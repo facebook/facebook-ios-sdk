@@ -55,9 +55,12 @@
 		0CD31AA383E5619C33FF966A /* FBSDKGameRequestURLProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8732F884613A8A1626A538BF /* FBSDKGameRequestURLProvider.m */; };
 		0F1D21D515AA1BC464B5BEFD /* FBSDKLikeActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B5FDC2467A3BB5A24198EAF /* FBSDKLikeActionController.h */; };
 		0FAACDD33255A2E7CB5EF344 /* FBSDKShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F5227BBF4B0C473A5A514AA /* FBSDKShareKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		125404E9D2A347E020BC3E6C /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7A7221E4C2B7BF695561E3 /* TestInternalUtility.swift */; };
 		1326300AC87039797A928ECD /* FBSDKSocialComposeViewControllerFactoryProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 6693BB0CBB96D9457CD5F4DA /* FBSDKSocialComposeViewControllerFactoryProtocol.h */; };
 		13A7243A5C8438239F5DA0A0 /* FBSDKMessageDialogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B99159174F0C6DC372D969 /* FBSDKMessageDialogTests.m */; };
 		16274953283BB17513CEF447 /* FBSDKShareDialogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F2667A67F58B045AAA39D003 /* FBSDKShareDialogTests.m */; };
+		1630FDC55872BD7499B0999A /* TestBridgeAPIRequestOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0131C6C8A09BFC9128B367 /* TestBridgeAPIRequestOpener.swift */; };
+		1642842E94B2B901490C95DD /* TestInternalURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */; };
 		174F20B75399AFEC2AFEDD13 /* FBSDKHashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = F8661FCBD7D670165A857453 /* FBSDKHashtag.m */; };
 		1771DD2485326203A3385E8F /* FBSDKSharingScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 05755F7163FBF04B5E4CF832 /* FBSDKSharingScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		17B7DD6D1BDCEF52E5A95F57 /* FBSDKShareVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6198A408A2F248CE25CAF7 /* FBSDKShareVideo.m */; };
@@ -138,6 +141,7 @@
 		52947D43C3A3FFE1CCDF4F92 /* UIApplication+ShareInternalURLOpening.h in Headers */ = {isa = PBXBuildFile; fileRef = 80622C0A20C52A7D7BAB39A0 /* UIApplication+ShareInternalURLOpening.h */; };
 		52C0E7AEAE6D7A48F9D28F3B /* FBSDKShareVideoContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 74D980E099769793DAB2FAD3 /* FBSDKShareVideoContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		52E9AFF39A33F33C1EB4A27F /* FBSDKHashtag.h in Headers */ = {isa = PBXBuildFile; fileRef = 2931BBF6624C21AD56984829 /* FBSDKHashtag.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		530827D547795977B95BD690 /* TestShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEECCC9AB7ABD607FE043B6 /* TestShareUtility.swift */; };
 		5320043EF27ABBD5815E5CC1 /* FBSDKCoreKitBasicsImportForShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D64A52FABCE6FF2757BBF7C /* FBSDKCoreKitBasicsImportForShareKit.h */; };
 		5379DC8E0C36853EF21405EC /* FBSDKShareLinkContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 62FCBAE4F95AC8A0374BFF4F /* FBSDKShareLinkContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54303B7CF2D07CD566B5E96D /* FBSDKShareLinkContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F2A69495F9D0BEBCD8C4C62 /* FBSDKShareLinkContentTests.m */; };
@@ -159,6 +163,7 @@
 		63BB13BE1CA2343B6B9154D8 /* FBSDKSharing.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B54E92EC83F9596A28D4C92 /* FBSDKSharing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63D749559671118F54707B1D /* FBSDKHasher.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A9475B92CE2C6CC16C9090 /* FBSDKHasher.m */; };
 		6476CB82BAD86042807470C0 /* FBSDKShareDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 55390FFA8E5A639FA90397BC /* FBSDKShareDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6594BF8CC4485C77829C619E /* TestSocialComposeViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB38E7B7C0BCDD0A234133D /* TestSocialComposeViewControllerFactory.swift */; };
 		67A9A4A5CA43222E411FECA8 /* ShareVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CB3C5F0256CAD48245B469 /* ShareVideoTests.swift */; };
 		67BD647B1DA91558433B09E5 /* FBSDKGameRequestContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819EA1776D11FB997F79D /* FBSDKGameRequestContentTests.m */; };
 		67FF25A862AA8808079AB9F5 /* FBSDKAppInviteContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AD54DDAA7C56250AE88347AC /* FBSDKAppInviteContentTests.m */; };
@@ -241,6 +246,7 @@
 		B151827AB995C6504D885640 /* FBSDKSharingButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 049A515F8525968FE819FD7B /* FBSDKSharingButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B1DFF65C0DFB7679D92DA64A /* FBSDKSharePhotoContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 436C852AC42922873B1ADF9F /* FBSDKSharePhotoContent.m */; };
 		B36D95D1F7536CC353A35A7E /* FBSDKShareLinkContent.m in Sources */ = {isa = PBXBuildFile; fileRef = A644A75B5BEFAE7ECCB7B335 /* FBSDKShareLinkContent.m */; };
+		B49611EA9CB08DCFF167C6E5 /* TestBridgeAPIRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFAFA5F7C388441B101ADF4 /* TestBridgeAPIRequestFactory.swift */; };
 		B54DAC18493A870B07CCD00E /* FBSDKShareBridgeAPIRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BEF5A4942ADA087798C013D /* FBSDKShareBridgeAPIRequestFactory.m */; };
 		B678689CECBE7E79489D992A /* FBSDKShareConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = E767B03DABAA13E4A95C7970 /* FBSDKShareConstants.m */; };
 		B6D785348B7A9EA8B873ACFA /* FBSDKSharePhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 52ACDE9FEB1B7EBCE078D27D /* FBSDKSharePhoto.m */; };
@@ -299,6 +305,7 @@
 		DB492FCE83D5A5128175A1F2 /* FBSDKShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F5227BBF4B0C473A5A514AA /* FBSDKShareKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB803B251DB4594A95BCF35F /* FBSDKShareAppEventNames.m in Sources */ = {isa = PBXBuildFile; fileRef = BBFADDCC2BCC00F3A8A92FA9 /* FBSDKShareAppEventNames.m */; };
 		DBFB1717E344F9CE817A3F4B /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227EEAA2262AD634B42FD444 /* FBSDKShareKit.framework */; };
+		DC8CA1CBBB3495F59E01D7EB /* TestSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066C83A6C8047A2680E65C15 /* TestSettings.swift */; };
 		DC9A089535A9AD3DC9C8EDBE /* FBSDKLikeBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = BF6090CBC0F35847ADDAD9D0 /* FBSDKLikeBoxView.h */; };
 		DDB73D0DB73E5CD8DCD1AF20 /* FBSDKShareMediaContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 605C232A330B4E0E8120A7D9 /* FBSDKShareMediaContent.m */; };
 		DF065DF576C6A8C811F03365 /* FakeSharingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C66B896B75DB793A393EC51D /* FakeSharingDelegate.m */; };
@@ -334,6 +341,7 @@
 		FA371202B892830775F52416 /* FBSDKHasher.h in Headers */ = {isa = PBXBuildFile; fileRef = EACCA566611F96F557CB8082 /* FBSDKHasher.h */; };
 		FA45BC46F63B21FA55CB67B9 /* FBSDKLikeObjectType.m in Sources */ = {isa = PBXBuildFile; fileRef = F41FBCBF2E502179F58EF83A /* FBSDKLikeObjectType.m */; };
 		FB72AD1A6C778C6A8D9F4D86 /* FBSDKSharingContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0032EB58115BC2C367823CB4 /* FBSDKSharingContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FB76BA0BC3DEAC3B4877FFB5 /* TestBridgeAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */; };
 		FDADF93C6B93D6BA2829459A /* FBSDKSharingValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 91EC0E6953C727E3614CDC9E /* FBSDKSharingValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF089B96408D71B89F94B9DA /* FBSDKSocialComposeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B698B98FBDEB5DF7B03FA2F4 /* FBSDKSocialComposeViewController.h */; };
 /* End PBXBuildFile section */
@@ -509,11 +517,13 @@
 		0424A6CD9EB71E9E7578B7FB /* FBSDKCameraEffectTextures+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectTextures+Internal.h"; sourceTree = "<group>"; };
 		049A515F8525968FE819FD7B /* FBSDKSharingButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingButton.h; sourceTree = "<group>"; };
 		05755F7163FBF04B5E4CF832 /* FBSDKSharingScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingScheme.h; sourceTree = "<group>"; };
+		066C83A6C8047A2680E65C15 /* TestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSettings.swift; sourceTree = "<group>"; };
 		068195043F6B7EE42F59D10E /* FBSDKShareUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareUtility.m; sourceTree = "<group>"; };
 		07B99159174F0C6DC372D969 /* FBSDKMessageDialogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessageDialogTests.m; sourceTree = "<group>"; };
 		07DC95DF804D443EE2449872 /* FBSDKCameraEffectArguments+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectArguments+Internal.h"; sourceTree = "<group>"; };
 		09841CC71A63855F5B741484 /* FBSDKSharePhotoContentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContentTests.m; sourceTree = "<group>"; };
 		09D2609E6E872DEE21F325E1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		0AFAFA5F7C388441B101ADF4 /* TestBridgeAPIRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestFactory.swift; sourceTree = "<group>"; };
 		0BEF5A4942ADA087798C013D /* FBSDKShareBridgeAPIRequestFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareBridgeAPIRequestFactory.m; sourceTree = "<group>"; };
 		0C59765D7C510F3D3FD2D283 /* FBSDKShareMediaContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareMediaContent.h; sourceTree = "<group>"; };
 		0D034C19B57361B3418C2B70 /* FBSDKGameRequestURLProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGameRequestURLProvider.h; sourceTree = "<group>"; };
@@ -557,6 +567,7 @@
 		5B1D4BFDC08DEFD7863035E3 /* FBSDKCameraEffectArgumentsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCameraEffectArgumentsTests.m; sourceTree = "<group>"; };
 		5B6198A408A2F248CE25CAF7 /* FBSDKShareVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareVideo.m; sourceTree = "<group>"; };
 		5E264DC241621A59F316D68F /* FBSDKAppGroupContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppGroupContent.h; sourceTree = "<group>"; };
+		5EEECCC9AB7ABD607FE043B6 /* TestShareUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestShareUtility.swift; sourceTree = "<group>"; };
 		5F880B0AF3603AB8C5E8ED10 /* FBSDKMessageDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMessageDialog.h; sourceTree = "<group>"; };
 		5FB74825064A4F79D3CF0A4A /* FBSDKGameRequestFrictionlessRecipientCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestFrictionlessRecipientCache.m; sourceTree = "<group>"; };
 		60196AA551032CD5BA234C1A /* FBSDKShareButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareButton.m; sourceTree = "<group>"; };
@@ -568,6 +579,7 @@
 		6801C2AE8FB7A681A1C2EE22 /* FBSDKGameRequestContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGameRequestContent.h; sourceTree = "<group>"; };
 		6C4F34F5B98E29F023B4348F /* FBSDKShareExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareExtension.m; sourceTree = "<group>"; };
 		6CC819EA1776D11FB997F79D /* FBSDKGameRequestContentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestContentTests.m; sourceTree = "<group>"; };
+		6D7A7221E4C2B7BF695561E3 /* TestInternalUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalUtility.swift; sourceTree = "<group>"; };
 		71F506744437CB004A863527 /* FBSDKShareButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareButton.h; sourceTree = "<group>"; };
 		721C6B8A6975EC60274FD7F7 /* FBSDKGameRequestDialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestDialog.m; sourceTree = "<group>"; };
 		74D980E099769793DAB2FAD3 /* FBSDKShareVideoContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareVideoContent.h; sourceTree = "<group>"; };
@@ -578,6 +590,7 @@
 		7B5FDC2467A3BB5A24198EAF /* FBSDKLikeActionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLikeActionController.h; sourceTree = "<group>"; };
 		7C1544B8B69A7B6653C13F92 /* ShareCameraEffectContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCameraEffectContentTests.swift; sourceTree = "<group>"; };
 		7E4A9E45835BB8A4E2D48774 /* FBSDKShareAppEventNames.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareAppEventNames.h; sourceTree = "<group>"; };
+		7F0131C6C8A09BFC9128B367 /* TestBridgeAPIRequestOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestOpener.swift; sourceTree = "<group>"; };
 		80622C0A20C52A7D7BAB39A0 /* UIApplication+ShareInternalURLOpening.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+ShareInternalURLOpening.h"; sourceTree = "<group>"; };
 		82E1A686D0718A1712A98688 /* FBSDKShareCameraEffectContent+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKShareCameraEffectContent+Internal.h"; sourceTree = "<group>"; };
 		8732F884613A8A1626A538BF /* FBSDKGameRequestURLProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestURLProvider.m; sourceTree = "<group>"; };
@@ -597,6 +610,7 @@
 		99B12F2CAA7CFE87D5CADCAC /* FBSDKShareConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareConstants.h; sourceTree = "<group>"; };
 		99E9E460CF60C8D4FCBC1114 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A010B4ED3919F7869F1B879 /* HashtagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagTests.swift; sourceTree = "<group>"; };
+		9BB38E7B7C0BCDD0A234133D /* TestSocialComposeViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSocialComposeViewControllerFactory.swift; sourceTree = "<group>"; };
 		9D8CC77428298A1156E36F2D /* FBSDKCameraEffectTextures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCameraEffectTextures.h; sourceTree = "<group>"; };
 		A0CB3C5F0256CAD48245B469 /* ShareVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareVideoTests.swift; sourceTree = "<group>"; };
 		A17102B159B379E9CF51336E /* FBSDKGameRequestFrictionlessRecipientCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGameRequestFrictionlessRecipientCache.h; sourceTree = "<group>"; };
@@ -624,8 +638,10 @@
 		C6F8BB394EF7EFBAF90255E5 /* FBSDKShareUtilityProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareUtilityProtocol.h; sourceTree = "<group>"; };
 		C72DD54A5C516FDB507EFA52 /* FBSDKShareDialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareDialog.m; sourceTree = "<group>"; };
 		CAC74C1B0E5DA2F06DC61047 /* FBSDKShareKitTestUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKitTestUtility.h; sourceTree = "<group>"; };
+		CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalURLOpener.swift; sourceTree = "<group>"; };
 		CCFAA96811868C050A8F2BA2 /* FBSDKShareKit-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKShareKit-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		CD12E15B1DBD33670ECA157A /* OCMock */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
+		DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequest.swift; sourceTree = "<group>"; };
 		DA93E28CFC5D7742BB0542D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		DBD93B614791761DC599E568 /* FBSDKSendButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSendButton.m; sourceTree = "<group>"; };
 		DC4D084321DC68182B476082 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -929,6 +945,14 @@
 				953B9D3C327D520BB4C4569C /* ShareBridgeAPIRequestFactoryTests.swift */,
 				7C1544B8B69A7B6653C13F92 /* ShareCameraEffectContentTests.swift */,
 				3DE1ABD032A00EEB79912995 /* test-image.jpeg */,
+				DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */,
+				0AFAFA5F7C388441B101ADF4 /* TestBridgeAPIRequestFactory.swift */,
+				7F0131C6C8A09BFC9128B367 /* TestBridgeAPIRequestOpener.swift */,
+				CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */,
+				6D7A7221E4C2B7BF695561E3 /* TestInternalUtility.swift */,
+				066C83A6C8047A2680E65C15 /* TestSettings.swift */,
+				5EEECCC9AB7ABD607FE043B6 /* TestShareUtility.swift */,
+				9BB38E7B7C0BCDD0A234133D /* TestSocialComposeViewControllerFactory.swift */,
 				CDF1744FC11463AAF688078E /* Interfaces */,
 				85FD5B9197B1F1E349250D6F /* Internal */,
 				FBE23EFEC87671089B28BB70 /* Models */,
@@ -1655,6 +1679,14 @@
 				AD97918B02F32D630BA29E28 /* ShareCameraEffectContentTests.swift in Sources */,
 				D549B26A89757C47EFE89CD1 /* ShareMediaContentTests.swift in Sources */,
 				67A9A4A5CA43222E411FECA8 /* ShareVideoTests.swift in Sources */,
+				FB76BA0BC3DEAC3B4877FFB5 /* TestBridgeAPIRequest.swift in Sources */,
+				B49611EA9CB08DCFF167C6E5 /* TestBridgeAPIRequestFactory.swift in Sources */,
+				1630FDC55872BD7499B0999A /* TestBridgeAPIRequestOpener.swift in Sources */,
+				1642842E94B2B901490C95DD /* TestInternalURLOpener.swift in Sources */,
+				125404E9D2A347E020BC3E6C /* TestInternalUtility.swift in Sources */,
+				DC8CA1CBBB3495F59E01D7EB /* TestSettings.swift in Sources */,
+				530827D547795977B95BD690 /* TestShareUtility.swift in Sources */,
+				6594BF8CC4485C77829C619E /* TestSocialComposeViewControllerFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

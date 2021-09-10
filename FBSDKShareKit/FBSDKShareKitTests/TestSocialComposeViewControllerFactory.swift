@@ -16,17 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+import UIKit
 
-@protocol FBSDKAppInstallCheck;
+@objcMembers
+final class TestSocialComposeViewControllerFactory: NSObject, SocialComposeViewControllerFactoryProtocol {
+  var canMakeSocialComposeViewController = false
+  var stubbedSocialComposeViewController: (UIViewController & SocialComposeViewControllerProtocol)?
 
-@interface FBSDKMessageDialog (Testing)
+  func makeSocialComposeViewController() -> SocialComposeViewControllerProtocol? {
+    stubbedSocialComposeViewController
+  }
+}
 
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+@objcMembers
+final class TestSocialComposeViewController: UIViewController, SocialComposeViewControllerProtocol {
+  var completionHandler: FBSDKSocialComposeViewControllerCompletionHandler = { _ in }
+  var stubbedSetInitialText = false
+  var capturedInitialText: String?
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
+  func setInitialText(_ text: String) -> Bool {
+    capturedInitialText = text
+    return stubbedSetInitialText
+  }
 
-@end
+  func add(_ image: UIImage) -> Bool {
+    false
+  }
+
+  func add(_ url: URL) -> Bool {
+    false
+  }
+}

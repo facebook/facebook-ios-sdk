@@ -16,17 +16,41 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@objcMembers
+class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
+  var actionID: String?
+  var methodName: String?
+  var protocolType: FBSDKBridgeAPIProtocolType
+  var `protocol`: BridgeAPIProtocol?
+  var scheme: String?
 
-@protocol FBSDKAppInstallCheck;
+  let url: URL?
 
-@interface FBSDKMessageDialog (Testing)
+  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String? = nil) {
+    self.url = url
+    self.protocolType = protocolType
+    self.scheme = scheme
+  }
 
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+  func copy(with zone: NSZone? = nil) -> Any {
+    self
+  }
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
+  func requestURL() throws -> URL {
+    guard let url = url else {
+      throw FakeBridgeAPIRequestError(domain: "tests", code: 0, userInfo: [:])
+    }
+    return url
+  }
 
-@end
+  static func request(withURL url: URL?) -> TestBridgeAPIRequest {
+    TestBridgeAPIRequest(url: url)
+  }
+
+  static func request(withURL url: URL, scheme: String) -> TestBridgeAPIRequest {
+    TestBridgeAPIRequest(url: url, scheme: scheme)
+  }
+}
+
+@objc
+class FakeBridgeAPIRequestError: NSError {}

@@ -16,17 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@objcMembers
+final class TestSettings: NSObject, SettingsProtocol {
+  static var appID: String?
+  static var clientToken: String?
+  static var userAgentSuffix: String?
+  static var sdkVersion: String?
+  static var loggingBehaviors: Set<LoggingBehavior> = []
 
-@protocol FBSDKAppInstallCheck;
-
-@interface FBSDKMessageDialog (Testing)
-
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
-
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
-
-@end
+  var appID: String?
+  var appURLSchemeSuffix: String?
+  var isDataProcessingRestricted = false
+  var isAutoLogAppEventsEnabled = false
+  var isSetATETimeExceedsInstallTime = false
+  var isSKAdNetworkReportEnabled = false
+  var loggingBehaviors: Set<LoggingBehavior> = []
+  var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
+  var installTimestamp: Date?
+  var advertiserTrackingEnabledTimestamp: Date?
+  var shouldLimitEventAndDataUsage = false
+  var shouldUseTokenOptimizations = false
+  var graphAPIVersion = ""
+  var isGraphErrorRecoveryEnabled = false
+  var graphAPIDebugParamValue: String?
+}

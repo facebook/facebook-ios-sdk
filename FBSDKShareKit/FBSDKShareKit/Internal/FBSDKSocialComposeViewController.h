@@ -51,6 +51,7 @@ typedef void (^FBSDKSocialComposeViewControllerCompletionHandler)(FBSDKSocialCom
  Compose view controller interface to provide an abstraction on top of the
  `SLComposeViewController` type in the Social framework.
  */
+NS_SWIFT_NAME(SocialComposeViewControllerProtocol)
 @protocol FBSDKSocialComposeViewController <NSObject>
 
 @property (nonatomic, copy) FBSDKSocialComposeViewControllerCompletionHandler completionHandler;

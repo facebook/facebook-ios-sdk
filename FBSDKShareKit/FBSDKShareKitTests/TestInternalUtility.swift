@@ -16,17 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@objcMembers
+final class TestInternalUtility: NSObject, InternalUtilityProtocol {
+  var isFacebookAppInstalled = false
+  var isMessengerAppInstalled = false
+  var isMSQRDPlayerAppInstalled = false
+  var stubbedURL: URL?
 
-@protocol FBSDKAppInstallCheck;
+  func registerTransientObject(_ object: Any) {}
 
-@interface FBSDKMessageDialog (Testing)
+  func unregisterTransientObject(_ object: Any) {}
 
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+  func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
+  func url(
+    withScheme scheme: String,
+    host: String,
+    path: String,
+    queryParameters: [String: Any]
+  ) throws -> URL {
+    struct Error: Swift.Error {}
 
-@end
+    guard let url = stubbedURL else { throw Error() }
+    return url
+  }
+
+  func validateURLSchemes() {}
+}

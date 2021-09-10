@@ -16,17 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@objcMembers
+final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+  var capturedRequest: BridgeAPIRequestProtocol?
+  var capturedUseSafariViewController: Bool? // swiftlint:disable:this discouraged_optional_boolean
+  var capturedFromViewController: UIViewController?
+  var capturedCompletionBlock: BridgeAPIResponseBlock?
 
-@protocol FBSDKAppInstallCheck;
+  func open(
+    _ request: BridgeAPIRequestProtocol,
+    useSafariViewController: Bool,
+    from fromViewController: UIViewController?,
+    completionBlock: @escaping BridgeAPIResponseBlock
+  ) {
+    capturedRequest = request
+    capturedUseSafariViewController = useSafariViewController
+    capturedFromViewController = fromViewController
+    capturedCompletionBlock = completionBlock
+  }
 
-@interface FBSDKMessageDialog (Testing)
-
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
-
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
-
-@end
+  func openURL(
+    withSafariViewController url: URL,
+    sender: URLOpening,
+    from fromViewController: UIViewController,
+    handler: @escaping SuccessBlock
+  ) {}
+}

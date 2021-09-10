@@ -18,9 +18,11 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
-#import "FBSDKHashtag.h"
-#import "FBSDKMessageDialog.h"
 #import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
+#import "FBSDKShareInternalURLOpening.h"
 #import "FBSDKShareModelTestUtility.h"
+#import "FBSDKShareUtility.h"
+#import "FBSDKSocialComposeViewController.h"
+#import "FBSDKSocialComposeViewControllerFactoryProtocol.h"

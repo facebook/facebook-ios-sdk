@@ -16,17 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@objcMembers
+final class TestBridgeAPIRequestFactory: NSObject, BridgeAPIRequestCreating {
+  var capturedProtocolType: FBSDKBridgeAPIProtocolType?
+  var capturedScheme: String?
+  var capturedMethodName: String?
+  var capturedMethodVersion: String?
+  var capturedParameters: [String: Any]?
+  var capturedUserInfo: [String: Any]?
+  var stubbedBridgeAPIRequest: TestBridgeAPIRequest?
 
-@protocol FBSDKAppInstallCheck;
+  func bridgeAPIRequest(
+    with protocolType: FBSDKBridgeAPIProtocolType,
+    scheme: String,
+    methodName: String?,
+    methodVersion: String?,
+    parameters: [String: Any]? = nil,
+    userInfo: [String: Any]? = nil
+  ) -> BridgeAPIRequestProtocol? {
+    capturedProtocolType = protocolType
+    capturedScheme = scheme
+    capturedMethodName = methodName
+    capturedMethodVersion = methodVersion
+    capturedParameters = parameters
+    capturedUserInfo = userInfo
 
-@interface FBSDKMessageDialog (Testing)
-
-@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
-
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
-
-@end
+    return stubbedBridgeAPIRequest
+  }
+}
