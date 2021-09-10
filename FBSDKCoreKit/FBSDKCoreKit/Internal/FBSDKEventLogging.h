@@ -18,13 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#if FBSDK_SWIFT_PACKAGE
- #import "FBSDKAppEventName.h"
- #import "FBSDKAppEventsFlushBehavior.h"
-#else
  #import <FBSDKCoreKit/FBSDKAppEventName.h>
  #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
-#endif
 
 @class FBSDKAccessToken;
 

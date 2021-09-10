@@ -21,12 +21,7 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-
-#if SWIFT_PACKAGE
- #import "FBSDKLoginManager.h"
-#else
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#endif
 
 NS_SWIFT_NAME(LoginUtility)
 @interface FBSDKLoginUtility : NSObject

@@ -17,12 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookGamingServices
-
-#if FBSDK_SWIFT_PACKAGE
-import LegacyCore
-#else
 import FBSDKCoreKit
-#endif
 
 @objcMembers
 open class FBSDKContextDialogPresenter: NSObject {

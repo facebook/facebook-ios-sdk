@@ -17,11 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#if SWIFT_PACKAGE
- #import "FBSDKLoginManager.h"
-#else
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

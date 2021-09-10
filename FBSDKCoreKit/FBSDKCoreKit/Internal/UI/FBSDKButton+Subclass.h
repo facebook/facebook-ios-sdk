@@ -18,13 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKButton.h"
- #import "FBSDKButtonImpressionTracking.h"
-#else
- #import <FBSDKCoreKit/FBSDKButton.h>
- #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
-#endif
+#import <FBSDKCoreKit/FBSDKButton.h>
+#import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
 
 #import "FBSDKIcon+Internal.h"
 

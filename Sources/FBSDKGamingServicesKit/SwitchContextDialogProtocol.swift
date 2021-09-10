@@ -17,12 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookGamingServices
-
-#if FBSDK_SWIFT_PACKAGE
-import LegacyCore
-#else
 import FBSDKCoreKit
-#endif
 
 // Internal protocol to enable us to verify that the underlying pure Swift type is
 // exercised correctly by the wrapper class

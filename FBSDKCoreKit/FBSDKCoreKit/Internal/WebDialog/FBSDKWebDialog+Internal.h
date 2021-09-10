@@ -23,11 +23,7 @@
  #import <CoreGraphics/CoreGraphics.h>
  #import <Foundation/Foundation.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKWebDialog.h"
- #else
-  #import <FBSDKCoreKit/FBSDKWebDialog.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKWebDialog.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

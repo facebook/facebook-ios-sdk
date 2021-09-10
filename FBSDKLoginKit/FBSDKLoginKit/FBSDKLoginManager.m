@@ -22,14 +22,7 @@
 
  #import "FBSDKLoginManager+Internal.h"
 
- #import "FBSDKLoginManagerLoginResult+Internal.h"
-
- #ifdef SWIFT_PACKAGE
-  #import "FBSDKAccessToken.h"
-  #import "FBSDKSettings.h"
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
@@ -37,6 +30,7 @@
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManagerLogger.h"
+ #import "FBSDKLoginManagerLoginResult+Internal.h"
  #import "FBSDKLoginUtility.h"
  #import "FBSDKMonotonicTime.h"
  #import "FBSDKPermission.h"

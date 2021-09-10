@@ -16,11 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if defined FBSDK_SWIFT_PACKAGE
- #import "FBSDKAccessTokenProtocols.h"
-#else
  #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-#endif
 
 #import "FBSDKDataPersisting.h"
 #import "TargetConditionals.h"

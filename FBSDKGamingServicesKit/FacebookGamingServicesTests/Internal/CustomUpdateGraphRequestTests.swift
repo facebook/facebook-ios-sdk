@@ -18,12 +18,7 @@
 
 import FacebookGamingServices
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
 import FBSDKCoreKit
-#endif
-
 import TestTools
 import XCTest
 

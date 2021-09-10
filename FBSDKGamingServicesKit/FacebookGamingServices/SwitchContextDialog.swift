@@ -18,11 +18,7 @@
 
 import Foundation
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
 import FBSDKCoreKit
-#endif
 
 /**
   A dialog to switch the current gaming context through a web view

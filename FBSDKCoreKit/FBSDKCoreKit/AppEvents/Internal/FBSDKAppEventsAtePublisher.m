@@ -18,13 +18,8 @@
 
 #import "FBSDKAppEventsAtePublisher.h"
 
-#if FBSDK_SWIFT_PACKAGE
- #import "FBSDKGraphRequestFlags.h"
- #import "FBSDKGraphRequestHTTPMethod.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
- #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
-#endif
+#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
 
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKCoreKitBasicsImport.h"

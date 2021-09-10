@@ -22,11 +22,7 @@
 
  #import <Foundation/Foundation.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKLoginConstants.h"
- #else
-  #import <FBSDKLoginKit/FBSDKLoginConstants.h>
- #endif
+ #import <FBSDKLoginKit/FBSDKLoginConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

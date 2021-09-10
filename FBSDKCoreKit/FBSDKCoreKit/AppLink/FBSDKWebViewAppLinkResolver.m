@@ -77,9 +77,6 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
-#if FBSDK_SWIFT_PACKAGE
-NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
-#endif
 @implementation FBSDKWebViewAppLinkResolverWebViewDelegate
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
@@ -114,9 +111,6 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 @end
 
-#if FBSDK_SWIFT_PACKAGE
-NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
-#endif
 @implementation FBSDKWebViewAppLinkResolver
 
 - (instancetype)init

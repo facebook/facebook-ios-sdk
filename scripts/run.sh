@@ -110,13 +110,6 @@ main() {
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
 
-    SWIFT_PACKAGE_SCHEMES=(
-      "FacebookAEM"
-      "FacebookCore"
-      "FacebookLogin"
-      "FacebookShare"
-    )
-
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
@@ -318,54 +311,11 @@ build_sdk() {
     fi
   }
 
-  build_spm() {
-    for scheme in "${SWIFT_PACKAGE_SCHEMES[@]}"; do
-
-    echo "Building Swift Package - $scheme"
-
-    xcodebuild clean build \
-      -workspace .swiftpm/xcode/package.xcworkspace \
-      -scheme "$scheme" \
-      -sdk iphonesimulator \
-      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE" | xcpretty
-    done
-  }
-
-  build_spm_integration() {
-    set +u # Don't fail on undefined variables
-
-    local branch
-
-    if [ -n "$CIRCLE_PULL_REQUEST" ] && [ "$CIRCLE_PULL_REQUEST" != "false" ]; then
-      PR_NUMBER="${CIRCLE_PULL_REQUEST//[!0-9]/}"
-      branch="refs/pull/$PR_NUMBER/merge";
-    elif [ -n "$CIRCLE_BRANCH" ]; then
-      branch="$CIRCLE_BRANCH";
-    else
-      branch="master"
-    fi
-    echo "Using branch: $branch"
-
-    cd "$SDK_DIR"/samples/SmoketestSPM
-
-    echo "Updating project file to point to merge commit at: $branch"
-    /usr/libexec/PlistBuddy \
-        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch $branch" \
-        SmoketestSPM.xcodeproj/project.pbxproj
-
-    xcodebuild build -scheme SmoketestSPM \
-      -sdk iphonesimulator | xcpretty
-
-    set -u # Resume failing on undefined variables
-  }
-
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
-  "spm") build_spm "$@" ;;
-  "spm-integration") build_spm_integration ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac

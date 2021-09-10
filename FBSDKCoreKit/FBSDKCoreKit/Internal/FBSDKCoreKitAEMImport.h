@@ -20,12 +20,8 @@
 
 #if !TARGET_OS_TV
 
- #if defined FBSDK_SWIFT_PACKAGE
-@import FBAEMKit;
- #else
-  #import <FBAEMKit/FBAEMNetworking.h>
-  #import <FBAEMKit/FBAEMReporter.h>
-  #import <FBAEMKit/FBSKAdNetworkReporting.h>
- #endif
+ #import <FBAEMKit/FBAEMNetworking.h>
+ #import <FBAEMKit/FBAEMReporter.h>
+ #import <FBAEMKit/FBSKAdNetworkReporting.h>
 
 #endif

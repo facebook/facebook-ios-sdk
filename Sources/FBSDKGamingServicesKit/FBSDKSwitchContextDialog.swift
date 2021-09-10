@@ -17,12 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookGamingServices
-
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
 import FBSDKCoreKit
-#endif
 
 /**
   A dialog to switch the current context through a web view

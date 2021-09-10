@@ -61,7 +61,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKLoginKit/Internal
@@ -96,7 +95,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKLoginKit/Internal
@@ -140,7 +138,6 @@ targets:
           - FBSDKLoginTooltipView*
           - FBSDKTooltipView*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKLoginKit/Internal
@@ -192,7 +189,6 @@ targets:
           - FBSDKLoginTooltipView*
           - FBSDKTooltipView*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKLoginKit/Internal

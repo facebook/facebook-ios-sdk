@@ -16,15 +16,4 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Importing FBSDKCoreKit is tricky due to build variants.
-// SPM requires that it is imported as <FBSDKCoreKit.h> while Carthage, Buck,
-// and xcodebuild require <FBSDKCoreKit/FBSDKCoreKit.h>
-// This file is not exposed via SPM so non SPM users will use <FBSDKCoreKit/FBSDKCoreKit.h>
-
-// Even though this file is not available from projects using SPM,
-// it is available when building the packages themselves so we need to include this check.
-#if FBSDK_SWIFT_PACKAGE
- #import <FBSDKCoreKit.h>
-#else
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+#import <FBSDKCoreKit/FBSDKCoreKit.h>

@@ -18,11 +18,7 @@
 
 #import "FBSDKCreateContextDialogFactory.h"
 
-#if FBSDK_SWIFT_PACKAGE
-@import LegacyCore;
-#else
- #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-#endif
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 
 #import "FBSDKContextDialogs+Showable.h"
 

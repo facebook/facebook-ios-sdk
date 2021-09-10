@@ -43,10 +43,6 @@ static FBSDKWebDialog *g_currentDialog = nil;
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
 @end
 
- #if FBSDK_SWIFT_PACKAGE
-NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
- #endif
-
 @interface FBSDKWebDialog ()
 @property (nonatomic) UIView *backgroundView;
 @property (nonatomic) FBSDKWebDialogView *dialogView;

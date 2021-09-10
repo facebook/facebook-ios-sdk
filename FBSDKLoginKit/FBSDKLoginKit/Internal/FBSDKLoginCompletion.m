@@ -22,11 +22,7 @@
 
  #import "FBSDKLoginCompletion+Internal.h"
 
- #if SWIFT_PACKAGE
-@import FBSDKCoreKit;
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
  #import "FBSDKAuthenticationTokenCreating.h"
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"

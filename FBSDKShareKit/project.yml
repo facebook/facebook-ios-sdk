@@ -61,7 +61,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKShareKit/Internal
@@ -97,7 +96,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKShareKit/Internal
@@ -154,7 +152,6 @@ targets:
           - FBSDKSharingButton*
           - FBSDKSharingScheme*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKShareKit/Internal
@@ -217,7 +214,6 @@ targets:
           - FBSDKSharingButton*
           - FBSDKSharingScheme*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKShareKit/Internal

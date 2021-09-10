@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKGraphRequestConnection.h"
-#else
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
 
 @protocol FBSDKGraphRequest;
 

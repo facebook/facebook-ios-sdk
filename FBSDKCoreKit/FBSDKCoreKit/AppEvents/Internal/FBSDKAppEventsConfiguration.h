@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKAdvertisingTrackingStatus.h"
-#else
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

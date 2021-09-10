@@ -22,11 +22,7 @@
 
  #import <UIKit/UIKit.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKDeviceDialogView.h"
- #else
   #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
- #endif
 
 NS_ASSUME_NONNULL_BEGIN
 

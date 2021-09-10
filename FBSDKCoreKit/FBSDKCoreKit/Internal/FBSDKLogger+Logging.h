@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if FBSDK_SWIFT_PACKAGE
- #import "FBSDKLogging.h"
-#else
- #import <FBSDKCoreKit/FBSDKLogging.h>
-#endif
+#import <FBSDKCoreKit/FBSDKLogging.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

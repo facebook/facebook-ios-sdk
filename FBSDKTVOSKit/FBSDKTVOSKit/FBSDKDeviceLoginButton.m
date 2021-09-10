@@ -18,11 +18,7 @@
 
 #import "FBSDKDeviceLoginButton.h"
 
-#if defined FBSDK_SWIFT_PACKAGE
-@import FBSDKCoreKit_Basics;
-#else
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#endif
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKDeviceLoginViewController.h"
 

@@ -18,10 +18,6 @@
 
 #if !TARGET_OS_TV
 
-#if BUCK
-import FacebookCore
-#endif
-
 import FBSDKCoreKit
 
 import UIKit

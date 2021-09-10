@@ -22,11 +22,7 @@
 
  #import "FBSDKShareBridgeAPIRequestFactory.h"
 
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation FBSDKShareBridgeAPIRequestFactory
 

@@ -26,7 +26,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
       - path: FacebookGamingServices/Internal
         headerVisibility: project
         createIntermediateGroups: true

@@ -21,12 +21,7 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-
-#if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKBridgeAPIRequestCreating.h>
-#else
-  #import <FBSDKCoreKit/FBSDKBridgeAPIRequestCreating.h>
-#endif
+#import <FBSDKCoreKit/FBSDKBridgeAPIRequestCreating.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

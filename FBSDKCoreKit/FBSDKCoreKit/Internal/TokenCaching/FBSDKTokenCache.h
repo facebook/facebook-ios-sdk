@@ -18,13 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#if FBSDK_SWIFT_PACKAGE
-#import "FBSDKAccessToken.h"
-#import "FBSDKTokenCaching.h"
-#else
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKTokenCaching.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

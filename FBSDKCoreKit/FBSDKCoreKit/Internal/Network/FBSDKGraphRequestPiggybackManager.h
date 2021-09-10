@@ -16,12 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-#if SWIFT_PACKAGE
-#import "FBSDKGraphRequestConnection.h"
-#else
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
 
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @interface FBSDKGraphRequestPiggybackManager : NSObject

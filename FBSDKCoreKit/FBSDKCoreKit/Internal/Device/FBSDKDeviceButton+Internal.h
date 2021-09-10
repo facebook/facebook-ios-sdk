@@ -22,11 +22,7 @@
 
  #import <Foundation/Foundation.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKDeviceButton.h"
- #else
-  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKDeviceButton.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

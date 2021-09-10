@@ -17,11 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if SWIFT_PACKAGE
- #import "FBSDKAuthenticationToken.h"
-#else
- #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
-#endif
+#import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 
 #import "FBSDKCoreKit+Internal.h"
 

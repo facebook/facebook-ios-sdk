@@ -24,11 +24,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
-#if SWIFT_PACKAGE
-#import "FBSDKLoginManager.h"
-#else
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#endif
 
 #import "FBSDKLoginProviding.h"
 

@@ -20,11 +20,7 @@
 
 #if TARGET_OS_TV
 
- #if SWIFT_PACKAGE
-  #import "FBSDKDeviceViewControllerBase.h"
- #else
-  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
 
 @class FBSDKDeviceDialogView;
 

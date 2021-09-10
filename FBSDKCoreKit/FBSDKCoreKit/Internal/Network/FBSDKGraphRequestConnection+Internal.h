@@ -20,11 +20,7 @@
 @protocol FBSDKURLSessionProxying;
 @protocol FBSDKURLSessionProxyProviding;
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
 #import "FBSDKGraphRequestMetadata.h"
 

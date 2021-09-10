@@ -87,13 +87,6 @@ commands:
           paths:
             - build/Release
 
-  build_swift_packages:
-    description: Builds Swift Packages using xcodebuild
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh build spm
-
   build_xcode:
     description: Runs xcodebuild for the FacebookSDK workspace with a given scheme, and configuration
     parameters:
@@ -129,13 +122,6 @@ commands:
           scheme: BuildAllKits_TV
           configuration: Release
 
-  integrate_spm:
-    description: Builds a project that includes the Swift Packages
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh build spm-integration
-
   publish_cocoapods:
     description: Pushes all CocoaPods to trunk
     steps:
@@ -170,13 +156,6 @@ commands:
           at: .
       - run: sh scripts/run.sh check-release-status
 
-  verify_spm_headers:
-    description: Verifies that all public headers are available when using Swift Package Manager
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh verify-spm-headers
-
   verify_xcode_integration:
     description: Verifies that an xcode project that includes the SDK can build without error
     steps:
@@ -198,10 +177,6 @@ jobs:
     <<: *useMacOS
     steps:
       - build_for_release
-  build-swift-packages:
-    <<: *useMacOS
-    steps:
-      - build_swift_packages
   build-xcode-debug:
     <<: *useMacOS
     steps:
@@ -214,10 +189,6 @@ jobs:
     <<: *useMacOS
     steps:
       - build_carthage
-  integrate-spm:
-    <<: *useMacOS
-    steps:
-      - integrate_spm
   publish-cocoapods:
     <<: *useMacOS
     steps:
@@ -231,10 +202,6 @@ jobs:
     <<: *useMacOS
     steps:
       - verify_release
-  verify-spm-headers:
-    <<: *useMacOS
-    steps:
-      - verify_spm_headers
   verify-xcode-integration:
     <<: *useMacOS
     steps:
@@ -246,18 +213,12 @@ workflows:
       - setup
       - generate-projects:
           <<: *requiresSetup
-      - build-swift-packages:
-          <<: *requiresSetup
       - build-xcode-debug:
           <<: *requiresProjectGeneration
       - build-xcode-release:
           <<: *requiresProjectGeneration
       - build-carthage:
           <<: *requiresProjectGeneration
-      - integrate-spm:
-          <<: *requiresSetup
-      - verify-spm-headers:
-          <<: *requiresSetup
       - verify-xcode-integration:
           <<: *requiresProjectGeneration
   release:
