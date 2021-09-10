@@ -28,8 +28,6 @@ projectReferences:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
-  OCMock:
-    path: ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj
 
 options:
   deploymentTarget:
@@ -260,8 +258,6 @@ targets:
       - target: FBSDKShareKit-Dynamic
         embed: false
       - target: TestTools/TestTools
-        embed: false
-      - target: OCMock/OCMock iOS
         embed: false
     settings:
       ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES

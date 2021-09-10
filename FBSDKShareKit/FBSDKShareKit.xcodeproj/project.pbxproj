@@ -336,7 +336,6 @@
 		F5063B63FD987C34DD0EDA38 /* FBSDKShareVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6198A408A2F248CE25CAF7 /* FBSDKShareVideo.m */; };
 		F68415D2CFD1AFC2163A6B1D /* FBSDKLikeButton+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C53EF64CE01F5F2A2EA7D52 /* FBSDKLikeButton+Internal.h */; };
 		F7703D97C66FECC24149D85B /* UIApplication+ShareInternalURLOpening.h in Headers */ = {isa = PBXBuildFile; fileRef = 80622C0A20C52A7D7BAB39A0 /* UIApplication+ShareInternalURLOpening.h */; };
-		F930D537EBEF588132A3EEC9 /* OCMock iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD513C2D981305F370717F3F /* OCMock iOS.framework */; };
 		F9783ED600A8751DFAE6741A /* FBSDKSharePhotoContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09841CC71A63855F5B741484 /* FBSDKSharePhotoContentTests.m */; };
 		FA371202B892830775F52416 /* FBSDKHasher.h in Headers */ = {isa = PBXBuildFile; fileRef = EACCA566611F96F557CB8082 /* FBSDKHasher.h */; };
 		FA45BC46F63B21FA55CB67B9 /* FBSDKLikeObjectType.m in Sources */ = {isa = PBXBuildFile; fileRef = F41FBCBF2E502179F58EF83A /* FBSDKLikeObjectType.m */; };
@@ -417,13 +416,6 @@
 			remoteGlobalIDString = C82569269F0990FC515167BC;
 			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
 		};
-		903604E8FEFA3B6EAF1244CD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD12E15B1DBD33670ECA157A /* OCMock */;
-			proxyType = 1;
-			remoteGlobalIDString = F0B950F01B0080BE00942C38;
-			remoteInfo = "OCMock iOS";
-		};
 		9887477CE3648DBF01AE2A41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8A1D34466657820519D250B7 /* FBSDKCoreKit_Basics */;
@@ -458,13 +450,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9B3DC93C05C131CAD9C2148A;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
-		};
-		BC3B412EF8E9037A474968E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD12E15B1DBD33670ECA157A /* OCMock */;
-			proxyType = 2;
-			remoteGlobalIDString = F0B950F11B0080BE00942C38;
-			remoteInfo = "OCMock iOS";
 		};
 		C673DA003F844CC6C22302F1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -640,7 +625,6 @@
 		CAC74C1B0E5DA2F06DC61047 /* FBSDKShareKitTestUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKitTestUtility.h; sourceTree = "<group>"; };
 		CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalURLOpener.swift; sourceTree = "<group>"; };
 		CCFAA96811868C050A8F2BA2 /* FBSDKShareKit-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKShareKit-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		CD12E15B1DBD33670ECA157A /* OCMock */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
 		DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequest.swift; sourceTree = "<group>"; };
 		DA93E28CFC5D7742BB0542D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		DBD93B614791761DC599E568 /* FBSDKSendButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSendButton.m; sourceTree = "<group>"; };
@@ -697,7 +681,6 @@
 			files = (
 				DBFB1717E344F9CE817A3F4B /* FBSDKShareKit.framework in Frameworks */,
 				DAA1DD6008922D64CCE0378E /* TestTools.framework in Frameworks */,
-				F930D537EBEF588132A3EEC9 /* OCMock iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,7 +702,6 @@
 			children = (
 				95C282131ED0EE610B595083 /* FBSDKCoreKit */,
 				8A1D34466657820519D250B7 /* FBSDKCoreKit_Basics */,
-				CD12E15B1DBD33670ECA157A /* OCMock */,
 				65FCE404A897C3694C40434C /* TestTools */,
 			);
 			name = Projects;
@@ -782,14 +764,6 @@
 				80622C0A20C52A7D7BAB39A0 /* UIApplication+ShareInternalURLOpening.h */,
 			);
 			path = Internal;
-			sourceTree = "<group>";
-		};
-		3CDA1C0854B0893116CD608E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FD513C2D981305F370717F3F /* OCMock iOS.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		61F01A238035C143EC90E6B1 /* Products */ = {
@@ -1273,7 +1247,6 @@
 			dependencies = (
 				5622161B8864484D69206B35 /* PBXTargetDependency */,
 				E8BE97BF8BB7CB3C2D845171 /* PBXTargetDependency */,
-				7FEA10DDE084174A8A116EB4 /* PBXTargetDependency */,
 			);
 			name = FBSDKShareKitTests;
 			productName = FBSDKShareKitTests;
@@ -1329,10 +1302,6 @@
 				{
 					ProductGroup = 235CEA86290A8D051640095F /* Products */;
 					ProjectRef = 8A1D34466657820519D250B7 /* FBSDKCoreKit_Basics */;
-				},
-				{
-					ProductGroup = 3CDA1C0854B0893116CD608E /* Products */;
-					ProjectRef = CD12E15B1DBD33670ECA157A /* OCMock */;
 				},
 				{
 					ProductGroup = 87D90BB1D5DB17F825B86901 /* Products */;
@@ -1414,13 +1383,6 @@
 			fileType = wrapper.framework;
 			path = FBSDKCoreKit_TV.framework;
 			remoteRef = 1485D1E607FC8388CF804B2C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FD513C2D981305F370717F3F /* OCMock iOS.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = "OCMock iOS.framework";
-			remoteRef = BC3B412EF8E9037A474968E0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1742,11 +1704,6 @@
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKit;
 			targetProxy = 1D75B4A7ACAA347F0AC50B6A /* PBXContainerItemProxy */;
-		};
-		7FEA10DDE084174A8A116EB4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OCMock iOS";
-			targetProxy = 903604E8FEFA3B6EAF1244CD /* PBXContainerItemProxy */;
 		};
 		843846ABA2CE2A1D415F0C7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
