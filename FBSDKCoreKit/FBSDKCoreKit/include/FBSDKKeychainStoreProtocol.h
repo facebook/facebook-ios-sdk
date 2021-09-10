@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(KeychainStoreProtocol)
 @protocol FBSDKKeychainStore
 
-- (NSString *)stringForKey:(NSString *)key;
+- (nullable NSString *)stringForKey:(NSString *)key;
 
 - (BOOL)setString:(nullable NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
 

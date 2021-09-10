@@ -22,6 +22,11 @@ import FBSDKCoreKit
 public class TestKeychainStore: NSObject, KeychainStoreProtocol {
   public var service: String?
   public var accessGroup: String?
+  public var wasStringForKeyCalled = false
+  public var wasSetStringCalled = false
+  public var value: String?
+  public var key: String?
+  public var keychainDictionary: [String: String] = [:]
 
   public convenience init(
     service: String,
@@ -32,11 +37,14 @@ public class TestKeychainStore: NSObject, KeychainStoreProtocol {
     self.accessGroup = accessGroup
   }
 
-  public func string(forKey key: String) -> String {
-    ""
+  public func string(forKey key: String) -> String? {
+    wasStringForKeyCalled = true
+    return keychainDictionary[key]
   }
 
   public func setString(_ value: String?, forKey key: String, accessibility: CFTypeRef) -> Bool {
-    true
+    keychainDictionary[key] = value
+    wasSetStringCalled = true
+    return true
   }
 }

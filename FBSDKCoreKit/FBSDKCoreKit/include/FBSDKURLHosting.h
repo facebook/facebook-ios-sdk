@@ -34,6 +34,17 @@ NS_SWIFT_NAME(URLHosting)
           queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                     error:(NSError *__autoreleasing *)errorRef;
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+                                path:(NSString *)path
+                     queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                               error:(NSError *__autoreleasing *)errorRef;
+
 @end
 
 NS_ASSUME_NONNULL_END

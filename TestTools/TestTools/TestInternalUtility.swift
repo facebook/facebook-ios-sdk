@@ -20,7 +20,6 @@ import FBSDKCoreKit
 
 @objcMembers
 public class TestInternalUtility: NSObject, AppAvailabilityChecker, URLHosting, AppURLSchemeProviding {
-
   public var stubbedScheme = "No stub app url scheme provided"
   public var validateURLSchemesCalled = false
 
@@ -28,13 +27,22 @@ public class TestInternalUtility: NSObject, AppAvailabilityChecker, URLHosting, 
 
   public var isMessengerAppInstalled = false
 
+  public func facebookURL(
+    withHostPrefix hostPrefix: String,
+    path: String,
+    queryParameters: [String: Any],
+    error errorRef: NSErrorPointer
+  ) -> URL {
+    URL(string: "facebook.com")! // swiftlint:disable:this force_unwrapping
+  }
+
   public func appURL(
     withHost host: String,
     path: String,
     queryParameters: [String: Any],
     error errorRef: NSErrorPointer
   ) -> URL {
-    return URL(string: "test")! // swiftlint:disable:this all
+    URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
   }
 
   public func appURLScheme() -> String {

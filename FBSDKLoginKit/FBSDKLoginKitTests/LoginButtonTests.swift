@@ -20,6 +20,7 @@
 import FacebookCore
 #endif
 
+import FBSDKLoginKit
 import TestTools
 import XCTest
 
@@ -40,7 +41,7 @@ class LoginButtonTests: XCTestCase {
     super.setUp()
 
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    AuthenticationToken.setCurrent(nil)
+    AuthenticationToken.current = nil
     Profile.current = nil
 
     button.delegate = delegate
@@ -182,7 +183,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testDeterminingAuthenticationWithoutAccessTokenWithAuthToken() {
-    AuthenticationToken.setCurrent(sampleToken)
+    AuthenticationToken.current = sampleToken
 
     XCTAssertTrue(
       button._isAuthenticated(),

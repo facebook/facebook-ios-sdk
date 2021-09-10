@@ -20,16 +20,16 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestProfileProvider: NSObject, ProfileProviding {
+public class TestProfileProvider: NSObject, ProfileProviding {
 
-  static var current: Profile?
-  static var stubbedCachedProfile: Profile?
+  public static var current: Profile?
+  public static var stubbedCachedProfile: Profile?
 
-  static func fetchCachedProfile() -> Profile? {
+  public static func fetchCachedProfile() -> Profile? {
     stubbedCachedProfile
   }
 
-  static func reset() {
+  public static func reset() {
     current = nil
     stubbedCachedProfile = nil
   }

@@ -19,11 +19,11 @@
 import FBSDKCoreKit
 
 @objcMembers
-class TestAuthenticationTokenWallet: NSObject, AuthenticationTokenProviding, AuthenticationTokenSetting {
-  static var tokenCache: TokenCaching?
-  static var currentAuthenticationToken: AuthenticationToken?
+public class TestAuthenticationTokenWallet: NSObject, AuthenticationTokenProviding, AuthenticationTokenSetting {
+  public static var tokenCache: TokenCaching?
+  public static var currentAuthenticationToken: AuthenticationToken?
 
-  static func reset() {
+  public static func reset() {
     tokenCache = nil
     currentAuthenticationToken = nil
   }
