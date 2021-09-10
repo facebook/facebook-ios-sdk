@@ -17,12 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Need to treat ObjC as separate dependency for SPM because it does not
-// support mixed Swift and ObjC sources. In order to expose the dependent
-// interface we need to pass through the import of the `FBSDKShareKitObjC`
-// target defined in Package.swift.
+// support mixed Swift and ObjC sources.
 // See: https://forums.swift.org/t/16648/2 for more details
 //
-
-#if !BUCK
-@_exported import FBSDKCoreKit
-#endif
+@_exported import FBSDKLoginKit

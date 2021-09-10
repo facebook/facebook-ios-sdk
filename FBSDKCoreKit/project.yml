@@ -61,10 +61,6 @@ targets:
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
-      - path: ../Sources/FacebookCore/Swift
-        group: FBSDKCoreKit
-        excludes:
-          - Exports.swift
     configFiles:
       Debug: Configurations/FBSDKCoreKit.xcconfig
       Release: Configurations/FBSDKCoreKit.xcconfig
@@ -100,10 +96,6 @@ targets:
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
-      - path: ../Sources/FacebookCore/Swift
-        group: FBSDKCoreKit
-        excludes:
-          - Exports.swift
     configFiles:
       Debug: Configurations/FBSDKCoreKit-Dynamic.xcconfig
       Release: Configurations/FBSDKCoreKit-Dynamic.xcconfig
@@ -219,10 +211,6 @@ targets:
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
-      - path: ../Sources/FacebookCore/Swift
-        group: FBSDKCoreKit
-        excludes:
-          - Exports.swift
     configFiles:
       Debug: Configurations/FBSDKCoreKit-tvOS.xcconfig
       Release: Configurations/FBSDKCoreKit-tvOS.xcconfig
@@ -324,10 +312,6 @@ targets:
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
-      - path: ../Sources/FacebookCore/Swift
-        group: FBSDKCoreKit
-        excludes:
-          - Exports.swift
     configFiles:
       Debug: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
       Release: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
