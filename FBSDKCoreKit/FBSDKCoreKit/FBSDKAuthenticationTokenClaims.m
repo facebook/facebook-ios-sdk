@@ -154,7 +154,7 @@ static _Nullable id<FBSDKSettings> _settings;
       BOOL hasJti = jti.length > 0;
 
       NSString *iss = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"iss"]];
-      BOOL isFacebook = iss.length > 0 && [[[NSURL URLWithString:iss] host] isEqualToString:@"facebook.com"];
+      BOOL isFacebook = iss.length > 0 && ([[NSURL URLWithString:iss].host isEqualToString:@"facebook.com"] || [[NSURL URLWithString:iss].host isEqualToString:@"www.facebook.com"]);
 
       NSString *aud = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"aud"]];
       BOOL audMatched = [aud isEqualToString:self.class.settings.appID];

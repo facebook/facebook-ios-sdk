@@ -24,7 +24,7 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
   let appID = "4321"
   let jti = "some_jti"
   let nonce = "some_nonce"
-  let facebookURL = "https://facebook.com/dialog/oauth"
+  let facebookURL = "https://www.facebook.com/"
   let currentTime = Date().timeIntervalSince1970
   let settings = TestSettings()
 
@@ -68,6 +68,15 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     let encoded = base64URLEncodeData(data)
     let decoded = AuthenticationTokenClaims(fromEncodedString: encoded, nonce: nonce)
     XCTAssertEqual(decoded, claims)
+  }
+
+  func testDecodeValidClaimsWithLegacyIssuer() throws {
+    var claims = claimsValues
+    claims["iss"] = "https://facebook.com"
+    let data = try TypeUtility.data(withJSONObject: claims, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = AuthenticationTokenClaims(fromEncodedString: encoded, nonce: nonce)
+    XCTAssertNotNil(decoded)
   }
 
   func testDecodeInvalidFormatClaims() {
