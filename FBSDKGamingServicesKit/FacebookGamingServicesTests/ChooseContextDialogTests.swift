@@ -24,7 +24,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCancel = false
   var dialogError: NSError?
   let defaultAppID = "abc123"
-  let msiteParamsQueryString = "{\"filter\":\"NEW_CONTEXT_ONLY\",\"min_size\":0,\"max_size\":0,\"app_id\":\"abc123\"}"
+  let msiteParamsQueryString = "{\"filter\":\"NO_FILTER\",\"min_size\":0,\"max_size\":0,\"app_id\":\"abc123\"}"
 
   override func setUp() {
     super.setUp()
@@ -109,7 +109,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertEqual(util.scheme, URLConstants.scheme)
     XCTAssertEqual(util.host, URLConstants.host)
     XCTAssertEqual(util.path, URLConstants.appSwitch(appID: defaultAppID).path)
-    XCTAssertEqual(filterQuery, "NEW_CONTEXT_ONLY")
+    XCTAssertEqual(filterQuery, "NO_FILTER")
     XCTAssertEqual(maxSizeQuery, 0)
     XCTAssertEqual(minSizeQuery, 0)
   }

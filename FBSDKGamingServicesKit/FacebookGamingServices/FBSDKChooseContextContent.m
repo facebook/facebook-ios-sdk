@@ -3,6 +3,11 @@
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
 // in connection with the web services and APIs provided by Facebook.
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
 //
 // As with any software that integrates with the Facebook platform, your use of
 // this software is subject to the Facebook Developer Principles and Policies
@@ -36,7 +41,7 @@
   }
 
   BOOL minimumGreaterThanMaximum = self.minParticipants > self.maxParticipants;
-  if (minimumGreaterThanMaximum) {
+  if (minimumGreaterThanMaximum && self.maxParticipants != 0) {
     if (errorRef != NULL) {
       NSString *message = @"The minimum size cannot be greater than the maximum size";
       *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKErrorDomain
@@ -60,8 +65,9 @@
     case FBSDKChooseContextFilterNewPlayersOnly: {
       return @"NEW_PLAYERS_ONLY";
     }
+    case FBSDKChooseContextFilterNone:
     default: {
-      return @"NEW_CONTEXT_ONLY";
+      return @"NO_FILTER";
     }
   }
 }

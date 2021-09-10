@@ -24,7 +24,8 @@
 #import "FBSDKDialogProtocol.h"
 
 typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
-  FBSDKChooseContextFilterNewContextOnly = 0,
+  FBSDKChooseContextFilterNone = 0,
+  FBSDKChooseContextFilterNewContextOnly,
   FBSDKChooseContextFilterExistingChallenges,
   FBSDKChooseContextFilterNewPlayersOnly,
 }NS_SWIFT_NAME(ChooseContextFilter);
@@ -49,7 +50,7 @@ NS_SWIFT_NAME(ChooseContextContent)
 @property (nonatomic) int maxParticipants;
 
 /**
-  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have. 
+  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
  */
 @property (nonatomic) int minParticipants;
 
