@@ -40,40 +40,12 @@
 #endif
 
 #import "FBSDKLoginKitTests-Swift.h"
+#import "FBSDKLoginManager+Testing.h"
 
 static NSString *const kFakeAppID = @"7391628439";
 static NSString *const kFakeChallenge = @"a =bcdef";
 static NSString *const kFakeNonce = @"fedcb =a";
 static NSString *const kFakeJTI = @"a jti is just any string";
-
-@interface FBSDKLoginManager (Testing)
-
-- (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
-
-- (NSString *)loadExpectedNonce;
-
-- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
-
-- (FBSDKLoginConfiguration *)configuration;
-
-- (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
-
-- (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions;
-
-- (void)validateReauthenticationWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                                                         withToken:(FBSDKAccessToken *)currentToken
-                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
-
-- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
-
-- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
-          fromViewController:(UIViewController *)viewController
-                     handler:(FBSDKLoginManagerLoginResultBlock)handler;
-
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
-                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
-
-@end
 
 @interface FBSDKAuthenticationTokenFactory (Testing)
 

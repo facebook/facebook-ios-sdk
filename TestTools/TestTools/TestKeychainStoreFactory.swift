@@ -23,6 +23,7 @@ public class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {
 
   public var capturedService: String?
   public var capturedAccessGroup: String?
+  public var stubbedKeychainStore: TestKeychainStore?
 
   public func createKeychainStore(
     withService service: String,
@@ -31,7 +32,7 @@ public class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {
     capturedService = service
     capturedAccessGroup = accessGroup
 
-    return TestKeychainStore(
+    return stubbedKeychainStore ?? TestKeychainStore(
       service: service,
       accessGroup: accessGroup
     )

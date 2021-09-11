@@ -440,6 +440,7 @@
 		0BD98769468F59C0B19252D9 /* FBSDKLoginProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginProviding.h; sourceTree = "<group>"; };
 		0C8E3D7EA2096120B030E051 /* FBSDKPermission.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKPermission.h; sourceTree = "<group>"; };
 		0EEF77C3953DB7DC6A301A81 /* FBSDKAuthenticationTokenFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAuthenticationTokenFactory.m; sourceTree = "<group>"; };
+		1191E8DC337A838CF41355BD /* FBSDKLoginManager+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginManager+Testing.h"; sourceTree = "<group>"; };
 		1305FBFAD38F696F93E15E64 /* OCMock */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
 		164F4061370FA79EA7334FB6 /* FBSDKDeviceLoginManagerResult+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKDeviceLoginManagerResult+Internal.h"; sourceTree = "<group>"; };
 		166F987F874885D447F216DC /* FBSDKReferralManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManager.m; sourceTree = "<group>"; };
@@ -661,6 +662,7 @@
 			isa = PBXGroup;
 			children = (
 				ED22316C110353CC49484F1A /* FBSDKInternalUtility+Testing.h */,
+				1191E8DC337A838CF41355BD /* FBSDKLoginManager+Testing.h */,
 				C8F1055BC2798D9506C682D5 /* FBSDKSettings+Testing.h */,
 			);
 			path = Interfaces;
