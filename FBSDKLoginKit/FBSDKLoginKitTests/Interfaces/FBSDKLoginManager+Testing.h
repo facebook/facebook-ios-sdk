@@ -20,6 +20,15 @@
 
 @interface FBSDKLoginManager (Testing)
 
+@property (nonatomic) FBSDKLoginManagerLoginResultBlock handler;
+@property (nonatomic) FBSDKLoginConfiguration *configuration;
+@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
+@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+@property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
+@property (nonatomic) Class<FBSDKProfileProviding> profile;
+@property (nonatomic)  id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
+
 - (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
 
 - (NSString *)loadExpectedNonce;
@@ -27,6 +36,8 @@
 - (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
 
 - (FBSDKLoginConfiguration *)configuration;
+
+- (void)storeExpectedNonce:(NSString *)nonceExpected;
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
 
@@ -42,7 +53,11 @@
           fromViewController:(UIViewController *)viewController
                      handler:(FBSDKLoginManagerLoginResultBlock)handler;
 
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
-                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+                   keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
+                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                     connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
+                                profile:(Class<FBSDKProfileProviding>)profile;
 
 @end
