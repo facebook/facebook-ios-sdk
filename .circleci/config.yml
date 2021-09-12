@@ -48,9 +48,6 @@ commands:
       - attach_workspace:
           at: .
       - run:
-          name: Bootstrap Carthage
-          command: carthage bootstrap --no-build
-      - run:
           name: Generate Projects
           command: ./generate-projects.sh
 

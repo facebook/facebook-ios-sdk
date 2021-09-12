@@ -124,7 +124,6 @@
 		62F505CA39968E62E9DBDCAA /* FBSDKNonceUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0B26B66DA79CF8FB23512E /* FBSDKNonceUtility.h */; };
 		64B0D7BE7BA31118AA03A81E /* FBSDKDeviceLoginManagerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 229BC22FB01B4DA5523F3930 /* FBSDKDeviceLoginManagerResult.m */; };
 		64EBFC181D9918BA8E58F743 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 164F4061370FA79EA7334FB6 /* FBSDKDeviceLoginManagerResult+Internal.h */; };
-		658B9256EB32F106331E59A0 /* OCMock iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44745A3FAD07F06D716076BD /* OCMock iOS.framework */; };
 		663E720653052D475D0A1A08 /* FBSDKLoginManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF579553CBAA45086C992D74 /* FBSDKLoginManagerTests.m */; };
 		66568EFD283AD396F0625F38 /* FBSDKDeviceLoginManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B96530AD5B7A27BB23CD7C /* FBSDKDeviceLoginManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		668DB7E4A1429722D9174A21 /* _FBSDKLoginRecoveryAttempter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C814392B35CC61D36341128 /* _FBSDKLoginRecoveryAttempter.h */; };
@@ -294,13 +293,6 @@
 			remoteGlobalIDString = 0F241E5E11B84E3DFB437AF1;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		3C6302F0C69F002BE222AD17 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1305FBFAD38F696F93E15E64 /* OCMock */;
-			proxyType = 2;
-			remoteGlobalIDString = F0B950F11B0080BE00942C38;
-			remoteInfo = "OCMock iOS";
-		};
 		54A83092B0AA9E39D0EA7997 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2CAC9AF88B394D79A77CE4A4 /* TestTools */;
@@ -420,13 +412,6 @@
 			remoteGlobalIDString = 9B3DC93C05C131CAD9C2148A;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
 		};
-		FF27CCCBDBBBBDCD11569912 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1305FBFAD38F696F93E15E64 /* OCMock */;
-			proxyType = 1;
-			remoteGlobalIDString = F0B950F01B0080BE00942C38;
-			remoteInfo = "OCMock iOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -441,7 +426,6 @@
 		0C8E3D7EA2096120B030E051 /* FBSDKPermission.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKPermission.h; sourceTree = "<group>"; };
 		0EEF77C3953DB7DC6A301A81 /* FBSDKAuthenticationTokenFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAuthenticationTokenFactory.m; sourceTree = "<group>"; };
 		1191E8DC337A838CF41355BD /* FBSDKLoginManager+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginManager+Testing.h"; sourceTree = "<group>"; };
-		1305FBFAD38F696F93E15E64 /* OCMock */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
 		164F4061370FA79EA7334FB6 /* FBSDKDeviceLoginManagerResult+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKDeviceLoginManagerResult+Internal.h"; sourceTree = "<group>"; };
 		166F987F874885D447F216DC /* FBSDKReferralManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManager.m; sourceTree = "<group>"; };
 		1954F97942223D1EA76F65B4 /* FBSDKAuthenticationTokenFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenFactory.h; sourceTree = "<group>"; };
@@ -581,7 +565,6 @@
 			files = (
 				04ED8A82B8F54EEB17496D33 /* FBSDKLoginKit.framework in Frameworks */,
 				57B7C0ED5728DE89FC2F5B28 /* TestTools.framework in Frameworks */,
-				658B9256EB32F106331E59A0 /* OCMock iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,18 +627,9 @@
 			children = (
 				C338D68292DBAE21D2A5C363 /* FBSDKCoreKit */,
 				2FA4AF0648972F6E0F2269F3 /* FBSDKCoreKit_Basics */,
-				1305FBFAD38F696F93E15E64 /* OCMock */,
 				2CAC9AF88B394D79A77CE4A4 /* TestTools */,
 			);
 			name = Projects;
-			sourceTree = "<group>";
-		};
-		358E7D1F6C213F1FD47B8F9E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				44745A3FAD07F06D716076BD /* OCMock iOS.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		402DCAD4E98634D0713B981F /* Interfaces */ = {
@@ -1088,7 +1062,6 @@
 			dependencies = (
 				1A574035A809789D01647984 /* PBXTargetDependency */,
 				D7CED702F7506838F722F35B /* PBXTargetDependency */,
-				C6A20B4DA856114E69212A02 /* PBXTargetDependency */,
 			);
 			name = FBSDKLoginKitTests;
 			productName = FBSDKLoginKitTests;
@@ -1126,10 +1099,6 @@
 					ProjectRef = 2FA4AF0648972F6E0F2269F3 /* FBSDKCoreKit_Basics */;
 				},
 				{
-					ProductGroup = 358E7D1F6C213F1FD47B8F9E /* Products */;
-					ProjectRef = 1305FBFAD38F696F93E15E64 /* OCMock */;
-				},
-				{
 					ProductGroup = CAE5C4D67738D5F3CAE6DF60 /* Products */;
 					ProjectRef = 2CAC9AF88B394D79A77CE4A4 /* TestTools */;
 				},
@@ -1153,13 +1122,6 @@
 			fileType = wrapper.framework;
 			path = FBSDKCoreKit.framework;
 			remoteRef = E44AFDEA1D794F3BBE124E91 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		44745A3FAD07F06D716076BD /* OCMock iOS.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = "OCMock iOS.framework";
-			remoteRef = 3C6302F0C69F002BE222AD17 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4513FA3FD963A22AFBA7CABE /* FBSDKCoreKit_Basics_TV-Dynamic.framework */ = {
@@ -1517,11 +1479,6 @@
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit_Basics-Dynamic";
 			targetProxy = BE1F31138973C300799D0FD5 /* PBXContainerItemProxy */;
-		};
-		C6A20B4DA856114E69212A02 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OCMock iOS";
-			targetProxy = FF27CCCBDBBBBDCD11569912 /* PBXContainerItemProxy */;
 		};
 		D7CED702F7506838F722F35B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

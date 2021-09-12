@@ -29,12 +29,6 @@ if [ $? -eq 0 ]; then
     killall Xcode || true
 fi
 
-
-if [ ! -d "Carthage/checkouts/ocmock" ]; then
-    echo "OCMock is required to run some tests. Run the command 'carthage bootstrap --no-build' and try again."
-    exit
-fi
-
 if ! command -v xcodegen >/dev/null; then
     echo "WARNING: Xcodegen not installed, run 'brew install xcodegen' or visit https://github.com/yonaskolb/XcodeGen"
     exit

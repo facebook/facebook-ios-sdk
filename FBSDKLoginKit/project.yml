@@ -28,8 +28,6 @@ projectReferences:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
-  OCMock:
-    path: ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj
 
 options:
   deploymentTarget:
@@ -232,8 +230,6 @@ targets:
       - target: FBSDKLoginKit-Dynamic
         embed: false
       - target: TestTools/TestTools
-        embed: false
-      - target: OCMock/OCMock iOS
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO

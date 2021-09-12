@@ -154,7 +154,7 @@ grep_for_old_version() {
   RED='\033[1;31m'
   RESET='\033[0m'
 
-  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|\bbuild/|Carthage/Build)')
+  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|\bbuild/)')
   if [ -n "$FILES_WITH_OLD_VERSION" ]; then
     echo "${RED}ERROR: Grep found the old $old_version version in ${FILES_WITH_OLD_VERSION}${RESET}" 1>&2;
     exit 1
