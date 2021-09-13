@@ -35,7 +35,7 @@ settings:
     PRODUCT_NAME: FBSDKCoreKit_Basics
 
 targets:
-  FBSDKCoreKit_Basics:
+  FBSDKCoreKit_Basics-Static:
     type: framework
     platform: iOS
     sources:
@@ -63,7 +63,7 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-  FBSDKCoreKit_Basics_TV:
+  FBSDKCoreKit_Basics_TV-Static:
     type: framework
     platform: tvOS
     productName: FBSDKCoreKit_Basics
@@ -107,7 +107,7 @@ targets:
 
 aggregateTargets:
   FBSDKCoreKit_Basics-Universal:
-    targets: [FBSDKCoreKit_Basics]
+    targets: [FBSDKCoreKit_Basics-Static]
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
@@ -115,7 +115,7 @@ aggregateTargets:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
   FBSDKCoreKit_Basics_TV-Universal:
-    targets: [FBSDKCoreKit_Basics_TV]
+    targets: [FBSDKCoreKit_Basics_TV-Static]
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
@@ -124,10 +124,10 @@ aggregateTargets:
         path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
-  FBSDKCoreKit_Basics:
+  FBSDKCoreKit_Basics-Static:
     build:
       targets:
-        FBSDKCoreKit_Basics: all
+        FBSDKCoreKit_Basics-Static: all
   FBSDKCoreKit_Basics-Dynamic:
     build:
       targets:

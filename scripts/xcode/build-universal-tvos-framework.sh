@@ -31,8 +31,8 @@ UNIVERSAL_TV_BUILD_FOLDER=../build/tv/
 mkdir -p "${UNIVERSAL_TV_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework"
 
-# get target by removing '-Universal' from $TARGET_NAME
-TARGET=${TARGET_NAME%-Universal}
+# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'
+TARGET=${TARGET_NAME%-Universal}-Static
 
 # Step 1. Build Device and Simulator versions
 xcodebuild -target "${TARGET}" \

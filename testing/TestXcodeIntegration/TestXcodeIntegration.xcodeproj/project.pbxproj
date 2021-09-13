@@ -7,27 +7,115 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A0F949F26EE7E1A009EF9E1 /* FBSDKGamingServicesKit-Static.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0F947A26EE7DFC009EF9E1 /* FBSDKGamingServicesKit-Static.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0A0F94A026EE7E2E009EF9E1 /* FBSDKLoginKit-Static.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0F948B26EE7DFC009EF9E1 /* FBSDKLoginKit-Static.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0A0F94A126EE7E33009EF9E1 /* FBSDKShareKit-Static.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0F949626EE7DFC009EF9E1 /* FBSDKShareKit-Static.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F45F227A247ECE5900EC9766 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F2279247ECE5900EC9766 /* AppDelegate.swift */; };
 		F45F227C247ECE5900EC9766 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F227B247ECE5900EC9766 /* SceneDelegate.swift */; };
 		F45F227E247ECE5900EC9766 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F227D247ECE5900EC9766 /* ViewController.swift */; };
 		F45F2281247ECE5900EC9766 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F45F227F247ECE5900EC9766 /* Main.storyboard */; };
 		F45F2283247ECE5B00EC9766 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F45F2282247ECE5B00EC9766 /* Assets.xcassets */; };
 		F45F2286247ECE5B00EC9766 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F45F2284247ECE5B00EC9766 /* LaunchScreen.storyboard */; };
-		F4F2B72B24ABD4660019369E /* FBSDKGamingServicesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B71424ABD43C0019369E /* FBSDKGamingServicesKit.framework */; };
-		F4F2B72C24ABD4660019369E /* FBSDKGamingServicesKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B71424ABD43C0019369E /* FBSDKGamingServicesKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F4F2B72D24ABD4660019369E /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B72224ABD43C0019369E /* FBSDKShareKit.framework */; };
-		F4F2B72E24ABD4660019369E /* FBSDKShareKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B72224ABD43C0019369E /* FBSDKShareKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F4F2B73324ABD4730019369E /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B70424ABD43C0019369E /* FBSDKLoginKit.framework */; };
-		F4F2B73424ABD4730019369E /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F2B70424ABD43C0019369E /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		F4F2B70324ABD43C0019369E /* PBXContainerItemProxy */ = {
+		0A0F946D26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 183251C53D6990EC82E3DE39;
+			remoteInfo = "FBSDKCoreKit-Static";
+		};
+		0A0F946F26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D36AFAAFE0D7CE80E74CEDAA;
+			remoteInfo = "FBSDKCoreKit_TV-Static";
+		};
+		0A0F947926EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7345B321FE1F43D8E26A6EBD;
+			remoteInfo = "FBSDKGamingServicesKit-Static";
+		};
+		0A0F947B26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DE7E8A0B13BD3060A8E34DDC;
+			remoteInfo = FBSDKGamingServicesKitTests;
+		};
+		0A0F947D26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 485125AF3AE3193C3812E211;
+			remoteInfo = "FacebookGamingServices-Dynamic";
+		};
+		0A0F947F26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7E52E00C9A5233E3F2685AC7;
+			remoteInfo = "FacebookGamingServices-Static";
+		};
+		0A0F948126EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4449A7DE6BAB955FAC4802C5;
+			remoteInfo = FacebookGamingServicesTests;
+		};
+		0A0F948A26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9D9DB8D91A114E500086167B;
-			remoteInfo = FBSDKLoginKit;
+			remoteGlobalIDString = C54E57389C33D521DFCD18F5;
+			remoteInfo = "FBSDKLoginKit-Static";
+		};
+		0A0F948C26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBF6403F232B2DF29FD7824E;
+			remoteInfo = "FBSDKLoginKit_TV-Static";
+		};
+		0A0F949526EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09EFC2D1D720ADBAF5ADF771;
+			remoteInfo = "FBSDKShareKit-Static";
+		};
+		0A0F949726EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C2E344ED2ABEC31089D167E0;
+			remoteInfo = "FBSDKShareKit_TV-Static";
+		};
+		0A0F949926EE7E03009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 34D553EBC357D82AEBA6A9C7;
+			remoteInfo = "FBSDKGamingServicesKit-Static";
+		};
+		0A0F949B26EE7E09009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E240564285BADCDB183B41E;
+			remoteInfo = "FBSDKLoginKit-Static";
+		};
+		0A0F949D26EE7E0F009EF9E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D4C7AB27C1ED9CF8EF881088;
+			remoteInfo = "FBSDKShareKit-Static";
 		};
 		F4F2B70524ABD43C0019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -43,13 +131,6 @@
 			remoteGlobalIDString = 9D9DB8E41A114E500086167B;
 			remoteInfo = FBSDKLoginKitTests;
 		};
-		F4F2B70924ABD43C0019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0B9DBF2C207C05CD00662776;
-			remoteInfo = FBSDKLoginKit_TV;
-		};
 		F4F2B70B24ABD43C0019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
@@ -57,26 +138,12 @@
 			remoteGlobalIDString = 0B9DBF52207C07C600662776;
 			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
 		};
-		F4F2B71324ABD43C0019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F4F7CA1823F4902B0030A346;
-			remoteInfo = FBSDKGamingServicesKit;
-		};
 		F4F2B71524ABD43C0019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = F4F7CA9923F49D6F0030A346;
 			remoteInfo = "FBSDKGamingServicesKit-Dynamic";
-		};
-		F4F2B72124ABD43C0019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D46C5F01A11E5D800A0DDB6;
-			remoteInfo = FBSDKShareKit;
 		};
 		F4F2B72324ABD43C0019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -92,26 +159,12 @@
 			remoteGlobalIDString = 9D46C5FB1A11E5D800A0DDB6;
 			remoteInfo = FBSDKShareKitTests;
 		};
-		F4F2B72724ABD43C0019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D2D99941BC452DE00929E76;
-			remoteInfo = FBSDKShareKit_TV;
-		};
 		F4F2B72924ABD43C0019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8144D91B1D261D2900C8E4AC;
 			remoteInfo = "FBSDKShareKit_TV-Dynamic";
-		};
-		F4F2B74524ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D2697471A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit;
 		};
 		F4F2B74724ABD4960019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -127,68 +180,12 @@
 			remoteGlobalIDString = 9D2697521A5DF40700143BFC;
 			remoteInfo = FBSDKCoreKitTests;
 		};
-		F4F2B74B24ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9DB0FA731BC1CA71005EB8B1;
-			remoteInfo = FBSDKCoreKit_TV;
-		};
 		F4F2B74D24ABD4960019369E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 814AC8571D1B528900D61E6C;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
-		};
-		F4F2B74F24ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
-			remoteInfo = FBSDKCoreKit_Basics;
-		};
-		F4F2B75124ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
-		};
-		F4F2B75324ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
-			remoteInfo = FBSDKCoreKit_Basics_TV;
-		};
-		F4F2B75524ABD4960019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B73524ABD4950019369E /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
-		};
-		F4F2B75724ABD5160019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F4F7C9A923F48ED80030A346;
-			remoteInfo = FBSDKGamingServicesKit;
-		};
-		F4F2B75924ABD5160019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B71724ABD43C0019369E /* FBSDKShareKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D46C5EF1A11E5D800A0DDB6;
-			remoteInfo = FBSDKShareKit;
-		};
-		F4F2B75B24ABD5160019369E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B6F924ABD43C0019369E /* FBSDKLoginKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D9DB8D81A114E500086167B;
-			remoteInfo = FBSDKLoginKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -199,9 +196,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F4F2B72E24ABD4660019369E /* FBSDKShareKit.framework in Embed Frameworks */,
-				F4F2B73424ABD4730019369E /* FBSDKLoginKit.framework in Embed Frameworks */,
-				F4F2B72C24ABD4660019369E /* FBSDKGamingServicesKit.framework in Embed Frameworks */,
+				0A0F94A126EE7E33009EF9E1 /* FBSDKShareKit-Static.framework in Embed Frameworks */,
+				0A0F94A026EE7E2E009EF9E1 /* FBSDKLoginKit-Static.framework in Embed Frameworks */,
+				0A0F949F26EE7E1A009EF9E1 /* FBSDKGamingServicesKit-Static.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,9 +246,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F2B72D24ABD4660019369E /* FBSDKShareKit.framework in Frameworks */,
-				F4F2B73324ABD4730019369E /* FBSDKLoginKit.framework in Frameworks */,
-				F4F2B72B24ABD4660019369E /* FBSDKGamingServicesKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,11 +318,11 @@
 		F4F2B6FA24ABD43C0019369E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4F2B70424ABD43C0019369E /* FBSDKLoginKit.framework */,
 				F4F2B70624ABD43C0019369E /* FBSDKLoginKit.framework */,
+				0A0F948B26EE7DFC009EF9E1 /* FBSDKLoginKit-Static.framework */,
 				F4F2B70824ABD43C0019369E /* FBSDKLoginKitTests.xctest */,
-				F4F2B70A24ABD43C0019369E /* FBSDKLoginKit.framework */,
 				F4F2B70C24ABD43C0019369E /* FBSDKLoginKit.framework */,
+				0A0F948D26EE7DFC009EF9E1 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,8 +330,12 @@
 		F4F2B70E24ABD43C0019369E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4F2B71424ABD43C0019369E /* FBSDKGamingServicesKit.framework */,
 				F4F2B71624ABD43C0019369E /* FBSDKGamingServicesKit.framework */,
+				0A0F947A26EE7DFC009EF9E1 /* FBSDKGamingServicesKit-Static.framework */,
+				0A0F947C26EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */,
+				0A0F947E26EE7DFC009EF9E1 /* FacebookGamingServices.framework */,
+				0A0F948026EE7DFC009EF9E1 /* FacebookGamingServices-Static.framework */,
+				0A0F948226EE7DFC009EF9E1 /* FacebookGamingServicesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -345,11 +343,11 @@
 		F4F2B71824ABD43C0019369E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4F2B72224ABD43C0019369E /* FBSDKShareKit.framework */,
 				F4F2B72424ABD43C0019369E /* FBSDKShareKit.framework */,
+				0A0F949626EE7DFC009EF9E1 /* FBSDKShareKit-Static.framework */,
 				F4F2B72624ABD43C0019369E /* FBSDKShareKitTests.xctest */,
-				F4F2B72824ABD43C0019369E /* FBSDKShareKit.framework */,
 				F4F2B72A24ABD43C0019369E /* FBSDKShareKit.framework */,
+				0A0F949826EE7DFC009EF9E1 /* FBSDKShareKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -357,15 +355,11 @@
 		F4F2B73624ABD4950019369E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4F2B74624ABD4960019369E /* FBSDKCoreKit.framework */,
 				F4F2B74824ABD4960019369E /* FBSDKCoreKit.framework */,
+				0A0F946E26EE7DFC009EF9E1 /* FBSDKCoreKit-Static.framework */,
 				F4F2B74A24ABD4960019369E /* FBSDKCoreKitTests.xctest */,
-				F4F2B74C24ABD4960019369E /* FBSDKCoreKit.framework */,
 				F4F2B74E24ABD4960019369E /* FBSDKCoreKit.framework */,
-				F4F2B75024ABD4960019369E /* FBSDKCoreKit.framework */,
-				F4F2B75224ABD4960019369E /* FBSDKCoreKit.framework */,
-				F4F2B75424ABD4960019369E /* FBSDKCoreKit.framework */,
-				F4F2B75624ABD4960019369E /* FBSDKCoreKit.framework */,
+				0A0F947026EE7DFC009EF9E1 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -385,9 +379,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				F4F2B75824ABD5160019369E /* PBXTargetDependency */,
-				F4F2B75A24ABD5160019369E /* PBXTargetDependency */,
-				F4F2B75C24ABD5160019369E /* PBXTargetDependency */,
+				0A0F949E26EE7E0F009EF9E1 /* PBXTargetDependency */,
+				0A0F949C26EE7E09009EF9E1 /* PBXTargetDependency */,
+				0A0F949A26EE7E03009EF9E1 /* PBXTargetDependency */,
 			);
 			name = TestXcodeIntegration;
 			productName = TestXcodeIntegration;
@@ -446,11 +440,86 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		F4F2B70424ABD43C0019369E /* FBSDKLoginKit.framework */ = {
+		0A0F946E26EE7DFC009EF9E1 /* FBSDKCoreKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKCoreKit-Static.framework";
+			path = FBSDKCoreKit.framework;
+			remoteRef = 0A0F946D26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F947026EE7DFC009EF9E1 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = 0A0F946F26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F947A26EE7DFC009EF9E1 /* FBSDKGamingServicesKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKGamingServicesKit-Static.framework";
+			path = FBSDKGamingServicesKit.framework;
+			remoteRef = 0A0F947926EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F947C26EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FBSDKGamingServicesKitTests.xctest;
+			remoteRef = 0A0F947B26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F947E26EE7DFC009EF9E1 /* FacebookGamingServices.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FacebookGamingServices.framework;
+			remoteRef = 0A0F947D26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F948026EE7DFC009EF9E1 /* FacebookGamingServices-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FacebookGamingServices-Static.framework";
+			path = FacebookGamingServices.framework;
+			remoteRef = 0A0F947F26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F948226EE7DFC009EF9E1 /* FacebookGamingServicesTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FacebookGamingServicesTests.xctest;
+			remoteRef = 0A0F948126EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F948B26EE7DFC009EF9E1 /* FBSDKLoginKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKLoginKit-Static.framework";
+			path = FBSDKLoginKit.framework;
+			remoteRef = 0A0F948A26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F948D26EE7DFC009EF9E1 /* FBSDKLoginKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = FBSDKLoginKit.framework;
-			remoteRef = F4F2B70324ABD43C0019369E /* PBXContainerItemProxy */;
+			remoteRef = 0A0F948C26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F949626EE7DFC009EF9E1 /* FBSDKShareKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKShareKit-Static.framework";
+			path = FBSDKShareKit.framework;
+			remoteRef = 0A0F949526EE7DFC009EF9E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A0F949826EE7DFC009EF9E1 /* FBSDKShareKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKShareKit.framework;
+			remoteRef = 0A0F949726EE7DFC009EF9E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F4F2B70624ABD43C0019369E /* FBSDKLoginKit.framework */ = {
@@ -467,13 +536,6 @@
 			remoteRef = F4F2B70724ABD43C0019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F2B70A24ABD43C0019369E /* FBSDKLoginKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKLoginKit.framework;
-			remoteRef = F4F2B70924ABD43C0019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F4F2B70C24ABD43C0019369E /* FBSDKLoginKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -481,25 +543,11 @@
 			remoteRef = F4F2B70B24ABD43C0019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F2B71424ABD43C0019369E /* FBSDKGamingServicesKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKGamingServicesKit.framework;
-			remoteRef = F4F2B71324ABD43C0019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F4F2B71624ABD43C0019369E /* FBSDKGamingServicesKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = FBSDKGamingServicesKit.framework;
 			remoteRef = F4F2B71524ABD43C0019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B72224ABD43C0019369E /* FBSDKShareKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKShareKit.framework;
-			remoteRef = F4F2B72124ABD43C0019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F4F2B72424ABD43C0019369E /* FBSDKShareKit.framework */ = {
@@ -516,25 +564,11 @@
 			remoteRef = F4F2B72524ABD43C0019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F2B72824ABD43C0019369E /* FBSDKShareKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKShareKit.framework;
-			remoteRef = F4F2B72724ABD43C0019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F4F2B72A24ABD43C0019369E /* FBSDKShareKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = FBSDKShareKit.framework;
 			remoteRef = F4F2B72924ABD43C0019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B74624ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B74524ABD4960019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F4F2B74824ABD4960019369E /* FBSDKCoreKit.framework */ = {
@@ -551,46 +585,11 @@
 			remoteRef = F4F2B74924ABD4960019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F2B74C24ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B74B24ABD4960019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F4F2B74E24ABD4960019369E /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = FBSDKCoreKit.framework;
 			remoteRef = F4F2B74D24ABD4960019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B75024ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B74F24ABD4960019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B75224ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B75124ABD4960019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B75424ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B75324ABD4960019369E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F2B75624ABD4960019369E /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F2B75524ABD4960019369E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -622,20 +621,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		F4F2B75824ABD5160019369E /* PBXTargetDependency */ = {
+		0A0F949A26EE7E03009EF9E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FBSDKGamingServicesKit;
-			targetProxy = F4F2B75724ABD5160019369E /* PBXContainerItemProxy */;
+			name = "FBSDKGamingServicesKit-Static";
+			targetProxy = 0A0F949926EE7E03009EF9E1 /* PBXContainerItemProxy */;
 		};
-		F4F2B75A24ABD5160019369E /* PBXTargetDependency */ = {
+		0A0F949C26EE7E09009EF9E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FBSDKShareKit;
-			targetProxy = F4F2B75924ABD5160019369E /* PBXContainerItemProxy */;
+			name = "FBSDKLoginKit-Static";
+			targetProxy = 0A0F949B26EE7E09009EF9E1 /* PBXContainerItemProxy */;
 		};
-		F4F2B75C24ABD5160019369E /* PBXTargetDependency */ = {
+		0A0F949E26EE7E0F009EF9E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FBSDKLoginKit;
-			targetProxy = F4F2B75B24ABD5160019369E /* PBXContainerItemProxy */;
+			name = "FBSDKShareKit-Static";
+			targetProxy = 0A0F949D26EE7E0F009EF9E1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

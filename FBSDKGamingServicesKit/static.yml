@@ -17,7 +17,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 targets:
-  FacebookGamingServices:
+  FacebookGamingServices-Static:
     type: framework
     platform: iOS
     sources:
@@ -32,9 +32,9 @@ targets:
       Debug: Configurations/FacebookGamingServices-Static.xcconfig
       Release: Configurations/FacebookGamingServices-Static.xcconfig
     dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
         link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
     preBuildScripts:
       - name: Run Swiftlint
@@ -42,7 +42,7 @@ targets:
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FacebookGamingServices
-  FBSDKGamingServicesKit:
+  FBSDKGamingServicesKit-Static:
     type: framework
     platform: iOS
     sources:
@@ -52,7 +52,7 @@ targets:
       Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
       Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
     dependencies:
-      - target: FacebookGamingServices
+      - target: FacebookGamingServices-Static
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit

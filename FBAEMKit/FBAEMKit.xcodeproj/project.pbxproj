@@ -14,7 +14,7 @@
 				E5D02A1544AEC11F2913500D /* ShellScript */,
 			);
 			dependencies = (
-				47DF72ACA4469EC2B6CBEAEE /* PBXTargetDependency */,
+				2E690D9C59248DFD2ABB887D /* PBXTargetDependency */,
 			);
 			name = "FBAEMKit-Universal";
 			productName = "FBAEMKit-Universal";
@@ -23,85 +23,92 @@
 
 /* Begin PBXBuildFile section */
 		0132E8912FF032030C181020 /* FBAEMAdvertiserSingleEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = EA8FABFB4D409A28FC534768 /* FBAEMAdvertiserSingleEntryRule.h */; };
+		0990BFB7CC3690B19A87F47F /* FBAEMAdvertiserMultiEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */; };
 		0C507DD67E7431FDAB46F042 /* FBAEMRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF23CF218E761473F27418AA /* FBAEMRuleTests.swift */; };
-		10B5A0A78511BB0C200D238B /* FBAEMRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE2CED0A6CA2846D094EFA /* FBAEMRule.m */; };
 		10F81E1022B146A9FAFA7E9D /* FBAEMAdvertiserSingleEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 47B2C7811B39287E80BC488E /* FBAEMAdvertiserSingleEntryRule.m */; };
 		139B2D3F51A5F3633C74BBC0 /* FBAEMAdvertiserRuleOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = 67CF74D0D6BAAD1000B83B4E /* FBAEMAdvertiserRuleOperator.h */; };
+		18D2D106D661B82F1D5E78FA /* FBAEMRule.h in Headers */ = {isa = PBXBuildFile; fileRef = F9ACAD4216D72E4122034CB9 /* FBAEMRule.h */; };
+		18DA62C1490FE2F61E57EB2E /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
 		191858C71EF3965CC6068391 /* FBAEMRule.h in Headers */ = {isa = PBXBuildFile; fileRef = F9ACAD4216D72E4122034CB9 /* FBAEMRule.h */; };
 		1BE86627D64C70351E770A14 /* FBAEMAdvertiserMultiEntryRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B69DC092D144860111A050 /* FBAEMAdvertiserMultiEntryRuleTests.swift */; };
-		1FF874F43DD533F37A7B932F /* FBAEMNetworker.h in Headers */ = {isa = PBXBuildFile; fileRef = E57E0709F9DB4299D8CB5EE6 /* FBAEMNetworker.h */; };
-		219420C52DCC4479EF35B989 /* FBAEMAdvertiserSingleEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 47B2C7811B39287E80BC488E /* FBAEMAdvertiserSingleEntryRule.m */; };
-		22FD4E0D3A2A4DDD62D77BA7 /* FBAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E30C51678F81517E269DCA /* FBAEMAdvertiserRuleProviding.h */; };
 		23399BC134DBFFDDB9C0CB79 /* FBAEMAdvertiserRuleMatching.h in Headers */ = {isa = PBXBuildFile; fileRef = ED832686F75580AF6283E52E /* FBAEMAdvertiserRuleMatching.h */; };
 		28B3BB4F772300D1A3422AA5 /* FBAEMAdvertiserMultiEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */; };
-		28E335A51B44D621CED8FB78 /* FBAEMConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4A048D5C10956A4A1995EE /* FBAEMConfiguration.m */; };
+		2A4E070E0A37FFE3C4FDF1B6 /* FBAEMKitVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD247C7727B63D8FF203BE0 /* FBAEMKitVersions.h */; };
 		301AD348B2C53174A4348CD1 /* FBAEMConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4A048D5C10956A4A1995EE /* FBAEMConfiguration.m */; };
-		32DA965F53B58BFD4DAF5E2F /* FBAEMAdvertiserRuleMatching.h in Headers */ = {isa = PBXBuildFile; fileRef = ED832686F75580AF6283E52E /* FBAEMAdvertiserRuleMatching.h */; };
 		3618F453DF1469570330FFDA /* FBAEMInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = BF14F7D688B16F470687F043 /* FBAEMInvocation.m */; };
 		392EB5902E83AD58EE2C7C19 /* FBAEMInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = CD92E131DC450BD5A3ADC03E /* FBAEMInvocation.h */; };
-		3B1C163B678F993A41843FB8 /* FBAEMNetworker.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */; };
-		474EFD6AB5988C7361FA0E15 /* FBAEMRule.h in Headers */ = {isa = PBXBuildFile; fileRef = F9ACAD4216D72E4122034CB9 /* FBAEMRule.h */; };
-		499A9AE9074800B75AAA76E5 /* FBAEMRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */; };
+		3C1E1241DA75260B0BB31341 /* FBAEMInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = CD92E131DC450BD5A3ADC03E /* FBAEMInvocation.h */; };
+		425F96EEB18C673FA83AB923 /* FBAEMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 8060F398EB7F033AD9F1D6AA /* FBAEMNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4E2FF0B5C2ED8BCBC7B9B20A /* FBAEMRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */; };
 		53E8F535EA776A4C33DF76C7 /* TestSKAdNetworkReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24036BAE1BECE8771F20C0A7 /* TestSKAdNetworkReporter.swift */; };
 		5630949F273EEA4D536894D9 /* SampleAEMData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177A5533D7CFF825F97ECA0 /* SampleAEMData.swift */; };
-		565CE9AC0313BEDA111FA043 /* FBSKAdNetworkReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 153B4C403EFEC54B3E5A0203 /* FBSKAdNetworkReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		567D930E785504CA4A62B0ED /* FBAEMAdvertiserSingleEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = EA8FABFB4D409A28FC534768 /* FBAEMAdvertiserSingleEntryRule.h */; };
 		599163559FEC9EF5DB917435 /* FBAEMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 8060F398EB7F033AD9F1D6AA /* FBAEMNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5A6B01E84A3CDA4D6B39BBA2 /* FBAEMInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = BF14F7D688B16F470687F043 /* FBAEMInvocation.m */; };
+		5B34B7E444AD7AA52943FEF5 /* FBAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E30C51678F81517E269DCA /* FBAEMAdvertiserRuleProviding.h */; };
 		5B97E50781C011C42447373D /* FBAEMRequestBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 325D4A4AF065D6881BFC8613 /* FBAEMRequestBody.h */; };
 		5CA184A0A14196BD37C0F165 /* FBAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BDDBCE1CDBD3488598FE265C /* FBAEMKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5CAA47E9841FDF679DD15B16 /* FBAEMRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE2CED0A6CA2846D094EFA /* FBAEMRule.m */; };
-		5DEFB069B34FC34146319A5C /* FBAEMKitVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD247C7727B63D8FF203BE0 /* FBAEMKitVersions.h */; };
 		5FD49299350E62E27B3C3101 /* FBAEMConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = CAAE2115CC5A03D37FABC343 /* FBAEMConfiguration.h */; };
-		60955E90A4D096CBB7A9E33D /* FBAEMAdvertiserMultiEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */; };
+		65D437B6954707B6A0AFA3C6 /* FBAEMConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = CAAE2115CC5A03D37FABC343 /* FBAEMConfiguration.h */; };
+		6625C34764DD6A7CCB1ED6CD /* FBAEMNetworker.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */; };
 		677A4D72D37B1C16EA5E981E /* FBAEMInvocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE0FAFF797BA7EDD4BACD50 /* FBAEMInvocationTests.swift */; };
-		7B5D95AB07A572BF48F0DE33 /* FBAEMReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8554100C2E72F8997D18A1D1 /* FBAEMReporter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7C15398E0B92F0A99548AA17 /* SampleAEMSingleEntryRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE582199B8FBA1789FEC3E0 /* SampleAEMSingleEntryRules.swift */; };
 		7EDC329260053BCA6CDFD915 /* FBAEMReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CB68BCAEA3667ED30FF01A /* FBAEMReporter.m */; };
+		7F380115247D592E327446F9 /* FBSDKCoreKit_Basics-Dynamic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A711947C38EB9FFE8530A0A9 /* FBSDKCoreKit_Basics-Dynamic.framework */; };
 		8197FF6F8812B39BA5A86613 /* FBAEMEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 695FB0FA40681F14C0E48D47 /* FBAEMEvent.h */; };
 		84238CBEE70824E825FD09F9 /* FBAEMReporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4844F060B113709025EE85 /* FBAEMReporterTests.swift */; };
 		8855E16D9638A2003BAC505A /* FBAEMNetworker.h in Headers */ = {isa = PBXBuildFile; fileRef = E57E0709F9DB4299D8CB5EE6 /* FBAEMNetworker.h */; };
-		89E02D619464C33D29154777 /* FBAEMAdvertiserRuleFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = DB9A8EAE427EDA8C514E9F2D /* FBAEMAdvertiserRuleFactory.h */; };
+		8A3F2D9597C5E87F5563BF86 /* FBAEMAdvertiserSingleEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = EA8FABFB4D409A28FC534768 /* FBAEMAdvertiserSingleEntryRule.h */; };
 		92A75FC874F8470A8B25D944 /* TestInvocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A8648B7AF86852325E167 /* TestInvocation.swift */; };
-		94292CDCDF3A758ABE61DC16 /* FBAEMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 8060F398EB7F033AD9F1D6AA /* FBAEMNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		99C74CF633318D1450F3FC2B /* FBAEMEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 695FB0FA40681F14C0E48D47 /* FBAEMEvent.h */; };
+		964EA1707E9DBF137C6B508E /* FBAEMInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = BF14F7D688B16F470687F043 /* FBAEMInvocation.m */; };
+		9A4915453012DFB8B2C4E6A8 /* FBAEMReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8554100C2E72F8997D18A1D1 /* FBAEMReporter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9A59582810D6586ED78FA550 /* FBCoreKitBasicsImportForAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0954C8A4F08D670E5928AA17 /* FBCoreKitBasicsImportForAEMKit.h */; };
+		9C40B862D7608D33092DB3E7 /* FBSKAdNetworkReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 153B4C403EFEC54B3E5A0203 /* FBSKAdNetworkReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CD5B27F696CA3B49E931C7A /* FBAEMKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9552CA6943B9F2D75DABB322 /* FBAEMKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A04003FA9F804ECE55FEBDBD /* FBAEMRequestBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 325D4A4AF065D6881BFC8613 /* FBAEMRequestBody.h */; };
 		A250E741B08F53944E2E66BD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 606DB09FE9B9C5CFA3A71DA7 /* libz.tbd */; };
-		A2989D9E4ACBD01674F27C75 /* FBAEMInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = CD92E131DC450BD5A3ADC03E /* FBAEMInvocation.h */; };
+		A271DAE56B1ACAFA5F1808A7 /* FBAEMAdvertiserRuleMatching.h in Headers */ = {isa = PBXBuildFile; fileRef = ED832686F75580AF6283E52E /* FBAEMAdvertiserRuleMatching.h */; };
 		A2AC255D8BEC81100C5AAF08 /* SampleAEMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC34B255947902579C7BEFE9 /* SampleAEMError.swift */; };
 		AAD557FAF558CAA8C0778452 /* FBAEMAdvertiserRuleFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = DB9A8EAE427EDA8C514E9F2D /* FBAEMAdvertiserRuleFactory.h */; };
-		B3CD5E0EB8287EF16619F04D /* FBCoreKitBasicsImportForAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0954C8A4F08D670E5928AA17 /* FBCoreKitBasicsImportForAEMKit.h */; };
+		AF809E7BBE1317B0F7FD76F2 /* FBAEMAdvertiserMultiEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */; };
 		B911B75F65AE33D9C53354BD /* FBAEMAdvertiserMultiEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */; };
+		B928C77FF5B8DBC9BAC01B40 /* FBAEMEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 695FB0FA40681F14C0E48D47 /* FBAEMEvent.h */; };
+		B9C85E78413E0AF1B73F011C /* FBAEMAdvertiserSingleEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 47B2C7811B39287E80BC488E /* FBAEMAdvertiserSingleEntryRule.m */; };
 		C31C49F965C147E171E9F7AF /* TestAEMNetworker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485B2A82D1087BAD40DEF28 /* TestAEMNetworker.swift */; };
 		C4DC4EF7F5DCA619C7E218EA /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
-		C6C8B877BDB131DA08A17B55 /* FBAEMAdvertiserRuleOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = 67CF74D0D6BAAD1000B83B4E /* FBAEMAdvertiserRuleOperator.h */; };
 		C740173B9ABE8084261AF3A8 /* SampleAEMInvocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D50412F133CE2A6A7D5150D /* SampleAEMInvocations.swift */; };
 		C7B8A24FA84AD1794BFE8FD4 /* FBAEMKitVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BD247C7727B63D8FF203BE0 /* FBAEMKitVersions.h */; };
 		C84D825AA4EB1D50219E259B /* FBAEMAdvertiserSingleEntryRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFFE52E67F6C9B86D8007B67 /* FBAEMAdvertiserSingleEntryRuleTests.swift */; };
+		C9321DFE29DE8288E668E10A /* FBAEMReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CB68BCAEA3667ED30FF01A /* FBAEMReporter.m */; };
 		CB0B635973208B511A062FB5 /* FBAEMReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8554100C2E72F8997D18A1D1 /* FBAEMReporter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CC7B4787404ACCEE7D6B6E8F /* FBAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BDDBCE1CDBD3488598FE265C /* FBAEMKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CC1F40FDCDB362B3A8A40F84 /* FBAEMRequestBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 325D4A4AF065D6881BFC8613 /* FBAEMRequestBody.h */; };
 		CF815EBD130A652187ED6DA7 /* FBAEMRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */; };
 		D14F628136A6491B9258692D /* FBAEMNetworker.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */; };
-		D175879013592F781F627ED5 /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
 		D5636656757EDC3E1CD3560D /* FBAEMAdvertiserRuleFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931238348E95CD28C59333BD /* FBAEMAdvertiserRuleFactoryTests.swift */; };
 		DED74AFF50400EC6B3881482 /* FBAEMEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D636174F633A8977B80DC4 /* FBAEMEventTests.swift */; };
-		E246773F0FECC373A76F35F7 /* FBAEMAdvertiserRuleFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */; };
+		E16DBD7C2F5A5A7BD0D899D7 /* FBAEMNetworker.h in Headers */ = {isa = PBXBuildFile; fileRef = E57E0709F9DB4299D8CB5EE6 /* FBAEMNetworker.h */; };
+		E1C8F972BFF8E49B4268B414 /* FBAEMAdvertiserRuleOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = 67CF74D0D6BAAD1000B83B4E /* FBAEMAdvertiserRuleOperator.h */; };
 		E4C2B6C43C21201696C7A0A2 /* SampleAEMConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA128CAAC00A5F44E3FACEF /* SampleAEMConfigurations.swift */; };
-		E56F6A9D5E198F0A8F50367B /* FBAEMAdvertiserMultiEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */; };
 		E7E54C28CF9D389A64B0B8B6 /* FBAEMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9552CA6943B9F2D75DABB322 /* FBAEMKit.framework */; };
-		E87F536334B42D42EC3452A2 /* FBAEMConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = CAAE2115CC5A03D37FABC343 /* FBAEMConfiguration.h */; };
+		EC0F23C33C2CF54D77B7B45F /* FBAEMConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4A048D5C10956A4A1995EE /* FBAEMConfiguration.m */; };
+		EF26EDFE6F59031EE94F1FD5 /* FBAEMRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE2CED0A6CA2846D094EFA /* FBAEMRule.m */; };
 		F1104751E43FE9AB97E4AABA /* FBCoreKitBasicsImportForAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0954C8A4F08D670E5928AA17 /* FBCoreKitBasicsImportForAEMKit.h */; };
+		F1564F49E3A7732FC98B6C33 /* FBAEMAdvertiserRuleFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = DB9A8EAE427EDA8C514E9F2D /* FBAEMAdvertiserRuleFactory.h */; };
 		F317CC64B9EA550F74510E37 /* FBAEMAdvertiserRuleFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */; };
 		F581E474473D84C5DA5D3B98 /* FBSKAdNetworkReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 153B4C403EFEC54B3E5A0203 /* FBSKAdNetworkReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FAD55F8F1A39980E8996FC34 /* FBAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BDDBCE1CDBD3488598FE265C /* FBAEMKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FAED7D24CD228AB4D795F1F2 /* FBAEMAdvertiserRuleFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */; };
 		FB2ED4B8A9D7F7BEFA0891DA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55624583B4F08EB7CA742BFA /* UIKit.framework */; };
-		FC81960674090AD38CABBA41 /* FBAEMReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CB68BCAEA3667ED30FF01A /* FBAEMReporter.m */; };
 		FC96D3627E3CC140C8B64E37 /* AEMConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCF97D130F84518CF735123 /* AEMConfigurationTests.swift */; };
-		FD4B28C43AB0724019C84126 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A84B4C7B14445ABABBDF148 /* FBSDKCoreKit_Basics.framework */; };
 		FE073523D3A2BA2AE06D14F0 /* FBAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E30C51678F81517E269DCA /* FBAEMAdvertiserRuleProviding.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0A6FF7A383F6ACFD4C51F1E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3B34DA976160ED761091E5B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9B208B1410A6473B4080CC3E;
+			remoteInfo = "FBAEMKit-Static";
+		};
 		131CABE29B32CC6E5BD66B9C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B2DB862A2534E9BCF64D92F /* TestTools */;
@@ -115,13 +122,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 563D03839E2E11C7E6A47941;
 			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
-		};
-		29AAF387E41B48130F9F3938 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 200CAFDF7052329542187DCB /* FBSDKCoreKit_Basics */;
-			proxyType = 2;
-			remoteGlobalIDString = 3DB180FE28E10A12830F05FE;
-			remoteInfo = FBSDKCoreKit_Basics;
 		};
 		3A294697780521D4D62BCE71 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -137,12 +137,19 @@
 			remoteGlobalIDString = C82569269F0990FC515167BC;
 			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
 		};
-		B0D87F18EA97324BE088F485 /* PBXContainerItemProxy */ = {
+		A4A6EDA6F5283B5ADCA11413 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3B34DA976160ED761091E5B4 /* Project object */;
+			containerPortal = 200CAFDF7052329542187DCB /* FBSDKCoreKit_Basics */;
 			proxyType = 1;
-			remoteGlobalIDString = D246132FAEBBED34D6F050E1;
-			remoteInfo = FBAEMKit;
+			remoteGlobalIDString = 4F903DA9EDB249CBB8F19937;
+			remoteInfo = "FBSDKCoreKit_Basics-Static";
+		};
+		BF1FD63BDC14A5DB7CAA14FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 200CAFDF7052329542187DCB /* FBSDKCoreKit_Basics */;
+			proxyType = 2;
+			remoteGlobalIDString = 466819BA148412564E784A23;
+			remoteInfo = "FBSDKCoreKit_Basics-Static";
 		};
 		E4FF00C76AF98FF926DA4C94 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -150,13 +157,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = E6BC29DBCBDBCD6E9C7B5EA2;
 			remoteInfo = "FBAEMKit-Dynamic";
-		};
-		E534A710CB60F788E28A73E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 200CAFDF7052329542187DCB /* FBSDKCoreKit_Basics */;
-			proxyType = 1;
-			remoteGlobalIDString = 471EF9928C73D1DED2CCAB1D;
-			remoteInfo = FBSDKCoreKit_Basics;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -187,10 +187,10 @@
 		2D50412F133CE2A6A7D5150D /* SampleAEMInvocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMInvocations.swift; sourceTree = "<group>"; };
 		308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMAdvertiserRuleFactory.m; sourceTree = "<group>"; };
 		325D4A4AF065D6881BFC8613 /* FBAEMRequestBody.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMRequestBody.h; sourceTree = "<group>"; };
-		3A84B4C7B14445ABABBDF148 /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit_Basics.framework; path = System/Library/Frameworks/FBSDKCoreKit_Basics.framework; sourceTree = SDKROOT; };
 		4177A5533D7CFF825F97ECA0 /* SampleAEMData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMData.swift; sourceTree = "<group>"; };
 		47B2C7811B39287E80BC488E /* FBAEMAdvertiserSingleEntryRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMAdvertiserSingleEntryRule.m; sourceTree = "<group>"; };
 		4BA128CAAC00A5F44E3FACEF /* SampleAEMConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMConfigurations.swift; sourceTree = "<group>"; };
+		50476081121C4AED999F9398 /* FBAEMKit-Static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBAEMKit-Static.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMNetworker.m; sourceTree = "<group>"; };
 		55624583B4F08EB7CA742BFA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5BD247C7727B63D8FF203BE0 /* FBAEMKitVersions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMKitVersions.h; sourceTree = "<group>"; };
@@ -205,7 +205,6 @@
 		816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMAdvertiserMultiEntryRule.h; sourceTree = "<group>"; };
 		84BA838B1CCC49062E1C49DB /* FBAEM+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBAEM+Testing.h"; sourceTree = "<group>"; };
 		8554100C2E72F8997D18A1D1 /* FBAEMReporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMReporter.h; sourceTree = "<group>"; };
-		883ACCD1EEEC3E1BB618BCFD /* FBAEMKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBAEMKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4844F060B113709025EE85 /* FBAEMReporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAEMReporterTests.swift; sourceTree = "<group>"; };
 		8BBE2CED0A6CA2846D094EFA /* FBAEMRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMRule.m; sourceTree = "<group>"; };
 		8D1A8648B7AF86852325E167 /* TestInvocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInvocation.swift; sourceTree = "<group>"; };
@@ -250,7 +249,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD4B28C43AB0724019C84126 /* FBSDKCoreKit_Basics.framework in Frameworks */,
+				7F380115247D592E327446F9 /* FBSDKCoreKit_Basics-Dynamic.framework in Frameworks */,
 				FB2ED4B8A9D7F7BEFA0891DA /* UIKit.framework in Frameworks */,
 				A250E741B08F53944E2E66BD /* libz.tbd in Frameworks */,
 			);
@@ -336,7 +335,7 @@
 		889A44E116F8C629A977FDD4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				883ACCD1EEEC3E1BB618BCFD /* FBAEMKit.framework */,
+				50476081121C4AED999F9398 /* FBAEMKit-Static.framework */,
 				9552CA6943B9F2D75DABB322 /* FBAEMKit.framework */,
 				C93D185ADDA6920863429EAB /* FBAEMKitTests.xctest */,
 			);
@@ -392,7 +391,6 @@
 		B8446904CAC61BC8F72AE136 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3A84B4C7B14445ABABBDF148 /* FBSDKCoreKit_Basics.framework */,
 				606DB09FE9B9C5CFA3A71DA7 /* libz.tbd */,
 				55624583B4F08EB7CA742BFA /* UIKit.framework */,
 			);
@@ -402,8 +400,8 @@
 		C2C0549D4778BEDE20A9D143 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				97A79ECD8BB5686419112679 /* FBSDKCoreKit_Basics.framework */,
 				A711947C38EB9FFE8530A0A9 /* FBSDKCoreKit_Basics-Dynamic.framework */,
+				052F51CAAE5D3603E23B7FF8 /* FBSDKCoreKit_Basics-Static.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -423,6 +421,31 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		14097CAA8145FC65B6E6E4C3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0990BFB7CC3690B19A87F47F /* FBAEMAdvertiserMultiEntryRule.h in Headers */,
+				F1564F49E3A7732FC98B6C33 /* FBAEMAdvertiserRuleFactory.h in Headers */,
+				A271DAE56B1ACAFA5F1808A7 /* FBAEMAdvertiserRuleMatching.h in Headers */,
+				E1C8F972BFF8E49B4268B414 /* FBAEMAdvertiserRuleOperator.h in Headers */,
+				5B34B7E444AD7AA52943FEF5 /* FBAEMAdvertiserRuleProviding.h in Headers */,
+				8A3F2D9597C5E87F5563BF86 /* FBAEMAdvertiserSingleEntryRule.h in Headers */,
+				65D437B6954707B6A0AFA3C6 /* FBAEMConfiguration.h in Headers */,
+				B928C77FF5B8DBC9BAC01B40 /* FBAEMEvent.h in Headers */,
+				3C1E1241DA75260B0BB31341 /* FBAEMInvocation.h in Headers */,
+				FAD55F8F1A39980E8996FC34 /* FBAEMKit.h in Headers */,
+				2A4E070E0A37FFE3C4FDF1B6 /* FBAEMKitVersions.h in Headers */,
+				E16DBD7C2F5A5A7BD0D899D7 /* FBAEMNetworker.h in Headers */,
+				425F96EEB18C673FA83AB923 /* FBAEMNetworking.h in Headers */,
+				9A4915453012DFB8B2C4E6A8 /* FBAEMReporter.h in Headers */,
+				CC1F40FDCDB362B3A8A40F84 /* FBAEMRequestBody.h in Headers */,
+				18D2D106D661B82F1D5E78FA /* FBAEMRule.h in Headers */,
+				9A59582810D6586ED78FA550 /* FBCoreKitBasicsImportForAEMKit.h in Headers */,
+				9C40B862D7608D33092DB3E7 /* FBSKAdNetworkReporting.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		169DC68E6A20F7245E56EA82 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -448,31 +471,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7B6D0A88A00E7A3755EDC0CB /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				60955E90A4D096CBB7A9E33D /* FBAEMAdvertiserMultiEntryRule.h in Headers */,
-				89E02D619464C33D29154777 /* FBAEMAdvertiserRuleFactory.h in Headers */,
-				32DA965F53B58BFD4DAF5E2F /* FBAEMAdvertiserRuleMatching.h in Headers */,
-				C6C8B877BDB131DA08A17B55 /* FBAEMAdvertiserRuleOperator.h in Headers */,
-				22FD4E0D3A2A4DDD62D77BA7 /* FBAEMAdvertiserRuleProviding.h in Headers */,
-				567D930E785504CA4A62B0ED /* FBAEMAdvertiserSingleEntryRule.h in Headers */,
-				E87F536334B42D42EC3452A2 /* FBAEMConfiguration.h in Headers */,
-				99C74CF633318D1450F3FC2B /* FBAEMEvent.h in Headers */,
-				A2989D9E4ACBD01674F27C75 /* FBAEMInvocation.h in Headers */,
-				CC7B4787404ACCEE7D6B6E8F /* FBAEMKit.h in Headers */,
-				5DEFB069B34FC34146319A5C /* FBAEMKitVersions.h in Headers */,
-				1FF874F43DD533F37A7B932F /* FBAEMNetworker.h in Headers */,
-				94292CDCDF3A758ABE61DC16 /* FBAEMNetworking.h in Headers */,
-				7B5D95AB07A572BF48F0DE33 /* FBAEMReporter.h in Headers */,
-				A04003FA9F804ECE55FEBDBD /* FBAEMRequestBody.h in Headers */,
-				474EFD6AB5988C7361FA0E15 /* FBAEMRule.h in Headers */,
-				B3CD5E0EB8287EF16619F04D /* FBCoreKitBasicsImportForAEMKit.h in Headers */,
-				565CE9AC0313BEDA111FA043 /* FBSKAdNetworkReporting.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -495,22 +493,22 @@
 			productReference = C93D185ADDA6920863429EAB /* FBAEMKitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D246132FAEBBED34D6F050E1 /* FBAEMKit */ = {
+		9B208B1410A6473B4080CC3E /* FBAEMKit-Static */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3DAE5E55E94C00A3298C4D18 /* Build configuration list for PBXNativeTarget "FBAEMKit" */;
+			buildConfigurationList = 816CCDA3831170D8C01F3E27 /* Build configuration list for PBXNativeTarget "FBAEMKit-Static" */;
 			buildPhases = (
-				3D36D35F641258BC03083377 /* Run Swiftlint */,
-				7B6D0A88A00E7A3755EDC0CB /* Headers */,
-				0A69EF2154EA15D60FB62FDF /* Sources */,
+				321CF230492C8D59FC62FFBE /* Run Swiftlint */,
+				14097CAA8145FC65B6E6E4C3 /* Headers */,
+				3D39F137B5080C3AE385BAF3 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				394C1C18522A7399247D107C /* PBXTargetDependency */,
+				3AAB767BA955311AE0E8942B /* PBXTargetDependency */,
 			);
-			name = FBAEMKit;
-			productName = FBAEMKit;
-			productReference = 883ACCD1EEEC3E1BB618BCFD /* FBAEMKit.framework */;
+			name = "FBAEMKit-Static";
+			productName = "FBAEMKit-Static";
+			productReference = 50476081121C4AED999F9398 /* FBAEMKit-Static.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		E6BC29DBCBDBCD6E9C7B5EA2 /* FBAEMKit-Dynamic */ = {
@@ -565,8 +563,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				D246132FAEBBED34D6F050E1 /* FBAEMKit */,
 				E6BC29DBCBDBCD6E9C7B5EA2 /* FBAEMKit-Dynamic */,
+				9B208B1410A6473B4080CC3E /* FBAEMKit-Static */,
 				96EC9BE57A56F1C89382894F /* FBAEMKit-Universal */,
 				1C47B9912935D5C80C951296 /* FBAEMKitTests */,
 			);
@@ -574,18 +572,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		052F51CAAE5D3603E23B7FF8 /* FBSDKCoreKit_Basics-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = "FBSDKCoreKit_Basics-Static.framework";
+			remoteRef = BF1FD63BDC14A5DB7CAA14FB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1279293F2FF5EF656DD2C54D /* TestTools.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = TestTools.framework;
 			remoteRef = 3A294697780521D4D62BCE71 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		97A79ECD8BB5686419112679 /* FBSDKCoreKit_Basics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit_Basics.framework;
-			remoteRef = 29AAF387E41B48130F9F3938 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		A711947C38EB9FFE8530A0A9 /* FBSDKCoreKit_Basics-Dynamic.framework */ = {
@@ -598,7 +596,7 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3D36D35F641258BC03083377 /* Run Swiftlint */ = {
+		321CF230492C8D59FC62FFBE /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -650,28 +648,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME\nTARGET=${TARGET_NAME%-Universal}\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphoneos \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n\n# Step 3. Copy the swiftmodule files created during the simulator build\nrsync -a \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule/\" \\\n  \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule\" || true\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# Step 5. Copy strings bundle if exists\nSTRINGS_INPUT_FOLDER=\"${PRODUCT_NAME}Strings.bundle\"\nif [ -d \"${STRINGS_INPUT_FOLDER}\" ]; then\n  STRINGS_OUTPUT_FOLDER=\"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}Strings.bundle\"\n  rm -rf \"${STRINGS_OUTPUT_FOLDER}\"\n  cp -R \"${STRINGS_INPUT_FOLDER}\" \"${STRINGS_OUTPUT_FOLDER}\"\nfi\n";
+			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphoneos \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n\n# Step 3. Copy the swiftmodule files created during the simulator build\nrsync -a \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule/\" \\\n  \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule\" || true\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# Step 5. Copy strings bundle if exists\nSTRINGS_INPUT_FOLDER=\"${PRODUCT_NAME}Strings.bundle\"\nif [ -d \"${STRINGS_INPUT_FOLDER}\" ]; then\n  STRINGS_OUTPUT_FOLDER=\"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}Strings.bundle\"\n  rm -rf \"${STRINGS_OUTPUT_FOLDER}\"\n  cp -R \"${STRINGS_INPUT_FOLDER}\" \"${STRINGS_OUTPUT_FOLDER}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		0A69EF2154EA15D60FB62FDF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E56F6A9D5E198F0A8F50367B /* FBAEMAdvertiserMultiEntryRule.m in Sources */,
-				E246773F0FECC373A76F35F7 /* FBAEMAdvertiserRuleFactory.m in Sources */,
-				219420C52DCC4479EF35B989 /* FBAEMAdvertiserSingleEntryRule.m in Sources */,
-				28E335A51B44D621CED8FB78 /* FBAEMConfiguration.m in Sources */,
-				D175879013592F781F627ED5 /* FBAEMEvent.m in Sources */,
-				5A6B01E84A3CDA4D6B39BBA2 /* FBAEMInvocation.m in Sources */,
-				3B1C163B678F993A41843FB8 /* FBAEMNetworker.m in Sources */,
-				FC81960674090AD38CABBA41 /* FBAEMReporter.m in Sources */,
-				499A9AE9074800B75AAA76E5 /* FBAEMRequestBody.m in Sources */,
-				10B5A0A78511BB0C200D238B /* FBAEMRule.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0CABBA55CDC3EFFD30009D0A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -712,6 +693,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D39F137B5080C3AE385BAF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF809E7BBE1317B0F7FD76F2 /* FBAEMAdvertiserMultiEntryRule.m in Sources */,
+				FAED7D24CD228AB4D795F1F2 /* FBAEMAdvertiserRuleFactory.m in Sources */,
+				B9C85E78413E0AF1B73F011C /* FBAEMAdvertiserSingleEntryRule.m in Sources */,
+				EC0F23C33C2CF54D77B7B45F /* FBAEMConfiguration.m in Sources */,
+				18DA62C1490FE2F61E57EB2E /* FBAEMEvent.m in Sources */,
+				964EA1707E9DBF137C6B508E /* FBAEMInvocation.m in Sources */,
+				6625C34764DD6A7CCB1ED6CD /* FBAEMNetworker.m in Sources */,
+				C9321DFE29DE8288E668E10A /* FBAEMReporter.m in Sources */,
+				4E2FF0B5C2ED8BCBC7B9B20A /* FBAEMRequestBody.m in Sources */,
+				EF26EDFE6F59031EE94F1FD5 /* FBAEMRule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -720,15 +718,15 @@
 			name = "FBSDKCoreKit_Basics-Dynamic";
 			targetProxy = 1D04E9DB888A268EBFC36AD9 /* PBXContainerItemProxy */;
 		};
-		394C1C18522A7399247D107C /* PBXTargetDependency */ = {
+		2E690D9C59248DFD2ABB887D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FBSDKCoreKit_Basics;
-			targetProxy = E534A710CB60F788E28A73E1 /* PBXContainerItemProxy */;
+			target = 9B208B1410A6473B4080CC3E /* FBAEMKit-Static */;
+			targetProxy = 0A6FF7A383F6ACFD4C51F1E3 /* PBXContainerItemProxy */;
 		};
-		47DF72ACA4469EC2B6CBEAEE /* PBXTargetDependency */ = {
+		3AAB767BA955311AE0E8942B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D246132FAEBBED34D6F050E1 /* FBAEMKit */;
-			targetProxy = B0D87F18EA97324BE088F485 /* PBXContainerItemProxy */;
+			name = "FBSDKCoreKit_Basics-Static";
+			targetProxy = A4A6EDA6F5283B5ADCA11413 /* PBXContainerItemProxy */;
 		};
 		54E7042A3B15EA627BA31128 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -790,19 +788,7 @@
 			};
 			name = Debug;
 		};
-		C4879430B2B1E54A70D112AB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Debug;
-		};
-		CC75BB600829BDDCEE9009A5 /* Release */ = {
+		8598C7363867AAA9C2243927 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
 			buildSettings = {
@@ -813,6 +799,18 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
+		};
+		A1987CC131F3A9D8CA874240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
 		};
 		E79BB172E1D9CFFA7950B0DE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -853,11 +851,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3DAE5E55E94C00A3298C4D18 /* Build configuration list for PBXNativeTarget "FBAEMKit" */ = {
+		816CCDA3831170D8C01F3E27 /* Build configuration list for PBXNativeTarget "FBAEMKit-Static" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C4879430B2B1E54A70D112AB /* Debug */,
-				CC75BB600829BDDCEE9009A5 /* Release */,
+				A1987CC131F3A9D8CA874240 /* Debug */,
+				8598C7363867AAA9C2243927 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

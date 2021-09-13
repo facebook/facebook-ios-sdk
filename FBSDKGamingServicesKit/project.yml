@@ -51,7 +51,7 @@ settings:
 
 aggregateTargets:
   FacebookGamingServices-Universal:
-    targets: [FacebookGamingServices]
+    targets: [FacebookGamingServices-Static]
     configFiles:
       Debug: Configurations/FacebookGamingServices-Static.xcconfig
       Release: Configurations/FacebookGamingServices-Static.xcconfig
@@ -59,7 +59,7 @@ aggregateTargets:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
   FBSDKGamingServicesKit-Universal:
-    targets: [FBSDKGamingServicesKit]
+    targets: [FBSDKGamingServicesKit-Static]
     configFiles:
       Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
       Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
@@ -72,10 +72,10 @@ schemes:
     build:
       targets:
         FacebookGamingServices-Dynamic: all
-  FBSDKGamingServicesKit:
+  FBSDKGamingServicesKit-Static:
     build:
       targets:
-        FBSDKGamingServicesKit: all
+        FBSDKGamingServicesKit-Static: all
   FBSDKGamingServicesKit-Dynamic:
     build:
       targets:
@@ -88,7 +88,6 @@ schemes:
       coverageTargets:
         - FacebookGamingServices-Dynamic
         - FBSDKGamingServicesKit-Dynamic
-        - FBSDKGamingServicesKit
   FBSDKGamingServicesKit-Universal:
     build:
       targets:

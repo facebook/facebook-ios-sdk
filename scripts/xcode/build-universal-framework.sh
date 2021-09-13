@@ -31,8 +31,8 @@ UNIVERSAL_BUILD_FOLDER=../build/
 mkdir -p "${UNIVERSAL_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework"
 
-# get target by removing '-Universal' from $TARGET_NAME
-TARGET=${TARGET_NAME%-Universal}
+# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'
+TARGET=${TARGET_NAME%-Universal}-Static
 
 # Step 1. Build Device and Simulator versions
 xcodebuild -target "${TARGET}" \
