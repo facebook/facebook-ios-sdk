@@ -53,16 +53,16 @@ aggregateTargets:
   FacebookGamingServices-Universal:
     targets: [FacebookGamingServices]
     configFiles:
-      Debug: Configurations/FacebookGamingServices.xcconfig
-      Release: Configurations/FacebookGamingServices.xcconfig
+      Debug: Configurations/FacebookGamingServices-Static.xcconfig
+      Release: Configurations/FacebookGamingServices-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
   FBSDKGamingServicesKit-Universal:
     targets: [FBSDKGamingServicesKit]
     configFiles:
-      Debug: Configurations/FBSDKGamingServicesKit.xcconfig
-      Release: Configurations/FBSDKGamingServicesKit.xcconfig
+      Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
+      Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh

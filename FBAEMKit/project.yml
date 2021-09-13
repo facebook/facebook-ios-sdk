@@ -55,8 +55,8 @@ targets:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
         link: false
     configFiles:
-      Debug: Configurations/FBAEMKit.xcconfig
-      Release: Configurations/FBAEMKit.xcconfig
+      Debug: Configurations/FBAEMKit-Static.xcconfig
+      Release: Configurations/FBAEMKit-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
@@ -103,8 +103,8 @@ aggregateTargets:
   FBAEMKit-Universal:
     targets: [FBAEMKit]
     configFiles:
-      Debug: Configurations/FBAEMKit.xcconfig
-      Release: Configurations/FBAEMKit.xcconfig
+      Debug: Configurations/FBAEMKit-Static.xcconfig
+      Release: Configurations/FBAEMKit-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh

@@ -213,6 +213,7 @@
 		2EFBD1C82EF57A264671EE8B /* FBSDKCrashHandlerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashHandlerProtocol.h; sourceTree = "<group>"; };
 		35E46720CB3F936DED19B33A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		3651C81E860A04E8B363F56B /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-tvOS-Static.xcconfig"; sourceTree = "<group>"; };
 		3DB180FE28E10A12830F05FE /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4360446EE97BEC26366466E2 /* FBSDKBasicUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBasicUtility.h; sourceTree = "<group>"; };
 		4A689338A808E8B459B119E2 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
@@ -223,8 +224,8 @@
 		659881D5339547443558B0F0 /* FBSDKCrashObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserving.h; sourceTree = "<group>"; };
 		752C7E0BF4ED848E416116B6 /* FBSDKSafeCast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSafeCast.m; sourceTree = "<group>"; };
 		763AA73855A17EF8A5F06A2A /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-Static.xcconfig"; sourceTree = "<group>"; };
 		790A75281DF15095A3BE3191 /* NSBundle+InfoDictionaryProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+InfoDictionaryProviding.h"; sourceTree = "<group>"; };
-		7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKCoreKit_Basics.xcconfig; sourceTree = "<group>"; };
 		88D14D1060B027EF3745B35F /* FBSDKSafeCastTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSafeCastTests.m; sourceTree = "<group>"; };
 		8961D78BDB4AC2B8D2485B9B /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A74F7498B8D648C7DF07B65 /* FBSDKBase64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKBase64.m; sourceTree = "<group>"; };
@@ -243,7 +244,6 @@
 		A66804798D3A91DAD2AE3F5E /* FBSDKInfoDictionaryProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKInfoDictionaryProviding.h; sourceTree = "<group>"; };
 		B3DA52CF984CE29229402E1A /* FBSDKCoreKit_BasicsTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCoreKit_BasicsTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		C0A7C949DCBC81058C1D52F2 /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
-		C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-tvOS.xcconfig"; sourceTree = "<group>"; };
 		C4C36158EA664E66175EDA4C /* FBSDKBase64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBase64.h; sourceTree = "<group>"; };
 		C79ECB3BAF28CD5B274FCDFA /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		C82569269F0990FC515167BC /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -381,9 +381,9 @@
 			isa = PBXGroup;
 			children = (
 				E723F2F226EFAB93F0B62C6B /* FBSDKCoreKit_Basics-Dynamic.xcconfig */,
+				77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */,
 				FF4E3D08670D7483B8DC6544 /* FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig */,
-				C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */,
-				7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */,
+				388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */,
 				93EE7D29E9DA46C80F556CB4 /* FBSDKCoreKit_BasicsTests.xcconfig */,
 			);
 			path = Configurations;
@@ -880,7 +880,7 @@
 		};
 		03B49DA169B915FBEF147C23 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */;
+			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -905,7 +905,7 @@
 		};
 		6BCF5CB296EABB0FE620B844 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */;
+			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -918,7 +918,7 @@
 		};
 		7F1BCA40CA5F9CF0EC50CFEF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */;
+			baseConfigurationReference = 77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -972,7 +972,7 @@
 		};
 		BA92475F51F76692435F134C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */;
+			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
@@ -991,28 +991,28 @@
 		};
 		D739F10091E76C5AF9C8CC30 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */;
+			baseConfigurationReference = 77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		E3D784678C06475E22733609 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */;
+			baseConfigurationReference = 77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		E6E53B41620549D702ABBBCE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C307C4ABA4BAAD70193ABF41 /* FBSDKCoreKit_Basics-tvOS.xcconfig */;
+			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		ED7C7AC220415DC11394B12F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A5609E2B84166AB392AA1A7 /* FBSDKCoreKit_Basics.xcconfig */;
+			baseConfigurationReference = 77B926B18CAE8F6B09A0CEAE /* FBSDKCoreKit_Basics-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

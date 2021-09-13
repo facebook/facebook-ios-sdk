@@ -200,7 +200,6 @@
 		695FB0FA40681F14C0E48D47 /* FBAEMEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMEvent.h; sourceTree = "<group>"; };
 		69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMRequestBody.m; sourceTree = "<group>"; };
 		6A38C63E41E0EE7CAF14DF59 /* FBAEMKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBAEMKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBAEMKit.xcconfig; sourceTree = "<group>"; };
 		7BE582199B8FBA1789FEC3E0 /* SampleAEMSingleEntryRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMSingleEntryRules.swift; sourceTree = "<group>"; };
 		8060F398EB7F033AD9F1D6AA /* FBAEMNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMNetworking.h; sourceTree = "<group>"; };
 		816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMAdvertiserMultiEntryRule.h; sourceTree = "<group>"; };
@@ -215,6 +214,7 @@
 		9552CA6943B9F2D75DABB322 /* FBAEMKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBAEMKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACE0FAFF797BA7EDD4BACD50 /* FBAEMInvocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAEMInvocationTests.swift; sourceTree = "<group>"; };
 		BDDBCE1CDBD3488598FE265C /* FBAEMKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMKit.h; sourceTree = "<group>"; };
+		BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBAEMKit-Static.xcconfig"; sourceTree = "<group>"; };
 		BF14F7D688B16F470687F043 /* FBAEMInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMInvocation.m; sourceTree = "<group>"; };
 		BF4A048D5C10956A4A1995EE /* FBAEMConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMConfiguration.m; sourceTree = "<group>"; };
 		C2368B332ED43BBAF2493859 /* FBAEMEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMEvent.m; sourceTree = "<group>"; };
@@ -310,7 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				6A38C63E41E0EE7CAF14DF59 /* FBAEMKit-Dynamic.xcconfig */,
-				72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */,
+				BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */,
 				08EA45F62800A6094DE6FE23 /* FBAEMKitTests.xcconfig */,
 			);
 			path = Configurations;
@@ -757,7 +757,7 @@
 		};
 		33E8CB5B9805E2B4BA42E712 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */;
+			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
@@ -773,7 +773,7 @@
 		};
 		623A11A89D8049854D76F967 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */;
+			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
@@ -792,7 +792,7 @@
 		};
 		C4879430B2B1E54A70D112AB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */;
+			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -804,7 +804,7 @@
 		};
 		CC75BB600829BDDCEE9009A5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */;
+			baseConfigurationReference = BE3AC50847FE4DDF48CA5AE3 /* FBAEMKit-Static.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
