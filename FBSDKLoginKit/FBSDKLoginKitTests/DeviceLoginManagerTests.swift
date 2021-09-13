@@ -49,7 +49,6 @@ class DeviceLoginManagerTests: XCTestCase {
     // and make network requests, and generally pollute the test environment.
     // This is mimicking the behavior of calling `didFinishLaunching` by configuring
     // the types that are needed for these test cases.
-    GraphRequestConnection.setCanMakeRequests()
     InternalUtility.shared.isConfigured = true
     Settings.shared.isConfigured = true
 
