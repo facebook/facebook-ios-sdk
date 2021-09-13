@@ -18,6 +18,8 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
+#import "FBSDKCoreKit+Internal.h"
+
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenCreating.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenFactory.h>
