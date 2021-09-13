@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKGraphRequestConnecting.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -34,7 +35,6 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 
 @class FBSDKGraphRequestConnection;
 @protocol FBSDKGraphRequest;
-@protocol FBSDKGraphRequestConnecting;
 
 /**
  FBSDKGraphRequestCompletion
@@ -76,9 +76,9 @@ typedef void (^FBSDKGraphRequestCompletion)(id<FBSDKGraphRequestConnecting> _Nul
  @param error The `NSError` representing any error that occurred.
 
  */
-typedef void (^FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
-                                       id _Nullable result,
-                                       NSError *_Nullable error)
+typedef void (^ FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
+  id _Nullable result,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(GraphRequestBlock)
 DEPRECATED_MSG_ATTRIBUTE("Please use the methods that use the `GraphRequestConnecting` protocol instead.");
 
@@ -161,10 +161,10 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
  @param totalBytesWritten         The total number of bytes sent to the remote host
  @param totalBytesExpectedToWrite The total number of bytes expected to send to the remote host
  */
-- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection
-          didSendBodyData:(NSInteger)bytesWritten
-        totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+- (void)  requestConnection:(id<FBSDKGraphRequestConnecting>)connection
+            didSendBodyData:(NSInteger)bytesWritten
+          totalBytesWritten:(NSInteger)totalBytesWritten
+  totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 
 @end
 
@@ -180,7 +180,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 
  */
 NS_SWIFT_NAME(GraphRequestConnection)
-@interface FBSDKGraphRequestConnection : NSObject
+@interface FBSDKGraphRequestConnection : NSObject <FBSDKGraphRequestConnecting>
 
 /**
  The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
@@ -190,7 +190,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
 /**
   The delegate object that receives updates.
  */
-@property (nonatomic, weak, nullable) id<FBSDKGraphRequestConnectionDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
 /**
   Gets or sets the timeout interval to wait for a response before giving up.
@@ -208,7 +208,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
  The property is nil until the request completes.  If there was a response
  then this property will be non-nil during the FBSDKGraphRequestBlock callback.
  */
-@property (nonatomic, retain, readonly, nullable) NSHTTPURLResponse *urlResponse;
+@property (nullable, nonatomic, readonly, retain) NSHTTPURLResponse *urlResponse;
 
 /**
  Determines the operation queue that is used to call methods on the connection's delegate.
@@ -237,9 +237,9 @@ NS_SWIFT_NAME(GraphRequestConnection)
  The completion handler is retained until the block is called upon the
  completion or cancellation of the connection.
  */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:completion:` instead");
+- (void) addRequest:(id<FBSDKGraphRequest>)request
+  completionHandler:(FBSDKGraphRequestBlock)handler
+    DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:completion:` instead");
 
 /**
  @method
@@ -253,7 +253,7 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
  completion or cancellation of the connection.
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
- completion:(FBSDKGraphRequestCompletion)completion;
+        completion:(FBSDKGraphRequestCompletion)completion;
 
 /**
  @method
@@ -274,10 +274,10 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
  completion or cancellation of the connection. This request can be named
  to allow for using the request's response in a subsequent request.
  */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
-    batchEntryName:(NSString *)name
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:name:completion:` instead");
+- (void) addRequest:(id<FBSDKGraphRequest>)request
+     batchEntryName:(NSString *)name
+  completionHandler:(FBSDKGraphRequestBlock)handler
+    DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:name:completion:` instead");
 
 /**
  @method
@@ -319,10 +319,10 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
  completion or cancellation of the connection. This request can be named
  to allow for using the request's response in a subsequent request.
  */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
-   batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:parameters:completion:` instead");
+- (void) addRequest:(id<FBSDKGraphRequest>)request
+    batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
+  completionHandler:(FBSDKGraphRequestBlock)handler
+    DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:parameters:completion:` instead");
 
 /**
  @method

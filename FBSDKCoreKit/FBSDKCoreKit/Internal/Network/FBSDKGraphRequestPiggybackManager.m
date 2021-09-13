@@ -18,11 +18,17 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKAccessToken.h"
+#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
+#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKServerConfigurationLoading.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
+#import "FBSDKSettings.h"
 #import "FBSDKSettings+SettingsLogging.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day

@@ -34,7 +34,7 @@ NS_SWIFT_NAME(GraphRequestConnecting)
 @protocol FBSDKGraphRequestConnecting
 
 @property (nonatomic, assign) NSTimeInterval timeout;
-@property (nonatomic, weak, nullable) id<FBSDKGraphRequestConnectionDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
 - (void)addRequest:(id<FBSDKGraphRequest>)request
         completion:(FBSDKGraphRequestCompletion)handler;
