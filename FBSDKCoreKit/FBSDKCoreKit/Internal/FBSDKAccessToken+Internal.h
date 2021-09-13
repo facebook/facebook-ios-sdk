@@ -18,10 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKConstants.h"
-#import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKCoreKit+Internal.h"
 
 @protocol FBSDKTokenCaching;
 @protocol FBSDKGraphRequestConnectionProviding;
