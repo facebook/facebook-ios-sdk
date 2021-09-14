@@ -34,7 +34,7 @@ static NSString *const FBSDKTimeSpentPersistKeySessionNumInterruptions = @"numIn
 static NSString *const FBSDKTimeSpentPersistKeyLastSuspendTime = @"lastSuspendTime";
 static NSString *const FBSDKTimeSpentPersistKeySessionID = @"sessionID";
 
-NSString *const FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
+static NSString *const FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
 static NSString *const FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate_app";
 static NSString *const FBSDKAppEventParameterNameSessionInterruptions = @"fb_mobile_app_interruptions";
 static NSString *const FBSDKAppEventParameterNameTimeBetweenSessions = @"fb_mobile_time_between_sessions";

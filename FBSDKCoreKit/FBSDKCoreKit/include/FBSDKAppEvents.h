@@ -125,12 +125,6 @@ FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCountry;
 /** Parameter key used to specify user's external id. */
 FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventExternalId;
 
-/** Parameter key used to specify event name. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterEventName;
-
-/** Parameter key used to specify event log time. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLogTime;
-
 /**
  @methodgroup Predefined event name parameters for common additional information to accompany events logged through the `logProductItem` method on `FBSDKAppEvents`.
  */

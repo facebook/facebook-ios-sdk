@@ -28,8 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(TimeSpentData)
 @interface FBSDKTimeSpentData : NSObject
 
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameActivatedApp;
-
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
