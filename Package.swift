@@ -32,10 +32,10 @@ let package = Package(
          The Kernel of the SDK. Must be included as a runtime dependency.
          */
         .library(
-            name: "FBSDKCoreKit_Basics",
+            name: "FacebookBasics",
             targets: ["FBSDKCoreKit_Basics"]
         ),
-        
+
         /*
           The Core SDK library that provides two importable modules:
 
@@ -102,7 +102,7 @@ let package = Package(
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBAEMKit_XCFramework.zip",
             checksum: "f7ad5812f0f1c5ca10e577c034400358bf50a5220696f697bf3a1bc300f1f995"
         ),
-        
+
         /*
           The main AEM module
          */
@@ -110,7 +110,7 @@ let package = Package(
           name: "FacebookAEM",
           dependencies: ["FBAEMKit"]
         ),
-        
+
         /*
           The legacy Objective-C interface that will be used to maintain
           backwards compatibility with types that have been converted to Swift.
@@ -141,7 +141,7 @@ let package = Package(
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKLoginKit_XCFramework.zip",
             checksum: "589eb1edfc91ab36f0b66830866b8ec8b75c9b54528e80640032e8154a77021b"
         ),
-        
+
         /*
           The main Login SDK module
         */
@@ -159,7 +159,7 @@ let package = Package(
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKShareKit_XCFramework.zip",
             checksum: "c8b161a7151b4b79985be256e20994e146007562b927a876afa6c30b5b2b5c61"
         ),
-        
+
         /*
           The main Share SDK module
         */
@@ -173,7 +173,7 @@ let package = Package(
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FacebookGamingServices_XCFramework.zip",
             checksum: "ed9edc676e5937652902e39f3d98f6fe37505d0e6a1ee8130621f04317c425f3"
         ),
-        
+
         /*
           The legacy Objective-C interface that will be used to maintain
           backwards compatibility with types that have been converted to Swift.
