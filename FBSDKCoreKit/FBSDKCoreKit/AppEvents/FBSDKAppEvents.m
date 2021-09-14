@@ -193,11 +193,14 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingVideoID = @"fb_sdk_live_str
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingMic = @"fb_sdk_live_streaming_mic";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingCamera = @"fb_sdk_live_streaming_camera";
 
+// Public Event Parameters
+NSString *const FBSDKAppEventParameterEventName = @"_eventName";
+NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
+
 // Event Parameters internal to this file
 NSString *const FBSDKAppEventParameterShareTrayActivityName = @"fb_share_tray_activity";
 NSString *const FBSDKAppEventParameterShareTrayResult = @"fb_share_tray_result";
-NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
-NSString *const FBSDKAppEventParameterEventName = @"_eventName";
+
 NSString *const FBSDKAppEventParameterImplicitlyLogged = @"_implicitlyLogged";
 NSString *const FBSDKAppEventParameterInBackground = @"_inBackground";
 

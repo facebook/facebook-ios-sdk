@@ -17,31 +17,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "FBSDKAppEvents.h"
 
-@protocol FBSDKEventLogging;
-@protocol FBSDKServerConfigurationProviding;
+NS_SWIFT_NAME(FBSDKAppEventsCAPITransformer)
+@interface FBSDKAppEventsCAPITransformer : NSObject
 
-NS_ASSUME_NONNULL_BEGIN
-
-// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents activateApp].  The activate app App Event is
-// logged when restore: is called with sufficient time since the last deactivation.
-NS_SWIFT_NAME(TimeSpentData)
-@interface FBSDKTimeSpentData : NSObject
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameActivatedApp;
-
-+ (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
-
-- (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(nullable NSURL *)url;
-- (void)setSourceApplication:(nullable NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;
-- (void)registerAutoResetSourceApplication;
-- (void)suspend;
-- (void)restore:(BOOL)calledFromActivateApp;
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventsUserDataSection;
 
 @end
-
-NS_ASSUME_NONNULL_END
