@@ -20,6 +20,8 @@
 
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKGraphRequest;
 
 // Internal only class to facilitate FBSDKGraphRequest processing, specifically
@@ -36,11 +38,13 @@ NS_SWIFT_NAME(GraphRequestMetadata)
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithRequest:(id<FBSDKGraphRequest>)request
-              completionHandler:(FBSDKGraphRequestCompletion)handler
-                batchParameters:(NSDictionary<NSString *, id> *)batchParameters
+              completionHandler:(nullable FBSDKGraphRequestCompletion)handler
+                batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
 NS_DESIGNATED_INITIALIZER;
 
 - (void)invokeCompletionHandlerForConnection:(id<FBSDKGraphRequestConnecting>)connection
                                  withResults:(id)results
-                                       error:(NSError *)error;
+                                       error:(nullable NSError *)error;
 @end
+
+NS_ASSUME_NONNULL_END

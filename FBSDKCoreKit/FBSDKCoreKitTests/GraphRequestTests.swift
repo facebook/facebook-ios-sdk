@@ -249,8 +249,7 @@ final class GraphRequestTests: XCTestCase {
 
   func testDebuggingMetadata() {
     let request = GraphRequest(graphPath: path)
-    // swiftlint:disable:next force_unwrapping
-    let metadata = GraphRequestMetadata(request: request, completionHandler: nil, batchParameters: [:])!
+    let metadata = GraphRequestMetadata(request: request, completionHandler: nil, batchParameters: [:])
     XCTAssertTrue(
       metadata.description.contains("request: "),
       "Request metadata should include information about the request"
