@@ -37,7 +37,7 @@ open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol
    - Parameters:
     - content: The content for the switch context dialog
     - windowFinder: The application window finder that provides the window to display the dialog
-    - delegate: The receiver's delegate used to let the receiver know a context was switch was successful or failure
+    - delegate: The receiver's delegate used to let the receiver know if a context switch was successful
    */
   public static func dialog(
     withContent content: SwitchContextContent,

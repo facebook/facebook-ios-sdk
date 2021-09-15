@@ -48,7 +48,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
 
    - Parameter content: The content for the switch context dialog
    - Parameter windowFinder: The application window finder that provides the window to display the dialog
-   - Parameter delegate: The receiver's delegate used to let the receiver know a context was switch was successful or failure
+   - Parameter delegate: The receiver's delegate used to let the receiver know if a context switch was successful
    */
   public init(
     content: SwitchContextContent,
