@@ -16,21 +16,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FacebookGamingServices
 import FBSDKCoreKit
-import XCTest
 
-class TestURLOpener: URLOpener {
+@objcMembers
+public class TestURLOpener: NSObject, URLOpener {
+  public var capturedRequests = [SuccessBlock]()
+  public var capturedURL: URL?
+  public var viewController: UIViewController?
+  public var wasOpenURLWithoutSVCCalled = false
+  public var wasOpenURLWithSVCCalled = false
 
-  var capturedRequests = [SuccessBlock]()
-  var capturedURL: URL?
-
-  func open(
+  public func open(
     _ url: URL,
     sender: URLOpening?,
     handler: @escaping SuccessBlock
   ) {
     capturedURL = url
     capturedRequests.append(handler)
+    wasOpenURLWithoutSVCCalled = true
+  }
+
+  public func openURL(
+    withSafariViewController url: URL,
+    sender: URLOpening,
+    from fromViewController: UIViewController,
+    handler: @escaping SuccessBlock
+  ) {
+    capturedURL = url
+    capturedRequests.append(handler)
+    wasOpenURLWithSVCCalled = true
+    viewController = fromViewController
   }
 }

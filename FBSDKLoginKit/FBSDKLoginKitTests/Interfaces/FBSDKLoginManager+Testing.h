@@ -28,6 +28,7 @@
 @property (nonatomic) Class<FBSDKProfileProviding> profile;
 @property (nonatomic)  id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
+@property (nonatomic) id<FBSDKURLOpener> urlOpener;
 
 - (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
 
@@ -58,6 +59,7 @@
                             tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                      connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
-                                profile:(Class<FBSDKProfileProviding>)profile;
+                                profile:(Class<FBSDKProfileProviding>)profile
+                              urlOpener:(id<FBSDKURLOpener>)urlOpener;
 
 @end

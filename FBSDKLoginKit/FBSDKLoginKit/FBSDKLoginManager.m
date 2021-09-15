@@ -53,6 +53,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 @property (nonatomic) Class<FBSDKProfileProviding> profile;
 @property (nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
+@property (nonatomic) id<FBSDKURLOpener> urlOpener;
 
 @end
 
@@ -79,6 +80,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                     connectionProvider:[FBSDKGraphRequestConnectionFactory new]
                    authenticationToken:FBSDKAuthenticationToken.class
                                profile:FBSDKProfile.class
+                             urlOpener:FBSDKBridgeAPI.sharedInstance
   ];
 }
 
@@ -88,6 +90,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                      connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
+                              urlOpener:(id<FBSDKURLOpener>)urlOpener
 {
   if ((self = [super init])) {
     _internalUtility = internalUtility;
@@ -95,6 +98,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     _connectionProvider = connectionProvider;
     _authenticationToken = authenticationToken;
     _profile = profile;
+    _urlOpener = urlOpener;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", NSBundle.mainBundle.bundleIdentifier];
 
     _keychainStore = [keychainStoreFactory createKeychainStoreWithService:keyChainServiceIdentifier
@@ -569,12 +573,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     if (useSafariViewController) {
       // Note based on above, authURL must be a http scheme. If that changes, add a guard, otherwise SFVC can throw
       self->_usedSFAuthSession = YES;
-      [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:authURL
-                                                                sender:self
-                                                    fromViewController:self.fromViewController
-                                                               handler:handlerWrapper];
+      [self.urlOpener openURLWithSafariViewController:authURL
+                                               sender:self
+                                   fromViewController:self.fromViewController
+                                              handler:handlerWrapper];
     } else {
-      [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:handlerWrapper];
+      [self.urlOpener openURL:authURL sender:self handler:handlerWrapper];
     }
   } else {
     error = error ?: [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Failed to construct oauth browser url"];

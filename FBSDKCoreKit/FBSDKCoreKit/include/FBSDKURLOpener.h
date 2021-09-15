@@ -27,6 +27,11 @@ NS_SWIFT_NAME(URLOpener)
          sender:(nullable id<FBSDKURLOpening>)sender
         handler:(FBSDKSuccessBlock)handler;
 
+- (void)openURLWithSafariViewController:(NSURL *)url
+                                 sender:(id<FBSDKURLOpening>)sender
+                     fromViewController:(UIViewController *)fromViewController
+                                handler:(FBSDKSuccessBlock)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END

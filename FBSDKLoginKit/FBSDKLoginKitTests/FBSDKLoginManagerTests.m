@@ -101,6 +101,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) TestKeychainStore *keychainStore;
 @property (nonatomic) TestGraphRequestConnectionFactory *connectionProvider;
 @property (nonatomic) TestGraphRequestConnection *connection;
+@property (nonatomic) TestURLOpener *urlOpener;
 
 @end
 
@@ -121,6 +122,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   self.keychainStoreFactory.stubbedKeychainStore = self.keychainStore;
   self.connection = [TestGraphRequestConnection new];
   self.connectionProvider = [[TestGraphRequestConnectionFactory alloc] initWithStubbedConnection:self.connection];
+  self.urlOpener = [TestURLOpener new];
 
   self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility
                                                     keychainStoreFactory:self.keychainStoreFactory
@@ -128,6 +130,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                       connectionProvider:self.connectionProvider
                                                      authenticationToken:TestAuthenticationTokenWallet.class
                                                                  profile:TestProfileProvider.class
+                                                               urlOpener:self.urlOpener
   ];
 
   [FBSDKSettings setAppID:kFakeAppID];
@@ -186,6 +189,26 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"typ" : @"JWT",
     @"kid" : @"abcd1234",
   };
+}
+
+- (void)testInitializingLoginManager
+{
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  NSObject *internalUtility = (NSObject *)loginManager.internalUtility;
+  NSObject *keychainStore = (NSObject *)loginManager.keychainStore;
+  NSObject *tokenWallet = (NSObject *)loginManager.tokenWallet;
+  NSObject *connectionProvider = (NSObject *)loginManager.connectionProvider;
+  NSObject *authenticationToken = (NSObject *)loginManager.authenticationToken;
+  NSObject *profile = (NSObject *)loginManager.profile;
+  NSObject *urlOpener = (NSObject *)loginManager.urlOpener;
+
+  XCTAssertEqualObjects(internalUtility.class, FBSDKInternalUtility.class);
+  XCTAssertEqualObjects(keychainStore.class, FBSDKKeychainStore.class);
+  XCTAssertEqualObjects(tokenWallet.class, FBSDKAccessToken.class);
+  XCTAssertEqualObjects(connectionProvider.class, FBSDKGraphRequestConnectionFactory.class);
+  XCTAssertEqualObjects(authenticationToken.class, FBSDKAuthenticationToken.class);
+  XCTAssertEqualObjects(profile.class, FBSDKProfile.class);
+  XCTAssertEqualObjects(urlOpener.class, FBSDKBridgeAPI.class);
 }
 
 // MARK: openURL Auth
@@ -556,6 +579,23 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 }
 
 // MARK: Login
+
+- (void)testLoginWithSFVC
+{
+  [self.loginManager logInWithPermissions:@[@"public_profile"] fromViewController:[UIViewController new] handler:nil];
+
+  XCTAssertTrue(
+    self.urlOpener.wasOpenURLWithSVCCalled,
+    "openURLWithSafariViewController should be called"
+  );
+
+  XCTAssertFalse(
+    self.urlOpener.wasOpenURLWithoutSVCCalled,
+    "openURL should not be called"
+  );
+
+  XCTAssertNotNil(self.urlOpener.viewController);
+}
 
 - (void)testLoginWithBrowser
 {
