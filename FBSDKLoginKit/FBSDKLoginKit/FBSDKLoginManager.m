@@ -159,7 +159,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     return;
   }
 
-  if (![_tokenWallet currentAccessToken]) {
+  if (![self.tokenWallet currentAccessToken]) {
     NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
     NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
                                             code:FBSDKLoginErrorMissingAccessToken
@@ -178,7 +178,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)logOut
 {
-  [_tokenWallet setCurrentAccessToken:nil];
+  [self.tokenWallet setCurrentAccessToken:nil];
   [self.authenticationToken setCurrentAuthenticationToken:nil];
   [self.profile setCurrentProfile:nil];
 }
@@ -269,8 +269,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     if (!cancelled) {
       result = [self successResultFromParameters:parameters];
 
-      if (result.token && [_tokenWallet currentAccessToken]) {
-        [self validateReauthentication:[_tokenWallet currentAccessToken] withResult:result];
+      if (result.token && [self.tokenWallet currentAccessToken]) {
+        [self validateReauthentication:[self.tokenWallet currentAccessToken] withResult:result];
         // in a reauth, short circuit and let the login handler be called when the validation finishes.
         return;
       }
@@ -305,7 +305,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                               profile:(FBSDKProfile *_Nullable)profile
 {
   [self.authenticationToken setCurrentAuthenticationToken:authToken];
-  [_tokenWallet setCurrentAccessToken:accessToken];
+  [self.tokenWallet setCurrentAccessToken:accessToken];
   [self.profile setCurrentProfile:profile];
 }
 
@@ -345,12 +345,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (NSString *)loadExpectedChallenge
 {
-  return [_keychainStore stringForKey:FBSDKExpectedChallengeKey];
+  return [self.keychainStore stringForKey:FBSDKExpectedChallengeKey];
 }
 
 - (NSString *)loadExpectedNonce
 {
-  return [_keychainStore stringForKey:FBSDKExpectedNonceKey];
+  return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
 - (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
@@ -492,9 +492,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)storeExpectedChallenge:(NSString *)challengeExpected
 {
-  [_keychainStore setString:challengeExpected
-                     forKey:FBSDKExpectedChallengeKey
-              accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  [self.keychainStore setString:challengeExpected
+                         forKey:FBSDKExpectedChallengeKey
+                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 - (void)storeExpectedNonce:(NSString *)nonceExpected
@@ -591,7 +591,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (FBSDKLoginManagerLoginResult *)cancelledResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
 {
   NSSet *declinedPermissions = nil;
-  if ([_tokenWallet currentAccessToken] != nil) {
+  if ([self.tokenWallet currentAccessToken] != nil) {
     // Always include the list of declined permissions from this login request
     // if an access token is already cached by the SDK
     declinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:parameters.declinedPermissions];
@@ -655,7 +655,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
   NSMutableSet *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
-  NSSet *previouslyGrantedPermissions = [[_tokenWallet currentAccessToken] permissions];
+  NSSet *previouslyGrantedPermissions = [[self.tokenWallet currentAccessToken] permissions];
 
   // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
   // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.
