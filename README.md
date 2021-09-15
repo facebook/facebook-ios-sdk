@@ -1,7 +1,7 @@
 # Facebook SDK for iOS
 
 [![Platforms](https://img.shields.io/cocoapods/p/FBSDKCoreKit.svg)](https://cocoapods.org/pods/FBSDKCoreKit)
-[![circleci](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/master.svg?style=shield)](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/master)
+[![circleci](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/main.svg?style=shield)](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/main)
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/FBSDKCoreKit.svg)](https://cocoapods.org/pods/FBSDKCoreKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
