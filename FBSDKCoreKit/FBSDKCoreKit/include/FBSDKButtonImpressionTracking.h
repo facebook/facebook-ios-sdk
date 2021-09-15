@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -27,8 +29,10 @@
 NS_SWIFT_NAME(FBButtonImpressionTracking)
 @protocol FBSDKButtonImpressionTracking <NSObject>
 
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
+@property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
 @property (nonatomic, readonly, copy) NSString *impressionTrackingEventName;
 @property (nonatomic, readonly, copy) NSString *impressionTrackingIdentifier;
 
 @end
+
+NS_ASSUME_NONNULL_END
