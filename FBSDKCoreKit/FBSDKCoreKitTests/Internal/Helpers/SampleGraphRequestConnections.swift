@@ -39,7 +39,7 @@ class SampleGraphRequestConnections: NSObject {
 
 @objc
 extension TestGraphRequestConnection: _FBSDKGraphRequestConnecting {
-  public var requests: NSMutableArray! {  // swiftlint:disable:this implicitly_unwrapped_optional
+  public var requests: NSMutableArray {
     NSMutableArray(
       array: graphRequests.compactMap {
         GraphRequestMetadata(

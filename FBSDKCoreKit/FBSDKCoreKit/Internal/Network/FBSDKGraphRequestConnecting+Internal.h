@@ -20,8 +20,12 @@
 
 #import "FBSDKGraphRequestMetadata.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _FBSDKGraphRequestConnecting <FBSDKGraphRequestConnecting>
 
 @property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 
 @end
+
+NS_ASSUME_NONNULL_END
