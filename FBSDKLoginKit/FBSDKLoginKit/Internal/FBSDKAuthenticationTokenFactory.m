@@ -188,10 +188,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
                      if (cert) {
                        SecPolicyRef policy = SecPolicyCreateBasicX509();
-                       OSStatus status = -1;
                        SecTrustRef trust;
 
-                       status = SecTrustCreateWithCertificates(cert, policy, &trust);
+                       OSStatus status = SecTrustCreateWithCertificates(cert, policy, &trust);
 
                        if (status == errSecSuccess && trust) {
                          publicKey = SecTrustCopyPublicKey(trust);
