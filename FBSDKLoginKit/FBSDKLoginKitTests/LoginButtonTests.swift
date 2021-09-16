@@ -46,7 +46,7 @@ class LoginButtonTests: XCTestCase {
 
     button.delegate = delegate
     button.setLoginProvider(loginProvider)
-    button.setGraphRequestFactory(factory)
+    button.graphRequestFactory = factory
   }
 
   // MARK: Nonce

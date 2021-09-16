@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginButton (Testing)
 
+@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+
 - (FBSDKLoginConfiguration *)loginConfiguration;
 - (BOOL)_isAuthenticated;
 - (void)_fetchAndSetContent;
@@ -68,7 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider;
 - (void)_buttonPressed:(id)sender;
 - (void)_logout;
-- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)graphRequestFactory;
 
 @end
 

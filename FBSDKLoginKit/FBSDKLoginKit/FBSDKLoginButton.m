@@ -42,13 +42,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 @property (nonatomic) id<FBSDKLoginProviding> loginProvider;
 @property (nonatomic) NSString *userID;
 @property (nonatomic) NSString *userName;
+@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 
 @end
 
 @implementation FBSDKLoginButton
-{
-  id<FBSDKGraphRequestProviding> _graphRequestFactory;
-}
 
  #pragma mark - Object Lifecycle
 
@@ -484,11 +482,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 - (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider
 {
   _loginProvider = loginProvider;
-}
-
-- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)graphRequestFactory
-{
-  _graphRequestFactory = graphRequestFactory;
 }
 
   #endif
