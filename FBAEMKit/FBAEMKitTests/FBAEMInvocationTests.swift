@@ -49,6 +49,9 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let currency = "currency"
     static let amount = "amount"
     static let paramRule = "param_rule"
+    static let content = "fb_content"
+    static let contentID = "fb_content_id"
+    static let contentType = "fb_content_type"
   }
 
   enum Values {
@@ -242,6 +245,45 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
+  func testProcessedParametersWithValidContent() {
+    let invocation: AEMInvocation? = self.validInvocation
+    let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
+
+    let parameters = invocation?.processedParameters([
+      Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+      Keys.contentID: "001",
+      Keys.contentType: "product"
+    ]) as? [String: AnyHashable]
+    XCTAssertEqual(
+      parameters,
+      [
+        Keys.content: [content],
+        Keys.contentID: "001",
+        Keys.contentType: "product"
+      ],
+      "Processed parameters are not expected"
+    )
+  }
+
+  func testProcessedParametersWithInvalidContent() {
+    let invocation: AEMInvocation? = self.validInvocation
+
+    let parameters = invocation?.processedParameters([
+      Keys.content: "[{\"id\":,\"quantity\":5}]",
+      Keys.contentID: "001",
+      Keys.contentType: "product"
+    ]) as? [String: AnyHashable]
+    XCTAssertEqual(
+      parameters,
+      [
+        Keys.content: "[{\"id\":,\"quantity\":5}]",
+        Keys.contentID: "001",
+        Keys.contentType: "product"
+      ],
+      "Processed parameters are not expected"
+    )
+  }
+
   func testFindConfig() {
     var invocation: AEMInvocation? = self.validInvocation
     invocation?.reset()
@@ -413,6 +455,66 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.donate))
     XCTAssertEqual(invocation.recordedValues.count, 0, "Should not attribute unexpected values")
+  }
+
+  func testAttributeEventWithExpectedContent() {
+    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+    let invocation = AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: nil,
+      acsConfigID: nil,
+      businessID: "test_advertiserid_content_test",
+      isTestMode: false,
+      hasSKAN: false
+    )! // swiftlint:disable:this force_unwrapping
+    let configs = [
+      Values.defaultMode: [configWithoutBusinessID],
+      Values.brandMode: [configWithBusinessID]
+    ]
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: Values.USD,
+      value: 0,
+      parameters: [
+        Keys.content: "[{\"id\":\"abc\",\"quantity\":5}]",
+        Keys.contentID: "001",
+        Keys.contentType: "product"
+      ],
+      configs: configs
+    )
+    XCTAssertTrue(isAttributed, "Should attribute the event with expected parameters")
+  }
+
+  func testAttributeEventWithUnexpectedContent() {
+    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+    let invocation = AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: nil,
+      acsConfigID: nil,
+      businessID: "test_advertiserid_content_test",
+      isTestMode: false,
+      hasSKAN: false
+    )! // swiftlint:disable:this force_unwrapping
+    let configs = [
+      Values.defaultMode: [configWithoutBusinessID],
+      Values.brandMode: [configWithBusinessID]
+    ]
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: Values.USD,
+      value: 0,
+      parameters: [
+        Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+        Keys.contentID: "001",
+        Keys.contentType: "product"
+      ],
+      configs: configs
+    )
+    XCTAssertFalse(isAttributed, "Should attribute the event with expected parameters")
   }
 
   func testUpdateConversionWithValue() {

@@ -73,6 +73,34 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
+    static func createConfigWithBusinessIDAndContentRule() -> AEMConfiguration {
+      let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+
+      AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+
+      return AEMConfiguration(
+        json: [
+          Keys.defaultCurrency: Values.USD,
+          Keys.cutoffTime: 1,
+          Keys.validFrom: 10000,
+          Keys.configMode: Values.defaultMode,
+          Keys.businessID: "test_advertiserid_content_test",
+          Keys.paramRule: "{\"or\":[{\"fb_content[*].id\":{\"eq\":\"abc\"}}]}",
+          Keys.conversionValueRules: [
+            [
+              Keys.conversionValue: 2,
+              Keys.priority: 10,
+              Keys.events: [
+                [
+                  Keys.eventName: Values.purchase,
+                ],
+              ],
+            ]
+          ]
+        ]
+      )! // swiftlint:disable:this force_unwrapping
+    }
+
   static func createConfigWithoutBusinessID() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
 
