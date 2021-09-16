@@ -23,12 +23,12 @@ class AppEventsStateTests: XCTestCase {
   let appEventsStateMaxEvents = 1000
   let appId = "appid"
   let eventsProcessor = TestAppEventsParameterProcessor()
-  lazy var state = AppEventsState(token: self.name, appID: appId)! // swiftlint:disable:this force_unwrapping
+  lazy var state = AppEventsState(token: self.name, appID: appId)
   lazy var partiallyFullState = AppEventsState(
     token: self.name,
     appID: appId
-  )! // swiftlint:disable:this force_unwrapping
-  lazy var fullState = AppEventsState(token: self.name, appID: appId)! // swiftlint:disable:this force_unwrapping
+  )
+  lazy var fullState = AppEventsState(token: self.name, appID: appId)
 
   override func setUp() {
     super.setUp()
@@ -385,7 +385,7 @@ class AppEventsStateTests: XCTestCase {
     let otherFullState = AppEventsState(token: name, appID: appId)
 
     for _ in 0..<(appEventsStateMaxEvents * 2) {
-      otherFullState?.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+      otherFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
     }
 
     fullState.addEvents(fromAppEventState: otherFullState)
@@ -455,7 +455,7 @@ class AppEventsStateTests: XCTestCase {
   }
 
   func testNilTokensMatchingAppID() {
-    let state1 = AppEventsState(token: nil, appID: self.name)! // swiftlint:disable:this force_unwrapping
+    let state1 = AppEventsState(token: nil, appID: self.name)
     let state2 = AppEventsState(token: nil, appID: self.name)
     XCTAssertTrue(
       state1.is(compatibleWith: state2),
@@ -464,7 +464,7 @@ class AppEventsStateTests: XCTestCase {
   }
 
   func testNilTokensNonMatchingAppID() {
-    let state1 = AppEventsState(token: nil, appID: appId)! // swiftlint:disable:this force_unwrapping
+    let state1 = AppEventsState(token: nil, appID: appId)
     let state2 = AppEventsState(token: nil, appID: self.name)
     XCTAssertFalse(
       state1.is(compatibleWith: state2),
