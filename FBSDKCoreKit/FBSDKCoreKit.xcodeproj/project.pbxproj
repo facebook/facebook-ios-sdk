@@ -64,6 +64,7 @@
 		037021DAE9C7E0706E45BA63 /* FBSDKUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 50EF1C834575ABE23E405B9D /* FBSDKUtility.m */; };
 		04130A9762D14DF617CF62B7 /* FBSDKKeychainStoreFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A57A5138D8838085F8DC676 /* FBSDKKeychainStoreFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		043568357F71D0174D4F809C /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E9B2DD477BEE7848B3179ED /* FBSDKApplicationObserving.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0437BE062E8F1152044C347A /* FBSDKTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */; };
 		0442B4B76187BFFBFE1B9332 /* FBSDKInternalUtilityProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 707AAB6AE136FD48DBB49927 /* FBSDKInternalUtilityProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		047A349A08544DA33B0821CA /* FBSDKSKAdNetworkReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B59717AD7E4B06DCC34E7166 /* FBSDKSKAdNetworkReporterTests.m */; };
 		04932E4F97FCF1592B3CD77E /* FBSDKDeviceButton+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B1F8A5E7370497C36BA1C4DE /* FBSDKDeviceButton+Internal.h */; };
@@ -457,6 +458,7 @@
 		372D8E70561103896014FD41 /* TestGraphRequestPiggybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5CB6204E815CD79CB46297 /* TestGraphRequestPiggybackManager.swift */; };
 		373F6FACBD719ECB6C83ED50 /* FBSDKMetadataIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = A95A4D1D7D587DF11E9C3041 /* FBSDKMetadataIndexer.m */; };
 		376D0C09CDA7B4CA25F03042 /* FBSDKModelManager+IntegrityProcessing.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E68C05255954FC7EA2C7E3B /* FBSDKModelManager+IntegrityProcessing.h */; };
+		378C01336963D4859B5ECA32 /* FBSDKTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */; };
 		380CF95B1CCAFC4003FE5800 /* FBSDKDynamicSocialFrameworkLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 381CBE1C404E08BA12751DC3 /* FBSDKDynamicSocialFrameworkLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3819C3E438115D20FEE32082 /* FBSDKGraphRequestDataAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9EC637CDD6A12EE5BBF6CC /* FBSDKGraphRequestDataAttachment.m */; };
 		381D77E10ED2D03496E0E017 /* NSProcessInfo+Protocols.h in Headers */ = {isa = PBXBuildFile; fileRef = DD439544423F016AE035F2B3 /* NSProcessInfo+Protocols.h */; };
@@ -738,6 +740,7 @@
 		5BE0FF59D76EFA3AF6CADB5F /* WebDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F0042ACE9CEA32235A5381 /* WebDialogTests.swift */; };
 		5C0251F338B7CBC2501758FC /* FBSDKMutableCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A7F1177DAB11C8A4AA7636 /* FBSDKMutableCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5C167F7B2D5CC533411C1318 /* FBSDKAccessTokenExpirer.h in Headers */ = {isa = PBXBuildFile; fileRef = C6BC1F37B48DEE5BFAB4DF5D /* FBSDKAccessTokenExpirer.h */; };
+		5C4F7FA5BDEF612A9FAAAAD9 /* FBSDKTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5C6CABDFE70C07C7BE31E472 /* FBSDKBridgeAPIProtocolWebV2.h in Headers */ = {isa = PBXBuildFile; fileRef = EFEB4D5B6B3F1421A3E2BCFC /* FBSDKBridgeAPIProtocolWebV2.h */; };
 		5CD27ABE763DFC1E7674CBA7 /* TestFileDataExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081276FA1DF393B7A8B0BC8 /* TestFileDataExtractor.swift */; };
 		5CEAF8AF63871C1F5820A5A7 /* TestInternalURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF8A7BE8B889E65035A2405 /* TestInternalURLOpener.swift */; };
@@ -805,6 +808,7 @@
 		65749A87DA33EBC21BD5AFE9 /* FBSDKModelUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C6A8D952A3D647BC34C8EF2 /* FBSDKModelUtility.h */; };
 		65A9621EB5DCD8DF62E303A8 /* FBSDKAppEventsStateManager+AppEventsStatePersisting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1152F422FAF082153EAB43 /* FBSDKAppEventsStateManager+AppEventsStatePersisting.h */; };
 		65B23A056A6DC336195D027A /* FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 884A930586B80F5AF2EBE20E /* FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h */; };
+		65BB70892C9A0100F4271E34 /* FBSDKTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65C84204333E259345BA8D2A /* BridgeAPIResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BE4F57F3D3B8D3E15BBAEC /* BridgeAPIResponseTests.swift */; };
 		65CE1988DDEF83FE1105B7D7 /* FBSDKSKAdNetworkReporter+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D58FF3A2AA3F7E62CCDEA7DD /* FBSDKSKAdNetworkReporter+Internal.h */; };
 		6603EDCCF7E9AEE6D13FECA2 /* FBSDKAppEvents+ApplicationLifecycleObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = F57F28222C16E9D26129118F /* FBSDKAppEvents+ApplicationLifecycleObserving.h */; };
@@ -1096,6 +1100,7 @@
 		8B8443459E74B5357467F72B /* FBSDKAppEventsState.h in Headers */ = {isa = PBXBuildFile; fileRef = 39723BBFBBBAD4AC8E14135E /* FBSDKAppEventsState.h */; };
 		8B8B419D5FAE4A2C4CE6BB5A /* FBSDKEventDeactivationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E160910474C72C383013D816 /* FBSDKEventDeactivationManager.h */; };
 		8B9E92A0497C96B5F04CA578 /* FBSDKModelManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1765994E63F13058BC86D1AF /* FBSDKModelManager.h */; };
+		8BC9945CF6119F3398D1B6E8 /* FBSDKTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8BEB0E02B18EC23B507EA489 /* FBSDKServerConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2961F39835FDD786ACB4E7AF /* FBSDKServerConfigurationProvider.m */; };
 		8C0A5D0808BB420A7ECC0BAB /* FBSDKAppEventsConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F08C04064151096838FF251 /* FBSDKAppEventsConfiguration.m */; };
 		8C0BF888F35A564A0FCC18AB /* FBSDKBase64Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC46DDFEE030DD12AD12249 /* FBSDKBase64Tests.swift */; };
@@ -1206,6 +1211,7 @@
 		9CDDD11005C5229A59EDB1FC /* FBSDKAppEventsUtility+AdvertiserIDProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E216AE13DA08EAE6DB0EAEC /* FBSDKAppEventsUtility+AdvertiserIDProviding.h */; };
 		9D5226384A3585CC8BDB185C /* FBSDKDialogConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 770519C64BAFFE84AE4D837C /* FBSDKDialogConfiguration.m */; };
 		9D7C8457AD2E6DD6BFAF20B0 /* FBSDKSKAdNetworkRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 039F657FD7CFEFA75699AB44 /* FBSDKSKAdNetworkRule.m */; };
+		9DA149F57C6F97C54310D901 /* FBSDKTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E0E09910B9D5AE374049B92 /* FBSDKLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 7592E00997C6523D17993013 /* FBSDKLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E374A82F8854E5AA74110D4 /* FBSDKGraphRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = ADCCE2DC1A706E5636919CFB /* FBSDKGraphRequestFactory.m */; };
 		9E5AD34A3303EC94A5696A76 /* FBSDKAuthenticationToken+AuthenticationTokenProtocols.h in Headers */ = {isa = PBXBuildFile; fileRef = B82381FA618B7B75FCD2DB77 /* FBSDKAuthenticationToken+AuthenticationTokenProtocols.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1602,6 +1608,7 @@
 		D6F1B4254AF6DA2640B222C7 /* FBSDKCrashObserver+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7572CE339E27CC8AAF2B7AFB /* FBSDKCrashObserver+Internal.h */; };
 		D711EDF8D6B9012D8C28A49D /* FBSDKProductsRequestProtocols.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B51DCE44279F215C96B8607 /* FBSDKProductsRequestProtocols.h */; };
 		D7185798146B427EF0DB6328 /* FBSDKBridgeAPIProtocolNativeV1.m in Sources */ = {isa = PBXBuildFile; fileRef = 340B6422E7B50E9616908EB1 /* FBSDKBridgeAPIProtocolNativeV1.m */; };
+		D72877CBA84F73F8333BEFA1 /* FBSDKTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */; };
 		D735C8A1A20072D7657925ED /* FBSDKObjectDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8028557E63CAD9C80719ED30 /* FBSDKObjectDecoder.m */; };
 		D790A602118C58512ABAB19F /* FBSDKSKAdNetworkReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D27B61CF1B6018DECF308C5 /* FBSDKSKAdNetworkReporter.m */; };
 		D7A0E0E6CA9C49F4B5CD8C8F /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC07AF321FA9D98ADA87C91C /* Permission.swift */; };
@@ -1795,6 +1802,7 @@
 		F240F3666935B17BCA2CABD8 /* FBSDKWebViewProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D7F6F3A5EE6F85839DEAEC9 /* FBSDKWebViewProviding.h */; };
 		F25E091BCC9F74803313863F /* FBSDKSuggestedEventsIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C07D870F464871E5E5CC9A0 /* FBSDKSuggestedEventsIndexer.h */; };
 		F2769364955858D8A683A5A7 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33FB07478B025EA6F442320 /* StoreKit.framework */; };
+		F27A61FDD6845D121A7CF467 /* FBSDKTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */; };
 		F27DC2EA03DCFF5D5665642E /* TestAppEventsParameterProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C984B5FACAB42227937DA6B /* TestAppEventsParameterProcessor.swift */; };
 		F28EE18EC7B28A243471F059 /* FBSDKMetadataIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 25810ADFB6509E0F5696F5A9 /* FBSDKMetadataIndexer.h */; };
 		F293D9D6AC0DE2A5FC57B92F /* FBSDKURLSessionProxying.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B469DB841EAC0569C5E3EBF /* FBSDKURLSessionProxying.h */; };
@@ -2413,10 +2421,12 @@
 		7C0B8AF57FFF7A438FA9CCEE /* FBSDKSettingsProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSettingsProtocol.h; sourceTree = "<group>"; };
 		7C45950832C8C21247765F73 /* SKAdNetworkConversionConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKAdNetworkConversionConfigurationTests.swift; sourceTree = "<group>"; };
 		7C78B9D9C9E98DA72DA66CE9 /* FBSDKErrorConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKErrorConfiguration.m; sourceTree = "<group>"; };
+		7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTransformer.m; sourceTree = "<group>"; };
 		7CB43F91CE5EA3942F7FA5C6 /* FBSDKAppLinkUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkUtility.h; sourceTree = "<group>"; };
 		7CC37EAD93A02A35B6B6EEFF /* FBSDKURLSessionProxyFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionProxyFactory.h; sourceTree = "<group>"; };
 		7CC4C249645EEE3145D97706 /* FBSDKLogger+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLogger+Internal.h"; sourceTree = "<group>"; };
 		7CC6D8D75D5B15013BAA1E95 /* RawServerConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawServerConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
+		7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTransformer.h; sourceTree = "<group>"; };
 		7D1C4D75AF27485E2F3D8D0F /* FBSDKConversionValueUpdating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKConversionValueUpdating.h; sourceTree = "<group>"; };
 		7DC5AD510D327EE4AFD96AE5 /* FBSDKAuthenticationTokenClaims+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAuthenticationTokenClaims+Testing.h"; sourceTree = "<group>"; };
 		7DDFDA283F6BF474D8EB4611 /* FBSDKUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKUtility.h; sourceTree = "<group>"; };
@@ -3407,6 +3417,7 @@
 				8D340D551587D8293DC2F421 /* FBSDKShareDialogConfiguration.h */,
 				BEAEF422955C0B7A960EFA9E /* FBSDKTokenCaching.h */,
 				E89766E90401FFBA0E34DB89 /* FBSDKTokenStringProviding.h */,
+				7CD86561DB164DD7FFCDC092 /* FBSDKTransformer.h */,
 				B0ADC1CAA88143C56215F01B /* FBSDKURL.h */,
 				0E83D74BD3BAFACC31487935 /* FBSDKURLHosting.h */,
 				70EECCF796D8A25E369783E1 /* FBSDKURLOpener.h */,
@@ -3633,6 +3644,7 @@
 				2961F39835FDD786ACB4E7AF /* FBSDKServerConfigurationProvider.m */,
 				1DB485238250FC117EDF66F9 /* FBSDKSettings.m */,
 				5004CC150760BD4095447B1B /* FBSDKShareDialogConfiguration.m */,
+				7C842D31E58CA0A6CA6C8A1A /* FBSDKTransformer.m */,
 				DB75F96D369C3FBFDBA6AEEB /* FBSDKURL.m */,
 				0FA0354AA0E650AAA2539C22 /* FBSDKUserAgeRange.m */,
 				50EF1C834575ABE23E405B9D /* FBSDKUtility.m */,
@@ -4406,6 +4418,7 @@
 				A9961C99E8D03283B007C5E1 /* FBSDKTokenCache.h in Headers */,
 				518CB042BF7D2912E120265C /* FBSDKTokenCaching.h in Headers */,
 				BC33ED75F4744BFD8302FEA0 /* FBSDKTokenStringProviding.h in Headers */,
+				65BB70892C9A0100F4271E34 /* FBSDKTransformer.h in Headers */,
 				7CA80F126B8E7955ED657A0C /* FBSDKUIUtility.h in Headers */,
 				0C8FF8F04F2986F28BC2A69F /* FBSDKURLSession+URLSessionProxying.h in Headers */,
 				B8D585DC6009F259950C93B0 /* FBSDKURLSessionProxyFactory.h in Headers */,
@@ -4669,6 +4682,7 @@
 				7F60CF833340B85083D49067 /* FBSDKTokenCache.h in Headers */,
 				E430E7E7BF378D777B0B3BAE /* FBSDKTokenCaching.h in Headers */,
 				BF678C0428DB2CCE184537AA /* FBSDKTokenStringProviding.h in Headers */,
+				8BC9945CF6119F3398D1B6E8 /* FBSDKTransformer.h in Headers */,
 				F42389A4239C58B447BC1FA2 /* FBSDKUIUtility.h in Headers */,
 				B147A346E1E2744B62363B36 /* FBSDKURLSession+URLSessionProxying.h in Headers */,
 				79A896478DF550725E0B6324 /* FBSDKURLSessionProxyFactory.h in Headers */,
@@ -4986,6 +5000,7 @@
 				4930F7109FAE4EEE50A29004 /* FBSDKTokenCache.h in Headers */,
 				AE03808C6685B2AA3B7953E4 /* FBSDKTokenCaching.h in Headers */,
 				FA0840553A9CF84762C3D0E4 /* FBSDKTokenStringProviding.h in Headers */,
+				5C4F7FA5BDEF612A9FAAAAD9 /* FBSDKTransformer.h in Headers */,
 				0BB318A047E7EEFE5A1C5E77 /* FBSDKUIUtility.h in Headers */,
 				E13CEE2F30CEE2C0E6953F1B /* FBSDKURL.h in Headers */,
 				6F386A8923ED5B773926AEBD /* FBSDKURLHosting.h in Headers */,
@@ -5318,6 +5333,7 @@
 				93D6EF04FDD90C9DB5656E30 /* FBSDKTokenCache.h in Headers */,
 				105B95ED7445A41EAF0B0816 /* FBSDKTokenCaching.h in Headers */,
 				0B37121FF5C3D9EA53AA4897 /* FBSDKTokenStringProviding.h in Headers */,
+				9DA149F57C6F97C54310D901 /* FBSDKTransformer.h in Headers */,
 				2BB5A92C59F5AA17B4726517 /* FBSDKUIUtility.h in Headers */,
 				589849717873EE96F3B33266 /* FBSDKURL.h in Headers */,
 				70916B1B1E4B6FD638474225 /* FBSDKURLHosting.h in Headers */,
@@ -5802,6 +5818,7 @@
 				5FD80D1C3CCED2D23E4A58E1 /* FBSDKTimeSpentData.m in Sources */,
 				E12A7DA7E23E62C6DDA8246A /* FBSDKTimeSpentRecordingFactory.m in Sources */,
 				3D900614FD309985B345C5FB /* FBSDKTokenCache.m in Sources */,
+				378C01336963D4859B5ECA32 /* FBSDKTransformer.m in Sources */,
 				00C210ED25E93BA14FF3127E /* FBSDKURL.m in Sources */,
 				8F8B203291E50BB1AF741459 /* FBSDKURLSessionProxyFactory.m in Sources */,
 				B68B712F19649B1F67E6C864 /* FBSDKUnarchiverProvider.m in Sources */,
@@ -5941,6 +5958,7 @@
 				D0AA3DE53C65C52517C64B07 /* FBSDKTimeSpentData.m in Sources */,
 				0ED53DC8B15387675ACA9A69 /* FBSDKTimeSpentRecordingFactory.m in Sources */,
 				0B656F0165D8F4862F49EAC6 /* FBSDKTokenCache.m in Sources */,
+				0437BE062E8F1152044C347A /* FBSDKTransformer.m in Sources */,
 				B92EFFCE4519DC2D27CFD31A /* FBSDKURL.m in Sources */,
 				87375B7F55B4351D33FD80AB /* FBSDKURLSessionProxyFactory.m in Sources */,
 				4A9334F009892FF5B489A8B7 /* FBSDKUnarchiverProvider.m in Sources */,
@@ -6056,6 +6074,7 @@
 				E98E7A085DA1885925E4691F /* FBSDKTimeSpentData.m in Sources */,
 				26AB8827AF5919F3E36D25E8 /* FBSDKTimeSpentRecordingFactory.m in Sources */,
 				4FDF6F834DFF52DFD79D74E2 /* FBSDKTokenCache.m in Sources */,
+				F27A61FDD6845D121A7CF467 /* FBSDKTransformer.m in Sources */,
 				2CF101B3CA53E6070711143D /* FBSDKURLSessionProxyFactory.m in Sources */,
 				3C3B00100FD676E551EB1894 /* FBSDKUnarchiverProvider.m in Sources */,
 				1481E67826C3691E03EB40B5 /* FBSDKUserAgeRange.m in Sources */,
@@ -6393,6 +6412,7 @@
 				09E4FD2E75BB62E77EEE8541 /* FBSDKTimeSpentData.m in Sources */,
 				D6973B02F9D8E178D7C7FD18 /* FBSDKTimeSpentRecordingFactory.m in Sources */,
 				5F704FDCB2218CD290F7EB51 /* FBSDKTokenCache.m in Sources */,
+				D72877CBA84F73F8333BEFA1 /* FBSDKTransformer.m in Sources */,
 				FC2D1FFF38F46FCAE72FF5C5 /* FBSDKURLSessionProxyFactory.m in Sources */,
 				26276F3D55E235613069E224 /* FBSDKUnarchiverProvider.m in Sources */,
 				393F5F91520736CE17C7EC7A /* FBSDKUserAgeRange.m in Sources */,

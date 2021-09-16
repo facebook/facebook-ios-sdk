@@ -75,6 +75,7 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKTokenStringProviding.h"
+#import "FBSDKTransformer.h"
 #import "FBSDKUserAgeRange.h"
 #import "FBSDKUtility.h"
 

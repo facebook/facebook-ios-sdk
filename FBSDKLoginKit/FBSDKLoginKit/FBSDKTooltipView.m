@@ -24,7 +24,7 @@
 
  #import <CoreText/CoreText.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitImport.h"
 
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
@@ -244,10 +244,10 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   if (_pointingUp) {
     zoomOffsetY = -zoomOffsetY;
   }
-  self.layer.transform = fbsdkdfl_CATransform3DConcat(
-    fbsdkdfl_CATransform3DMakeScale(kZoomOutScale, kZoomOutScale, kZoomOutScale),
-    fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX, zoomOffsetY, 0)
-  );
+  FBSDKTransformer *transformer = [FBSDKTransformer new];
+  CATransform3D zoomOutScale = [transformer CATransform3DMakeScale:kZoomOutScale sy:kZoomOutScale sz:kZoomOutScale];
+  CATransform3D zoomOffsetTranslation = [transformer CATransform3DMakeTranslation:zoomOffsetX ty:zoomOffsetY tz:0];
+  self.layer.transform = [transformer CATransform3DConcat:zoomOutScale b:zoomOffsetTranslation];
   self.hidden = NO;
 
   // Prepare animation steps
@@ -261,9 +261,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
       newZoomOffsetY = -newZoomOffsetY;
     }
 
-    CATransform3D scale = fbsdkdfl_CATransform3DMakeScale(kZoomInScale, kZoomInScale, kZoomInScale);
-    CATransform3D translate = fbsdkdfl_CATransform3DMakeTranslation(newZoomOffsetX, newZoomOffsetY, 0);
-    self.layer.transform = fbsdkdfl_CATransform3DConcat(scale, translate);
+    CATransform3D zoomInScale = [transformer CATransform3DMakeScale:kZoomInScale sy:kZoomInScale sz:kZoomInScale];
+    CATransform3D newZoomOffsetTranslation = [transformer CATransform3DMakeTranslation:newZoomOffsetX ty:newZoomOffsetY tz:0];
+    self.layer.transform = [transformer CATransform3DConcat:zoomInScale b:newZoomOffsetTranslation];
   };
 
   // 2nd Step.
@@ -274,15 +274,14 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     if (self->_pointingUp) {
       zoomOffsetY2 = -zoomOffsetY2;
     }
-    self.layer.transform = fbsdkdfl_CATransform3DConcat(
-      fbsdkdfl_CATransform3DMakeScale(kZoomBounceScale, kZoomBounceScale, kZoomBounceScale),
-      fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX2, zoomOffsetY2, 0)
-    );
+    CATransform3D zoomBounceScale = [transformer CATransform3DMakeScale:kZoomBounceScale sy:kZoomBounceScale sz:kZoomBounceScale];
+    CATransform3D bounceOffsetTranslation = [transformer CATransform3DMakeTranslation:zoomOffsetX2 ty:zoomOffsetY2 tz:0];
+    self.layer.transform = [transformer CATransform3DConcat:zoomBounceScale b:bounceOffsetTranslation];
   };
 
   // 3rd Step.
   void (^normalizeZoom)(void) = ^{
-    self.layer.transform = fbsdkdfl_CATransform3DIdentity;
+    self.layer.transform = FBSDKCATransform3DIdentity;
   };
 
   // Animate 3 steps sequentially

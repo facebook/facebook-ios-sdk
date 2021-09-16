@@ -45,8 +45,6 @@ FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeScale (CGFloat sx, CGF
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeTranslation (CGFloat tx, CGFloat ty, CGFloat tz);
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DConcat (CATransform3D a, CATransform3D b);
 
-FOUNDATION_EXPORT const CATransform3D fbsdkdfl_CATransform3DIdentity;
-
 #pragma mark - AdSupport Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_ASIdentifierManagerClass(void);

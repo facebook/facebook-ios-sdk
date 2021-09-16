@@ -286,8 +286,6 @@ typedef CATransform3D (*CATransform3DMakeScale_type)(CGFloat, CGFloat, CGFloat);
 typedef CATransform3D (*CATransform3DMakeTranslation_type)(CGFloat, CGFloat, CGFloat);
 typedef CATransform3D (*CATransform3DConcat_type)(CATransform3D, CATransform3D);
 
-const CATransform3D fbsdkdfl_CATransform3DIdentity = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-
 CATransform3D fbsdkdfl_CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz)
 {
   _fbsdkdfl_QuartzCore_get_f(CATransform3DMakeScale);
