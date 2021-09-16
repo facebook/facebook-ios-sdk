@@ -70,13 +70,12 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 // Other state
 @property (nonatomic) long lastGroup1CheckTime;
 @property (nonatomic) BOOL isEncodingDirty;
-
+@property (nonatomic) NSString *encodedDeviceInfo;
 @end
 
 @implementation FBSDKAppEventsDeviceInfo
-{
-  NSString *_encodedDeviceInfo;
-}
+
+@synthesize encodedDeviceInfo = _encodedDeviceInfo;
 
 #pragma mark - Public Methods
 
