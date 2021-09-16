@@ -58,11 +58,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 @end
 
 @implementation FBSDKLoginManager
-{
-  FBSDKLoginManagerLogger *_logger;
-  FBSDKLoginManagerState _state;
-  BOOL _usedSFAuthSession;
-}
 
 + (void)initialize
 {
