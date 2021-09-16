@@ -18,9 +18,10 @@
 
 #import "FBSDKUtility.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility+Internal.h"
 
 @implementation FBSDKUtility

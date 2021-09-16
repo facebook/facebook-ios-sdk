@@ -22,8 +22,9 @@
 
  #import "FBSDKEventBinding.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventLogging.h"
  #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKSwizzler.h"

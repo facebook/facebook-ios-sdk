@@ -24,8 +24,9 @@
 
  #import "FBSDKCreateContextDialog.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCreateContextContent.h"
- #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300

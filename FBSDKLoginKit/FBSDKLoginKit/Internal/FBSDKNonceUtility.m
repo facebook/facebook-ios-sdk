@@ -18,7 +18,7 @@
 
 #import "FBSDKNonceUtility.h"
 
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKNonceUtility
 

@@ -19,7 +19,8 @@
 #import "FBSDKLogger.h"
 #import "FBSDKLogger+Internal.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings.h"
 

@@ -22,9 +22,10 @@
 
  #import "FBSDKAuthenticationStatusUtility.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAccessToken.h"
  #import "FBSDKAuthenticationToken.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKLogger.h"
  #import "FBSDKProfile.h"

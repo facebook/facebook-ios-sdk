@@ -18,6 +18,7 @@
 
 #import "FBSDKApplicationDelegate.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken+Internal.h"
@@ -41,7 +42,6 @@
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"

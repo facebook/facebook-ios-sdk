@@ -22,9 +22,10 @@
 
  #import "FBSDKLoginError.h"
 
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKCoreKitImport.h"
 
  #ifndef NS_ERROR_ENUM
   #define NS_ERROR_ENUM(_domain, _name) \

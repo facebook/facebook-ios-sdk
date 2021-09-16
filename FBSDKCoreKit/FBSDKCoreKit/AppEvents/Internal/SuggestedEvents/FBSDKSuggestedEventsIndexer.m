@@ -24,6 +24,7 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
@@ -31,7 +32,6 @@
  #import "FBSDKAppEvents.h"
  #import "FBSDKAppEvents+EventLogging.h"
  #import "FBSDKAppEventsUtility.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"

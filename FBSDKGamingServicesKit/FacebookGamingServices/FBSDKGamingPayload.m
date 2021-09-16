@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingPayload.h"
 
-#import "FBSDKGamingServicesCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NSString *const kGamingPayload = @"payload";
 NSString *const kGamingPayloadGameRequestID = @"game_request_id";

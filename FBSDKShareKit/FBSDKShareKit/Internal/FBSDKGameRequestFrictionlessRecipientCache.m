@@ -22,8 +22,8 @@
 
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKGameRequestFrictionlessRecipientCache ()
 @property (nonatomic) NSSet *recipientIDs;

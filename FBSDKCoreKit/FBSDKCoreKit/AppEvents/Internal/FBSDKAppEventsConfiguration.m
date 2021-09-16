@@ -18,7 +18,7 @@
 
 #import "FBSDKAppEventsConfiguration.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #define FBSDK_APP_EVENTS_CONFIGURATION_DEFAULT_ATE_STATUS_KEY @"default_ate_status"
 #define FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY @"advertiser_id_collection_enabled"

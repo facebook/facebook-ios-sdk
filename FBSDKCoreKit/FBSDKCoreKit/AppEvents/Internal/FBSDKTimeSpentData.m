@@ -18,9 +18,10 @@
 
 #import "FBSDKTimeSpentData.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventsFlushReason.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"

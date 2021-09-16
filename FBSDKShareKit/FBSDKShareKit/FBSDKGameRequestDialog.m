@@ -22,7 +22,8 @@
 
  #import "FBSDKGameRequestDialog.h"
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"

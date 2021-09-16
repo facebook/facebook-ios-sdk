@@ -23,9 +23,9 @@
  #import "FBSDKLoginManager+Internal.h"
 
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
  #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginCompletion.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"

@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <AdSupport/AdSupport.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <TestTools/FBSDKTestCoder.h>
 
@@ -90,7 +91,6 @@
 #import "FBSDKCloseIcon+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKConversionValueUpdating.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashHandler+Testing.h"
 #import "FBSDKCrashObserver+Internal.h"
 #import "FBSDKCrashObserver+Testing.h"

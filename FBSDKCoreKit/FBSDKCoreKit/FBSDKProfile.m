@@ -23,8 +23,9 @@
 
  #import "FBSDKProfile+Internal.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAccessToken.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKGraphRequestConnecting.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKLocation.h"

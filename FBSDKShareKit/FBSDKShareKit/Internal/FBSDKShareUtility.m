@@ -18,7 +18,8 @@
 
 #import "FBSDKShareUtility.h"
 
-#import "FBSDKCoreKitBasicsImportForShareKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKHashtag.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"

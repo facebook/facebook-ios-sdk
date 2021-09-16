@@ -19,7 +19,7 @@
 #import "TargetConditionals.h"
 
 #import <Foundation/Foundation.h>
-#import "FBSDKGamingServicesCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "FBSDKDialogProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN

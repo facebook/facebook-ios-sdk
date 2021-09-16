@@ -27,7 +27,7 @@ NS_REFINED_FOR_SWIFT;
 
 #else
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -22,8 +22,9 @@
 
  #import "FBSDKCodelessParameterComponent.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKViewHierarchyMacros.h"
 
 @implementation FBSDKCodelessParameterComponent

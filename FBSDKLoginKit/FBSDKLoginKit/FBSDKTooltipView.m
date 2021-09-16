@@ -24,7 +24,7 @@
 
  #import <CoreText/CoreText.h>
 
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;

@@ -30,7 +30,7 @@
 
 #else
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKLoginManager.h"
 #import "FBSDKTooltipView.h"

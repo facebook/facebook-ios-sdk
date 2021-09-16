@@ -22,7 +22,8 @@
 
  #import "FBSDKCameraEffectTextures.h"
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKShareUtility.h"
 
 static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";

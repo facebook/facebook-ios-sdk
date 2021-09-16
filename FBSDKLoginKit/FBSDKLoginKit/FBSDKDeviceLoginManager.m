@@ -18,8 +18,9 @@
 
 #import "FBSDKDeviceLoginManager.h"
 
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 #import "FBSDKDeviceLoginManagerResult+Internal.h"
 #import "FBSDKDevicePoller.h"

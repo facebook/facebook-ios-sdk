@@ -25,10 +25,11 @@
 
  #import <UIKit/UIApplication.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKBridgeAPIProtocolNativeV1.h"
  #import "FBSDKBridgeAPIProtocolWebV1.h"
  #import "FBSDKBridgeAPIProtocolWebV2.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKSettings.h"
  #import "UIApplication+URLOpener.h"

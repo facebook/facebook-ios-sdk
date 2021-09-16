@@ -21,10 +21,10 @@
 #import <Security/Security.h>
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenHeader.h"
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
-#import "FBSDKCoreKitImport.h"
 
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end

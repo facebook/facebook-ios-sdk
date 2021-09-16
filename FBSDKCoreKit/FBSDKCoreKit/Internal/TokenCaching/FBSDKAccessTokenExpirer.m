@@ -18,9 +18,10 @@
 
 #import "FBSDKAccessTokenExpirer.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKNotificationProtocols.h"
 
 @interface FBSDKAccessTokenExpirer ()

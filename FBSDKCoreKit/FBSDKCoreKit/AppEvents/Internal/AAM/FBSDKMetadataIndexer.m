@@ -24,12 +24,12 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
  #import "FBSDKAppEventsUtility.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKServerConfigurationManager.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"

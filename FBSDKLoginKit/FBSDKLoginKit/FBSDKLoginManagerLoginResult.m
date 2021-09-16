@@ -22,8 +22,8 @@
 
  #import "FBSDKLoginManagerLoginResult+Internal.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKLoginManagerLoginResult ()
 @property (nonatomic) NSMutableDictionary<NSString *, id> *mutableLoggingExtras;

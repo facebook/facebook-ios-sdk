@@ -23,9 +23,10 @@
  #import "FBSDKModelManager.h"
  #import "FBSDKModelManager+IntegrityProcessing.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsParameterProcessing.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"

@@ -18,10 +18,11 @@
 
 #import "FBSDKViewImpressionTracker.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"

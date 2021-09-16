@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServicesCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY @"completionGesture"
 #define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST @"post"

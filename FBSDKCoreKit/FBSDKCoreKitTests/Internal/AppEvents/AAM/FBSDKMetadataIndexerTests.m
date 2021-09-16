@@ -19,8 +19,8 @@
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKMetadataIndexer.h"
 
 @interface FBSDKMetadataIndexer ()

@@ -22,9 +22,10 @@
 
  #import "FBSDKMeasurementEventListener.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEvents+SourceApplicationTracking.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent.h"
  #import "FBSDKTimeSpentData.h"
 

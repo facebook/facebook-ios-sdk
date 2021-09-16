@@ -20,7 +20,7 @@
 
 #import "FBSDKGamingServiceCompletionHandler.h"
 
-#import "FBSDKGamingServicesCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

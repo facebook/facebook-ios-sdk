@@ -22,8 +22,9 @@
 
  #import "FBSDKLoginUtility.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLoginConstants.h"
 
 @implementation FBSDKLoginUtility

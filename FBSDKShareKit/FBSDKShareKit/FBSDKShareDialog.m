@@ -25,10 +25,10 @@
  #import <Social/Social.h>
  #import <UIKit/UIApplication.h>
 
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKCoreKitImport.h"
  #import "FBSDKShareAppEventNames.h"
  #import "FBSDKShareBridgeAPIRequestFactory.h"
  #import "FBSDKShareCameraEffectContent.h"

@@ -18,7 +18,8 @@
 
 #import "FBSDKLocation.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKMath.h"
 
 NSString *const FBSDKLocationIdCodingKey = @"FBSDKLocationIdCodingKey";

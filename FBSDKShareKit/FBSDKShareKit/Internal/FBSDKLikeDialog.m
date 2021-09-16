@@ -22,8 +22,9 @@
 
  #import "FBSDKLikeDialog.h"
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
 

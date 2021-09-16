@@ -23,8 +23,9 @@
  #import <Foundation/Foundation.h>
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKGamingContext.h"
- #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 @implementation FBSDKContextWebDialog
 

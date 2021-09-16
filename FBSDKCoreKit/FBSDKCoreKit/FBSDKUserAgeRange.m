@@ -18,7 +18,8 @@
 
 #import "FBSDKUserAgeRange.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKMath.h"
 
 NSString *const FBSDKUserAgeRangeMinCodingKey = @"FBSDKUserAgeRangeMinCodingKey";

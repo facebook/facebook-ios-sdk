@@ -22,9 +22,10 @@
 
  #import "FBSDKShareCameraEffectContent+Internal.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCameraEffectArguments+Internal.h"
  #import "FBSDKCameraEffectTextures+Internal.h"
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKHasher.h"
  #import "FBSDKHashtag.h"
  #import "FBSDKShareUtility.h"

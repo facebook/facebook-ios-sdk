@@ -22,8 +22,9 @@
 
  #import "FBSDKWebDialog+Internal.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAccessToken.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility+Internal.h"

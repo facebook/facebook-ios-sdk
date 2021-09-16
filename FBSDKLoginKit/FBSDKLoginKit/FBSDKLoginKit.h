@@ -18,7 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKDeviceLoginCodeInfo.h"
 #import "FBSDKDeviceLoginManager.h"
 #import "FBSDKDeviceLoginManagerResult.h"

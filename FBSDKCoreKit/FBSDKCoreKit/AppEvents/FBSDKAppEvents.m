@@ -23,6 +23,7 @@
 #import <StoreKit/StoreKit.h>
 #import <UIKit/UIApplication.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken.h"
@@ -40,7 +41,6 @@
 #import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKConstants.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"

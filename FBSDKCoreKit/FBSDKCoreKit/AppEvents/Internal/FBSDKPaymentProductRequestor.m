@@ -20,11 +20,12 @@
 
 #import <StoreKit/StoreKit.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppStoreReceiptProviding.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGateKeeperManaging.h"

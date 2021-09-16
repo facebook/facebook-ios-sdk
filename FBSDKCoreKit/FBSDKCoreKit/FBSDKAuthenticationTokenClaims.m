@@ -18,7 +18,8 @@
 
 #import "FBSDKAuthenticationTokenClaims+Internal.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKSettings.h"
 
 static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins

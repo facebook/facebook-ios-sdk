@@ -22,7 +22,8 @@
 
  #import "FBSDKMessageDialog.h"
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKShareAppEventNames.h"
  #import "FBSDKShareDefines.h"
  #import "FBSDKShareUtility.h"

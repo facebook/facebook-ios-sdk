@@ -22,7 +22,8 @@
 
  #import "FBSDKLoginButton.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginTooltipView.h"
  #import "FBSDKNonceUtility.h"

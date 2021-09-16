@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharingValidation.h"
 

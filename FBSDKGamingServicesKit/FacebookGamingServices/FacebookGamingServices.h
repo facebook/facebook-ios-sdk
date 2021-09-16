@@ -29,7 +29,6 @@
 #import "FBSDKGamingPayload.h"
 #import "FBSDKGamingPayloadObserver.h"
 #import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKGamingVideoUploader.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKSwitchContextContent.h"

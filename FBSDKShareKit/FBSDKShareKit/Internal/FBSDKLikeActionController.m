@@ -24,8 +24,9 @@
 
  #import <QuartzCore/QuartzCore.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKCoreKitImport.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLikeActionControllerCache.h"
  #import "FBSDKLikeDialog.h"
 

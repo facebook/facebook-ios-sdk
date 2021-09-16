@@ -20,9 +20,10 @@
 
 #if !TARGET_OS_TV
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppLinkTarget.h"
  #import "FBSDKAppLink_Internal.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent_Internal.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL_Internal.h"

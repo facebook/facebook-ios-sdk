@@ -22,7 +22,8 @@
 
  #import "FBSDKReferralManagerLogger.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLoginConstants.h"
  #import "FBSDKReferralManagerResult.h"
 

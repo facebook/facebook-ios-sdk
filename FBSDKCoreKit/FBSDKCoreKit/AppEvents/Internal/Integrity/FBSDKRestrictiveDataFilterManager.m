@@ -18,7 +18,8 @@
 
 #import "FBSDKRestrictiveDataFilterManager.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
 

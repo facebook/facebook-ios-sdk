@@ -18,9 +18,10 @@
 
 #import "FBSDKGamingPayloadObserver.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKGamingContext.h"
 #import "FBSDKGamingPayload.h"
-#import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKGamingPayloadObserver () <FBSDKApplicationObserving>
 @end

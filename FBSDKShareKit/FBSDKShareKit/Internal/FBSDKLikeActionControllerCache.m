@@ -24,7 +24,8 @@
 
  #import <UIKit/UIKit.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLikeActionController.h"
 
 // after 1 day, expire the cached states

@@ -18,7 +18,8 @@
 
 #import "FBSDKInstrumentManager.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKCrashObserver.h"
 #import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKFeatureChecking.h"

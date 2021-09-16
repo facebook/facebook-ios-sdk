@@ -22,7 +22,8 @@
 
  #import "FBSDKLoginManagerLogger.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManagerLoginResult+Internal.h"
  #import "FBSDKLoginUtility.h"

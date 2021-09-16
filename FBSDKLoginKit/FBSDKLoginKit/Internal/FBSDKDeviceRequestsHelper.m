@@ -21,9 +21,8 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <sys/utsname.h>
-
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"

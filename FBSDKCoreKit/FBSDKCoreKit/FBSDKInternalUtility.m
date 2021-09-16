@@ -18,12 +18,12 @@
 
 #import "FBSDKInternalUtility.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <mach-o/dyld.h>
 #import <sys/time.h>
 
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKAuthenticationToken.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKInternalUtilityProtocol.h"
 #import "FBSDKLogger.h"

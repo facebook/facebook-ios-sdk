@@ -24,10 +24,10 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
 
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventBinding.h"
  #import "FBSDKEventLogging.h"
  #import "FBSDKSwizzling.h"

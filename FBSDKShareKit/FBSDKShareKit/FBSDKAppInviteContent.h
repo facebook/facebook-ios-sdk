@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKSharingValidation.h"
 

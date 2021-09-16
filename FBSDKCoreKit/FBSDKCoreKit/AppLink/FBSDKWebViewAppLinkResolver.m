@@ -26,7 +26,7 @@
 #import <WebKit/WebKit.h>
 
 #import "FBSDKAppLink.h"
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import "FBSDKError+Internal.h"
 #import "NSURLSession+Protocols.h"
 

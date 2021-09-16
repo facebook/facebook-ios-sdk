@@ -24,11 +24,11 @@
 
  #import <QuartzCore/QuartzCore.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
 
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKUtility.h"
  #import "FBSDKViewHierarchyMacros.h"
 

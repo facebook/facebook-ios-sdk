@@ -20,9 +20,9 @@
 
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestProtocol.h"

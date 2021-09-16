@@ -18,8 +18,9 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationProviding.h"

@@ -22,9 +22,10 @@
 
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEvents+EventLogging.h"
  #import "FBSDKAppEvents+Internal.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventLogging.h"
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";

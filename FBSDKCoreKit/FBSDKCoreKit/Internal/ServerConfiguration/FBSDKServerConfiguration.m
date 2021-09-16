@@ -19,7 +19,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfiguration+Internal.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 // one minute
 #define DEFAULT_SESSION_TIMEOUT_INTERVAL 60

@@ -22,7 +22,8 @@
 
  #import "FBSDKFeatureExtractor.h"
 
- #import "FBSDKCoreKitBasicsImport.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKModelManager.h"
  #import "FBSDKRulesFromKeyProvider.h"
  #import "FBSDKViewHierarchy.h"

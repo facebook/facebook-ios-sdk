@@ -19,7 +19,7 @@
 #import <Photos/Photos.h>
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharingValidation.h"
 NS_ASSUME_NONNULL_BEGIN

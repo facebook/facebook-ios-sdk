@@ -24,11 +24,11 @@
 
  #import <StoreKit/StoreKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/message.h>
 
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKConversionValueUpdating.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
