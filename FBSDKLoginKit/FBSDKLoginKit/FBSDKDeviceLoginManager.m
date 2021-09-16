@@ -190,17 +190,10 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
           return;
         }
       }
-    #if TARGET_TV_OS
-      NSError *wrappedError = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                     code:FBSDKErrorTVOSUnknown
-                                                  message:@"Unable to fetch permissions for token"
-                                          underlyingError:error];
-    #else
       NSError *wrappedError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
                                                      code:FBSDKErrorUnknown
                                                   message:@"Unable to fetch permissions for token"
                                           underlyingError:error];
-    #endif
       [self _notifyError:wrappedError];
     };
     [request startWithCompletion:completion];
