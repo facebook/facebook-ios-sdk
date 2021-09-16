@@ -70,9 +70,6 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 @end
 
 @implementation FBSDKTooltipView
-{
-  FBSDKTooltipColorStyle _colorStyle;
-}
 
 - (instancetype)initWithTagline:(NSString *)tagline message:(NSString *)message colorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
@@ -198,11 +195,6 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 }
 
  #pragma mark Style
-
-- (FBSDKTooltipColorStyle)colorStyle
-{
-  return _colorStyle;
-}
 
 - (void)setColorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
