@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKAppEventsState;
 
 NS_SWIFT_NAME(AppEventsStateProviding)
@@ -26,3 +28,5 @@ NS_SWIFT_NAME(AppEventsStateProviding)
 - (FBSDKAppEventsState*) createStateWithToken:(NSString *)tokenString appID:(NSString *)appID NS_SWIFT_NAME(createState(tokenString:appID:));
 
 @end
+
+NS_ASSUME_NONNULL_END
