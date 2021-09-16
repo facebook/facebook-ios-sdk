@@ -86,6 +86,8 @@ NS_ASSUME_NONNULL_BEGIN
                                  isTestMode:(BOOL)isTestMode
                                     hasSKAN:(BOOL)hasSKAN;
 
+- (nullable NSDictionary<NSString *, id> *)processedParameters:(nullable NSDictionary<NSString *, id> *)parameters;
+
 - (nullable FBAEMConfiguration *)_findConfig:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 
 - (nullable NSString *)getHMAC:(NSInteger)delay;

@@ -45,6 +45,8 @@ static NSString *const CONVERSION_TIMESTAMP_KEY = @"conversion_timestamp";
 static NSString *const IS_AGGREGATED_KEY = @"is_aggregated";
 static NSString *const HAS_SKAN_KEY = @"has_skan";
 
+static NSString *const FB_CONTENT = @"fb_content";
+
 typedef NSString *const FBAEMInvocationConfigMode;
 
 FBAEMInvocationConfigMode FBAEMInvocationConfigDefaultMode = @"DEFAULT";
@@ -169,7 +171,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     return NO;
   }
   // Check advertiser rule matching
-  if (config.matchingRule && ![config.matchingRule isMatchedEventParameters:parameters]) {
+  if (config.matchingRule && ![config.matchingRule isMatchedEventParameters:[self processedParameters:parameters]]) {
     return NO;
   }
   BOOL isAttributed = NO;
@@ -262,6 +264,27 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   base64String = [base64String stringByAppendingString:padding];
   NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
   return decodedData;
+}
+
+- (nullable NSDictionary<NSString *, id> *)processedParameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  if (!parameters) {
+    return parameters;
+  }
+  @try {
+    NSMutableDictionary<NSString *, id> *result = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    NSString *content = [FBSDKTypeUtility dictionary:result objectForKey:FB_CONTENT ofType:NSString.class];
+    if (content) {
+      [FBSDKTypeUtility dictionary:result
+                         setObject:[FBSDKTypeUtility JSONObjectWithData:[content dataUsingEncoding:NSUTF8StringEncoding]
+                                                                options:0
+                                                                  error:nil]
+                            forKey:FB_CONTENT];
+    }
+    return [result copy];
+  } @catch (NSException *exception) {
+    return parameters;
+  }
 }
 
 - (BOOL)_isOutOfWindowWithConfig:(nullable FBAEMConfiguration *)config
