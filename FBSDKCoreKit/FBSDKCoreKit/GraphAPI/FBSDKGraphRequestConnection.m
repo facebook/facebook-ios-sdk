@@ -199,30 +199,9 @@ static BOOL _canMakeRequests = NO;
   return g_defaultTimeout;
 }
 
-- (void) addRequest:(id<FBSDKGraphRequest>)request
-  completionHandler:(FBSDKGraphRequestBlock)handler
-{
-  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
-  };
-
-  [self addRequest:request completion:completion];
-}
-
 - (void)addRequest:(id<FBSDKGraphRequest>)request completion:(FBSDKGraphRequestCompletion)completion
 {
   [self addRequest:request name:@"" completion:completion];
-}
-
-- (void) addRequest:(id<FBSDKGraphRequest>)request
-     batchEntryName:(NSString *)name
-  completionHandler:(FBSDKGraphRequestBlock)handler
-{
-  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
-  };
-
-  [self addRequest:request name:name completion:completion];
 }
 
 - (void)addRequest:(id<FBSDKGraphRequest>)request
@@ -231,17 +210,6 @@ static BOOL _canMakeRequests = NO;
 {
   NSDictionary<NSString *, id> *batchParams = name.length > 0 ? @{kBatchEntryName : name } : nil;
   [self addRequest:request parameters:batchParams completion:completion];
-}
-
-- (void) addRequest:(id<FBSDKGraphRequest>)request
-    batchParameters:(NSDictionary<NSString *, id> *)batchParameters
-  completionHandler:(FBSDKGraphRequestBlock)handler
-{
-  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
-  };
-
-  [self addRequest:request parameters:batchParameters completion:completion];
 }
 
 - (void)addRequest:(id<FBSDKGraphRequest>)request

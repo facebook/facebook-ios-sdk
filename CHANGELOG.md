@@ -19,6 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `AppEvents`' `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
 - Ability to create new instances of `FBSDKGraphErrorRecoveryProcessor` without using designated initializers.
 - `GraphRequest`'s `start(completionHandler:)` method. Replaced by `start(completion:)`
+- `GraphRequestBlock` - Replaced by `GraphRequestCompletion`
+- `GraphRequestConnection`'s `add(_:completionHandler:)`. Replaced by `add(_:completion:)`
+- `GraphRequestConnection`'s `add(_:batchEntryName:completionHandler:)`. Replaced by `add(_:name:completion:)`
+- `GraphRequestConnection`'s `add(_:batchParameters:completionHandler:)`. Replaced by `add(_:parameters:completion:)`
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...HEAD)
 

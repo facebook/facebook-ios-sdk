@@ -59,30 +59,6 @@ typedef void (^FBSDKGraphRequestCompletion)(id<FBSDKGraphRequestConnecting> _Nul
                                             NSError *_Nullable error);
 
 /**
- FBSDKGraphRequestBlock
-
-  A block that is passed to addRequest to register for a callback with the results of that
- request once the connection completes.
-
- Pass a block of this type when calling addRequest.  This will be called once
- the request completes.  The call occurs on the UI thread.
-
- @param connection The connection that sent the request.
-
- @param result The result of the request.  This is a translation of
- JSON data to `NSDictionary` and `NSArray` objects.  This
- is nil if there was an error.
-
- @param error The `NSError` representing any error that occurred.
-
- */
-typedef void (^FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
-                                       id _Nullable result,
-                                       NSError *_Nullable error)
-NS_SWIFT_NAME(GraphRequestBlock)
-DEPRECATED_MSG_ATTRIBUTE("Please use the methods that use the `GraphRequestConnecting` protocol instead.");
-
-/**
  @protocol
 
   The `FBSDKGraphRequestConnectionDelegate` protocol defines the methods used to receive network
@@ -232,21 +208,6 @@ NS_SWIFT_NAME(GraphRequestConnection)
   This method adds an <FBSDKGraphRequest> object to this connection.
 
  @param request       A request to be included in the round-trip when start is called.
- @param handler       A handler to call back when the round-trip completes or times out.
-
- The completion handler is retained until the block is called upon the
- completion or cancellation of the connection.
- */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:completion:` instead");
-
-/**
- @method
-
-  This method adds an <FBSDKGraphRequest> object to this connection.
-
- @param request       A request to be included in the round-trip when start is called.
  @param completion       A handler to call back when the round-trip completes or times out.
 
  The completion handler is retained until the block is called upon the
@@ -254,30 +215,6 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
  completion:(FBSDKGraphRequestCompletion)completion;
-
-/**
- @method
-
-  This method adds an <FBSDKGraphRequest> object to this connection.
-
- @param request         A request to be included in the round-trip when start is called.
-
- @param handler         A handler to call back when the round-trip completes or times out.
- The handler will be invoked on the main thread.
-
- @param name            A name for this request.  This can be used to feed
- the results of one request to the input of another <FBSDKGraphRequest> in the same
- `FBSDKGraphRequestConnection` as described in
- [Graph API Batch Requests]( https://developers.facebook.com/docs/reference/api/batch/ ).
-
- The completion handler is retained until the block is called upon the
- completion or cancellation of the connection. This request can be named
- to allow for using the request's response in a subsequent request.
- */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
-    batchEntryName:(NSString *)name
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:name:completion:` instead");
 
 /**
  @method
@@ -301,28 +238,6 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
 - (void)addRequest:(id<FBSDKGraphRequest>)request
               name:(NSString *)name
         completion:(FBSDKGraphRequestCompletion)completion;
-
-/**
- @method
-
-  This method adds an <FBSDKGraphRequest> object to this connection.
-
- @param request         A request to be included in the round-trip when start is called.
-
- @param handler         A handler to call back when the round-trip completes or times out.
-
- @param batchParameters The dictionary of parameters to include for this request
- as described in [Graph API Batch Requests]( https://developers.facebook.com/docs/reference/api/batch/ ).
- Examples include "depends_on", "name", or "omit_response_on_success".
-
- The completion handler is retained until the block is called upon the
- completion or cancellation of the connection. This request can be named
- to allow for using the request's response in a subsequent request.
- */
-- (void)addRequest:(id<FBSDKGraphRequest>)request
-   batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
- completionHandler:(FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:parameters:completion:` instead");
 
 /**
  @method
