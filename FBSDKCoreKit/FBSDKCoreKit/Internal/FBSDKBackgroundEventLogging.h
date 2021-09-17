@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKInfoDictionaryProviding;
 @protocol FBSDKEventLogging;
 
@@ -37,5 +39,7 @@ NS_SWIFT_NAME(BackgroundEventLogging)
 - (void)logBackgroundRefresStatus:(UIBackgroundRefreshStatus)status;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

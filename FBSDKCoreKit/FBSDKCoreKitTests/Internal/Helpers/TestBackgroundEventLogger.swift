@@ -20,8 +20,8 @@
 class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
 
   required init(
-    infoDictionaryProvider: InfoDictionaryProviding?,
-    eventLogger: EventLogging?
+    infoDictionaryProvider: InfoDictionaryProviding,
+    eventLogger: EventLogging
   ) {
   }
 
