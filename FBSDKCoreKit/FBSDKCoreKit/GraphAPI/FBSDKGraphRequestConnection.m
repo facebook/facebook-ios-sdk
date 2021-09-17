@@ -148,7 +148,7 @@ static BOOL _canMakeRequests = NO;
                      piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
                                      settings:FBSDKSettings.self
                             connectionFactory:[FBSDKGraphRequestConnectionFactory new]
-                                  eventLogger:FBSDKAppEvents.singleton
+                                  eventLogger:FBSDKAppEvents.shared
                operatingSystemVersionComparer:NSProcessInfo.processInfo
                       macCatalystDeterminator:NSProcessInfo.processInfo];
 }

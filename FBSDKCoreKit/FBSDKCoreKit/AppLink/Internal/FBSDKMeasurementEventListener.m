@@ -56,7 +56,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
     NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
     if (sourceApplication) {
-      [FBSDKAppEvents.singleton setSourceApplication:sourceApplication isFromAppLink:YES];
+      [FBSDKAppEvents.shared setSourceApplication:sourceApplication isFromAppLink:YES];
     }
   }
   NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];

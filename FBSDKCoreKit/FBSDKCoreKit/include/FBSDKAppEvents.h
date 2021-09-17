@@ -281,12 +281,9 @@ NS_SWIFT_NAME(AppEvents)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
+ The shared instance of AppEvents.
  */
-@property (class, nonatomic, readonly, strong) FBSDKAppEvents *singleton;
+@property (class, nonatomic, readonly, strong) FBSDKAppEvents *shared;
 
 /*
  * Control over event batching/flushing
@@ -550,9 +547,6 @@ NS_SWIFT_NAME(AppEvents)
                    mpn:(nullable NSString *)mpn
                  brand:(nullable NSString *)brand
             parameters:(nullable NSDictionary<NSString *, id> *)parameters;
-
-+ (void)activateApp
-DEPRECATED_MSG_ATTRIBUTE("The class method `activateApp` is deprecated. It is replaced by an instance method of the same name.");
 
 /**
 

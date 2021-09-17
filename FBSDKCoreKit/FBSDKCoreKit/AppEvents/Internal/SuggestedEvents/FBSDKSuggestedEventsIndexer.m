@@ -72,7 +72,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
                 serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
-                                eventLogger:FBSDKAppEvents.singleton
+                                eventLogger:FBSDKAppEvents.shared
                            featureExtractor:FBSDKFeatureExtractor.class
                              eventProcessor:FBSDKModelManager.shared];
 }

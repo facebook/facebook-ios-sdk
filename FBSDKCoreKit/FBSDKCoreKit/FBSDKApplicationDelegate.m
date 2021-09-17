@@ -151,18 +151,18 @@ static UIApplicationState _applicationState;
                               tokenWallet:FBSDKAccessToken.class
                                  settings:FBSDKSettings.sharedSettings
                            featureChecker:FBSDKFeatureManager.shared
-                                appEvents:FBSDKAppEvents.singleton
+                                appEvents:FBSDKAppEvents.shared
               serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                     store:NSUserDefaults.standardUserDefaults
                 authenticationTokenWallet:FBSDKAuthenticationToken.class];
 #else
   FBSDKBackgroundEventLogger *backgroundEventLogger = [[FBSDKBackgroundEventLogger alloc] initWithInfoDictionaryProvider:NSBundle.mainBundle
-                                                                                                             eventLogger:FBSDKAppEvents.singleton];
+                                                                                                             eventLogger:FBSDKAppEvents.shared];
   return [self initWithNotificationCenter:NSNotificationCenter.defaultCenter
                               tokenWallet:FBSDKAccessToken.class
                                  settings:FBSDKSettings.sharedSettings
                            featureChecker:FBSDKFeatureManager.shared
-                                appEvents:FBSDKAppEvents.singleton
+                                appEvents:FBSDKAppEvents.shared
               serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                     store:NSUserDefaults.standardUserDefaults
                 authenticationTokenWallet:FBSDKAuthenticationToken.class
@@ -650,7 +650,7 @@ static UIApplicationState _applicationState;
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
-                        eventLogger:FBSDKAppEvents.singleton];
+                        eventLogger:FBSDKAppEvents.shared];
   [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
   [FBSDKGraphRequest setSettings:sharedSettings];
   [FBSDKGraphRequestConnection setCanMakeRequests];

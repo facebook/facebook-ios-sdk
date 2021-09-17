@@ -101,7 +101,7 @@ class ApplicationDelegateTests: XCTestCase {
     )
     XCTAssertEqual(
       ApplicationDelegate.shared.appEvents as? AppEvents,
-      AppEvents.singleton,
+      AppEvents.shared,
       "Should use the expected default app events instance"
     )
     XCTAssertTrue(

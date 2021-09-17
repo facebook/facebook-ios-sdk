@@ -51,7 +51,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
 
     XCTAssertEqual(
       ObjectIdentifier(handler.eventLogger),
-      ObjectIdentifier(AppEvents.singleton),
+      ObjectIdentifier(AppEvents.shared),
       "Should use the correct concrete event logger by default"
     )
   }

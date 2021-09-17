@@ -46,7 +46,7 @@
 - (instancetype)init
 {
   return [self initWithSettings:FBSDKSettings.sharedSettings
-                      eventLogger:FBSDKAppEvents.singleton
+                      eventLogger:FBSDKAppEvents.shared
                 gateKeeperManager:FBSDKGateKeeperManager.class
                             store:NSUserDefaults.standardUserDefaults
                     loggerFactory:[FBSDKLoggerFactory new]

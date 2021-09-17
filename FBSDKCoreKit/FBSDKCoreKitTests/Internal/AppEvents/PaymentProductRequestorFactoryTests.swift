@@ -60,7 +60,7 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     )
     XCTAssertEqual(
       ObjectIdentifier(factory.eventLogger),
-      ObjectIdentifier(AppEvents.singleton),
+      ObjectIdentifier(AppEvents.shared),
       "Should use the expected concrete event logger by default"
     )
     XCTAssertTrue(

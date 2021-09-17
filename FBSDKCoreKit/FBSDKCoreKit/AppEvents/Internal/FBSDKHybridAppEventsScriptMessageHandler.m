@@ -43,7 +43,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 
 - (instancetype)init
 {
-  return [self initWithEventLogger:FBSDKAppEvents.singleton];
+  return [self initWithEventLogger:FBSDKAppEvents.shared];
 }
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger

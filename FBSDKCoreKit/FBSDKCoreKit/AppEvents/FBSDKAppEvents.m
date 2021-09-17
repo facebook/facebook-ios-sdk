@@ -270,7 +270,7 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define FBUnityUtilityClassName "FBUnityUtility"
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
-static FBSDKAppEvents *shared = nil;
+static FBSDKAppEvents *_shared = nil;
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
@@ -386,7 +386,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)logEvent:(FBSDKAppEventName)eventName
 {
-  [self.singleton logEvent:eventName];
+  [self.shared logEvent:eventName];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -398,8 +398,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -413,8 +413,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton logEvent:eventName
-                parameters:parameters];
+  [self.shared logEvent:eventName
+             parameters:parameters];
 }
 
 - (void)logEvent:(NSString *)eventName
@@ -430,9 +430,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       valueToSum:(double)valueToSum
       parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum
-                parameters:parameters];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum
+             parameters:parameters];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -450,10 +450,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       parameters:(NSDictionary<NSString *, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum
-                parameters:parameters
-               accessToken:accessToken];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum
+             parameters:parameters
+            accessToken:accessToken];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -491,7 +491,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
          parameters:(NSDictionary<NSString *, id> *)parameters
         accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
@@ -511,7 +511,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.
   if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   }
 }
 
@@ -526,7 +526,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   NSDictionary<NSString *, id> *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
   if (!facebookPayload) {
@@ -563,7 +563,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                  brand:(NSString *)brand
             parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (itemID == nil) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -654,7 +654,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)activateApp
 {
-  [self.singleton activateApp];
+  [self.shared activateApp];
 }
 
 - (void)activateApp
@@ -676,7 +676,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
@@ -684,35 +684,35 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (deviceTokenString == nil) {
-    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = nil;
+    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = nil;
     return;
   }
 
-  if (![deviceTokenString isEqualToString:([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString)]) {
-    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = deviceTokenString;
+  if (![deviceTokenString isEqualToString:([FBSDKAppEvents shared].pushNotificationsDeviceTokenString)]) {
+    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = deviceTokenString;
 
     [FBSDKAppEvents logEvent:FBSDKAppEventNamePushTokenObtained];
 
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
     if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-      [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+      [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
     }
   }
 }
 
 + (FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  return [FBSDKAppEvents singleton].flushBehavior;
+  return [FBSDKAppEvents shared].flushBehavior;
 }
 
 + (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  self.singleton.flushBehavior = flushBehavior;
+  self.shared.flushBehavior = flushBehavior;
 }
 
 + (NSString *)loggingOverrideAppID
@@ -722,7 +722,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)setLoggingOverrideAppID:(NSString *)appID
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (![g_overrideAppID isEqualToString:appID]) {
     FBSDKConditionalLog(
@@ -736,13 +736,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)flush
 {
-  [self.singleton validateConfiguration];
-  [self.singleton flushForReason:FBSDKAppEventsFlushReasonExplicit];
+  [self.shared validateConfiguration];
+  [self.shared flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
 + (void)setUserID:(NSString *)userID
 {
-  self.singleton.userID = userID;
+  self.shared.userID = userID;
 }
 
 - (void)setUserID:(NSString *)userID
@@ -754,7 +754,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)clearUserID
 {
-  [self.singleton clearUserID];
+  [self.shared clearUserID];
 }
 
 - (void)clearUserID
@@ -766,9 +766,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (NSString *)userID
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  return self.singleton.userID;
+  return self.shared.userID;
 }
 
 + (void)setUserEmail:(nullable NSString *)email
@@ -824,7 +824,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #if !TARGET_OS_TV
 + (void)augmentHybridWKWebView:(WKWebView *)webView
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if ([webView isKindOfClass:WKWebView.class]) {
     if (WKUserScript.class != nil) {
@@ -833,7 +833,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js = [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
-                      [[self singleton] appID],
+                      [[self shared] appID],
                       FBSDKAppEventsWKWebViewMessagesPixelIDKey,
                       FBSDKAppEventsWKWebViewMessagesEventKey,
                       FBSDKAppEventsWKWebViewMessagesParamsKey,
@@ -852,21 +852,21 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)setIsUnityInit:(BOOL)isUnityInit
 {
-  [FBSDKAppEvents singleton]->_isUnityInit = isUnityInit;
+  [FBSDKAppEvents shared]->_isUnityInit = isUnityInit;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 + (void)sendEventBindingsToUnity
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   // Send event bindings to Unity only Unity is initialized
-  if ([FBSDKAppEvents singleton]->_isUnityInit
-      && [FBSDKAppEvents singleton]->_serverConfiguration
-      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings]
+  if ([FBSDKAppEvents shared]->_isUnityInit
+      && [FBSDKAppEvents shared]->_serverConfiguration
+      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings]
   ) {
-    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings ?: @""
                                                     options:0
                                                       error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -968,8 +968,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -984,9 +984,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               valueToSum:(double)valueToSum
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1003,9 +1003,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1024,10 +1024,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:accessToken];
+  [self.shared logInternalEvent:eventName
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged
+                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1047,10 +1047,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1071,11 +1071,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:accessToken];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged
+                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(NSString *)eventName
@@ -1098,11 +1098,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton instanceLogEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:accessToken];
+  [self.shared instanceLogEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:YES
+                    accessToken:accessToken];
 }
 
 - (void)logImplicitEvent:(NSString *)eventName
@@ -1117,13 +1117,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
              accessToken:accessToken];
 }
 
-+ (FBSDKAppEvents *)singleton
++ (FBSDKAppEvents *)shared
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    shared = [self new];
+    _shared = [self new];
   });
-  return shared;
+  return _shared;
 }
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason
@@ -1712,7 +1712,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   accessToken = accessToken ?: [FBSDKAccessToken currentAccessToken];
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
@@ -1730,7 +1730,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
     // available. Note that this function only makes sense to be called in the context of advertising.
-    udid = [self.singleton.advertiserIDProvider advertiserID];
+    udid = [self.shared.advertiserIDProvider advertiserID];
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;
@@ -1742,7 +1742,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     parameters = @{ @"udid" : udid };
   }
 
-  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self singleton] appID]];
+  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self shared] appID]];
 
   id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:graphPath
                                                                                parameters:parameters
@@ -1758,7 +1758,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)reset
 {
-  self.singleton.isConfigured = NO;
+  self.shared.isConfigured = NO;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
   g_graphRequestProvider = nil;
@@ -1766,12 +1766,12 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents
 {
-  shared = appEvents;
+  _shared = appEvents;
 }
 
 + (void)resetApplicationState
 {
-  self.singleton.applicationState = UIApplicationStateInactive;
+  self.shared.applicationState = UIApplicationStateInactive;
 }
 
 + (id<FBSDKFeatureChecking>)featureChecker

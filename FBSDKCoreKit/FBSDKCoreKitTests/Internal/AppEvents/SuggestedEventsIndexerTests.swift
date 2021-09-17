@@ -113,7 +113,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
     XCTAssertEqual(
       ObjectIdentifier(indexer.eventLogger),
-      ObjectIdentifier(AppEvents.singleton),
+      ObjectIdentifier(AppEvents.shared),
       "Should have an event logger of the expected default type"
     )
     XCTAssertTrue(

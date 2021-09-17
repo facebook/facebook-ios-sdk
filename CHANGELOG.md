@@ -7,11 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
+
 ### Removed
 
 - `AccessToken`'s `graphDomain` property. Replacement - the `graphDomain` property on `AuthenticationToken`
 - `AccessToken`'s convenience initializers that include `graphDomain`
 - `AccessToken`'s `refreshCurrentAccessToken(completionHandler:)`. Replaced by `refreshCurrentAccessToken(completion:)`
+- `AppEvents`' `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...HEAD)
 

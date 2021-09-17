@@ -101,7 +101,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       graphRequestFactory: TestGraphRequestFactory(),
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory()
     )
-    AppEvents.singleton.configure(
+    AppEvents.shared.configure(
       withGateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
       serverConfigurationProvider: TestServerConfigurationProvider(),

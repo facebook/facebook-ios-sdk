@@ -330,7 +330,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSObject *logger = (NSObject *)connection.eventLogger;
   XCTAssertEqualObjects(
     logger,
-    FBSDKAppEvents.singleton,
+    FBSDKAppEvents.shared,
     "A graph request connection should have the correct events logger by default"
   );
 }

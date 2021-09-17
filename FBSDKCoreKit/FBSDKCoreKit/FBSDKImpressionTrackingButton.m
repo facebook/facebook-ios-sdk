@@ -40,7 +40,7 @@
       FBSDKViewImpressionTracker *impressionTracker
         = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName
                                                 graphRequestProvider:[FBSDKGraphRequestFactory new]
-                                                         eventLogger:FBSDKAppEvents.singleton
+                                                         eventLogger:FBSDKAppEvents.shared
                                                 notificationObserver:NSNotificationCenter.defaultCenter
                                                          tokenWallet:FBSDKAccessToken.class];
       [impressionTracker logImpressionWithIdentifier:identifier parameters:parameters];

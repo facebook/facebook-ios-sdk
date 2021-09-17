@@ -588,7 +588,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     eventLogger,
-    FBSDKAppEvents.singleton,
+    FBSDKAppEvents.shared,
     "Should be configured with the expected concrete event logger"
   );
 }
