@@ -23,15 +23,16 @@
 #import <StoreKit/StoreKit.h>
 #import <UIKit/UIApplication.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAEMReporter.h"
 #import "FBSDKAccessToken.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKAppEventsReporter.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsStateProviding.h"
@@ -40,21 +41,18 @@
 #import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKConstants.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKPaymentObserving.h"
-#import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
@@ -64,6 +62,7 @@
 
 #if !TARGET_OS_TV
 
+ #import "FBSDKCoreKitAEMImport.h"
  #import "FBSDKEventBindingManager.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
@@ -194,11 +193,13 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingVideoID = @"fb_sdk_live_str
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingMic = @"fb_sdk_live_streaming_mic";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingCamera = @"fb_sdk_live_streaming_camera";
 
+// Public Event Parameters
+NSString *const FBSDKAppEventParameterEventName = @"_eventName";
+NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
+
 // Event Parameters internal to this file
 NSString *const FBSDKAppEventParameterShareTrayActivityName = @"fb_share_tray_activity";
 NSString *const FBSDKAppEventParameterShareTrayResult = @"fb_share_tray_result";
-NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
-NSString *const FBSDKAppEventParameterEventName = @"_eventName";
 NSString *const FBSDKAppEventParameterImplicitlyLogged = @"_implicitlyLogged";
 NSString *const FBSDKAppEventParameterInBackground = @"_inBackground";
 
@@ -269,12 +270,12 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define FBUnityUtilityClassName "FBUnityUtility"
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
-static FBSDKAppEvents *shared = nil;
+static FBSDKAppEvents *_shared = nil;
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
-static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
+static id<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
@@ -283,11 +284,6 @@ static id<FBSDKPaymentObserving> g_paymentObserver;
 static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_eventDeactivationParameterProcessor;
 static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiveDataFilterParameterProcessor;
-
-#if !TARGET_OS_TV
-static id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> g_onDeviceMLModelManager = nil;
-static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
-#endif
 
 @interface FBSDKAppEvents ()
 
@@ -302,28 +298,32 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (nonatomic) id<FBSDKAtePublisherCreating> atePublisherFactory;
 @property (nonatomic) BOOL isConfigured;
 
+#if !TARGET_OS_TV
+@property (nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
+@property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
+@property (nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
+@property (nonatomic) FBSDKEventBindingManager *eventBindingManager;
+#endif
+
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
+
+@property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
+@property (nonatomic) FBSDKAppEventsState *appEventsState;
+@property (nonatomic) BOOL isUnityInit;
 
 @end
 
 @implementation FBSDKAppEvents
-{
-  FBSDKServerConfiguration *_serverConfiguration;
-  FBSDKAppEventsState *_appEventsState;
-#if !TARGET_OS_TV
-  FBSDKEventBindingManager *_eventBindingManager;
-#endif
-  BOOL _isUnityInit;
-}
 
 #pragma mark - Object Lifecycle
 
 + (void)initialize
 {
-  if (self == [FBSDKAppEvents class]) {
-    g_overrideAppID = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
+  if (self == FBSDKAppEvents.class) {
+    g_overrideAppID = [[NSBundle.mainBundle objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
       [FBSDKBasicUtility anonymousID];
     });
@@ -357,19 +357,19 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 - (void)startObservingApplicationLifecycleNotifications
 {
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveStateOrTerminating)
    name:UIApplicationWillResignActiveNotification
    object:NULL];
 
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveStateOrTerminating)
    name:UIApplicationWillTerminateNotification
    object:NULL];
 
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationDidBecomeActive)
    name:UIApplicationDidBecomeActiveNotification
@@ -378,7 +378,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
   [FBSDKUtility stopGCDTimer:self.flushTimer];
 }
 
@@ -386,7 +386,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
 {
-  [self.singleton logEvent:eventName];
+  [self.shared logEvent:eventName];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -398,8 +398,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -411,10 +411,10 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton logEvent:eventName
-                parameters:parameters];
+  [self.shared logEvent:eventName
+             parameters:parameters];
 }
 
 - (void)logEvent:(NSString *)eventName
@@ -428,16 +428,16 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum
-                parameters:parameters];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum
+             parameters:parameters];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:@(valueToSum)
@@ -447,18 +447,18 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logEvent:eventName
-                valueToSum:valueToSum
-                parameters:parameters
-               accessToken:accessToken];
+  [self.shared logEvent:eventName
+             valueToSum:valueToSum
+             parameters:parameters
+            accessToken:accessToken];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
   [self instanceLogEvent:eventName
@@ -478,7 +478,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary *)parameters
+         parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logPurchase:purchaseAmount
                      currency:currency
@@ -488,14 +488,14 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary *)parameters
+         parameters:(NSDictionary<NSString *, id> *)parameters
         accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
-  NSDictionary *newParameters;
+  NSDictionary<NSString *, id> *newParameters;
   if (!parameters) {
     newParameters = @{ FBSDKAppEventParameterNameCurrency : currency };
   } else {
@@ -511,7 +511,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.
   if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   }
 }
 
@@ -519,16 +519,16 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
  * Push Notifications Logging
  */
 
-+ (void)logPushNotificationOpen:(NSDictionary *)payload
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
 {
   [self logPushNotificationOpen:payload action:@""];
 }
 
-+ (void)logPushNotificationOpen:(NSDictionary *)payload action:(NSString *)action
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  NSDictionary *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
+  NSDictionary<NSString *, id> *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
   if (!facebookPayload) {
     return;
   }
@@ -539,7 +539,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     return;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObject:campaign forKey:FBSDKAppEventParameterPushCampaign];
+  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterPushAction];
   }
@@ -561,9 +561,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
                   gtin:(NSString *)gtin
                    mpn:(NSString *)mpn
                  brand:(NSString *)brand
-            parameters:(NSDictionary *)parameters
+            parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (itemID == nil) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -595,7 +595,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     return;
   }
 
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *dict = [NSMutableDictionary dictionary];
   if (nil != parameters) {
     [dict setValuesForKeysWithDictionary:parameters];
   }
@@ -654,7 +654,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)activateApp
 {
-  [self.singleton activateApp];
+  [self.shared activateApp];
 }
 
 - (void)activateApp
@@ -676,43 +676,43 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  NSString *deviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
+  NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
 }
 
 + (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (deviceTokenString == nil) {
-    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = nil;
+    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = nil;
     return;
   }
 
-  if (![deviceTokenString isEqualToString:([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString)]) {
-    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = deviceTokenString;
+  if (![deviceTokenString isEqualToString:([FBSDKAppEvents shared].pushNotificationsDeviceTokenString)]) {
+    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = deviceTokenString;
 
     [FBSDKAppEvents logEvent:FBSDKAppEventNamePushTokenObtained];
 
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
     if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-      [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+      [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
     }
   }
 }
 
 + (FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  return [FBSDKAppEvents singleton].flushBehavior;
+  return [FBSDKAppEvents shared].flushBehavior;
 }
 
 + (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  self.singleton.flushBehavior = flushBehavior;
+  self.shared.flushBehavior = flushBehavior;
 }
 
 + (NSString *)loggingOverrideAppID
@@ -722,7 +722,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)setLoggingOverrideAppID:(NSString *)appID
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if (![g_overrideAppID isEqualToString:appID]) {
     FBSDKConditionalLog(
@@ -736,13 +736,13 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)flush
 {
-  [self.singleton validateConfiguration];
-  [self.singleton flushForReason:FBSDKAppEventsFlushReasonExplicit];
+  [self.shared validateConfiguration];
+  [self.shared flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
 + (void)setUserID:(NSString *)userID
 {
-  self.singleton.userID = userID;
+  self.shared.userID = userID;
 }
 
 - (void)setUserID:(NSString *)userID
@@ -754,7 +754,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)clearUserID
 {
-  [self.singleton clearUserID];
+  [self.shared clearUserID];
 }
 
 - (void)clearUserID
@@ -766,9 +766,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (NSString *)userID
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
-  return self.singleton.userID;
+  return self.shared.userID;
 }
 
 + (void)setUserEmail:(nullable NSString *)email
@@ -824,7 +824,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #if !TARGET_OS_TV
 + (void)augmentHybridWKWebView:(WKWebView *)webView
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   if ([webView isKindOfClass:WKWebView.class]) {
     if (WKUserScript.class != nil) {
@@ -833,7 +833,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js = [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
-                      [[self singleton] appID],
+                      [[self shared] appID],
                       FBSDKAppEventsWKWebViewMessagesPixelIDKey,
                       FBSDKAppEventsWKWebViewMessagesEventKey,
                       FBSDKAppEventsWKWebViewMessagesParamsKey,
@@ -852,21 +852,21 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)setIsUnityInit:(BOOL)isUnityInit
 {
-  [FBSDKAppEvents singleton]->_isUnityInit = isUnityInit;
+  [FBSDKAppEvents shared]->_isUnityInit = isUnityInit;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 + (void)sendEventBindingsToUnity
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   // Send event bindings to Unity only Unity is initialized
-  if ([FBSDKAppEvents singleton]->_isUnityInit
-      && [FBSDKAppEvents singleton]->_serverConfiguration
-      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings]
+  if ([FBSDKAppEvents shared]->_isUnityInit
+      && [FBSDKAppEvents shared]->_serverConfiguration
+      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings]
   ) {
-    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings ?: @""
                                                     options:0
                                                       error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -884,7 +884,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                      graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store
@@ -913,7 +913,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
   self.swizzler = swizzler;
   self.store = store;
-  self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
+  self.atePublisherFactory = atePublisherFactory;
+  self.atePublisher = [self.atePublisherFactory createPublisherWithAppID:self.appID];
   self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
   self.appEventsStateProvider = appEventsStateProvider;
   self.advertiserIDProvider = advertiserIDProvider;
@@ -944,7 +945,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   }
 }
 
-+ (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider
++ (void)setServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)provider
 {
   if (g_serverConfigurationProvider != provider) {
     g_serverConfigurationProvider = provider;
@@ -953,11 +954,13 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #if !TARGET_OS_TV
 
-+ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
+- (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
+                                       skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter;
 {
-  g_onDeviceMLModelManager = modelManager;
-  g_metadataIndexer = metadataIndexer;
+  self.onDeviceMLModelManager = modelManager;
+  self.metadataIndexer = metadataIndexer;
+  self.skAdNetworkReporter = skAdNetworkReporter;
 }
 
 #endif
@@ -965,8 +968,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -981,9 +984,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
               valueToSum:(double)valueToSum
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -997,16 +1000,16 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -1017,18 +1020,18 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:accessToken];
+  [self.shared logInternalEvent:eventName
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged
+                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1041,18 +1044,18 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -1064,20 +1067,20 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton logInternalEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:accessToken];
+  [self.shared logInternalEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:isImplicitlyLogged
+                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1092,19 +1095,19 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton instanceLogEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:accessToken];
+  [self.shared instanceLogEvent:eventName
+                     valueToSum:valueToSum
+                     parameters:parameters
+             isImplicitlyLogged:YES
+                    accessToken:accessToken];
 }
 
 - (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
   [self instanceLogEvent:eventName
@@ -1114,13 +1117,13 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
              accessToken:accessToken];
 }
 
-+ (FBSDKAppEvents *)singleton
++ (FBSDKAppEvents *)shared
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    shared = [self new];
+    _shared = [self new];
   });
-  return shared;
+  return _shared;
 }
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason
@@ -1140,7 +1143,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       [self flushOnMainQueue:copy forReason:flushReason];
     };
 
-  #if DEBUG && FBSDKTEST
+  #if DEBUG && FBTEST
     block();
   #else
     dispatch_async(dispatch_get_main_queue(), block);
@@ -1186,8 +1189,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
       return;
     }
-    NSMutableDictionary *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
-                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
+    NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
+                                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:path
@@ -1212,7 +1215,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     return;
   }
 
-#if FBSDKTEST
+  self.atePublisher = self.atePublisher ?: [self.atePublisherFactory createPublisherWithAppID:self.appID];
+
+#if FBTEST
   [self.atePublisher publishATE];
 #else
   __weak FBSDKAppEvents *weakSelf = self;
@@ -1222,7 +1227,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #endif
 }
 
-- (void)appendInstallTimestamp:(NSMutableDictionary *)parameters
+- (void)appendInstallTimestamp:(NSMutableDictionary<NSString *, id> *)parameters
 {
   if (@available(iOS 14.0, *)) {
     if ([g_settings isSetATETimeExceedsInstallTime]) {
@@ -1245,7 +1250,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       _eventBindingManager = [FBSDKEventBindingManager new];
     }
 
-    if ([FBSDKInternalUtility isUnity]) {
+    if ([FBSDKInternalUtility.sharedUtility isUnity]) {
       [FBSDKAppEvents sendEventBindingsToUnity];
     } else {
       FBSDKEventBindingManager *manager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler
@@ -1295,12 +1300,12 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       }];
       [g_featureChecker checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [g_metadataIndexer enable];
+          [self.metadataIndexer enable];
         }
       }];
       [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [g_onDeviceMLModelManager enable];
+          [self.onDeviceMLModelManager enable];
         }
       }];
       if (@available(iOS 11.3, *)) {
@@ -1310,7 +1315,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
               [SKAdNetwork registerAppForAdNetworkAttribution];
               [g_featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
                 if (SKAdNetworkConversionValueEnabled) {
-                  [FBSDKSKAdNetworkReporter enable];
+                  [self.skAdNetworkReporter enable];
                 }
               }];
             }
@@ -1320,7 +1325,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       if (@available(iOS 14.0, *)) {
         [g_featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
           if (AEMEnabled) {
-            [FBSDKAEMReporter enable];
+            [FBAEMReporter enable];
           }
         }];
       }
@@ -1336,7 +1341,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1356,12 +1361,15 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   }
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
-  [FBSDKSKAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
+  [self.skAdNetworkReporter recordAndUpdateEvent:eventName
+                                        currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                           value:valueToSum
+                                      parameters:parameters];
   // Update conversion value for AEM if needed
-  [FBSDKAEMReporter recordAndUpdateEvent:eventName
-                                currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
-                                   value:valueToSum
-                              parameters:parameters];
+  [FBAEMReporter recordAndUpdateEvent:eventName
+                             currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                value:valueToSum
+                           parameters:parameters];
 #endif
 
   if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
@@ -1379,14 +1387,14 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
   // Make sure parameter dictionary is well formed.  Log and exit if not.
   [FBSDKTypeUtility dictionary:parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    if (![key isKindOfClass:[NSString class]]) {
+    if (![key isKindOfClass:NSString.class]) {
       [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The keys in the parameters must be NSStrings, '%@' is not.", key]];
       failed = YES;
     }
     if (![FBSDKAppEventsUtility validateIdentifier:key]) {
       failed = YES;
     }
-    if (![obj isKindOfClass:[NSString class]] && ![obj isKindOfClass:[NSNumber class]]) {
+    if (![obj isKindOfClass:NSString.class] && ![obj isKindOfClass:NSNumber.class]) {
       [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The values in the parameters dictionary must be NSStrings or NSNumbers, '%@' is not.", obj]];
       failed = YES;
     }
@@ -1400,8 +1408,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
-  if (g_onDeviceMLModelManager.integrityParametersProcessor) {
-    parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
+  if (self.onDeviceMLModelManager.integrityParametersProcessor) {
+    parameters = [self.onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
   }
 #endif
   // Filter out restrictive keys
@@ -1420,14 +1428,14 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
   NSString *currentViewControllerName;
   UIApplicationState applicationState;
-  if ([NSThread isMainThread]) {
+  if (NSThread.isMainThread) {
     // We only collect the view controller when on the main thread, as the behavior off
     // the main thread is unpredictable.  Besides, UI state for off-main-thread computations
     // isn't really relevant anyhow.
     UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
     vc = vc.presentedViewController ?: vc;
     if (vc) {
-      currentViewControllerName = [[vc class] description];
+      currentViewControllerName = [vc.class description];
     } else {
       currentViewControllerName = @"no_ui";
     }
@@ -1528,7 +1536,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     return;
   }
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
   [self fetchServerConfiguration:^(void) {
     if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
@@ -1542,9 +1550,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
                           logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
       return;
     }
-    NSMutableDictionary *postParameters = [FBSDKAppEventsUtility
-                                           activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
-                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
+    NSMutableDictionary<NSString *, id> *postParameters = [FBSDKAppEventsUtility
+                                                           activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
+                                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
     NSInteger length = receipt_data.length;
     if (length > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:receipt_data forKey:@"receipt_data"];
@@ -1566,7 +1574,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       NSString *prettyPrintedJsonEvents = [[NSString alloc] initWithData:prettyJSONData
                                                                 encoding:NSUTF8StringEncoding];
       // Remove this param -- just an encoding of the events which we pretty print later.
-      NSMutableDictionary *paramsForPrinting = [postParameters mutableCopy];
+      NSMutableDictionary<NSString *, id> *paramsForPrinting = [postParameters mutableCopy];
       [paramsForPrinting removeObjectForKey:@"custom_events_file"];
 
       loggingEntry = [NSString stringWithFormat:@"FBSDKAppEvents: Flushed @ %f, %lu events due to '%@' - %@\nEvents: %@",
@@ -1599,7 +1607,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     FlushResultNoConnectivity,
   };
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
   FBSDKAppEventsFlushResult flushResult = FlushResultSuccess;
   if (error) {
@@ -1651,7 +1659,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 - (void)flushTimerFired:(id)arg
 {
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
   if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly && !self.disableTimer) {
     [self flushForReason:FBSDKAppEventsFlushReasonTimer];
   }
@@ -1659,7 +1667,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 - (void)applicationDidBecomeActive
 {
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
   // This must happen here to avoid a race condition with the shared `Settings` object.
   [self fetchServerConfiguration:nil];
@@ -1693,7 +1701,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   if (!self.isConfigured) {
     static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
     "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
-    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+    "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 #endif
@@ -1703,7 +1712,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
 {
-  [self.singleton validateConfiguration];
+  [self.shared validateConfiguration];
 
   accessToken = accessToken ?: [FBSDKAccessToken currentAccessToken];
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
@@ -1721,19 +1730,19 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
     // available. Note that this function only makes sense to be called in the context of advertising.
-    udid = [self.singleton.advertiserIDProvider advertiserID];
+    udid = [self.shared.advertiserIDProvider advertiserID];
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;
     }
   }
 
-  NSDictionary *parameters = @{};
+  NSDictionary<NSString *, id> *parameters = @{};
   if (udid) {
     parameters = @{ @"udid" : udid };
   }
 
-  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self singleton] appID]];
+  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self shared] appID]];
 
   id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:graphPath
                                                                                parameters:parameters
@@ -1745,11 +1754,11 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #pragma mark - Testability
 
-#if DEBUG && FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
-  self.singleton.isConfigured = NO;
+  self.shared.isConfigured = NO;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
   g_graphRequestProvider = nil;
@@ -1757,12 +1766,12 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 + (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents
 {
-  shared = appEvents;
+  _shared = appEvents;
 }
 
 + (void)resetApplicationState
 {
-  self.singleton.applicationState = UIApplicationStateInactive;
+  self.shared.applicationState = UIApplicationStateInactive;
 }
 
 + (id<FBSDKFeatureChecking>)featureChecker
@@ -1775,7 +1784,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   return g_graphRequestProvider;
 }
 
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
++ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   return g_serverConfigurationProvider;
 }
@@ -1826,16 +1835,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
  #if !TARGET_OS_TV
-
-+ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager
-{
-  return g_onDeviceMLModelManager;
-}
-
-+ (id<FBSDKMetadataIndexing>)metadataIndexer
-{
-  return g_metadataIndexer;
-}
 
 + (id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
 {

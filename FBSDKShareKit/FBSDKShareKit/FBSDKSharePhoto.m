@@ -20,11 +20,7 @@
 
 #import <Photos/Photos.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKHasher.h"
 #import "FBSDKShareConstants.h"
 
 NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
@@ -95,7 +91,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     _caption.hash,
     (_userGenerated ? 1u : 0u)
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -103,7 +99,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if (![object isKindOfClass:FBSDKSharePhoto.class]) {
     return NO;
   }
   return [self isEqualToSharePhoto:(FBSDKSharePhoto *)object];
@@ -113,10 +109,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 {
   return (photo
     && (_userGenerated == photo.userGenerated)
-    && [FBSDKInternalUtility object:_image isEqualToObject:photo.image]
-    && [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL]
-    && [FBSDKInternalUtility object:_photoAsset isEqualToObject:photo.photoAsset]
-    && [FBSDKInternalUtility object:_caption isEqualToObject:photo.caption]);
+    && [FBSDKInternalUtility.sharedUtility object:_image isEqualToObject:photo.image]
+    && [FBSDKInternalUtility.sharedUtility object:_imageURL isEqualToObject:photo.imageURL]
+    && [FBSDKInternalUtility.sharedUtility object:_photoAsset isEqualToObject:photo.photoAsset]
+    && [FBSDKInternalUtility.sharedUtility object:_caption isEqualToObject:photo.caption]);
 }
 
 #pragma mark - FBSDKSharingValidation
@@ -196,14 +192,14 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _image = [decoder decodeObjectOfClass:[UIImage class] forKey:kFBSDKSharePhotoImageKey];
-    _imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:kFBSDKSharePhotoImageURLKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoAssetKey];
+    _image = [decoder decodeObjectOfClass:UIImage.class forKey:kFBSDKSharePhotoImageKey];
+    _imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKSharePhotoImageURLKey];
+    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoAssetKey];
     if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
       _photoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
     }
     _userGenerated = [decoder decodeBoolForKey:kFBSDKSharePhotoUserGeneratedKey];
-    _caption = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoCaptionKey];
+    _caption = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoCaptionKey];
   }
   return self;
 }

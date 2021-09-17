@@ -23,14 +23,15 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   let requestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
-  let connection: TestGraphRequestConnection = TestGraphRequestConnection()
+  let connection = TestGraphRequestConnection()
   lazy var connectionFactory: TestGraphRequestConnectionFactory = {
     TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   }()
   let settings = TestSettings()
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"
-  let enabledConfiguration = ServerConfigurationFixtures.config(with: ["codelessEventsEnabled": true])
+  let enabledConfiguration = ServerConfigurationFixtures.config(withDictionary: ["codelessEventsEnabled": true])
+  var serverConfigurationProvider = TestServerConfigurationProvider()
   var codelessSettingStorageKey: String! // swiftlint:disable:this implicitly_unwrapped_optional
   var capturedIsEnabled = false
   var capturedError: Error?
@@ -61,7 +62,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     CodelessIndexer.configure(
       withRequestProvider: requestFactory,
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      serverConfigurationProvider: serverConfigurationProvider,
       store: store,
       connectionProvider: connectionFactory,
       swizzler: TestSwizzler.self,
@@ -79,7 +80,6 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   class func reset() {
     CodelessIndexer.reset()
     TestSwizzler.reset()
-    TestServerConfigurationProvider.reset()
   }
 
   // MARK: - Dependencies
@@ -124,7 +124,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should be able to configure with a request provider"
     )
     XCTAssertTrue(
-      CodelessIndexer.serverConfigurationProvider is TestServerConfigurationProvider.Type,
+      CodelessIndexer.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to configure with a server configuration provider"
     )
     XCTAssertEqual(
@@ -226,7 +226,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not load a codeless setting without an app identifier")
     }
     XCTAssertFalse(
-      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
+      serverConfigurationProvider.loadServerConfigurationWasCalled,
       "Should not load the server configuration if the app identifier is missing"
     )
   }
@@ -235,8 +235,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not load a codeless setting when codeless events are disabled")
     }
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.defaultConfig(),
+    serverConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.defaultConfig,
       nil
     )
     XCTAssertNil(
@@ -253,7 +253,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertEqual(
       store.capturedObjectRetrievalKey,
@@ -277,7 +277,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertNil(
       connection.capturedRequest,
@@ -293,7 +293,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertNotNil(
       connection.capturedRequest,
@@ -314,7 +314,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion if the network call completes with an error")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, nil, SampleError())
   }
@@ -327,7 +327,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, nil, nil)
 
@@ -349,7 +349,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, ["foo": "bar"], nil)
 
@@ -371,7 +371,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
@@ -396,7 +396,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
@@ -654,7 +654,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithInvalidResults() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    (1 ... 20).forEach { _ in
+    (1...20).forEach { _ in
       requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, Fuzzer.random, nil)
 
       XCTAssertNil(

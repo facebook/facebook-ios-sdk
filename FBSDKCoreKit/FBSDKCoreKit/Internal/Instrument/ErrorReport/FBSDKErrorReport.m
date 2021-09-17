@@ -18,15 +18,14 @@
 
 #import "FBSDKErrorReport.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
 #define FBSDK_MAX_ERROR_REPORT_LOGS 1000
@@ -149,7 +148,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                                                                              HTTPMethod:FBSDKHTTPMethodPOST];
 
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
+    if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {
       [self _clearErrorInfo];
     }
   }];
@@ -212,7 +211,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 - (void)reset
 {

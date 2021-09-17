@@ -20,8 +20,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length file_length
-
+// swiftlint:disable file_length
 class GateKeeperManagerTests: XCTestCase {
 
   let requestFactory = TestGraphRequestFactory()

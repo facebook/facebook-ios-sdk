@@ -20,11 +20,15 @@
 
 @protocol FBSDKGraphRequest;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ErrorConfigurationProtocol)
 @protocol FBSDKErrorConfiguration
 
-- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code
-                                                          subcode:(NSString *)subcode
-                                                          request:(id<FBSDKGraphRequest>)request;
+- (nullable FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(nullable NSString *)code
+                                                                   subcode:(nullable NSString *)subcode
+                                                                   request:(id<FBSDKGraphRequest>)request;
 
 @end
+
+NS_ASSUME_NONNULL_END

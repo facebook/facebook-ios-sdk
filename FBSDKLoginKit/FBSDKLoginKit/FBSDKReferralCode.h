@@ -36,7 +36,7 @@ NS_SWIFT_NAME(ReferralCode)
 /**
  The string value of the referral code
 */
-@property NSString *value;
+@property (nonatomic) NSString *value;
 
 /**
  Initializes a new instance if the referral code is valid. Otherwise returns nil.

@@ -24,20 +24,20 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
  #import "FBSDKAdvertiserIDProviding.h"
  #import "FBSDKAppEventsUtility.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKGraphRequestConnecting.h"
  #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKGraphRequestHTTPMethod.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKObjectDecoding.h"
  #import "FBSDKServerConfiguration.h"
  #import "FBSDKServerConfigurationManager.h"
@@ -53,7 +53,7 @@
 @interface FBSDKCodelessIndexer ()
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
-@property (class, nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nullable, nonatomic, readonly, copy) Class<FBSDKSwizzling> swizzler;
@@ -76,7 +76,7 @@ static NSString *_deviceSessionID;
 static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
 static id<FBSDKGraphRequestProviding> _requestProvider;
-static Class<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
+static id<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
 static id<FBSDKDataPersisting> _store;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSwizzling> _swizzler;
@@ -85,14 +85,14 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 static id<FBSDKSettings> _settings;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                store:(id<FBSDKDataPersisting>)store
                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                             swizzler:(Class<FBSDKSwizzling>)swizzler
                             settings:(id<FBSDKSettings>)settings
                 advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
-  if (self == [FBSDKCodelessIndexer class]) {
+  if (self == FBSDKCodelessIndexer.class) {
     _requestProvider = requestProvider;
     _serverConfigurationProvider = serverConfigurationProvider;
     _store = store;
@@ -108,7 +108,7 @@ static id<FBSDKSettings> _settings;
   return _requestProvider;
 }
 
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
++ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   return _serverConfigurationProvider;
 }
@@ -176,7 +176,7 @@ static id<FBSDKSettings> _settings;
     // load the defaults
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
     NSData *data = [self.store objectForKey:defaultKey];
-    if ([data isKindOfClass:[NSData class]]) {
+    if ([data isKindOfClass:NSData.class]) {
       NSMutableDictionary<NSString *, id> *codelessSetting = nil;
       id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
       @try {
@@ -252,12 +252,12 @@ static id<FBSDKSettings> _settings;
 {
   _isGestureSet = YES;
   [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
-  Class class = [UIApplication class];
+  Class class = UIApplication.class;
 
   [self.swizzler swizzleSelector:@selector(motionBegan:withEvent:)
                          onClass:class
                        withBlock:^{
-                         if ([FBSDKServerConfigurationManager cachedServerConfiguration].isCodelessEventsEnabled) {
+                         if (FBSDKServerConfigurationManager.shared.cachedServerConfiguration.isCodelessEventsEnabled) {
                            [self checkCodelessIndexingSession];
                          }
                        }
@@ -271,7 +271,7 @@ static id<FBSDKSettings> _settings;
   }
 
   _isCheckingSession = YES;
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID],
     CODELESS_INDEXING_EXT_INFO_KEY : [self extInfo]
   };
@@ -282,8 +282,8 @@ static id<FBSDKSettings> _settings;
                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
-    if ([result isKindOfClass:[NSDictionary class]]) {
-      _isCodelessIndexingEnabled = [((NSDictionary *)result)[CODELESS_INDEXING_STATUS_KEY] boolValue];
+    if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+      _isCodelessIndexingEnabled = [((NSDictionary<NSString *, id> *)result)[CODELESS_INDEXING_STATUS_KEY] boolValue];
       if (_isCodelessIndexingEnabled) {
         _lastTreeHash = nil;
         if (!_appIndexingTimer) {
@@ -292,7 +292,7 @@ static id<FBSDKSettings> _settings;
                                                     selector:@selector(startIndexing)
                                                     userInfo:nil
                                                      repeats:YES];
-          [[NSRunLoop mainRunLoop] addTimer:_appIndexingTimer forMode:NSDefaultRunLoopMode];
+          [NSRunLoop.mainRunLoop addTimer:_appIndexingTimer forMode:NSDefaultRunLoopMode];
         }
       } else {
         _deviceSessionID = nil;
@@ -322,7 +322,7 @@ static id<FBSDKSettings> _settings;
 #else
   NSString *isSimulator = @"0";
 #endif
-  NSLocale *locale = [NSLocale currentLocale];
+  NSLocale *locale = NSLocale.currentLocale;
   NSString *languageCode = [locale objectForKey:NSLocaleLanguageCode];
   NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
   NSString *localeString = locale.localeIdentifier;
@@ -395,7 +395,7 @@ static id<FBSDKSettings> _settings;
 
   _lastTreeHash = currentTreeHash;
 
-  NSBundle *mainBundle = [NSBundle mainBundle];
+  NSBundle *mainBundle = NSBundle.mainBundle;
   NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                                                      [self.settings appID],
@@ -410,7 +410,7 @@ static id<FBSDKSettings> _settings;
   _isCodelessIndexing = YES;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCodelessIndexing = NO;
-    if ([result isKindOfClass:[NSDictionary class]]) {
+    if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
       _isCodelessIndexingEnabled = [result[CODELESS_INDEXING_STATUS_KEY] boolValue];
       if (!_isCodelessIndexingEnabled) {
         _deviceSessionID = nil;
@@ -425,10 +425,10 @@ static id<FBSDKSettings> _settings;
 
   NSArray *windows = [UIApplication sharedApplication].windows;
   for (UIWindow *window in windows) {
-    NSDictionary *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
-                                                                      targetNode:nil
-                                                                   objAddressSet:nil
-                                                                            hash:YES];
+    NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
+                                                                                      targetNode:nil
+                                                                                   objAddressSet:nil
+                                                                                            hash:YES];
     if (tree) {
       if (window.isKeyWindow) {
         [trees insertObject:tree atIndex:0];
@@ -447,7 +447,7 @@ static id<FBSDKSettings> _settings;
   NSData *data = UIImageJPEGRepresentation([FBSDKCodelessIndexer screenshot], 0.5);
   NSString *screenshot = [data base64EncodedStringWithOptions:0];
 
-  NSMutableDictionary *treeInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *treeInfo = [NSMutableDictionary dictionary];
 
   [FBSDKTypeUtility dictionary:treeInfo setObject:viewTrees forKey:@"view"];
   [FBSDKTypeUtility dictionary:treeInfo setObject:screenshot ?: @"" forKey:@"screenshot"];
@@ -480,16 +480,16 @@ static id<FBSDKSettings> _settings;
 {
   UIView *view = nil;
 
-  if ([obj isKindOfClass:[UIView class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
     view = (UIView *)obj;
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     view = ((UIViewController *)obj).view;
   }
 
   CGRect frame = view.frame;
   CGPoint offset = CGPointZero;
 
-  if ([view isKindOfClass:[UIScrollView class]]) {
+  if ([view isKindOfClass:UIScrollView.class]) {
     offset = ((UIScrollView *)view).contentOffset;
   }
 
@@ -505,7 +505,7 @@ static id<FBSDKSettings> _settings;
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

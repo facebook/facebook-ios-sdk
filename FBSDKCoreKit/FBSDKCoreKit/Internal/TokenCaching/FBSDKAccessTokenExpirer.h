@@ -21,6 +21,8 @@
 @protocol FBSDKNotificationPosting;
 @protocol FBSDKNotificationObserving;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(AccessTokenExpirer)
 @interface FBSDKAccessTokenExpirer : NSObject
 
@@ -30,3 +32,5 @@ NS_SWIFT_NAME(AccessTokenExpirer)
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter;
 
 @end
+
+NS_ASSUME_NONNULL_END

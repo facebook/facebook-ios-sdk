@@ -22,13 +22,8 @@
 
  #import "FBSDKReferralManager+Internal.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKReferralManagerLogger.h"
  #import "FBSDKReferralManagerResult.h"
@@ -40,13 +35,29 @@ static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentica
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 static int const FBClientStateChallengeLength = 20;
 
+@interface FBSDKReferralManager ()
+@property (nonatomic) NSString *expectedChallenge;
+@property (nonatomic) UIViewController *viewController;
+@property (nonatomic) FBSDKReferralManagerResultBlock handler;
+@property (nonatomic) FBSDKReferralManagerLogger *logger;
+@property (nonatomic) BOOL isPerformingReferral;
+@end
+
 @implementation FBSDKReferralManager
+
+static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
+
+- (id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
 {
-  UIViewController *_viewController;
-  FBSDKReferralManagerResultBlock _handler;
-  FBSDKReferralManagerLogger *_logger;
-  BOOL _isPerformingReferral;
-  NSString *_expectedChallenge;
+  if (!_bridgeAPIRequestOpener) {
+    _bridgeAPIRequestOpener = FBSDKBridgeAPI.sharedInstance;
+  }
+  return _bridgeAPIRequestOpener;
+}
+
++ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
 }
 
 - (instancetype)initWithViewController:(UIViewController *)viewController
@@ -67,7 +78,7 @@ static int const FBClientStateChallengeLength = 20;
   [_logger logReferralStart];
 
   @try {
-    [FBSDKInternalUtility validateURLSchemes];
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes];
   } @catch (NSException *exception) {
     NSError *error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown
                                        message:[NSString stringWithFormat:@"%@: %@", exception.name, exception.reason]];
@@ -81,10 +92,10 @@ static int const FBClientStateChallengeLength = 20;
       [self handleOpenURLComplete:didOpen error:error];
     };
 
-    [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:referralURL
-                                                              sender:self
-                                                  fromViewController:_viewController
-                                                             handler:completionHandler];
+    [self.bridgeAPIRequestOpener openURLWithSafariViewController:referralURL
+                                                          sender:self
+                                              fromViewController:_viewController
+                                                         handler:completionHandler];
   }
 }
 
@@ -92,21 +103,21 @@ static int const FBClientStateChallengeLength = 20;
 {
   NSError *error;
   NSURL *url;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
 
   [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.appID forKey:@"app_id"];
 
   _expectedChallenge = [self stringForChallenge];
   [FBSDKTypeUtility dictionary:params setObject:_expectedChallenge forKey:@"state"];
 
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     [FBSDKTypeUtility dictionary:params setObject:redirectURL forKey:@"redirect_uri"];
 
-    url = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                     path:FBSDKReferralPath
-                                          queryParameters:params
-                                                    error:&error];
+    url = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                   path:FBSDKReferralPath
+                                                        queryParameters:params
+                                                                  error:&error];
   }
 
   if (error || !url) {
@@ -185,7 +196,7 @@ static int const FBClientStateChallengeLength = 20;
 
   if (isFacebookURL) {
     NSError *error;
-    NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
+    NSDictionary<NSString *, id> *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
     if (![self validateChallenge:params[ChalllengeKey]]) {
       error = [FBSDKError errorWithCode:FBSDKLoginErrorBadChallengeString

@@ -31,7 +31,7 @@ enum SampleProducts {
   }
 
   static func createSubscription(discount: TestProductDiscount) -> TestProduct {
-    return TestProduct(subscriptionPeriod: createValidSubscriptionPeriod(), discount: discount)
+    TestProduct(subscriptionPeriod: createValidSubscriptionPeriod(), discount: discount)
   }
 
   private static func createValidSubscriptionPeriod() -> TestProductSubscriptionPeriod {

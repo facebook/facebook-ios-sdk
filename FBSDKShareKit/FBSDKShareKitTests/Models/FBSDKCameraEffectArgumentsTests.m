@@ -45,7 +45,7 @@
   FBSDKCameraEffectArguments *arguments = [FBSDKShareModelTestUtility cameraEffectArguments];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:arguments];
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
-  FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKCameraEffectArguments class] fromData:data error:nil];
+  FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKCameraEffectArguments.class fromData:data error:nil];
 #else
   FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 #endif

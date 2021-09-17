@@ -20,11 +20,12 @@
 
 #import <StoreKit/StoreKit.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppStoreReceiptProviding.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGateKeeperManaging.h"
@@ -76,7 +77,7 @@ static NSMutableArray *_pendingRequestors;
 
 + (void)initialize
 {
-  if ([self class] == [FBSDKPaymentProductRequestor class]) {
+  if (self.class == FBSDKPaymentProductRequestor.class) {
     _pendingRequestors = [NSMutableArray new];
   }
 }
@@ -192,18 +193,22 @@ static NSMutableArray *_pendingRequestors;
     default: break;
   }
   SKPayment *payment = transaction.payment;
-  NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:@{
-                                            FBSDKAppEventParameterNameContentID : payment.productIdentifier ?: @"",
-                                            FBSDKAppEventParameterNameNumItems : @(payment.quantity),
-                                            FBSDKAppEventParameterNameTransactionDate : transactionDate ?: @"",
-                                          }];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                            FBSDKAppEventParameterNameContentID : payment.productIdentifier ?: @"",
+                                                            FBSDKAppEventParameterNameNumItems : @(payment.quantity),
+                                                            FBSDKAppEventParameterNameTransactionDate : transactionDate ?: @"",
+                                                          }];
   if (product) {
     [eventParameters addEntriesFromDictionary:@{
-       FBSDKAppEventParameterNameCurrency : [product.priceLocale objectForKey:NSLocaleCurrencyCode],
        FBSDKAppEventParameterNameNumItems : @(payment.quantity),
        FBSDKAppEventParameterNameProductTitle : [self getTruncatedString:product.localizedTitle],
        FBSDKAppEventParameterNameDescription : [self getTruncatedString:product.localizedDescription],
      }];
+    if (@available(iOS 10.0, *)) {
+      [FBSDKTypeUtility dictionary:eventParameters
+                         setObject:product.priceLocale.currencyCode
+                            forKey:FBSDKAppEventParameterNameCurrency];
+    }
     if (transactionID) {
       [FBSDKTypeUtility dictionary:eventParameters setObject:transactionID forKey:FBSDKAppEventParameterNameTransactionID];
     }
@@ -300,7 +305,7 @@ static NSMutableArray *_pendingRequestors;
 #if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
-    if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:[SKProductSubscriptionPeriod class]]) {
+    if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:SKProductSubscriptionPeriod.class]) {
       SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subcriptionPeriod;
       NSString *unit = nil;
       switch (period.unit) {
@@ -426,7 +431,7 @@ static NSMutableArray *_pendingRequestors;
                          valueToSum:(double)valueToSum
                          parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 
   if ([_eventsWithReceipt containsObject:eventName]) {
     NSData *receipt = [self fetchDeviceReceipt];

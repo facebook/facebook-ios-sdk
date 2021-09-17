@@ -22,20 +22,31 @@
 
  #import "FBSDKBridgeAPIProtocol.h"
  #import "FBSDKBridgeAPIRequest.h"
+ #import "FBSDKInternalURLOpener.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKSettings.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPIRequest ()
 
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
+@property (class, nullable, nonatomic) id<FBSDKInternalURLOpener> internalURLOpener;
+@property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+
+@property (nonnull, nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
+
+- (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
+                             protocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                   scheme:(nonnull NSString *)scheme
+                               methodName:(nullable NSString *)methodName
+                            methodVersion:(nullable NSString *)methodVersion
+                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
   NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, readwrite, strong) id<FBSDKBridgeAPIProtocol> protocol;
-
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

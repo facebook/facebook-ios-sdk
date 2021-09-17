@@ -22,18 +22,16 @@
 
  #import "FBSDKLikeBoxView.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
  #import "FBSDKLikeBoxBorderView.h"
 
+@interface FBSDKLikeBoxView ()
+
+@property (nonatomic) FBSDKLikeBoxBorderView *borderView;
+@property (nonatomic) UILabel *likeCountLabel;
+
+@end
+
 @implementation FBSDKLikeBoxView
-{
-  FBSDKLikeBoxBorderView *_borderView;
-  UILabel *_likeCountLabel;
-}
 
  #pragma mark - Object Lifecycle
 
@@ -45,7 +43,7 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [super initWithCoder:decoder])) {
     [self _initializeContent];

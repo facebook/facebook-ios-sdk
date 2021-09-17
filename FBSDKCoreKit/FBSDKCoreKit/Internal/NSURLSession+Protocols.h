@@ -18,7 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 // MARK: Default Protocol Conformances
 
@@ -27,3 +29,5 @@
 
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end
+
+NS_ASSUME_NONNULL_END

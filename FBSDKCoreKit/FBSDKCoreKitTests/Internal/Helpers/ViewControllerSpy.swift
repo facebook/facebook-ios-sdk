@@ -56,7 +56,8 @@ class ViewControllerSpy: UIViewController {
   override func present(
     _ viewControllerToPresent: UIViewController,
     animated: Bool,
-    completion: (() -> Void)? = nil) {
+    completion: (() -> Void)? = nil
+  ) {
     capturedPresentViewController = viewControllerToPresent
     capturedPresentViewControllerAnimated = animated
     capturedPresentViewControllerCompletion = completion

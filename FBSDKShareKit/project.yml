@@ -18,6 +18,9 @@
 
 name: FBSDKShareKit
 
+include:
+  - ../xcodegen_project_common.yml
+
 projectReferences:
   FBSDKCoreKit_Basics:
     path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
@@ -25,20 +28,10 @@ projectReferences:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
-  OCMock:
-    path: ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj
 
 options:
   deploymentTarget:
-    iOS: "9.0"
-    tvOS: "10.0"
-  usesTabs: false
-  tabWidth: 2
-  indentWidth: 2
-  defaultConfig: Debug
-
-attributes:
-  ORGANIZATIONNAME: Facebook
+    tvOS: '10.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -55,7 +48,7 @@ settings:
     PRODUCT_NAME: FBSDKShareKit
 
 targets:
-  FBSDKShareKit:
+  FBSDKShareKit-Static:
     type: framework
     platform: iOS
     sources:
@@ -66,7 +59,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKShareKit/Internal
@@ -77,22 +69,16 @@ targets:
           - Exports.swift
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/FBSDKShareKit.xcconfig
-      Release: Configurations/FBSDKShareKit.xcconfig
+      Debug: Configurations/FBSDKShareKit-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-Static.xcconfig
     dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
         link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
@@ -108,7 +94,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKShareKit/Internal
@@ -127,20 +112,16 @@ targets:
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
       - sdk: Photos.framework
+      - sdk: Social.framework
+        weak: true
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
       PRODUCT_NAME: FBSDKShareKit
-  FBSDKShareKit_TV:
+  FBSDKShareKit_TV-Static:
     type: framework
     platform: tvOS
     productName: FBSDKShareKit
@@ -169,7 +150,6 @@ targets:
           - FBSDKSharingButton*
           - FBSDKSharingScheme*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKShareKit/Internal
@@ -191,22 +171,16 @@ targets:
           - FBSDKShareKit+Internal*
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/FBSDKShareKit-tvOS.xcconfig
-      Release: Configurations/FBSDKShareKit-tvOS.xcconfig
+      Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
     dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
         link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit_TV
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKit_TV-Dynamic:
@@ -238,7 +212,6 @@ targets:
           - FBSDKSharingButton*
           - FBSDKSharingScheme*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKShareKit/Internal
@@ -270,13 +243,7 @@ targets:
       - sdk: Photos.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKitTests:
@@ -292,35 +259,33 @@ targets:
         embed: false
       - target: TestTools/TestTools
         embed: false
-      - target: OCMock/OCMock iOS
-        embed: false
     settings:
       ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
       GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
 
 aggregateTargets:
   FBSDKShareKit-Universal:
-    targets: [FBSDKShareKit]
+    targets: [FBSDKShareKit-Static]
     configFiles:
-      Debug: Configurations/FBSDKShareKit.xcconfig
-      Release: Configurations/FBSDKShareKit.xcconfig
+      Debug: Configurations/FBSDKShareKit-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
   FBSDKShareKit_TV-Universal:
-    targets: [FBSDKShareKit_TV]
+    targets: [FBSDKShareKit_TV-Static]
     configFiles:
-      Debug: Configurations/FBSDKShareKit-tvOS.xcconfig
-      Release: Configurations/FBSDKShareKit-tvOS.xcconfig
+      Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
-  FBSDKShareKit:
+  FBSDKShareKit-Static:
     build:
       targets:
-        FBSDKShareKit: all
+        FBSDKShareKit-Static: all
   FBSDKShareKit-Dynamic:
     build:
       targets:

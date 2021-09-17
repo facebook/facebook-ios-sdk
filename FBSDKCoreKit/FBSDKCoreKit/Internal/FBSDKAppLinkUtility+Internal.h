@@ -23,6 +23,8 @@
 
  #import "FBSDKAppLinkUtility.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKInfoDictionaryProviding;
 
 @interface FBSDKAppLinkUtility (Internal)
@@ -32,5 +34,7 @@
 NS_SWIFT_NAME(configure(requestProvider:infoDictionaryProvider:));
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

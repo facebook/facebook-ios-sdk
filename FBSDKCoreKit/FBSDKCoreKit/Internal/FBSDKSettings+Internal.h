@@ -16,17 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if SWIFT_PACKAGE
-#import "FBSDKAdvertisingTrackingStatus.h"
- #import "FBSDKSettings.h"
-#else
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
-#endif
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
@@ -37,14 +34,13 @@
 @interface FBSDKSettings (Internal)
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
-
-@property (nonatomic, copy, null_resettable) NSString *graphAPIVersion;
-
 // used by Unity.
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-
 @property (class, nonnull, readonly) FBSDKSettings *sharedSettings;
+
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
+@property (nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+@property (nonatomic, nonatomic, readonly) BOOL graphErrorRecoveryEnabled;
 
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
@@ -82,3 +78,5 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 - (void)logIfSDKSettingsChanged;
 
 @end
+
+NS_ASSUME_NONNULL_END

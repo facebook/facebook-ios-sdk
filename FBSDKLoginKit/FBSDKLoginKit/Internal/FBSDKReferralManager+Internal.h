@@ -26,14 +26,14 @@
   #import "FBSDKReferralManager.h"
  #endif
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKCoreKit+Internal.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKReferralManager () <FBSDKURLOpening>
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

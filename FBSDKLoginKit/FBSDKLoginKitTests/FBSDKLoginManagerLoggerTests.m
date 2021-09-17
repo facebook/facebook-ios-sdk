@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKLoginKitTests-Swift.h"
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
@@ -34,29 +35,19 @@
 @end
 
 @implementation FBSDKLoginManagerLoggerTests
-{
-  id _appEventsMock;
-  id _settingsMock;
-  id _loginManagerMock;
-}
 
 - (void)setUp
 {
   [super setUp];
-  _loginManagerMock = OCMClassMock(FBSDKLoginManager.class);
-  _settingsMock = OCMClassMock(FBSDKSettings.class);
-  OCMStub([_settingsMock isAutoLogAppEventsEnabled]).andReturn(YES);
-  // Set up AppEvents class mock
-  _appEventsMock = OCMClassMock(FBSDKAppEvents.class);
+
+  [FBSDKSettings reset];
 }
 
 - (void)tearDown
 {
   [super tearDown];
-  [_loginManagerMock stopMocking];
-  _loginManagerMock = nil;
-  [_appEventsMock stopMocking];
-  _appEventsMock = nil;
+
+  [FBSDKSettings reset];
 }
 
 - (void)testCreatingWithMissingParametersWithTrackingEnabled
@@ -169,28 +160,25 @@
 
 - (void)testExtrasForAddSingleLoggingExtra
 {
+  FBSDKSettings.sharedSettings.isConfigured = YES;
+  [FBSDKSettings setAutoLogAppEventsEnabled:YES];
+
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+
+  TestAppEvents *testAppEvents = [[TestAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorAuto flushPeriodInSeconds:15];
+  [FBSDKAppEvents setSingletonInstanceToInstance:testAppEvents];
+
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:nil
                                                                                  tracking:FBSDKLoginTrackingEnabled];
-  BOOL (^verifyParameterContents)(NSDictionary *) = ^BOOL (NSDictionary *parameters) {
-    NSString *extras = [FBSDKTypeUtility dictionary:parameters objectForKey:@"6_extras" ofType:NSString.class];
-    NSDictionary *extrasDictionary = [FBSDKBasicUtility objectForJSONString:extras error:nil];
-    XCTAssertEqualObjects([FBSDKTypeUtility dictionary:extrasDictionary objectForKey:@"test_extra_key" ofType:NSString.class], @"test_extra_value");
-    return YES;
-  };
-
   [logger addSingleLoggingExtra:@"test_extra_value" forKey:@"test_extra_key"];
-  [logger startSessionForLoginManager:_loginManagerMock];
+  [logger startSessionForLoginManager:loginManager];
 
-  OCMVerify(
-    ClassMethod(
-      [_appEventsMock logInternalEvent:OCMArg.any
-                            parameters:[OCMArg checkWithBlock:verifyParameterContents]
-                    isImplicitlyLogged:OCMArg.any]
-    )
-  );
+  NSString *extras = [FBSDKTypeUtility dictionary:testAppEvents.capturedParameters objectForKey:@"6_extras" ofType:NSString.class];
+  NSDictionary<NSString *, id> *extrasDictionary = [FBSDKBasicUtility objectForJSONString:extras error:nil];
+  XCTAssertEqualObjects([FBSDKTypeUtility dictionary:extrasDictionary objectForKey:@"test_extra_key" ofType:NSString.class], @"test_extra_value");
 }
 
-- (NSDictionary *)validParameters
+- (NSDictionary<NSString *, id> *)validParameters
 {
   return @{@"state" : @"{\"challenge\":\"ibUuyvhzJW36TvC7BBYpasPHrXk%3D\",\"0_auth_logger_id\":\"A48F8D79-F2DF-4E04-B893-B29879A9A37B\",\"com.facebook.sdk_client_state\":true,\"3_method\":\"sfvc_auth\"}"};
 }

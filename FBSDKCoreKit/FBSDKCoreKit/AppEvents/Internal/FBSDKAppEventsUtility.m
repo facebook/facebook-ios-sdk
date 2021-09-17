@@ -20,6 +20,7 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken.h"
@@ -28,10 +29,9 @@
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKConstants.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKError+Internal.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
@@ -88,10 +88,10 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return instance;
 }
 
-+ (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
++ (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
   if (shouldAccessAdvertisingID) {
@@ -142,7 +142,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static NSMutableArray *urlSchemes;
 
   dispatch_once(&fetchBundleOnce, ^{
-    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSBundle *mainBundle = NSBundle.mainBundle;
     urlSchemes = [NSMutableArray new];
     for (NSDictionary<NSString *, id> *fields in [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
       NSArray<NSString *> *schemesForType = fields[@"CFBundleURLSchemes"];
@@ -214,16 +214,16 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (void)clearLibraryFiles
 {
-  [[NSFileManager defaultManager] removeItemAtPath:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
-                                             error:NULL];
-  [[NSFileManager defaultManager] removeItemAtPath:[[self class] persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
-                                             error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
+                                           error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
+                                           error:NULL];
 }
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
   FBSDKConditionalLog(
-    [NSThread isMainThread],
+    NSThread.isMainThread,
     FBSDKLoggingBehaviorDeveloperErrors,
     @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
     methodName,
@@ -259,7 +259,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (void)logAndNotify:(NSString *)msg
 {
-  [[self class] logAndNotify:msg allowLogAsDeveloperError:YES];
+  [self.class logAndNotify:msg allowLogAsDeveloperError:YES];
 }
 
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError
@@ -274,7 +274,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   [FBSDKLogger singleShotLogEntry:behaviorToLog logEntry:msg];
   NSError *error = [FBSDKError errorWithCode:FBSDKErrorAppEventsFlush message:msg];
-  [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
+  [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
 + (BOOL)       matchString:(NSString *)string
@@ -306,7 +306,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static dispatch_once_t onceToken;
   static NSMutableSet *cachedIdentifiers;
   dispatch_once(&onceToken, ^{
-    NSMutableCharacterSet *mutableSet = [NSMutableCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet *mutableSet = NSMutableCharacterSet.alphanumericCharacterSet;
     [mutableSet addCharactersInString:@"_"];
     firstCharacterSet = [mutableSet copy];
 
@@ -331,9 +331,9 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (BOOL)validateIdentifier:(NSString *)identifier
 {
-  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![[self class] regexValidateIdentifier:identifier]) {
-    [[self class] logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
-                                identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
+  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self.class regexValidateIdentifier:identifier]) {
+    [self.class logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
+                              identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
     return NO;
   }
 
@@ -472,7 +472,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager
 {

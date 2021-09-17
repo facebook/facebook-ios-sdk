@@ -18,7 +18,8 @@
 
 #import "FBSDKKeychainStore.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -28,7 +29,7 @@
 - (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup
 {
   if ((self = [super init])) {
-    _service = service ? [service copy] : [NSBundle mainBundle].bundleIdentifier;
+    _service = service ? [service copy] : NSBundle.mainBundle.bundleIdentifier;
     _accessGroup = [accessGroup copy];
     NSAssert(_service, @"Keychain must be initialized with service");
   }
@@ -38,13 +39,13 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (BOOL)setDictionary:(NSDictionary *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
+- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
   NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value];
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSDictionary *)dictionaryForKey:(NSString *)key
+- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {
@@ -88,15 +89,15 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to storing access token in NSUserDefaults because of simulator bug"];
-  [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+  [NSUserDefaults.standardUserDefaults setObject:value forKey:key];
 
-  return [[NSUserDefaults standardUserDefaults] synchronize];
+  return [NSUserDefaults.standardUserDefaults synchronize];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
 
   OSStatus status;
   if (value) {
-    NSMutableDictionary *attributesToUpdate = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *attributesToUpdate = [NSMutableDictionary dictionary];
     [attributesToUpdate setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
     status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
@@ -132,9 +133,9 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to loading access token from NSUserDefaults because of simulator bug"];
-  return [[NSUserDefaults standardUserDefaults] dataForKey:key];
+  return [NSUserDefaults.standardUserDefaults dataForKey:key];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
   [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];
   [query setObject:[FBSDKDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBSDKDynamicFrameworkLoader loadkSecMatchLimit]];
 
@@ -155,9 +156,9 @@
 #endif
 }
 
-- (NSMutableDictionary *)queryForKey:(NSString *)key
+- (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key
 {
-  NSMutableDictionary *query = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *query = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
   [FBSDKTypeUtility dictionary:query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
   [FBSDKTypeUtility dictionary:query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];

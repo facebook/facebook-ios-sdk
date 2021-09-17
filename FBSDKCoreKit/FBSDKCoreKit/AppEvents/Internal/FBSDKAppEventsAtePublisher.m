@@ -18,21 +18,16 @@
 
 #import "FBSDKAppEventsAtePublisher.h"
 
-#if FBSDK_SWIFT_PACKAGE
- #import "FBSDKGraphRequestFlags.h"
- #import "FBSDKGraphRequestHTTPMethod.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
- #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
-#endif
+#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -74,15 +69,15 @@
   self.isProcessing = YES;
   NSString *lastATEPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", self.appIdentifier];
   id lastPublishDate = [self.store objectForKey:lastATEPingString];
-  if ([lastPublishDate isKindOfClass:[NSDate class]] && [(NSDate *)lastPublishDate timeIntervalSinceNow] * -1 < 24 * 60 * 60) {
+  if ([lastPublishDate isKindOfClass:NSDate.class] && [(NSDate *)lastPublishDate timeIntervalSinceNow] * -1 < 24 * 60 * 60) {
     self.isProcessing = NO;
     return;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:@"CUSTOM_APP_EVENTS" forKey:@"event"];
 
-  NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility operatingSystemVersion];
+  NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility.sharedUtility operatingSystemVersion];
   NSString *osVersion = [NSString stringWithFormat:@"%ti.%ti.%ti",
                          operatingSystemVersion.majorVersion,
                          operatingSystemVersion.minorVersion,
@@ -113,7 +108,7 @@
     self.isProcessing = NO;
   }];
 
-#if FBSDKTEST
+#if FBTEST
   self.isProcessing = NO;
 #endif
 }

@@ -16,21 +16,56 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import UIKit
 import XCTest
 
-class FBSDKBridgeAPIRequestTests: XCTestCase {
+class BridgeAPIRequestTests: XCTestCase {
 
-  func testDefaultProtocolConformance() {
-    let request: Any = BridgeAPIRequest(
-      protocolType: .web,
-      scheme: "https",
+  override func tearDown() {
+    BridgeAPIRequest.resetClassDependencies()
+    super.tearDown()
+  }
+
+  func testClassDependencies() {
+    _ = BridgeAPIRequest(
+      protocolType: .native,
+      scheme: "http",
       methodName: nil,
       methodVersion: nil,
-      parameters: [:],
-      userInfo: [:]
-    ) as Any
-    let conformedRequest = request as? FBSDKBridgeAPIRequestProtocol
+      parameters: nil,
+      userInfo: nil
+    )
 
-    XCTAssertNotNil(conformedRequest, "BridgeAPIRequest should conform to the expected protocol")
+    let testInternalURLOpener = {
+      XCTAssertTrue(
+        BridgeAPIRequest.internalURLOpener === UIApplication.shared,
+        "BridgeAPIRequest should use the shared application for its default internal URL opener dependency"
+      )
+    }
+
+    #if BUCK
+    testInternalURLOpener()
+    #else
+    XCTExpectFailure(
+      "The following test should fail since the tests do not have a valid application singleton",
+      failingBlock: testInternalURLOpener
+    )
+    #endif
+
+    XCTAssertTrue(
+      BridgeAPIRequest.internalUtility === InternalUtility.shared,
+      "BridgeAPIRequest should use the shared utility for its default internal utility dependency"
+    )
+    XCTAssertTrue(
+      BridgeAPIRequest.settings === Settings.shared,
+      "BridgeAPIRequest should use the shared settings for its default settings dependency"
+    )
+  }
+
+  func testDefaultProtocolConformance() {
+    XCTAssertTrue(
+      (BridgeAPIRequest.self as Any) is BridgeAPIRequestProtocol.Type,
+      "BridgeAPIRequest should conform to the expected protocol"
+    )
   }
 }

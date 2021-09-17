@@ -22,15 +22,39 @@
 
  #import "FBSDKGraphErrorRecoveryProcessor.h"
 
+ #import "FBSDKAccessToken+AccessTokenProtocols.h"
+ #import "FBSDKErrorRecoveryAttempter.h"
  #import "FBSDKGraphRequestProtocol.h"
 
 @interface FBSDKGraphErrorRecoveryProcessor ()
 
+@property (nonatomic, readonly) NSString *accessToken;
 @property (nullable, nonatomic, readonly, weak) id<FBSDKGraphErrorRecoveryProcessorDelegate> delegate;
+@property (nullable, nonatomic) FBSDKErrorRecoveryAttempter *recoveryAttempter;
+@property (nullable, nonatomic) NSError *_error;
 
 @end
 
 @implementation FBSDKGraphErrorRecoveryProcessor
+
++ (instancetype)new
+{
+  return [[FBSDKGraphErrorRecoveryProcessor alloc] init];
+}
+
+- (instancetype)init
+{
+  return [self initWithAccessTokenString:FBSDKAccessToken.currentAccessToken.tokenString];
+}
+
+- (instancetype)initWithAccessTokenString:(NSString *)accessTokenString
+{
+  if ((self = [super init])) {
+    _accessToken = accessTokenString;
+  }
+
+  return self;
+}
 
 - (BOOL)processError:(NSError *)error
              request:(id<FBSDKGraphRequest>)request
@@ -42,12 +66,30 @@
     }
   }
 
-  FBSDKGraphRequestError errorCategory = [error.userInfo[FBSDKGraphRequestErrorKey] unsignedIntegerValue];
+  FBSDKGraphRequestError errorCategory;
+  id rawErrorCategory = error.userInfo[FBSDKGraphRequestErrorKey];
+  if (rawErrorCategory && [rawErrorCategory respondsToSelector:@selector(unsignedIntegerValue)]) {
+    errorCategory = [rawErrorCategory unsignedIntegerValue];
+  } else {
+    return NO;
+  }
+
   switch (errorCategory) {
     case FBSDKGraphRequestErrorTransient:
       [delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
       return YES;
     case FBSDKGraphRequestErrorRecoverable:
+      if (request.tokenString && [request.tokenString isEqualToString:self.accessToken]) {
+        self.recoveryAttempter = error.recoveryAttempter;
+        [self.recoveryAttempter attemptRecoveryFromError:error
+                                             optionIndex:0
+                                       completionHandler:^(BOOL didRecover) {
+                                         [delegate processorDidAttemptRecovery:self didRecover:didRecover error:error];
+                                         self->_delegate = nil;
+                                       }];
+        return YES;
+      }
+      break;
     case FBSDKGraphRequestErrorOther:
       return NO;
   }

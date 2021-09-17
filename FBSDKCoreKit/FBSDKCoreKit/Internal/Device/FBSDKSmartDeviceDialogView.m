@@ -22,15 +22,17 @@
 
  #import "FBSDKSmartDeviceDialogView.h"
 
- #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKDeviceUtilities.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKLogo.h"
+
+@interface FBSDKSmartDeviceDialogView ()
+@property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) UILabel *confirmationCodeLabel;
+@property (nonatomic) UIImageView *qrImageView;
+@end
 
 @implementation FBSDKSmartDeviceDialogView
-{
-  UIActivityIndicatorView *_spinner;
-  UILabel *_confirmationCodeLabel;
-  UIImageView *_qrImageView;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -94,7 +96,7 @@
   dialogView.layer.cornerRadius = 3;
   dialogView.translatesAutoresizingMaskIntoConstraints = NO;
   dialogView.clipsToBounds = YES;
-  dialogView.backgroundColor = [UIColor whiteColor];
+  dialogView.backgroundColor = UIColor.whiteColor;
   [self addSubview:dialogView];
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0].active = YES;;
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;
@@ -151,7 +153,7 @@
   NSString *smartInstructionString = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.SmartLogInPrompt",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"To connect your account, open the Facebook app on your mobile device and check for notifications.",
     @"Instructions telling the user to open their Facebook app on a mobile device and check for a login notification."
   );
@@ -182,7 +184,7 @@
   orInstructionLabel.text = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.SmartLogInOrLabel",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"-- OR --",
     @"The 'or' string for smart login instructions"
   );;
@@ -216,7 +218,7 @@
   NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.LogInPrompt",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Visit %@ and enter the code shown above.",
     @"The format string for device login instructions"
   );
@@ -263,7 +265,7 @@
   [button setTitle:NSLocalizedStringWithDefaultValue(
     @"LoginButton.CancelLogout",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Cancel",
     @"The label for the FBSDKLoginButton action sheet to cancel logging out"
   )

@@ -18,8 +18,6 @@
 
 #import "FBSDKAppGroupContent.h"
 
-#import "TargetConditionals.h"
-
 #if TARGET_OS_TV
 
 NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
@@ -29,11 +27,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
 
 #else
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKHasher.h"
  #import "FBSDKShareUtility.h"
 
  #define FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY @"groupDescription"
@@ -63,7 +57,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
     _name.hash,
     _privacy,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -71,7 +65,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKAppGroupContent class]]) {
+  if (![object isKindOfClass:FBSDKAppGroupContent.class]) {
     return NO;
   }
   return [self isEqualToAppGroupContent:(FBSDKAppGroupContent *)object];
@@ -81,8 +75,8 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 {
   return (content
     && (_privacy == content.privacy)
-    && [FBSDKInternalUtility object:_name isEqualToObject:content.name]
-    && [FBSDKInternalUtility object:_groupDescription isEqualToObject:content.groupDescription]);
+    && [_name isEqual:content.name]
+    && [_groupDescription isEqual:content.groupDescription]);
 }
 
  #pragma mark - NSCoding
@@ -95,9 +89,9 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _groupDescription = [decoder decodeObjectOfClass:[NSString class]
+    _groupDescription = [decoder decodeObjectOfClass:NSString.class
                                               forKey:FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY];
-    _name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
+    _name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
     _privacy = [decoder decodeIntegerForKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
   }
   return self;

@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(SKAdNetworkConversionConfiguration)
 @interface FBSDKSKAdNetworkConversionConfiguration : NSObject
 
 @property (nonatomic, readonly, assign) NSInteger timerBuckets;

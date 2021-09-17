@@ -20,8 +20,8 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKInternalUtility.h"
- #import "FBSDKWindowFinding.h"
+ #import <FBSDKCoreKit/FBSDKInternalUtility.h>
+ #import <FBSDKCoreKit/FBSDKWindowFinding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

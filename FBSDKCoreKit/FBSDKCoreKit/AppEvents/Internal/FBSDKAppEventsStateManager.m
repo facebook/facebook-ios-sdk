@@ -20,37 +20,26 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
 
-@interface FBSDKAppEventsStateManager (Internal)
+@interface FBSDKAppEventsStateManager ()
 // A quick optimization to allow returning empty array if we know there are no persisted events.
 @property (nonatomic, readwrite, assign) BOOL canSkipDiskCheck;
 @end
 
 @implementation FBSDKAppEventsStateManager
-{
-  BOOL _canSkipDiskCheck;
-}
 
 - (instancetype)init
 {
-  self.canSkipDiskCheck = NO;
+  if ((self = [super init])) {
+    _canSkipDiskCheck = NO;
+  }
   return self;
-}
-
-- (void)setCanSkipDiskCheck:(BOOL)canSkipDiskCheck
-{
-  _canSkipDiskCheck = canSkipDiskCheck;
-}
-
-- (BOOL)canSkipDiskCheck
-{
-  return _canSkipDiskCheck;
 }
 
 + (FBSDKAppEventsStateManager *)shared
@@ -68,8 +57,8 @@
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                          logEntry:@"FBSDKAppEvents Persist: Clearing"];
-  [[NSFileManager defaultManager] removeItemAtPath:[self filePath]
-                                             error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self filePath]
+                                           error:NULL];
   self.canSkipDiskCheck = YES;
 }
 

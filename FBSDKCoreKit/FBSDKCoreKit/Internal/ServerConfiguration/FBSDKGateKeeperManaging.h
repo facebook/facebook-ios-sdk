@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error);
 
 NS_SWIFT_NAME(GateKeeperManaging)
@@ -31,3 +33,5 @@ NS_SWIFT_NAME(GateKeeperManaging)
 + (void)loadGateKeepers:(nonnull FBSDKGKManagerBlock)completionBlock;
 
 @end
+
+NS_ASSUME_NONNULL_END

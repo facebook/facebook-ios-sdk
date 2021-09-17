@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+               BlueprintIdentifier = "CBD330E3FC768333E8F93ED3"
                BuildableName = "FBSDKCoreKit_Basics-Universal"
                BlueprintName = "FBSDKCoreKit_Basics-Universal"
                ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
@@ -28,7 +28,21 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+               BlueprintIdentifier = "96EC9BE57A56F1C89382894F"
+               BuildableName = "FBAEMKit-Universal"
+               BlueprintName = "FBAEMKit-Universal"
+               ReferencedContainer = "container:FBAEMKit/FBAEMKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
                BuildableName = "FBSDKCoreKit-Universal"
                BlueprintName = "FBSDKCoreKit-Universal"
                ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -42,7 +56,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D9DB95F1A116A860086167B"
+               BlueprintIdentifier = "70FC91559D454ECCC83AED2D"
                BuildableName = "FBSDKLoginKit-Universal"
                BlueprintName = "FBSDKLoginKit-Universal"
                ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
@@ -56,7 +70,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
+               BlueprintIdentifier = "92D9D2CE5CA265C537EF6C43"
                BuildableName = "FBSDKShareKit-Universal"
                BlueprintName = "FBSDKShareKit-Universal"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
@@ -70,7 +84,21 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F4F7CA2323F497200030A346"
+               BlueprintIdentifier = "1DE0CAD4DD359F7382F52801"
+               BuildableName = "FacebookGamingServices-Universal"
+               BlueprintName = "FacebookGamingServices-Universal"
+               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
                BuildableName = "FBSDKGamingServicesKit-Universal"
                BlueprintName = "FBSDKGamingServicesKit-Universal"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
@@ -81,10 +109,10 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BlueprintIdentifier = "0AFAA4AA80A855D463672CB9"
                BuildableName = "FBSDKCoreKitTests.xctest"
                BlueprintName = "FBSDKCoreKitTests"
                ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -95,10 +123,10 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D9DB8E31A114E500086167B"
+               BlueprintIdentifier = "EA4533F3932D71F74932EC94"
                BuildableName = "FBSDKLoginKitTests.xctest"
                BlueprintName = "FBSDKLoginKitTests"
                ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
@@ -109,10 +137,10 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D46C5FA1A11E5D800A0DDB6"
+               BlueprintIdentifier = "72B7C3B648443F780CC2BFD5"
                BuildableName = "FBSDKShareKitTests.xctest"
                BlueprintName = "FBSDKShareKitTests"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
@@ -131,7 +159,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BlueprintIdentifier = "0AFAA4AA80A855D463672CB9"
                BuildableName = "FBSDKCoreKitTests.xctest"
                BlueprintName = "FBSDKCoreKitTests"
                ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -141,7 +169,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BlueprintIdentifier = "9CB0B0DE34B638602F559C29"
                BuildableName = "FBSDKCoreKit_BasicsTests.xctest"
                BlueprintName = "FBSDKCoreKit_BasicsTests"
                ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
@@ -151,7 +179,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D9DB8E31A114E500086167B"
+               BlueprintIdentifier = "EA4533F3932D71F74932EC94"
                BuildableName = "FBSDKLoginKitTests.xctest"
                BlueprintName = "FBSDKLoginKitTests"
                ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
@@ -161,7 +189,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D46C5FA1A11E5D800A0DDB6"
+               BlueprintIdentifier = "72B7C3B648443F780CC2BFD5"
                BuildableName = "FBSDKShareKitTests.xctest"
                BlueprintName = "FBSDKShareKitTests"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
@@ -171,10 +199,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F46A223F24D9F14D005878A8"
+               BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
                BuildableName = "FBSDKGamingServicesKitTests.xctest"
                BlueprintName = "FBSDKGamingServicesKitTests"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1C47B9912935D5C80C951296"
+               BuildableName = "FBAEMKitTests.xctest"
+               BlueprintName = "FBAEMKitTests"
+               ReferencedContainer = "container:FBAEMKit/FBAEMKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -192,7 +230,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
             BuildableName = "FBSDKCoreKit-Universal"
             BlueprintName = "FBSDKCoreKit-Universal"
             ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -208,7 +246,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
             BuildableName = "FBSDKCoreKit-Universal"
             BlueprintName = "FBSDKCoreKit-Universal"
             ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">

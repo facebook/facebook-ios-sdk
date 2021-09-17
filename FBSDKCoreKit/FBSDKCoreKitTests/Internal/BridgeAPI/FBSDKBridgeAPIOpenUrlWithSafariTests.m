@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : XCTestCase
 
@@ -30,10 +29,10 @@
 @property (nonatomic) TestLogger *logger;
 @property (nonatomic, readonly) NSURL *sampleUrl;
 @property (nonatomic) FBSDKLoginManager *loginManager;
-@property (nonatomic) TestURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestInternalURLOpener *urlOpener;
+@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
+@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
 
 @end
 
@@ -45,10 +44,10 @@
 
   [FBSDKLoginManager resetTestEvidence];
   self.logger = [TestLogger new];
-  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
+  self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   self.frameworkLoader = [TestDylibResolver new];
-  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  self.appURLSchemeProvider = [TestInternalUtility new];
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                                   logger:self.logger
                                                urlOpener:self.urlOpener

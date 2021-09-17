@@ -19,6 +19,8 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGraphRequestPiggybackManaging.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Describes a type that can add piggyback requests to connections
 NS_SWIFT_NAME(GraphRequestPiggybackManaging)
 @protocol FBSDKGraphRequestPiggybackManaging
@@ -26,3 +28,5 @@ NS_SWIFT_NAME(GraphRequestPiggybackManaging)
 + (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection;
 
 @end
+
+NS_ASSUME_NONNULL_END

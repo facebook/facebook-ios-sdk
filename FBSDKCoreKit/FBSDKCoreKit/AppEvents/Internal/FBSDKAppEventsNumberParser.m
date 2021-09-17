@@ -18,10 +18,13 @@
 
 #import "FBSDKAppEventsNumberParser.h"
 
+@interface FBSDKAppEventsNumberParser ()
+
+@property (nonatomic) NSLocale *locale;
+
+@end
+
 @implementation FBSDKAppEventsNumberParser
-{
-  NSLocale *_locale;
-}
 
 - (instancetype)initWithLocale:(NSLocale *)locale
 {

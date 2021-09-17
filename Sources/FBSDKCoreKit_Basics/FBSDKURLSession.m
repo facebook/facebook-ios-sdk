@@ -20,9 +20,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBasicUtility.h"
-#import "FBSDKURLSessionTask.h"
-
 // At some point this default conformance declaration needs to be moved out of
 // this class and treated like the dependency it is.
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
@@ -57,7 +54,7 @@
 - (void)updateSessionWithBlock:(dispatch_block_t)block
 {
   if (!self.valid) {
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+    self.session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration
                                                  delegate:_delegate
                                             delegateQueue:_delegateQueue];
   }

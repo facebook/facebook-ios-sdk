@@ -25,7 +25,7 @@
 
  #import "FBSDKAccessToken.h"
  #import "FBSDKHumanSilhouetteIcon.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKMath.h"
  #import "FBSDKProfile+Internal.h"
 
@@ -81,7 +81,7 @@
 
 - (BOOL)isEqual:(id)object
 {
-  if (![object isKindOfClass:[FBSDKProfilePictureViewState class]]) {
+  if (![object isKindOfClass:FBSDKProfilePictureViewState.class]) {
     return NO;
   }
   FBSDKProfilePictureViewState *other = (FBSDKProfilePictureViewState *)object;
@@ -100,19 +100,22 @@
   return (other != nil
     && (_imageShouldFit == other->_imageShouldFit)
     && (_pictureMode == other->_pictureMode)
-    && [FBSDKInternalUtility object:_profileID isEqualToObject:other->_profileID]);
+    && [FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:other->_profileID]);
 }
 
 @end
 
+@interface FBSDKProfilePictureView ()
+
+@property (nonatomic) BOOL hasProfileImage;
+@property (nonatomic) UIImageView *imageView;
+@property (nonatomic) FBSDKProfilePictureViewState *lastState;
+@property (nonatomic) BOOL needsImageUpdate;
+@property (nonatomic) BOOL placeholderImageIsValid;
+
+@end
+
 @implementation FBSDKProfilePictureView
-{
-  BOOL _hasProfileImage;
-  UIImageView *_imageView;
-  FBSDKProfilePictureViewState *_lastState;
-  BOOL _needsImageUpdate;
-  BOOL _placeholderImageIsValid;
-}
 
  #pragma mark - Object Lifecycle
 
@@ -150,7 +153,7 @@
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
  #pragma mark - Properties
@@ -193,7 +196,7 @@
 
 - (void)setProfileID:(NSString *)profileID
 {
-  if (![FBSDKInternalUtility object:_profileID isEqualToObject:profileID]) {
+  if (![FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:profileID]) {
     _profileID = [profileID copy];
     _placeholderImageIsValid = NO;
     [self setNeedsImageUpdate];
@@ -233,17 +236,17 @@
   [self addSubview:_imageView];
 
   _profileID = @"me";
-  self.backgroundColor = [UIColor whiteColor];
+  self.backgroundColor = UIColor.whiteColor;
   self.contentMode = UIViewContentModeScaleAspectFit;
   self.userInteractionEnabled = NO;
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_accessTokenDidChangeNotification:)
-                                               name:FBSDKAccessTokenDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_profileDidChangeNotification:)
-                                               name:FBSDKProfileDidChangeNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_accessTokenDidChangeNotification:)
+                                             name:FBSDKAccessTokenDidChangeNotification
+                                           object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_profileDidChangeNotification:)
+                                             name:FBSDKProfileDidChangeNotification
+                                           object:nil];
 }
 
  #pragma mark - Notifications
@@ -321,7 +324,7 @@
 {
   __weak FBSDKProfilePictureView *weakSelf = self;
   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
-  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSession *session = NSURLSession.sharedSession;
   [[session
     dataTaskWithRequest:request
     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

@@ -18,21 +18,20 @@
 
 #import "FBSDKAccessTokenExpirer.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKNotificationProtocols.h"
 
 @interface FBSDKAccessTokenExpirer ()
 
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
+@property (nonatomic) NSTimer *timer;
 
 @end
 
 @implementation FBSDKAccessTokenExpirer
-{
-  NSTimer *_timer;
-}
 
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
@@ -66,13 +65,13 @@
 - (void)_timerDidFire
 {
   FBSDKAccessToken *accessToken = FBSDKAccessToken.currentAccessToken;
-  NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeNewKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeOldKey];
   userInfo[FBSDKAccessTokenDidExpireKey] = @YES;
 
   [self.notificationCenter postNotificationName:FBSDKAccessTokenDidChangeNotification
-                                         object:[FBSDKAccessToken class]
+                                         object:FBSDKAccessToken.class
                                        userInfo:userInfo];
 }
 

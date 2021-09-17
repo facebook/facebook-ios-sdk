@@ -49,7 +49,6 @@ class DeviceLoginManagerTests: XCTestCase {
     // and make network requests, and generally pollute the test environment.
     // This is mimicking the behavior of calling `didFinishLaunching` by configuring
     // the types that are needed for these test cases.
-    GraphRequestConnection.setCanMakeRequests()
     InternalUtility.shared.isConfigured = true
     Settings.shared.isConfigured = true
 
@@ -184,7 +183,7 @@ class DeviceLoginManagerTests: XCTestCase {
   func testStatusGraphRequestCompleteWithNoToken() throws {
     manager._schedulePoll(sampleCodeInfo().pollingInterval)
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-      completion(nil, [], nil)
+    completion(nil, [], nil)
     XCTAssertEqual(self.delegate.capturedLoginManager, self.manager)
     XCTAssertNotNil(self.delegate.capturedError)
   }
@@ -200,7 +199,7 @@ class DeviceLoginManagerTests: XCTestCase {
       )
     ]
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-      completion(nil, result, nil)
+    completion(nil, result, nil)
 
     let request = try XCTUnwrap(factory.capturedRequests.last)
     XCTAssertEqual(request.tokenString, SampleAccessTokens.validToken.tokenString)
@@ -433,18 +432,18 @@ class DeviceLoginManagerTests: XCTestCase {
       )
     )
 
-      let request = try XCTUnwrap(factory.capturedRequests.first)
-      XCTAssertEqual(
-        request.graphPath,
-        "device/login_status",
-        "Should create a graph request with the expected graph path"
-      )
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+    XCTAssertEqual(
+      request.graphPath,
+      "device/login_status",
+      "Should create a graph request with the expected graph path"
+    )
   }
 
   // MARK: Helpers
 
   func sampleCodeInfo() -> DeviceLoginCodeInfo {
-    return DeviceLoginCodeInfo(
+    DeviceLoginCodeInfo(
       identifier: "identifier",
       loginCode: "loginCode",
       verificationURL: URL(string: "https://www.facebook.com")!, // swiftlint:disable:this force_unwrapping

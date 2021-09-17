@@ -19,6 +19,9 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(AuthenticationStatusUtility)
 @interface FBSDKAuthenticationStatusUtility : NSObject
 
 /**
@@ -28,3 +31,5 @@
 + (void)checkAuthenticationStatus;
 
 @end
+
+NS_ASSUME_NONNULL_END

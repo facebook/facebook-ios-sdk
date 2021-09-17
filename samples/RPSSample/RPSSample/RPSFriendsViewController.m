@@ -282,7 +282,7 @@
 
     NSMutableString *output = [NSMutableString string];
     for (id entry in activity) {
-      NSDateComponents *c = [[NSCalendar currentCalendar]
+      NSDateComponents *c = [NSCalendar.currentCalendar
                              components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
                              fromDate:entry[@"publish_date"]];
       NSString *gesture = entry[@"player_gesture"];

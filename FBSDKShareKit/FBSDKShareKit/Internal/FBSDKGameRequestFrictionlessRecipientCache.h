@@ -22,12 +22,16 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(GameRequestFrictionlessRecipientCache)
 @interface FBSDKGameRequestFrictionlessRecipientCache : NSObject
 
 - (BOOL)recipientsAreFrictionless:(id)recipients;
-- (void)updateWithResults:(NSDictionary *)results;
+- (void)updateWithResults:(NSDictionary<NSString *, id> *)results;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

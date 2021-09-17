@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 // swiftlint:disable type_body_length implicitly_unwrapped_optional
@@ -25,6 +26,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   var eventProcessor: TestOnDeviceMLModelManager! = TestOnDeviceMLModelManager()
+  let serverConfigurationProvider = TestServerConfigurationProvider()
   let collectionView = TestCollectionView(
     frame: .zero,
     collectionViewLayout: UICollectionViewFlowLayout()
@@ -62,7 +64,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     indexer = SuggestedEventsIndexer(
       requestProvider: requestProvider,
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      serverConfigurationProvider: serverConfigurationProvider,
       swizzler: TestSwizzler.self,
       settings: settings,
       eventLogger: eventLogger,
@@ -78,7 +80,6 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   }
 
   static func reset() {
-    TestServerConfigurationProvider.reset()
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
     SuggestedEventsIndexer.reset()
@@ -99,7 +100,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should have a request provider of the expected default type"
     )
     XCTAssertTrue(
-      indexer.serverConfigurationProvider is ServerConfigurationManager.Type,
+      indexer.serverConfigurationProvider is ServerConfigurationManager,
       "Should have a server configuration manager of the expected default type"
     )
     XCTAssertTrue(
@@ -112,7 +113,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
     XCTAssertEqual(
       ObjectIdentifier(indexer.eventLogger),
-      ObjectIdentifier(AppEvents.singleton),
+      ObjectIdentifier(AppEvents.shared),
       "Should have an event logger of the expected default type"
     )
     XCTAssertTrue(
@@ -127,7 +128,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should be able to create an instance with a custom request provider"
     )
     XCTAssertTrue(
-      indexer.serverConfigurationProvider is TestServerConfigurationProvider.Type,
+      indexer.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to create an instance with a custom server configuration provider"
     )
     XCTAssertTrue(
@@ -163,7 +164,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.enable()
 
     XCTAssertTrue(
-      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
+      serverConfigurationProvider.loadServerConfigurationWasCalled,
       "Enabling should load a server configuration"
     )
   }
@@ -299,9 +300,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
-    guard let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
-          let data = parameter.data(using: .utf8),
-          let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+    guard
+      let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
+      let data = parameter.data(using: .utf8),
+      let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
       return XCTFail("Should capture the metadata in the parameters")
     }
@@ -660,8 +662,8 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       unconfirmedEvents: unconfirmedEvents
     )
     indexer.enable()
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(with: setting),
+    serverConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.config(withDictionary: setting),
       error
     )
   }

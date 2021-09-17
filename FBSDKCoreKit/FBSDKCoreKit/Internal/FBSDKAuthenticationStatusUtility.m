@@ -22,10 +22,11 @@
 
  #import "FBSDKAuthenticationStatusUtility.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAccessToken.h"
  #import "FBSDKAuthenticationToken.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKLogger.h"
  #import "FBSDKProfile.h"
 
@@ -65,7 +66,7 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
   }
 
   if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
-    NSDictionary *header = [httpResponse allHeaderFields];
+    NSDictionary<NSString *, id> *header = [httpResponse allHeaderFields];
     NSString *status = [FBSDKTypeUtility dictionary:header objectForKey:@"fb-s" ofType:NSString.class];
     if ([status isEqualToString:@"not_authorized"]) {
       [self _invalidateCurrentSession];
@@ -81,13 +82,13 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
     return nil;
   }
 
-  NSDictionary *params = @{@"id_token" : token.tokenString};
+  NSDictionary<NSString *, id> *params = @{@"id_token" : token.tokenString};
   NSError *error;
 
-  NSURL *requestURL = [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:@"m"
-                                                                            path:FBSDKOIDCStatusPath
-                                                                 queryParameters:params
-                                                                           error:&error];
+  NSURL *requestURL = [FBSDKInternalUtility.sharedUtility unversionedFacebookURLWithHostPrefix:@"m"
+                                                                                          path:FBSDKOIDCStatusPath
+                                                                               queryParameters:params
+                                                                                         error:&error];
   return error == nil ? requestURL : nil;
 }
 

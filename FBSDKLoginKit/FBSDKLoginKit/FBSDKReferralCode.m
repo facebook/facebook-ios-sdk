@@ -32,7 +32,7 @@
     return nil;
   }
 
-  NSCharacterSet *alphanumericSet = [NSCharacterSet alphanumericCharacterSet];
+  NSCharacterSet *alphanumericSet = NSCharacterSet.alphanumericCharacterSet;
   if (![[string stringByTrimmingCharactersInSet:alphanumericSet] isEqualToString:@""]) {
     return nil;
   }
@@ -46,7 +46,7 @@
 
 - (BOOL)isEqual:(id)obj
 {
-  if (![obj isKindOfClass:[FBSDKReferralCode class]]) {
+  if (![obj isKindOfClass:FBSDKReferralCode.class]) {
     return NO;
   }
 

@@ -26,7 +26,7 @@
 
 @implementation FBSDKCodelessPathComponent
 
-- (instancetype)initWithJSON:(NSDictionary *)dict
+- (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
 {
   if (self = [super init]) {
     _className = [dict[CODELESS_MAPPING_CLASS_NAME_KEY] copy];

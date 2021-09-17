@@ -21,18 +21,24 @@ import TestTools
 @objcMembers
 class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, ServerConfigurationLoading {
 
-  static var capturedCompletionBlock: ServerConfigurationBlock?
-  static var secondCapturedCompletionBlock: ServerConfigurationBlock?
-  static var loadServerConfigurationWasCalled = false
-  static var stubbedServerConfiguration: ServerConfiguration?
-  static var stubbedRequestToLoadServerConfiguration: GraphRequest?
-  static var requestToLoadConfigurationCallWasCalled = false
+  var capturedCompletionBlock: ServerConfigurationBlock?
+  var secondCapturedCompletionBlock: ServerConfigurationBlock?
+  var loadServerConfigurationWasCalled = false
+  var stubbedRequestToLoadServerConfiguration: GraphRequest?
+  var stubbedServerConfiguration: ServerConfiguration
+  var requestToLoadConfigurationCallWasCalled = false
+  var didRetrieveCachedServerConfiguration = false
 
-  static func cachedServerConfiguration() -> ServerConfiguration? {
-    stubbedServerConfiguration
+  init(configuration: ServerConfiguration = ServerConfigurationFixtures.defaultConfig) {
+    stubbedServerConfiguration = configuration
   }
 
-  static func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {
+  func cachedServerConfiguration() -> ServerConfiguration {
+    didRetrieveCachedServerConfiguration = true
+    return stubbedServerConfiguration
+  }
+
+  func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {
     loadServerConfigurationWasCalled = true
     guard capturedCompletionBlock == nil else {
       secondCapturedCompletionBlock = completionBlock
@@ -42,18 +48,17 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, S
     capturedCompletionBlock = completionBlock
   }
 
-  static func reset() {
+  func reset() {
     requestToLoadConfigurationCallWasCalled = false
     loadServerConfigurationWasCalled = false
     capturedCompletionBlock = nil
     secondCapturedCompletionBlock = nil
   }
 
-  static func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {
-    return
+  func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {
   }
 
-  static func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
+  func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
     requestToLoadConfigurationCallWasCalled = true
     return stubbedRequestToLoadServerConfiguration
   }

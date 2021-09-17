@@ -129,16 +129,14 @@ class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithNilAuthType() {
     let config = LoginConfiguration(authType: nil)
-    XCTAssertEqual(
+    XCTAssertNil(
       config?.authType,
-      nil,
       "Should treat a nil auth type as nil"
     )
   }
 
   func testAuthTypeForStringWithInvalidAuthType() {
-    XCTAssertNil(LoginConfiguration.authType(for: "foo"),
-                 "Should return nil for invalid auth types")
+    XCTAssertNil(LoginConfiguration.authType(for: "foo"), "Should return nil for invalid auth types")
   }
 
   func testAuthTypeForStringWithValidAuthType() {

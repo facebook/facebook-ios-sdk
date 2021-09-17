@@ -22,17 +22,11 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
 #import "FBSDKCoreKit+Internal.h"
-#endif
 
-#if SWIFT_PACKAGE
-#import "FBSDKLoginManager.h"
-#else
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#endif
+
+#import "FBSDKLoginProviding.h"
 
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
@@ -53,7 +47,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   FBSDKLoginManagerStatePerformingLogin,
 };
 
-@interface FBSDKLoginManager () <FBSDKURLOpening>
+@interface FBSDKLoginManager () <FBSDKURLOpening, FBSDKLoginProviding>
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
@@ -69,7 +63,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)logIn;
 
 // made available for testing only
-- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+- (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
                                serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
                                             logger:(FBSDKLoginManagerLogger *)logger
                                         authMethod:(NSString *)authMethod;

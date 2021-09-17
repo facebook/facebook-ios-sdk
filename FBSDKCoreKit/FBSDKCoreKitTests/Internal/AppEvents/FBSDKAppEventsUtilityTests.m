@@ -19,12 +19,13 @@
 // @lint-ignore-every CLANGTIDY
 @import TestTools;
 
+#import "FBSDKAppEventsUtilityTests.h"
+
 #import <AdSupport/AdSupport.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
@@ -67,12 +68,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 @end
 
 @implementation FBSDKAppEventsUtilityTests
-{
-  UserDefaultsSpy *userDefaultsSpy;
-  TestBundle *bundle;
-  TestEventLogger *logger;
-  TestAppEventsStateProvider *appEventsStateProvider;
-}
 
 + (void)setUp
 {
@@ -85,44 +80,43 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [super setUp];
 
-  userDefaultsSpy = [UserDefaultsSpy new];
-  bundle = [TestBundle new];
-  logger = [TestEventLogger new];
-  appEventsStateProvider = [TestAppEventsStateProvider new];
+  self.userDefaultsSpy = [UserDefaultsSpy new];
+  self.bundle = [TestBundle new];
+  self.logger = [TestEventLogger new];
+  self.appEventsStateProvider = [TestAppEventsStateProvider new];
   TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid;
 
-  [FBSDKSettings configureWithStore:userDefaultsSpy
+  [FBSDKSettings configureWithStore:self.userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-             infoDictionaryProvider:bundle
-                        eventLogger:logger];
+             infoDictionaryProvider:self.bundle
+                        eventLogger:self.logger];
 
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                        flushPeriodInSeconds:0];
   [FBSDKAppEvents setSingletonInstanceToInstance:appEvents];
-  [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.self
-                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
-                               serverConfigurationProvider:TestServerConfigurationProvider.self
-                                      graphRequestProvider:[TestGraphRequestFactory new]
-                                            featureChecker:[TestFeatureManager new]
-                                                     store:userDefaultsSpy
-                                                    logger:TestLogger.class
-                                                  settings:[TestSettings new]
-                                           paymentObserver:[TestPaymentObserver new]
-                                  timeSpentRecorderFactory:[TestTimeSpentRecorderFactory new]
-                                       appEventsStateStore:[TestAppEventsStateStore new]
-                       eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
-                   restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
-                                       atePublisherFactory:[TestAtePublisherFactory new]
-                                    appEventsStateProvider:appEventsStateProvider
-                                                  swizzler:TestSwizzler.class
-                                      advertiserIDProvider:FBSDKAppEventsUtility.shared];
+  [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.self
+                         appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
+                            serverConfigurationProvider:TestServerConfigurationProvider.self
+                                   graphRequestProvider:[TestGraphRequestFactory new]
+                                         featureChecker:[TestFeatureManager new]
+                                                  store:self.userDefaultsSpy
+                                                 logger:TestLogger.class
+                                               settings:[TestSettings new]
+                                        paymentObserver:[TestPaymentObserver new]
+                               timeSpentRecorderFactory:[TestTimeSpentRecorderFactory new]
+                                    appEventsStateStore:[TestAppEventsStateStore new]
+                    eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
+                restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
+                                    atePublisherFactory:[TestAtePublisherFactory new]
+                                 appEventsStateProvider:self.appEventsStateProvider
+                                               swizzler:TestSwizzler.class
+                                   advertiserIDProvider:FBSDKAppEventsUtility.shared];
 }
 
 - (void)tearDown
 {
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
-  [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
   [FBSDKSettings reset];
@@ -160,8 +154,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   TestASIdentifierManager *identifierManager = [TestASIdentifierManager new];
   identifierManager.stubbedAdvertisingIdentifier = uuid;
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager;
-  NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                         shouldAccessAdvertisingID:YES];
+  NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                         shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
@@ -307,8 +301,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
       if ([status unsignedIntegerValue] != FBSDKAdvertisingTrackingUnspecified) {
         [FBSDKSettings setAdvertiserTrackingStatus:[status unsignedIntegerValue]];
       }
-      NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                             shouldAccessAdvertisingID:YES];
+      NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                             shouldAccessAdvertisingID:YES];
       if (@available(iOS 14.0, *)) {
         // If status is unspecified, ATE will be defaultATEStatus
         if ([status unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
@@ -339,7 +333,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertFalse(
-    appEventsStateProvider.state.isAddEventCalled,
+    self.appEventsStateProvider.state.isAddEventCalled,
     "Shouldn't call addEvents on AppEventsState when dropping app event"
   );
 }
@@ -353,11 +347,11 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertTrue(
-    appEventsStateProvider.state.isAddEventCalled,
+    self.appEventsStateProvider.state.isAddEventCalled,
     "Should call addEvents on AppEventsState when sending app event"
   );
   XCTAssertFalse(
-    appEventsStateProvider.state.capturedIsImplicit,
+    self.appEventsStateProvider.state.capturedIsImplicit,
     "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
   );
 }
@@ -371,11 +365,11 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertTrue(
-    appEventsStateProvider.state.isAddEventCalled,
+    self.appEventsStateProvider.state.isAddEventCalled,
     "Should call addEvents on AppEventsState when sending app event"
   );
   XCTAssertFalse(
-    appEventsStateProvider.state.capturedIsImplicit,
+    self.appEventsStateProvider.state.capturedIsImplicit,
     "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
   );
 }
@@ -388,11 +382,11 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKSettings setAppID:@"123"];
   [FBSDKAppEvents logEvent:@"event"];
   XCTAssertTrue(
-    appEventsStateProvider.state.isAddEventCalled,
+    self.appEventsStateProvider.state.isAddEventCalled,
     "Should call addEvents on AppEventsState when sending app event"
   );
   XCTAssertFalse(
-    appEventsStateProvider.state.capturedIsImplicit,
+    self.appEventsStateProvider.state.capturedIsImplicit,
     "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
   );
 }

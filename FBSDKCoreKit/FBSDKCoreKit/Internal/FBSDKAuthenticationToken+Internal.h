@@ -17,16 +17,19 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if SWIFT_PACKAGE
- #import "FBSDKAuthenticationToken.h"
-#else
- #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
-#endif
+#import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKAuthenticationToken (Internal)
 
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                        graphDomain:(NSString *)graphDomain;
 + (void)resetTokenCache;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -22,12 +22,6 @@
 
  #import "FBSDKLikeBoxBorderView.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
  #define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
  #define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
@@ -45,7 +39,7 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [super initWithCoder:decoder])) {
     [self _initializeContent];
@@ -132,7 +126,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-  return FBSDKEdgeInsetsOutsetSize(self.contentView.intrinsicContentSize, self.contentInsets);
+  return [self _outsetSizeForSize:self.contentView.intrinsicContentSize andInsets:self.contentInsets];
 }
 
 - (void)layoutSubviews
@@ -145,9 +139,9 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
   UIEdgeInsets contentInsets = self.contentInsets;
-  size = FBSDKEdgeInsetsInsetSize(size, contentInsets);
+  size = [self _outsetSizeForSize:size andInsets:contentInsets];
   size = [self.contentView sizeThatFits:size];
-  size = FBSDKEdgeInsetsOutsetSize(size, contentInsets);
+  size = [self _outsetSizeForSize:size andInsets:contentInsets];
   return size;
 }
 
@@ -321,6 +315,14 @@ static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFun
   return limitFunction(pointValue * screenScale) / screenScale;
 }
 
+- (CGSize)_outsetSizeForSize:(CGSize)size andInsets:(UIEdgeInsets)insets
+{
+  return CGSizeMake(
+    insets.left + size.width + insets.right,
+    insets.top + size.height + insets.bottom
+  );
+}
+
 - (UIEdgeInsets)_borderInsets
 {
   // inset the border bounds by 1/2 of the border width, since it is drawn split between inside and outside of the path
@@ -353,11 +355,11 @@ static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFun
 
 - (void)_initializeContent
 {
-  self.backgroundColor = [UIColor clearColor];
+  self.backgroundColor = UIColor.clearColor;
   self.borderCornerRadius = 3.0;
   self.borderWidth = 1.0;
   self.contentMode = UIViewContentModeRedraw;
-  self.fillColor = [UIColor whiteColor];
+  self.fillColor = UIColor.whiteColor;
   self.foregroundColor = [UIColor colorWithRed:(0x6A / 255.0)
                                          green:(0x71 / 255.0)
                                           blue:(0x80 / 255.0)

@@ -20,13 +20,11 @@
 @protocol FBSDKURLSessionProxying;
 @protocol FBSDKURLSessionProxyProviding;
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
 #import "FBSDKGraphRequestMetadata.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequestConnection (Internal)
 
@@ -49,3 +47,5 @@
 - (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
 
 @end
+
+NS_ASSUME_NONNULL_END

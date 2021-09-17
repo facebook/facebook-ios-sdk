@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 class FBSDKModelManagerTests: XCTestCase {
@@ -24,7 +25,7 @@ class FBSDKModelManagerTests: XCTestCase {
   let featureChecker = TestFeatureManager()
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"
-  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
+  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
   let store = UserDefaultsSpy()
   let settings = TestSettings()
 
@@ -91,10 +92,10 @@ class FBSDKModelManagerTests: XCTestCase {
     )
   }
 
-  func testEnablingRetrievesCache() throws {
+  func testEnablingRetrievesCache() {
     manager.enable()
 
-    let keys = try XCTUnwrap(store.capturedObjectRetrievalKeys)
+    let keys = store.capturedObjectRetrievalKeys
 
     XCTAssertTrue(
       keys.contains("com.facebook.sdk:FBSDKModelInfo"),
@@ -158,7 +159,7 @@ class FBSDKModelManagerTests: XCTestCase {
       factory.capturedRequests.first?.capturedCompletionHandler
     )
 
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       completion(nil, Fuzzer.randomize(json: RawRemoteModelResponse.valid), nil)
     }
   }
@@ -321,8 +322,8 @@ private enum RawRemoteModelResponse {
   ]
 
   static let eventPredictionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset1").absoluteString,
-    Keys.rulesURI: SampleUrls.valid(path: "rules1").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset1").absoluteString,
+    Keys.rulesURI: SampleURLs.valid(path: "rules1").absoluteString,
     Keys.thresholds: [
       1,
       "0.68",
@@ -335,7 +336,7 @@ private enum RawRemoteModelResponse {
   ]
 
   static let detectionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset2").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset2").absoluteString,
     Keys.thresholds: [
       1,
       "0.85",

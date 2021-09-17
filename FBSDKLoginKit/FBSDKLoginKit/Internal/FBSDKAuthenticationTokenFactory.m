@@ -21,10 +21,10 @@
 #import <Security/Security.h>
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenHeader.h"
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
-#import "FBSDKCoreKitImport.h"
 
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end
@@ -46,19 +46,19 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenClaims (Internal)
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
+                                                               nonce:(nonnull NSString *)expectedNonce;
 
 @end
 
 @interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
 
+@property (nonatomic) NSString *cert;
+@property (nonatomic) id<FBSDKSessionProviding> sessionProvider;
+
 @end
 
 @implementation FBSDKAuthenticationTokenFactory
-{
-  NSString *_cert;
-  id<FBSDKSessionProviding> _sessionProvider;
-}
 
 - (instancetype)init
 {
@@ -139,7 +139,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
              completion:(FBSDKVerifySignatureCompletionBlock)completion
 {
 #if DEBUG
-#if FBSDKTEST
+#if FBTEST
   // skip signature checking for tests
   if (_skipSignatureVerification && completion) {
     completion(YES);
@@ -188,10 +188,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
                      if (cert) {
                        SecPolicyRef policy = SecPolicyCreateBasicX509();
-                       OSStatus status = -1;
                        SecTrustRef trust;
 
-                       status = SecTrustCreateWithCertificates(cert, policy, &trust);
+                       OSStatus status = SecTrustCreateWithCertificates(cert, policy, &trust);
 
                        if (status == errSecSuccess && trust) {
                          publicKey = SecTrustCopyPublicKey(trust);
@@ -215,7 +214,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                            return completion(nil);
                          }
 
-                         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                         if ([response isKindOfClass:NSHTTPURLResponse.class]) {
                            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                            if (httpResponse.statusCode != 200) {
                              return completion(nil);
@@ -223,7 +222,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                          }
 
                          SecCertificateRef result = NULL;
-                         NSDictionary *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+                         NSDictionary<NSString *, id> *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
                          NSString *certString = [FBSDKTypeUtility dictionary:certs objectForKey:certificateKey ofType:NSString.class];
                          if (!certString) {
                            return completion(nil);
@@ -252,7 +251,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 #pragma mark - Test methods
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 static BOOL _skipSignatureVerification;
 

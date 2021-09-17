@@ -18,7 +18,8 @@
 
 #import "FBSDKLocation.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKMath.h"
 
 NSString *const FBSDKLocationIdCodingKey = @"FBSDKLocationIdCodingKey";
@@ -37,7 +38,7 @@ NSString *const FBSDKLocationNameCodingKey = @"FBSDKLocationNameCodingKey";
   return self;
 }
 
-+ (instancetype)locationFromDictionary:(NSDictionary *)dictionary
++ (instancetype)locationFromDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (![FBSDKTypeUtility dictionaryValue:dictionary]) {
     return nil;
@@ -69,7 +70,7 @@ NSString *const FBSDKLocationNameCodingKey = @"FBSDKLocationNameCodingKey";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKLocation class]]) {
+  if (![object isKindOfClass:FBSDKLocation.class]) {
     return NO;
   }
   return [self isEqualToLocation:object];

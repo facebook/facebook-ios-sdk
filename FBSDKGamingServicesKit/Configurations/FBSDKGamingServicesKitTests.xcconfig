@@ -22,11 +22,9 @@
 PRODUCT_NAME = FBSDKGamingServicesKitTests
 PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKitTests
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKGamingServicesKitTests/Info.plist
+INFOPLIST_FILE = $(SRCROOT)/Info.plist
 
 IPHONEOS_DEPLOYMENT_TARGET = 9.0
 
 HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKGamingServicesKitTests/FBSDKGamingServicesKitTests-Bridging-Header.h

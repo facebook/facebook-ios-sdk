@@ -22,7 +22,7 @@
 
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
 
- #import "FBSDKCoreKitBasicsImport.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKSKAdNetworkConversionConfiguration
 
@@ -103,7 +103,7 @@
     if (obj1.conversionValue < obj2.conversionValue) {
       return NSOrderedDescending;
     }
-    if (obj1.conversionValue < obj2.conversionValue) {
+    if (obj1.conversionValue > obj2.conversionValue) {
       return NSOrderedAscending;
     }
     return NSOrderedSame;

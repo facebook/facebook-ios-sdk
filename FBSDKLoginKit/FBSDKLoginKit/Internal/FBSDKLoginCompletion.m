@@ -22,14 +22,10 @@
 
  #import "FBSDKLoginCompletion+Internal.h"
 
- #if SWIFT_PACKAGE
-@import FBSDKCoreKit;
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
  #import "FBSDKAuthenticationTokenCreating.h"
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -56,13 +52,18 @@
 
  #pragma mark - Completers
 
+@interface FBSDKLoginURLCompleter ()
+
+@property (nonatomic) id<NSObject> observer;
+@property (nonatomic) BOOL performExplicitFallback;
+@property (nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
+
+@end
+
 @implementation FBSDKLoginURLCompleter
 {
   FBSDKLoginCompletionParameters *_parameters;
-  id<NSObject> _observer;
-  BOOL _performExplicitFallback;
-  id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
-  id<FBSDKAuthenticationTokenCreating> _authenticationTokenCreator;
 }
 
 static id<FBSDKProfileCreating> _profileFactory;
@@ -70,12 +71,12 @@ static NSDateFormatter *_dateFormatter;
 
 + (void)initialize
 {
-  if (self == [FBSDKLoginURLCompleter class]) {
+  if (self == FBSDKLoginURLCompleter.class) {
     _profileFactory = [FBSDKProfileFactory new];
   }
 }
 
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+- (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
                    connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
@@ -156,7 +157,7 @@ static NSDateFormatter *_dateFormatter;
                                                completion:completion];
 }
 
-- (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
+- (void)setParametersWithDictionary:(NSDictionary<NSString *, id> *)parameters appID:(NSString *)appID
 {
   NSString *grantedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"granted_scopes" ofType:NSString.class];
   NSString *declinedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"denied_scopes" ofType:NSString.class];
@@ -195,7 +196,7 @@ static NSDateFormatter *_dateFormatter;
   _parameters.challenge = [FBSDKLoginURLCompleter challengeFromParameters:parameters];
 }
 
-- (void)setErrorWithDictionary:(NSDictionary *)parameters
+- (void)setErrorWithDictionary:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *legacyErrorReason = [FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class];
 
@@ -206,7 +207,7 @@ static NSDateFormatter *_dateFormatter;
 
   // if error is nil, then this should be processed as a cancellation unless
   // _performExplicitFallback is set to YES and the log in behavior is Native.
-  _parameters.error = [NSError fbErrorFromReturnURLParameters:parameters];
+  _parameters.error = [FBSDKLoginErrorFactory fbErrorFromReturnURLParameters:parameters];
 }
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
@@ -295,7 +296,7 @@ static NSDateFormatter *_dateFormatter;
                                         isLimited:YES];
 }
 
-+ (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters
++ (NSDate *)expirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *expiresString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires" ofType:NSString.class];
   NSString *expiresAtString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_at" ofType:NSString.class];
@@ -311,7 +312,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-+ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary *)parameters
++ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *dataAccessExpirationDateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"data_access_expiration_time" ofType:NSString.class];
   if (dataAccessExpirationDateString.integerValue > 0) {
@@ -321,7 +322,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-+ (NSString *)challengeFromParameters:(NSDictionary *)parameters
++ (NSString *)challengeFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *stateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"state" ofType:NSString.class];
   if (stateString.length > 0) {
@@ -349,7 +350,7 @@ static NSDateFormatter *_dateFormatter;
 // MARK: Test Helpers
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (id<FBSDKProfileCreating>)profileFactory
 {

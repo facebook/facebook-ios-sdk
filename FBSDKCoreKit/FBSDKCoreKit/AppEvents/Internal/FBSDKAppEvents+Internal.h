@@ -16,18 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if defined FBSDK_SWIFT_PACKAGE
- #import "FBSDKAppEvents.h"
-#else
- #import <FBSDKCoreKit/FBSDKAppEvents.h>
-#endif
-
 #import <UIKit/UIApplication.h>
+
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
 
 #import "FBSDKAppEventsUtility.h"
 
-@protocol FBSDKEventProcessing;
-@protocol FBSDKMetadataIndexing;
+NS_ASSUME_NONNULL_BEGIN
 
 // Internally known event names
 
@@ -123,28 +118,23 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 + (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)startObservingApplicationLifecycleNotifications;
 
-#if !TARGET_OS_TV
-
-+ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
-                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
-
-#endif
-
 @end
+
+NS_ASSUME_NONNULL_END

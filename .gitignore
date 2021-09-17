@@ -78,6 +78,7 @@ xcuserdata
 TestAppIdAndSecret.xcconfig
 .DS_Store
 *.xcscmblueprint
+*.xcscheme
 
 # vim temp files
 *.sw?

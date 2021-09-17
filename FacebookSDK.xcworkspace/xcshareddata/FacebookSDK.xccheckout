@@ -12,8 +12,6 @@
 	<dict>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
-		<key>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</key>
-		<string>git://github.com/erikdoe/ocmock</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>FacebookSDK.xcworkspace</string>
@@ -21,8 +19,6 @@
 	<dict>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>..</string>
-		<key>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</key>
-		<string>../Carthage/Checkouts/ocmock</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
@@ -39,14 +35,6 @@
 			<string>A20D666FF4B08EFE53F147818C2D4D17E2242912</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ios-sdk</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</string>
-			<key>IDESourceControlWCCName</key>
-			<string>OCMock</string>
 		</dict>
 	</array>
 </dict>

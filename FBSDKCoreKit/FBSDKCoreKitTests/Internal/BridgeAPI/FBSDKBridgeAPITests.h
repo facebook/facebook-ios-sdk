@@ -24,20 +24,23 @@
 
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FakeLoginManager.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPITests : XCTestCase
 
-@property FBSDKBridgeAPI *api;
+@property (nonatomic) FBSDKBridgeAPI *api;
 @property (nonatomic) TestLogger *logger;
 @property (readonly) NSURL *sampleUrl;
 @property (readonly) NSError *sampleError;
-@property (nonatomic) TestURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestInternalURLOpener *urlOpener;
+@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
+@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
 
 extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;
 
 @end
+
+NS_ASSUME_NONNULL_END

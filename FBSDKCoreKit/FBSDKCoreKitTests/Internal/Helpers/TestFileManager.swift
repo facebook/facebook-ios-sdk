@@ -41,7 +41,7 @@ class TestFileManager: FileManaging {
     in domain: FileManager.SearchPathDomainMask,
     appropriateFor url: URL,
     create shouldCreate: Bool
-    ) throws -> URL {
+  ) throws -> URL {
     tempDirectoryURL
   }
 

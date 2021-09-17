@@ -34,14 +34,6 @@ FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTyp
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef * __nullable CF_RETURNS_RETAINED result);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query);
 
-#pragma mark - Social Constants
-
-FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeFacebook(void);
-
-#pragma mark - Social Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_SLComposeViewControllerClass(void);
-
 #pragma mark - QuartzCore Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_CATransactionClass(void);
@@ -52,8 +44,6 @@ FOUNDATION_EXPORT Class fbsdkdfl_CATransactionClass(void);
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeScale (CGFloat sx, CGFloat sy, CGFloat sz);
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeTranslation (CGFloat tx, CGFloat ty, CGFloat tz);
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DConcat (CATransform3D a, CATransform3D b);
-
-FOUNDATION_EXPORT const CATransform3D fbsdkdfl_CATransform3DIdentity;
 
 #pragma mark - AdSupport Classes
 

@@ -23,10 +23,7 @@
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsLogging.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashObserver ()
@@ -40,13 +37,6 @@
 @implementation FBSDKCrashObserver
 
 @synthesize prefixes, frameworks;
-
-- (instancetype)init
-{
-  return [self initWithFeatureChecker:FBSDKFeatureManager.shared
-                 graphRequestProvider:[FBSDKGraphRequestFactory new]
-                             settings:FBSDKSettings.sharedSettings];
-}
 
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
@@ -64,16 +54,6 @@
     _settings = settings;
   }
   return self;
-}
-
-+ (instancetype)shared
-{
-  static FBSDKCrashObserver *_sharedInstance;
-  static dispatch_once_t nonce;
-  dispatch_once(&nonce, ^{
-    _sharedInstance = [self new];
-  });
-  return _sharedInstance;
 }
 
 - (void)didReceiveCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
@@ -94,7 +74,7 @@
                                                                            HTTPMethod:FBSDKHTTPMethodPOST];
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
+      if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {
         [FBSDKCrashHandler clearCrashReportFiles];
       }
     }];
@@ -107,7 +87,7 @@
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 - (id<FBSDKSettings>)settings
 {
   return _settings;

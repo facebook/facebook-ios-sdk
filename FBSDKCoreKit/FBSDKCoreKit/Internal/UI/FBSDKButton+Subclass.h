@@ -18,30 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKButton.h"
- #import "FBSDKButtonImpressionTracking.h"
-#else
- #import <FBSDKCoreKit/FBSDKButton.h>
- #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
-#endif
+#import <FBSDKCoreKit/FBSDKButton.h>
+#import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
 
-#import "FBSDKIcon.h"
+#import "FBSDKIcon+Internal.h"
 
 @interface FBSDKButton ()
-
-@property (nonatomic, readonly, getter = isImplicitlyDisabled) BOOL implicitlyDisabled;
 
 + (void)setApplicationActivationNotifier:(id)notifier;
 
 - (void)logTapEventWithEventName:(NSString *)eventName
-                      parameters:(NSDictionary *)parameters;
-- (void)checkImplicitlyDisabled;
+                      parameters:(NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
-- (void)configureWithIcon:(FBSDKIcon *)icon
-                    title:(NSString *)title
-          backgroundColor:(UIColor *)backgroundColor
-         highlightedColor:(UIColor *)highlightedColor;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title
            backgroundColor:(UIColor *)backgroundColor

@@ -26,14 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKEventBindingManager (Testing)
 
 @property (nonatomic) BOOL isStarted;
-@property (nullable, nonatomic) NSMutableDictionary *reactBindings;
+@property (nullable, nonatomic) NSMutableDictionary<NSString *, id> *reactBindings;
 @property (nonatomic, readonly) NSSet *validClasses;
 @property (nonatomic) BOOL hasReactNative;
 @property (nullable, nonatomic) NSArray<FBSDKEventBinding *> *eventBindings;
 @property (nullable, nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
 
-- (instancetype)initWithJSON:(NSDictionary *)dict
+- (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
                     swizzler:(Class<FBSDKSwizzling>)swizzler
                  eventLogger:(id<FBSDKEventLogging>)eventLogger;
 - (void)start;

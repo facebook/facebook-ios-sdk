@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TargetConditionals.h"
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @class FBSDKGameRequestContent;
 
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
 
 NS_SWIFT_NAME(GameRequestURLProvider)
 @interface FBSDKGameRequestURLProvider : NSObject
-+ (NSURL *_Nullable)createDeepLinkURLWithQueryDictionary:(NSDictionary *_Nonnull)queryDictionary;
++ (NSURL *_Nullable)createDeepLinkURLWithQueryDictionary:(NSDictionary<NSString *, id> *_Nonnull)queryDictionary;
 + (NSString *_Nullable)filtersNameForFilters:(FBSDKGameRequestFilter)filters;
 + (NSString *_Nullable)actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType;
 @end

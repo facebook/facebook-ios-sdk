@@ -18,12 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKCopying.h"
-#else
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#endif
-
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
 
@@ -34,9 +28,6 @@ FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLogin;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameAppInvite;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameGameRequest;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameGroup;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLike;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameMessage;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameShare;
 
 FOUNDATION_EXPORT const NSInteger FBSDKServerConfigurationVersion;
 
@@ -48,7 +39,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationSmartLoginOptions)
 };
 
 NS_SWIFT_NAME(ServerConfiguration)
-@interface FBSDKServerConfiguration : NSObject <FBSDKCopying, NSSecureCoding>
+@interface FBSDKServerConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -63,8 +54,8 @@ NS_SWIFT_NAME(ServerConfiguration)
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
         codelessEventsEnabled:(BOOL)codelessEventsEnabled
      uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
-         dialogConfigurations:(NSDictionary *)dialogConfigurations
-                  dialogFlows:(NSDictionary *)dialogFlows
+         dialogConfigurations:(NSDictionary<NSString *, id> *)dialogConfigurations
+                  dialogFlows:(NSDictionary<NSString *, id> *)dialogFlows
                     timestamp:(NSDate *)timestamp
            errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
        sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval

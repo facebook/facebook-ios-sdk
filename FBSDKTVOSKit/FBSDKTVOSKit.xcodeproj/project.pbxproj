@@ -22,6 +22,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0A488BC926EF205200E6D81E /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8117C23C1D302F6900784D79 /* FBSDKCoreKit.framework */; };
+		0A488BCA26EF205200E6D81E /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAE2DD626ED6AFD00D586FA /* FBSDKCoreKit_Basics.framework */; };
+		0AEF6BFB26EE805B00C42D92 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9DBF66207C080600662776 /* FBSDKLoginKit.framework */; };
 		0B9DBF69207C082D00662776 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9DBF66207C080600662776 /* FBSDKLoginKit.framework */; };
 		8117C2781D30303D00784D79 /* FBSDKTVLoginViewControllerElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D82CF181C56C3EE00CB7AD7 /* FBSDKTVLoginViewControllerElement.m */; };
 		8117C2791D30303D00784D79 /* FBSDKTVInterfaceFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D81FD9E1C50407000AF5F8D /* FBSDKTVInterfaceFactory.m */; };
@@ -39,12 +42,10 @@
 		8117C2901D30303D00784D79 /* FBSDKTVInterfaceFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D81FD9D1C50407000AF5F8D /* FBSDKTVInterfaceFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8117C2911D30303D00784D79 /* FBSDKTVOSConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D8E94761BC332900012023B /* FBSDKTVOSConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8117C2921D30303D00784D79 /* FBSDKTVLoginViewControllerElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D82CF171C56C3EE00CB7AD7 /* FBSDKTVLoginViewControllerElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8117C2BC1D30308700784D79 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6151D0A45F000962084 /* FBSDKCoreKit.framework */; };
 		8117C2C21D30309600784D79 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8117C2C11D30309600784D79 /* UIKit.framework */; };
 		8117C2C51D30309C00784D79 /* TVMLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8117C2C41D30309C00784D79 /* TVMLKit.framework */; };
 		8117C2C81D3030A000784D79 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8117C2C71D3030A000784D79 /* CoreGraphics.framework */; };
 		8118B6941D0A5F9800962084 /* FBSDKTVOSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DEC55831BBA636A00C7DB4A /* FBSDKTVOSKit.framework */; };
-		8118B6951D0A5F9800962084 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6151D0A45F000962084 /* FBSDKCoreKit.framework */; };
 		9D6538261BF40AB3008A08E9 /* FBSDKDeviceLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6538241BF40AB3008A08E9 /* FBSDKDeviceLoginButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D6538271BF40AB3008A08E9 /* FBSDKDeviceLoginButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6538251BF40AB3008A08E9 /* FBSDKDeviceLoginButton.m */; };
 		9D81FD9F1C50407000AF5F8D /* FBSDKTVInterfaceFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D81FD9D1C50407000AF5F8D /* FBSDKTVInterfaceFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,23 +63,106 @@
 		9DEC55931BBA636A00C7DB4A /* FBSDKTVOSKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC55921BBA636A00C7DB4A /* FBSDKTVOSKitTests.m */; };
 		9DEC56041BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DEC56021BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DEC56051BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC56031BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.m */; };
-		F43FBA752649B59100FDCB82 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43FBA662649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0AAE2DBF26ED6AFD00D586FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C90AF26FC3DE92042D89299;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
+		};
+		0AAE2DCF26ED6AFD00D586FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C82569269F0990FC515167BC;
+			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
+		};
+		0AAE2DD126ED6AFD00D586FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D699E942F0F780122DC0BEA;
+			remoteInfo = FBSDKCoreKit_BasicsTests;
+		};
+		0AAE2DD526ED6AFD00D586FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3651C81E860A04E8B363F56B;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
+		};
+		0AEF6BD626EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 183251C53D6990EC82E3DE39;
+			remoteInfo = "FBSDKCoreKit-Static";
+		};
+		0AEF6BD826EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D36AFAAFE0D7CE80E74CEDAA;
+			remoteInfo = "FBSDKCoreKit_TV-Static";
+		};
+		0AEF6BE026EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 466819BA148412564E784A23;
+			remoteInfo = "FBSDKCoreKit_Basics-Static";
+		};
+		0AEF6BE226EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2C001BDA2F580C4AE381D846;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Static";
+		};
+		0AEF6BEA26EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C54E57389C33D521DFCD18F5;
+			remoteInfo = "FBSDKLoginKit-Static";
+		};
+		0AEF6BEC26EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBF6403F232B2DF29FD7824E;
+			remoteInfo = "FBSDKLoginKit_TV-Static";
+		};
+		0AEF6BF526EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09EFC2D1D720ADBAF5ADF771;
+			remoteInfo = "FBSDKShareKit-Static";
+		};
+		0AEF6BF726EE7FA100C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C2E344ED2ABEC31089D167E0;
+			remoteInfo = "FBSDKShareKit_TV-Static";
+		};
+		0AEF6BF926EE804C00C42D92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F32F324235358EB2B4635AF;
+			remoteInfo = "FBSDKLoginKit_TV-Static";
+		};
 		0B3229372093848300F011F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 0B9DBF40207C07C600662776;
+			remoteGlobalIDString = E53936AD30027E37E10349FA;
 			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
-		};
-		0B9DBF5D207C080600662776 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D9DB8D91A114E500086167B;
-			remoteInfo = FBSDKLoginKit;
 		};
 		0B9DBF5F207C080600662776 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -94,26 +178,12 @@
 			remoteGlobalIDString = 9D9DB8E41A114E500086167B;
 			remoteInfo = FBSDKLoginKitTests;
 		};
-		0B9DBF63207C080600662776 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0B9DBF2C207C05CD00662776;
-			remoteInfo = FBSDKLoginKit_TV;
-		};
 		0B9DBF65207C080600662776 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0B9DBF52207C07C600662776;
 			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
-		};
-		0B9DBF67207C080E00662776 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 0B9DBF2B207C05CD00662776;
-			remoteInfo = FBSDKLoginKit_TV;
 		};
 		8117C2391D302F6900784D79 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -147,15 +217,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 814AC7E11D1B528900D61E6C;
+			remoteGlobalIDString = 9B3DC93C05C131CAD9C2148A;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
-		};
-		8118B6101D0A45F000962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D2697471A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit;
 		};
 		8118B6121D0A45F000962084 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -164,47 +227,12 @@
 			remoteGlobalIDString = 9D2697521A5DF40700143BFC;
 			remoteInfo = FBSDKCoreKitTests;
 		};
-		8118B6141D0A45F000962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9DB0FA731BC1CA71005EB8B1;
-			remoteInfo = FBSDKCoreKit_TV;
-		};
-		8118B6161D0A45F600962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9DB0FA721BC1CA71005EB8B1;
-			remoteInfo = FBSDKCoreKit_TV;
-		};
-		8118B6281D0A462B00962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D46C5F01A11E5D800A0DDB6;
-			remoteInfo = FBSDKShareKit;
-		};
 		8118B62A1D0A462B00962084 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 9D46C5FB1A11E5D800A0DDB6;
 			remoteInfo = FBSDKShareKitTests;
-		};
-		8118B62C1D0A462B00962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D2D99941BC452DE00929E76;
-			remoteInfo = FBSDKShareKit_TV;
-		};
-		8118B6971D0A5FA300962084 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9DB0FA721BC1CA71005EB8B1;
-			remoteInfo = FBSDKCoreKit_TV;
 		};
 		9DEC558F1BBA636A00C7DB4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -220,61 +248,14 @@
 			remoteGlobalIDString = 9DEC55821BBA636A00C7DB4A;
 			remoteInfo = FBSDKTVOSKit;
 		};
-		F43FBA4F2649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C5C4B3BE2276B67200CA3706;
-			remoteInfo = FBSDKCoreKit_Basics_TV;
-		};
-		F43FBA5D2649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9D2697521A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit_BasicsTests;
-		};
-		F43FBA5F2649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
-			remoteInfo = FBSDKCoreKit_Basics;
-		};
-		F43FBA612649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
-		};
-		F43FBA632649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
-			remoteInfo = FBSDKCoreKit_Basics_TV;
-		};
-		F43FBA652649B56C00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
-		};
-		F43FBA732649B57B00FDCB82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C5C4B4DC2276BA8D00CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0AAE2D9026ED5A2F00D586FA /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit_Basics.xcodeproj; path = "/Users/samodom/fbsource/fbobjc/ios-sdk/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj"; sourceTree = "<absolute>"; };
+		0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKTVOSKit-Static.xcconfig"; sourceTree = "<group>"; };
 		0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKLoginKit.xcodeproj; path = ../../FBSDKLoginKit/FBSDKLoginKit.xcodeproj; sourceTree = "<group>"; };
 		8117C2151D302F6900784D79 /* FBSDKTVOSKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKTVOSKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKTVOSKit.xcconfig; sourceTree = "<group>"; };
 		8117C2181D302F6900784D79 /* FBSDKTVOSKitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKTVOSKitTests.xcconfig; sourceTree = "<group>"; };
 		8117C21A1D302F6900784D79 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		8117C21C1D302F6900784D79 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -336,7 +317,6 @@
 		9DEC55B81BBA675E00C7DB4A /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		9DEC56021BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceLoginViewController.h; sourceTree = "<group>"; };
 		9DEC56031BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceLoginViewController.m; sourceTree = "<group>"; };
-		F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit_Basics.xcodeproj; path = "/Users/joesusnick/fbsource/fbobjc/ios-sdk/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,12 +324,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F43FBA752649B59100FDCB82 /* FBSDKCoreKit_Basics.framework in Frameworks */,
+				0A488BC926EF205200E6D81E /* FBSDKCoreKit.framework in Frameworks */,
+				0A488BCA26EF205200E6D81E /* FBSDKCoreKit_Basics.framework in Frameworks */,
 				0B9DBF69207C082D00662776 /* FBSDKLoginKit.framework in Frameworks */,
 				8117C2C81D3030A000784D79 /* CoreGraphics.framework in Frameworks */,
 				8117C2C51D30309C00784D79 /* TVMLKit.framework in Frameworks */,
 				8117C2C21D30309600784D79 /* UIKit.framework in Frameworks */,
-				8117C2BC1D30308700784D79 /* FBSDKCoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,6 +337,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AEF6BFB26EE805B00C42D92 /* FBSDKLoginKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,21 +346,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				8118B6941D0A5F9800962084 /* FBSDKTVOSKit.framework in Frameworks */,
-				8118B6951D0A5F9800962084 /* FBSDKCoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0AAE2DBD26ED6AFD00D586FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0AAE2DD026ED6AFD00D586FA /* FBSDKCoreKit_Basics.framework */,
+				0AEF6BE126EE7FA100C42D92 /* FBSDKCoreKit_Basics-Static.framework */,
+				0AAE2DD226ED6AFD00D586FA /* FBSDKCoreKit_BasicsTests.xctest */,
+				0AAE2DD626ED6AFD00D586FA /* FBSDKCoreKit_Basics.framework */,
+				0AEF6BE326EE7FA100C42D92 /* FBSDKCoreKit_Basics.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0B9DBF55207C080600662776 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0B9DBF5E207C080600662776 /* FBSDKLoginKit.framework */,
 				0B9DBF60207C080600662776 /* FBSDKLoginKit.framework */,
+				0AEF6BEB26EE7FA100C42D92 /* FBSDKLoginKit-Static.framework */,
 				0B9DBF62207C080600662776 /* FBSDKLoginKitTests.xctest */,
-				0B9DBF64207C080600662776 /* FBSDKLoginKit.framework */,
 				0B9DBF66207C080600662776 /* FBSDKLoginKit.framework */,
+				0AEF6BED26EE7FA100C42D92 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -395,7 +387,7 @@
 		8117C2131D302F6900784D79 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
-				8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */,
+				0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */,
 				8117C2151D302F6900784D79 /* FBSDKTVOSKit-Dynamic.xcconfig */,
 				8117C2181D302F6900784D79 /* FBSDKTVOSKitTests.xcconfig */,
 				8117C2191D302F6900784D79 /* Shared */,
@@ -459,11 +451,11 @@
 		8118B6091D0A45F000962084 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8118B6111D0A45F000962084 /* FBSDKCoreKit.framework */,
 				8117C23A1D302F6900784D79 /* FBSDKCoreKit.framework */,
+				0AEF6BD726EE7FA100C42D92 /* FBSDKCoreKit-Static.framework */,
 				8118B6131D0A45F000962084 /* FBSDKCoreKitTests.xctest */,
-				8118B6151D0A45F000962084 /* FBSDKCoreKit.framework */,
 				8117C23C1D302F6900784D79 /* FBSDKCoreKit.framework */,
+				0AEF6BD926EE7FA100C42D92 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -471,11 +463,11 @@
 		8118B61D1D0A462B00962084 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8118B6291D0A462B00962084 /* FBSDKShareKit.framework */,
 				8117C2441D302F6900784D79 /* FBSDKShareKit.framework */,
+				0AEF6BF626EE7FA100C42D92 /* FBSDKShareKit-Static.framework */,
 				8118B62B1D0A462B00962084 /* FBSDKShareKitTests.xctest */,
-				8118B62D1D0A462B00962084 /* FBSDKShareKit.framework */,
 				8117C2461D302F6900784D79 /* FBSDKShareKit.framework */,
+				0AEF6BF826EE7FA100C42D92 /* FBSDKShareKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -489,7 +481,7 @@
 				9DEC55911BBA636A00C7DB4A /* FBSDKTVOSKitTests */,
 				9DEC55CC1BBA6C0C00C7DB4A /* Frameworks */,
 				9DEC55841BBA636A00C7DB4A /* Products */,
-				F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */,
+				0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -568,6 +560,7 @@
 		9DEC55CC1BBA6C0C00C7DB4A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AAE2D9026ED5A2F00D586FA /* FBSDKCoreKit_Basics.framework */,
 				8117C2C71D3030A000784D79 /* CoreGraphics.framework */,
 				8117C2C41D30309C00784D79 /* TVMLKit.framework */,
 				8117C2C11D30309600784D79 /* UIKit.framework */,
@@ -577,18 +570,6 @@
 			);
 			name = Frameworks;
 			path = FBSDKTVOSKit;
-			sourceTree = "<group>";
-		};
-		F43FBA4D2649B56C00FDCB82 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F43FBA5E2649B56C00FDCB82 /* FBSDKCoreKit_BasicsTests.xctest */,
-				F43FBA602649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */,
-				F43FBA622649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */,
-				F43FBA642649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */,
-				F43FBA662649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -641,7 +622,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F43FBA742649B57B00FDCB82 /* PBXTargetDependency */,
+				0AAE2DC026ED6AFD00D586FA /* PBXTargetDependency */,
 				0B3229382093848300F011F9 /* PBXTargetDependency */,
 				8117C2B91D30307C00784D79 /* PBXTargetDependency */,
 			);
@@ -650,9 +631,9 @@
 			productReference = 8117C2991D30303D00784D79 /* FBSDKTVOSKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV */ = {
+		9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9DEC55971BBA636A00C7DB4A /* Build configuration list for PBXNativeTarget "FBSDKTVOSKit_TV" */;
+			buildConfigurationList = 9DEC55971BBA636A00C7DB4A /* Build configuration list for PBXNativeTarget "FBSDKTVOSKit_TV-Static" */;
 			buildPhases = (
 				9DEC557E1BBA636A00C7DB4A /* Sources */,
 				9DEC557F1BBA636A00C7DB4A /* Frameworks */,
@@ -662,11 +643,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				F43FBA502649B56C00FDCB82 /* PBXTargetDependency */,
-				0B9DBF68207C080E00662776 /* PBXTargetDependency */,
-				8118B6171D0A45F600962084 /* PBXTargetDependency */,
+				0AEF6BFA26EE804C00C42D92 /* PBXTargetDependency */,
 			);
-			name = FBSDKTVOSKit_TV;
+			name = "FBSDKTVOSKit_TV-Static";
 			productName = FBSDKTVOSKit;
 			productReference = 9DEC55831BBA636A00C7DB4A /* FBSDKTVOSKit.framework */;
 			productType = "com.apple.product-type.framework";
@@ -682,7 +661,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				8118B6981D0A5FA300962084 /* PBXTargetDependency */,
 				9DEC55901BBA636A00C7DB4A /* PBXTargetDependency */,
 			);
 			name = FBSDKTVOSKitTests;
@@ -696,7 +674,7 @@
 		9DEC557A1BBA636A00C7DB4A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9DEC55821BBA636A00C7DB4A = {
@@ -727,8 +705,8 @@
 					ProjectRef = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
 				},
 				{
-					ProductGroup = F43FBA4D2649B56C00FDCB82 /* Products */;
-					ProjectRef = F43FBA4C2649B56C00FDCB82 /* FBSDKCoreKit_Basics.xcodeproj */;
+					ProductGroup = 0AAE2DBD26ED6AFD00D586FA /* Products */;
+					ProjectRef = 0AAE2DBC26ED6AFD00D586FA /* FBSDKCoreKit_Basics.xcodeproj */;
 				},
 				{
 					ProductGroup = 0B9DBF55207C080600662776 /* Products */;
@@ -741,7 +719,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV */,
+				9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */,
 				8117C2711D30303D00784D79 /* FBSDKTVOSKit_TV-Dynamic */,
 				9DEC558C1BBA636A00C7DB4A /* FBSDKTVOSKitTests */,
 				9DEC559D1BBA63BC00C7DB4A /* FBSDKTVOSKit_TV-Universal */,
@@ -750,11 +728,85 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		0B9DBF5E207C080600662776 /* FBSDKLoginKit.framework */ = {
+		0AAE2DD026ED6AFD00D586FA /* FBSDKCoreKit_Basics.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit_Basics.framework;
+			remoteRef = 0AAE2DCF26ED6AFD00D586FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AAE2DD226ED6AFD00D586FA /* FBSDKCoreKit_BasicsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FBSDKCoreKit_BasicsTests.xctest;
+			remoteRef = 0AAE2DD126ED6AFD00D586FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AAE2DD626ED6AFD00D586FA /* FBSDKCoreKit_Basics.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit_Basics.framework;
+			remoteRef = 0AAE2DD526ED6AFD00D586FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BD726EE7FA100C42D92 /* FBSDKCoreKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKCoreKit-Static.framework";
+			path = FBSDKCoreKit.framework;
+			remoteRef = 0AEF6BD626EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BD926EE7FA100C42D92 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = 0AEF6BD826EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BE126EE7FA100C42D92 /* FBSDKCoreKit_Basics-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKCoreKit_Basics-Static.framework";
+			path = FBSDKCoreKit_Basics.framework;
+			remoteRef = 0AEF6BE026EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BE326EE7FA100C42D92 /* FBSDKCoreKit_Basics.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit_Basics.framework;
+			remoteRef = 0AEF6BE226EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BEB26EE7FA100C42D92 /* FBSDKLoginKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKLoginKit-Static.framework";
+			path = FBSDKLoginKit.framework;
+			remoteRef = 0AEF6BEA26EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BED26EE7FA100C42D92 /* FBSDKLoginKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = FBSDKLoginKit.framework;
-			remoteRef = 0B9DBF5D207C080600662776 /* PBXContainerItemProxy */;
+			remoteRef = 0AEF6BEC26EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BF626EE7FA100C42D92 /* FBSDKShareKit-Static.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "FBSDKShareKit-Static.framework";
+			path = FBSDKShareKit.framework;
+			remoteRef = 0AEF6BF526EE7FA100C42D92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AEF6BF826EE7FA100C42D92 /* FBSDKShareKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKShareKit.framework;
+			remoteRef = 0AEF6BF726EE7FA100C42D92 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0B9DBF60207C080600662776 /* FBSDKLoginKit.framework */ = {
@@ -769,13 +821,6 @@
 			fileType = wrapper.cfbundle;
 			path = FBSDKLoginKitTests.xctest;
 			remoteRef = 0B9DBF61207C080600662776 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0B9DBF64207C080600662776 /* FBSDKLoginKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKLoginKit.framework;
-			remoteRef = 0B9DBF63207C080600662776 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0B9DBF66207C080600662776 /* FBSDKLoginKit.framework */ = {
@@ -813,13 +858,6 @@
 			remoteRef = 8117C2451D302F6900784D79 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8118B6111D0A45F000962084 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = 8118B6101D0A45F000962084 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		8118B6131D0A45F000962084 /* FBSDKCoreKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -827,67 +865,11 @@
 			remoteRef = 8118B6121D0A45F000962084 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8118B6151D0A45F000962084 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = 8118B6141D0A45F000962084 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8118B6291D0A462B00962084 /* FBSDKShareKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKShareKit.framework;
-			remoteRef = 8118B6281D0A462B00962084 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		8118B62B1D0A462B00962084 /* FBSDKShareKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = FBSDKShareKitTests.xctest;
 			remoteRef = 8118B62A1D0A462B00962084 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8118B62D1D0A462B00962084 /* FBSDKShareKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKShareKit.framework;
-			remoteRef = 8118B62C1D0A462B00962084 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F43FBA5E2649B56C00FDCB82 /* FBSDKCoreKit_BasicsTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FBSDKCoreKit_BasicsTests.xctest;
-			remoteRef = F43FBA5D2649B56C00FDCB82 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F43FBA602649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit_Basics.framework;
-			remoteRef = F43FBA5F2649B56C00FDCB82 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F43FBA622649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit_Basics.framework;
-			remoteRef = F43FBA612649B56C00FDCB82 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F43FBA642649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit_Basics.framework;
-			remoteRef = F43FBA632649B56C00FDCB82 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F43FBA662649B56C00FDCB82 /* FBSDKCoreKit_Basics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit_Basics.framework;
-			remoteRef = F43FBA652649B56C00FDCB82 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -928,7 +910,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh";
+			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -972,50 +954,35 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0AAE2DC026ED6AFD00D586FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit_Basics_TV-Dynamic";
+			targetProxy = 0AAE2DBF26ED6AFD00D586FA /* PBXContainerItemProxy */;
+		};
+		0AEF6BFA26EE804C00C42D92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKLoginKit_TV-Static";
+			targetProxy = 0AEF6BF926EE804C00C42D92 /* PBXContainerItemProxy */;
+		};
 		0B3229382093848300F011F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKLoginKit_TV-Dynamic";
 			targetProxy = 0B3229372093848300F011F9 /* PBXContainerItemProxy */;
-		};
-		0B9DBF68207C080E00662776 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKLoginKit_TV;
-			targetProxy = 0B9DBF67207C080E00662776 /* PBXContainerItemProxy */;
 		};
 		8117C2B91D30307C00784D79 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit_TV-Dynamic";
 			targetProxy = 8117C2B81D30307C00784D79 /* PBXContainerItemProxy */;
 		};
-		8118B6171D0A45F600962084 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit_TV;
-			targetProxy = 8118B6161D0A45F600962084 /* PBXContainerItemProxy */;
-		};
-		8118B6981D0A5FA300962084 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit_TV;
-			targetProxy = 8118B6971D0A5FA300962084 /* PBXContainerItemProxy */;
-		};
 		9DEC55901BBA636A00C7DB4A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV */;
+			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */;
 			targetProxy = 9DEC558F1BBA636A00C7DB4A /* PBXContainerItemProxy */;
 		};
 		9DEC55A21BBA63C800C7DB4A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV */;
+			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */;
 			targetProxy = 9DEC55A11BBA63C800C7DB4A /* PBXContainerItemProxy */;
-		};
-		F43FBA502649B56C00FDCB82 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit_Basics_TV;
-			targetProxy = F43FBA4F2649B56C00FDCB82 /* PBXContainerItemProxy */;
-		};
-		F43FBA742649B57B00FDCB82 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "FBSDKCoreKit_Basics_TV-Dynamic";
-			targetProxy = F43FBA732649B57B00FDCB82 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1070,14 +1037,14 @@
 		};
 		9DEC55981BBA636A00C7DB4A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
+			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		9DEC55991BBA636A00C7DB4A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
+			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
@@ -1098,14 +1065,14 @@
 		};
 		9DEC559F1BBA63BC00C7DB4A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
+			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		9DEC55A01BBA63BC00C7DB4A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
+			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
@@ -1131,7 +1098,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9DEC55971BBA636A00C7DB4A /* Build configuration list for PBXNativeTarget "FBSDKTVOSKit_TV" */ = {
+		9DEC55971BBA636A00C7DB4A /* Build configuration list for PBXNativeTarget "FBSDKTVOSKit_TV-Static" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9DEC55981BBA636A00C7DB4A /* Debug */,

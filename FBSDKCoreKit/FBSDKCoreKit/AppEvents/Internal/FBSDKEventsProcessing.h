@@ -18,8 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(EventsProcessing)
 @protocol FBSDKEventsProcessing
 - (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
 @end
+
+NS_ASSUME_NONNULL_END
 

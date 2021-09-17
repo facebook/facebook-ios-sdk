@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disable:this type_body_length
+class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
   var dialog: FBWebDialogView! // swiftlint:disable:this implicitly_unwrapped_optional
   var webView = TestWebView()
@@ -30,7 +30,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   var capturedDidCompleteResults: [String: String]?
   var webDialogViewDidCancelWasCalled = false
   var webDialogViewDidFinishLoadWasCalled = false
-  var urlOpener = TestURLOpener()
+  var urlOpener = TestInternalURLOpener()
 
   override func setUp() {
     super.setUp()
@@ -94,11 +94,11 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   }
 
   func testLoadingURL() {
-    dialog.load(SampleUrls.valid)
+    dialog.load(SampleURLs.valid)
 
     XCTAssertEqual(
       webView.capturedRequest,
-      URLRequest(url: SampleUrls.valid),
+      URLRequest(url: SampleURLs.valid),
       "Should attempt to load the request in the webview"
     )
     XCTAssertTrue(
@@ -108,7 +108,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   }
 
   func testStopLoadingURL() {
-    dialog.load(SampleUrls.valid)
+    dialog.load(SampleURLs.valid)
     dialog.stopLoading()
 
     XCTAssertEqual(
@@ -266,9 +266,10 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
       delegateDidFailWithErrorWasCalled,
       "Should invoke the delegate with failure when the url is cancelled and contains an error"
     )
-    guard let error = capturedDelegateDidFailError as NSError?,
-          error.domain == "com.facebook.sdk.core",
-          error.code == 999
+    guard
+      let error = capturedDelegateDidFailError as NSError?,
+      error.domain == "com.facebook.sdk.core",
+      error.code == 999
     else {
       return XCTFail("Should create an error from the URL and call the delegate with it")
     }
@@ -279,14 +280,14 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
     dialog.webView(
       WKWebView(),
       decidePolicyFor: TestWebKitNavigationAction(
-        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        stubbedRequest: URLRequest(url: SampleURLs.valid),
         navigationType: .linkActivated
       )
     ) {
       policy = $0
     }
 
-    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleUrls.valid)
+    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleURLs.valid)
     urlOpener.capturedOpenUrlCompletion?(true)
     XCTAssertEqual(
       policy,
@@ -309,7 +310,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
     dialog.webView(
       WKWebView(),
       decidePolicyFor: TestWebKitNavigationAction(
-        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        stubbedRequest: URLRequest(url: SampleURLs.valid),
         navigationType: .other
       )
     ) {
@@ -361,7 +362,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
 
   func webDialogView(
     _ webDialogView: FBWebDialogView,
-    didCompleteWithResults results: [AnyHashable: Any]
+    didCompleteWithResults results: [String: Any]
   ) {
     capturedDidCompleteResults = results as? [String: String]
   }

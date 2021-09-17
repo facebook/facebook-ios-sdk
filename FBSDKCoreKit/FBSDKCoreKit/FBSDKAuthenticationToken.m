@@ -19,8 +19,9 @@
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 
-#import "FBSDKAuthenticationTokenClaims.h"
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAuthenticationTokenClaims+Internal.h"
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 static id<FBSDKTokenCaching> g_tokenCache;
@@ -29,16 +30,13 @@ NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthentica
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
 NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthenticationTokenGraphDomainCodingKey";
 
-@interface FBSDKAuthenticationTokenClaims (Internal)
+@interface FBSDKAuthenticationToken ()
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
+@property (nonatomic) NSString *jti;
 
 @end
 
 @implementation FBSDKAuthenticationToken
-{
-  NSString *_jti;
-}
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
@@ -136,7 +134,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 #pragma mark - Test methods
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)resetCurrentAuthenticationTokenCache
 {

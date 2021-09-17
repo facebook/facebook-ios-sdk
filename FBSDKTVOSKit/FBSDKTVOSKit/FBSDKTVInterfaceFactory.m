@@ -20,11 +20,6 @@
 
 #import <TVMLKit/TVElementFactory.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
 #import "FBSDKDeviceLoginButton.h"
 #import "FBSDKTVLoginButtonElement.h"
 #import "FBSDKTVLoginViewControllerElement.h"
@@ -32,10 +27,11 @@
 static NSString *const FBSDKLoginButtonTag = @"FBSDKLoginButton";
 static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController";
 
+@interface FBSDKTVInterfaceFactory ()
+@property (nonatomic) id<TVInterfaceCreating> interfaceCreator;
+@end
+
 @implementation FBSDKTVInterfaceFactory
-{
-  id<TVInterfaceCreating> _interfaceCreator;
-}
 
 - (instancetype)initWithInterfaceCreator:(id<TVInterfaceCreating>)interfaceCreator
 {
@@ -43,8 +39,8 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
     _interfaceCreator = interfaceCreator;
   }
 
-  [TVElementFactory registerViewElementClass:[FBSDKTVLoginButtonElement class] forElementName:FBSDKLoginButtonTag];
-  [TVElementFactory registerViewElementClass:[FBSDKTVLoginViewControllerElement class] forElementName:FBSDKLoginViewControllerTag];
+  [TVElementFactory registerViewElementClass:FBSDKTVLoginButtonElement.class forElementName:FBSDKLoginButtonTag];
+  [TVElementFactory registerViewElementClass:FBSDKTVLoginViewControllerElement.class forElementName:FBSDKLoginViewControllerTag];
   return self;
 }
 
@@ -53,7 +49,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 - (UIView *)viewForElement:(TVViewElement *)element
               existingView:(UIView *)existingView
 {
-  if ([element isKindOfClass:[FBSDKTVLoginButtonElement class]]) {
+  if ([element isKindOfClass:FBSDKTVLoginButtonElement.class]) {
     FBSDKDeviceLoginButton *button = [[FBSDKDeviceLoginButton alloc] initWithFrame:CGRectZero];
     button.delegate = (FBSDKTVLoginButtonElement *)element;
     button.permissions = [self permissionsFromElement:element];
@@ -68,7 +64,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 
 - (UIViewController *)viewControllerForElement:(TVViewElement *)element existingViewController:(UIViewController *)existingViewController
 {
-  if ([element isKindOfClass:[FBSDKTVLoginViewControllerElement class]]) {
+  if ([element isKindOfClass:FBSDKTVLoginViewControllerElement.class]) {
     FBSDKDeviceLoginViewController *vc = [FBSDKDeviceLoginViewController new];
     vc.delegate = (FBSDKTVLoginViewControllerElement *)element;
     vc.permissions = [self permissionsFromElement:element];

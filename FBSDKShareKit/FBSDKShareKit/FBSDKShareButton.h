@@ -22,7 +22,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKSharingButton.h"
 

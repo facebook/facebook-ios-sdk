@@ -22,21 +22,17 @@
 
  #import "FBSDKCameraEffectTextures.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKShareUtility.h"
 
 static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
+@interface FBSDKCameraEffectTextures ()
+@property (nonatomic) NSMutableDictionary<NSString *, UIImage *> *textures;
+@end
+
 @implementation FBSDKCameraEffectTextures
-{
-  NSMutableDictionary<NSString *, UIImage *> *_textures;
-}
 
  #pragma mark - Object Lifecycle
 
@@ -55,7 +51,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (UIImage *)imageForKey:(NSString *)key
 {
-  return [self _valueOfClass:[UIImage class] forKey:key];
+  return [self _valueOfClass:UIImage.class forKey:key];
 }
 
 - (NSDictionary<NSString *, UIImage *> *)allTextures
@@ -75,7 +71,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCameraEffectTextures class]]) {
+  if (![object isKindOfClass:FBSDKCameraEffectTextures.class]) {
     return NO;
   }
   return [self isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object];
@@ -83,7 +79,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (BOOL)isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object
 {
-  return [FBSDKInternalUtility object:_textures isEqualToObject:[object allTextures]];
+  return [FBSDKInternalUtility.sharedUtility object:_textures isEqualToObject:[object allTextures]];
 }
 
  #pragma mark - NSCoding
@@ -96,7 +92,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _textures = [decoder decodeObjectOfClass:[NSMutableDictionary class]
+    _textures = [decoder decodeObjectOfClass:NSMutableDictionary.class
                                       forKey:FBSDKCameraEffectTexturesTexturesKey];
   }
   return self;

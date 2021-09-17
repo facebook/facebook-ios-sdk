@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  NS_ENUM(NSUInteger, FBSDKLikeBoxCaretPosition)
 
@@ -46,5 +48,7 @@ NS_SWIFT_NAME(FBLikeBoxView)
 @property (nonatomic, copy) NSString *text;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

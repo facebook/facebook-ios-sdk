@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FeatureExtracting)
 @protocol FBSDKFeatureExtracting
 
-+ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy;
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
 
 @end
 

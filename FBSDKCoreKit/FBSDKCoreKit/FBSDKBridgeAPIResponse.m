@@ -22,16 +22,17 @@
 
  #import "FBSDKBridgeAPIResponse.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKBridgeAPIRequest+Private.h"
  #import "FBSDKConstants.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
 
 @interface FBSDKBridgeAPIResponse ()
-- (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request
-             responseParameters:(NSDictionary *)responseParameters
+- (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
   NS_DESIGNATED_INITIALIZER;
@@ -41,7 +42,7 @@
 
  #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request error:(NSError *)error
++ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request error:(NSError *)error
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -49,7 +50,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                                        error:(NSError *__autoreleasing *)errorRef
@@ -61,7 +62,7 @@
                                       error:errorRef];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                            osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
@@ -75,7 +76,7 @@
   } else {
     switch (protocolType) {
       case FBSDKBridgeAPIProtocolTypeNative: {
-        if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
+        if (![FBSDKInternalUtility.sharedUtility isFacebookBundleIdentifier:sourceApplication]) {
           if (errorRef != NULL) {
             *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
                                                    code:FBSDKErrorBridgeAPIResponse
@@ -86,7 +87,7 @@
         break;
       }
       case FBSDKBridgeAPIProtocolTypeWeb: {
-        if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
+        if (![FBSDKInternalUtility.sharedUtility isSafariBundleIdentifier:sourceApplication]) {
           if (errorRef != NULL) {
             *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
                                                    code:FBSDKErrorBridgeAPIResponse
@@ -102,10 +103,10 @@
   id<FBSDKBridgeAPIProtocol> protocol = request.protocol;
   BOOL cancelled;
   NSError *error;
-  NSDictionary *responseParameters = [protocol responseParametersForActionID:request.actionID
-                                                             queryParameters:queryParameters
-                                                                   cancelled:&cancelled
-                                                                       error:&error];
+  NSDictionary<NSString *, id> *responseParameters = [protocol responseParametersForActionID:request.actionID
+                                                                             queryParameters:queryParameters
+                                                                                   cancelled:&cancelled
+                                                                                       error:&error];
   if (errorRef != NULL) {
     *errorRef = error;
   }
@@ -121,7 +122,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -131,8 +132,8 @@
 
  #pragma mark - Object Lifecycle
 
-- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-             responseParameters:(NSDictionary *)responseParameters
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
 {

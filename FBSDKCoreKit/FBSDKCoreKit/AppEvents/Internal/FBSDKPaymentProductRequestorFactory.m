@@ -27,7 +27,6 @@
 #import "FBSDKProductRequestFactory.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 @interface FBSDKPaymentProductRequestorFactory ()
@@ -47,7 +46,7 @@
 - (instancetype)init
 {
   return [self initWithSettings:FBSDKSettings.sharedSettings
-                      eventLogger:FBSDKAppEvents.singleton
+                      eventLogger:FBSDKAppEvents.shared
                 gateKeeperManager:FBSDKGateKeeperManager.class
                             store:NSUserDefaults.standardUserDefaults
                     loggerFactory:[FBSDKLoggerFactory new]

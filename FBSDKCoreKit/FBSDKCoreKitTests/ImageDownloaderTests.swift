@@ -41,7 +41,7 @@ class ImageDownloaderTests: XCTestCase {
     UIGraphicsEndImageContext()
     imageData = image.pngData()!
 
-    url = SampleUrls.valid(path: name)
+    url = SampleURLs.valid(path: name)
     request = URLRequest(url: url)
 
     downloader = ImageDownloader(sessionProvider: provider)
@@ -315,7 +315,7 @@ class ImageDownloaderTests: XCTestCase {
     var completionInvoked = false
     var image: UIImage?
     downloader.downloadImage(
-      with: SampleUrls.valid,
+      with: SampleURLs.valid,
       ttl: 0
     ) { potentialImage in
       image = potentialImage

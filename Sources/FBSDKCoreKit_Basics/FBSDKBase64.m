@@ -27,7 +27,7 @@ static FBSDKBase64 *_encoder;
 
 + (void)initialize
 {
-  if (self == [FBSDKBase64 class]) {
+  if (self == FBSDKBase64.class) {
     _decoder = [FBSDKBase64 new];
     _encoder = [FBSDKBase64 new];
   }

@@ -32,8 +32,10 @@ class FBSDKAppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithDefaultAdvertisingIDCollectionEnabled() {
-    XCTAssertTrue(config.advertiserIDCollectionEnabled,
-                  "Advertising identifier collection enabled should default to true")
+    XCTAssertTrue(
+      config.advertiserIDCollectionEnabled,
+      "Advertising identifier collection enabled should default to true"
+    )
   }
 
   func testCreatingWithKnownAdvertisingIDCollectionEnabled() {

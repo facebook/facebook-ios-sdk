@@ -22,6 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(CodelessParameterComponent)
 @interface FBSDKCodelessParameterComponent : NSObject
 
@@ -30,9 +32,11 @@ NS_SWIFT_NAME(CodelessParameterComponent)
 @property (nonatomic, readonly) NSArray *path;
 @property (nonatomic, copy, readonly) NSString *pathType;
 
-- (instancetype)initWithJSON:(NSDictionary *)dict;
+- (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 - (BOOL)isEqualToParameter:(FBSDKCodelessParameterComponent *)parameter;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

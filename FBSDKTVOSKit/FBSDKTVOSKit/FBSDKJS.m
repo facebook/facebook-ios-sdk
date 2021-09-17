@@ -42,7 +42,7 @@
   [FBSDKAppEvents logEvent:eventName];
 }
 
-+ (void)logEvent:(NSString *)eventName parameters:(NSDictionary *)parameters
++ (void)logEvent:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName parameters:parameters];
 }
@@ -52,7 +52,7 @@
   [FBSDKAppEvents logPurchase:purchaseAmount currency:currency];
 }
 
-+ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary *)parameters
++ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logPurchase:purchaseAmount currency:currency parameters:parameters];
 }

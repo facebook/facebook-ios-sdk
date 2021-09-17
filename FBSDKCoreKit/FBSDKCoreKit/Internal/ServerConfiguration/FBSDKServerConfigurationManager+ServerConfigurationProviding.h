@@ -21,5 +21,9 @@
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKServerConfigurationManager (ServerConfigurationProviding) <FBSDKServerConfigurationProviding>
 @end
+
+NS_ASSUME_NONNULL_END

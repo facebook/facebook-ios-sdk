@@ -55,27 +55,6 @@ class UIUtilityTests: XCTestCase {
     )
   }
 
-  func testEdgeOutsetsSizeForZero() {
-    let size = FBSDKEdgeInsetsOutsetSize(.zero, insets)
-    XCTAssertEqual(
-      size,
-      CGSize(width: 2 * edgeInset, height: 2 * edgeInset),
-      "Should return a new size outset from the old size by the edge insets"
-    )
-  }
-
-  func testEdgeOutsetsSizeForNonZero() {
-    let side: CGFloat = 56
-    let size = CGSize(width: side, height: side)
-    let insetSize = FBSDKEdgeInsetsOutsetSize(size, insets)
-
-    XCTAssertEqual(
-      insetSize,
-      CGSize(width: side + 2 * edgeInset, height: side + 2 * edgeInset),
-      "Should return a new size that equals the old size plus the insets"
-    )
-  }
-
   func testTextSizeWithWordWrapping() {
     let size = FBSDKTextSize(
       "A very long string that will need to wrap",

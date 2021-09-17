@@ -22,11 +22,6 @@
 
  #import "FBSDKSendButton.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
  #import "FBSDKMessageDialog.h"
  #import "FBSDKMessengerIcon.h"
 
@@ -34,12 +29,10 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_
 FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
 
 @interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
+@property (nonatomic) FBSDKMessageDialog *dialog;
 @end
 
 @implementation FBSDKSendButton
-{
-  FBSDKMessageDialog *_dialog;
-}
 
  #pragma mark - Properties
 
@@ -56,7 +49,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
  #pragma mark - FBSDKButtonImpressionTracking
 
-- (NSDictionary *)analyticsParameters
+- (NSDictionary<NSString *, id> *)analyticsParameters
 {
   return nil;
 }
@@ -79,7 +72,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   NSLocalizedStringWithDefaultValue(
     @"SendButton.Send",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Send",
     @"The label for FBSDKSendButton"
   );
@@ -105,8 +98,16 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
 - (void)_share:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
+  [self _logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
   [_dialog show];
+}
+
+- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
+{
+  [FBSDKAppEvents logInternalEvent:eventName
+                        parameters:parameters
+                isImplicitlyLogged:YES
+                       accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
 @end

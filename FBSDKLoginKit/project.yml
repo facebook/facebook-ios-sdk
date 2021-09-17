@@ -18,6 +18,9 @@
 
 name: FBSDKLoginKit
 
+include:
+  - ../xcodegen_project_common.yml
+
 projectReferences:
   FBSDKCoreKit_Basics:
     path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
@@ -25,20 +28,10 @@ projectReferences:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
-  OCMock:
-    path: ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj
 
 options:
   deploymentTarget:
-    iOS: "9.0"
-    tvOS: "10.0"
-  usesTabs: false
-  tabWidth: 2
-  indentWidth: 2
-  defaultConfig: Debug
-
-attributes:
-  ORGANIZATIONNAME: Facebook
+    tvOS: '10.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -55,7 +48,7 @@ settings:
     PRODUCT_NAME: FBSDKLoginKit
 
 targets:
-  FBSDKLoginKit:
+  FBSDKLoginKit-Static:
     type: framework
     platform: iOS
     sources:
@@ -66,7 +59,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKLoginKit/Internal
@@ -77,22 +69,16 @@ targets:
           - Exports.swift
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/FBSDKLoginKit.xcconfig
-      Release: Configurations/FBSDKLoginKit.xcconfig
+      Debug: Configurations/FBSDKLoginKit-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-Static.xcconfig
     dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
         link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKLoginKit-Dynamic:
@@ -107,7 +93,6 @@ targets:
         headerVisibility: public
         excludes:
           - Internal
-          - include
           - Info.plist
           - Swift
       - path: FBSDKLoginKit/Internal
@@ -127,17 +112,11 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKLoginKit
-  FBSDKLoginKit_TV:
+  FBSDKLoginKit_TV-Static:
     type: framework
     platform: tvOS
     productName: FBSDKLoginKit
@@ -157,7 +136,6 @@ targets:
           - FBSDKLoginTooltipView*
           - FBSDKTooltipView*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKLoginKit/Internal
@@ -176,22 +154,16 @@ targets:
           - FBSDKProfileCreating*
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/FBSDKLoginKit-tvOS.xcconfig
-      Release: Configurations/FBSDKLoginKit-tvOS.xcconfig
+      Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
     dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
         link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit_TV
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKLoginKit
@@ -215,7 +187,6 @@ targets:
           - FBSDKLoginTooltipView*
           - FBSDKTooltipView*
           - Internal
-          - include
           - Info.plist
           - Swift/*.swift
       - path: FBSDKLoginKit/Internal
@@ -243,13 +214,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKLoginKit
@@ -266,34 +231,32 @@ targets:
         embed: false
       - target: TestTools/TestTools
         embed: false
-      - target: OCMock/OCMock iOS
-        embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
 
 aggregateTargets:
   FBSDKLoginKit-Universal:
-    targets: [FBSDKLoginKit]
+    targets: [FBSDKLoginKit-Static]
     configFiles:
-      Debug: Configurations/FBSDKLoginKit.xcconfig
-      Release: Configurations/FBSDKLoginKit.xcconfig
+      Debug: Configurations/FBSDKLoginKit-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
   FBSDKLoginKit_TV-Universal:
-    targets: [FBSDKLoginKit_TV]
+    targets: [FBSDKLoginKit_TV-Static]
     configFiles:
-      Debug: Configurations/FBSDKLoginKit-tvOS.xcconfig
-      Release: Configurations/FBSDKLoginKit-tvOS.xcconfig
+      Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
-  FBSDKLoginKit:
+  FBSDKLoginKit-Static:
     build:
       targets:
-        FBSDKLoginKit: all
+        FBSDKLoginKit-Static: all
   FBSDKLoginKit-Dynamic:
     build:
       targets:
@@ -301,10 +264,8 @@ schemes:
     test:
       targets:
         - FBSDKLoginKitTests
-        - FBSDKCoreKit/FBSDKCoreKitTests
       coverageTargets:
-        - FBSDKLoginKit
-        - FBSDKCoreKit/FBSDKCoreKit
+        - FBSDKLoginKit-Dynamic
   FBSDKLoginKit_TV-Dynamic:
     build:
       targets:

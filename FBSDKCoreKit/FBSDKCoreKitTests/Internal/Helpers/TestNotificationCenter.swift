@@ -31,7 +31,7 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
       lhs: TestNotificationCenter.ObserverEvidence,
       rhs: TestNotificationCenter.ObserverEvidence
     ) -> Bool {
-      return lhs.observer as AnyObject === rhs.observer as AnyObject &&
+      lhs.observer as AnyObject === rhs.observer as AnyObject &&
         lhs.name == rhs.name &&
         lhs.selector == rhs.selector &&
         lhs.object as AnyObject === rhs.object as AnyObject
@@ -41,7 +41,7 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
   var capturedRemovedObservers = [Any]()
   var capturedPostNames = [NSNotification.Name]()
   var capturedPostObjects = [Any]()
-  var capturedPostUserInfos = [[AnyHashable: Any]]()
+  var capturedPostUserInfos = [[String: Any]]()
 
   var capturedAddObserverInvocations = [ObserverEvidence]()
 
@@ -50,7 +50,7 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
   func post(
     name: Notification.Name,
     object: Any?,
-    userInfo: [AnyHashable: Any]? = nil
+    userInfo: [String: Any]? = nil
   ) {
     self.capturedPostNames.append(name)
     self.capturedPostObjects.append(object as Any)

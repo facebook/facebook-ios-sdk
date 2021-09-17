@@ -22,7 +22,8 @@
 
  #import "FBSDKFeatureExtractor.h"
 
- #import "FBSDKCoreKitBasicsImport.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKModelManager.h"
  #import "FBSDKRulesFromKeyProvider.h"
  #import "FBSDKViewHierarchy.h"
@@ -38,10 +39,10 @@
  #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
  #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
 
-static NSDictionary *_languageInfo;
-static NSDictionary *_eventInfo;
-static NSDictionary *_textTypeInfo;
-static NSDictionary *_rules;
+static NSDictionary<NSString *, id> *_languageInfo;
+static NSDictionary<NSString *, id> *_eventInfo;
+static NSDictionary<NSString *, id> *_textTypeInfo;
+static NSDictionary<NSString *, id> *_rules;
 
 void sum(float *val0, float *val1);
 
@@ -95,11 +96,11 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
               withScreenName:(NSString *)screenName
 {
   // use "|" and "," to separate different text based on the rule of how text processed during training
-  NSString *appName = [FBSDKTypeUtility dictionary:[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
+  NSString *appName = [FBSDKTypeUtility dictionary:[NSBundle.mainBundle infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
   return [[NSString stringWithFormat:@"%@ | %@, %@", appName, screenName, text] lowercaseString];
 }
 
-+ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy
 {
   if (!_rules) {
     return nil;
@@ -134,7 +135,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
 }
 
  #pragma mark - Helper functions
-+ (BOOL)pruneTree:(NSMutableDictionary *)node siblings:(NSMutableArray *)siblings
++ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node siblings:(NSMutableArray *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
   BOOL isInteracted = [[FBSDKTypeUtility dictionary:node
@@ -175,7 +176,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return isDescendantInteracted;
 }
 
-+ (float *)nonparseFeatures:(NSMutableDictionary *)node
++ (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
                    siblings:(NSMutableArray *)siblings
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
@@ -233,7 +234,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return densefeat;
 }
 
-+ (float *)parseFeatures:(NSMutableDictionary *)node
++ (float *)parseFeatures:(NSMutableDictionary<NSString *, id> *)node
 {
   float *densefeat = (float *)calloc(30, sizeof(float));
 
@@ -312,15 +313,19 @@ void sum(float *val0, float *val1)
   }
 }
 
-+ (BOOL)isButton:(NSDictionary *)node
++ (BOOL)isButton:(NSDictionary<NSString *, id> *)node
 {
-  int classtypebitmask = [[FBSDKTypeUtility dictionary:node
+  NSDictionary<NSString *, id> *dictionary = node;
+  if (!dictionary) {
+    dictionary = [NSMutableDictionary new];
+  }
+  int classtypebitmask = [[FBSDKTypeUtility dictionary:dictionary
                                           objectForKey:VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY
                                                 ofType:NSString.class] intValue];
   return (classtypebitmask & FBCodelessClassBitmaskUIButton) > 0;
 }
 
-+ (void)update:(NSDictionary *)node
++ (void)update:(NSDictionary<NSString *, id> *)node
           text:(NSMutableString *)buttonTextString
           hint:(NSMutableString *)buttonHintString
 {
@@ -386,7 +391,7 @@ void sum(float *val0, float *val1)
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (id<FBSDKRulesFromKeyProvider>)keyProvider
 {

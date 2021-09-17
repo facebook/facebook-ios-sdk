@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 
 @protocol FBSDKGraphRequestProviding;
 @protocol FBSDKFileManaging;

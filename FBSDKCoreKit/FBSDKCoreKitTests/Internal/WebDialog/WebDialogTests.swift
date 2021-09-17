@@ -22,6 +22,7 @@ import XCTest
 class WebDialogTests: XCTestCase, WebDialogDelegate {
 
   let windowFinder = TestWindowFinder()
+  let dialogView = FBWebDialogView()
   var webDialogDidCancelWasCalled = false
   var webDialogDidFailWasCalled = false
   var capturedDidCompleteResults: [String: String]?
@@ -68,7 +69,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     }
     let results = ["foo": name]
 
-    dialog.webDialogView(nil, didCompleteWithResults: results)
+    dialog.webDialogView(dialogView, didCompleteWithResults: results)
 
     XCTAssertEqual(
       capturedDidCompleteResults,
@@ -82,7 +83,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       return XCTFail("Web dialog should be a web dialog view delegate")
     }
 
-    dialog.webDialogView(nil, didFailWithError: SampleError())
+    dialog.webDialogView(dialogView, didFailWithError: SampleError())
 
     XCTAssertTrue(
       capturedError is SampleError,
@@ -95,7 +96,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       return XCTFail("Web dialog should be a web dialog view delegate")
     }
 
-    dialog.webDialogViewDidCancel(nil)
+    dialog.webDialogViewDidCancel(dialogView)
 
     XCTAssertTrue(
       webDialogDidCancelWasCalled,
@@ -119,7 +120,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     )
   }
 
-  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [AnyHashable: Any]) {
+  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
     capturedDidCompleteResults = results as? [String: String]
   }
 

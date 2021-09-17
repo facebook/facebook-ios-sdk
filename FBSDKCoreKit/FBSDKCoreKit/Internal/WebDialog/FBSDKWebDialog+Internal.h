@@ -23,29 +23,24 @@
  #import <CoreGraphics/CoreGraphics.h>
  #import <Foundation/Foundation.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKWebDialog.h"
- #else
-  #import <FBSDKCoreKit/FBSDKWebDialog.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKWebDialog.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKWebDialogDelegate;
 @protocol FBSDKWindowFinding;
 
 @interface FBSDKWebDialog ()
 
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate;
-
 @property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSDictionary *parameters;
-@property CGRect webViewFrame;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
+@property (nonatomic) CGRect webViewFrame;
 
 - (BOOL)show;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

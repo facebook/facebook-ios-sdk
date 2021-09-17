@@ -16,16 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnecting.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
-#endif
+#import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 
 #import "FBSDKGraphRequestMetadata.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol _FBSDKGraphRequestConnecting <FBSDKGraphRequestConnecting>
 
 @property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 
 @end
+
+NS_ASSUME_NONNULL_END

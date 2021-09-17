@@ -26,12 +26,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(FeatureExtractor)
 @interface FBSDKFeatureExtractor : NSObject
 
 + (void)loadRulesForKey:(NSString *)useCaseKey;
 + (NSString *)getTextFeature:(NSString *)text
               withScreenName:(NSString *)screenName;
-+ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy;
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
 
 @end
 

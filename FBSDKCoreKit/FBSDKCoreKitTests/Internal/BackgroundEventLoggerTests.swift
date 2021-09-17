@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 class BackgroundEventLoggerTests: XCTestCase {
@@ -29,8 +30,8 @@ class BackgroundEventLoggerTests: XCTestCase {
     super.setUp()
 
     backgroundEventLogger = BackgroundEventLogger(
-        infoDictionaryProvider: bundleWithIdentifier,
-        eventLogger: logger
+      infoDictionaryProvider: bundleWithIdentifier,
+      eventLogger: logger
     )
   }
 
@@ -84,8 +85,8 @@ class BackgroundEventLoggerTests: XCTestCase {
 
   func testIsNewBackgroundRefreshWithoutIdentifiers() {
     backgroundEventLogger = BackgroundEventLogger(
-        infoDictionaryProvider: bundleWithoutIdentifier,
-        eventLogger: logger
+      infoDictionaryProvider: bundleWithoutIdentifier,
+      eventLogger: logger
     )
 
     XCTAssertFalse(

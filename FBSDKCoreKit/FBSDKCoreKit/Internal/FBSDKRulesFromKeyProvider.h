@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(RulesFromKeyProvider)
 @protocol FBSDKRulesFromKeyProvider
 
-- (nullable NSDictionary *)getRulesForKey:(NSString *)useCase;
+- (nullable NSDictionary<NSString *, id> *)getRulesForKey:(NSString *)useCase;
 
 @end
 

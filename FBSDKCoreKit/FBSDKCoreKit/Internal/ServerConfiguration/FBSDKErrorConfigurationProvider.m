@@ -24,7 +24,7 @@
 
 - (id<FBSDKErrorConfiguration>)errorConfiguration
 {
-  return [[FBSDKServerConfigurationManager cachedServerConfiguration] errorConfiguration]
+  return FBSDKServerConfigurationManager.shared.cachedServerConfiguration.errorConfiguration
   ?: [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
 }
 

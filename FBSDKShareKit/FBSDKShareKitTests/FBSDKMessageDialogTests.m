@@ -16,60 +16,66 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 
 #ifdef BUCK
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+ #import <TestTools/TestTools-Swift.h>
 #else
 @import FBSDKCoreKit;
+@import TestTools;
 #endif
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKMessageDialog.h"
+#import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FakeSharingDelegate.h"
 
 @interface FBSDKMessageDialogTests : XCTestCase
+
+@property (nonatomic) TestInternalUtility *appAvailabilityChecker;
+@property (nonatomic) FakeSharingDelegate *delegate;
+@property (nonatomic) FBSDKMessageDialog *dialog;
+
 @end
 
 @implementation FBSDKMessageDialogTests
 
-- (void)_mockApplicationForURL:(NSURL *)URL canOpen:(BOOL)canOpen usingBlock:(void (^)(void))block
+- (void)setUp
 {
-  if (block != NULL) {
-    id applicationMock = OCMClassMock(UIApplication.class);
-    OCMStub([applicationMock canOpenURL:URL]).andReturn(canOpen);
-    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    block();
-    [applicationMock stopMocking];
-  }
+  [super setUp];
+
+  self.appAvailabilityChecker = [TestInternalUtility new];
+  self.delegate = [FakeSharingDelegate new];
+  self.dialog = [FBSDKMessageDialog
+                 dialogWithContent:nil
+                 delegate:self.delegate
+                 appAvailabilityChecker:self.appAvailabilityChecker
+  ];
 }
 
 - (void)testCanShow
 {
-  FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
-    XCTAssertTrue([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-    XCTAssertTrue([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-    XCTAssertTrue([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-    XCTAssertTrue([dialog canShow]);
-  }];
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-    XCTAssertFalse([dialog canShow]);
-  }];
+  self.appAvailabilityChecker.isMessengerAppInstalled = YES;
+  XCTAssertTrue([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
+  XCTAssertTrue([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
+  XCTAssertTrue([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+  XCTAssertTrue([self.dialog canShow]);
+  self.appAvailabilityChecker.isMessengerAppInstalled = NO;
+  XCTAssertFalse([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
+  XCTAssertFalse([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
+  XCTAssertFalse([self.dialog canShow]);
+  self.dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+  XCTAssertFalse([self.dialog canShow]);
 }
 
 - (void)testValidate
@@ -122,85 +128,72 @@
 
 - (void)testShowInvokesDelegateWhenCannotShow
 {
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
-    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
-    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
-    dialog.delegate = delegate;
+  self.appAvailabilityChecker.isMessengerAppInstalled = NO;
+  [self.dialog show];
 
-    [dialog show];
-
-    XCTAssertEqualObjects(
-      delegate.capturedError.domain,
-      FBSDKShareErrorDomain,
-      "Failure to show a message dialog should present an error with the expected domain."
-    );
-    XCTAssertEqual(
-      delegate.capturedError.code,
-      FBSDKShareErrorDialogNotAvailable,
-      "Failure to show a message dialog should present an error with the expected code."
-    );
-    XCTAssertEqualObjects(
-      delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
-      @"Message dialog is not available.",
-      "Failure to show a message dialog should present an error with the expected message."
-    );
-  }];
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.domain,
+    FBSDKShareErrorDomain,
+    "Failure to show a message dialog should present an error with the expected domain."
+  );
+  XCTAssertEqual(
+    self.delegate.capturedError.code,
+    FBSDKShareErrorDialogNotAvailable,
+    "Failure to show a message dialog should present an error with the expected code."
+  );
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"Message dialog is not available.",
+    "Failure to show a message dialog should present an error with the expected message."
+  );
 }
 
 - (void)testShowInvokesDelegateWhenMissingContent
 {
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
-    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
-    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
-    dialog.delegate = delegate;
+  self.appAvailabilityChecker.isMessengerAppInstalled = YES;
+  [self.dialog show];
 
-    [dialog show];
-
-    XCTAssertEqualObjects(
-      delegate.capturedError.domain,
-      FBSDKShareErrorDomain,
-      "Failure to show a message dialog should present an error with the expected domain."
-    );
-    XCTAssertEqual(
-      delegate.capturedError.code,
-      FBSDKErrorInvalidArgument,
-      "Failure to show a message dialog should present an error with the expected code."
-    );
-    XCTAssertEqualObjects(
-      delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
-      @"Value for shareContent is required.",
-      "Failure to show a message dialog should present an error with the expected message."
-    );
-  }];
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.domain,
+    FBSDKShareErrorDomain,
+    "Failure to show a message dialog should present an error with the expected domain."
+  );
+  XCTAssertEqual(
+    self.delegate.capturedError.code,
+    FBSDKErrorInvalidArgument,
+    "Failure to show a message dialog should present an error with the expected code."
+  );
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"Value for shareContent is required.",
+    "Failure to show a message dialog should present an error with the expected message."
+  );
 }
 
 - (void)testShowInvokesDelegateWhenCannotValidate
 {
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
-    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
-    // Using invalid share content to force validation failure
-    dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
-    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
-    dialog.delegate = delegate;
+  FBSDKMessageDialog *dialog = [FBSDKMessageDialog dialogWithContent:[FBSDKShareModelTestUtility cameraEffectContent]
+                                                            delegate:self.delegate
+                                              appAvailabilityChecker:self.appAvailabilityChecker
+  ];
+  self.appAvailabilityChecker.isMessengerAppInstalled = YES;
+  [dialog show];
 
-    [dialog show];
-
-    XCTAssertEqualObjects(
-      delegate.capturedError.domain,
-      FBSDKShareErrorDomain,
-      "Failure to show a message dialog should present an error with the expected domain."
-    );
-    XCTAssertEqual(
-      delegate.capturedError.code,
-      FBSDKErrorInvalidArgument,
-      "Failure to show a message dialog should present an error with the expected code."
-    );
-    XCTAssertEqualObjects(
-      delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
-      @"Message dialog does not support FBSDKShareCameraEffectContent.",
-      "Failure to show a message dialog should present an error with the expected message."
-    );
-  }];
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.domain,
+    FBSDKShareErrorDomain,
+    "Failure to show a message dialog should present an error with the expected domain."
+  );
+  XCTAssertEqual(
+    self.delegate.capturedError.code,
+    FBSDKErrorInvalidArgument,
+    "Failure to show a message dialog should present an error with the expected code."
+  );
+  XCTAssertEqualObjects(
+    self.delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"Message dialog does not support FBSDKShareCameraEffectContent.",
+    "Failure to show a message dialog should present an error with the expected message."
+  );
 }
 
 @end

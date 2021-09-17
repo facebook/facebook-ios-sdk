@@ -24,9 +24,10 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppLink.h"
  #import "FBSDKAppLinkResolverRequestBuilder.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKLogger.h"
  #import "FBSDKSettings+Internal.h"
 

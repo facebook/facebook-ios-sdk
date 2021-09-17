@@ -89,7 +89,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
     id<FBSDKSessionDataTask> task = [self.sessionProvider dataTaskWithRequest:request
                                                             completionHandler:
                                      ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                       if ([response isKindOfClass:[NSHTTPURLResponse class]]
+                                       if ([response isKindOfClass:NSHTTPURLResponse.class]
                                            && ((NSHTTPURLResponse *)response).statusCode == 200
                                            && error == nil
                                            && data != nil) {

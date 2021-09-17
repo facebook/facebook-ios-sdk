@@ -32,10 +32,12 @@
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSwizzling.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKCodelessIndexer (Internal)
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                store:(id<FBSDKDataPersisting>)store
                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                             swizzler:(Class<FBSDKSwizzling>)swizzler
@@ -43,5 +45,7 @@
                 advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

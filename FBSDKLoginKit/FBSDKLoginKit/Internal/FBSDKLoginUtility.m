@@ -22,19 +22,9 @@
 
  #import "FBSDKLoginUtility.h"
 
- #if SWIFT_PACKAGE
-@import FBSDKCoreKit;
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
 
 @implementation FBSDKLoginUtility
@@ -51,9 +41,9 @@
   }
 }
 
-+ (NSDictionary *)queryParamsFromLoginURL:(NSURL *)url
++ (NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url
 {
-  NSString *expectedUrlPrefix = [FBSDKInternalUtility
+  NSString *expectedUrlPrefix = [FBSDKInternalUtility.sharedUtility
                                  appURLWithHost:@"authorize"
                                  path:@""
                                  queryParameters:@{}
@@ -65,9 +55,9 @@
       return nil;
     }
   }
-  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:[FBSDKInternalUtility parametersFromFBURL:url]];
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:[FBSDKInternalUtility.sharedUtility parametersFromFBURL:url]];
 
-  NSString *userID = [[self class] userIDFromSignedRequest:params[@"signed_request"]];
+  NSString *userID = [self.class userIDFromSignedRequest:params[@"signed_request"]];
   if (userID) {
     [FBSDKTypeUtility dictionary:params setObject:userID forKey:@"user_id"];
   }
@@ -87,7 +77,7 @@
   if (signatureAndPayload.count == 2) {
     NSData *data = [FBSDKBase64 decodeAsData:[FBSDKTypeUtility array:signatureAndPayload objectAtIndex:1]];
     if (data) {
-      NSDictionary *dictionary = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+      NSDictionary<NSString *, id> *dictionary = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
       userID = dictionary[@"user_id"];
     }
   }

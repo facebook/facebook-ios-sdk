@@ -20,14 +20,7 @@
 
 #if TARGET_OS_TV
 
- #if SWIFT_PACKAGE
-  #import "FBSDKDeviceViewControllerBase.h"
- #else
-  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
- #endif
-
- #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKDeviceDialogView.h"
+ #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
 
 @class FBSDKDeviceDialogView;
 
@@ -40,8 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @interface FBSDKDeviceViewControllerBase () <
   UIViewControllerAnimatedTransitioning,
-  UIViewControllerTransitioningDelegate,
-  FBSDKDeviceDialogViewDelegate
+  UIViewControllerTransitioningDelegate
 >
 
 @property (nonatomic, readonly, strong) FBSDKDeviceDialogView *deviceDialogView;

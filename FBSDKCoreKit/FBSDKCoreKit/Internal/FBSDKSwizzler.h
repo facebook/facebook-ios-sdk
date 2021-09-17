@@ -28,6 +28,8 @@ typedef void (^swizzleBlock)();
 
 #pragma clang diagnostic pop
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Rename to avoid duplicate symbol errors
 NS_SWIFT_NAME(Swizzler)
 @interface FBSDKSwizzler : NSObject
@@ -37,3 +39,5 @@ NS_SWIFT_NAME(Swizzler)
 + (void)printSwizzles;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -18,17 +18,11 @@
 
 #import "FBSDKDeviceLoginManager.h"
 
-#import "FBSDKDeviceLoginManagerResult+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
+#import "FBSDKDeviceLoginManagerResult+Internal.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKDeviceRequestsHelper.h"
@@ -36,19 +30,22 @@
 
 static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
+@interface FBSDKDeviceLoginManager ()
+
+@property (nonatomic) FBSDKDeviceLoginCodeInfo *codeInfo;
+@property (nonatomic) BOOL isCancelled;
+@property (nonatomic) NSNetService *loginAdvertisementService;
+@property (nonatomic) BOOL isSmartLoginEnabled;
+@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonatomic) id<FBSDKDevicePolling> poller;
+
+@end
+
 @implementation FBSDKDeviceLoginManager
-{
-  FBSDKDeviceLoginCodeInfo *_codeInfo;
-  BOOL _isCancelled;
-  NSNetService *_loginAdvertisementService;
-  BOOL _isSmartLoginEnabled;
-  id<FBSDKGraphRequestProviding> _graphRequestFactory;
-  id<FBSDKDevicePolling> _poller;
-}
 
 + (void)initialize
 {
-  if (self == [FBSDKDeviceLoginManager class]) {
+  if (self == FBSDKDeviceLoginManager.class) {
     g_loginManagerInstances = [NSMutableArray array];
   }
 }
@@ -79,17 +76,17 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)start
 {
-  [FBSDKInternalUtility validateAppID];
+  [FBSDKInternalUtility.sharedUtility validateAppID];
   [FBSDKTypeUtility array:g_loginManagerInstances addObject:self];
 
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     @"scope" : [self.permissions componentsJoinedByString:@","] ?: @"",
     @"redirect_uri" : self.redirectURL.absoluteString ?: @"",
     FBSDK_DEVICE_INFO_PARAM : [FBSDKDeviceRequestsHelper getDeviceInfo],
   };
   id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
                                                                              parameters:parameters
-                                                                            tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                            tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                              HTTPMethod:@"POST"
                                                                                   flags:FBSDKGraphRequestFlagNone];
   [request setGraphErrorRecoveryDisabled:YES];
@@ -161,21 +158,19 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                                HTTPMethod:@"GET"
                                                                                     flags:FBSDKGraphRequestFlagDisableErrorRecovery];
     FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id rawResult, NSError *error) {
-      NSDictionary *graphResult = [FBSDKTypeUtility dictionaryValue:rawResult];
+      NSDictionary<NSString *, id> *graphResult = [FBSDKTypeUtility dictionaryValue:rawResult];
       if (!error && graphResult) {
         NSString *userID = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"id" ofType:NSString.class];
-        NSDictionary *permissionResult = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"permissions" ofType:NSDictionary.class];
+        NSDictionary<NSString *, id> *permissionResult = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"permissions" ofType:NSDictionary.class];
         if (userID && permissionResult) {
           NSMutableSet<NSString *> *permissions = [NSMutableSet set];
           NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
           NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-          [FBSDKInternalUtility extractPermissionsFromResponse:permissionResult
-                                            grantedPermissions:permissions
-                                           declinedPermissions:declinedPermissions
-                                            expiredPermissions:expiredPermissions];
-          #pragma clang diagnostic push
-          #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+          [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:permissionResult
+                                                          grantedPermissions:permissions
+                                                         declinedPermissions:declinedPermissions
+                                                          expiredPermissions:expiredPermissions];
           FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
                                                                             permissions:permissions.allObjects
                                                                     declinedPermissions:declinedPermissions.allObjects
@@ -184,9 +179,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                                  userID:userID
                                                                          expirationDate:expirationDate
                                                                             refreshDate:nil
-                                                               dataAccessExpirationDate:dataAccessExpirationDate
-                                                                            graphDomain:nil];
-          #pragma clange diagnostic pop
+                                                               dataAccessExpirationDate:dataAccessExpirationDate];
           FBSDKDeviceLoginManagerResult *result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:accessToken
                                                                                            isCancelled:NO];
           [FBSDKAccessToken setCurrentAccessToken:accessToken];
@@ -194,17 +187,10 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
           return;
         }
       }
-    #if TARGET_TV_OS
-      NSError *wrappedError = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                     code:FBSDKErrorTVOSUnknown
-                                                  message:@"Unable to fetch permissions for token"
-                                          underlyingError:error];
-    #else
       NSError *wrappedError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
                                                      code:FBSDKErrorUnknown
                                                   message:@"Unable to fetch permissions for token"
                                           underlyingError:error];
-    #endif
       [self _notifyError:wrappedError];
     };
     [request startWithCompletion:completion];
@@ -241,10 +227,10 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                return;
              }
 
-             NSDictionary *parameters = @{ @"code" : self->_codeInfo.identifier };
+             NSDictionary<NSString *, id> *parameters = @{ @"code" : self->_codeInfo.identifier };
              id<FBSDKGraphRequest> request = [self->_graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
                                                                                               parameters:parameters
-                                                                                             tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                                             tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                                               HTTPMethod:@"POST"
                                                                                                    flags:FBSDKGraphRequestFlagNone];
              [request setGraphErrorRecoveryDisabled:YES];
@@ -256,13 +242,13 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                  [self _processError:error];
                } else {
                  NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                 NSDate *expirationDate = [NSDate distantFuture];
+                 NSDate *expirationDate = NSDate.distantFuture;
                  NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
                  if (expiresIn > 0) {
                    expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
                  }
 
-                 NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+                 NSDate *dataAccessExpirationDate = NSDate.distantFuture;
                  NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
                  if (dataAccessExpirationTime > 0) {
                    dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];

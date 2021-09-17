@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class InternalUtilityTests: XCTestCase {
@@ -29,7 +30,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testDefaultInfoDictionaryProvider() {
     XCTAssertNil(
-      InternalUtility.infoDictionaryProvider,
+      InternalUtility.shared.infoDictionaryProvider,
       "Should not have an info dictionary provider by default"
     )
   }
@@ -39,7 +40,7 @@ class InternalUtilityTests: XCTestCase {
     InternalUtility.configure(withInfoDictionaryProvider: bundle)
 
     XCTAssertTrue(
-      InternalUtility.infoDictionaryProvider === bundle,
+      InternalUtility.shared.infoDictionaryProvider === bundle,
       "Should be able to provide an info dictionary provider"
     )
   }

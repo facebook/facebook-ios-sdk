@@ -16,16 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
-class BridgeAPIRequestTests: XCTestCase {
+class BridgeAPITests: XCTestCase {
 
   let processInfo = TestProcessInfo()
   let logger = TestLogger()
-  let urlOpener = TestURLOpener()
-  let responseFactory = TestBridgeApiResponseFactory()
+  let urlOpener = TestInternalURLOpener()
+  let responseFactory = TestBridgeAPIResponseFactory()
   let frameworkLoader = TestDylibResolver()
-  let appURLSchemeProvider = TestAppURLSchemeProvider()
+  let appURLSchemeProvider = TestInternalUtility()
 
   func testDefaults() {
     XCTAssertTrue(
@@ -78,12 +79,12 @@ class BridgeAPIRequestTests: XCTestCase {
       "Should be able to create a bridge api with a specific logger"
     )
     XCTAssertEqual(
-      api.urlOpener as? TestURLOpener,
+      api.urlOpener as? TestInternalURLOpener,
       urlOpener,
       "Should be able to create a bridge api with a specific url opener"
     )
     XCTAssertEqual(
-      api.bridgeAPIResponseFactory as? TestBridgeApiResponseFactory,
+      api.bridgeAPIResponseFactory as? TestBridgeAPIResponseFactory,
       responseFactory,
       "Should be able to create a bridge api with a specific response factory"
     )

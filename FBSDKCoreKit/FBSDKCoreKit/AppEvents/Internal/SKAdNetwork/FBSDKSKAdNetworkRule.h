@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(SKAdNetworkRule)
 @interface FBSDKSKAdNetworkRule : NSObject
 
 @property (nonatomic) NSInteger conversionValue;
@@ -35,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 
 - (BOOL)isMatchedWithRecordedEvents:(NSSet<NSString *> *)recordedEvents
-                     recordedValues:(NSDictionary<NSString *, NSDictionary *> *)recordedValues;
+                     recordedValues:(NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedValues;
 
 @end
 

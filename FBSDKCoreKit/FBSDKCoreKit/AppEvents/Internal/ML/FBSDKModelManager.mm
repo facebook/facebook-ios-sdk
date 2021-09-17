@@ -23,9 +23,10 @@
  #import "FBSDKModelManager.h"
  #import "FBSDKModelManager+IntegrityProcessing.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsParameterProcessing.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
@@ -150,7 +151,7 @@ static dispatch_once_t enableNonce;
   }
 }
 
-- (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
+- (nullable NSDictionary<NSString *, id> *)getRulesForKey:(NSString *)useCase
 {
   @try {
     NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
@@ -158,7 +159,7 @@ static dispatch_once_t enableNonce;
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
         NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
-        NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
+        NSDictionary<NSString *, id> *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }
     }
@@ -300,7 +301,7 @@ static dispatch_once_t enableNonce;
     [FBSDKTypeUtility dictionary:_modelInfo setObject:@{
        USE_CASE_KEY : MTMLKey,
        ASSET_URI_KEY : mtmlAssetUri,
-       VERSION_ID_KEY : [NSNumber numberWithLong:mtmlVersionId],
+       VERSION_ID_KEY : @(mtmlVersionId),
      } forKey:MTMLKey];
   }
 }
@@ -430,7 +431,7 @@ static dispatch_once_t enableNonce;
   }
 }
 
-+ (BOOL)isPlistFormatDictionary:(NSDictionary *)dictionary
++ (BOOL)isPlistFormatDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   __block BOOL isPlistFormat = YES;
   [dictionary enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
@@ -467,7 +468,7 @@ static dispatch_once_t enableNonce;
     FBSDKAppEventNameInitiatedCheckout];
 }
 
- #if DEBUG && FBSDKTEST
+ #if DEBUG && FBTEST
 
 + (void)reset
 {

@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-@protocol FBSDKBridgeAPIRequestProtocol;
+@protocol FBSDKBridgeAPIRequest;
 @class FBSDKBridgeAPIResponse;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -28,15 +28,15 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(BridgeAPIResponseCreating)
 @protocol FBSDKBridgeAPIResponseCreating
 
-- (FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                 error:(NSError *)error;
 
-- (nullable FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (nullable FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                    responseURL:(NSURL *)responseURL
                                              sourceApplication:(nullable NSString *)sourceApplication
                                                          error:(NSError *__autoreleasing *)errorRef;
 
-- (FBSDKBridgeAPIResponse *)createResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request;
+- (FBSDKBridgeAPIResponse *)createResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request;
 
 @end
 

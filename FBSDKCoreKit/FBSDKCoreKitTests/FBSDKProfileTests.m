@@ -38,18 +38,15 @@
 @end
 
 @interface FBSDKProfileTests : XCTestCase
-
+@property (nonatomic) FBSDKProfile *profile;
+@property (nonatomic, copy) NSString *sdkVersion;
+@property (nonatomic, assign) CGSize validNonSquareSize;
+@property (nonatomic, assign) CGSize validSquareSize;
+@property (nonatomic, copy) NSString *validClientToken;
+@property (nonatomic) TestGraphRequest *testGraphRequest;
 @end
 
 @implementation FBSDKProfileTests
-{
-  FBSDKProfile *_profile;
-  NSString *_sdkVersion;
-  CGSize _validNonSquareSize;
-  CGSize _validSquareSize;
-  NSString *_validClientToken;
-  TestGraphRequest *_testGraphRequest;
-}
 
 NSString *const accessTokenKey = @"access_token";
 NSString *const pictureModeKey = @"type";
@@ -800,7 +797,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadProfileWithRandomData
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedResult = [Fuzzer randomizeWithJson:self.sampleGraphResult];
+    NSDictionary<NSString *, id> *randomizedResult = [Fuzzer randomizeWithJson:self.sampleGraphResult];
     __block BOOL completed = NO;
     [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
                             completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
@@ -992,7 +989,7 @@ NSString *const heightKey = @"height";
 
 // MARK: Helper
 
-- (NSDictionary *)sampleGraphResult
+- (NSDictionary<NSString *, id> *)sampleGraphResult
 {
   return @{
     @"id" : SampleUserProfiles.valid.userID,

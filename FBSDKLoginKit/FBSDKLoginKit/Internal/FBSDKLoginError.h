@@ -22,15 +22,11 @@
 
  #import <Foundation/Foundation.h>
 
- #if SWIFT_PACKAGE
-  #import "FBSDKLoginConstants.h"
- #else
-  #import <FBSDKLoginKit/FBSDKLoginConstants.h>
- #endif
+ #import <FBSDKLoginKit/FBSDKLoginConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSError (FBSDKLoginError)
+@interface FBSDKLoginErrorFactory : NSObject
 
 + (NSError *)fbErrorForFailedLoginWithCode:(FBSDKLoginError)code;
 + (NSError *)fbErrorForSystemPasswordChange:(NSError *)innerError;

@@ -21,8 +21,8 @@ class TestAppEventsConfiguration: NSObject, AppEventsConfigurationProtocol {
   static var stubbedDefaultConfiguration: TestAppEventsConfiguration?
 
   var defaultATEStatus: AdvertisingTrackingStatus = .unspecified
-  var advertiserIDCollectionEnabled: Bool = false
-  var eventCollectionEnabled: Bool = false
+  var advertiserIDCollectionEnabled = false
+  var eventCollectionEnabled = false
 
   init(
     defaultAteStatus: AdvertisingTrackingStatus = .unspecified,

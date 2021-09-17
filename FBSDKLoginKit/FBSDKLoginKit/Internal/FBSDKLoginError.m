@@ -22,13 +22,10 @@
 
  #import "FBSDKLoginError.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKCoreKit+Internal.h"
 
  #ifndef NS_ERROR_ENUM
   #define NS_ERROR_ENUM(_domain, _name) \
@@ -43,7 +40,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   FBSDKLoginErrorSubcodeUnconfirmedUser = 464,
 };
 
-@implementation NSError (FBSDKLoginError)
+@implementation FBSDKLoginErrorFactory
 
 + (NSError *)fbErrorForFailedLoginWithCode:(FBSDKLoginError)code
 {
@@ -67,7 +64,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       NSLocalizedStringWithDefaultValue(
         @"LoginError.SystemAccount.Network",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Unable to connect to Facebook. Check your network connection and try again.",
         @"The user facing error message when the Accounts framework encounters a network error."
       );
@@ -77,7 +74,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       NSLocalizedStringWithDefaultValue(
         @"LoginError.SystemAccount.UserCheckpointed",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"You cannot log in to apps at this time. Please log in to www.facebook.com and follow the instructions given.",
         @"The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed."
       );
@@ -87,7 +84,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       NSLocalizedStringWithDefaultValue(
         @"LoginError.SystemAccount.UnconfirmedUser",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Your account is not confirmed. Please log in to www.facebook.com and follow the instructions given.",
         @"The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed."
       );
@@ -97,7 +94,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       NSLocalizedStringWithDefaultValue(
         @"LoginError.SystemAccount.Disabled",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Access has not been granted to the Facebook account. Verify device settings.",
         @"The user facing error message when the app slider has been disabled and login fails."
       );
@@ -107,7 +104,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       NSLocalizedStringWithDefaultValue(
         @"LoginError.SystemAccount.Unavailable",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"The Facebook account has not been configured on the device.",
         @"The user facing error message when the device Facebook account is unavailable and login fails."
       );
@@ -130,14 +127,14 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   NSLocalizedStringWithDefaultValue(
     @"LoginError.SystemAccount.PasswordChange",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name.",
     @"The user facing error message when the device Facebook account password is incorrect and login fails."
   );
-  NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   failureReasonAndDescription, FBSDKErrorLocalizedDescriptionKey,
-                                   failureReasonAndDescription, NSLocalizedDescriptionKey,
-                                   nil];
+  NSMutableDictionary<NSString *, id> *userInfo = [@{
+                                                     FBSDKErrorLocalizedDescriptionKey : failureReasonAndDescription,
+                                                     NSLocalizedDescriptionKey : failureReasonAndDescription
+                                                   } mutableCopy];
 
   [FBSDKTypeUtility dictionary:userInfo setObject:innerError forKey:NSUnderlyingErrorKey];
 
@@ -146,7 +143,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
                          userInfo:userInfo];
 }
 
-+ (NSError *)fbErrorFromReturnURLParameters:(NSDictionary *)parameters
++ (NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSError *error = nil;
 
@@ -176,9 +173,9 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   NSError *loginError = nil;
 
   if ([serverError.domain isEqualToString:FBSDKErrorDomain]) {
-    NSDictionary *response = [FBSDKTypeUtility dictionaryValue:serverError.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey]];
-    NSDictionary *body = [FBSDKTypeUtility dictionaryValue:response[@"body"]];
-    NSDictionary *error = [FBSDKTypeUtility dictionaryValue:body[@"error"]];
+    NSDictionary<NSString *, id> *response = [FBSDKTypeUtility dictionaryValue:serverError.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey]];
+    NSDictionary<NSString *, id> *body = [FBSDKTypeUtility dictionaryValue:response[@"body"]];
+    NSDictionary<NSString *, id> *error = [FBSDKTypeUtility dictionaryValue:body[@"error"]];
     NSInteger subcode = [FBSDKTypeUtility integerValue:error[@"error_subcode"]];
 
     switch (subcode) {

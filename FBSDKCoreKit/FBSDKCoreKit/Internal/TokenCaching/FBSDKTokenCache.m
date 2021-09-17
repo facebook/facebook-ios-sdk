@@ -33,16 +33,19 @@ static NSString *const kFBSDKAuthenticationTokenKeychainKey = @"com.facebook.sdk
 static NSString *const kFBSDKTokenUUIDKey = @"tokenUUID";
 static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
+@interface FBSDKTokenCache ()
+
+@property (nonatomic) FBSDKKeychainStore *keychainStore;
+@property (nonatomic) id<FBSDKSettings> settings;
+
+@end
+
 @implementation FBSDKTokenCache
-{
-  FBSDKKeychainStore *_keychainStore;
-  id<FBSDKSettings> _settings;
-}
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
 {
   if ((self = [super init])) {
-    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [NSBundle mainBundle].bundleIdentifier];
+    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", NSBundle.mainBundle.bundleIdentifier];
     _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
     _settings = settings;
   }
@@ -54,7 +57,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
 - (FBSDKAccessToken *)accessToken
 {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
   NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
 
@@ -74,12 +77,12 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     }
   }
 
-  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:NSString.class]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
       id tokenData = dict[kFBSDKTokenEncodedKey];
-      if ([tokenData isKindOfClass:[NSData class]]) {
+      if ([tokenData isKindOfClass:NSData.class]) {
         id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:tokenData];
 
         FBSDKAccessToken *unarchivedToken = nil;
@@ -104,7 +107,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     [self clearAccessTokenCache];
     return;
   }
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
   if (!uuid) {
     uuid = [NSUUID UUID].UUIDString;
@@ -143,7 +146,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     }
   }
 
-  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:NSString.class]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
@@ -197,7 +200,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
   [_keychainStore setDictionary:nil
                          forKey:kFBSDKAuthenticationTokenKeychainKey
                   accessibility:NULL];
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
   [defaults synchronize];
 }
@@ -207,7 +210,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
   [_keychainStore setDictionary:nil
                          forKey:kFBSDKAccessTokenKeychainKey
                   accessibility:NULL];
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAccessTokenUserDefaultsKey];
   [defaults synchronize];
 }

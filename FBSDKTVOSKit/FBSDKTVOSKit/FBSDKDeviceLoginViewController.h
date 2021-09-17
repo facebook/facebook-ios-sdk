@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

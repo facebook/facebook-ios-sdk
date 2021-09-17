@@ -51,6 +51,13 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     appStoreReceiptProvider: receiptProvider
   )
 
+  let transactionDate = Date.distantPast
+  lazy var expectedTransactionDateString: String = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+    return dateFormatter.string(from: transactionDate)
+  }()
+
   enum Keys {
     static let receiptData = "receipt_data"
     static let implicitlyLogged = "_implicitlyLogged"
@@ -230,7 +237,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     let transaction = TestPaymentTransaction(
       identifier: name,
       state: .purchased,
-      date: .distantPast,
+      date: transactionDate,
       payment: TestPayment(productIdentifier: name, quantity: 5)
     )
 
@@ -242,7 +249,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       contentID: transaction.payment.productIdentifier,
       productType: Values.inApp,
       numberOfItems: 5,
-      transactionDate: "0001-12-31 16:07:02-075258"
+      transactionDate: expectedTransactionDateString
     )
 
     XCTAssertEqual(parameters, expectedParameters)
@@ -252,7 +259,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     let transaction = TestPaymentTransaction(
       identifier: name,
       state: .restored,
-      date: .distantPast,
+      date: transactionDate,
       payment: TestPayment(productIdentifier: name, quantity: 5)
     )
 
@@ -264,7 +271,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       contentID: transaction.payment.productIdentifier,
       productType: Values.inApp,
       numberOfItems: 5,
-      transactionDate: "0001-12-31 16:07:02-075258"
+      transactionDate: expectedTransactionDateString
     )
 
     XCTAssertEqual(parameters, expectedParameters)
@@ -298,7 +305,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     let transaction = TestPaymentTransaction(
       identifier: name,
       state: .purchased,
-      date: .distantPast,
+      date: transactionDate,
       payment: TestPayment(productIdentifier: name, quantity: 5)
     )
 
@@ -313,7 +320,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       contentID: transaction.payment.productIdentifier,
       productType: Values.inApp,
       numberOfItems: 5,
-      transactionDate: "0001-12-31 16:07:02-075258",
+      transactionDate: expectedTransactionDateString,
       transactionID: name,
       currency: "USD",
       productTitle: TestProduct.title,
@@ -687,14 +694,14 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
   func createDiscount(mode: SKProductDiscount.PaymentMode) -> TestProductDiscount {
     TestProductDiscount(
-     paymentMode: mode,
-     price: 100.0,
-     subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
-   )
+      paymentMode: mode,
+      price: 100.0,
+      subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
+    )
   }
 
   var encodedAppName: Data {
-    return Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
+    Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
   }
 
   func seedReceiptData() throws {
@@ -702,7 +709,8 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   }
 
   func decodedEventParameters() throws -> PaymentProductParameters {
-    guard let rawParameters = eventLogger.capturedParameters as? [String: Any] else {
+    let rawParameters = eventLogger.capturedParameters
+    guard !rawParameters.isEmpty else {
       throw MissingEventParametersError()
     }
     let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])

@@ -22,15 +22,10 @@
 
  #import "FBSDKLoginConfiguration.h"
 
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKNonceUtility.h"
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKPermission.h"
 
 FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
@@ -152,7 +147,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 + (nullable FBSDKLoginAuthType)authTypeForString:(NSString *)rawValue
 {
-  NSDictionary *map = @{
+  NSDictionary<NSString *, id> *map = @{
     (NSString *)FBSDKLoginAuthTypeRerequest : FBSDKLoginAuthTypeRerequest,
     (NSString *)FBSDKLoginAuthTypeReauthorize : FBSDKLoginAuthTypeReauthorize
   };

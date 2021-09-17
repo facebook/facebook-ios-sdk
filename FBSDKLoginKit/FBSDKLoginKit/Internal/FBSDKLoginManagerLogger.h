@@ -30,7 +30,7 @@ FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
 
 NS_SWIFT_NAME(LoginManagerLogger)
 @interface FBSDKLoginManagerLogger : NSObject
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
++ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary<NSString *, id> *)parameters
                                          tracking:(FBSDKLoginTracking)tracking;
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -50,7 +50,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)postLoginHeartbeat;
 
 + (NSString *)clientStateForAuthMethod:(NSString *)authMethod
-                      andExistingState:(NSDictionary *)existingState
+                      andExistingState:(NSDictionary<NSString *, id> *)existingState
                                 logger:(FBSDKLoginManagerLogger *)logger;
 
 - (void)willAttemptAppSwitchingBehavior;

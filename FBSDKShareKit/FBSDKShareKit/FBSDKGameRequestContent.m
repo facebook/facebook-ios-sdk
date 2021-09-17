@@ -22,11 +22,7 @@
 
  #import "FBSDKGameRequestContent.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKHasher.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 
@@ -45,7 +41,7 @@
 
 - (void)setRecipients:(NSArray *)recipients
 {
-  [FBSDKShareUtility assertCollection:recipients ofClass:[NSString class] name:@"recipients"];
+  [FBSDKShareUtility assertCollection:recipients ofClass:NSString.class name:@"recipients"];
   if (![_recipients isEqual:recipients]) {
     _recipients = [recipients copy];
   }
@@ -53,7 +49,7 @@
 
 - (void)setRecipientSuggestions:(NSArray *)recipientSuggestions
 {
-  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:[NSString class] name:@"recipientSuggestions"];
+  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:NSString.class name:@"recipientSuggestions"];
   if (![_recipientSuggestions isEqual:recipientSuggestions]) {
     _recipientSuggestions = [recipientSuggestions copy];
   }
@@ -170,16 +166,16 @@
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    [FBSDKMath hashWithInteger:_actionType],
+    [FBSDKHasher hashWithInteger:_actionType],
     _data.hash,
-    [FBSDKMath hashWithInteger:_filters],
+    [FBSDKHasher hashWithInteger:_filters],
     _message.hash,
     _objectID.hash,
     _recipientSuggestions.hash,
     _title.hash,
     _recipients.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -187,7 +183,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKGameRequestContent class]]) {
+  if (![object isKindOfClass:FBSDKGameRequestContent.class]) {
     return NO;
   }
   return [self isEqualToGameRequestContent:(FBSDKGameRequestContent *)object];
@@ -198,12 +194,12 @@
   return (content
     && _actionType == content.actionType
     && _filters == content.filters
-    && [FBSDKInternalUtility object:_data isEqualToObject:content.data]
-    && [FBSDKInternalUtility object:_message isEqualToObject:content.message]
-    && [FBSDKInternalUtility object:_objectID isEqualToObject:content.objectID]
-    && [FBSDKInternalUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions]
-    && [FBSDKInternalUtility object:_title isEqualToObject:content.title]
-    && [FBSDKInternalUtility object:_recipients isEqualToObject:content.recipients]);
+    && [FBSDKInternalUtility.sharedUtility object:_data isEqualToObject:content.data]
+    && [FBSDKInternalUtility.sharedUtility object:_message isEqualToObject:content.message]
+    && [FBSDKInternalUtility.sharedUtility object:_objectID isEqualToObject:content.objectID]
+    && [FBSDKInternalUtility.sharedUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions]
+    && [FBSDKInternalUtility.sharedUtility object:_title isEqualToObject:content.title]
+    && [FBSDKInternalUtility.sharedUtility object:_recipients isEqualToObject:content.recipients]);
 }
 
  #pragma mark - NSCoding
@@ -217,13 +213,13 @@
 {
   if ((self = [self init])) {
     _actionType = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY];
-    _data = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_DATA_KEY];
+    _data = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_DATA_KEY];
     _filters = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY];
-    _message = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
-    _objectID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
-    _recipientSuggestions = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
-    _title = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
-    _recipients = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
+    _message = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
+    _objectID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
+    _recipientSuggestions = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
+    _title = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
+    _recipients = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
   }
   return self;
 }

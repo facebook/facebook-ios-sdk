@@ -22,10 +22,11 @@
 
  #import "FBSDKEventBinding.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventLogging.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"
  #import "FBSDKViewHierarchy.h"
@@ -61,7 +62,7 @@ static id<FBSDKNumberParsing> _numberParser;
   _numberParser = [[FBSDKAppEventsNumberParser alloc] initWithLocale:NSLocale.currentLocale];
 }
 
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
+- (FBSDKEventBinding *)initWithJSON:(NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
@@ -74,7 +75,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *pathComponents = dict[CODELESS_MAPPING_PATH_KEY];
     NSMutableArray *mut = [NSMutableArray array];
-    for (NSDictionary *info in pathComponents) {
+    for (NSDictionary<NSString *, id> *info in pathComponents) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
@@ -82,7 +83,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *parameters = dict[CODELESS_MAPPING_PARAMETERS_KEY];
     mut = [NSMutableArray array];
-    for (NSDictionary *info in parameters) {
+    for (NSDictionary<NSString *, id> *info in parameters) {
       FBSDKCodelessParameterComponent *component = [[FBSDKCodelessParameterComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
@@ -93,8 +94,8 @@ static id<FBSDKNumberParsing> _numberParser;
 
 - (void)trackEvent:(id)sender
 {
-  UIView *sourceView = [sender isKindOfClass:[UIView class]] ? (UIView *)sender : nil;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  UIView *sourceView = [sender isKindOfClass:UIView.class] ? (UIView *)sender : nil;
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:params setObject:@"1" forKey:CODELESS_CODELESS_EVENT_KEY];
   for (FBSDKCodelessParameterComponent *component in self.parameters) {
     NSString *text = component.value;
@@ -130,7 +131,10 @@ static id<FBSDKNumberParsing> _numberParser;
 + (BOOL)  match:(NSObject *)view
   pathComponent:(FBSDKCodelessPathComponent *)component
 {
-  NSString *className = NSStringFromClass([view class]);
+  if (!view) {
+    return NO;
+  }
+  NSString *className = NSStringFromClass(view.class);
   if (![className isEqualToString:component.className]) {
     return NO;
   }
@@ -160,7 +164,7 @@ static id<FBSDKNumberParsing> _numberParser;
   }
 
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldTag) > 0
-      && [view isKindOfClass:[UIView class]]
+      && [view isKindOfClass:UIView.class]
       && component.tag != ((UIView *)view).tag) {
     return NO;
   }

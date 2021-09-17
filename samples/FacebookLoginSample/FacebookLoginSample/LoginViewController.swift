@@ -56,7 +56,9 @@ class LoginViewController: UIViewController {
         let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
         alertController.addAction(dismissAction)
 
-        present(alertController, animated: true)
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true)
+        }
     }
 
     func presentAlert(for error: Error) {

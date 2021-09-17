@@ -17,12 +17,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-
-#if FBSDK_SWIFT_PACKAGE
- #import <FBSDKCoreKit.h>
-#else
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+
 #import "FBSDKAuthenticationTokenCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN

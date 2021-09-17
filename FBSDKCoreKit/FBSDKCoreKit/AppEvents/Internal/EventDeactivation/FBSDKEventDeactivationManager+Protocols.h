@@ -20,5 +20,9 @@
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventsProcessing.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKEventDeactivationManager (Protocols) <FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>
 @end
+
+NS_ASSUME_NONNULL_END

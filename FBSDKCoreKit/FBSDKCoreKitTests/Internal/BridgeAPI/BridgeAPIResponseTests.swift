@@ -19,11 +19,11 @@
 import XCTest
 
 class BridgeAPIResponseTests: XCTestCase {
-  let request = TestBridgeApiRequest(url: SampleUrls.valid)
-  let bridgeProtocol = TestBridgeApiProtocol()
+  let request = TestBridgeAPIRequest(url: SampleURLs.valid)
+  let bridgeProtocol = TestBridgeAPIProtocol()
   let queryItems = [URLQueryItem(name: "foo", value: "bar")]
   lazy var responseURL: URL = {
-    SampleUrls.valid(queryItems: queryItems)
+    SampleURLs.valid(queryItems: queryItems)
   }()
 
   func testCreatingWithMinimalInput() {
@@ -34,7 +34,7 @@ class BridgeAPIResponseTests: XCTestCase {
       "The response should not be cancelled by default"
     )
     XCTAssertEqual(
-      response.request as? TestBridgeApiRequest,
+      response.request as? TestBridgeAPIRequest,
       request,
       "Should store the request it was created with"
     )
@@ -45,14 +45,14 @@ class BridgeAPIResponseTests: XCTestCase {
   }
 
   func testCreatingCancelledWithRequest() {
-    let response = BridgeAPIResponse(cancelledWithRequest: request)
+    let response = BridgeAPIResponse(cancelledWith: request)
 
     XCTAssertTrue(
       response.isCancelled,
       "The response should be cancelled upon creation"
     )
     XCTAssertEqual(
-      response.request as? TestBridgeApiRequest,
+      response.request as? TestBridgeAPIRequest,
       request,
       "Should store the request it was created with"
     )

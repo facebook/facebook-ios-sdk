@@ -20,10 +20,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
@@ -32,7 +32,6 @@
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY @"com.facebook.sdk:GateKeepers%@"
@@ -57,7 +56,7 @@ static id<FBSDKDataPersisting> _store;
 #pragma mark - Public Class Methods
 + (void)initialize
 {
-  if (self == [FBSDKGateKeeperManager class]) {
+  if (self == FBSDKGateKeeperManager.class) {
     _completionBlocks = [NSMutableArray array];
     _store = nil;
     _requestProvider = nil;
@@ -111,7 +110,7 @@ static id<FBSDKDataPersisting> _store;
         NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
                                 appID];
         NSData *data = [self.store objectForKey:defaultKey];
-        if ([data isKindOfClass:[NSData class]]) {
+        if ([data isKindOfClass:NSData.class]) {
           id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
           @try {
             _gateKeepers = [FBSDKTypeUtility dictionaryValue:
@@ -133,7 +132,7 @@ static id<FBSDKDataPersisting> _store;
         [FBSDKTypeUtility array:_completionBlocks addObject:completionBlock];
         if (!_loadingGateKeepers) {
           _loadingGateKeepers = YES;
-          id<FBSDKGraphRequest> request = [[self class] requestToLoadGateKeepers];
+          id<FBSDKGraphRequest> request = [self.class requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
           id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
@@ -255,7 +254,7 @@ static id<FBSDKDataPersisting> _store;
   return _connectionProvider;
 }
 
-+ (NSDictionary *)gateKeepers
++ (NSDictionary<NSString *, id> *)gateKeepers
 {
   return _gateKeepers;
 }
@@ -274,7 +273,7 @@ static id<FBSDKDataPersisting> _store;
   return _canLoadGateKeepers;
 }
 
-+ (void)setGateKeepers:(NSDictionary *)gateKeepers
++ (void)setGateKeepers:(NSDictionary<NSString *, id> *)gateKeepers
 {
   _gateKeepers = gateKeepers;
 }

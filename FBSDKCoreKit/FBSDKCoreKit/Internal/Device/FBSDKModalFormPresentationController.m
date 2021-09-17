@@ -22,10 +22,13 @@
 
  #import "FBSDKModalFormPresentationController.h"
 
+@interface FBSDKModalFormPresentationController ()
+
+@property (nonatomic) UIView *dimmedView;
+
+@end
+
 @implementation FBSDKModalFormPresentationController
-{
-  UIView *_dimmedView;
-}
 
 - (UIView *)dimmedView
 {

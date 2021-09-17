@@ -22,17 +22,18 @@
 
  #import "FBSDKBridgeAPIProtocolWebV2.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKBridgeAPIProtocolNativeV1.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDialogConfiguration.h"
- #import "FBSDKError.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKServerConfigurationManager.h"
+ #import "FBSDKError+Internal.h"
+ #import "FBSDKInternalUtility+Internal.h"
+ #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
  #import "FBSDKServerConfigurationProviding.h"
 
 @interface FBSDKBridgeAPIProtocolWebV2 ()
 
-@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
 
 @end
@@ -43,14 +44,14 @@
 
 - (instancetype)init
 {
-  return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class
+  return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared
                                       nativeBridge:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
                                                                                                   pasteboard:nil
                                                                                          dataLengthThreshold:0
                                                                                               includeAppIcon:NO]];
 }
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
 {
   if ((self = [super init])) {
@@ -64,26 +65,26 @@
 
 - (NSURL *)_redirectURLWithActionID:(NSString *)actionID methodName:(NSString *)methodName error:(NSError **)errorRef
 {
-  NSDictionary *queryParameters = nil;
+  NSDictionary<NSString *, id> *queryParameters = nil;
   if (actionID) {
-    NSDictionary *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
+    NSDictionary<NSString *, id> *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
     NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs
                                                                   error:NULL
                                                    invalidObjectHandler:NULL];
     queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs : bridgeArgsString };
   }
-  return [FBSDKInternalUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
 }
 
 - (NSURL *)_requestURLForDialogConfiguration:(FBSDKDialogConfiguration *)dialogConfiguration error:(NSError **)errorRef
 {
   NSURL *requestURL = dialogConfiguration.URL;
   if (!requestURL.scheme) {
-    requestURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                            path:requestURL.path
-                                                 queryParameters:@{}
-                                                  defaultVersion:@""
-                                                           error:errorRef];
+    requestURL = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                          path:requestURL.path
+                                                               queryParameters:@{}
+                                                                defaultVersion:@""
+                                                                         error:errorRef];
   }
   return requestURL;
 }
@@ -92,7 +93,7 @@
                            scheme:(NSString *)scheme
                        methodName:(NSString *)methodName
                     methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                             error:(NSError *__autoreleasing *)errorRef
 {
   FBSDKServerConfiguration *serverConfiguration = [self.serverConfigurationProvider cachedServerConfiguration];
@@ -114,7 +115,7 @@
   }
 
   NSMutableDictionary<NSString *, id> *queryParameters = [[FBSDKBasicUtility dictionaryWithQueryString:requestURL.query] mutableCopy];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:[NSBundle mainBundle].bundleIdentifier forKey:@"ios_bundle_id"];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:NSBundle.mainBundle.bundleIdentifier forKey:@"ios_bundle_id"];
   NSURL *redirectURL = [self _redirectURLWithActionID:nil methodName:methodName error:errorRef];
   if (!redirectURL) {
     return nil;
@@ -125,17 +126,17 @@
   if (!requestURL) {
     return nil;
   }
-  return [FBSDKInternalUtility URLWithScheme:requestURL.scheme
-                                        host:requestURL.host
-                                        path:requestURL.path
-                             queryParameters:queryParameters
-                                       error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility URLWithScheme:requestURL.scheme
+                                                      host:requestURL.host
+                                                      path:requestURL.path
+                                           queryParameters:queryParameters
+                                                     error:errorRef];
 }
 
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef
+- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                      cancelled:(BOOL *)cancelledRef
+                                                          error:(NSError *__autoreleasing *)errorRef
 {
   return [_nativeBridge responseParametersForActionID:actionID
                                       queryParameters:queryParameters

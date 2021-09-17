@@ -7,15 +7,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
+
+### Removed
+
+- `AccessToken`'s `graphDomain` property. Replacement - the `graphDomain` property on `AuthenticationToken`
+- `AccessToken`'s convenience initializers that include `graphDomain`
+- `AccessToken`'s `refreshCurrentAccessToken(completionHandler:)`. Replaced by `refreshCurrentAccessToken(completion:)`
+- `AppEvents`' `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
+
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...HEAD)
+
+## 11.2.0
+
+### Added
+
+- Added AEM Deeplink handling debugging support
+
+### Fixed
+
+- Support for building with Xcode 13 beta 4 due to change in optionality for NS_EXTENSION_UNAVAILABLE. More information in the [Xcode release notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-13-beta-release-notes) and in issue [#1799](https://github.com/facebook/facebook-ios-sdk/issues/1799). Resolved by [@S2Ler](https://github.com/S2Ler) in [#1768](https://github.com/facebook/facebook-ios-sdk/pull/1811)
+
+[2021-08-30](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.1.0...v11.2.0)
+
+## 11.1.0
+
+### Added
+
+- Reintroduces `initializeSDK` method to `FBSDKApplicationDelegate`
+
 ### Changed
 
 - Introduced [Xcodegen](https://github.com/yonaskolb/XcodeGen) for generating project files. Moving forward, We will now use Xcodegen to generate the project files that are used to build the SDK releases. There should be no impact to SDK users. However, some build settings were restored to Xcode defaults as a result of this change, and output binaries may be affected in unpredictable ways. Contributors to the SDK should run the new, top-level script `generate-projects.sh` to ensure that the project files they are using are the same as those being used in CI and for releases. The next major version will remove the project files from version control. If you experience any of these issues, please open an [issue](https://github.com/facebook/facebook-ios-sdk/issues/new/choose) and we will look into it.
 
 ### Deprecated
 
-- Building the frameworks using [Carthage](https://github.com/Carthage/Carthage). Carthage is a dependency manager that typically works by building a third party framework using Xcode schemes shared from a `.xcodeproj` file. We are planning to remove the `.xcodeproj` files in the next major release as they will be generated on an as needed basis using [Xcodegen](https://github.com/yonaskolb/XcodeGen). There is a strong likelihood that this change will break several integrations that use Carthage. You will still be able to use Carthage by pulling the pre-built binaries directly from the release. If this does not work for your use case, we recommend checking out Swift Package Manager as an alternative.
+- Building the frameworks using [Carthage](https://github.com/Carthage/Carthage). Carthage is a dependency manager that typically works by building a third party framework using Xcode schemes shared from a `.xcodeproj` file. We are planning to remove the `.xcodeproj` files in the next major release as they will be generated on an as needed basis using [Xcodegen](https://github.com/yonaskolb/XcodeGen). There is a strong likelihood that this change will break several integrations that use Carthage. You will still be able to use Carthage by pulling the pre-built binaries or XCFrameworks directly from the release. If this does not work for your use case, we recommend checking out Swift Package Manager as an alternative.
+- FBSDKGamingServicesKit's `GamingServiceResultCompletionHandler`. Replaced by `GamingServiceResultCompletion` which passes a dictionary instead of a string for the result. Additionally the following methods have been updated:
+  - `uploadImageWithConfiguration:andResultCompletionHandler` is replaced by `uploadImageWithConfiguration:andResultCompletion`
+  - `uploadImageWithConfiguration:completionHandler:andProgressHandler` is replaced by `uploadImageWithConfiguration:completion:andProgressHandler:`
+  - `uploadVideoWithConfiguration:completionHandler:andProgressHandler:` is replaced by `uploadVideoWithConfiguration:completion:andProgressHandler:`
+  - `uploadVideoWithConfiguration:andResultCompletionHandler` is replaced by `uploadVideoWithConfiguration:andResultCompletion`
+- `FBSDKGamingPayloadObserver`'s `shared` instance. Going forward a user should create and retain their own instance of a payload observer for as long as they'd like to receive callbacks from its delegate.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
+### Fixed
+
+- Initializing the SDK in when UIApplication is unavailable [#1748](https://github.com/facebook/facebook-ios-sdk/issues/1748)
+- Issue caused by `initializeSDK` deprecation [#1731](https://github.com/facebook/facebook-ios-sdk/issues/1731)
+
+[2021-07-23](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...v11.1.0)
 
 ## 11.0.1
 

@@ -24,6 +24,8 @@
 
 #import "FBSDKLikeObjectType.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKLikeDialogDelegate;
 
 NS_SWIFT_NAME(LikeDialog)
@@ -52,5 +54,7 @@ NS_SWIFT_NAME(LikeDialogDelegate)
 - (void)likeDialog:(FBSDKLikeDialog *)likeDialog didFailWithError:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -18,11 +18,10 @@
 
 import XCTest
 
-// swiftlint:disable type_body_length
 class FBSDKErrorTests: XCTestCase {
 
   let errorReporter = TestErrorReport()
-  let code = Int.random(in: 1 ... 500)
+  let code = Int.random(in: 1...500)
   let defaultDomain = "com.facebook.sdk.core"
   let customDomain = "foo"
   let userInfo = ["some": "info"]
@@ -323,9 +322,9 @@ class FBSDKErrorTests: XCTestCase {
   // MARK: - Helpers
 
   func createNSError(
-      withCode code: Int,
-      userInfo: [String: Any] = ["foo": "bar"]
-    ) -> NSError {
-      NSError(domain: "sample.ns.error", code: code, userInfo: userInfo)
-    }
+    withCode code: Int,
+    userInfo: [String: Any] = ["foo": "bar"]
+  ) -> NSError {
+    NSError(domain: "sample.ns.error", code: code, userInfo: userInfo)
+  }
 }

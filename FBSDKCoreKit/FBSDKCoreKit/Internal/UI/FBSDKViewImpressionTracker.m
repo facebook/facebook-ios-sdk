@@ -18,13 +18,13 @@
 
 #import "FBSDKViewImpressionTracker.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"
 
 @interface FBSDKViewImpressionTracker ()
@@ -33,13 +33,11 @@
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
+@property (nonatomic) NSMutableSet *trackedImpressions;
 
 @end
 
 @implementation FBSDKViewImpressionTracker
-{
-  NSMutableSet *_trackedImpressions;
-}
 
 static dispatch_once_t token;
 
@@ -51,7 +49,7 @@ static dispatch_once_t token;
                           notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
                                    tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
-  static NSMutableDictionary *_impressionTrackers = nil;
+  static NSMutableDictionary<NSString *, id> *_impressionTrackers = nil;
 
   dispatch_once(&token, ^{
     _impressionTrackers = [NSMutableDictionary new];
@@ -64,6 +62,9 @@ static dispatch_once_t token;
                                             eventLogger:eventLogger
                                    notificationObserver:notificationObserver
                                             tokenWallet:tokenWallet];
+    if (!_impressionTrackers) {
+      _impressionTrackers = [NSMutableDictionary new];
+    }
     [FBSDKTypeUtility dictionary:_impressionTrackers setObject:impressionTracker forKey:eventName];
   }
   return impressionTracker;
@@ -100,12 +101,12 @@ static dispatch_once_t token;
 
 #pragma mark - Public API
 
-- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary *)parameters
+- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  NSMutableDictionary *keys = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *keys = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:keys setObject:identifier forKey:@"__view_impression_identifier__"];
   [keys addEntriesFromDictionary:parameters];
-  NSDictionary *impressionKey = [keys copy];
+  NSDictionary<NSString *, id> *impressionKey = [keys copy];
   // Ensure that each impression is only tracked once
   if ([_trackedImpressions containsObject:impressionKey]) {
     return;
@@ -128,7 +129,7 @@ static dispatch_once_t token;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

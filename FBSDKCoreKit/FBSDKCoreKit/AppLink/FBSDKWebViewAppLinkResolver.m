@@ -26,8 +26,8 @@
 #import <WebKit/WebKit.h>
 
 #import "FBSDKAppLink.h"
-#import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKError.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import "FBSDKError+Internal.h"
 #import "NSURLSession+Protocols.h"
 
 /**
@@ -78,7 +78,6 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 @end
 
 @implementation FBSDKWebViewAppLinkResolverWebViewDelegate
-
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
   if (self.didFinishLoad) {
@@ -146,7 +145,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
       return;
     }
 
-    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+    if ([response isKindOfClass:NSHTTPURLResponse.class]) {
       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
       // NSURLConnection usually follows redirects automatically, but the
@@ -179,17 +178,17 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 {
     [self followRedirects:url handler:^(NSDictionary<NSString *,id> *result, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if (error) {
                 handler(nil, error);
                 return;
             }
-            
+
             NSData *responseData = result[@"data"];
             NSHTTPURLResponse *response = result[@"response"];
-            
+
             WKWebView *webView = [WKWebView new];
-            
+
             FBSDKWebViewAppLinkResolverWebViewDelegate *listener = [FBSDKWebViewAppLinkResolverWebViewDelegate new];
             __block FBSDKWebViewAppLinkResolverWebViewDelegate *retainedListener = listener;
             listener.didFinishLoad = ^(WKWebView *view) {
@@ -231,7 +230,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     NSMutableDictionary<NSString *, id> *al = [NSMutableDictionary dictionary];
     for (NSDictionary<NSString *, id> *tag in dataArray) {
         NSString *name = tag[@"property"];
-        if (![name isKindOfClass:[NSString class]]) {
+        if (![name isKindOfClass:NSString.class]) {
             continue;
         }
         NSArray<NSString *> *nameComponents = [name componentsSeparatedByString:@":"];
@@ -265,7 +264,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
   // Run some JavaScript in the webview to fetch the meta tags.
   [webView evaluateJavaScript:FBSDKWebViewAppLinkResolverTagExtractionJavaScript
             completionHandler:^(id _Nullable evaluateResult, NSError * _Nullable error) {
-    NSString *jsonString = [evaluateResult isKindOfClass:[NSString class]] ? evaluateResult : nil;
+    NSString *jsonString = [evaluateResult isKindOfClass:NSString.class] ? evaluateResult : nil;
     error = nil;
     NSData *encodedJSON = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     if (encodedJSON) {
@@ -297,7 +296,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
         platformData = @[ appLinkDict[FBSDKWebViewAppLinkResolverIOSKey] ?: @{} ];
     }
 
-    for (NSArray<NSDictionary *> *platformObjects in platformData) {
+    for (NSArray<NSDictionary<NSString *, id> *> *platformObjects in platformData) {
         for (NSDictionary<NSString *, NSArray *> *platformDict in platformObjects) {
             // The schema requires a single url/app store id/app name,
             // but we could find multiple of them. We'll make a best effort

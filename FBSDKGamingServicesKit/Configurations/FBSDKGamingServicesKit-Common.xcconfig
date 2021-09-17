@@ -21,9 +21,7 @@ PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
 
 CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
 
-INFOPLIST_FILE = FBSDKGamingServicesKit/Info.plist
-
-MODULEMAP_FILE = $(SRCROOT)/FBSDKGamingServicesKit/FBSDKGamingServicesKit.modulemap
+INFOPLIST_FILE = Info.plist
 
 SDKROOT = iphoneos
 

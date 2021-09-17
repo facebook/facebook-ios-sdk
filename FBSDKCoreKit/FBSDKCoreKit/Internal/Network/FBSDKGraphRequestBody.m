@@ -18,11 +18,13 @@
 
 #import "FBSDKGraphRequestBody.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKConstants.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrypto.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKLogger.h"
+#import "FBSDKLogger+Internal.h"
 #import "FBSDKSettings.h"
 
 #define kNewline @"\r\n"
@@ -30,7 +32,7 @@
 @implementation FBSDKGraphRequestBody
 {
   NSMutableData *_data;
-  NSMutableDictionary *_json;
+  NSMutableDictionary<NSString *, id> *_json;
   NSString *_stringBoundary;
 }
 

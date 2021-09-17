@@ -20,15 +20,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <sys/utsname.h>
-
-#if FBSDK_SWIFT_PACKAGE
- #import <FBSDKCoreKit.h>
-#else
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
-
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"
@@ -82,7 +76,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
     // Dots in the version will mess up the bonjour DNS record parsing
     sdkVersion = [[FBSDKSettings sdkVersion] stringByReplacingOccurrencesOfString:@"." withString:@"|"];
     if (sdkVersion.length > 10
-        || ![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[sdkVersion characterAtIndex:0]]) {
+        || ![NSCharacterSet.decimalDigitCharacterSet characterIsMember:[sdkVersion characterAtIndex:0]]) {
       sdkVersion = @"dev";
     }
   });

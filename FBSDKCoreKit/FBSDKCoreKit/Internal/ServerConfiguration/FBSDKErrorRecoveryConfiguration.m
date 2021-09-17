@@ -46,12 +46,12 @@
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSString *description = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_DESCRIPTION_KEY];
-  NSArray *options = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_OPTIONS_KEY];
-  NSNumber *category = [decoder decodeObjectOfClass:[NSNumber class] forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_CATEGORY_KEY];
-  NSString *action = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_ACTION_KEY];
+  NSString *description = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_DESCRIPTION_KEY];
+  NSArray *options = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_OPTIONS_KEY];
+  NSNumber *category = [decoder decodeObjectOfClass:NSNumber.class forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_CATEGORY_KEY];
+  NSString *action = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ERROR_RECOVERY_CONFIGURATION_ACTION_KEY];
 
   return [self initWithRecoveryDescription:description
                         optionDescriptions:options

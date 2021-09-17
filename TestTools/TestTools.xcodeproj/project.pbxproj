@@ -7,11 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
+		41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */; };
+		4463F7E77A22CF4A3B8596D0 /* TestKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */; };
+		5C15C252C08510B4B00930B1 /* TestURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */; };
+		638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */; };
+		8D0D73617FA7679F8A827C99 /* TestBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571755F44AE658FF8F3716B4 /* TestBundle.swift */; };
+		8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44853480B9144B4E2A10493 /* TestInternalUtility.swift */; };
+		99EFAC95A1FB2E0A37D88F38 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */; };
+		9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */; };
+		A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */; };
 		ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */; };
 		B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8640C198FCE46662467AD22C /* TestSessionProvider.swift */; };
 		BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */; };
 		BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */; };
+		C975A94CFA4522D7A5194379 /* TestKeychainStoreFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA859E1F31F30B29819BC2F /* TestKeychainStoreFactory.swift */; };
+		CDF18EF7B43D29D705F3FCDD /* TestAuthenticationTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */; };
+		D5040753CDE54C5B7AAFF2C2 /* FBSDKAuthenticationToken+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = EE90E7B3A5223FB9B851A0F6 /* FBSDKAuthenticationToken+Testing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E3BC8A6FB6836D80A837A438 /* TestTools-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8BAD2C97071376A74507AF /* TestTools-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8D4BE357D16D0721EE967 /* Fuzzer.swift */; };
+		ECA21F7C52F9A7C5192642E2 /* SampleAuthenticationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */; };
+		F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FB7D50EB7B42C13CF153050F /* TestAccessTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,19 +44,37 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
 			proxyType = 2;
-			remoteGlobalIDString = 2DA6329335CC5D6AFDDA8E93;
+			remoteGlobalIDString = 0F241E5E11B84E3DFB437AF1;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03A8D4BE357D16D0721EE967 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
+		155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeychainStore.swift; sourceTree = "<group>"; };
+		339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
+		4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProfileProvider.swift; sourceTree = "<group>"; };
+		508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenProvider.swift; sourceTree = "<group>"; };
+		571755F44AE658FF8F3716B4 /* TestBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBundle.swift; sourceTree = "<group>"; };
+		791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthenticationTokenWallet.swift; sourceTree = "<group>"; };
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
+		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
+		B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
+		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
+		C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
+		CB8BAD2C97071376A74507AF /* TestTools-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestTools-Bridging-Header.h"; sourceTree = "<group>"; };
+		D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
+		D44853480B9144B4E2A10493 /* TestInternalUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalUtility.swift; sourceTree = "<group>"; };
+		DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAuthenticationToken.swift; sourceTree = "<group>"; };
 		E40113A8B281C6A908AEFA21 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindowFinder.swift; sourceTree = "<group>"; };
+		EE90E7B3A5223FB9B851A0F6 /* FBSDKAuthenticationToken+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAuthenticationToken+Testing.h"; sourceTree = "<group>"; };
 		FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUserProfiles.swift; sourceTree = "<group>"; };
 		FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
+		FEA859E1F31F30B29819BC2F /* TestKeychainStoreFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeychainStoreFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -61,11 +97,29 @@
 		8D0A9F8F0A540BDAE761EE52 /* TestTools */ = {
 			isa = PBXGroup;
 			children = (
+				EE90E7B3A5223FB9B851A0F6 /* FBSDKAuthenticationToken+Testing.h */,
+				339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */,
+				A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */,
+				03A8D4BE357D16D0721EE967 /* Fuzzer.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
+				DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */,
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
+				508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */,
+				C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */,
+				791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */,
+				571755F44AE658FF8F3716B4 /* TestBundle.swift */,
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
 				0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */,
+				D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */,
+				BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */,
+				D44853480B9144B4E2A10493 /* TestInternalUtility.swift */,
+				155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */,
+				FEA859E1F31F30B29819BC2F /* TestKeychainStoreFactory.swift */,
+				4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
+				CB8BAD2C97071376A74507AF /* TestTools-Bridging-Header.h */,
+				B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */,
+				E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */,
 			);
 			path = TestTools;
 			sourceTree = "<group>";
@@ -92,11 +146,26 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		8DB9EAC958C8DBE41CFBE228 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5040753CDE54C5B7AAFF2C2 /* FBSDKAuthenticationToken+Testing.h in Headers */,
+				F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */,
+				E3BC8A6FB6836D80A837A438 /* TestTools-Bridging-Header.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		7EE1BFF550650C49854D563A /* TestTools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8484440B93FEF66A21A7D2E1 /* Build configuration list for PBXNativeTarget "TestTools" */;
 			buildPhases = (
+				DC1ECA2D21D9A8B0E51DB831 /* Run Swiftlint */,
+				8DB9EAC958C8DBE41CFBE228 /* Headers */,
 				514FB552E0988BBC0743E3FC /* Sources */,
 			);
 			buildRules = (
@@ -115,7 +184,8 @@
 		37E54EEFC92A215F0352C118 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1250;
+				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 				};
 			};
@@ -152,16 +222,52 @@
 		};
 /* End PBXReferenceProxy section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		DC1ECA2D21D9A8B0E51DB831 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		514FB552E0988BBC0743E3FC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */,
+				E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */,
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
+				ECA21F7C52F9A7C5192642E2 /* SampleAuthenticationToken.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
+				FB7D50EB7B42C13CF153050F /* TestAccessTokenProvider.swift in Sources */,
+				A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */,
+				CDF18EF7B43D29D705F3FCDD /* TestAuthenticationTokenWallet.swift in Sources */,
+				8D0D73617FA7679F8A827C99 /* TestBundle.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
+				41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */,
+				154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */,
+				8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */,
+				4463F7E77A22CF4A3B8596D0 /* TestKeychainStore.swift in Sources */,
+				C975A94CFA4522D7A5194379 /* TestKeychainStoreFactory.swift in Sources */,
+				638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
+				5C15C252C08510B4B00930B1 /* TestURLOpener.swift in Sources */,
+				99EFAC95A1FB2E0A37D88F38 /* TestWindowFinder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,7 +297,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_NAME = TestTools;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -251,6 +356,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "TestTools/TestTools-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 			};
@@ -271,7 +377,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_NAME = TestTools;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -338,6 +443,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "TestTools/TestTools-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};

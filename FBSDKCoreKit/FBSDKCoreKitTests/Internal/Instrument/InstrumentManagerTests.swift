@@ -53,9 +53,9 @@ class InstrumentManagerTests: XCTestCase {
       "Should use the shared settings instance by default"
     )
     XCTAssertEqual(
-      ObjectIdentifier(manager.crashObserver),
-      ObjectIdentifier(CrashObserver.shared),
-      "Should use the shared crash observer instance by default"
+      ObjectIdentifier(self.manager.crashObserver),
+      ObjectIdentifier(crashObserver),
+      "Should be the same instance passed in initialization"
     )
     XCTAssertEqual(
       ObjectIdentifier(manager.errorReport),

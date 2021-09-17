@@ -57,11 +57,11 @@ class TestLogger: Logger {
     capturedContents = logEntry
   }
 
-  override var isActive: Bool {
+  var isActive: Bool {
     stubbedIsActive
   }
 
-  override func appendKey(_ key: String, value: String) {
+  func appendKey(_ key: String, value: String) {
     capturedAppendedKeys.append(key)
     capturedAppendedValues.append(value)
   }

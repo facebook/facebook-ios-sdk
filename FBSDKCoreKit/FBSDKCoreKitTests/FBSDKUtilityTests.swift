@@ -59,11 +59,12 @@ class FBSDKUtilityTests: XCTestCase {
 
   @available(iOS, deprecated: 9.0) // Needed to disable warning on CFURLCreateStringByAddingPercentEscapes
   func legacyURLEncode(_ value: String) -> String? {
-    return CFURLCreateStringByAddingPercentEscapes(
+    CFURLCreateStringByAddingPercentEscapes(
       nil,
       value as CFString,
       nil,
       ":!*();@/&?+$,='" as CFString,
-      CFStringBuiltInEncodings.UTF8.rawValue) as String
+      CFStringBuiltInEncodings.UTF8.rawValue
+    ) as String
   }
 }

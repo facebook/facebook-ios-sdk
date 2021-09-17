@@ -110,7 +110,7 @@ NS_SWIFT_NAME(LoginURLCompleter)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+- (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
                    connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator;

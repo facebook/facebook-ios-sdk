@@ -22,9 +22,10 @@
 
  #import "FBSDKMeasurementEventListener.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEvents+SourceApplicationTracking.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent.h"
  #import "FBSDKTimeSpentData.h"
 
@@ -40,7 +41,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   static FBSDKMeasurementEventListener *defaultListener = nil;
   dispatch_once(&dispatchOnceLocker, ^{
     defaultListener = [self new];
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
     [center addObserver:defaultListener
                selector:@selector(logFBAppEventForNotification:)
                    name:FBSDKMeasurementEventNotification
@@ -55,7 +56,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
     NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
     if (sourceApplication) {
-      [FBSDKAppEvents.singleton setSourceApplication:sourceApplication isFromAppLink:YES];
+      [FBSDKAppEvents.shared setSourceApplication:sourceApplication isFromAppLink:YES];
     }
   }
   NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];
@@ -77,7 +78,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 @end

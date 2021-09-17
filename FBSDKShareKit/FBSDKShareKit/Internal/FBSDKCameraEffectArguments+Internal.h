@@ -22,10 +22,14 @@
 
  #import "FBSDKCameraEffectArguments.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKCameraEffectArguments ()
 
 - (NSDictionary<NSString *, id> *)allArguments;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

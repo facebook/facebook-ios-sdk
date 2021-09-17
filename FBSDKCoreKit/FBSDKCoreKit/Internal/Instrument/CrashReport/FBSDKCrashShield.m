@@ -18,15 +18,12 @@
 
 #import "FBSDKCrashShield.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureDisabling.h"
-#import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashShield ()
@@ -64,7 +61,7 @@ static id<FBSDKSettings> _settings;
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _settings = settings;
     _requestProvider = requestProvider;
     _featureChecking = featureChecking;
@@ -73,18 +70,18 @@ static id<FBSDKSettings> _settings;
 
 + (void)initialize
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _featureMapping =
     @{
-      @"AEM" : @ [
-        @"FBSDKAEMConfiguration",
-        @"FBSDKAEMEvent",
-        @"FBSDKAEMInvocation",
-        @"FBSDKAEMReporter",
-        @"FBSDKAEMRule",
-      ],
       @"AAM" : @[
         @"FBSDKMetadataIndexer",
+      ],
+      @"AEM" : @ [
+        @"FBAEMConfiguration",
+        @"FBAEMEvent",
+        @"FBAEMInvocation",
+        @"FBAEMReporter",
+        @"FBAEMRule",
       ],
       @"CodelessEvents" : @[
         @"FBSDKCodelessIndexer",
@@ -216,7 +213,7 @@ static id<FBSDKSettings> _settings;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

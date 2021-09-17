@@ -18,10 +18,6 @@
 
 #if !TARGET_OS_TV
 
-#if BUCK
-import FacebookCore
-#endif
-
 import FBSDKCoreKit
 
 import UIKit
@@ -174,7 +170,7 @@ public extension LoginManager {
   }
 
   private func convertedResultHandler(_ original: @escaping LoginResultBlock) -> LoginManagerLoginResultBlock {
-    return { (result: LoginManagerLoginResult?, error: Error?) in
+    { (result: LoginManagerLoginResult?, error: Error?) in
       let result = LoginResult(result: result, error: error)
       original(result)
     }

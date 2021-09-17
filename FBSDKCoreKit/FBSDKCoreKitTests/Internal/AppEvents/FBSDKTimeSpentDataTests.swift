@@ -24,20 +24,8 @@ class FBSDKTimeSpentDataTests: XCTest {
   let eventLogger = TestEventLogger()
   lazy var timeSpentData = TimeSpentData(
     eventLogger: eventLogger,
-    serverConfigurationProvider: TestServerConfigurationProvider.self
+    serverConfigurationProvider: TestServerConfigurationProvider()
   )
-
-  override func setUp() {
-    super.setUp()
-
-    TestServerConfigurationProvider.reset()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-
-    TestServerConfigurationProvider.reset()
-  }
 
   func testCreatingWithDependencies() {
     XCTAssertEqual(

@@ -18,7 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @protocol ProtocolA <NSObject>
 @end

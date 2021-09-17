@@ -23,16 +23,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents activateApp].  The activate app App Event is
+// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents.shared activateApp].  The activate app App Event is
 // logged when restore: is called with sufficient time since the last deactivation.
 NS_SWIFT_NAME(TimeSpentData)
 @interface FBSDKTimeSpentData : NSObject
+
+FOUNDATION_EXPORT NSString *const FBSDKAppEventNameActivatedApp;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 - (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(nullable NSURL *)url;
 - (void)setSourceApplication:(nullable NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;

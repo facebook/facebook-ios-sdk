@@ -23,6 +23,7 @@
 
 #import <dlfcn.h>
 
+#import "FBSDKDynamicSocialFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
@@ -101,7 +102,7 @@ static void fbsdkdfl_load_symbol_once(void *context)
 // convenience macro for getting a pointer to a named NSString, verifying it loaded correctly, and returning it
 #define _fbsdkdfl_get_and_return_NSString(LIBRARY, SYMBOL) \
   _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, NSString **); \
-  NSCAssert([*k isKindOfClass:[NSString class]], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
+  NSCAssert([*k isKindOfClass:NSString.class], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
   _fbsdkdfl_return_k(LIBRARY, SYMBOL)
 
 #pragma mark - Security Framework
@@ -284,8 +285,6 @@ Class fbsdkdfl_CATransactionClass(void)
 typedef CATransform3D (*CATransform3DMakeScale_type)(CGFloat, CGFloat, CGFloat);
 typedef CATransform3D (*CATransform3DMakeTranslation_type)(CGFloat, CGFloat, CGFloat);
 typedef CATransform3D (*CATransform3DConcat_type)(CATransform3D, CATransform3D);
-
-const CATransform3D fbsdkdfl_CATransform3DIdentity = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
 CATransform3D fbsdkdfl_CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz)
 {

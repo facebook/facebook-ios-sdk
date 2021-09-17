@@ -17,17 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+@import FBSDKShareKit;
 
-#import "FBSDKCameraEffectArguments.h"
-#import "FBSDKHashtag.h"
-#import "FBSDKShareCameraEffectContent.h"
-#import "FBSDKShareLinkContent.h"
-#import "FBSDKShareMediaContent.h"
-#import "FBSDKSharePhoto.h"
-#import "FBSDKSharePhotoContent.h"
-#import "FBSDKShareVideo.h"
-#import "FBSDKShareVideoContent.h"
-
+NS_SWIFT_NAME(ShareModelTestUtility)
 @interface FBSDKShareModelTestUtility : NSObject
 
 + (NSURL *)contentURL;

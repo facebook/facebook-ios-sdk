@@ -22,13 +22,14 @@
 
  #import "FBSDKCodelessParameterComponent.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKViewHierarchyMacros.h"
 
 @implementation FBSDKCodelessParameterComponent
 
-- (instancetype)initWithJSON:(NSDictionary *)dict
+- (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
 {
   if (self = [super init]) {
     _name = [dict[CODELESS_MAPPING_PARAMETER_NAME_KEY] copy];
@@ -37,7 +38,7 @@
 
     NSArray *ary = dict[CODELESS_MAPPING_PATH_KEY];
     NSMutableArray *mut = [NSMutableArray array];
-    for (NSDictionary *info in ary) {
+    for (NSDictionary<NSString *, id> *info in ary) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }

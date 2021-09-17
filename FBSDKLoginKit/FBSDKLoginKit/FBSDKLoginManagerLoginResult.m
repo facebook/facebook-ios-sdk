@@ -22,18 +22,14 @@
 
  #import "FBSDKLoginManagerLoginResult+Internal.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+@interface FBSDKLoginManagerLoginResult ()
+@property (nonatomic) NSMutableDictionary<NSString *, id> *mutableLoggingExtras;
+@end
 
 @implementation FBSDKLoginManagerLoginResult
-{
-  NSMutableDictionary *_mutableLoggingExtras;
-}
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token
           authenticationToken:(FBSDKAuthenticationToken *)authenticationToken
@@ -58,7 +54,7 @@
   [FBSDKTypeUtility dictionary:_mutableLoggingExtras setObject:object forKey:key];
 }
 
-- (NSDictionary *)loggingExtras
+- (NSDictionary<NSString *, id> *)loggingExtras
 {
   return [_mutableLoggingExtras copy];
 }

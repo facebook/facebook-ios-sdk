@@ -22,7 +22,6 @@
 
  #import "FBSDKLogger.h"
  #import "FBSDKMeasurementEvent_Internal.h"
- #import "FBSDKSettings.h"
 
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
@@ -58,7 +57,7 @@ NSString *const FBSDKAppLinkNavigateBackToReferrerEventName = @"al_ref_back_out"
      logEntry:@"Warning: Missing event name when logging FBSDK measurement event.\nIgnoring this event in logging."];
     return;
   }
-  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+  NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
   NSDictionary<NSString *, id> *userInfo = @{FBSDKMeasurementEventNameKey : name,
                                              FBSDKMeasurementEventArgsKey : args};
 

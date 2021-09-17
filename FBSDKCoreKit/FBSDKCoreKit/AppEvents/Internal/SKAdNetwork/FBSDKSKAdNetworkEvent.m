@@ -24,8 +24,7 @@
 
  #import <Foundation/Foundation.h>
 
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKUtility.h"
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKSKAdNetworkEvent
 

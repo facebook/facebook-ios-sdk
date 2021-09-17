@@ -23,7 +23,6 @@
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKLogo.h"
 #import "FBSDKUIUtility.h"
 #import "FBSDKViewImpressionTracker.h"
@@ -37,14 +36,12 @@
 @interface FBSDKButton ()
 
 @property (class, nonatomic) id applicationActivationNotifier;
+@property (nonatomic) BOOL skipIntrinsicContentSizing;
+@property (nonatomic) BOOL isExplicitlyDisabled;
 
 @end
 
 @implementation FBSDKButton
-{
-  BOOL _skipIntrinsicContentSizing;
-  BOOL _isExplicitlyDisabled;
-}
 
 static id _applicationActivationNotifier;
 
@@ -80,7 +77,7 @@ static id _applicationActivationNotifier;
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 #pragma mark - Properties
@@ -170,7 +167,7 @@ static id _applicationActivationNotifier;
 
 #pragma mark - Subclass Methods
 
-- (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+- (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters
@@ -285,7 +282,11 @@ static id _applicationActivationNotifier;
   CGFloat padding = [self _paddingForHeight:height];
   CGFloat textPaddingCorrection = [self _textPaddingCorrectionForHeight:height];
   CGSize contentSize = CGSizeMake(height + padding + titleSize.width - textPaddingCorrection, height);
-  return FBSDKEdgeInsetsOutsetSize(contentSize, contentEdgeInsets);
+
+  return CGSizeMake(
+    contentEdgeInsets.left + contentSize.width + contentEdgeInsets.right,
+    contentEdgeInsets.top + contentSize.height + contentEdgeInsets.bottom
+  );
 }
 
 #pragma mark - Helper Methods
@@ -358,7 +359,7 @@ static id _applicationActivationNotifier;
   self.adjustsImageWhenHighlighted = NO;
   self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
   self.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
-  self.tintColor = [UIColor whiteColor];
+  self.tintColor = UIColor.whiteColor;
 
   BOOL forceSizeToFit = CGRectIsEmpty(self.bounds);
 
@@ -390,7 +391,7 @@ static id _applicationActivationNotifier;
   #endif
   }
 
-  [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+  [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [self setTitleColor:[self highlightedContentColor] forState:UIControlStateHighlighted | UIControlStateSelected];
 
   [self setTitle:title forState:UIControlStateNormal];
@@ -432,10 +433,10 @@ static id _applicationActivationNotifier;
   if (forceSizeToFit) {
     [self sizeToFit];
   }
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_applicationDidBecomeActiveNotification:)
-                                               name:FBSDKApplicationDidBecomeActiveNotification
-                                             object:self.class.applicationActivationNotifier];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_applicationDidBecomeActiveNotification:)
+                                             name:FBSDKApplicationDidBecomeActiveNotification
+                                           object:self.class.applicationActivationNotifier];
 }
 
 - (CGFloat)_fontSizeForHeight:(CGFloat)height

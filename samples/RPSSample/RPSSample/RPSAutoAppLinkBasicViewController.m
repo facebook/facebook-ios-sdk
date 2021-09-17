@@ -33,21 +33,21 @@ static const int paddingLen = 10;
 {
   [super viewDidLoad];
 
-  self.view.backgroundColor = [UIColor whiteColor];
+  self.view.backgroundColor = UIColor.whiteColor;
   UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
   int stdWidth = scrollView.frame.size.width - paddingLen * 2;
 
   UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, stdWidth, 30)];
   nameLabel.font = [UIFont boldSystemFontOfSize:24];
-  nameLabel.textColor = [UIColor grayColor];
+  nameLabel.textColor = UIColor.grayColor;
 
   UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 90, stdWidth, 20)];
   descLabel.font = [UIFont systemFontOfSize:14];
-  descLabel.textColor = [UIColor lightGrayColor];
+  descLabel.textColor = UIColor.lightGrayColor;
 
   UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 130, stdWidth, 20)];
   priceLabel.font = [UIFont systemFontOfSize:20];
-  priceLabel.textColor = [UIColor blackColor];
+  priceLabel.textColor = UIColor.blackColor;
 
   if (self.product == nil) {
     self.product = [[Coffee alloc] initWithName:@"Coffee" desc:@"I am just a coffee" price:1];
@@ -63,7 +63,7 @@ static const int paddingLen = 10;
   if (self.data != nil) {
     UILabel *dataLabel = [[UILabel alloc] init];
     dataLabel.font = [UIFont systemFontOfSize:20];
-    dataLabel.textColor = [UIColor blueColor];
+    dataLabel.textColor = UIColor.blueColor;
     dataLabel.text = [NSString stringWithFormat:@"data is: %@", self.data];
     dataLabel.numberOfLines = 0;
     CGSize size = [dataLabel.text boundingRectWithSize:CGSizeMake(stdWidth, 1000)

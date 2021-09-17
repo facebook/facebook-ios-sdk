@@ -18,9 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ClientTokenProviding)
 @protocol FBSDKClientTokenProviding
 
 @property (nonatomic, copy, nullable, readonly) NSString *clientToken;
 
 @end
+
+NS_ASSUME_NONNULL_END

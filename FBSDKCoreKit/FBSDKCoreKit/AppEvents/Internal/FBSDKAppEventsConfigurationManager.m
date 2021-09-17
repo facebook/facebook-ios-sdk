@@ -18,7 +18,8 @@
 
 #import "FBSDKAppEventsConfigurationManager.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
@@ -181,7 +182,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

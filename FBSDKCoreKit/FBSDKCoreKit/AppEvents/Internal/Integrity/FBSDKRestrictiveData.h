@@ -20,6 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(RestrictiveData)
 @interface FBSDKRestrictiveData : NSObject
 
 - (instancetype)initWithEventName:(NSString *)eventName params:(id)params;

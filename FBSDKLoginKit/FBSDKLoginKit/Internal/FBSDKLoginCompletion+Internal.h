@@ -22,6 +22,8 @@
 
  #import "FBSDKLoginCompletion.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKLoginCompletionParameters ()
 
 @property (nonatomic) FBSDKAuthenticationToken *authenticationToken;
@@ -54,5 +56,7 @@
 @property (nonatomic, strong) FBSDKLoginCompletionParameters *parameters;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

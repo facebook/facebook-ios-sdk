@@ -22,10 +22,11 @@
 
  #import "FBSDKAppLinkUtility.h"
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
  #import "FBSDKAppEventsConfigurationManager.h"
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL.h"
@@ -37,12 +38,11 @@ static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
 static BOOL _isConfigured;
 
 @implementation FBSDKAppLinkUtility
-{}
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
               infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
-  if (self == [FBSDKAppLinkUtility class]) {
+  if (self == FBSDKAppLinkUtility.class) {
     _requestProvider = requestProvider;
     _infoDictionaryProvider = infoDictionaryProvider;
     _isConfigured = YES;
@@ -52,7 +52,7 @@ static BOOL _isConfigured;
 + (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
 {
   [self validateConfiguration];
-  NSAssert([NSThread isMainThread], @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
+  NSAssert(NSThread.isMainThread, @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
 
   [FBSDKAppEventsConfigurationManager loadAppEventsConfigurationWithBlock:^{
     if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
@@ -63,12 +63,24 @@ static BOOL _isConfigured;
       return;
     }
 
+    if (@available(iOS 14.5, *)) {
+      NSString *defaultAdvertiserID = @"00000000-0000-0000-0000-000000000000";
+      BOOL isAdvertiserIDMissingOrDefault = !FBSDKAppEventsUtility.shared.advertiserID
+      || [FBSDKAppEventsUtility.shared.advertiserID isEqualToString:defaultAdvertiserID];
+
+      if (handler && isAdvertiserIDMissingOrDefault) {
+        NSError *error = [[NSError alloc] initWithDomain:@"ATTrackingManager.AuthorizationStatus must be `authorized` for deferred deep linking to work. Read more at: https://developer.apple.com/documentation/apptrackingtransparency" code:-1 userInfo:nil];
+        handler(nil, error);
+        return;
+      }
+    }
+
     NSString *appID = [FBSDKSettings appID];
 
     // Deferred app links are only currently used for engagement ads, thus we consider the app to be an advertising one.
     // If this is considered for organic, non-ads scenarios, we'll need to retrieve the FBAppEventsUtility.shouldAccessAdvertisingID
     // before we make this call.
-    NSMutableDictionary *deferredAppLinkParameters =
+    NSMutableDictionary<NSString *, id> *deferredAppLinkParameters =
     [FBSDKAppEventsUtility activityParametersDictionaryForEvent:FBSDKDeferredAppLinkEvent
                                       shouldAccessAdvertisingID:YES];
     id<FBSDKGraphRequest> deferredAppLinkRequest = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
@@ -110,7 +122,7 @@ static BOOL _isConfigured;
 {
   [self validateConfiguration];
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
-  NSDictionary *extras = parsedUrl.appLinkExtras;
+  NSDictionary<NSString *, id> *extras = parsedUrl.appLinkExtras;
   if (extras) {
     NSString *deeplinkContextString = extras[@"deeplink_context"];
 
@@ -118,7 +130,7 @@ static BOOL _isConfigured;
     if (deeplinkContextString.length > 0) {
       NSError *error = nil;
       NSDictionary<id, id> *deeplinkContextData = [FBSDKBasicUtility objectForJSONString:deeplinkContextString error:&error];
-      if (!error && [deeplinkContextData isKindOfClass:[NSDictionary class]]) {
+      if (!error && [deeplinkContextData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
         return deeplinkContextData[@"promo_code"];
       }
     }
@@ -133,7 +145,7 @@ static BOOL _isConfigured;
     return NO;
   }
   [self validateConfiguration];
-  for (NSDictionary *urlType in [_infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+  for (NSDictionary<NSString *, id> *urlType in [_infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
     for (NSString *urlScheme in urlType[@"CFBundleURLSchemes"]) {
       if ([urlScheme caseInsensitiveCompare:scheme] == NSOrderedSame) {
         return YES;
@@ -151,14 +163,15 @@ static BOOL _isConfigured;
   if (!_isConfigured) {
     static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
     "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method."
-    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+    "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 #endif
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

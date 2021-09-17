@@ -20,8 +20,8 @@
 
 @objcMembers
 public class TestGraphRequest: NSObject, GraphRequestProtocol {
-  public var isGraphErrorRecoveryDisabled: Bool = false
-  public var hasAttachments: Bool = false
+  public var isGraphErrorRecoveryDisabled = false
+  public var hasAttachments = false
   public var parameters: [String: Any] = [:]
   public var tokenString: String?
   public var graphPath: String = ""
@@ -134,6 +134,6 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
   }
 
   public func formattedDescription() -> String {
-    return "Test graph request"
+    "Test graph request"
   }
 }

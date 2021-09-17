@@ -18,7 +18,7 @@
 
 import FBSDKCoreKit
 
-class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class AppLinkNavigationTests: XCTestCase {
 
   struct AppLinkUrlPayload: Codable {
     let userAgent: String
@@ -36,7 +36,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
 
   var error: NSError?
   var navigation: AppLinkNavigation! // swiftlint:disable:this implicitly_unwrapped_optional
-  let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: "123", appName: "ExampleApp")
+  let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: "123", appName: "ExampleApp")
   let emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
   let eventPoster = TestMeasurementEvent()
   let resolver = TestAppLinkResolver()
@@ -83,7 +83,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
 
   func testAppLinkWithTargetUrl() {
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
@@ -99,18 +99,18 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
   }
 
   func testAppLinkWithTargetUrlWithValidStartingAppLink() {
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [target], webURL: SampleUrls.valid)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
       appLink: appLink, extras: [:], appLinkData: [:]
     )
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
       XCTAssertEqual(payload?.version, "1.0")
       XCTAssertEqual(payload?.extras, [:])
-      XCTAssertEqual(payload?.targetUrl, SampleUrls.valid)
+      XCTAssertEqual(payload?.targetUrl, SampleURLs.valid)
     } catch {
       XCTAssertNil(
         error,
@@ -123,10 +123,11 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self])
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
 
-      guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
-            let appLinkItem = queryItems.first(where: { $0.name == "al_applink_data" })
+      guard
+        let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+        let appLinkItem = queryItems.first(where: { $0.name == "al_applink_data" })
       else {
         return XCTFail("Should have a query item for app link data")
       }
@@ -149,7 +150,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData)
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "foo")
@@ -173,7 +174,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: appLinkData)
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
       XCTAssertEqual(payload?.userAgent, "foo")
       XCTAssertEqual(payload?.version, "bar")
@@ -248,7 +249,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
   }
 
   func testPostingNavigationEventWithAppLink() {
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [target], webURL: SampleUrls.valid)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
       appLink: appLink, extras: [:], appLinkData: [:]
     )
@@ -266,17 +267,17 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceHost"],
-      SampleUrls.valid.host,
+      SampleURLs.valid.host,
       "A navigation event notification should include information about the app link"
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceScheme"],
-      SampleUrls.valid.scheme,
+      SampleURLs.valid.scheme,
       "A navigation event notification should include information about the app link"
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceURL"],
-      SampleUrls.valid.absoluteString,
+      SampleURLs.valid.absoluteString,
       "A navigation event notification should include information about the app link"
     )
   }
@@ -329,55 +330,55 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
 
   func testNavigationTypeWithoutTarget() {
     XCTAssertEqual(
-      navigation.navigationType(for: [], urlOpener: TestURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
       .failure,
       "The navigation type for an empty list of targets should be a failure"
     )
   }
 
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestURLOpener(canOpenUrl: false)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
       .failure,
       "The navigation type when there is an invalid target and no web url should be 'failure'"
     )
   }
 
   func testNavigationTypeWithValidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
       .app,
       "The navigation type when there is a valid target and no web url should be 'app'"
     )
   }
 
   func testNavigationTypeWithValidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
       .app,
       "The navigation type when there is a valid target and a web url should be 'app'"
     )
   }
 
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestURLOpener(canOpenUrl: false)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
       .browser,
       "The navigation type when there is an invalid target and a web url should be 'browser'"
     )
@@ -408,13 +409,13 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
   // MARK: - Navigating
 
   func testSuccessfullyNavigatingWithTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    let opener = TestURLOpener(canOpenUrl: true)
+    let opener = TestInternalURLOpener(canOpenUrl: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
 
       opener.stubOpen(url: targetUrl, success: true)
 
@@ -439,14 +440,14 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
   }
 
   func testUnsuccessfullyNavigatingWithTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid(path: name))
-    let opener = TestURLOpener(canOpenUrl: true)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid(path: name))
+    let opener = TestInternalURLOpener(canOpenUrl: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
-      let webUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid(path: name))
+      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let webUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid(path: name))
 
       opener.stubOpen(url: targetUrl, success: false)
       opener.stubOpen(url: webUrl, success: true)
@@ -473,7 +474,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
 
   func testNavigatingToUrlWithoutAppLink() {
     let expectation = self.expectation(description: name)
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { _, _ in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { _, _ in
       expectation.fulfill()
     }
 
@@ -491,13 +492,13 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     var callbackNavigationType: AppLinkNavigation.`Type`?
     var callbackError: Error?
 
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { potentialNavigationType, potentialError in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
       callbackNavigationType = potentialNavigationType
       callbackError = potentialError
       expectation.fulfill()
     }
 
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [], webURL: nil)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [], webURL: nil)
 
     // The captured completion itself is dispatched asynchronously to the main thread
     // so we can delay a tick here to make sure it's complete
@@ -515,13 +516,13 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     var callbackNavigationType: AppLinkNavigation.`Type`?
     var callbackError: Error?
 
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { potentialNavigationType, potentialError in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
       callbackNavigationType = potentialNavigationType
       callbackError = potentialError
       expectation.fulfill()
     }
 
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [], webURL: nil)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [], webURL: nil)
 
     // The captured completion itself is dispatched asynchronously to the main thread
     // so we can delay a tick here to make sure it's complete
@@ -541,14 +542,14 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
 
   func testResolvingAppLinkWithMissingDestination() {
     var didInvokeCompletion = false
-    AppLinkNavigation.resolveAppLink(SampleUrls.valid) { _, _ in
+    AppLinkNavigation.resolveAppLink(SampleURLs.valid) { _, _ in
       didInvokeCompletion = true
     }
     resolver.capturedCompletion?(nil, nil)
 
     XCTAssertEqual(
       resolver.capturedUrl,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should resolve using the provided url"
     )
     XCTAssertTrue(didInvokeCompletion)
@@ -561,10 +562,11 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     file: StaticString = #file,
     line: UInt = #line
   ) -> AppLinkUrlPayload? {
-    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-          let queryItems = components.queryItems,
-          let data = queryItems.first?.value?.data(using: .utf8),
-          let payload = try? JSONDecoder().decode(AppLinkUrlPayload.self, from: data)
+    guard
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+      let queryItems = components.queryItems,
+      let data = queryItems.first?.value?.data(using: .utf8),
+      let payload = try? JSONDecoder().decode(AppLinkUrlPayload.self, from: data)
     else {
       XCTFail("Could not decode the payload from the query item", file: file, line: line)
       return nil

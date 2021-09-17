@@ -27,7 +27,7 @@ NS_REFINED_FOR_SWIFT;
 
 #else
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -53,7 +53,7 @@ NS_REFINED_FOR_SWIFT;
   A model for creating an app group.
  */
 NS_SWIFT_NAME(AppGroupContent)
-@interface FBSDKAppGroupContent : NSObject <FBSDKCopying, NSSecureCoding>
+@interface FBSDKAppGroupContent : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 /**
   The description of the group.

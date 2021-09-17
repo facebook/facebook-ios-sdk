@@ -20,6 +20,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+@import TestTools;
 #import "FBSDKLoginKitTests-Swift.h"
 
 @interface FBSDKAuthenticationTokenHeader (Testing)
@@ -32,13 +33,12 @@
 
 @interface FBSDKAuthenticationTokenHeaderTests : XCTestCase
 
+@property (nonatomic) FBSDKAuthenticationTokenHeader *header;
+@property (nonatomic) NSDictionary<NSString *, id> *headerDict;
+
 @end
 
 @implementation FBSDKAuthenticationTokenHeaderTests
-{
-  FBSDKAuthenticationTokenHeader *_header;
-  NSDictionary *_headerDict;
-}
 
 - (void)setUp
 {
@@ -90,7 +90,7 @@
 
 - (void)testDecodeEmptyHeader
 {
-  NSDictionary *header = @{};
+  NSDictionary<NSString *, id> *header = @{};
   NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:header options:0 error:nil];
   NSString *encodedHeader = [self base64URLEncodeData:headerData];
 
@@ -100,7 +100,7 @@
 - (void)testDecodeRandomHeader
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedHeader = [Fuzzer randomizeWithJson:_headerDict];
+    NSDictionary<NSString *, id> *randomizedHeader = [Fuzzer randomizeWithJson:_headerDict];
     NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:randomizedHeader options:0 error:nil];
     NSString *encodedHeader = [self base64URLEncodeData:headerData];
 
@@ -112,7 +112,7 @@
 
 - (void)assertDecodeHeaderFailWithInvalidEntry:(NSString *)key value:(id)value
 {
-  NSMutableDictionary *invalidHeader = [_headerDict mutableCopy];
+  NSMutableDictionary<NSString *, id> *invalidHeader = [_headerDict mutableCopy];
   if (value) {
     [FBSDKTypeUtility dictionary:invalidHeader setObject:value forKey:key];
   } else {

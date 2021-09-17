@@ -18,13 +18,13 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettings+SettingsLogging.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
@@ -34,7 +34,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
-static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
+static id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
 static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
@@ -47,7 +47,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   return _settings;
 }
 
-+ (Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
++ (id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
 {
   return _serverConfiguration;
 }
@@ -59,10 +59,10 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+             serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
-  if (self == [FBSDKGraphRequestPiggybackManager class]) {
+  if (self == FBSDKGraphRequestPiggybackManager.class) {
     _tokenWallet = tokenWallet;
     _settings = settings;
     _serverConfiguration = serverConfiguration;
@@ -83,8 +83,8 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       }
     }
     if (safeForPiggyback) {
-      [[self class] addRefreshPiggybackIfStale:connection];
-      [[self class] addServerConfigurationPiggyback:connection];
+      [self.class addRefreshPiggybackIfStale:connection];
+      [self.class addServerConfigurationPiggyback:connection];
     }
   }
 }
@@ -110,17 +110,15 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       if (expirationDateNumber != nil) {
         expirationDate = (expirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
       NSDate *dataExpirationDate = currentToken.dataAccessExpirationDate;
       if (dataAccessExpirationDateNumber != nil) {
         dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
 
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
@@ -129,9 +127,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                              dataAccessExpirationDate:dataExpirationDate
-                                                                           graphDomain:graphDomain ?: currentToken.graphDomain];
-      #pragma clange diagnostic pop
+                                                              dataAccessExpirationDate:dataExpirationDate];
 
       if (expectedToken == currentToken) {
         [self.tokenWallet setCurrentAccessToken:refreshedToken];
@@ -161,10 +157,10 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       declinedPermissions = [NSMutableSet set];
       expiredPermissions = [NSMutableSet set];
 
-      [FBSDKInternalUtility extractPermissionsFromResponse:result
-                                        grantedPermissions:permissions
-                                       declinedPermissions:declinedPermissions
-                                        expiredPermissions:expiredPermissions];
+      [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:result
+                                                      grantedPermissions:permissions
+                                                     declinedPermissions:declinedPermissions
+                                                      expiredPermissions:expiredPermissions];
     }
     expectingCallbackComplete();
     if (permissionHandler) {
@@ -223,7 +219,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (NSDate *)_lastRefreshTry
 {
   if (!_lastRefreshTry) {
-    _lastRefreshTry = [NSDate distantPast];
+    _lastRefreshTry = NSDate.distantPast;
   }
   return _lastRefreshTry;
 }
@@ -234,7 +230,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)setTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {

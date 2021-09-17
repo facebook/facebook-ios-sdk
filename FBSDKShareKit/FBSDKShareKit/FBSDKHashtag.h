@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitImport.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
   Represents a single hashtag that can be used with the share dialog.
  */
 NS_SWIFT_NAME(Hashtag)
-@interface FBSDKHashtag : NSObject <FBSDKCopying, NSSecureCoding>
+@interface FBSDKHashtag : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 /**
   Convenience method to build a new hashtag with a string identifier. Equivalent to setting the

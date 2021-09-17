@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKTimeSpentRecordingFactory ()
 
-@property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 
 @end
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation FBSDKTimeSpentRecordingFactory
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   if ((self = [super init])) {
     _eventLogger = eventLogger;

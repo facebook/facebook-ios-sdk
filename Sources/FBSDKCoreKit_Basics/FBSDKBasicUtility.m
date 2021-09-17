@@ -31,7 +31,7 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
 void fb_dispatch_on_main_thread(dispatch_block_t block)
 {
   if (block != nil) {
-    if ([NSThread isMainThread]) {
+    if (NSThread.isMainThread) {
       block();
     } else {
       dispatch_async(dispatch_get_main_queue(), block);
@@ -100,11 +100,11 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
                             stop:(BOOL *)stopRef
 {
   __block BOOL stop = NO;
-  if ([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSString.class] || [object isKindOfClass:NSNumber.class]) {
     // good to go, keep the object
-  } else if ([object isKindOfClass:[NSURL class]]) {
+  } else if ([object isKindOfClass:NSURL.class]) {
     object = ((NSURL *)object).absoluteString;
-  } else if ([object isKindOfClass:[NSDictionary class]]) {
+  } else if ([object isKindOfClass:[NSDictionary<NSString *, id> class]]) {
     NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:(NSDictionary<id, id> *) object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
       [FBSDKTypeUtility dictionary:dictionary
@@ -115,7 +115,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
       }
     }];
     object = dictionary;
-  } else if ([object isKindOfClass:[NSArray class]]) {
+  } else if ([object isKindOfClass:NSArray.class]) {
     NSMutableArray<id> *array = [NSMutableArray new];
     for (id obj in (NSArray *)object) {
       id convertedObj = [self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop];
@@ -146,7 +146,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   return [FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
 }
 
-+ (nullable NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary
++ (nullable NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
                                            error:(NSError *__autoreleasing *)errorRef
                             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
@@ -156,17 +156,17 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
     NSMutableArray<NSString *> *keys = [dictionary.allKeys mutableCopy];
     // remove non-string keys, as they are not valid
     [keys filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<id, id> *bindings) {
-      return [evaluatedObject isKindOfClass:[NSString class]];
+      return [evaluatedObject isKindOfClass:NSString.class];
     }]];
     // sort the keys so that the query string order is deterministic
     [keys sortUsingSelector:@selector(compare:)];
     BOOL stop = NO;
     for (NSString *key in keys) {
       id value = [self convertRequestValue:dictionary[key]];
-      if ([value isKindOfClass:[NSString class]]) {
+      if ([value isKindOfClass:NSString.class]) {
         value = [self URLEncode:value];
       }
-      if (invalidObjectHandler && ![value isKindOfClass:[NSString class]]) {
+      if (invalidObjectHandler && ![value isKindOfClass:NSString.class]) {
         value = invalidObjectHandler(value, &stop);
         if (stop) {
           break;
@@ -189,9 +189,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 + (id)convertRequestValue:(id)value
 {
-  if ([value isKindOfClass:[NSNumber class]]) {
+  if ([value isKindOfClass:NSNumber.class]) {
     value = ((NSNumber *)value).stringValue;
-  } else if ([value isKindOfClass:[NSURL class]]) {
+  } else if ([value isKindOfClass:NSURL.class]) {
     value = ((NSURL *)value).absoluteString;
   }
   return value;
@@ -304,7 +304,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 {
   // Grab previously written anonymous ID and, if none have been generated, create and
   // persist a new one which will remain associated with this app.
-  NSString *result = [[self class] retrievePersistedAnonymousID];
+  NSString *result = [self.class retrievePersistedAnonymousID];
   if (!result) {
     // Generate a new anonymous ID.  Create as a UUID, but then prepend the fairly
     // arbitrary 'XZ' to the front so it's easily distinguishable from IDFA's which
@@ -318,7 +318,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 + (NSString *)retrievePersistedAnonymousID
 {
-  NSString *file = [[self class] persistenceFilePath:FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME];
+  NSString *file = [self.class persistenceFilePath:FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME];
   NSString *content = [[NSString alloc] initWithContentsOfFile:file
                                                       encoding:NSASCIIStringEncoding
                                                          error:nil];
@@ -339,7 +339,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   NSDictionary<NSString *, NSString *> *data = @{ FBSDK_BASICUTILITY_ANONYMOUSID_KEY : anonymousID };
   NSString *content = [self JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
 
-  [content writeToFile:[[self class] persistenceFilePath:FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME]
+  [content writeToFile:[self.class persistenceFilePath:FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME]
             atomically:YES
               encoding:NSASCIIStringEncoding
                  error:nil];
@@ -349,9 +349,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 {
   NSData *data = nil;
 
-  if ([input isKindOfClass:[NSData class]]) {
+  if ([input isKindOfClass:NSData.class]) {
     data = (NSData *)input;
-  } else if ([input isKindOfClass:[NSString class]]) {
+  } else if ([input isKindOfClass:NSString.class]) {
     data = [(NSString *)input dataUsingEncoding:NSUTF8StringEncoding];
   }
 

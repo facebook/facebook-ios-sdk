@@ -62,18 +62,6 @@ class SampleAppEventsConfigurations: NSObject {
   }
 
   static func create(
-    defaultATEStatus: AdvertisingTrackingStatus?,
-    advertiserIDCollectionEnabled: Bool?,
-    eventCollectionEnabled: Bool?
-  ) -> AppEventsConfiguration {
-    AppEventsConfiguration(
-      defaultATEStatus: defaultATEStatus ?? self.default.defaultATEStatus,
-      advertiserIDCollectionEnabled: advertiserIDCollectionEnabled ?? self.default.advertiserIDCollectionEnabled,
-      eventCollectionEnabled: eventCollectionEnabled ?? self.default.eventCollectionEnabled
-    )
-  }
-
-  static func create(
     defaultATEStatus: AdvertisingTrackingStatus,
     advertiserIDCollectionEnabled: Bool,
     eventCollectionEnabled: Bool

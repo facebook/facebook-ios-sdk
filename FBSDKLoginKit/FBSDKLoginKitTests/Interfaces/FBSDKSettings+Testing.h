@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKCoreKit+Internal.h"
+@import FBSDKCoreKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isConfigured;
 
 + (void)reset;
++ (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled;
 
 @end
 

@@ -26,13 +26,13 @@
 
 @interface FBSDKBridgeAPIOpenBridgeRequestTests : XCTestCase
 
-@property FBSDKBridgeAPI *api;
-@property id partialMock;
+@property (nonatomic) FBSDKBridgeAPI *api;
+@property (nonatomic) id partialMock;
 @property (readonly) NSURL *sampleUrl;
-@property (nonatomic) TestURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestInternalURLOpener *urlOpener;
+@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
+@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
 
 @end
 
@@ -42,10 +42,10 @@
 {
   [super setUp];
 
-  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  _urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
+  _bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   _frameworkLoader = [TestDylibResolver new];
-  _appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  _appURLSchemeProvider = [TestInternalUtility new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:[TestLogger new]
                                            urlOpener:self.urlOpener
@@ -60,7 +60,7 @@
 {
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:YES
               fromViewController:spy
@@ -87,7 +87,7 @@
 - (void)testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithoutFromVc
 {
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:YES
               fromViewController:nil
@@ -110,7 +110,7 @@
 {
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:NO
               fromViewController:spy
@@ -127,7 +127,7 @@
 
 - (void)testOpeningBridgeRequestWithRequestUrlNotUsingSafariVcWithoutFromVc
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:NO
               fromViewController:nil
@@ -145,7 +145,7 @@
 - (void)testOpeningBridgeRequestWithoutRequestUrlUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -153,7 +153,7 @@
       "Should call the completion with a response that includes the original request"
     );
     XCTAssertTrue(
-      [response.error isKindOfClass:FakeBridgeApiRequestError.class],
+      [response.error isKindOfClass:FakeBridgeAPIRequestError.class],
       "Should call the completion with an error if the request cannot provide a url"
     );
   };
@@ -176,7 +176,7 @@
 
 - (void)testOpeningBridgeRequestWithoutRequestUrlUsingSafariVcWithoutFromVc
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -184,7 +184,7 @@
       "Should call the completion with a response that includes the original request"
     );
     XCTAssertTrue(
-      [response.error isKindOfClass:FakeBridgeApiRequestError.class],
+      [response.error isKindOfClass:FakeBridgeAPIRequestError.class],
       "Should call the completion with an error if the request cannot provide a url"
     );
   };
@@ -206,7 +206,7 @@
 - (void)testOpeningBridgeRequestWithoutRequestUrlNotUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -214,7 +214,7 @@
       "Should call the completion with a response that includes the original request"
     );
     XCTAssertTrue(
-      [response.error isKindOfClass:FakeBridgeApiRequestError.class],
+      [response.error isKindOfClass:FakeBridgeAPIRequestError.class],
       "Should call the completion with an error if the request cannot provide a url"
     );
   };
@@ -235,7 +235,7 @@
 
 - (void)testOpeningBridgeRequestWithoutRequestUrlNotUsingSafariVcWithoutFromVc
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -243,7 +243,7 @@
       "Should call the completion with a response that includes the original request"
     );
     XCTAssertTrue(
-      [response.error isKindOfClass:FakeBridgeApiRequestError.class],
+      [response.error isKindOfClass:FakeBridgeAPIRequestError.class],
       "Should call the completion with an error if the request cannot provide a url"
     );
   };

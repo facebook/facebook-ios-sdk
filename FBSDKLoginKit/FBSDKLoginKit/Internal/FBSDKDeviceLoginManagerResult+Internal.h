@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if defined BUCK || defined FBSDKCOCOAPODS
+#if defined BUCK
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;

@@ -1,8 +1,9 @@
 excluded:
-  - Pods
-  - Carthage
-  - Vendor
+  - ads
+  - internal
   - samples
+  - testing
+  - Package.swift
 
 cyclomatic_complexity: 11
 file_header:
@@ -27,45 +28,26 @@ file_header:
 identifier_name:
   excluded:
     - ok
-indentation: 2
+indentation_width:
+  indentation_width: 2
+  include_comments: false
 large_tuple: 3
 line_length: 120
 nesting:
   type_level: 2
 private_outlet:
   allow_private_set: true
+file_name:
+  excluded: [Enums+Extensions.swift]
 type_name:
-  excluded: [
-    RawAppEventsConfigurationResponseFixtures,
-    GraphRequestPiggybackManagerProviderTests
-  ]
+  excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
 
 # Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
 modifier_order:
-  preferred_modifier_order: [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
+  preferred_modifier_order:
+    [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
 
-disabled_rules:
-  - attributes
-  - conditional_returns_on_newline
-  - discouraged_object_literal
-  - explicit_acl
-  - explicit_enum_raw_value
-  - explicit_top_level_acl
-  - explicit_type_interface
-  - no_extension_access_modifier
-  - number_separator
-  - prefixed_toplevel_constant
-  - statement_position
-  - switch_case_on_newline
-  - weak_delegate
-  # TODO: All below to move to Opt In
-  - discouraged_optional_boolean
-  - discouraged_optional_collection
-  - function_default_parameter_at_end
-  - todo
-  - trailing_comma
-
-opt_in_rules:
+only_rules:
   - array_init
   - block_based_kvo
   - class_delegate_protocol
@@ -75,19 +57,25 @@ opt_in_rules:
   - closure_spacing
   - colon
   - comma
+  - comment_spacing
   - compiler_protocol_init
+  - computed_accessors_order
   - contains_over_first_not_nil
   - control_statement
   - convenience_type
   - cyclomatic_complexity
+  - deployment_target
   - discarded_notification_center_observer
   - discouraged_direct_init
+  - discouraged_optional_boolean
+  - duplicate_enum_cases
+  - duplicate_imports
   - dynamic_inline
   - empty_count
-  - empty_string
   - empty_enum_arguments
   - empty_parameters
   - empty_parentheses_with_trailing_closure
+  - empty_string
   - empty_xctest_method
   - explicit_init
   - extension_access_modifier
@@ -95,6 +83,7 @@ opt_in_rules:
   - fatal_error_message
   - file_header
   - file_length
+  - file_name
   - first_where
   - for_where
   - force_cast
@@ -105,7 +94,11 @@ opt_in_rules:
   - generic_type_name
   - identifier_name
   - implicit_getter
+  - implicit_return
   - implicitly_unwrapped_optional
+  - inclusive_language
+  - indentation_width
+  - inert_defer
   - is_disjoint
   - joined_default_parameter
   - large_tuple
@@ -113,6 +106,7 @@ opt_in_rules:
   - legacy_cggeometry_functions
   - legacy_constant
   - legacy_constructor
+  - legacy_hashing
   - legacy_nsgeometry_functions
   - let_var_whitespace
   - line_length
@@ -123,16 +117,19 @@ opt_in_rules:
   - multiline_arguments
   - multiline_function_chains
   - multiline_parameters
+  - multiline_parameters_brackets
   - multiple_closures_with_trailing_closure
   - nesting
   - nimble_operator
   - no_fallthrough_only
-  - no_grouping_extension
+  - no_space_in_method_call
   - notification_center_detachment
+  - nsobject_prefer_isequal
   - object_literal
   - opening_brace
   - operator_usage_whitespace
   - operator_whitespace
+  - orphaned_doc_comment
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
@@ -145,11 +142,14 @@ opt_in_rules:
   - quick_discouraged_call
   - quick_discouraged_focused_test
   - quick_discouraged_pending_test
+  - reduce_boolean
   - redundant_discardable_let
   - redundant_nil_coalescing
+  - redundant_objc_attribute
   - redundant_optional_initialization
   - redundant_set_access_control
   - redundant_string_enum_value
+  - redundant_type_annotation
   - redundant_void_return
   - required_enum_case
   - return_arrow_whitespace
@@ -171,13 +171,17 @@ opt_in_rules:
   - unneeded_break_in_switch
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
+  - unused_capture_list
   - unused_closure_parameter
+  - unused_control_flow_label
   - unused_enumerated
   - unused_optional_binding
+  - unused_setter_value
   - valid_ibinspectable
   - vertical_parameter_alignment
   - vertical_parameter_alignment_on_call
   - vertical_whitespace
   - void_return
+  - xct_specific_matcher
   - xctfail_message
   - yoda_condition

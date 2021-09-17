@@ -24,13 +24,13 @@
 
 + (NSArray *)arrayValue:(id)object
 {
-  return (NSArray *)[self _objectValue:object ofClass:[NSArray class]];
+  return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
 }
 
 + (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
 {
   if ([self arrayValue:array] && index < array.count) {
-    return [array objectAtIndex:index];
+    return array[index];
   }
 
   return nil;
@@ -56,10 +56,10 @@
 
 + (BOOL)boolValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     // @0 or @NO returns NO, otherwise YES
     return ((NSNumber *)object).boolValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     // Returns YES on encountering one of "Y", "y", "T", "t", or a digit 1-9, otherwise NO
     return ((NSString *)object).boolValue;
   } else {
@@ -67,14 +67,14 @@
   }
 }
 
-+ (NSDictionary *)dictionaryValue:(id)object
++ (NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
-  return (NSDictionary *)[self _objectValue:object ofClass:[NSDictionary class]];
+  return (NSDictionary<NSString *, id> *)[self _objectValue: object ofClass:[NSDictionary<NSString *, id> class]];
 }
 
-+ (id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type
++ (id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
 {
-  id potentialValue = [[self dictionaryValue:dictionary] objectForKey:key];
+  id potentialValue = [self dictionaryValue:dictionary][key];
 
   if ([potentialValue isKindOfClass:type]) {
     return potentialValue;
@@ -90,9 +90,9 @@
   }
 }
 
-+ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
++ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
 {
-  NSDictionary *validDictionary = [self dictionaryValue:dictionary];
+  NSDictionary<NSString *, id> *validDictionary = [self dictionaryValue:dictionary];
   if (validDictionary) {
     [validDictionary enumerateKeysAndObjectsUsingBlock:block];
   }
@@ -105,9 +105,9 @@
 
 + (NSInteger)integerValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).integerValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return ((NSString *)object).integerValue;
   } else {
     return 0;
@@ -121,16 +121,16 @@
 
 + (id)objectValue:(id)object
 {
-  return ([object isKindOfClass:[NSNull class]] ? nil : object);
+  return ([object isKindOfClass:NSNull.class] ? nil : object);
 }
 
 + (NSString *)coercedToStringValue:(id)object
 {
-  if ([object isKindOfClass:[NSString class]]) {
+  if ([object isKindOfClass:NSString.class]) {
     return (NSString *)object;
-  } else if ([object isKindOfClass:[NSNumber class]]) {
+  } else if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).stringValue;
-  } else if ([object isKindOfClass:[NSURL class]]) {
+  } else if ([object isKindOfClass:NSURL.class]) {
     return ((NSURL *)object).absoluteString;
   } else {
     return nil;
@@ -139,9 +139,9 @@
 
 + (NSTimeInterval)timeIntervalValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).doubleValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return ((NSString *)object).doubleValue;
   } else {
     return 0;
@@ -150,7 +150,7 @@
 
 + (NSUInteger)unsignedIntegerValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).unsignedIntegerValue;
   } else {
     // there is no direct support for strings containing unsigned values > NSIntegerMax - not worth writing ourselves
@@ -165,9 +165,9 @@
 
 + (NSURL *)URLValue:(id)object
 {
-  if ([object isKindOfClass:[NSURL class]]) {
+  if ([object isKindOfClass:NSURL.class]) {
     return (NSURL *)object;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return [NSURL URLWithString:(NSString *)object];
   } else {
     return nil;

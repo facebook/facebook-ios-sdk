@@ -24,12 +24,12 @@
 
  #import <UIKit/UIKit.h>
 
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
  #import <objc/runtime.h>
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
  #import "FBSDKAppEventsUtility.h"
- #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKServerConfigurationManager.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"
@@ -89,7 +89,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
+      NSDictionary<NSString *, id> *AAMRules = FBSDKServerConfigurationManager.shared.cachedServerConfiguration.AAMRules;
       if (AAMRules) {
         [self setupWithRules:AAMRules];
       }
@@ -155,7 +155,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 {
   void (^block)(UIView *) = ^(UIView *view) {
     // Indexing when the view is removed from window and conforms to UITextInput, and skip UIFieldEditor, which is an internval view of UITextField
-    if (![view window] && ![NSStringFromClass([view class]) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
+    if (![view window] && ![NSStringFromClass(view.class) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
       NSString *text = [FBSDKViewHierarchy getText:view];
       NSString *placeholder = [FBSDKViewHierarchy getHint:view];
       BOOL secureTextEntry = [self checkSecureTextEntry:view];
@@ -171,13 +171,13 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
   };
 
-  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIView class] withBlock:block named:@"metadataIndexingUIView"];
+  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIView.class withBlock:block named:@"metadataIndexingUIView"];
 
   // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
   if (@available(iOS 12, *)) {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UITextField class] withBlock:block named:@"metadataIndexingUITextField"];
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
   } else {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:block named:@"metadataIndexingUIControl"];
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIControl.class withBlock:block named:@"metadataIndexingUIControl"];
   }
 }
 
@@ -206,7 +206,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
   NSArray<id> *siblingViews = [self getSiblingViewsOfView:view];
   for (id sibling in siblingViews) {
-    if ([sibling isKindOfClass:[UILabel class]]) {
+    if ([sibling isKindOfClass:UILabel.class]) {
       NSString *text = [self normalizeField:[FBSDKViewHierarchy getText:sibling]];
       if (text.length > 0) {
         [FBSDKTypeUtility array:labels addObject:text];
@@ -218,10 +218,10 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
 - (BOOL)checkSecureTextEntry:(UIView *)view
 {
-  if ([view isKindOfClass:[UITextField class]]) {
+  if ([view isKindOfClass:UITextField.class]) {
     return ((UITextField *)view).secureTextEntry;
   }
-  if ([view isKindOfClass:[UITextView class]]) {
+  if ([view isKindOfClass:UITextView.class]) {
     return ((UITextView *)view).secureTextEntry;
   }
 
@@ -230,10 +230,10 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
 - (UIKeyboardType)getKeyboardType:(UIView *)view
 {
-  if ([view isKindOfClass:[UITextField class]]) {
+  if ([view isKindOfClass:UITextField.class]) {
     return ((UITextField *)view).keyboardType;
   }
-  if ([view isKindOfClass:[UITextView class]]) {
+  if ([view isKindOfClass:UITextView.class]) {
     return ((UITextView *)view).keyboardType;
   }
 
@@ -295,7 +295,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     [FBSDKUserDataStore setInternalHashData:[weakStore[key] componentsJoinedByString:FIELD_K_DELIMITER]
                                     forType:key];
   };
-#ifdef FBSDKTEST
+#if FBTEST
   checkAndAppendDataBlock();
 #else
   dispatch_async(_serialQueue, checkAndAppendDataBlock);
@@ -358,7 +358,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   if (value.length == 0) {
     return @"";
   }
-  return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
+  return [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet].lowercaseString;
 }
 
 - (NSString *)pruneValue:(NSString *)value forKey:(NSString *)key
@@ -373,7 +373,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
       value = @"f";
     }
   } else if ([key isEqualToString:@"r4"] || [key isEqualToString:@"r5"]) {
-    value = [[value componentsSeparatedByCharactersInSet:[[NSCharacterSet letterCharacterSet] invertedSet]] componentsJoinedByString:@""];
+    value = [[value componentsSeparatedByCharactersInSet:[NSCharacterSet.letterCharacterSet invertedSet]] componentsJoinedByString:@""];
   } else if ([key isEqualToString:@"r6"]) {
     value = [FBSDKTypeUtility array:[value componentsSeparatedByString:@"-"] objectAtIndex:0];
   }

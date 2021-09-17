@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKConstants.h"
-#else
 #import <FBSDKCoreKit/FBSDKConstants.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

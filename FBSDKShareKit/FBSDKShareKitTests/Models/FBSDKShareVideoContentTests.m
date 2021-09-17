@@ -57,7 +57,7 @@
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
   [unarchiver setRequiresSecureCoding:YES];
-  FBSDKShareVideoContent *unarchivedObject = [unarchiver decodeObjectOfClass:[FBSDKShareVideoContent class]
+  FBSDKShareVideoContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKShareVideoContent.class
                                                                       forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);
 }
@@ -151,7 +151,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsDefault
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
@@ -169,7 +169,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsVideoData
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
