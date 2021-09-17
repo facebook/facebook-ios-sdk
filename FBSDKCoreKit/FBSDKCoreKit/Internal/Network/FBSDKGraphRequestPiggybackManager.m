@@ -119,8 +119,6 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
           : NSDate.distantFuture);
       }
 
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
@@ -129,9 +127,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                              dataAccessExpirationDate:dataExpirationDate
-                                                                           graphDomain:graphDomain ?: currentToken.graphDomain];
-      #pragma clange diagnostic pop
+                                                              dataAccessExpirationDate:dataExpirationDate];
 
       if (expectedToken == currentToken) {
         [self.tokenWallet setCurrentAccessToken:refreshedToken];

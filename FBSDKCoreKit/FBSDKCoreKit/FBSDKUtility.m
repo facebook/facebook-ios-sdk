@@ -83,14 +83,7 @@
 
 + (NSString *)getGraphDomainFromToken
 {
-  NSString *graphDomain = FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain;
-  if (!graphDomain) {
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    graphDomain = FBSDKAccessToken.currentAccessToken.graphDomain;
-    #pragma clange diagnostic pop
-  }
-  return graphDomain;
+  return FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain;
 }
 
 + (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix

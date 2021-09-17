@@ -87,7 +87,7 @@ NS_SWIFT_NAME(encode(urlString:));
 NS_SWIFT_NAME(sha256Hash(_:));
 
 /**
- Returns the graphdomain stored in FBSDKAuthenticationToken or FBSDKAccessToken 
+ Returns the graphdomain stored in FBSDKAuthenticationToken
  */
 + (NSString *)getGraphDomainFromToken;
 

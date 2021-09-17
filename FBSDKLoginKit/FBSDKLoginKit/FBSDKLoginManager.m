@@ -620,8 +620,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
     FBSDKAccessToken *token;
     if (parameters.accessTokenString) {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       token = [[FBSDKAccessToken alloc] initWithTokenString:parameters.accessTokenString
                                                 permissions:rawGrantedPermissions.allObjects
                                         declinedPermissions:rawDeclinedPermissions.allObjects
@@ -630,9 +628,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                                                      userID:parameters.userID
                                              expirationDate:parameters.expirationDate
                                                 refreshDate:[NSDate date]
-                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate
-                                                graphDomain:parameters.graphDomain];
-      #pragma clange diagnostic pop
+                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate];
     }
 
     return [[FBSDKLoginManagerLoginResult alloc] initWithToken:token

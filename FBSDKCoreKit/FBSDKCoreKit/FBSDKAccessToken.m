@@ -83,36 +83,6 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   return self;
 }
 
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray<NSString *> *)permissions
-                declinedPermissions:(NSArray<NSString *> *)declinedPermissions
-                 expiredPermissions:(NSArray<NSString *> *)expiredPermissions
-                              appID:(NSString *)appID
-                             userID:(NSString *)userID
-                     expirationDate:(NSDate *)expirationDate
-                        refreshDate:(NSDate *)refreshDate
-           dataAccessExpirationDate:(NSDate *)dataAccessExpirationDate
-                        graphDomain:(NSString *)graphDomain
-{
-  FBSDKAccessToken *accessToken =
-  [self
-   initWithTokenString:tokenString
-   permissions:permissions
-   declinedPermissions:declinedPermissions
-   expiredPermissions:expiredPermissions
-   appID:appID
-   userID:userID
-   expirationDate:expirationDate
-   refreshDate:refreshDate
-   dataAccessExpirationDate:dataAccessExpirationDate];
-
-  if (accessToken != nil) {
-    accessToken->_graphDomain = [graphDomain copy];
-  }
-
-  return accessToken;
-}
-
 - (BOOL)hasGranted:(NSString *)permission
 {
   return [self.permissions containsObject:permission];
@@ -195,16 +165,6 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   return currentAccessToken != nil && !currentAccessToken.isExpired;
 }
 
-+ (void)refreshCurrentAccessToken:(FBSDKGraphRequestBlock)completionHandler
-{
-  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    if (completionHandler) {
-      completionHandler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
-    }
-  };
-  [self refreshCurrentAccessTokenWithCompletion:completion];
-}
-
 + (void)refreshCurrentAccessTokenWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
 {
   if ([FBSDKAccessToken currentAccessToken]) {
@@ -250,7 +210,6 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
     self.refreshDate.hash,
     self.expirationDate.hash,
     self.dataAccessExpirationDate.hash,
-    self.graphDomain.hash
   };
   #pragma clange diagnostic pop
 
@@ -281,8 +240,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
     && [FBSDKInternalUtility.sharedUtility object:self.userID isEqualToObject:token.userID]
     && [FBSDKInternalUtility.sharedUtility object:self.refreshDate isEqualToObject:token.refreshDate]
     && [FBSDKInternalUtility.sharedUtility object:self.expirationDate isEqualToObject:token.expirationDate]
-    && [FBSDKInternalUtility.sharedUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]
-    && [FBSDKInternalUtility.sharedUtility object:self.graphDomain isEqualToObject:token.graphDomain]);
+    && [FBSDKInternalUtility.sharedUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]);
   #pragma clange diagnostic pop
 }
 
@@ -312,7 +270,6 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
   NSDate *expirationDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
   NSDate *dataAccessExpirationDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
-  NSString *graphDomain = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
 
   return
   [self
@@ -324,8 +281,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
    userID:userID
    expirationDate:expirationDate
    refreshDate:refreshDate
-   dataAccessExpirationDate:dataAccessExpirationDate
-   graphDomain:graphDomain];
+   dataAccessExpirationDate:dataAccessExpirationDate];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -339,10 +295,6 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   [encoder encodeObject:self.expirationDate forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
   [encoder encodeObject:self.refreshDate forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
   [encoder encodeObject:self.dataAccessExpirationDate forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [encoder encodeObject:self.graphDomain forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
-  #pragma clange diagnostic pop
 }
 
 #pragma mark - Testability

@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Removed
+
+- `AccessToken`'s `graphDomain` property. Replacement - the `graphDomain` property on `AuthenticationToken`
+- `AccessToken`'s convenience initializers that include `graphDomain`
+- `AccessToken`'s `refreshCurrentAccessToken(completionHandler:)`. Replaced by `refreshCurrentAccessToken(completion:)`
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...HEAD)
 
 ## 11.2.0

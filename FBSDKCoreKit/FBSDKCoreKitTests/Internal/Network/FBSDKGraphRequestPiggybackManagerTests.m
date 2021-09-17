@@ -332,16 +332,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @""}];
 
-  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
-       withExpectedGraphDomain:@""];
-}
-
-- (void)testCompletingTokenExtensionRequestWithUpdatedWhitespaceOnlyGraphDomain
-{
-  [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @"    "}];
-
-  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
-       withExpectedGraphDomain:@"    "];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken];
 }
 
 - (void)testCompletingTokenExtensionRequestWithFuzzyValues
@@ -775,35 +766,27 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:SampleAccessTokens.validToken.tokenString
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
            expectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]];
-  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
        withExpectedTokenString:(NSString *)expectedTokenString
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:expectedTokenString
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
            expectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]];
-  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -814,7 +797,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:expectedExpirationDate
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
            expectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]];
@@ -828,21 +810,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:expectedDataExpirationDate
-           expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
-           expectedPermissions:@[]
-   expectedDeclinedPermissions:@[]
-    expectedExpiredPermissions:@[]];
-}
-
-- (void)validateRefreshedToken:(FBSDKAccessToken *)token
-       withExpectedGraphDomain:(NSString *)expectedGraphDomain
-{
-  [self validateRefreshedToken:token
-       withExpectedTokenString:SampleAccessTokens.validToken.tokenString
-           expectedRefreshDate:[NSDate date]
-        expectedExpirationDate:NSDate.distantFuture
-    expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:expectedGraphDomain
            expectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]];
@@ -858,7 +825,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
            expectedPermissions:expectedPermissions
    expectedDeclinedPermissions:expectedDeclinedPermissions
     expectedExpiredPermissions:expectedExpiredPermissions];
@@ -869,7 +835,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:(NSDate *)expectedRefreshDate
         expectedExpirationDate:(NSDate *)expectedExpirationDate
     expectedDataExpirationDate:(NSDate *)expectedDataExpirationDate
-           expectedGraphDomain:(NSString *)expectedGraphDomain
            expectedPermissions:(NSArray *)expectedPermissions
    expectedDeclinedPermissions:(NSArray *)expectedDeclinedPermissions
     expectedExpiredPermissions:(NSArray *)expectedExpiredPermissions
@@ -878,7 +843,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   XCTAssertEqualWithAccuracy(token.refreshDate.timeIntervalSince1970, expectedRefreshDate.timeIntervalSince1970, 1, "A refreshed token should have the expected refresh date");
   XCTAssertEqualObjects(token.expirationDate, expectedExpirationDate, "A refreshed token should have the expected expiration date");
   XCTAssertEqualObjects(token.dataAccessExpirationDate, expectedDataExpirationDate, "A refreshed token should have the expected data access expiration date");
-  XCTAssertEqualObjects(token.graphDomain, expectedGraphDomain, "A refreshed token should have the expected graph domain");
   XCTAssertEqualObjects(token.permissions.allObjects, expectedPermissions, "A refreshed token should have the expected permissions");
   XCTAssertEqualObjects(token.declinedPermissions.allObjects, expectedDeclinedPermissions, "A refreshed token should have the expected declined permissions");
   XCTAssertEqualObjects(token.expiredPermissions.allObjects, expectedExpiredPermissions, "A refreshed token should have the expected expired permissions");

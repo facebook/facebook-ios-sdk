@@ -171,8 +171,6 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                           grantedPermissions:permissions
                                                          declinedPermissions:declinedPermissions
                                                           expiredPermissions:expiredPermissions];
-          #pragma clang diagnostic push
-          #pragma clang diagnostic ignored "-Wdeprecated-declarations"
           FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
                                                                             permissions:permissions.allObjects
                                                                     declinedPermissions:declinedPermissions.allObjects
@@ -181,9 +179,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                                  userID:userID
                                                                          expirationDate:expirationDate
                                                                             refreshDate:nil
-                                                               dataAccessExpirationDate:dataAccessExpirationDate
-                                                                            graphDomain:nil];
-          #pragma clange diagnostic pop
+                                                               dataAccessExpirationDate:dataAccessExpirationDate];
           FBSDKDeviceLoginManagerResult *result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:accessToken
                                                                                            isCancelled:NO];
           [FBSDKAccessToken setCurrentAccessToken:accessToken];

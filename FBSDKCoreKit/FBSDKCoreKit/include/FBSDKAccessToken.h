@@ -166,11 +166,6 @@ NS_REFINED_FOR_SWIFT;
 @property (nonatomic, copy, readonly) NSString *userID;
 
 /**
-  The graph domain where this access token is valid.
- */
-@property (nonatomic, copy, readonly) NSString *graphDomain DEPRECATED_MSG_ATTRIBUTE("The graphDomain property will be removed from AccessToken in the next major release. Use the graphDomain property on AuthenticationToken instead.");
-
-/**
  Returns whether the access token is expired by checking its expirationDate property
  */
 @property (readonly, assign, nonatomic, getter=isExpired) BOOL expired;
@@ -215,39 +210,6 @@ NS_REFINED_FOR_SWIFT;
 NS_DESIGNATED_INITIALIZER;
 
 /**
- Convenience initializer.
- @param tokenString the opaque token string.
- @param permissions the granted permissions. Note this is converted to NSSet and is only
- an NSArray for the convenience of literal syntax.
- @param declinedPermissions the declined permissions. Note this is converted to NSSet and is only
- an NSArray for the convenience of literal syntax.
- @param expiredPermissions the expired permissions. Note this is converted to NSSet and is only
- an NSArray for the convenience of literal syntax.
- @param appID the app ID.
- @param userID the user ID.
- @param expirationDate the optional expiration date (defaults to distantFuture).
- @param refreshDate the optional date the token was last refreshed (defaults to today).
- @param dataAccessExpirationDate the date which data access will expire for the given user
- (defaults to distantFuture).
- @param graphDomain the domain this access token can be used in.
-
- This initializer should only be used for advanced apps that
- manage tokens explicitly. Typical login flows only need to use `FBSDKLoginManager`
- along with `+currentAccessToken`.
- */
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray<NSString *> *)permissions
-                declinedPermissions:(NSArray<NSString *> *)declinedPermissions
-                 expiredPermissions:(NSArray<NSString *> *)expiredPermissions
-                              appID:(NSString *)appID
-                             userID:(NSString *)userID
-                     expirationDate:(nullable NSDate *)expirationDate
-                        refreshDate:(nullable NSDate *)refreshDate
-           dataAccessExpirationDate:(nullable NSDate *)dataAccessExpirationDate
-                        graphDomain:(nullable NSString *)graphDomain
-DEPRECATED_MSG_ATTRIBUTE("The graphDomain property will be removed from AccessToken in the next major release. Use initializers that do not take in graphDomain domain instead.");
-
-/**
   Convenience getter to determine if a permission has been granted
  @param permission  The permission to check.
  */
@@ -260,19 +222,6 @@ NS_SWIFT_NAME(hasGranted(permission:));
  @return YES if the receiver's values are equal to the other token's values; otherwise NO
  */
 - (BOOL)isEqualToAccessToken:(FBSDKAccessToken *)token;
-
-/**
-  Refresh the current access token's permission state and extend the token's expiration date,
-  if possible.
- @param completionHandler an optional callback handler that can surface any errors related to permission refreshing.
-
- On a successful refresh, the currentAccessToken will be updated so you typically only need to
-  observe the `FBSDKAccessTokenDidChangeNotification` notification.
-
- If a token is already expired, it cannot be refreshed.
- */
-+ (void)refreshCurrentAccessToken:(nullable FBSDKGraphRequestBlock)completionHandler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `refreshCurrentAccessTokenWithCompletion:` instead");
 
 /**
   Refresh the current access token's permission state and extend the token's expiration date,
