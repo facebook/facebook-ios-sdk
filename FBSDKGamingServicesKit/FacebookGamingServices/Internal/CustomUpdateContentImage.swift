@@ -20,7 +20,6 @@ import UIKit
 
 public class CustomUpdateContentImage {
 
-  var contextTokenID: String
   var message: String
   var image: UIImage?
   var ctaText: String?
@@ -32,7 +31,6 @@ public class CustomUpdateContentImage {
    Init method for a custom update content with an image
 
    - Parameters:
-    - contextTokenID: The context token id of the game instance in which to send the update
     - message:  The message to be display in the update
     - image: The image to display in the update
     - cta: The text to display in the action button for the update
@@ -40,18 +38,14 @@ public class CustomUpdateContentImage {
     - messageLocalization: A dictionary of any Localization that should be applied to the message
     - ctaLocalization: A dictionary of any Localization that should be applied to the CTA
    */
-  public convenience init(
-    contextTokenID: String,
+  public init(
     message: String,
     image: UIImage,
-    cta: String?,
-    payload: String?,
-    messageLocalization: [String: String],
-    ctaLocalization: [String: String]
+    cta: String? = nil,
+    payload: String? = nil,
+    messageLocalization: [String: String] = [:],
+    ctaLocalization: [String: String] = [:]
   ) {
-    self.init(contextTokenID: contextTokenID, message: message)
-
-    self.contextTokenID = contextTokenID
     self.message = message
     self.image = image
     self.ctaText = cta
@@ -60,30 +54,4 @@ public class CustomUpdateContentImage {
     self.ctaLocalization = ctaLocalization
   }
 
-  /**
-    initializer for the required content values to send a custom update request
-
-   - Parameters:
-    - contextTokenID: The context token id of the game instance the user triggering the custom update is currently in
-    - message: The message to be displayed in the update
-    - image: The image to display in the update
-    */
-  public convenience init(contextTokenID: String, message: String, image: UIImage) {
-    self.init(contextTokenID: contextTokenID, message: message)
-    self.image = image
-  }
-
-  /**
-     Private initializer used in the convenience initializers.
-
-   - Parameters:
-    - contextTokenID: The context token id of the game instance the user triggering the custom update is currently in
-    - message: The message to be displayed in the update
-    */
-  private init(contextTokenID: String, message: String) {
-    self.contextTokenID = contextTokenID
-    self.message = message
-    self.messageLocalization = [:]
-    self.ctaLocalization = [:]
-  }
 }

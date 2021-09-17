@@ -37,19 +37,16 @@ class CustomUpdateContentTests: XCTestCase {
 
   func testCustomUpdateContentMediaInitWithOnlyRequiredValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentMedia(
-      contextTokenID: contextToken,
       message: validMessage,
       media: gif
     ))
 
-    XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
     XCTAssertEqual(gif, content.media as? FacebookGIF)
   }
 
   func testCustomUpdateContentMediaInitWithAllValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentMedia(
-      contextTokenID: contextToken,
       message: validMessage,
       media: gif,
       cta: ctaText,
@@ -58,7 +55,6 @@ class CustomUpdateContentTests: XCTestCase {
       ctaLocalization: localization
     ))
 
-    XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
     XCTAssertEqual(gif, content.media as? FacebookGIF)
     XCTAssertEqual(ctaText, content.ctaText)
@@ -69,19 +65,16 @@ class CustomUpdateContentTests: XCTestCase {
 
   func testCustomUpdateContentImageInitWithOnlyRequiredValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentImage(
-      contextTokenID: contextToken,
       message: validMessage,
       image: validImage
     ))
 
-    XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
     XCTAssertEqual(validImage, content.image)
   }
 
   func testCustomUpdateContentImageInitWithAllValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentImage(
-      contextTokenID: contextToken,
       message: validMessage,
       image: validImage,
       cta: ctaText,
@@ -90,7 +83,6 @@ class CustomUpdateContentTests: XCTestCase {
       ctaLocalization: localization
     ))
 
-    XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
     XCTAssertEqual(validImage, content.image)
     XCTAssertEqual(ctaText, content.ctaText)

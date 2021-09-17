@@ -26,6 +26,7 @@ enum CustomUpdateContentObjects {
   static var validID = "12345"
   static var validMessage = "Hello"
   static var gifMedia = FacebookGIF(withUrl: URL(string: "www.test.com")!)
+  static var invalidGifMedia = FacebookGIF(withUrl: URL(string: "")!)
   @available(iOS 13.0, *)
   static var validImage = UIImage(
     named: "customColorSilhouette",
@@ -34,71 +35,14 @@ enum CustomUpdateContentObjects {
   )!
 
   @available(iOS 13.0, *)
-  static let imageContentInvalidContextID = {
-    return CustomUpdateContentImage(
-      contextTokenID: "",
-      message: validMessage,
-      image: validImage
-    )
-  }
-
+  static let imageContentInvalidMessage = CustomUpdateContentImage(message: "", image: validImage)
+  static let imageContentInvalidImage = CustomUpdateContentImage(message: validMessage, image: UIImage())
   @available(iOS 13.0, *)
-  static let imageContentInvalidMessage = {
-    return CustomUpdateContentImage(
-      contextTokenID: validID,
-      message: "",
-      image: validImage
-    )
-  }
+  static let imageContentValid = CustomUpdateContentImage(message: validMessage, image: validImage)
+  static let mediaContentInvalidMessage = CustomUpdateContentMedia(message: "", media: gifMedia)
+  static let mediaContentInvalidMedia = CustomUpdateContentMedia(message: validMessage, media: invalidGifMedia)
+  static let mediaContentValid = CustomUpdateContentMedia(message: validMessage, media: gifMedia)
 
-  static let imageContentInvalidImage = {
-    return CustomUpdateContentImage(
-      contextTokenID: validID,
-      message: validMessage,
-      image: UIImage()
-    )
-  }
-
-  @available(iOS 13.0, *)
-  static let imageContentValid = {
-    return CustomUpdateContentImage(
-      contextTokenID: validID,
-      message: validMessage,
-      image: validImage
-    )
-  }
-
-  static let mediaContentInvalidContextID = {
-    return CustomUpdateContentMedia(
-      contextTokenID: "",
-      message: validMessage,
-      media: gifMedia
-    )
-  }
-
-  static let mediaContentInvalidMessage = {
-    return CustomUpdateContentMedia(
-      contextTokenID: validID,
-      message: "",
-      media: gifMedia
-    )
-  }
-
-  static let mediaContentInvalidMedia = {
-    return CustomUpdateContentMedia(
-      contextTokenID: validID,
-      message: validMessage,
-      media: gifMedia
-    )
-  }
-
-  static let mediaContentValid = {
-    return CustomUpdateContentMedia(
-      contextTokenID: validID,
-      message: validMessage,
-      media: gifMedia
-    )
-  }
 }
 
 enum CustomUpdateContentObjectsParameters {

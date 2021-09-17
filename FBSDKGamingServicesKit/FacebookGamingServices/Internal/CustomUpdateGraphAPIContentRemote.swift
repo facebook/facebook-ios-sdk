@@ -28,20 +28,26 @@ class CustomUpdateGraphAPIContentRemote: Codable {
   var image: Data?
   var data: String?
 
-  init?(customUpdateContentMedia: CustomUpdateContentMedia) {
+  init(customUpdateContentMedia: CustomUpdateContentMedia) throws {
+    guard let currentContextID = GamingContext.current?.identifier else {
+      throw CustomUpdateContentError.notInGameContext
+    }
+
+    guard let message = CustomUpdateLocalizedText(
+      defaultString: customUpdateContentMedia.message,
+      localizations: customUpdateContentMedia.messageLocalization
+    ) else {
+      throw CustomUpdateContentError.invalidMessage
+    }
+
     guard
-      !customUpdateContentMedia.contextTokenID.isEmpty,
-      let message = CustomUpdateLocalizedText(
-        defaultString: customUpdateContentMedia.message,
-        localizations: customUpdateContentMedia.messageLocalization
-      ),
       let media = customUpdateContentMedia.media,
       let customUpdateMedia = CustomUpdateMedia(media: media)
     else {
-      return nil
+      throw CustomUpdateContentError.invalidMedia
     }
 
-    self.contextTokenID = customUpdateContentMedia.contextTokenID
+    self.contextTokenID = currentContextID
     self.text = message
     self.cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentMedia.ctaText ?? "",
@@ -51,18 +57,25 @@ class CustomUpdateGraphAPIContentRemote: Codable {
     self.media = customUpdateMedia
   }
 
-  init?(customUpdateContentImage: CustomUpdateContentImage) {
+  init(customUpdateContentImage: CustomUpdateContentImage) throws {
+    guard let currentContextID = GamingContext.current?.identifier else {
+      throw CustomUpdateContentError.notInGameContext
+    }
+
+    guard let message = CustomUpdateLocalizedText(
+      defaultString: customUpdateContentImage.message,
+      localizations: customUpdateContentImage.messageLocalization
+    ) else {
+      throw CustomUpdateContentError.invalidMessage
+    }
+
     guard
-      !customUpdateContentImage.contextTokenID.isEmpty,
-      let message = CustomUpdateLocalizedText(
-        defaultString: customUpdateContentImage.message,
-        localizations: customUpdateContentImage.messageLocalization
-      ),
       let imageData = customUpdateContentImage.image?.pngData()
     else {
-      return nil
+      throw CustomUpdateContentError.invalidImage
     }
-    self.contextTokenID = customUpdateContentImage.contextTokenID
+
+    self.contextTokenID = currentContextID
     self.text = message
     self.cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentImage.ctaText ?? "",

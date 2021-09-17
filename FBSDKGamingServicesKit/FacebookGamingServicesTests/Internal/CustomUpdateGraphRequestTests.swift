@@ -26,6 +26,7 @@ import XCTest
 class CustomUpdateGraphRequestTests: XCTestCase {
   let factory = TestGraphRequestFactory()
   lazy var requester = CustomUpdateGraphRequest(graphRequestFactory: factory)
+  var validContextTokenID = "12345"
   let validMediaContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
@@ -37,6 +38,12 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
     CustomUpdateContentObjectsParameters.imageKey: CustomUpdateContentObjectsParameters.imageValue
   ]
+
+  override func setUp() {
+    super.setUp()
+    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+
+  }
 
   func testDependencies() {
     let requester = CustomUpdateGraphRequest()
@@ -56,7 +63,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   // MARK: - CustomUpdateContentMedia
 
   func testPerformRequest() throws {
-    try requester.request(content: CustomUpdateContentObjects.mediaContentValid()) { _ in
+    try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { _ in
       XCTFail("Should not reach here")
     }
 
@@ -79,22 +86,9 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     )
   }
 
-  func testHandlingRequestInvalidMediaContentError() throws {
-    try requester.request(content: CustomUpdateContentObjects.mediaContentInvalidContextID()) { result in
-      switch result {
-      case .failure(let error):
-        guard case .contentParsing = error else {
-          return XCTFail("Should not be a decoding error")
-        }
-      case .success:
-        XCTFail("Should not succeed")
-      }
-    }
-  }
-
   func testHandlingRequestError() throws {
     var completionWasInvoked = false
-    try requester.request(content: CustomUpdateContentObjects.mediaContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -115,7 +109,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
   func testHandlingRequestInvalidResult() throws {
     var completionWasInvoked = false
-    try requester.request(content: CustomUpdateContentObjects.mediaContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -139,7 +133,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     var didSucceed = false
 
-    try requester.request(content: CustomUpdateContentObjects.mediaContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
       case .failure(let error):
         return XCTFail(
@@ -162,7 +156,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     var didSucceed = false
 
-    try requester.request(content: CustomUpdateContentObjects.mediaContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
       case .failure(let error):
         return XCTFail(
@@ -184,7 +178,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   // MARK: - CustomUpdateContentImage
 
   func testPerformRequestWithImageContent() throws {
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { _ in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { _ in
       XCTFail("Should not reach here")
     }
 
@@ -208,7 +202,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   }
 
   func testHandlingRequestInvalidImageContentError() throws {
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
       case .failure(let error):
         guard case .contentParsing = error else {
@@ -222,7 +216,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
   func testHandlingRequestErrorWithImageContent() throws {
     var completionWasInvoked = false
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -243,7 +237,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
   func testHandlingRequestInvalidResultWithImageContent() throws {
     var completionWasInvoked = false
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -267,7 +261,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     var didSucceed = false
 
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
       case .failure(let error):
         return XCTFail(
@@ -290,7 +284,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     var didSucceed = false
 
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid()) { result in
+    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
       case .failure(let error):
         return XCTFail(

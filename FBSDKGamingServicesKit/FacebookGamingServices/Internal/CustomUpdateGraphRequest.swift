@@ -51,17 +51,13 @@ public class CustomUpdateGraphRequest {
 
    - Parameters:
     - content: A media custom update request content
-    - completionHandler:  A completion handler to be invoked if an
+    - completionHandler:  A completion handler to be invoked with the graph request success result or error
    */
   public func request(
     content: CustomUpdateContentMedia,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
-  )
-  throws {
-    guard let remoteContent = CustomUpdateGraphAPIContentRemote(customUpdateContentMedia: content) else {
-      return completionHandler(.failure(.contentParsing))
-    }
-
+  ) throws {
+    let remoteContent = try CustomUpdateGraphAPIContentRemote(customUpdateContentMedia: content)
     let parameters = try parameterDictionary(content: remoteContent)
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: graphPath,
@@ -77,16 +73,13 @@ public class CustomUpdateGraphRequest {
 
    - Parameters:
     - content: An image custom update request content
-    - completionHandler:  A completion handler to be invoked if an
+    - completionHandler:  A completion handler to be invoked if  with the graph request success result or error
    */
   public func request(
     content: CustomUpdateContentImage,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
-  )
-  throws {
-    guard let remoteContent = CustomUpdateGraphAPIContentRemote(customUpdateContentImage: content) else {
-      return completionHandler(.failure(.contentParsing))
-    }
+  ) throws {
+    let remoteContent = try CustomUpdateGraphAPIContentRemote(customUpdateContentImage: content)
     let parameters = try parameterDictionary(content: remoteContent)
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: graphPath,
