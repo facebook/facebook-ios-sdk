@@ -12,6 +12,7 @@ projectReferences:
 settings:
   base:
     PRODUCT_BUNDLE_IDENTIFIER: com.facebook.TestTools
+    SWIFT_OBJC_BRIDGING_HEADER: TestTools/TestTools-Bridging-Header.h
 
 targets:
   TestTools:

@@ -16,17 +16,4 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAuthenticationToken.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKAuthenticationToken (Testing)
-
-@property (class, nonatomic) FBSDKAuthenticationToken *currentAuthenticationToken;
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
-@end
-
-NS_ASSUME_NONNULL_END
+#import <TestTools/FBSDKAuthenticationToken+Testing.h>

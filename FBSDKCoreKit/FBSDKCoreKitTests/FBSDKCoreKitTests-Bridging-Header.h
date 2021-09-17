@@ -77,7 +77,6 @@
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
-#import "FBSDKAuthenticationToken+Testing.h"
 #import "FBSDKAuthenticationTokenProtocols.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKBridgeAPIProtocolNativeV1.h"

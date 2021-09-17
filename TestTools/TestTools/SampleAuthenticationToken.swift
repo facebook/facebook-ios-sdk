@@ -16,13 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class SampleAuthenticationToken: NSObject {
+import FBSDKCoreKit
+import Foundation
 
-  static var validToken: AuthenticationToken {
+@objcMembers
+public class SampleAuthenticationToken: NSObject {
+
+  public static var validToken: AuthenticationToken {
     AuthenticationToken(
       tokenString: "fakeTokenString",
       nonce: "fakeNonce"
     )
   }
+
+  public static func validToken(withGraphDomain domain: String) -> AuthenticationToken {
+    AuthenticationToken(
+      tokenString: "fakeTokenString",
+      nonce: "fakeNonce",
+      graphDomain: domain
+    )
+  }
+
 }
