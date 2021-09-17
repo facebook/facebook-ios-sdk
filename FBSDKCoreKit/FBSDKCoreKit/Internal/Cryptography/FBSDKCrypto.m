@@ -22,6 +22,8 @@
 
 #import "FBSDKDynamicFrameworkLoader.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static inline void FBSDKCryptoBlankData(NSData *data)
 {
   if (!data) {
@@ -32,7 +34,7 @@ static inline void FBSDKCryptoBlankData(NSData *data)
 
 @implementation FBSDKCrypto
 
-+ (NSData *)randomBytes:(NSUInteger)numOfBytes
++ (nullable NSData *)randomBytes:(NSUInteger)numOfBytes
 {
   uint8_t *buffer = malloc(numOfBytes);
   int result = fbsdkdfl_SecRandomCopyBytes([FBSDKDynamicFrameworkLoader loadkSecRandomDefault], numOfBytes, buffer);
@@ -52,3 +54,5 @@ static inline void FBSDKCryptoBlankData(NSData *data)
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
