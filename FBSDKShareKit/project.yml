@@ -45,12 +45,12 @@ settings:
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
     SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
-    PRODUCT_NAME: FBSDKShareKit
 
 targets:
   FBSDKShareKit-Static:
     type: framework
     platform: iOS
+    productName: FBSDKShareKit
     sources:
       - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
         headerVisibility: project
@@ -120,7 +120,6 @@ targets:
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-      PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKit_TV-Static:
     type: framework
     platform: tvOS
@@ -181,8 +180,6 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -244,8 +241,6 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKitTests:
     type: bundle.unit-test
     platform: iOS

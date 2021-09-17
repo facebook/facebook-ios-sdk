@@ -38,12 +38,12 @@ settings:
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: false
     SWIFT_OPTIMIZATION_LEVEL: -O
-    PRODUCT_NAME: FBAEMKit
 
 targets:
   FBAEMKit-Static:
     type: framework
     platform: iOS
+    productName: FBAEMKit
     sources:
       - path: ../Sources/FBAEMKit
         headerVisibility: project
@@ -78,8 +78,6 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
-    settings:
-      PRODUCT_NAME: FBAEMKit
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh

@@ -45,12 +45,12 @@ settings:
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
     SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
-    PRODUCT_NAME: FBSDKLoginKit
 
 targets:
   FBSDKLoginKit-Static:
     type: framework
     platform: iOS
+    productName: FBSDKLoginKit
     sources:
       - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
         headerVisibility: project
@@ -115,7 +115,6 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKLoginKit
   FBSDKLoginKit_TV-Static:
     type: framework
     platform: tvOS
@@ -166,7 +165,6 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKLoginKit
   FBSDKLoginKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -217,7 +215,6 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKLoginKit
   FBSDKLoginKitTests:
     type: bundle.unit-test
     platform: iOS

@@ -32,12 +32,12 @@ settings:
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: false
     SWIFT_OPTIMIZATION_LEVEL: -O
-    PRODUCT_NAME: FBSDKCoreKit_Basics
 
 targets:
   FBSDKCoreKit_Basics-Static:
     type: framework
     platform: iOS
+    productName: FBSDKCoreKit_Basics
     sources:
       - ../Sources/FBSDKCoreKit_Basics
     configFiles:
@@ -58,8 +58,6 @@ targets:
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
-    settings:
-      PRODUCT_NAME: FBSDKCoreKit_Basics
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
@@ -72,8 +70,6 @@ targets:
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
-    settings:
-      PRODUCT_NAME: FBSDKCoreKit_Basics
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
@@ -89,8 +85,6 @@ targets:
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
-    settings:
-      PRODUCT_NAME: FBSDKCoreKit_Basics
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh

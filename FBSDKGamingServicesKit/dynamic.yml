@@ -43,7 +43,6 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FacebookGamingServices
     transitivelyLinkDependencies: true
   FBSDKGamingServicesKit-Dynamic:
     type: framework
@@ -64,5 +63,4 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit FacebookGamingServicesTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKGamingServicesKit
     transitivelyLinkDependencies: true

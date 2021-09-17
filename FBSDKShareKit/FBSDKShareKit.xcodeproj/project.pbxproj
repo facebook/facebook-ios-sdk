@@ -391,7 +391,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 95C282131ED0EE610B595083 /* FBSDKCoreKit */;
 			proxyType = 2;
-			remoteGlobalIDString = 183251C53D6990EC82E3DE39;
+			remoteGlobalIDString = F84B61CDD98A2F242F5BF044;
 			remoteInfo = "FBSDKCoreKit-Static";
 		};
 		782E8C511353DF2C13D187D8 /* PBXContainerItemProxy */ = {
@@ -412,7 +412,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8A1D34466657820519D250B7 /* FBSDKCoreKit_Basics */;
 			proxyType = 2;
-			remoteGlobalIDString = 466819BA148412564E784A23;
+			remoteGlobalIDString = FFB1B135B1C613F878D13E07;
 			remoteInfo = "FBSDKCoreKit_Basics-Static";
 		};
 		A14D10CE3C53FBF8A619C0D1 /* PBXContainerItemProxy */ = {
@@ -500,7 +500,6 @@
 		07DC95DF804D443EE2449872 /* FBSDKCameraEffectArguments+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectArguments+Internal.h"; sourceTree = "<group>"; };
 		09841CC71A63855F5B741484 /* FBSDKSharePhotoContentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContentTests.m; sourceTree = "<group>"; };
 		09D2609E6E872DEE21F325E1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
-		09EFC2D1D720ADBAF5ADF771 /* FBSDKShareKit-Static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBSDKShareKit-Static.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AFAFA5F7C388441B101ADF4 /* TestBridgeAPIRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestFactory.swift; sourceTree = "<group>"; };
 		0BEF5A4942ADA087798C013D /* FBSDKShareBridgeAPIRequestFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareBridgeAPIRequestFactory.m; sourceTree = "<group>"; };
 		0C59765D7C510F3D3FD2D283 /* FBSDKShareMediaContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareMediaContent.h; sourceTree = "<group>"; };
@@ -573,6 +572,7 @@
 		8B372BBF89738C7EA0DFB12D /* Enums+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+Extensions.swift"; sourceTree = "<group>"; };
 		8F2A69495F9D0BEBCD8C4C62 /* FBSDKShareLinkContentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareLinkContentTests.m; sourceTree = "<group>"; };
 		8F5227BBF4B0C473A5A514AA /* FBSDKShareKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKit.h; sourceTree = "<group>"; };
+		9069A7A33A735790DEBE3364 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91073DE1C6E4051C4CACE3D7 /* ShareMediaContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMediaContentTests.swift; sourceTree = "<group>"; };
 		91EC0E6953C727E3614CDC9E /* FBSDKSharingValidation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingValidation.h; sourceTree = "<group>"; };
 		941491F769964F03329B3CAD /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
@@ -925,8 +925,8 @@
 		C681651561454F4DB1AE1820 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				09EFC2D1D720ADBAF5ADF771 /* FBSDKShareKit-Static.framework */,
 				227EEAA2262AD634B42FD444 /* FBSDKShareKit.framework */,
+				9069A7A33A735790DEBE3364 /* FBSDKShareKit.framework */,
 				2FCA1161E832D9DCC7E65E4E /* FBSDKShareKit.framework */,
 				C2E344ED2ABEC31089D167E0 /* FBSDKShareKit.framework */,
 				C2F9CFE8D8E4BEF1F596541C /* FBSDKShareKitTests.xctest */,
@@ -1250,7 +1250,7 @@
 			);
 			name = "FBSDKShareKit-Static";
 			productName = "FBSDKShareKit-Static";
-			productReference = 09EFC2D1D720ADBAF5ADF771 /* FBSDKShareKit-Static.framework */;
+			productReference = 9069A7A33A735790DEBE3364 /* FBSDKShareKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1727,7 +1727,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1787,7 +1786,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1800,7 +1798,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1812,7 +1809,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				ENABLE_NS_ASSERTIONS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = FBSDKShareKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -1826,7 +1823,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				ENABLE_NS_ASSERTIONS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = FBSDKShareKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -1858,7 +1855,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1890,7 +1886,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1905,7 +1900,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
-				PRODUCT_NAME = FBSDKShareKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

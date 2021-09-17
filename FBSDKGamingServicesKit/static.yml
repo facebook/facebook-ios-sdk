@@ -20,6 +20,7 @@ targets:
   FacebookGamingServices-Static:
     type: framework
     platform: iOS
+    productName: FacebookGamingServices
     sources:
       - path: FacebookGamingServices
         headerVisibility: public
@@ -41,10 +42,10 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FacebookGamingServices
   FBSDKGamingServicesKit-Static:
     type: framework
     platform: iOS
+    productName: FBSDKGamingServicesKit
     sources:
       - path: ../Sources/FBSDKGamingServicesKit
         group: Sources
@@ -58,4 +59,3 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKGamingServicesKit

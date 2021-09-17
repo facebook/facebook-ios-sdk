@@ -324,7 +324,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 2FA4AF0648972F6E0F2269F3 /* FBSDKCoreKit_Basics */;
 			proxyType = 2;
-			remoteGlobalIDString = 466819BA148412564E784A23;
+			remoteGlobalIDString = FFB1B135B1C613F878D13E07;
 			remoteInfo = "FBSDKCoreKit_Basics-Static";
 		};
 		A246B4B36092121651BA5509 /* PBXContainerItemProxy */ = {
@@ -394,7 +394,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = C338D68292DBAE21D2A5C363 /* FBSDKCoreKit */;
 			proxyType = 2;
-			remoteGlobalIDString = 183251C53D6990EC82E3DE39;
+			remoteGlobalIDString = F84B61CDD98A2F242F5BF044;
 			remoteInfo = "FBSDKCoreKit-Static";
 		};
 		FDB3EB84948E98B439E52E52 /* PBXContainerItemProxy */ = {
@@ -411,6 +411,7 @@
 		05614BA2D383EC9E83C14F94 /* FBSDKLoginCompletionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginCompletionTests.m; sourceTree = "<group>"; };
 		0580E794DBA6974CD714D977 /* FBSDKReferralCode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralCode.m; sourceTree = "<group>"; };
 		06164DD73DED901C9412CA4F /* FBSDKLoginKitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKLoginKitTests.xcconfig; sourceTree = "<group>"; };
+		0634D2BF1FF272DEF25C483D /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07658CBD88E9B85A318A2C7B /* FBSDKLoginUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginUtility.h; sourceTree = "<group>"; };
 		09577FC8D4C192134EE3C5EF /* FBSDKProfileFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKProfileFactory.h; sourceTree = "<group>"; };
 		0BD98769468F59C0B19252D9 /* FBSDKLoginProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginProviding.h; sourceTree = "<group>"; };
@@ -493,7 +494,6 @@
 		C338D68292DBAE21D2A5C363 /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 		C3E52CF469915633BEFE149A /* FBSDKLoginKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginKit.h; sourceTree = "<group>"; };
 		C473AA5FC46BF84C13CC2C16 /* FBSDKAuthenticationTokenHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenHeader.h; sourceTree = "<group>"; };
-		C54E57389C33D521DFCD18F5 /* FBSDKLoginKit-Static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBSDKLoginKit-Static.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6FBE72098CC1ADDE0F94F05 /* FBSDKNonceUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKNonceUtility.m; sourceTree = "<group>"; };
 		C8945DA9872FCB14E407CA7A /* FBSDKLoginKit-Static.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-Static.xcconfig"; sourceTree = "<group>"; };
 		C8F1055BC2798D9506C682D5 /* FBSDKSettings+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKSettings+Testing.h"; sourceTree = "<group>"; };
@@ -656,8 +656,8 @@
 		63AFE79D4EAAA6E9DB61C19A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C54E57389C33D521DFCD18F5 /* FBSDKLoginKit-Static.framework */,
 				922E212B41FB34F2CB951BA5 /* FBSDKLoginKit.framework */,
+				0634D2BF1FF272DEF25C483D /* FBSDKLoginKit.framework */,
 				E0E6A39520FF5A42A7DCC80D /* FBSDKLoginKit.framework */,
 				EBF6403F232B2DF29FD7824E /* FBSDKLoginKit.framework */,
 				C06FAF9CB90AC943E3EA9D7C /* FBSDKLoginKitTests.xctest */,
@@ -968,7 +968,7 @@
 			);
 			name = "FBSDKLoginKit-Static";
 			productName = "FBSDKLoginKit-Static";
-			productReference = C54E57389C33D521DFCD18F5 /* FBSDKLoginKit-Static.framework */;
+			productReference = 0634D2BF1FF272DEF25C483D /* FBSDKLoginKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		4F32F324235358EB2B4635AF /* FBSDKLoginKit_TV-Static */ = {
@@ -1489,7 +1489,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1504,7 +1503,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1525,7 +1523,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1537,7 +1534,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				ENABLE_NS_ASSERTIONS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = FBSDKLoginKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -1558,7 +1555,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				ENABLE_NS_ASSERTIONS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				PRODUCT_NAME = FBSDKLoginKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -1595,7 +1592,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1609,7 +1605,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1658,7 +1653,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FBSDKLoginKit/Info.plist;
-				PRODUCT_NAME = FBSDKLoginKit;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

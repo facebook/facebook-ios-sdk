@@ -41,12 +41,12 @@ settings:
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
     SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
-    PRODUCT_NAME: FBSDKCoreKit
 
 targets:
   FBSDKCoreKit-Static:
     type: framework
     platform: iOS
+    productName: FBSDKCoreKit
     sources:
       - path: FBSDKCoreKit/include
         headerVisibility: public
@@ -220,8 +220,6 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      PRODUCT_NAME: FBSDKCoreKit
   FBSDKCoreKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -326,8 +324,6 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      PRODUCT_NAME: FBSDKCoreKit
   FBSDKCoreKitTests:
     type: bundle.unit-test
     platform: iOS
