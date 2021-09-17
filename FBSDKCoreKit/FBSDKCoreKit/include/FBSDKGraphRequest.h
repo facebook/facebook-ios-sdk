@@ -161,13 +161,6 @@ NS_SWIFT_NAME(GraphRequest)
 
 /**
   Starts a connection to the Graph API.
- @param handler The handler block to call when the request completes.
- */
-- (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(nullable FBSDKGraphRequestBlock)handler
-    DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `startWithCompletion:` instead`");
-
-/**
-  Starts a connection to the Graph API.
  @param completion The handler block to call when the request completes.
  */
 - (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion;

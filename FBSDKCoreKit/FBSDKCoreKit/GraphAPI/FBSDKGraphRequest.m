@@ -266,15 +266,6 @@ static id<FBSDKSettings> _settings;
   _settings = settings;
 }
 
-- (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(FBSDKGraphRequestBlock)handler
-{
-  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
-  };
-
-  return [self startWithCompletion:completion];
-}
-
 - (id<FBSDKGraphRequestConnecting>)startWithCompletion:(FBSDKGraphRequestCompletion)completion
 {
   id<FBSDKGraphRequestConnecting> connection = [self.connectionFactory createGraphRequestConnection];
