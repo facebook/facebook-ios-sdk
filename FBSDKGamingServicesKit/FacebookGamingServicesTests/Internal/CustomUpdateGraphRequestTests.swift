@@ -27,6 +27,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   let factory = TestGraphRequestFactory()
   lazy var requester = CustomUpdateGraphRequest(graphRequestFactory: factory)
   var validContextTokenID = "12345"
+
   let validMediaContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
@@ -42,7 +43,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   override func setUp() {
     super.setUp()
     GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
-
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
   }
 
   func testDependencies() {
@@ -84,6 +85,19 @@ class CustomUpdateGraphRequestTests: XCTestCase {
       validMediaContentParameterDictionary,
       "Request should have the correct parameters"
     )
+  }
+
+  func testHandlingRequestInvalidMediaContentError() throws {
+    var caughtContentError = false
+    do {
+      try requester.request(content: CustomUpdateContentObjects.mediaContentInvalidMessage) { _ in
+        XCTFail("Should not succeed")
+      }
+    } catch CustomUpdateContentError.invalidMessage {
+      caughtContentError = true
+    }
+
+    XCTAssertTrue(caughtContentError, "Should throw an invalid message content error")
   }
 
   func testHandlingRequestError() throws {
@@ -202,16 +216,16 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   }
 
   func testHandlingRequestInvalidImageContentError() throws {
-    try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
-      switch result {
-      case .failure(let error):
-        guard case .contentParsing = error else {
-          return XCTFail("Should not be a decoding error")
-        }
-      case .success:
-        XCTFail("Should not succeed")
+    var caughtContentError = false
+    do {
+      try requester.request(content: CustomUpdateContentObjects.imageContentInvalidImage) { _ in
+        XCTFail("Should not reach here")
       }
+    } catch CustomUpdateContentError.invalidImage {
+      caughtContentError = true
     }
+
+    XCTAssertTrue(caughtContentError, "Should throw an invalid image content error")
   }
 
   func testHandlingRequestErrorWithImageContent() throws {

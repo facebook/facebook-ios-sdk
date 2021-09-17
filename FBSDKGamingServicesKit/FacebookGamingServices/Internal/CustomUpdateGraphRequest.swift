@@ -28,6 +28,7 @@ struct ServerResult: Codable {
  */
 public enum CustomUpdateGraphRequestError: Error {
   case server(Error)
+  case invalidAccessToken
   case contentParsing
   case decoding
 }
@@ -36,6 +37,7 @@ public class CustomUpdateGraphRequest {
 
   public let graphRequestFactory: GraphRequestProviding
   let graphPath = "me/custom_update"
+  let gamingGraphDomain = "gaming"
   let base64EncodedImageHeader = "data:image/png;base64,"
 
   public init() {
@@ -57,6 +59,10 @@ public class CustomUpdateGraphRequest {
     content: CustomUpdateContentMedia,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
   ) throws {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+      throw CustomUpdateGraphRequestError.invalidAccessToken
+    }
+
     let remoteContent = try CustomUpdateGraphAPIContentRemote(customUpdateContentMedia: content)
     let parameters = try parameterDictionary(content: remoteContent)
     let request = graphRequestFactory.createGraphRequest(
@@ -79,6 +85,10 @@ public class CustomUpdateGraphRequest {
     content: CustomUpdateContentImage,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
   ) throws {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+      throw CustomUpdateGraphRequestError.invalidAccessToken
+    }
+
     let remoteContent = try CustomUpdateGraphAPIContentRemote(customUpdateContentImage: content)
     let parameters = try parameterDictionary(content: remoteContent)
     let request = graphRequestFactory.createGraphRequest(
