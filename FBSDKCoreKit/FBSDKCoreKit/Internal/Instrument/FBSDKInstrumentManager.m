@@ -42,7 +42,7 @@
 - (instancetype)init
 {
   FBSDKCrashObserver *crashObserver = [[FBSDKCrashObserver alloc] initWithFeatureChecker:FBSDKFeatureManager.shared
-                                                                    graphRequestProvider:[FBSDKGraphRequestFactory new]
+                                                                     graphRequestFactory:[FBSDKGraphRequestFactory new]
                                                                                 settings:FBSDKSettings.sharedSettings];
 
   return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.shared

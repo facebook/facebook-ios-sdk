@@ -21,7 +21,7 @@
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKAppEventsConfigurationProviding;
 @protocol FBSDKServerConfigurationProviding;
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKLogging;
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                     graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                     graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store
                                    logger:(Class<FBSDKLogging>)logger

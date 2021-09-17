@@ -50,7 +50,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
   var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
   var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
-  var capturedConfigureGraphRequestProvider: GraphRequestProviding?
+  var capturedConfigureGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedConfigureFeatureChecker: FeatureChecking?
   var capturedConfigureStore: DataPersisting?
   var capturedConfigureLogger: Logging.Type?
@@ -73,7 +73,7 @@ class TestAppEvents: TestEventLogger,
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
     appEventsConfigurationProvider: AppEventsConfigurationProviding.Type,
     serverConfigurationProvider: ServerConfigurationProviding,
-    graphRequestProvider provider: GraphRequestProviding,
+    graphRequestFactory: GraphRequestFactoryProtocol,
     featureChecker: FeatureChecking,
     store: DataPersisting,
     logger: Logging.Type,
@@ -91,7 +91,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
     capturedConfigureServerConfigurationProvider = serverConfigurationProvider
-    capturedConfigureGraphRequestProvider = provider
+    capturedConfigureGraphRequestFactory = graphRequestFactory
     capturedConfigureFeatureChecker = featureChecker
     capturedConfigureStore = store
     capturedConfigureLogger = logger

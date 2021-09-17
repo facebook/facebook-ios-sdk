@@ -32,7 +32,7 @@
 
 @interface FBSDKErrorReport ()
 
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
@@ -53,19 +53,19 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 - (instancetype)init
 {
-  return [self initWithGraphRequestProvider:[FBSDKGraphRequestFactory new]
-                                fileManager:NSFileManager.defaultManager
-                                   settings:FBSDKSettings.sharedSettings
-                          fileDataExtractor:NSData.class];
+  return [self initWithGraphRequestFactory:[FBSDKGraphRequestFactory new]
+                               fileManager:NSFileManager.defaultManager
+                                  settings:FBSDKSettings.sharedSettings
+                         fileDataExtractor:NSData.class];
 }
 
-- (instancetype)initWithGraphRequestProvider:(nonnull id<FBSDKGraphRequestProviding>)requestProvider
-                                 fileManager:(nonnull id<FBSDKFileManaging>)fileManager
-                                    settings:(nonnull id<FBSDKSettings>)settings
-                           fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
+- (instancetype)initWithGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                fileManager:(nonnull id<FBSDKFileManaging>)fileManager
+                                   settings:(nonnull id<FBSDKSettings>)settings
+                          fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
 {
   if ((self = [super init])) {
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
     _fileManager = fileManager;
     _settings = settings;
     _dataExtractor = dataExtractor;
@@ -143,9 +143,9 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
     return;
   }
   NSString *errorData = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-  id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", self.settings.appID]
-                                                                             parameters:@{@"error_reports" : errorData ?: @""}
-                                                                             HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", self.settings.appID]
+                                                                                 parameters:@{@"error_reports" : errorData ?: @""}
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
 
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {

@@ -27,7 +27,7 @@
  #import "FBSDKCodelessIndexer.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKGraphRequestConnectionProviding.h"
- #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKServerConfigurationProviding.h"
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSwizzling.h"
@@ -36,13 +36,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCodelessIndexer (Internal)
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                               store:(id<FBSDKDataPersisting>)store
-                  connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                            swizzler:(Class<FBSDKSwizzling>)swizzler
-                            settings:(id<FBSDKSettings>)settings
-                advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
++ (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+             serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                   store:(id<FBSDKDataPersisting>)store
+                      connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                                swizzler:(Class<FBSDKSwizzling>)swizzler
+                                settings:(id<FBSDKSettings>)settings
+                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
 
 @end
 

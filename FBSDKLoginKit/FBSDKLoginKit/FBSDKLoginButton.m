@@ -42,11 +42,14 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 @property (nonatomic) id<FBSDKLoginProviding> loginProvider;
 @property (nonatomic) NSString *userID;
 @property (nonatomic) NSString *userName;
-@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 
 @end
 
 @implementation FBSDKLoginButton
+{
+  id<FBSDKGraphRequestFactory> _graphRequestFactory;
+}
 
  #pragma mark - Object Lifecycle
 
@@ -456,7 +459,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   [self.delegate loginButtonDidLogOut:self];
 }
 
-- (id<FBSDKGraphRequestProviding>)graphRequestFactory
+- (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   if (!_graphRequestFactory) {
     _graphRequestFactory = FBSDKGraphRequestFactory.new;
@@ -482,6 +485,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 - (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider
 {
   _loginProvider = loginProvider;
+}
+
+- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
+{
+  _graphRequestFactory = graphRequestFactory;
 }
 
   #endif

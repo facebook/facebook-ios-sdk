@@ -22,7 +22,7 @@ import XCTest
 class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   var transaction = TestPaymentTransaction(state: .deferred)
-  var requestFactory = TestProductsRequestFactory()
+  var graphRequestFactory = TestProductsRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   let store = UserDefaultsSpy()
@@ -47,7 +47,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     gateKeeperManager: TestGateKeeperManager.self,
     store: store,
     loggerFactory: loggerFactory,
-    productsRequestFactory: requestFactory,
+    productsRequestFactory: graphRequestFactory,
     appStoreReceiptProvider: receiptProvider
   )
 
@@ -83,7 +83,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     requestor.resolveProducts()
 
     XCTAssertEqual(
-      requestFactory.capturedProductIdentifiers,
+      graphRequestFactory.capturedProductIdentifiers,
       Set([transaction.payment.productIdentifier]),
       "Should use the product identifier from the transaction's payment to create the products request"
     )
@@ -93,7 +93,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       "Should set the requestor as the products request delegate when resolving products"
     )
     XCTAssertEqual(
-      requestFactory.request.startCallCount,
+      graphRequestFactory.request.startCallCount,
       1,
       "Should start the products request when resolving products"
     )

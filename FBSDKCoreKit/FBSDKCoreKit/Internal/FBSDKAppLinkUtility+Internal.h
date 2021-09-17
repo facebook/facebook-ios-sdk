@@ -29,9 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppLinkUtility (Internal)
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
++ (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(requestProvider:infoDictionaryProvider:));
+NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:));
 
 @end
 

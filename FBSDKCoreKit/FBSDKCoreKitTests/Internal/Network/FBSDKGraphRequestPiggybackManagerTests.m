@@ -56,7 +56,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [Manager configureWithTokenWallet:TestAccessTokenWallet.class
                            settings:self.settings
                 serverConfiguration:self.serverConfigurationProvider
-                    requestProvider:self.graphRequestFactory];
+                graphRequestFactory:self.graphRequestFactory];
 }
 
 - (void)tearDown

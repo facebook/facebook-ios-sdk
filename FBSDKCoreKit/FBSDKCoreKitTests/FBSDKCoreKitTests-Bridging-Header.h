@@ -123,7 +123,7 @@
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
 #import "FBSDKGraphRequestPiggybackManaging.h"
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKInstrumentManager+Testing.h"
@@ -232,7 +232,7 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 
 @interface FBSDKCrashShield (Testing)
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
 + (nullable NSString *)_getFeature:(id)callstack; // Using id instead of NSArray<NSString *> * for testing in Swift
 + (nullable NSString *)_getClassName:(id)entry; // Using id instead of NSString for testing in Swift

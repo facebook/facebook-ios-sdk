@@ -32,7 +32,7 @@ class CrashShieldTests: XCTestCase {
     CrashShield.reset()
     CrashShield.configure(
       with: settings,
-      requestProvider: graphRequestFactory,
+      graphRequestFactory: graphRequestFactory,
       featureChecking: featureManager
     )
   }

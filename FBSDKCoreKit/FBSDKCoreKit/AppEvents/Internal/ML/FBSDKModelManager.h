@@ -27,7 +27,7 @@
  @protocol FBSDKDataPersisting;
  @protocol FBSDKFeatureChecking;
  @protocol FBSDKFileManaging;
- @protocol FBSDKGraphRequestProviding;
+ @protocol FBSDKGraphRequestFactory;
  @protocol FBSDKSettings;
  @protocol FBSDKFileDataExtracting;
 
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(ModelManager)
 - (BOOL)processIntegrity:(nullable NSString *)param;
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings

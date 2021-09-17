@@ -52,7 +52,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 @interface FBSDKSuggestedEventsIndexer ()
 
-@property (nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
@@ -68,27 +68,27 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 - (instancetype)init
 {
-  return [self initWithGraphRequestProvider:[FBSDKGraphRequestFactory new]
-                serverConfigurationProvider:FBSDKServerConfigurationManager.shared
-                                   swizzler:FBSDKSwizzler.class
-                                   settings:FBSDKSettings.sharedSettings
-                                eventLogger:FBSDKAppEvents.shared
-                           featureExtractor:FBSDKFeatureExtractor.class
-                             eventProcessor:FBSDKModelManager.shared];
+  return [self initWithGraphRequestFactory:[FBSDKGraphRequestFactory new]
+               serverConfigurationProvider:FBSDKServerConfigurationManager.shared
+                                  swizzler:FBSDKSwizzler.class
+                                  settings:FBSDKSettings.sharedSettings
+                               eventLogger:FBSDKAppEvents.shared
+                          featureExtractor:FBSDKFeatureExtractor.class
+                            eventProcessor:FBSDKModelManager.shared];
 }
 
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                    swizzler:(Class<FBSDKSwizzling>)swizzler
-                                    settings:(id<FBSDKSettings>)settings
-                                 eventLogger:(id<FBSDKEventLogging>)eventLogger
-                            featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
-                              eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                   swizzler:(Class<FBSDKSwizzling>)swizzler
+                                   settings:(id<FBSDKSettings>)settings
+                                eventLogger:(id<FBSDKEventLogging>)eventLogger
+                           featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
+                             eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
 {
   if ((self = [super init])) {
     _optInEvents = [NSMutableSet set];
     _unconfirmedEvents = [NSMutableSet set];
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
     _serverConfigurationProvider = serverConfigurationProvider;
     _swizzler = swizzler;
     _settings = settings;
@@ -350,12 +350,12 @@ static dispatch_once_t setupNonce;
     return;
   }
 
-  id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [self.settings appID]]
-                                                                             parameters:@{
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [self.settings appID]]
+                                                                                 parameters:@{
                                      @"event_name" : event,
                                      @"metadata" : metadata,
                                    }
-                                                                             HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   return;
 }

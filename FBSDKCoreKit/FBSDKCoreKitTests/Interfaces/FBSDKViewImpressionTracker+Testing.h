@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKViewImpressionTracker (Testing)
 
-@property (nonatomic, assign) id<FBSDKGraphRequestProviding> graphRequestProvider;
+@property (nonatomic, assign) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, assign) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;

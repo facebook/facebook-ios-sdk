@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 
 @objcMembers
-public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
+public class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
 
   public var capturedGraphPath: String?
   public var capturedParameters = [String: Any]()
@@ -28,7 +28,7 @@ public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
   public var capturedFlags: GraphRequestFlags = []
   public var capturedRequests = [TestGraphRequest]()
 
-  // MARK: - GraphRequestProviding
+  // MARK: - GraphRequestFactoryProtocol
 
   public func createGraphRequest(
     withGraphPath graphPath: String,

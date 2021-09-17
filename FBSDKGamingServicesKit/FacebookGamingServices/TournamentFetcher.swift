@@ -26,9 +26,9 @@ public enum TournamentFetchError: Error {
 
 public class TournamentFetcher {
 
-  let graphRequestFactory: GraphRequestProviding
+  let graphRequestFactory: GraphRequestFactoryProtocol
 
-  public init(graphRequestFactory: GraphRequestProviding = GraphRequestFactory()) {
+  public init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {
     self.graphRequestFactory = graphRequestFactory
   }
 

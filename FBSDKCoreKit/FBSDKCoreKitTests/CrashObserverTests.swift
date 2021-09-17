@@ -22,18 +22,18 @@ import XCTest
 
 class CrashObserverTests: XCTestCase {
 
-  var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
+  var graphRequestFactory: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
   var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
   let featureManager = TestFeatureManager()
 
   override func setUp() {
     super.setUp()
-    requestProvider = TestGraphRequestFactory()
+    graphRequestFactory = TestGraphRequestFactory()
     settings = TestSettings()
     crashObserver = CrashObserver(
       featureChecker: featureManager,
-      graphRequestProvider: requestProvider,
+      graphRequestFactory: graphRequestFactory,
       settings: settings
     )
   }

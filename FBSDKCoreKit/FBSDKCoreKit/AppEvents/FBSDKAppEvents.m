@@ -47,7 +47,7 @@
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
@@ -276,7 +276,7 @@ static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
 static id<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
-static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
+static id<FBSDKGraphRequestFactory> g_graphRequestFactory;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
@@ -885,7 +885,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                     graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                      graphRequestFactory:(id<FBSDKGraphRequestFactory>)provider
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store
                                    logger:(Class<FBSDKLogging>)logger
@@ -904,7 +904,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
   g_gateKeeperManager = gateKeeperManager;
   g_logger = logger;
-  [FBSDKAppEvents setRequestProvider:provider];
+  [FBSDKAppEvents setGraphRequestFactory:provider];
   [FBSDKAppEvents setFeatureChecker:featureChecker];
   g_settings = settings;
   g_paymentObserver = paymentObserver;
@@ -931,10 +931,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 }
 
-+ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider
++ (void)setGraphRequestFactory:(id<FBSDKGraphRequestFactory>)provider
 {
-  if (g_graphRequestProvider != provider) {
-    g_graphRequestProvider = provider;
+  if (g_graphRequestFactory != provider) {
+    g_graphRequestFactory = provider;
   }
 }
 
@@ -1193,11 +1193,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                                                                                     shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
-    id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:path
-                                                                                 parameters:params
-                                                                                tokenString:nil
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+    id<FBSDKGraphRequest> request = [g_graphRequestFactory createGraphRequestWithGraphPath:path
+                                                                                parameters:params
+                                                                               tokenString:nil
+                                                                                HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                     flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     __block id<FBSDKDataPersisting> weakStore = self.store;
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error) {
@@ -1584,11 +1584,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                       paramsForPrinting,
                       prettyPrintedJsonEvents];
     }
-    id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
-                                                                                 parameters:postParameters
-                                                                                tokenString:appEventsState.tokenString
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+    id<FBSDKGraphRequest> request = [g_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
+                                                                                parameters:postParameters
+                                                                               tokenString:appEventsState.tokenString
+                                                                                HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                     flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self handleActivitiesPostCompletion:error
                               loggingEntry:loggingEntry
@@ -1744,11 +1744,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
   NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self shared] appID]];
 
-  id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:graphPath
-                                                                               parameters:parameters
-                                                                              tokenString:tokenString
-                                                                               HTTPMethod:FBSDKHTTPMethodGET
-                                                                                    flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [g_graphRequestFactory createGraphRequestWithGraphPath:graphPath
+                                                                              parameters:parameters
+                                                                             tokenString:tokenString
+                                                                              HTTPMethod:FBSDKHTTPMethodGET
+                                                                                   flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 
@@ -1761,7 +1761,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   self.shared.isConfigured = NO;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
-  g_graphRequestProvider = nil;
+  g_graphRequestFactory = nil;
 }
 
 + (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents
@@ -1779,9 +1779,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   return g_featureChecker;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return g_graphRequestProvider;
+  return g_graphRequestFactory;
 }
 
 + (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
 @property (class, nonatomic, nullable) FBSDKLogger *logger;
 @property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
 
@@ -35,16 +35,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic) BOOL isLoadingGateKeepers;
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                         store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:store:));
+NS_SWIFT_NAME(configure(settings:graphRequestFactory:connectionProvider:store:));
 + (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
 + (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error
 NS_SWIFT_NAME(parse(result:error:));
 + (BOOL)_gateKeeperIsValid;
 + (void)reset;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 
 @end
 

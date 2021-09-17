@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCodelessIndexer (Testing)
 
-@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;

@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginButton (Testing)
 
-@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 
 - (FBSDKLoginConfiguration *)loginConfiguration;
 - (BOOL)_isAuthenticated;
@@ -70,6 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider;
 - (void)_buttonPressed:(id)sender;
 - (void)_logout;
+- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory;
 
 @end
 
@@ -117,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKDeviceLoginManager (Testing)
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
-                graphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)connectionProvider
+                graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)connectionProvider
                        devicePoller:(id<FBSDKDevicePolling>)poller;
 
 - (void)_schedulePoll:(NSUInteger)interval;

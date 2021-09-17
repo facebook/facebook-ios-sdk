@@ -36,7 +36,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 @property (nonatomic) BOOL isCancelled;
 @property (nonatomic) NSNetService *loginAdvertisementService;
 @property (nonatomic) BOOL isSmartLoginEnabled;
-@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic) id<FBSDKDevicePolling> poller;
 
 @end
@@ -52,7 +52,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                    enableSmartLogin:(BOOL)enableSmartLogin
-                graphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)graphRequestFactory
+                graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
                        devicePoller:(id<FBSDKDevicePolling>)poller
 {
   self = [self initWithPermissions:permissions enableSmartLogin:enableSmartLogin];
@@ -63,7 +63,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
 {
-  id<FBSDKGraphRequestProviding> factory = FBSDKGraphRequestFactory.new;
+  id<FBSDKGraphRequestFactory> factory = FBSDKGraphRequestFactory.new;
   FBSDKDevicePoller *poller = FBSDKDevicePoller.new;
   if ((self = [super init])) {
     _permissions = [permissions copy];

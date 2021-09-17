@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKCrashShield (Internal)
 
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
 
 @end

@@ -22,7 +22,7 @@ import XCTest
 class ViewImpressionTrackerTests: XCTestCase {
 
   var tracker: ViewImpressionTracker! // swiftlint:disable:this implicitly_unwrapped_optional
-  let requestProvider = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   let logger = TestEventLogger()
   let notificationCenter = TestNotificationCenter()
   let sharedTrackerName = "shared"
@@ -48,7 +48,7 @@ class ViewImpressionTrackerTests: XCTestCase {
 
   func testCreatingWithDependencies() {
     XCTAssertTrue(
-      tracker.graphRequestProvider === requestProvider,
+      tracker.graphRequestFactory === graphRequestFactory,
       "Should be able to create with a graph request provider"
     )
     XCTAssertEqual(
@@ -217,7 +217,7 @@ class ViewImpressionTrackerTests: XCTestCase {
   func createImpressionTracker(named name: String) -> ViewImpressionTracker {
     ViewImpressionTracker(
       eventName: name,
-      graphRequestProvider: requestProvider,
+      graphRequestFactory: graphRequestFactory,
       eventLogger: logger,
       notificationObserver: notificationCenter,
       tokenWallet: TestAccessTokenWallet.self

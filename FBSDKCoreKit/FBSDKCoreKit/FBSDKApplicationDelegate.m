@@ -641,7 +641,7 @@ static UIApplicationState _applicationState;
 
 - (void)configureDependencies
 {
-  id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
+  id<FBSDKGraphRequestFactory> graphRequestFactory = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
@@ -655,7 +655,7 @@ static UIApplicationState _applicationState;
   [FBSDKGraphRequest setSettings:sharedSettings];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
-                                requestProvider:graphRequestProvider
+                            graphRequestFactory:graphRequestFactory
                              connectionProvider:connectionProvider
                                           store:store];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings];
@@ -663,7 +663,7 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setConnectionFactory:connectionProvider];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
-                                                                              graphRequestFactory:graphRequestProvider
+                                                                              graphRequestFactory:graphRequestFactory
                                                                                          settings:sharedSettings];
   FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
     = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
@@ -674,7 +674,7 @@ static UIApplicationState _applicationState;
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:serverConfigurationProvider
-                            graphRequestProvider:graphRequestProvider
+                             graphRequestFactory:graphRequestFactory
                                   featureChecker:self.featureChecker
                                            store:store
                                           logger:FBSDKLogger.class
@@ -691,39 +691,39 @@ static UIApplicationState _applicationState;
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings
-                                     graphRequestFactory:graphRequestProvider
+                                     graphRequestFactory:graphRequestFactory
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
                                           serverConfiguration:serverConfigurationProvider
-                                              requestProvider:graphRequestProvider];
+                                          graphRequestFactory:graphRequestFactory];
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
-                                    graphRequestFactory:graphRequestProvider
+                                    graphRequestFactory:graphRequestFactory
                                             fileManager:NSFileManager.defaultManager
                                                   store:store
                                                settings:sharedSettings
                                           dataExtractor:NSData.class];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
-  [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
-                             infoDictionaryProvider:NSBundle.mainBundle];
-  [FBSDKCodelessIndexer configureWithRequestProvider:graphRequestProvider
-                         serverConfigurationProvider:serverConfigurationProvider
-                                               store:store
-                                  connectionProvider:connectionProvider
-                                            swizzler:FBSDKSwizzler.class
-                                            settings:sharedSettings
-                                advertiserIDProvider:FBSDKAppEventsUtility.shared];
+  [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
+                                 infoDictionaryProvider:NSBundle.mainBundle];
+  [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
+                             serverConfigurationProvider:serverConfigurationProvider
+                                                   store:store
+                                      connectionProvider:connectionProvider
+                                                swizzler:FBSDKSwizzler.class
+                                                settings:sharedSettings
+                                    advertiserIDProvider:FBSDKAppEventsUtility.shared];
   [FBSDKCrashShield configureWithSettings:sharedSettings
-                          requestProvider:[FBSDKGraphRequestFactory new]
+                      graphRequestFactory:[FBSDKGraphRequestFactory new]
                           featureChecking:FBSDKFeatureManager.shared];
   self.skAdNetworkReporter = nil;
   if (@available(iOS 11.3, *)) {
-    self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:graphRequestProvider
-                                                                                   store:store
-                                                                conversionValueUpdatable:SKAdNetwork.class];
+    self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithGraphRequestFactory:graphRequestFactory
+                                                                                       store:store
+                                                                    conversionValueUpdatable:SKAdNetwork.class];
   }
   if (@available(iOS 14.0, *)) {
     [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new]

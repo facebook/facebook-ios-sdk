@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                   graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                               settings:(id<FBSDKSettings>)settings;
 
 - (instancetype)init;

@@ -20,7 +20,7 @@
 
 #import "FBSDKError+Internal.h"
 
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 @protocol FBSDKFileManaging;
 @protocol FBSDKSettings;
 @protocol FBSDKFileDataExtracting;
@@ -36,7 +36,7 @@ NS_SWIFT_NAME(ErrorReport)
       errorDomain:(NSErrorDomain)errorDomain
           message:(nullable NSString *)message;
 
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                  fileManager:(id<FBSDKFileManaging>)fileManager
                                     settings:(id<FBSDKSettings>)settings
                            fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;

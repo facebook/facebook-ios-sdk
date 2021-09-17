@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 + (id<FBSDKSettings>)settings;
 + (id<FBSDKServerConfigurationProviding>)serverConfiguration;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 
 @end
 

@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppLinkUtility (Testing)
 
-@property (class, nullable, nonatomic) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 
 + (void)validateConfiguration;

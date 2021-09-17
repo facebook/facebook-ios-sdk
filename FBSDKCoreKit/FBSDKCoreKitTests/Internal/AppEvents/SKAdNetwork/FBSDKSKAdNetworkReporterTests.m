@@ -32,7 +32,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @interface FBSDKSKAdNetworkReporter ()
-@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
 
@@ -46,15 +46,15 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setSKAdNetworkReportEnabled:(BOOL)enabled;
 
 - (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
-- (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                               store:(id<FBSDKDataPersisting>)store;
+- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                   store:(id<FBSDKDataPersisting>)store;
 
 @end
 
 @interface FBSDKSKAdNetworkReporterTests : XCTestCase
 @property (nonnull, nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
 @property (nonatomic) UserDefaultsSpy *userDefaultsSpy;
-@property (nonatomic) TestGraphRequestFactory *requestProvider;
+@property (nonatomic) TestGraphRequestFactory *graphRequestFactory;
 @property (nonatomic) FBSDKSKAdNetworkConversionConfiguration *defaultConfiguration;
 @end
 
@@ -65,7 +65,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [super setUp];
   [TestConversionValueUpdating reset];
   self.userDefaultsSpy = [UserDefaultsSpy new];
-  self.requestProvider = [TestGraphRequestFactory new];
+  self.graphRequestFactory = [TestGraphRequestFactory new];
 
   NSDictionary<NSString *, id> *json = @{
     @"data" : @[@{
@@ -78,7 +78,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   };
   self.defaultConfiguration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
 
-  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:self.requestProvider store:self.userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
+  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithGraphRequestFactory:self.graphRequestFactory store:self.userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
   [self.skAdNetworkReporter _loadReportData];
   [self.skAdNetworkReporter setSKAdNetworkReportEnabled:YES];
 }
@@ -144,7 +144,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     count += 1;
   }];
   XCTAssertEqual(count, 1, @"Should expect the execution block to be called once");
-  XCTAssertEqual(self.requestProvider.capturedRequests.count, 0, "Should not have graph request with valid cache");
+  XCTAssertEqual(self.graphRequestFactory.capturedRequests.count, 0, "Should not have graph request with valid cache");
 }
 
 - (void)testLoadConfigurationWithoutValidCacheAndWithoutNetworkError
@@ -157,12 +157,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self.skAdNetworkReporter _loadConfigurationWithBlock:^{
     count += 1;
   }];
-  TestGraphRequest *request = self.requestProvider.capturedRequests.firstObject;
+  TestGraphRequest *request = self.graphRequestFactory.capturedRequests.firstObject;
   request.capturedCompletionHandler(nil, SampleSKAdNetworkConversionConfiguration.configJson, nil);
   XCTAssertEqual(count, 1, @"Should expect the execution block to be called once");
-  XCTAssertEqual(self.requestProvider.capturedRequests.count, 1, "Should have graph request without valid cache");
+  XCTAssertEqual(self.graphRequestFactory.capturedRequests.count, 1, "Should have graph request without valid cache");
   XCTAssertTrue(
-    [self.requestProvider.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
+    [self.graphRequestFactory.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
     "Should have graph request for config without valid cache"
   );
   XCTAssertNotNil(self.skAdNetworkReporter.config, @"Should have expected config");
@@ -178,12 +178,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self.skAdNetworkReporter _loadConfigurationWithBlock:^{
     count += 1;
   }];
-  TestGraphRequest *request = self.requestProvider.capturedRequests.firstObject;
+  TestGraphRequest *request = self.graphRequestFactory.capturedRequests.firstObject;
   request.capturedCompletionHandler(nil, SampleSKAdNetworkConversionConfiguration.configJson, [NSError errorWithDomain:@"test" code:0 userInfo:nil]);
   XCTAssertEqual(count, 0, @"Should not expect the execution block to be called");
-  XCTAssertEqual(self.requestProvider.capturedRequests.count, 1, "Should have graph request without valid cache");
+  XCTAssertEqual(self.graphRequestFactory.capturedRequests.count, 1, "Should have graph request without valid cache");
   XCTAssertTrue(
-    [self.requestProvider.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
+    [self.graphRequestFactory.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
     "Should have graph request for config without valid cache"
   );
   XCTAssertNil(self.skAdNetworkReporter.config, @"Should not have config with network error");
@@ -346,15 +346,15 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testInitializeWithDependencies
 {
-  id<FBSDKGraphRequestProviding> requestProvider = [FBSDKGraphRequestFactory new];
+  id<FBSDKGraphRequestFactory> graphRequestFactory = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = [UserDefaultsSpy new];
-  FBSDKSKAdNetworkReporter *reporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:requestProvider
-                                                                                           store:store
-                                                                        conversionValueUpdatable:TestConversionValueUpdating.class];
+  FBSDKSKAdNetworkReporter *reporter = [[FBSDKSKAdNetworkReporter alloc] initWithGraphRequestFactory:graphRequestFactory
+                                                                                               store:store
+                                                                            conversionValueUpdatable:TestConversionValueUpdating.class];
 
   XCTAssertEqualObjects(
-    requestProvider,
-    reporter.requestProvider,
+    graphRequestFactory,
+    reporter.graphRequestFactory,
     "Should be able to configure a reporter with a request provider"
   );
   XCTAssertEqualObjects(

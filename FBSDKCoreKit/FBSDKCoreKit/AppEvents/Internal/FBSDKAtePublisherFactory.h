@@ -21,7 +21,7 @@
 #import "FBSDKAtePublisherCreating.h"
 
 @protocol FBSDKDataPersisting;
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 @protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,7 +33,7 @@ NS_SWIFT_NAME(AtePublisherFactory)
 - (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
-          graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                      settings:(id<FBSDKSettings>)settings;
 
 @end

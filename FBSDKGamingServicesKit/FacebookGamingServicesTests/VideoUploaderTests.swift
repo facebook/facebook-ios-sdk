@@ -53,13 +53,13 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
     uploadError = error as NSError
   }
 
-  let requestProvider = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   lazy var videoUploader = VideoUploader(
     videoName: "Greatest Video",
     videoSize: 1,
     parameters: ["a": 1],
     delegate: self,
-    requestProvider: requestProvider
+    graphRequestFactory: graphRequestFactory
   )
 
   override func setUp() {
@@ -92,25 +92,25 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
     videoUploader.start()
     videoUploader._postFinishRequest()
     XCTAssertEqual(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "me/videos",
       "start() should call the graphPathWithSuffix and create the graph path parameter"
     )
-    XCTAssertNotNil(requestProvider.capturedHttpMethod)
+    XCTAssertNotNil(graphRequestFactory.capturedHttpMethod)
     XCTAssertNil(
-      requestProvider.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "Request Provider should not be initialized with a token string"
     )
   }
 
   func testGraphRequestFromStartWithVideoSizeZero() {
-    let requestProvider = TestGraphRequestFactory()
+    let graphRequestFactory = TestGraphRequestFactory()
     let videoUploader = VideoUploader(
       videoName: "Greatest Video",
       videoSize: 0,
       parameters: ["a": 1],
       delegate: self,
-      requestProvider: requestProvider
+      graphRequestFactory: graphRequestFactory
     )
     videoUploader.start()
     XCTAssertNotNil(
@@ -122,7 +122,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   func testCompletedUploadVideo() throws {
     let offsets = [startOffset: 1, endOffset: 1]
     videoUploader._startTransferRequest(withOffsetDictionary: offsets)
-    let completionHandler = try XCTUnwrap(requestProvider.capturedRequests.first?.capturedCompletionHandler)
+    let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["success": true], nil)
     XCTAssertTrue(
       uploadDidCompleteSuccessfully,
@@ -133,7 +133,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   func testErrorUploadingVideo() throws {
     let offsets = [startOffset: 1, endOffset: 1]
     videoUploader._startTransferRequest(withOffsetDictionary: offsets)
-    let completionHandler = try XCTUnwrap(requestProvider.capturedRequests.first?.capturedCompletionHandler)
+    let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["none": true], nil)
     XCTAssertFalse(
       uploadDidCompleteSuccessfully,
@@ -168,7 +168,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
     videoUploader.numberFormatter()
     videoUploader._startTransferRequest(withNewOffset: offsets, data: Data("Some Data".utf8))
 
-    let completionHandler = try XCTUnwrap(requestProvider.capturedRequests.first?.capturedCompletionHandler)
+    let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["none": true], SampleError())
 
     XCTAssertFalse(

@@ -39,7 +39,7 @@
     if (eventName && identifier) {
       FBSDKViewImpressionTracker *impressionTracker
         = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName
-                                                graphRequestProvider:[FBSDKGraphRequestFactory new]
+                                                 graphRequestFactory:[FBSDKGraphRequestFactory new]
                                                          eventLogger:FBSDKAppEvents.shared
                                                 notificationObserver:NSNotificationCenter.defaultCenter
                                                          tokenWallet:FBSDKAccessToken.class];

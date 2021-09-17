@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 @protocol FBSDKEventLogging;
 @protocol FBSDKNotificationObserving;
 @protocol FBSDKAccessTokenProviding;
@@ -32,7 +32,7 @@ NS_SWIFT_NAME(ViewImpressionTracker)
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)impressionTrackerWithEventName:(NSString *)eventName
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+                           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                           notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
                                    tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet;

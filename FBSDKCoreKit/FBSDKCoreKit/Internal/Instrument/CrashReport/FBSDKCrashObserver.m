@@ -21,15 +21,16 @@
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashObserver ()
 
 @property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 
 @end
@@ -39,7 +40,7 @@
 @synthesize prefixes, frameworks;
 
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                   graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                               settings:(id<FBSDKSettings>)settings
 {
   if ((self = [super init])) {
@@ -50,7 +51,7 @@
                    @"FBSDKGamingServicesKit",
                    @"FBSDKTVOSKit"];
     _featureChecker = featureChecker;
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
     _settings = settings;
   }
   return self;
@@ -69,9 +70,9 @@
   if (jsonData) {
     NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-    id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]
-                                                                           parameters:@{@"crash_reports" : crashReports ?: @""}
-                                                                           HTTPMethod:FBSDKHTTPMethodPOST];
+    id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]
+                                                                               parameters:@{@"crash_reports" : crashReports ?: @""}
+                                                                               HTTPMethod:FBSDKHTTPMethodPOST];
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {

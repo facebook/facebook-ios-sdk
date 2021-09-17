@@ -22,7 +22,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   let store = UserDefaultsSpy()
   let settings = TestSettings()
-  let requestFactory = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   let connection = TestGraphRequestConnection()
   lazy var connectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   let timestampKey = "com.facebook.sdk:FBSDKAppEventsConfigurationTimestamp"
@@ -41,7 +41,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.configure(
       store: store,
       settings: settings,
-      graphRequestFactory: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       graphRequestConnectionFactory: connectionFactory
     )
   }
@@ -66,7 +66,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       "Should not have a settings by default"
     )
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.requestFactory,
+      AppEventsConfigurationManager.shared.graphRequestFactory,
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
@@ -86,8 +86,8 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       "Should be able to configure with custom settings"
     )
     XCTAssertEqual(
-      AppEventsConfigurationManager.shared.requestFactory as? TestGraphRequestFactory,
-      requestFactory,
+      AppEventsConfigurationManager.shared.graphRequestFactory as? TestGraphRequestFactory,
+      graphRequestFactory,
       "Should be able to configure with a custom graph request provider"
     )
     XCTAssertEqual(
@@ -102,7 +102,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.configure(
       store: store,
       settings: settings,
-      graphRequestFactory: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       graphRequestConnectionFactory: connectionFactory
     )
 
@@ -127,25 +127,25 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       name,
       "Should create a request with the expected path"
     )
     XCTAssertEqual(
-      requestFactory.capturedParameters as? [String: String],
+      graphRequestFactory.capturedParameters as? [String: String],
       ["fields": "app_events_config.os_version(\(UIDevice.current.systemVersion))"],
       "Should create a request with the expected parameters"
     )
     XCTAssertNil(
-      requestFactory.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "Should not include a token string in the request"
     )
     XCTAssertNil(
-      requestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       "Should not specify an http method when creating the request"
     )
     XCTAssertEqual(
-      requestFactory.capturedFlags,
+      graphRequestFactory.capturedFlags,
       [],
       "Should not specify flags when creating the request"
     )
@@ -159,7 +159,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     }
 
     XCTAssertNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a graph request when there is no app id available"
     )
     XCTAssertTrue(
@@ -344,7 +344,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.configure(
       store: storeCopy,
       settings: settings,
-      graphRequestFactory: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       graphRequestConnectionFactory: connectionFactory
     )
     // Confirm configuration is unarchived from store instead of set again from defaults

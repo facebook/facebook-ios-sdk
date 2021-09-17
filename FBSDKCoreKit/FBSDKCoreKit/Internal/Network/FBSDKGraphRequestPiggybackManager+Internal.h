@@ -25,14 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKAccessTokenProviding;
 @protocol FBSDKAccessTokenSetting;
 @protocol FBSDKServerConfigurationProviding;
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 
 @interface FBSDKGraphRequestPiggybackManager (Internal)
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
              serverConfiguration:(id<FBSDKServerConfigurationProviding>)serverConfiguration
-                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
+             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory;
 
 @end
 

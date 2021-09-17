@@ -64,7 +64,7 @@ class AppEventsPublishAteTests: XCTestCase {
       withGateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
       serverConfigurationProvider: TestServerConfigurationProvider(),
-      graphRequestProvider: TestGraphRequestFactory(),
+      graphRequestFactory: TestGraphRequestFactory(),
       featureChecker: TestFeatureManager(),
       store: UserDefaultsSpy(),
       logger: TestLogger.self,

@@ -31,7 +31,7 @@
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGateKeeperManager.h"
- #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelParser.h"
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
-@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
@@ -86,7 +86,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
  #pragma mark - Dependency Management
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings

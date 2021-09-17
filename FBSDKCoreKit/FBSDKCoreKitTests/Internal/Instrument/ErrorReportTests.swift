@@ -43,7 +43,7 @@ class ErrorReportTests: XCTestCase {
     TestFileDataExtractor.reset()
 
     report = ErrorReport(
-      graphRequestProvider: factory,
+      graphRequestFactory: factory,
       fileManager: fileManager,
       settings: settings,
       fileDataExtractor: TestFileDataExtractor.self
@@ -54,7 +54,7 @@ class ErrorReportTests: XCTestCase {
     report = ErrorReport()
 
     XCTAssertTrue(
-      report.requestProvider is GraphRequestFactory,
+      report.graphRequestFactory is GraphRequestFactory,
       "Should use the expected default graph request factory"
     )
     XCTAssertEqual(
@@ -75,7 +75,7 @@ class ErrorReportTests: XCTestCase {
 
   func testCreatingWithDependencies() {
     XCTAssertEqual(
-      ObjectIdentifier(report.requestProvider),
+      ObjectIdentifier(report.graphRequestFactory),
       ObjectIdentifier(factory),
       "Should use the provided graph request factory"
     )

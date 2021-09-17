@@ -29,7 +29,7 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -48,7 +48,7 @@ static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
 static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
-static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
@@ -59,7 +59,7 @@ static id<FBSDKDataPersisting> _store;
   if (self == FBSDKGateKeeperManager.class) {
     _completionBlocks = [NSMutableArray array];
     _store = nil;
-    _requestProvider = nil;
+    _graphRequestFactory = nil;
     _connectionProvider = nil;
     _settings = nil;
     _canLoadGateKeepers = NO;
@@ -67,12 +67,12 @@ static id<FBSDKDataPersisting> _store;
 }
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                         store:(id<FBSDKDataPersisting>)store
 {
   _settings = settings;
-  _requestProvider = requestProvider;
+  _graphRequestFactory = graphRequestFactory;
   _connectionProvider = connectionProvider;
   _store = store;
   _canLoadGateKeepers = YES;
@@ -158,12 +158,12 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
   [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
 
-  return [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
-                                                    parameters:parameters
-                                                   tokenString:nil
-                                                    HTTPMethod:nil
-                                                         flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+  return [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                    [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
+                                                        parameters:parameters
+                                                       tokenString:nil
+                                                        HTTPMethod:nil
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 #pragma mark - Helper Class Methods
@@ -239,9 +239,9 @@ static id<FBSDKDataPersisting> _store;
   return NO;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
 + (Class<FBSDKSettings>)settings
@@ -300,7 +300,7 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)reset
 {
-  _requestProvider = nil;
+  _graphRequestFactory = nil;
   _gateKeepers = nil;
   _settings = nil;
   _connectionProvider = nil;

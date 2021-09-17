@@ -35,7 +35,7 @@ static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
 static id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
-static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
@@ -52,21 +52,21 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   return _serverConfiguration;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
              serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
-                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   if (self == FBSDKGraphRequestPiggybackManager.class) {
     _tokenWallet = tokenWallet;
     _settings = settings;
     _serverConfiguration = serverConfiguration;
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
   }
 }
 
@@ -134,11 +134,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       }
     }
   };
-  id<FBSDKGraphRequest> extendRequest = [self.requestProvider createGraphRequestWithGraphPath:@"oauth/access_token"
-                                                                                   parameters:@{@"grant_type" : @"fb_extend_sso_token",
-                                                                                                @"fields" : @"",
-                                                                                                @"client_id" : expectedToken.appID}
-                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> extendRequest = [self.graphRequestFactory createGraphRequestWithGraphPath:@"oauth/access_token"
+                                                                                       parameters:@{@"grant_type" : @"fb_extend_sso_token",
+                                                                                                    @"fields" : @"",
+                                                                                                    @"client_id" : expectedToken.appID}
+                                                                                            flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
@@ -147,9 +147,9 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
     graphDomain = [FBSDKTypeUtility dictionary:result objectForKey:@"graph_domain" ofType:NSString.class];
     expectingCallbackComplete();
   }];
-  id<FBSDKGraphRequest> permissionsRequest = [self.requestProvider createGraphRequestWithGraphPath:@"me/permissions"
-                                                                                        parameters:@{@"fields" : @""}
-                                                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> permissionsRequest = [self.graphRequestFactory createGraphRequestWithGraphPath:@"me/permissions"
+                                                                                            parameters:@{@"fields" : @""}
+                                                                                                 flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:permissionsRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     if (!error) {

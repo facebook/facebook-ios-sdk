@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 Describes anything that can provide instances of `GraphRequestProtocol`
  */
-NS_SWIFT_NAME(GraphRequestProviding)
-@protocol FBSDKGraphRequestProviding
+NS_SWIFT_NAME(GraphRequestFactoryProtocol)
+@protocol FBSDKGraphRequestFactory
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                                       parameters:(NSDictionary<NSString *, id> *)parameters

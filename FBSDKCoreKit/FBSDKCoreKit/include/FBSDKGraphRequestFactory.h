@@ -18,9 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@protocol FBSDKGraphRequestFactory;
 
 /**
  Internal type not intended for use outside of the SDKs.
@@ -28,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  A factory for providing objects that conform to `GraphRequest`
 */
 NS_SWIFT_NAME(GraphRequestFactory)
-@interface FBSDKGraphRequestFactory : NSObject <FBSDKGraphRequestProviding>
+@interface FBSDKGraphRequestFactory : NSObject <FBSDKGraphRequestFactory>
 @end
 
 NS_ASSUME_NONNULL_END

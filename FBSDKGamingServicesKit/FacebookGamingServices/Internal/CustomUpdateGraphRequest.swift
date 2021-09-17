@@ -35,7 +35,7 @@ public enum CustomUpdateGraphRequestError: Error {
 
 public class CustomUpdateGraphRequest {
 
-  public let graphRequestFactory: GraphRequestProviding
+  public let graphRequestFactory: GraphRequestFactoryProtocol
   let graphPath = "me/custom_update"
   let gamingGraphDomain = "gaming"
   let base64EncodedImageHeader = "data:image/png;base64,"
@@ -44,7 +44,7 @@ public class CustomUpdateGraphRequest {
     self.graphRequestFactory = GraphRequestFactory()
   }
 
-  public init(graphRequestFactory: GraphRequestProviding = GraphRequestFactory()) {
+  public init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {
     self.graphRequestFactory = graphRequestFactory
   }
 

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAtePublisherFactory ()
 
-@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonnull, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation FBSDKAtePublisherFactory
 
 - (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
-          graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                      settings:(id<FBSDKSettings>)settings
 {
   if ((self = [super init])) {

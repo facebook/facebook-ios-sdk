@@ -46,7 +46,7 @@
  #import "FBSDKGraphRequest+Internal.h"
  #import "FBSDKGraphRequestBody.h"
  #import "FBSDKGraphRequestConnection+Internal.h"
- #import "FBSDKGraphRequestFactory.h"
+ #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKGraphRequestMetadata.h"
  #import "FBSDKGraphRequestPiggybackManager.h"
  #import "FBSDKImageDownloader.h"

@@ -205,26 +205,26 @@
 - (void)configureAppEventsSingleton
 {
   [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.class
-                         appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-                            serverConfigurationProvider:self.serverConfigurationProvider
-                                   graphRequestProvider:self.graphRequestFactory
-                                         featureChecker:self.featureManager
-                                                  store:self.store
-                                                 logger:TestLogger.class
-                                               settings:self.settings
-                                        paymentObserver:self.paymentObserver
-                               timeSpentRecorderFactory:self.timeSpentRecorderFactory
-                                    appEventsStateStore:self.appEventsStateStore
-                    eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
-                restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
-                                    atePublisherFactory:self.atePublisherFactory
-                                 appEventsStateProvider:self.appEventsStateProvider
-                                               swizzler:TestSwizzler.class
-                                   advertiserIDProvider:self.advertiserIDProvider];
+                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+                               serverConfigurationProvider:self.serverConfigurationProvider
+                                       graphRequestFactory:self.graphRequestFactory
+                                            featureChecker:self.featureManager
+                                                     store:self.store
+                                                    logger:TestLogger.class
+                                                  settings:self.settings
+                                           paymentObserver:self.paymentObserver
+                                  timeSpentRecorderFactory:self.timeSpentRecorderFactory
+                                       appEventsStateStore:self.appEventsStateStore
+                       eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
+                   restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
+                                       atePublisherFactory:self.atePublisherFactory
+                                    appEventsStateProvider:self.appEventsStateProvider
+                                                  swizzler:TestSwizzler.class
+                                      advertiserIDProvider:self.advertiserIDProvider];
 
   [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
-                                                            metadataIndexer:self.metadataIndexer
-                                                        skAdNetworkReporter:self.skAdNetworkReporter];
+                                                               metadataIndexer:self.metadataIndexer
+                                                           skAdNetworkReporter:self.skAdNetworkReporter];
 }
 
 - (void)testConfiguringSetsSwizzlerDependency

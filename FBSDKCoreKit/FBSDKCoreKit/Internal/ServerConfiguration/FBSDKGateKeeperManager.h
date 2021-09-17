@@ -24,7 +24,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettings;
-@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKGraphRequestFactory;
 @protocol FBSDKGraphRequestConnectionProviding;
 @protocol FBSDKDataPersisting;
 
@@ -43,7 +43,7 @@ NS_SWIFT_NAME(GateKeeperManager)
  Configures the manager with various dependencies that are required to load the gate keepers
  */
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                         store:(id<FBSDKDataPersisting>)store;
 

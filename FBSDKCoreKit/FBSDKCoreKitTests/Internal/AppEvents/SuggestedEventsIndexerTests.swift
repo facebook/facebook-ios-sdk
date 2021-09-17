@@ -22,7 +22,7 @@ import XCTest
 // swiftlint:disable type_body_length implicitly_unwrapped_optional
 class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
-  let requestProvider = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   var eventProcessor: TestOnDeviceMLModelManager! = TestOnDeviceMLModelManager()
@@ -63,7 +63,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     settings.appID = name
 
     indexer = SuggestedEventsIndexer(
-      requestProvider: requestProvider,
+      graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
       swizzler: TestSwizzler.self,
       settings: settings,
@@ -96,7 +96,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer = SuggestedEventsIndexer()
 
     XCTAssertTrue(
-      indexer.requestProvider is GraphRequestFactory,
+      indexer.graphRequestFactory is GraphRequestFactory,
       "Should have a request provider of the expected default type"
     )
     XCTAssertTrue(
@@ -124,7 +124,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   func testCustomDependencies() {
     XCTAssertTrue(
-      indexer.requestProvider is TestGraphRequestFactory,
+      indexer.graphRequestFactory is TestGraphRequestFactory,
       "Should be able to create an instance with a custom request provider"
     )
     XCTAssertTrue(
@@ -287,7 +287,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
 
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if there is no dense feature"
     )
   }
@@ -301,7 +301,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
     guard
-      let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
+      let parameter = graphRequestFactory.capturedParameters[Keys.metadata] as? String,
       let data = parameter.data(using: .utf8),
       let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
@@ -309,12 +309,12 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     }
 
     XCTAssertEqual(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(name)/suggested_events",
       "Should use the app identifier from the settings"
     )
     XCTAssertEqual(
-      requestProvider.capturedParameters[Keys.eventName] as? String,
+      graphRequestFactory.capturedParameters[Keys.eventName] as? String,
       name,
       "Should capture the event name in the parameters"
     )
@@ -324,16 +324,16 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should request the expected metadata"
     )
     XCTAssertNil(
-      requestProvider.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "The request should be tokenless"
     )
     XCTAssertEqual(
-      requestProvider.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       .post,
       "Should use the expected http method"
     )
     XCTAssertTrue(
-      requestProvider.capturedFlags.isEmpty,
+      graphRequestFactory.capturedFlags.isEmpty,
       "Should not create the request with explicit request flags"
     )
   }
@@ -356,7 +356,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is too long"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is too long"
     )
   }
@@ -374,7 +374,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is empty"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is empty"
     )
   }
@@ -392,7 +392,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is sensitive"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is sensitive"
     )
   }
@@ -405,7 +405,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log if there is no event processor to process events"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if there is no event processor to process events"
     )
   }
@@ -488,7 +488,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log unconfirmed events"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if there is no dense data"
     )
   }
@@ -514,7 +514,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log unconfirmed events"
     )
     XCTAssertEqual(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(name)/suggested_events",
       "Should create a request for an unconfirmed event when there is dense data"
     )
@@ -538,7 +538,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       """
       Should not create a request when there are matching unconfirmed events if
       there are also matching opt-in events

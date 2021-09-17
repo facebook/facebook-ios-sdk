@@ -64,17 +64,17 @@
 @end
 
 @interface FBSDKCodelessIndexer (Testing)
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 @end
 
 @interface FBSDKSKAdNetworkReporter (Testing)
-- (id<FBSDKGraphRequestProviding>)requestProvider;
+- (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 - (id<FBSDKDataPersisting>)store;
 - (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 + (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 @end
 
@@ -84,7 +84,7 @@
 
 @interface FBSDKCrashShield (Testing)
 + (id<FBSDKSettings>)settings;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 + (id<FBSDKFeatureChecking>)featureChecking;
 @end
 
@@ -99,7 +99,7 @@
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 + (id<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
 + (Class<FBSDKLogging>)logger;
@@ -205,9 +205,9 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKGateKeeperManager.class,
     "Initializing the SDK should set gate keeper manager for event logging"
   );
-  NSObject *requestProvider = (NSObject *) self.appEvents.capturedConfigureGraphRequestProvider;
+  NSObject *graphRequestFactory = (NSObject *) self.appEvents.capturedConfigureGraphRequestFactory;
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Initializing the SDK should set graph request factory for event logging"
   );
@@ -344,7 +344,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
-  NSObject *requestProvider = (NSObject *)FBSDKGateKeeperManager.requestProvider;
+  NSObject *graphRequestFactory = (NSObject *)FBSDKGateKeeperManager.graphRequestFactory;
   NSObject *connectionProvider = (NSObject *)FBSDKGateKeeperManager.connectionProvider;
   NSObject *settings = (NSObject *)FBSDKGateKeeperManager.settings;
   NSObject *store = (NSObject *)FBSDKGateKeeperManager.store;
@@ -359,7 +359,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     "Should be configured with the expected concrete settings"
   );
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
   );
@@ -379,7 +379,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *requestProvider = (NSObject *)[FBSDKCodelessIndexer requestProvider];
+  NSObject *graphRequestFactory = (NSObject *)[FBSDKCodelessIndexer graphRequestFactory];
   NSObject *serverConfigurationProvider = (NSObject *)[FBSDKCodelessIndexer serverConfigurationProvider];
   NSObject *store = (NSObject *)[FBSDKCodelessIndexer store];
   NSObject *connectionProvider = (NSObject *)[FBSDKCodelessIndexer connectionProvider];
@@ -387,7 +387,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   NSObject *settings = (NSObject *)[FBSDKCodelessIndexer settings];
   NSObject *advertiserIDProvider = (NSObject *)[FBSDKCodelessIndexer advertiserIDProvider];
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
   );
@@ -428,7 +428,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *settings = (NSObject *)[FBSDKCrashShield settings];
-  NSObject *requestProvider = (NSObject *)[FBSDKCrashShield requestProvider];
+  NSObject *graphRequestFactory = (NSObject *)[FBSDKCrashShield graphRequestFactory];
   NSObject *featureChecking = (NSObject *)[FBSDKCrashShield featureChecking];
   XCTAssertEqualObjects(
     settings.class,
@@ -436,7 +436,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     "Should be configured with the expected settings"
   );
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
   );
@@ -464,10 +464,10 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *requestProvider = (NSObject *)[FBSDKAppLinkUtility requestProvider];
+  NSObject *graphRequestFactory = (NSObject *)[FBSDKAppLinkUtility graphRequestFactory];
   NSObject *infoDictionaryProvider = (NSObject *)[FBSDKAppLinkUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
   );
@@ -482,11 +482,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *requestProvider = (NSObject *)[[self.delegate skAdNetworkReporter] requestProvider];
+  NSObject *graphRequestFactory = (NSObject *)[[self.delegate skAdNetworkReporter] graphRequestFactory];
   NSObject *store = (NSObject *)[[self.delegate skAdNetworkReporter] store];
   NSObject *conversionValueUpdatable = (NSObject *)[[self.delegate skAdNetworkReporter] conversionValueUpdatable];
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
   );
@@ -612,7 +612,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   NSObject *tokenWallet = (NSObject *) FBSDKGraphRequestPiggybackManager.tokenWallet;
   NSObject *settings = (NSObject *) FBSDKGraphRequestPiggybackManager.settings;
   NSObject *serverConfiguration = (NSObject *) FBSDKGraphRequestPiggybackManager.serverConfiguration;
-  NSObject *requestProvider = (NSObject *) FBSDKGraphRequestPiggybackManager.requestProvider;
+  NSObject *graphRequestFactory = (NSObject *) FBSDKGraphRequestPiggybackManager.graphRequestFactory;
 
   XCTAssertEqualObjects(
     tokenWallet,
@@ -632,7 +632,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
 
     "Should be configured with the expected concrete graph request provider"
@@ -688,7 +688,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *store = (NSObject *) FBSDKAppEventsConfigurationManager.shared.store;
   NSObject *settings = (NSObject *) FBSDKAppEventsConfigurationManager.shared.settings;
-  NSObject *requestProvider = (NSObject *) FBSDKAppEventsConfigurationManager.shared.requestFactory;
+  NSObject *graphRequestFactory = (NSObject *) FBSDKAppEventsConfigurationManager.shared.graphRequestFactory;
   NSObject *connectionProvider = (NSObject *) FBSDKAppEventsConfigurationManager.shared.connectionFactory;
 
   XCTAssertEqualObjects(
@@ -702,7 +702,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     "Should be configured with the expected concrete settings"
   );
   XCTAssertEqualObjects(
-    requestProvider.class,
+    graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete request provider"
   );

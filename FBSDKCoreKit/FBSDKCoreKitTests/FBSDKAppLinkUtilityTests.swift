@@ -21,7 +21,7 @@ import TestTools
 
 class FBSDKAppLinkUtilityTests: XCTestCase {
 
-  let requestFactory = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   var bundle = TestBundle()
 
   override func setUp() {
@@ -29,7 +29,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
 
     TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
     AppLinkUtility.configure(
-      requestProvider: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       infoDictionaryProvider: bundle
     )
   }
@@ -47,9 +47,9 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     TestLogger.reset()
   }
 
-  func testConfiguringWithRequestProvider() {
+  func testConfiguringWithGraphRequestFactory() {
     XCTAssertTrue(
-      AppLinkUtility.requestProvider is TestGraphRequestFactory,
+      AppLinkUtility.graphRequestFactory is TestGraphRequestFactory,
       "Should use the provided request provider type"
     )
   }
@@ -85,7 +85,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     bundle = TestBundle(infoDictionary: bundleDict)
 
     AppLinkUtility.configure(
-      requestProvider: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       infoDictionaryProvider: bundle
     )
 
@@ -93,7 +93,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     XCTAssertFalse(AppLinkUtility.isMatchURLScheme("not_in_url_schemes"))
   }
 
-  func testRequestProviderAfterGraphRequest() {
+  func testGraphRequestFactoryAfterGraphRequest() {
     // TODO: Remove these configure calls when both types are injected into the utility
     AppEventsConfigurationManager.configure(
       store: UserDefaultsSpy(),
@@ -105,7 +105,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       withGateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
       serverConfigurationProvider: TestServerConfigurationProvider(),
-      graphRequestProvider: TestGraphRequestFactory(),
+      graphRequestFactory: TestGraphRequestFactory(),
       featureChecker: TestFeatureManager(),
       store: UserDefaultsSpy(),
       logger: TestLogger.self,
@@ -122,8 +122,8 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     )
 
     AppLinkUtility.fetchDeferredAppLink()
-    XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
-    XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
+    XCTAssertEqual(graphRequestFactory.capturedGraphPath, "(null)/activities")
+    XCTAssertEqual(graphRequestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
   }
 
   func testValidatingConfiguration() {

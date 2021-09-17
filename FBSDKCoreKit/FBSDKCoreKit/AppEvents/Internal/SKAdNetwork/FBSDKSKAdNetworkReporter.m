@@ -30,8 +30,8 @@
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKConversionValueUpdating.h"
  #import "FBSDKDataPersisting.h"
+ #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKGraphRequestProtocol.h"
- #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSettings.h"
 
@@ -57,7 +57,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 @property (nonatomic) NSDate *timestamp;
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
 @property (nonnull, nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *recordedValues;
-@property (nonnull, nonatomic) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonnull, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonnull, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
 
@@ -65,11 +65,11 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 @implementation FBSDKSKAdNetworkReporter
 
-- (instancetype)initWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                  store:(id<FBSDKDataPersisting>)store
-               conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                      store:(id<FBSDKDataPersisting>)store
+                   conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
 {
-  self.requestProvider = requestProvider;
+  self.graphRequestFactory = graphRequestFactory;
   self.store = store;
   self.conversionValueUpdatable = conversionValueUpdatable;
   return self;
@@ -152,7 +152,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
       return;
     }
     self.isRequestStarted = YES;
-    id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
+    id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self dispatchOnQueue:self.serialQueue block:^{
         if (error) {

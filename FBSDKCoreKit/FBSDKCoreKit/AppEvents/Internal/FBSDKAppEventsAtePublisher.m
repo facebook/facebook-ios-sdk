@@ -25,15 +25,15 @@
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKAppEventsAtePublisher ()
 
-@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonatomic) BOOL isProcessing;
@@ -43,7 +43,7 @@
 @implementation FBSDKAppEventsAtePublisher
 
 - (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
-                           graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                       settings:(id<FBSDKSettings>)settings
                                          store:(id<FBSDKDataPersisting>)store
 {

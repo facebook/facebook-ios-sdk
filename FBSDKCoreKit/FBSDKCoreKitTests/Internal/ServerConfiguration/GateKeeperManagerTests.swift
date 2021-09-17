@@ -23,7 +23,7 @@ import XCTest
 // swiftlint:disable file_length
 class GateKeeperManagerTests: XCTestCase {
 
-  let requestFactory = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   let connection = TestGraphRequestConnection()
   let connectionFactory = TestGraphRequestConnectionFactory()
   let store = UserDefaultsSpy()
@@ -35,7 +35,7 @@ class GateKeeperManagerTests: XCTestCase {
     connectionFactory.stubbedConnection = connection
     GateKeeperManager.configure(
       settings: TestSettings.self,
-      requestProvider: requestFactory,
+      graphRequestFactory: graphRequestFactory,
       connectionProvider: connectionFactory,
       store: store
     )
@@ -54,7 +54,7 @@ class GateKeeperManagerTests: XCTestCase {
     GateKeeperManager.reset()
 
     XCTAssertNil(
-      GateKeeperManager.requestProvider,
+      GateKeeperManager.graphRequestFactory,
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
@@ -72,7 +72,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(GateKeeperManager.requestProvider === requestFactory)
+    XCTAssertTrue(GateKeeperManager.graphRequestFactory === graphRequestFactory)
     XCTAssertTrue(GateKeeperManager.connectionProvider === connectionFactory)
     XCTAssertTrue(GateKeeperManager.settings is TestSettings.Type)
     XCTAssertTrue(GateKeeperManager.store === store)
@@ -166,7 +166,7 @@ class GateKeeperManagerTests: XCTestCase {
     }
     XCTAssertTrue(didInvokeCompletion)
     XCTAssertNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a graph request if the gatekeeper is valid"
     )
     XCTAssertNil(
@@ -265,31 +265,31 @@ class GateKeeperManagerTests: XCTestCase {
     _ = GateKeeperManager.requestToLoadGateKeepers()
 
     XCTAssertEqual(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(appIdentifier)/mobile_sdk_gk",
       "Should use the app identifier from the settings"
     )
-    XCTAssertEqual(requestFactory.capturedParameters["platform"] as? String, "ios")
+    XCTAssertEqual(graphRequestFactory.capturedParameters["platform"] as? String, "ios")
     XCTAssertEqual(
-      requestFactory.capturedParameters["sdk_version"] as? String,
+      graphRequestFactory.capturedParameters["sdk_version"] as? String,
       version,
       "Should use the sdk version from the settings"
     )
     XCTAssertEqual(
-      requestFactory.capturedParameters["fields"] as? String,
+      graphRequestFactory.capturedParameters["fields"] as? String,
       "gatekeepers",
       "Should request the expected fields"
     )
     XCTAssertNil(
-      requestFactory.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "The gate keepers request should be tokenless"
     )
     XCTAssertNil(
-      requestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       "Should not provide an explicit http method"
     )
     XCTAssertEqual(
-      requestFactory.capturedFlags,
+      graphRequestFactory.capturedFlags,
       [GraphRequestFlags.skipClientToken, GraphRequestFlags.disableErrorRecovery],
       "Should provide the expected graph request flags"
     )

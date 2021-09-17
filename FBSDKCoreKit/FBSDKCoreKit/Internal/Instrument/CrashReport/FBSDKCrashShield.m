@@ -22,13 +22,13 @@
 
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureDisabling.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashShield ()
 
-@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKFeatureChecking, FBSDKFeatureDisabling> featureChecking;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 
@@ -36,7 +36,7 @@
 
 @implementation FBSDKCrashShield
 
-static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKFeatureChecking, FBSDKFeatureDisabling> _featureChecking;
 static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
 static NSDictionary<NSString *, NSNumber *> *_featureForStringMap;
@@ -47,9 +47,9 @@ static id<FBSDKSettings> _settings;
   return _settings;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
 + (id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
@@ -58,12 +58,12 @@ static id<FBSDKSettings> _settings;
 }
 
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
 {
   if (self == FBSDKCrashShield.class) {
     _settings = settings;
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
     _featureChecking = featureChecking;
   }
 }
@@ -166,9 +166,9 @@ static id<FBSDKSettings> _settings;
     if (jsonData) {
       NSString *disabledFeatureReport = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       if (disabledFeatureReport) {
-        id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
-                                                                               parameters:@{@"crash_shield" : disabledFeatureReport}
-                                                                               HTTPMethod:FBSDKHTTPMethodPOST];
+        id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
+                                                                                   parameters:@{@"crash_shield" : disabledFeatureReport}
+                                                                                   HTTPMethod:FBSDKHTTPMethodPOST];
 
         [request startWithCompletion:nil];
       }
@@ -218,7 +218,7 @@ static id<FBSDKSettings> _settings;
 + (void)reset
 {
   _settings = nil;
-  _requestProvider = nil;
+  _graphRequestFactory = nil;
   _featureChecking = nil;
 }
 
