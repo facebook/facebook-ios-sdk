@@ -152,7 +152,7 @@ static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
     return nil;
   }
 
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _rawObject = obj;
   }
 

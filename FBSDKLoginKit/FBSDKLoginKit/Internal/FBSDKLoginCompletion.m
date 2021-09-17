@@ -42,7 +42,7 @@
 
 - (instancetype)initWithError:(NSError *)error
 {
-  if ((self = [self init]) != nil) {
+  if ((self = [self init])) {
     self.error = error;
   }
   return self;
@@ -81,7 +81,7 @@ static NSDateFormatter *_dateFormatter;
                    connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
 {
-  if ((self = [super init]) != nil) {
+  if ((self = [super init])) {
     _connectionProvider = connectionProvider;
     _authenticationTokenCreator = authenticationTokenCreator;
     _parameters = [FBSDKLoginCompletionParameters new];

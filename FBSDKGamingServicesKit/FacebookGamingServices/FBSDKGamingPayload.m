@@ -28,7 +28,7 @@ NSString *const kGamingPayloadContextTokenID = @"context_token_id";
 
 - (instancetype)initWithURL:(FBSDKURL *_Nonnull)url
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _URL = url;
   }
   return self;

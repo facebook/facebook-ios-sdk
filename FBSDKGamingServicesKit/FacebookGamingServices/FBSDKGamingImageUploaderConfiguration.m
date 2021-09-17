@@ -29,7 +29,7 @@
                       caption:(NSString *_Nullable)caption
       shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _image = image;
     _caption = caption;
     _shouldLaunchMediaDialog = shouldLaunchMediaDialog;

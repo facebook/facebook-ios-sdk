@@ -28,7 +28,7 @@
 - (instancetype)initWithVideoURL:(NSURL *_Nonnull)videoURL
                          caption:(NSString *_Nullable)caption;
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _videoURL = videoURL;
     _caption = caption;
   }

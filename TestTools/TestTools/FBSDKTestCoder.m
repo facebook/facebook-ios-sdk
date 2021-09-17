@@ -22,7 +22,7 @@
 
 - (instancetype)init
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _encodedObject = [NSMutableDictionary dictionary];
     _decodedObject = [NSMutableDictionary dictionary];
   }

@@ -35,7 +35,7 @@
 
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _notificationCenter = notificationCenter;
     [notificationCenter addObserver:self selector:@selector(_checkAccessTokenExpirationDate) name:FBSDKAccessTokenDidChangeNotification object:nil];
     [notificationCenter addObserver:self selector:@selector(_checkAccessTokenExpirationDate) name:FBSDKApplicationDidBecomeActiveNotification object:nil];

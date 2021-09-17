@@ -181,7 +181,7 @@ static UIApplicationState _applicationState;
                                      store:(id<FBSDKDataPersisting>)store
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
 {
-  if ((self = [super init]) != nil) {
+  if ((self = [super init])) {
     _applicationObservers = [NSHashTable new];
     _notificationObserver = notificationCenter;
     _tokenWallet = tokenWallet;
@@ -208,7 +208,7 @@ static UIApplicationState _applicationState;
                            profileProvider:(Class<FBSDKProfileProviding>)profileProvider
                      backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
 {
-  if ((self = [super init]) != nil) {
+  if ((self = [super init])) {
     _applicationObservers = [NSHashTable new];
     _notificationObserver = notificationCenter;
     _tokenWallet = tokenWallet;

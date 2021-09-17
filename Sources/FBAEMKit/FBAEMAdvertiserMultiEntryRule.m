@@ -32,7 +32,7 @@ static NSString *const RULES_KEY = @"rules";
 - (instancetype)initWithOperator:(FBAEMAdvertiserRuleOperator)op
                            rules:(NSArray<id<FBAEMAdvertiserRuleMatching>> *)rules
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _operator = op;
     _rules = rules;
   }

@@ -30,7 +30,7 @@ NSString *const FBSDKLocationNameCodingKey = @"FBSDKLocationNameCodingKey";
 - (instancetype)initWithId:(NSString *)id
                       name:(NSString *)name
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _id = id;
     _name = name;
   }

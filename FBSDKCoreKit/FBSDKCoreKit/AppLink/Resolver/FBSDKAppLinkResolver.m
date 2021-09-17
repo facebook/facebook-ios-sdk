@@ -74,7 +74,7 @@ static NSString *const kAppLinksKey = @"app_links";
                        clientTokenProvider:(id<FBSDKClientTokenProviding>)clientTokenProvider
                        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _cachedFBSDKAppLinks = [NSMutableDictionary dictionary];
     _userInterfaceIdiom = userInterfaceIdiom;
     _requestBuilder = builder;

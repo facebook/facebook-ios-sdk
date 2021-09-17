@@ -78,7 +78,7 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
                           urlOpener:(id<FBSDKURLOpener>)urlOpener
                            settings:(id<FBSDKSettings>)settings
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _serviceType = serviceType;
     _completionHandler = completion;
     _pendingResult = pendingResult;

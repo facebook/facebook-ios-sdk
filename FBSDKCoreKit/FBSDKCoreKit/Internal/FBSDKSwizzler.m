@@ -380,7 +380,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 
 - (instancetype)init
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     self.blocks = [NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsStrongMemory
                                 | NSPointerFunctionsObjectPersonality)
                                         valueOptions:(NSPointerFunctionsStrongMemory
@@ -396,7 +396,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
                originalMethod:(IMP)aMethod
                   withNumArgs:(uint)numArgs
 {
-  if (self = [self init]) {
+  if ((self = [self init])) {
     self.class = aClass;
     self.selector = aSelector;
     self.numArgs = numArgs;
@@ -425,7 +425,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 - (instancetype)initWithSwizzle:(FBSDKSwizzle *)aSwizzle
                           class:(Class)aClass
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     self.bindingSwizzle = aSwizzle;
     self.bindingClass = aClass;
   }

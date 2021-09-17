@@ -111,7 +111,7 @@ static _Nullable id<FBSDKSettings> _settings;
                           userGender:(nullable NSString *)userGender
                             userLink:(nullable NSString *)userLink
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _jti = jti;
     _iss = iss;
     _aud = aud;

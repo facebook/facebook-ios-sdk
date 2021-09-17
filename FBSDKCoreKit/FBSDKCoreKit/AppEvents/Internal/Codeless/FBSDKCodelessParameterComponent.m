@@ -31,7 +31,7 @@
 
 - (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _name = [dict[CODELESS_MAPPING_PARAMETER_NAME_KEY] copy];
     _value = [dict[CODELESS_MAPPING_PARAMETER_VALUE_KEY] copy];
     _pathType = [dict[CODELESS_MAPPING_PATH_TYPE_KEY] copy];

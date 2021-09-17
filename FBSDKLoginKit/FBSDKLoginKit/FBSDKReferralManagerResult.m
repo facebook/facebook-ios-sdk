@@ -27,7 +27,7 @@
 - (instancetype)initWithReferralCodes:(nullable NSArray<FBSDKReferralCode *> *)referralCodes
                           isCancelled:(BOOL)isCancelled
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _referralCodes = referralCodes;
     _isCancelled = isCancelled;
   }

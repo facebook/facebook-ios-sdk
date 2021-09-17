@@ -30,7 +30,7 @@ NSString *const FBSDKUserAgeRangeMaxCodingKey = @"FBSDKUserAgeRangeMaxCodingKey"
 - (instancetype)initMin:(NSNumber *)min
                     max:(NSNumber *)max
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _min = min;
     _max = max;
   }

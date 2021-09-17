@@ -28,7 +28,7 @@
 
 - (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _className = [dict[CODELESS_MAPPING_CLASS_NAME_KEY] copy];
     _text = [dict[CODELESS_MAPPING_TEXT_KEY] copy];
     _hint = [dict[CODELESS_MAPPING_HINT_KEY] copy];

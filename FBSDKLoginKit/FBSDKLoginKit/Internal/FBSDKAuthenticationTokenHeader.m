@@ -26,7 +26,7 @@
                         typ:(NSString *)typ
                         kid:(NSString *)kid
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _alg = alg;
     _typ = typ;
     _kid = kid;

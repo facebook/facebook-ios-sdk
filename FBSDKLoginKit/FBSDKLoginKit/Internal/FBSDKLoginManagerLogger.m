@@ -115,7 +115,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
       return nil;
   }
 
-  if ((self = [super init]) != nil) {
+  if ((self = [super init])) {
     _identifier = [NSUUID UUID].UUIDString;
     _extras = [NSMutableDictionary dictionary];
     _loggingToken = [loggingToken copy];
