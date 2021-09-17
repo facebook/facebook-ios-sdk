@@ -18,7 +18,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `AccessToken`'s `refreshCurrentAccessToken(completionHandler:)`. Replaced by `refreshCurrentAccessToken(completion:)`
 - `AppEvents`' `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...HEAD)
+
+## 11.2.1
+
+### Fixed
+- Fixed the App AEM Advertiser Rule match for fb_content
+- Fixed: 'FBSDKCoreKitImport.h' file not found. (Issue #1829)
+
+[2021-09-16](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.2.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...v11.2.1)
 
 ## 11.2.0
 
