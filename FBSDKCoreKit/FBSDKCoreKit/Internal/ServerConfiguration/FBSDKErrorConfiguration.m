@@ -97,7 +97,9 @@ static NSString *const kErrorCategoryLogin = @"login";
   return self;
 }
 
-- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode request:(id<FBSDKGraphRequest>)request
+- (nullable FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(nullable NSString *)code
+                                                                   subcode:(nullable NSString *)subcode
+                                                                   request:(nonnull id<FBSDKGraphRequest>)request
 {
   code = code ?: @"*";
   subcode = subcode ?: @"*";
