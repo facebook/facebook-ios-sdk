@@ -161,7 +161,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   return YES;
 }
 
-- (BOOL)isCompatibleWithAppEventsState:(FBSDKAppEventsState *)appEventsState
+- (BOOL)isCompatibleWithAppEventsState:(nullable FBSDKAppEventsState *)appEventsState
 {
   return ([self isCompatibleWithTokenString:appEventsState.tokenString appID:appEventsState.appID]);
 }
