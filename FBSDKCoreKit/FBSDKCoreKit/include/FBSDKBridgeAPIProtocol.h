@@ -24,6 +24,8 @@
 
 #import "FBSDKBridgeAPIProtocolType.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKBridgeAPIRequest;
 
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIAppIDKey;
@@ -39,17 +41,19 @@ FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIVersionKey;
 NS_SWIFT_NAME(BridgeAPIProtocol)
 @protocol FBSDKBridgeAPIProtocol <NSObject>
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
+- (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                            scheme:(NSString *)scheme
                        methodName:(NSString *)methodName
                     methodVersion:(NSString *)methodVersion
                        parameters:(NSDictionary<NSString *, id> *)parameters
-                            error:(NSError *__autoreleasing *)errorRef;
-- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                            error:( NSError * _Nullable *)errorRef;
+- (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
                                 queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef;
+                                      cancelled:(nullable BOOL *)cancelledRef
+                                                          error:( NSError* _Nullable *)errorRef;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

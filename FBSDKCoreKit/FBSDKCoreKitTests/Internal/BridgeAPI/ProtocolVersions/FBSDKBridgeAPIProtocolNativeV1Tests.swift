@@ -69,7 +69,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     do {
       let response = try protocolNativeV1.responseParameters(
         forActionID: actionID,
-        queryParameters: nil,
+        queryParameters: [:],
         cancelled: &cancelled
       )
       XCTAssertNil(response)
@@ -104,7 +104,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     do {
       let response = try protocolNativeV1.responseParameters(
         forActionID: actionID,
-        queryParameters: nil,
+        queryParameters: [:],
         cancelled: &cancelled
       )
 

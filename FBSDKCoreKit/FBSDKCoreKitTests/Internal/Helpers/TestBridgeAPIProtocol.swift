@@ -52,7 +52,7 @@ class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
   func responseParameters(
     forActionID actionID: String,
     queryParameters: [String: Any],
-    cancelled cancelledRef: UnsafeMutablePointer<ObjCBool>
+    cancelled cancelledRef: UnsafeMutablePointer<ObjCBool>?
   ) throws -> [String: Any] {
     capturedResponseActionID = actionID
     capturedResponseQueryParameters = queryParameters

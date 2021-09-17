@@ -72,11 +72,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutServerConfiguration() {
     XCTAssertNil(
       try? bridge.requestURL(
-        withActionID: nil,
-        scheme: nil,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil
+        withActionID: "",
+        scheme: "",
+        methodName: "",
+        methodVersion: "",
+        parameters: [:]
       ),
       "Should not create a url without a server configuration"
     )
@@ -84,11 +84,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestURLWithoutDialog() {
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: "Foo",
-      methodVersion: nil,
-      parameters: nil
+      methodVersion: "",
+      parameters: [:]
     )
 
     XCTAssertNil(
@@ -100,11 +100,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutMatchingDialogForMethodName() {
     stubServerConfigurationWithDialog(named: "Bar")
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: "Foo",
-      methodVersion: nil,
-      parameters: nil
+      methodVersion: "",
+      parameters: [:]
     )
 
     XCTAssertNil(
@@ -117,11 +117,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     stubServerConfigurationWithDialog(named: Values.methodName)
     nativeBridge.stubbedRequestURLError = SampleError()
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: Values.methodName,
-      methodVersion: nil,
-      parameters: nil
+      methodVersion: "",
+      parameters: [:]
     )
 
     XCTAssertNil(

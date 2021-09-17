@@ -70,45 +70,6 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
 
   let bridge = BridgeAPIProtocolWebV1()
 
-  func testCreatingURLWithoutInputs() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: nil,
-        scheme: nil,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil
-      ),
-      "Should not create a url without a method name or an action ID"
-    )
-  }
-
-  func testCreatingURLWithoutActionID() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: nil,
-        scheme: Values.scheme,
-        methodName: Values.methodName,
-        methodVersion: Values.methodVersion,
-        parameters: QueryParameters.withEmptyBridgeArgs
-      ),
-      "Should not create a url without action ID"
-    )
-  }
-
-  func testCreatingURLWithoutMethodName() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: Values.actionID,
-        scheme: Values.scheme,
-        methodName: nil,
-        methodVersion: Values.methodVersion,
-        parameters: QueryParameters.withEmptyBridgeArgs
-      ),
-      "Should not create a url without a method name"
-    )
-  }
-
   func testCreatingURLWithAllFields() throws {
     let url = try bridge.requestURL(
       withActionID: Values.actionID,
