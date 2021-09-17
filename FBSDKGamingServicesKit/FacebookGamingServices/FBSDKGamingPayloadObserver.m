@@ -86,13 +86,6 @@ static FBSDKGamingPayloadObserver *sharedInstance = nil;
     return true;
   }
 
-  if (urlContainsGameRequestID && [(NSObject *)self.delegate respondsToSelector:@selector(updatedURLContaining:)]) {
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [_delegate updatedURLContaining:payload];
-    #pragma clange diagnostic pop
-    return true;
-  }
-
   if (urlContainsGameContextTokenID
       && [(NSObject *)self.delegate respondsToSelector:@selector(parsedGamingContextURLContaining:)]) {
     [FBSDKGamingContext createContextWithIdentifier:sdkURL.appLinkExtras[kGamingPayloadContextTokenID] size:0];

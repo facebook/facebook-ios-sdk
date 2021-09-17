@@ -34,34 +34,11 @@ NS_SWIFT_NAME(GamingVideoUploader)
 Runs an upload to a users Gaming Media Library with the given configuration
 
 @param configuration model object contain the content that will be uploaded
-@param completionHandler a callback that is fired when the upload completes.
-*/
-+ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-DEPRECATED_MSG_ATTRIBUTE("`uploadVideoWithConfiguration:andResultCompletionHandler` is deprecated and will be removed in the next major release. It is replaced by `uploadVideoWithConfiguration:andResultCompletion`.");
-
-/**
-Runs an upload to a users Gaming Media Library with the given configuration
-
-@param configuration model object contain the content that will be uploaded
 @param completion a callback that is fired when the upload completes.
 */
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
                  andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
 NS_SWIFT_NAME(uploadeVideo(configuration:completion:));
-
-/**
-Runs an upload to a users Gaming Media Library with the given configuration
-
-@param configuration model object contain the content that will be uploaded
-@param completionHandler a callback that is fired when the upload completes.
-@param progressHandler an optional callback that is fired multiple times as
- bytes are transferred to Facebook.
-*/
-+ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
-DEPRECATED_MSG_ATTRIBUTE("`uploadVideoWithConfiguration:completionHandler:andProgressHandler:` is deprecated and will be removed in the next major release. It is replaced by `uploadVideoWithConfiguration:completion:andProgressHandler:`.");
 
 /**
 Runs an upload to a users Gaming Media Library with the given configuration

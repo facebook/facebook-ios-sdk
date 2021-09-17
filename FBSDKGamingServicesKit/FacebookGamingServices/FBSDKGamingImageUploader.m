@@ -71,16 +71,6 @@
 }
 
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-{
-  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary<NSString *, id> *result, NSError *error) {
-    completionHandler(success, result.debugDescription, error);
-  };
-
-  [self.shared uploadImageWithConfiguration:configuration andResultCompletion:completion];
-}
-
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                  andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
 {
   [self.shared uploadImageWithConfiguration:configuration
@@ -95,19 +85,6 @@
    uploadImageWithConfiguration:configuration
    completion:completion
    andProgressHandler:nil];
-}
-
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
-{
-  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary<NSString *, id> *result, NSError *error) {
-    completionHandler(success, result.debugDescription, error);
-  };
-
-  [self.shared uploadImageWithConfiguration:configuration
-                                 completion:completion
-                         andProgressHandler:progressHandler];
 }
 
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration

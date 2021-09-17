@@ -22,124 +22,8 @@ import XCTest
 class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   let gameRequestDelegate = GameRequestPayloadObserverDelegate()
   lazy var gameRequestObserver = GamingPayloadObserver(delegate: gameRequestDelegate)
-  lazy var gameRequestObserverDeprecated = GamingPayloadObserver(delegate: self)
   var capturedPayload: GamingPayload?
   var wasUpdatedURLContainingCalled = false
-
-  // MARK: - GameRequestObserver Implementing Deprecrated Delegate Method
-
-  func testCreatingWithDeprecratedDelegateMethod() {
-    XCTAssertTrue(
-      gameRequestObserverDeprecated.delegate === self,
-      "Should store the delegate it was created with"
-    )
-    XCTAssertTrue(
-      ApplicationDelegate.shared.applicationObservers.contains(gameRequestObserverDeprecated),
-      "Should observe the shared application delegate upon creation"
-    )
-  }
-
-  func testOpeningInvalidURLWithDeprecratedDelegateMethod() throws {
-    // non fbsdkurl
-    let url = try XCTUnwrap(URL(string: "file://foo"))
-    XCTAssertFalse(
-      gameRequestObserverDeprecated.application(
-        UIApplication.shared,
-        open: url,
-        sourceApplication: nil,
-        annotation: nil
-      ),
-      "Should not successfully open an invalid url"
-    )
-
-    XCTAssertFalse(
-      wasUpdatedURLContainingCalled,
-      "Should not invoke the delegate for an invalid url"
-    )
-  }
-
-  func testOpeningURLWithMissingKeysWithDeprecratedDelegateMethod() throws {
-    let url = try SampleUnparsedAppLinkURLs.missingKeys()
-
-    XCTAssertFalse(
-      gameRequestObserverDeprecated.application(
-        UIApplication.shared,
-        open: url,
-        sourceApplication: nil,
-        annotation: nil
-      ),
-      "Should not successfully open a url with missing extras"
-    )
-
-    XCTAssertFalse(
-      wasUpdatedURLContainingCalled,
-      "Should not invoke the delegate for a url with missing extras"
-    )
-  }
-
-  func testOpeningURLWithMissingGameRequestIDWithDeprecratedDelegateMethod() throws {
-    let url = try SampleUnparsedAppLinkURLs.create(gameRequestID: nil)
-    XCTAssertFalse(
-      gameRequestObserverDeprecated.application(
-        UIApplication.shared,
-        open: url,
-        sourceApplication: nil,
-        annotation: nil
-      ),
-      "Should not successfully open a url with a missing game request ID"
-    )
-    XCTAssertFalse(
-      wasUpdatedURLContainingCalled,
-      "Should not invoke the delegate method updatedURLContaining for a url with a missing game request ID"
-    )
-  }
-
-  func testOpeningURLWithMissingPayloadWithDeprecratedDelegateMethod() throws {
-    let url = try SampleUnparsedAppLinkURLs.create(payload: nil)
-    XCTAssertFalse(
-      gameRequestObserverDeprecated.application(
-        UIApplication.shared,
-        open: url,
-        sourceApplication: nil,
-        annotation: nil
-      ),
-      "Should not successfully open a url with a missing payload"
-    )
-    XCTAssertFalse(
-      wasUpdatedURLContainingCalled,
-      "Should not invoke the delegate for a url with a missing payload"
-    )
-  }
-
-  func testOpeningWithValidGameRequestURLWithDeprecratedDelegateMethod() throws {
-    let url = try SampleUnparsedAppLinkURLs.validGameRequestUrl()
-    XCTAssertTrue(
-      gameRequestObserverDeprecated.application(
-        UIApplication.shared,
-        open: url,
-        sourceApplication: nil,
-        annotation: nil
-      ),
-      "Should successfully open a game request url with a valid payload"
-    )
-
-    XCTAssertTrue(
-      wasUpdatedURLContainingCalled,
-      "Should invoke the delegate method updatedURLContainingCalled for a game request url with a valid payload"
-    )
-    XCTAssertEqual(
-      capturedPayload?.payload,
-      SampleUnparsedAppLinkURLs.Values.payload,
-      "Should invoke the delegate with the expected payload"
-    )
-    XCTAssertEqual(
-      capturedPayload?.gameRequestID,
-      SampleUnparsedAppLinkURLs.Values.gameRequestID,
-      "Should invoke the delegate with the expected game request ID"
-    )
-  }
-
-  // MARK: - GameRequestObserver with Nondeprecrated Delegate Method
 
   func testCreatingObserver() {
     XCTAssertTrue(
@@ -168,10 +52,6 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
       gameRequestDelegate.wasGameRequestDelegateCalled,
       "Should not invoke the delegate method parsedGameRequestURLContaining for an invalid url"
     )
-    XCTAssertFalse(
-      gameRequestDelegate.wasDeprecratedMethodCalled,
-      "Should not invoke the delegate method updatedURLContaining for an invalid url"
-    )
   }
 
   func testOpeningURLWithMissingKeys() throws {
@@ -191,10 +71,6 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
       gameRequestDelegate.wasGameRequestDelegateCalled,
       "Should not invoke the delegate method parsedGameRequestURLContaining for an invalid url"
     )
-    XCTAssertFalse(
-      gameRequestDelegate.wasDeprecratedMethodCalled,
-      "Should not invoke the delegate method updatedURLContaining for an invalid url"
-    )
   }
 
   func testOpeningURLWithMissingGameRequestID() throws {
@@ -211,10 +87,6 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
     XCTAssertFalse(
       gameRequestDelegate.wasGameRequestDelegateCalled,
       "Should not invoke the delegate method parsedGameRequestURLContaining for an invalid url"
-    )
-    XCTAssertFalse(
-      gameRequestDelegate.wasDeprecratedMethodCalled,
-      "Should not invoke the delegate method updatedURLContaining for an invalid url"
     )
   }
 
@@ -233,10 +105,6 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
       gameRequestDelegate.wasGameRequestDelegateCalled,
       "Should not invoke the delegate method parsedGameRequestURLContaining for an invalid url"
     )
-    XCTAssertFalse(
-      gameRequestDelegate.wasDeprecratedMethodCalled,
-      "Should not invoke the delegate method updatedURLContaining for an invalid url"
-    )
   }
 
   func testOpeningWithValidGameRequestURL() throws {
@@ -249,11 +117,6 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
         annotation: nil
       ),
       "Should successfully open a url with a valid payload"
-    )
-
-    XCTAssertFalse(
-      gameRequestDelegate.wasDeprecratedMethodCalled,
-      "Should not invoke the delegate method updatedURLContainingCalled for a url with a valid payload"
     )
     XCTAssertTrue(
       gameRequestDelegate.wasGameRequestDelegateCalled,
@@ -270,24 +133,12 @@ class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
       "Should invoke the delegate with the expected game request ID"
     )
   }
-
-  // MARK: - GamingPayload Deprecrated Delegate Method
-
-  func updatedURLContaining(_ payload: GamingPayload) {
-    wasUpdatedURLContainingCalled = true
-    capturedPayload = payload
-  }
 }
 
 class GameRequestPayloadObserverDelegate: GamingPayloadDelegate {
   var wasGameRequestDelegateCalled = false
-  var wasDeprecratedMethodCalled = false
   var capturedGameRequestID: String?
   var capturedPayload: GamingPayload?
-
-  func updatedURLContaining(_ payload: GamingPayload) {
-    wasDeprecratedMethodCalled = true
-  }
 
   func parsedGameRequestURLContaining(_ payload: GamingPayload, gameRequestID: String) {
     wasGameRequestDelegateCalled = true

@@ -41,18 +41,9 @@ A shared object that holds data about the current user's  game instance which co
 @property (readonly, nonatomic) NSString* identifier;
 
 /**
-  The context type which identifies the source of the user's game instance.
-    * GENERIC -
-    * LINK -
- */
-@property (readonly, nullable) FBSDKGamingContextType* type
-DEPRECATED_MSG_ATTRIBUTE("The Type property is deprecated and will be removed in the next major release. If you believe it's useful please give us feedback.");
-
-/**
   The number of players in the current user's  game instance
  */
 @property (readonly) NSInteger size;
-
 
 /**
  Internal Type exposed to facilitate transition to Swift.

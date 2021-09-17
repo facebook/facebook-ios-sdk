@@ -13,16 +13,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed
 
-- `AccessToken`'s `graphDomain` property. Replacement - the `graphDomain` property on `AuthenticationToken`
+- `AccessToken.graphDomain` Replacement - `AuthenticationToken.graphDomain`
 - `AccessToken`'s convenience initializers that include `graphDomain`
-- `AccessToken`'s `refreshCurrentAccessToken(completionHandler:)`. Replaced by `refreshCurrentAccessToken(completion:)`
-- `AppEvents`' `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
+- `AccessToken.refreshCurrentAccessToken(completionHandler:)` Replacement - `AccessToken.refreshCurrentAccessToken(completion:)`
+- `AppEvents.activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
 - Ability to create new instances of `FBSDKGraphErrorRecoveryProcessor` without using designated initializers.
-- `GraphRequest`'s `start(completionHandler:)` method. Replaced by `start(completion:)`
-- `GraphRequestBlock` - Replaced by `GraphRequestCompletion`
-- `GraphRequestConnection`'s `add(_:completionHandler:)`. Replaced by `add(_:completion:)`
-- `GraphRequestConnection`'s `add(_:batchEntryName:completionHandler:)`. Replaced by `add(_:name:completion:)`
-- `GraphRequestConnection`'s `add(_:batchParameters:completionHandler:)`. Replaced by `add(_:parameters:completion:)`
+- `GraphRequest.start(completionHandler:)` Replacement -  `GraphRequest.start(completion:)`
+- `GraphRequestBlock` Replacement -  `GraphRequestCompletion`
+- `GraphRequestConnection.add(_:completionHandler:)` Replacement - `GraphRequestConnection.add(_:completion:)`
+- `GraphRequestConnection.add(_:batchEntryName:completionHandler:)` Replacement - `GraphRequestConnection.add(_:name:completion:)`
+- `GraphRequestConnection.add(_:batchParameters:completionHandler:)` Replacement - `GraphRequestConnection.add(_:parameters:completion:)`
+- `GamingContext.type`
+- `GamingImageUploader.uploadImage(configuration:andResultCompletionHandler:)` Replacement - `GamingImageUploader.uploadImage(configuration:andResultCompletion:)`
+- `GamingImageUploader.uploadImage(configuration:completionHandler:andProgressHandler:)` Replacement - `GamingImageUploader.uploadImage(configuration:completion:andProgressHandler:)`
+- `GamingImageUploader.uploadVideo(configuration:andResultCompletionHandler:)` Replacement - `GamingImageUploader.uploadVideo(configuration:andResultCompletion:)`
+- `GamingImageUploader.uploadVideo(configuration:completionHandler:andProgressHandler:)` Replacement - `GamingImageUploader.uploadVideo(configuration:completion:andProgressHandler:)`
+- `GamingPayload.gameRequestID` You can obtain the game request idea from `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
+- `GamingPayloadDelegate.updatedURLContaining(_:)` Replacement - `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
+- `GamingPayloadObserver.shared`. Instances of this object now must be created with a delegate.
+- `GamingServiceResultCompletionHandler` Replacement - `GamingServiceResultCompletion`
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...HEAD)
 

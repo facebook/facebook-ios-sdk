@@ -24,9 +24,6 @@ NS_SWIFT_NAME(GamingPayloadDelegate)
 @protocol FBSDKGamingPayloadDelegate
 
 // MARK: Game Request
-@optional
-- (void)updatedURLContaining:(FBSDKGamingPayload* _Nonnull)payload
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `parsedGameRequestURLContaining:gameRequestID:` instead");
 
 /**
   Delegate method will be triggered when a `GamingPayloadObserver` parses a url with a payload and game request ID
@@ -55,8 +52,6 @@ NS_SWIFT_NAME(GamingPayloadObserver)
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
-
-+ (instancetype)shared DEPRECATED_MSG_ATTRIBUTE("The shared instance of the gaming payload observer is deprecated and will be removed in the next major release. Please create and use instances of this object directly as needed.");
 
 - (instancetype)initWithDelegate:(id<FBSDKGamingPayloadDelegate>)delegate;
 
