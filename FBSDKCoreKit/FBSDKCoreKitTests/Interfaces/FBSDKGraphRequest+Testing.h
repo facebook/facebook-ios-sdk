@@ -20,7 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Testing)
 
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nullable, class, nonatomic, strong) id<FBSDKSettings> settings;
+@property (nullable, class, nonatomic, readonly) Class<FBSDKTokenStringProviding> currentAccessTokenStringProvider;
 
 + (void)reset;
 

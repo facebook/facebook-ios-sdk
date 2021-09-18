@@ -53,8 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
                 httpMethod:(nullable NSString *)httpMethod
                   forBatch:(BOOL)forBatch;
 
-+ (void)setCurrentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider;
-+ (void)setSettings:(id<FBSDKSettings>)settings;
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
+graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
+NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
 
 @end
 

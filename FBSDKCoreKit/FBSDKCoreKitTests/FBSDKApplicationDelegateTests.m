@@ -41,12 +41,6 @@
 + (void)resetCanMakeRequests;
 @end
 
-@interface FBSDKGraphRequest (AppDelegateTesting)
-+ (Class<FBSDKTokenStringProviding>)currentAccessTokenStringProvider;
-+ (id<FBSDKSettings>)currentSettings;
-+ (void)resetSettings;
-@end
-
 @interface FBSDKApplicationDelegate (Testing)
 
 - (BOOL)isAppLaunched;
@@ -774,18 +768,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   XCTAssert(
     [self.featureChecker capturedFeaturesContains:FBSDKFeatureInstrument],
     "Should check if the instrument feature is enabled on initialization"
-  );
-}
-
-- (void)testInitializingSdkSetsSharedSettingsForGraphRequest
-{
-  [FBSDKGraphRequest resetSettings];
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-  XCTAssertEqualObjects(
-    FBSDKGraphRequest.currentSettings,
-    FBSDKSettings.sharedSettings,
-    "Should have set the shared settings instance for FBSDKGraphRequest"
   );
 }
 

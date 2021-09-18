@@ -27,35 +27,71 @@ final class GraphRequestTests: XCTestCase {
   let version = "v11.0"
   let prefix = "graph."
   let settings = TestSettings()
+  var factory = TestGraphRequestConnectionFactory()
 
   override func setUp() {
     super.setUp()
 
     AuthenticationToken.current = nil
-    AccessToken.resetCurrentAccessTokenCache()
     GraphRequest.reset()
-    GraphRequest.setSettings(settings)
+    AccessToken.resetCurrentAccessTokenCache()
+    TestAccessTokenWallet.reset()
+
+    GraphRequest.configure(
+      settings: settings,
+      currentAccessTokenStringProvider: TestAccessTokenWallet.self,
+      graphRequestConnectionFactory: factory
+    )
   }
 
   override func tearDown() {
     GraphRequest.reset()
+    TestAccessTokenWallet.reset()
 
     super.tearDown()
   }
 
   // MARK: - Tests
 
-  func testCreatingGraphRequestWithDefaultSessionProxyFactory() {
+  func testDefaultDependencies() {
+    GraphRequest.reset()
     let request = GraphRequest(graphPath: path)
-    let factory = request.graphRequestConnectionFactory
+
+    XCTAssertNil(
+      GraphRequest.settings,
+      "Should not have default settings"
+    )
+    XCTAssertNil(
+      request.tokenString,
+      "Should not have a token string when no token string provider has been provided"
+    )
+    XCTAssertNil(
+      request.graphRequestConnectionFactory,
+      "Should not have a default connection factory"
+    )
+  }
+
+  func testConfiguringWithDependencies() {
+    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    let request = GraphRequest(graphPath: path)
+
     XCTAssertTrue(
-      factory is GraphRequestConnectionFactory,
-      "A graph request should have the correct concrete session provider by default"
+      GraphRequest.settings === settings,
+      "GraphRequest should store the settings dependency it was configured with"
+    )
+    XCTAssertEqual(
+      request.tokenString,
+      TestAccessTokenWallet.tokenString,
+      "Should use the token string provider for the token string"
+    )
+    XCTAssertTrue(
+      request.graphRequestConnectionFactory === factory,
+      "New instances should use the factory provider configured on the type"
     )
   }
 
   func testCreatingWithCustomUrlSessionProxyFactory() {
-    let factory = TestGraphRequestConnectionFactory(stubbedConnection: GraphRequestConnection())
+    factory = TestGraphRequestConnectionFactory(stubbedConnection: GraphRequestConnection())
     let request = GraphRequest(
       graphPath: path,
       parameters: nil,
@@ -84,7 +120,7 @@ final class GraphRequestTests: XCTestCase {
 
   func testStartRequestUsesRequestProvidedByFactory() {
     let connection = TestGraphRequestConnection()
-    let factory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    factory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
     let request = GraphRequest(
       graphPath: path,
       parameters: nil,
@@ -224,18 +260,6 @@ final class GraphRequestTests: XCTestCase {
     )
     XCTAssertFalse(GraphRequest.isAttachment("string"))
     XCTAssertFalse(GraphRequest.isAttachment(Date()))
-  }
-
-  func testCreateRequestWithDefaultTokenString() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
-    GraphRequest.setCurrentAccessTokenStringProvider(TestAccessTokenWallet.self)
-    let request = GraphRequest(graphPath: path, parameters: [:])
-    XCTAssertEqual(
-      request.tokenString,
-      TestAccessTokenWallet.tokenString,
-      "Should use the token string provider for the token string"
-    )
-    XCTAssertNotNil(request.tokenString, "Should have a concrete token string")
   }
 
   func testDebuggingHelpers() {

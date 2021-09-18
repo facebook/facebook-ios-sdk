@@ -326,6 +326,21 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingConfiguresGraphRequest() {
+    GraphRequest.reset()
+    delegate.initializeSDK(launchOptions: [:])
+
+    let request = GraphRequest(graphPath: name)
+    XCTAssertTrue(
+      request.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "Should configure the graph request with a connection provider to use in creating new instances"
+    )
+    XCTAssertTrue(
+      GraphRequest.currentAccessTokenStringProvider === AccessToken.self,
+      "Should configure the graph request type with the expected concrete token string provider"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
