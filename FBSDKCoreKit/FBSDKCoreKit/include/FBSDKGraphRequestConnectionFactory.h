@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  A factory for providing objects that conform to `GraphRequestConnecting`.
  */
 NS_SWIFT_NAME(GraphRequestConnectionFactory)
-@interface FBSDKGraphRequestConnectionFactory : NSObject <FBSDKGraphRequestConnectionProviding>
+@interface FBSDKGraphRequestConnectionFactory : NSObject <FBSDKGraphRequestConnectionFactory>
 @end
 
 NS_ASSUME_NONNULL_END

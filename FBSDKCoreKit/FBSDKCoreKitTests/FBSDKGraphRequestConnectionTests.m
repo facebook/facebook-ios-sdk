@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 @property (nonatomic, strong) Class<FBSDKSettings> settings;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
@@ -57,7 +57,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                       piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                       settings:(id<FBSDKSettings>)settings
-                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+                 graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                 operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                        macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator;
@@ -103,7 +103,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
 @property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
 @property (nonatomic, strong) TestSettings *settings;
-@property (nonatomic, strong) TestGraphRequestConnectionFactory *connectionFactory;
+@property (nonatomic, strong) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic, strong) TestEventLogger *eventLogger;
 @property (nonatomic, strong) TestProcessInfo *processInfo;
 @property (nonatomic, strong) TestMacCatalystDeterminator *macCatalystDeterminator;
@@ -141,18 +141,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
   TestSettings.appID = self.appID;
   self.settings = TestSettings.self;
-  self.connectionFactory = [TestGraphRequestConnectionFactory new];
+  self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                piggybackManagerProvider:self.piggybackManagerProvider
                                                                                settings:self.settings
-                                                                      connectionFactory:self.connectionFactory
+                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                             eventLogger:self.eventLogger
                                                          operatingSystemVersionComparer:self.processInfo
                                                                 macCatalystDeterminator:self.macCatalystDeterminator];
-  self.connectionFactory.stubbedConnection = self.connection;
+  self.graphRequestConnectionFactory.stubbedConnection = self.connection;
 }
 
 - (void)tearDown
@@ -305,7 +305,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testCreatingWithDefaultConnectionFactory
 {
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *factory = (NSObject *)connection.connectionFactory;
+  NSObject *factory = (NSObject *)connection.graphRequestConnectionFactory;
   XCTAssertEqualObjects(
     factory.class,
     FBSDKGraphRequestConnectionFactory.class,
@@ -315,11 +315,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testCreatingWithCustomConnectionFactory
 {
-  NSObject *factory = (NSObject *)self.connection.connectionFactory;
+  NSObject *factory = (NSObject *)self.connection.graphRequestConnectionFactory;
 
   XCTAssertEqualObjects(
     factory,
-    self.connectionFactory,
+    self.graphRequestConnectionFactory,
     "A graph request connection should persist the connection factory it was created with"
   );
 }
@@ -1474,11 +1474,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                                                piggybackManagerProvider:self.piggybackManagerProvider
                                                                                                                settings:self.settings
-                                                                                                      connectionFactory:self.connectionFactory
+                                                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                                                             eventLogger:self.eventLogger
                                                                                          operatingSystemVersionComparer:self.processInfo
                                                                                                 macCatalystDeterminator:self.macCatalystDeterminator];
-  self.connectionFactory.stubbedConnection = retryConnection;
+  self.graphRequestConnectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {

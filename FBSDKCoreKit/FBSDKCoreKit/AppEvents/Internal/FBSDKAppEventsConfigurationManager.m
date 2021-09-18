@@ -22,7 +22,7 @@
 
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -35,7 +35,7 @@ static const NSTimeInterval kTimeout = 4.0;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonnull, nonatomic) FBSDKAppEventsConfiguration *configuration;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
@@ -64,7 +64,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 + (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   [self.shared configureWithStore:store
                          settings:settings
@@ -77,12 +77,12 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 - (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   self.store = store;
   self.settings = settings;
   self.graphRequestFactory = graphRequestFactory;
-  self.connectionFactory = graphRequestConnectionFactory;
+  self.graphRequestConnectionFactory = graphRequestConnectionFactory;
   id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
   if ([data isKindOfClass:NSData.class]) {
     if (@available(iOS 11.0, tvOS 11.0, *)) {
@@ -135,7 +135,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
                                                                                    parameters:@{
                                        @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", [UIDevice currentDevice].systemVersion]
                                      }];
-    id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionFactory createGraphRequestConnection];
+    id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;
     [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self _processResponse:result error:error];

@@ -24,7 +24,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   let graphRequestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
   let connection = TestGraphRequestConnection()
-  lazy var connectionFactory: TestGraphRequestConnectionFactory = {
+  lazy var graphRequestConnectionFactory: TestGraphRequestConnectionFactory = {
     TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   }()
   let settings = TestSettings()
@@ -64,7 +64,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       with: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
       store: store,
-      connectionProvider: connectionFactory,
+      graphRequestConnectionFactory: graphRequestConnectionFactory,
       swizzler: TestSwizzler.self,
       settings: settings,
       advertiserIDProvider: advertiserIDProvider
@@ -100,7 +100,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should not have a persistent data store by default"
     )
     XCTAssertNil(
-      CodelessIndexer.connectionProvider,
+      CodelessIndexer.graphRequestConnectionFactory,
       "Should not have a connection provider by default"
     )
     XCTAssertNil(
@@ -133,8 +133,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should be able to configure with a persistent data store"
     )
     XCTAssertEqual(
-      CodelessIndexer.connectionProvider as? TestGraphRequestConnectionFactory,
-      connectionFactory,
+      CodelessIndexer.graphRequestConnectionFactory as? TestGraphRequestConnectionFactory,
+      graphRequestConnectionFactory,
       "Should be able to configure with a connection provider"
     )
     XCTAssertTrue(

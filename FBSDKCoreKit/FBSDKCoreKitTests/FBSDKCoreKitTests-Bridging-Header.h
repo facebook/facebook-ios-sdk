@@ -115,7 +115,7 @@
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequest+Testing.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestMetadata.h"

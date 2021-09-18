@@ -23,8 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGraphRequestConnecting;
 
 /// Describes anything that can provide instances of `FBSDKGraphRequestConnecting`
-NS_SWIFT_NAME(GraphRequestConnectionProviding)
-@protocol FBSDKGraphRequestConnectionProviding
+NS_SWIFT_NAME(GraphRequestConnectionFactoryProtocol)
+@protocol FBSDKGraphRequestConnectionFactory
 
 - (id<FBSDKGraphRequestConnecting>)createGraphRequestConnection;
 

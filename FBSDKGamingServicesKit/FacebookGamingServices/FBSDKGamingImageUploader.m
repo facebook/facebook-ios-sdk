@@ -18,6 +18,8 @@
 
 #import "FBSDKGamingImageUploader.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
@@ -27,7 +29,7 @@
 @property (nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
 
 @property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
-@property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionProviding> graphRequestConnectionFactory;
+@property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
 @end
 
@@ -61,7 +63,7 @@
 }
 
 - (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory
-                         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
+                         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   if ((self = [super init])) {
     _factory = factory;

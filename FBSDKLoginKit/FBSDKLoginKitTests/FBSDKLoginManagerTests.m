@@ -99,7 +99,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) FBSDKLoginManager *loginManager;
 @property (nonatomic) TestKeychainStoreFactory *keychainStoreFactory;
 @property (nonatomic) TestKeychainStore *keychainStore;
-@property (nonatomic) TestGraphRequestConnectionFactory *connectionProvider;
+@property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic) TestGraphRequestConnection *connection;
 @property (nonatomic) TestURLOpener *urlOpener;
 
@@ -121,13 +121,13 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   self.keychainStoreFactory = [TestKeychainStoreFactory new];
   self.keychainStoreFactory.stubbedKeychainStore = self.keychainStore;
   self.connection = [TestGraphRequestConnection new];
-  self.connectionProvider = [[TestGraphRequestConnectionFactory alloc] initWithStubbedConnection:self.connection];
+  self.graphRequestConnectionFactory = [[TestGraphRequestConnectionFactory alloc] initWithStubbedConnection:self.connection];
   self.urlOpener = [TestURLOpener new];
 
   self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility
                                                     keychainStoreFactory:self.keychainStoreFactory
                                                              tokenWallet:TestAccessTokenWallet.class
-                                                      connectionProvider:self.connectionProvider
+                                           graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                      authenticationToken:TestAuthenticationTokenWallet.class
                                                                  profile:TestProfileProvider.class
                                                                urlOpener:self.urlOpener
@@ -197,7 +197,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSObject *internalUtility = (NSObject *)loginManager.internalUtility;
   NSObject *keychainStore = (NSObject *)loginManager.keychainStore;
   NSObject *tokenWallet = (NSObject *)loginManager.tokenWallet;
-  NSObject *connectionProvider = (NSObject *)loginManager.connectionProvider;
+  NSObject *graphRequestConnectionFactory = (NSObject *)loginManager.graphRequestConnectionFactory;
   NSObject *authenticationToken = (NSObject *)loginManager.authenticationToken;
   NSObject *profile = (NSObject *)loginManager.profile;
   NSObject *urlOpener = (NSObject *)loginManager.urlOpener;
@@ -205,7 +205,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(internalUtility.class, FBSDKInternalUtility.class);
   XCTAssertEqualObjects(keychainStore.class, FBSDKKeychainStore.class);
   XCTAssertEqualObjects(tokenWallet.class, FBSDKAccessToken.class);
-  XCTAssertEqualObjects(connectionProvider.class, FBSDKGraphRequestConnectionFactory.class);
+  XCTAssertEqualObjects(graphRequestConnectionFactory.class, FBSDKGraphRequestConnectionFactory.class);
   XCTAssertEqualObjects(authenticationToken.class, FBSDKAuthenticationToken.class);
   XCTAssertEqualObjects(profile.class, FBSDKProfile.class);
   XCTAssertEqualObjects(urlOpener.class, FBSDKBridgeAPI.class);
@@ -847,7 +847,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                            XCTFail("Should not actually reauthorize and call the handler in this test");
                          }];
-  TestGraphRequestConnection *connection = (TestGraphRequestConnection *)self.connectionProvider.stubbedConnection;
+  TestGraphRequestConnection *connection = (TestGraphRequestConnection *)self.graphRequestConnectionFactory.stubbedConnection;
   XCTAssertEqualObjects(connection.capturedRequests, @[]);
   XCTAssertFalse(self.loginManager.state == FBSDKLoginManagerStateIdle);
 }

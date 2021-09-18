@@ -26,7 +26,7 @@
 @property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 @property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
 @property (nonatomic) Class<FBSDKProfileProviding> profile;
-@property (nonatomic)  id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (nonatomic)  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
 @property (nonatomic) id<FBSDKURLOpener> urlOpener;
 
@@ -44,9 +44,9 @@
 
 - (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions;
 
-- (void)validateReauthenticationWithGraphRequestConnectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                                                         withToken:(FBSDKAccessToken *)currentToken
-                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
+- (void)validateReauthenticationWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                                                        withToken:(FBSDKAccessToken *)currentToken
+                                                       withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
 - (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
 
@@ -57,7 +57,7 @@
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
                    keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
                             tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                     connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
                               urlOpener:(id<FBSDKURLOpener>)urlOpener;

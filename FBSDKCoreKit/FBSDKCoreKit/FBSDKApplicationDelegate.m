@@ -643,7 +643,7 @@ static UIApplicationState _applicationState;
 {
   id<FBSDKGraphRequestFactory> graphRequestFactory = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
-  id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
+  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
   id<FBSDKServerConfigurationProviding> serverConfigurationProvider = FBSDKServerConfigurationManager.shared;
 
@@ -656,11 +656,11 @@ static UIApplicationState _applicationState;
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                             graphRequestFactory:graphRequestFactory
-                             connectionProvider:connectionProvider
+                  graphRequestConnectionFactory:graphRequestConnectionFactory
                                           store:store];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings];
   [FBSDKAccessToken setTokenCache:tokenCache];
-  [FBSDKAccessToken setConnectionFactory:connectionProvider];
+  [FBSDKAccessToken setGraphRequestConnectionFactory:graphRequestConnectionFactory];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestFactory
@@ -692,7 +692,7 @@ static UIApplicationState _applicationState;
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings
                                      graphRequestFactory:graphRequestFactory
-                           graphRequestConnectionFactory:connectionProvider];
+                           graphRequestConnectionFactory:graphRequestConnectionFactory];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
                                           serverConfiguration:serverConfigurationProvider
@@ -712,7 +712,7 @@ static UIApplicationState _applicationState;
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
                                                    store:store
-                                      connectionProvider:connectionProvider
+                           graphRequestConnectionFactory:graphRequestConnectionFactory
                                                 swizzler:FBSDKSwizzler.class
                                                 settings:sharedSettings
                                     advertiserIDProvider:FBSDKAppEventsUtility.shared];

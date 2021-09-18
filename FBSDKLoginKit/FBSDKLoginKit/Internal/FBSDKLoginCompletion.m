@@ -56,7 +56,7 @@
 
 @property (nonatomic) id<NSObject> observer;
 @property (nonatomic) BOOL performExplicitFallback;
-@property (nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
 
 @end
@@ -78,11 +78,11 @@ static NSDateFormatter *_dateFormatter;
 
 - (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
-                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
 {
   if ((self = [super init])) {
-    _connectionProvider = connectionProvider;
+    _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _authenticationTokenCreator = authenticationTokenCreator;
     _parameters = [FBSDKLoginCompletionParameters new];
 
@@ -235,7 +235,7 @@ static NSDateFormatter *_dateFormatter;
                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
                                      | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
-  id<FBSDKGraphRequestConnecting> connection = [_connectionProvider createGraphRequestConnection];
+  id<FBSDKGraphRequestConnecting> connection = [_graphRequestConnectionFactory createGraphRequestConnection];
   [connection addRequest:tokenRequest completion:^(id<FBSDKGraphRequestConnecting> requestConnection,
                                                    id result,
                                                    NSError *graphRequestError) {

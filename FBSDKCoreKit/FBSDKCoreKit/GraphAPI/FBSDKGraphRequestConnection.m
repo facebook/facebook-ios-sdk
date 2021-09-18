@@ -116,7 +116,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 @property (nonatomic, strong) Class<FBSDKSettings> settings;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (nonatomic, strong) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
@@ -147,7 +147,7 @@ static BOOL _canMakeRequests = NO;
                    errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
                      piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
                                      settings:FBSDKSettings.self
-                            connectionFactory:[FBSDKGraphRequestConnectionFactory new]
+                graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
                                   eventLogger:FBSDKAppEvents.shared
                operatingSystemVersionComparer:NSProcessInfo.processInfo
                       macCatalystDeterminator:NSProcessInfo.processInfo];
@@ -157,7 +157,7 @@ static BOOL _canMakeRequests = NO;
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                       piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                       settings:(Class<FBSDKSettings>)settings
-                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+                 graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                 operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                        macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
@@ -172,7 +172,7 @@ static BOOL _canMakeRequests = NO;
     _errorConfigurationProvider = errorConfigurationProvider;
     _piggybackManagerProvider = piggybackManagerProvider;
     _settings = settings;
-    _connectionFactory = factory;
+    _graphRequestConnectionFactory = factory;
     _eventLogger = eventLogger;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
     _macCatalystDeterminator = macCatalystDeterminator;
@@ -1231,7 +1231,7 @@ static BOOL _canMakeRequests = NO;
                                                                              HTTPMethod:originalRequest.HTTPMethod
                                                                                 version:originalRequest.version
                                                                                   flags:FBSDKGraphRequestFlagDisableErrorRecovery
-                                                                      connectionFactory:self.connectionFactory];
+                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
       [retryRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];

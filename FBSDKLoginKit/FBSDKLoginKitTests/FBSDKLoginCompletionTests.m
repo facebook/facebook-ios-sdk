@@ -747,7 +747,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   TestGraphRequestConnectionFactory *graphConnectionFactory = [TestGraphRequestConnectionFactory createWithStubbedConnection:_graphConnection];
   return [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters
                                                          appID:appID
-                                            connectionProvider:graphConnectionFactory
+                                 graphRequestConnectionFactory:graphConnectionFactory
                                     authenticationTokenCreator:_authenticationTokenFactory];
 }
 

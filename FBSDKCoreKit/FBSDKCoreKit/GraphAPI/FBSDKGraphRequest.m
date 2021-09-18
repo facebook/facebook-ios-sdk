@@ -42,7 +42,7 @@ static id<FBSDKSettings> _settings;
 @interface FBSDKGraphRequest ()
 @property (nonatomic, readwrite, assign) FBSDKGraphRequestFlags flags;
 @property (nonatomic, readwrite, copy) FBSDKHTTPMethod HTTPMethod;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @end
 
 @implementation FBSDKGraphRequest
@@ -116,15 +116,15 @@ static id<FBSDKSettings> _settings;
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
                             flags:(FBSDKGraphRequestFlags)requestFlags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
 {
   return [self initWithGraphPath:graphPath
-                      parameters:parameters
-                     tokenString:tokenString
-                      HTTPMethod:method
-                         version:_settings.graphAPIVersion
-                           flags:requestFlags
-               connectionFactory:factory];
+                             parameters:parameters
+                            tokenString:tokenString
+                             HTTPMethod:method
+                                version:_settings.graphAPIVersion
+                                  flags:requestFlags
+          graphRequestConnectionFactory:factory];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -133,7 +133,7 @@ static id<FBSDKSettings> _settings;
                        HTTPMethod:(NSString *)method
                           version:(NSString *)version
                             flags:(FBSDKGraphRequestFlags)requestFlags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
 {
   if ((self = [self initWithGraphPath:graphPath
                            parameters:parameters
@@ -141,7 +141,7 @@ static id<FBSDKSettings> _settings;
                               version:version
                            HTTPMethod:method])) {
     self.flags |= requestFlags;
-    self.connectionFactory = factory;
+    self.graphRequestConnectionFactory = factory;
   }
   return self;
 }
@@ -161,7 +161,7 @@ static id<FBSDKSettings> _settings;
     if (!_settings.isGraphErrorRecoveryEnabled) {
       self.flags = FBSDKGraphRequestFlagDisableErrorRecovery;
     }
-    _connectionFactory = [FBSDKGraphRequestConnectionFactory new];
+    _graphRequestConnectionFactory = [FBSDKGraphRequestConnectionFactory new];
   }
   return self;
 }
@@ -268,7 +268,7 @@ static id<FBSDKSettings> _settings;
 
 - (id<FBSDKGraphRequestConnecting>)startWithCompletion:(FBSDKGraphRequestCompletion)completion
 {
-  id<FBSDKGraphRequestConnecting> connection = [self.connectionFactory createGraphRequestConnection];
+  id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
   id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
   [connection addRequest:request completion:completion];
   [connection start];

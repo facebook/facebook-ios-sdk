@@ -25,18 +25,18 @@ class GateKeeperManagerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let connection = TestGraphRequestConnection()
-  let connectionFactory = TestGraphRequestConnectionFactory()
+  let graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
   let store = UserDefaultsSpy()
   let storeIdentifierPrefix = "com.facebook.sdk:GateKeepers"
 
   override func setUp() {
     super.setUp()
 
-    connectionFactory.stubbedConnection = connection
+    graphRequestConnectionFactory.stubbedConnection = connection
     GateKeeperManager.configure(
       settings: TestSettings.self,
       graphRequestFactory: graphRequestFactory,
-      connectionProvider: connectionFactory,
+      graphRequestConnectionFactory: graphRequestConnectionFactory,
       store: store
     )
   }
@@ -58,7 +58,7 @@ class GateKeeperManagerTests: XCTestCase {
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
-      GateKeeperManager.connectionProvider,
+      GateKeeperManager.graphRequestConnectionFactory,
       "Should not have a graph request connection factory by default"
     )
     XCTAssertNil(
@@ -73,7 +73,7 @@ class GateKeeperManagerTests: XCTestCase {
 
   func testConfiguringWithDependencies() {
     XCTAssertTrue(GateKeeperManager.graphRequestFactory === graphRequestFactory)
-    XCTAssertTrue(GateKeeperManager.connectionProvider === connectionFactory)
+    XCTAssertTrue(GateKeeperManager.graphRequestConnectionFactory === graphRequestConnectionFactory)
     XCTAssertTrue(GateKeeperManager.settings is TestSettings.Type)
     XCTAssertTrue(GateKeeperManager.store === store)
   }

@@ -33,7 +33,7 @@
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKGraphRequestConnecting.h"
- #import "FBSDKGraphRequestConnectionProviding.h"
+ #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
  #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKGraphRequestHTTPMethod.h"
  #import "FBSDKGraphRequestProtocol.h"
@@ -55,7 +55,7 @@
 @property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (class, nullable, nonatomic, readonly, copy) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
@@ -78,7 +78,7 @@ static NSString *_lastTreeHash;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
 static id<FBSDKDataPersisting> _store;
-static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
+static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static Class<FBSDKSwizzling> _swizzler;
 static id<FBSDKSettings> _settings;
 static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
@@ -87,7 +87,7 @@ static id<FBSDKSettings> _settings;
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                    store:(id<FBSDKDataPersisting>)store
-                      connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                 swizzler:(Class<FBSDKSwizzling>)swizzler
                                 settings:(id<FBSDKSettings>)settings
                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
@@ -96,7 +96,7 @@ static id<FBSDKSettings> _settings;
     _graphRequestFactory = graphRequestFactory;
     _serverConfigurationProvider = serverConfigurationProvider;
     _store = store;
-    _connectionProvider = connectionProvider;
+    _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _swizzler = swizzler;
     _settings = settings;
     _advertiserIDProvider = advertiserIDProvider;
@@ -118,9 +118,9 @@ static id<FBSDKSettings> _settings;
   return _store;
 }
 
-+ (id<FBSDKGraphRequestConnectionProviding>)connectionProvider
++ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
-  return _connectionProvider;
+  return _graphRequestConnectionFactory;
 }
 
 + (Class<FBSDKSwizzling>)swizzler
@@ -200,7 +200,7 @@ static id<FBSDKSettings> _settings;
       if (request == nil) {
         return;
       }
-      id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
+      id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
       requestConnection.timeout = kTimeout;
       [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *codelessLoadingError) {
         if (codelessLoadingError) {
@@ -517,7 +517,7 @@ static id<FBSDKSettings> _settings;
   _graphRequestFactory = nil;
   _serverConfigurationProvider = nil;
   _store = nil;
-  _connectionProvider = nil;
+  _graphRequestConnectionFactory = nil;
   _swizzler = nil;
   _settings = nil;
   _advertiserIDProvider = nil;

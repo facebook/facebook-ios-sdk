@@ -44,7 +44,7 @@ NSString *const FBSDKAccessTokenDidExpireKey = @"FBSDKAccessTokenDidExpireKey";
 
 static FBSDKAccessToken *g_currentAccessToken;
 static id<FBSDKTokenCaching> g_tokenCache;
-static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
+static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
@@ -168,7 +168,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 + (void)refreshCurrentAccessTokenWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
 {
   if ([FBSDKAccessToken currentAccessToken]) {
-    id<FBSDKGraphRequestConnecting> connection = [FBSDKAccessToken.connectionFactory createGraphRequestConnection];
+    id<FBSDKGraphRequestConnecting> connection = [FBSDKAccessToken.graphRequestConnectionFactory createGraphRequestConnection];
     [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completion];
     [connection start];
   } else if (completion) {
@@ -182,15 +182,15 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   }
 }
 
-+ (id<FBSDKGraphRequestConnectionProviding>)connectionFactory
++ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
-  return g_connectionFactory;
+  return g_graphRequestConnectionFactory;
 }
 
-+ (void)setConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionFactory
++ (void)setGraphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
-  if (g_connectionFactory != connectionFactory) {
-    g_connectionFactory = connectionFactory;
+  if (g_graphRequestConnectionFactory != graphRequestConnectionFactory) {
+    g_graphRequestConnectionFactory = graphRequestConnectionFactory;
   }
 }
 

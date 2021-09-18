@@ -29,7 +29,7 @@ class AccessTokenTests: XCTestCase {
     super.tearDown()
 
     AccessToken.current = nil
-    AccessToken.connectionFactory = nil
+    AccessToken.graphRequestConnectionFactory = nil
     AccessToken.resetTokenCache()
   }
 
@@ -57,7 +57,7 @@ class AccessTokenTests: XCTestCase {
   func testRefreshTokenThroughTestGraphRequestConnection() {
     let testConnection = TestGraphRequestConnection()
     let factory = TestGraphRequestConnectionFactory.create(withStubbedConnection: testConnection)
-    AccessToken.connectionFactory = factory
+    AccessToken.graphRequestConnectionFactory = factory
 
     AccessToken.current = nil
     AccessToken.refreshCurrentAccessToken(completion: nil)

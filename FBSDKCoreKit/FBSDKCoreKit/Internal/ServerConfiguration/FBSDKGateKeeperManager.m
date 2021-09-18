@@ -28,7 +28,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
@@ -49,7 +49,7 @@ static NSDate *_timestamp;
 static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
-static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
+static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static Class<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
 
@@ -60,20 +60,20 @@ static id<FBSDKDataPersisting> _store;
     _completionBlocks = [NSMutableArray array];
     _store = nil;
     _graphRequestFactory = nil;
-    _connectionProvider = nil;
+    _graphRequestConnectionFactory = nil;
     _settings = nil;
     _canLoadGateKeepers = NO;
   }
 }
 
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
-          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                        store:(id<FBSDKDataPersisting>)store
++ (void)  configureWithSettings:(Class<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                          store:(id<FBSDKDataPersisting>)store
 {
   _settings = settings;
   _graphRequestFactory = graphRequestFactory;
-  _connectionProvider = connectionProvider;
+  _graphRequestConnectionFactory = graphRequestConnectionFactory;
   _store = store;
   _canLoadGateKeepers = YES;
 }
@@ -135,7 +135,7 @@ static id<FBSDKDataPersisting> _store;
           id<FBSDKGraphRequest> request = [self.class requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
-          id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
+          id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
           requestConnection.timeout = kTimeout;
           [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
             _requeryFinishedForAppStart = YES;
@@ -249,9 +249,9 @@ static id<FBSDKDataPersisting> _store;
   return _settings;
 }
 
-+ (id<FBSDKGraphRequestConnectionProviding>)connectionProvider
++ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
-  return _connectionProvider;
+  return _graphRequestConnectionFactory;
 }
 
 + (NSDictionary<NSString *, id> *)gateKeepers
@@ -303,7 +303,7 @@ static id<FBSDKDataPersisting> _store;
   _graphRequestFactory = nil;
   _gateKeepers = nil;
   _settings = nil;
-  _connectionProvider = nil;
+  _graphRequestConnectionFactory = nil;
   _store = nil;
   _timestamp = nil;
   _requeryFinishedForAppStart = NO;

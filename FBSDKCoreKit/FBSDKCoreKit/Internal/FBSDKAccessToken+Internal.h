@@ -21,11 +21,11 @@
 #import "FBSDKCoreKit+Internal.h"
 
 @protocol FBSDKTokenCaching;
-@protocol FBSDKGraphRequestConnectionProviding;
+@protocol FBSDKGraphRequestConnectionFactory;
 
 @interface FBSDKAccessToken (Internal)
 
-@property (class, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (class, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
 + (void)resetTokenCache;
 

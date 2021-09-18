@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonnull, nonatomic, readonly) FBSDKGamingImageUploader *shared;
 @property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
-@property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionProviding> graphRequestConnectionFactory;
+@property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
 - (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory
-                         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory;
+                         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory;
 
 - (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                  andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion;

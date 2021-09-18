@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnectionProviding.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactory.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
 @protocol FBSDKTokenStringProviding;
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
                       tokenString:(nullable NSString *)tokenString
                        HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary<NSString *, id> *)parameters
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
                        HTTPMethod:(NSString *)method
                           version:(NSString *)version
                             flags:(FBSDKGraphRequestFlags)flags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
 
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl

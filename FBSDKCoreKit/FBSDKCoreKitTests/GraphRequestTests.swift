@@ -47,7 +47,7 @@ final class GraphRequestTests: XCTestCase {
 
   func testCreatingGraphRequestWithDefaultSessionProxyFactory() {
     let request = GraphRequest(graphPath: path)
-    let factory = request.connectionFactory
+    let factory = request.graphRequestConnectionFactory
     XCTAssertTrue(
       factory is GraphRequestConnectionFactory,
       "A graph request should have the correct concrete session provider by default"
@@ -62,11 +62,11 @@ final class GraphRequestTests: XCTestCase {
       tokenString: nil,
       httpMethod: nil,
       flags: [],
-      connectionFactory: factory
+      graphRequestConnectionFactory: factory
     )
 
     XCTAssertTrue(
-      request.connectionFactory === factory,
+      request.graphRequestConnectionFactory === factory,
       "A graph request should persist the session factory it was created with"
     )
   }
@@ -91,7 +91,7 @@ final class GraphRequestTests: XCTestCase {
       tokenString: nil,
       httpMethod: nil,
       flags: [],
-      connectionFactory: factory
+      graphRequestConnectionFactory: factory
     )
 
     request.start { _, _, _ in }

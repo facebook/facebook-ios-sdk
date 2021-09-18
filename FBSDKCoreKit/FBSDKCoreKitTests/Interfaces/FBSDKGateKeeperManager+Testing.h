@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, nullable) FBSDKLogger *logger;
 @property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
 
 @property (class, nonatomic, nullable) NSDictionary<NSString *, id> *gateKeepers;
@@ -36,9 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+           graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                         store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(settings:graphRequestFactory:connectionProvider:store:));
+NS_SWIFT_NAME(configure(settings:graphRequestFactory:graphRequestConnectionFactory:store:));
 + (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
 + (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error
 NS_SWIFT_NAME(parse(result:error:));

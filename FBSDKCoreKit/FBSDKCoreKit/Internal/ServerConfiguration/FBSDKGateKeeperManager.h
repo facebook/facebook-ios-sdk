@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettings;
 @protocol FBSDKGraphRequestFactory;
-@protocol FBSDKGraphRequestConnectionProviding;
+@protocol FBSDKGraphRequestConnectionFactory;
 @protocol FBSDKDataPersisting;
 
 /// typedef for FBSDKAppEventUserDataType
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(GateKeeperManager)
  */
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                         store:(id<FBSDKDataPersisting>)store;
 
 /**

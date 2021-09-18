@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 
 @objcMembers
-public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionFactoryProtocol {
   public var stubbedConnection: GraphRequestConnecting?
 
   public override init() {}
@@ -34,7 +34,7 @@ public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnection
     TestGraphRequestConnectionFactory(stubbedConnection: connection)
   }
 
-  // MARK: - GraphRequestConnectionProviding
+  // MARK: - GraphRequestConnectionFactoryProtocol
 
   public func createGraphRequestConnection() -> GraphRequestConnecting {
     guard let connection = stubbedConnection else {

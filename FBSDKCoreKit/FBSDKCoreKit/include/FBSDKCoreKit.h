@@ -49,7 +49,6 @@
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
