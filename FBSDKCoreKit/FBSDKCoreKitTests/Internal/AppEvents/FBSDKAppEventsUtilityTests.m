@@ -95,22 +95,22 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                                        flushPeriodInSeconds:0];
   [FBSDKAppEvents setSingletonInstanceToInstance:appEvents];
   [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.self
-                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
-                               serverConfigurationProvider:TestServerConfigurationProvider.self
-                                       graphRequestFactory:[TestGraphRequestFactory new]
-                                            featureChecker:[TestFeatureManager new]
-                                                     store:self.userDefaultsSpy
-                                                    logger:TestLogger.class
-                                                  settings:[TestSettings new]
-                                           paymentObserver:[TestPaymentObserver new]
-                                  timeSpentRecorderFactory:[TestTimeSpentRecorderFactory new]
-                                       appEventsStateStore:[TestAppEventsStateStore new]
-                       eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
-                   restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
-                                       atePublisherFactory:[TestAtePublisherFactory new]
-                                    appEventsStateProvider:self.appEventsStateProvider
-                                                  swizzler:TestSwizzler.class
-                                      advertiserIDProvider:FBSDKAppEventsUtility.shared];
+                         appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
+                            serverConfigurationProvider:TestServerConfigurationProvider.self
+                                    graphRequestFactory:[TestGraphRequestFactory new]
+                                         featureChecker:[TestFeatureManager new]
+                                                  store:self.userDefaultsSpy
+                                                 logger:TestLogger.class
+                                               settings:[TestSettings new]
+                                        paymentObserver:[TestPaymentObserver new]
+                               timeSpentRecorderFactory:[TestTimeSpentRecorderFactory new]
+                                    appEventsStateStore:[TestAppEventsStateStore new]
+                    eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
+                restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
+                                    atePublisherFactory:[TestAtePublisherFactory new]
+                                 appEventsStateProvider:self.appEventsStateProvider
+                                               swizzler:TestSwizzler.class
+                                   advertiserIDProvider:FBSDKAppEventsUtility.shared];
 }
 
 - (void)tearDown

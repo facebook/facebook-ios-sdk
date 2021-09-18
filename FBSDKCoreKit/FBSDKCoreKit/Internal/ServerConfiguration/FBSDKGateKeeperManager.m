@@ -67,7 +67,7 @@ static id<FBSDKDataPersisting> _store;
 }
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                         store:(id<FBSDKDataPersisting>)store
 {
