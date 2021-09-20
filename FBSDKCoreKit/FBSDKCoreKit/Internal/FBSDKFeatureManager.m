@@ -18,10 +18,10 @@
 
 #import "FBSDKFeatureManager.h"
 
+#import "FBSDKDataPersisting.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKSettings.h"
-#import "NSUserDefaults+FBSDKDataPersisting.h"
+#import "FBSDKSettingsProtocol.h"
 
 static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
 
@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKFeatureManager ()
 
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 
 @end
@@ -52,20 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
   return instance;
 }
 
-- (instancetype)init
+- (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+                              settings:(id<FBSDKSettings>)settings
+                                 store:(id<FBSDKDataPersisting>)store
 {
-  return [self initWithGateKeeperManager:FBSDKGateKeeperManager.class
-                                   store:NSUserDefaults.standardUserDefaults];
-}
-
-- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-                                    store:(id<FBSDKDataPersisting>)store
-{
-  if ((self = [super init])) {
-    _gateKeeperManager = gateKeeperManager;
-    _store = store;
-  }
-  return self;
+  _gateKeeperManager = gateKeeperManager;
+  _settings = settings;
+  _store = store;
 }
 
 + (void)checkFeature:(FBSDKFeature)feature
@@ -79,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   // check if the feature is locally disabled by Crash Shield first
   NSString *version = [self.store stringForKey:[self storageKeyForFeature:feature]];
-  if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
+  if (version && [version isEqualToString:self.settings.sdkVersion]) {
     if (completionBlock) {
       completionBlock(false);
     }
@@ -109,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)disableFeature:(FBSDKFeature)feature
 {
-  [self.store setObject:[FBSDKSettings sdkVersion] forKey:[self storageKeyForFeature:feature]];
+  [self.store setObject:self.settings.sdkVersion forKey:[self storageKeyForFeature:feature]];
 }
 
 - (NSString *)storageKeyForFeature:(FBSDKFeature)feature
@@ -201,6 +195,17 @@ NS_ASSUME_NONNULL_BEGIN
       return YES;
   }
 }
+
+#if DEBUG && FBTEST
+
++ (void)reset
+{
+  self.shared.gateKeeperManager = nil;
+  self.shared.settings = nil;
+  self.shared.store = nil;
+}
+
+#endif
 
 @end
 

@@ -18,11 +18,15 @@
 
 @objcMembers
 class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
+
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?
   static var loggingBehaviors = Set<LoggingBehavior>()
-  static var sdkVersion: String?
+  static var stubbedSdkVersion = "v1234"
+  static var sdkVersion: String {
+    stubbedSdkVersion
+  }
 
   var logWarningsCallCount = 0
   var logIfSDKSettingsChangedCallCount = 0
@@ -44,6 +48,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var shouldUseTokenOptimizations = true
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
+  let sdkVersion = TestSettings.stubbedSdkVersion
 
   var isDataProcessingRestricted: Bool {
     stubbedIsDataProcessingRestricted
@@ -98,6 +103,5 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     clientToken = nil
     userAgentSuffix = nil
     loggingBehaviors = []
-    sdkVersion = nil
   }
 }

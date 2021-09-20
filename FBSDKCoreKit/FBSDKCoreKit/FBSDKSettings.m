@@ -487,6 +487,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSString *)sdkVersion
 {
+  return self.sharedSettings.sdkVersion;
+}
+
+- (NSString *)sdkVersion
+{
   return FBSDK_VERSION_STRING;
 }
 

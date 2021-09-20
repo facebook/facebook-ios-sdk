@@ -24,8 +24,11 @@ class TestSettings: SettingsProtocol {
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?
-  static var sdkVersion: String?
   static var loggingBehaviors = Set<LoggingBehavior>()
+  static var stubbedSdkVersion = "v1234"
+  static var sdkVersion: String {
+    stubbedSdkVersion
+  }
 
   var appID: String?
   var appURLSchemeSuffix: String?
@@ -42,4 +45,5 @@ class TestSettings: SettingsProtocol {
   var graphAPIVersion = ""
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
+  let sdkVersion = TestSettings.stubbedSdkVersion
 }

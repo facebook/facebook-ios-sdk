@@ -261,7 +261,7 @@ class GateKeeperManagerTests: XCTestCase {
     let appIdentifier = "foo"
     let version = "bar"
     TestSettings.appID = appIdentifier
-    TestSettings.sdkVersion = version
+    TestSettings.stubbedSdkVersion = version
     _ = GateKeeperManager.requestToLoadGateKeepers()
 
     XCTAssertEqual(

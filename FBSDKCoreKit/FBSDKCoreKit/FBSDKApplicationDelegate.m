@@ -651,6 +651,9 @@ static UIApplicationState _applicationState;
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:FBSDKAppEvents.shared];
+  [FBSDKFeatureManager.shared configureWithGateKeeperManager:FBSDKGateKeeperManager.class
+                                                    settings:sharedSettings
+                                                       store:store];
   [FBSDKGraphRequest configureWithSettings:sharedSettings
           currentAccessTokenStringProvider:FBSDKAccessToken.class
              graphRequestConnectionFactory:graphRequestConnectionFactory];

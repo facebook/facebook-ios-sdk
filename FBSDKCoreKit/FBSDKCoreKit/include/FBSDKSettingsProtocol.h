@@ -27,7 +27,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (class, nonatomic, copy, nullable) NSString *appID;
 @property (class, nonatomic, copy, nullable) NSString *clientToken;
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-@property (class, nullable, nonatomic, readonly, copy) NSString *sdkVersion;
+@property (class, nonatomic, readonly, copy) NSString *sdkVersion;
 @property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 @property (nonatomic, copy, nullable) NSString *appID;
@@ -45,6 +45,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, copy, readonly) NSString * _Nonnull graphAPIVersion;
 @property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
 @property (nonatomic, readonly, copy, nullable) NSString *graphAPIDebugParamValue;
+@property (nonatomic, readonly, copy) NSString *sdkVersion;
 
 @end
 

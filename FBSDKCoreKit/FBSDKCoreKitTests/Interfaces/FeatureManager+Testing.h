@@ -25,13 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKFeatureManager (Testing)
 
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 
-- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-                                    store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(init(gateKeeperManager:store:));
-
 + (NSString *)featureName:(FBSDKFeature)feature;
++ (void)reset;
 
 @end
 

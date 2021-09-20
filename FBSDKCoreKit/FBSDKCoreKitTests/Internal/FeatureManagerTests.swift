@@ -22,8 +22,9 @@ import XCTest
 
 class FeatureManagerTests: XCTestCase {
 
-  var manager: FeatureManager! // swiftlint:disable:this implicitly_unwrapped_optional
-  var store: UserDefaultsSpy! // swiftlint:disable:this implicitly_unwrapped_optional
+  var manager = FeatureManager()
+  var store = UserDefaultsSpy()
+  let settings = TestSettings()
   let userDefaultsPrefix = "com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature"
   let gatekeeperKeyPrefix = "FBSDKFeature"
 
@@ -31,14 +32,15 @@ class FeatureManagerTests: XCTestCase {
     super.setUp()
 
     TestGateKeeperManager.reset()
+    FeatureManager.reset()
   }
 
   override func setUp() {
     super.setUp()
 
-    store = UserDefaultsSpy()
-    manager = FeatureManager(
+    manager.configure(
       gateKeeperManager: TestGateKeeperManager.self,
+      settings: settings,
       store: store
     )
   }
@@ -47,17 +49,21 @@ class FeatureManagerTests: XCTestCase {
     super.tearDown()
 
     TestGateKeeperManager.reset()
+    FeatureManager.reset()
   }
 
   func testCreatingWithDefaults() {
-    XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager is GateKeeperManager.Type,
-      "Should create the shared feature manager with the correct default gatekeeper manager"
+    XCTAssertNil(
+      FeatureManager.shared.gateKeeperManager,
+      "Should not have a gatekeeper manager by default"
     )
-    XCTAssertEqual(
-      FeatureManager.shared.store as? UserDefaults,
-      UserDefaults.standard,
-      "Should use the shared instance of user defaults as a persistent data store"
+    XCTAssertNil(
+      FeatureManager.shared.settings,
+      "Should not have settings by default"
+    )
+    XCTAssertNil(
+      FeatureManager.shared.store,
+      "Should not have a persistent data store by default"
     )
   }
 
@@ -65,6 +71,10 @@ class FeatureManagerTests: XCTestCase {
     XCTAssertTrue(
       manager.gateKeeperManager is TestGateKeeperManager.Type,
       "Should create with the provided gatekeeper manager"
+    )
+    XCTAssertTrue(
+      manager.settings === settings,
+      "Should create with the provided settings"
     )
     XCTAssertEqual(
       manager.store as? UserDefaultsSpy,
@@ -190,7 +200,7 @@ class FeatureManagerTests: XCTestCase {
         capturedKey = key
         // The existence of the sdk version for a feature key in user defaults
         // is interpreted to mean that the feature is disabled for that version
-        return Settings.sdkVersion
+        return self.settings.sdkVersion
       }
       manager.check(data.feature) { _ in }
 

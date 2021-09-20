@@ -341,6 +341,24 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingConfiguresFeatureManager() {
+    FeatureManager.reset()
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertTrue(
+      FeatureManager.shared.gateKeeperManager is GateKeeperManager.Type,
+      "Should configure with the expected concrete gatekeeper manager"
+    )
+    XCTAssertTrue(
+      FeatureManager.shared.settings === Settings.shared,
+      "Should configure with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      FeatureManager.shared.store === UserDefaults.standard,
+      "Should configure with the expected concrete data store"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
