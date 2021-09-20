@@ -22,6 +22,8 @@
 
  #import "FBSDKShareCameraEffectContent.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKInternalUtility;
 
 @interface FBSDKShareCameraEffectContent (Internal)
@@ -29,5 +31,7 @@
 @property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
