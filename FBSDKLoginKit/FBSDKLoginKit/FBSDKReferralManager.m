@@ -136,7 +136,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   return [challenge stringByReplacingOccurrencesOfString:@"+" withString:@"="];
 }
 
-- (void)invokeHandler:(FBSDKReferralManagerResult *)result error:(NSError *)error
+- (void)invokeHandler:(nullable FBSDKReferralManagerResult *)result error:(NSError *)error
 {
   _isPerformingReferral = NO;
   [_logger logReferralEnd:result error:error];

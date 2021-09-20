@@ -22,13 +22,17 @@
 
 #import "FBSDKReferralManager+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ReferralManagerLogger)
 @interface FBSDKReferralManagerLogger : NSObject
 
 - (void)logReferralStart;
 
-- (void)logReferralEnd:(FBSDKReferralManagerResult *)result error:(NSError *)error;
+- (void)logReferralEnd:(nullable FBSDKReferralManagerResult *)result error:(nullable NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
