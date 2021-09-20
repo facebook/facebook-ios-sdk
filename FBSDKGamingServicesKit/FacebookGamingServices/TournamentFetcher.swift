@@ -22,19 +22,31 @@ import Foundation
 public enum TournamentFetchError: Error {
   case server(Error)
   case decoding
+  case invalidAuthToken
+  case invalidAccessToken
 }
 
 public class TournamentFetcher {
 
   let graphRequestFactory: GraphRequestFactoryProtocol
+  let gamingGraphDomain = "gaming"
 
   public init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {
     self.graphRequestFactory = graphRequestFactory
   }
 
   public func fetchTournaments(completionHandler: @escaping (Result<Tournament, TournamentFetchError>) -> Void) {
-    let params = ["fields": "tournaments"]
-    let request = graphRequestFactory.createGraphRequest(withGraphPath: "me", parameters: params)
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+      return completionHandler(.failure(TournamentFetchError.invalidAuthToken))
+    }
+
+    guard let accessToken = AccessToken.current else {
+      return completionHandler(.failure(TournamentFetchError.invalidAccessToken))
+    }
+
+    let request = graphRequestFactory.createGraphRequest(
+      withGraphPath: "\(accessToken.userID)/tournaments",
+      parameters: [:])
     request.start { _, result, error in
       if let error = error {
         completionHandler(.failure(.server(error)))

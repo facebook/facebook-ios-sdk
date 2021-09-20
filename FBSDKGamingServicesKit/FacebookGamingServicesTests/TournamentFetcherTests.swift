@@ -42,6 +42,20 @@ class TournamentFetcherTests: XCTestCase {
     static let tournamentPayload = "test payload"
   }
 
+  override func setUp() {
+    super.setUp()
+
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
+    AccessToken.current = SampleAccessTokens.validToken
+  }
+
+  override func tearDown() {
+    AuthenticationToken.current = nil
+    AccessToken.current = nil
+
+    super.tearDown()
+  }
+
   func testDependencies() {
     let fetcher = TournamentFetcher()
     XCTAssertTrue(
@@ -72,14 +86,54 @@ class TournamentFetcherTests: XCTestCase {
     )
     XCTAssertEqual(
       factory.capturedGraphPath,
-      "me",
+      "user123/tournaments",
       "Should create a request with the expected graph path"
     )
     XCTAssertEqual(
       factory.capturedParameters as? [String: String],
-      ["fields": "tournaments"],
+      [:],
       "Should create a request with the expected parameters"
     )
+  }
+
+  func testFetchTournamentsAuthTokenWithInvalidGraphDomain() throws {
+    var completionWasInvoked = false
+
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
+    fetcher.fetchTournaments { result in
+      switch result {
+      case .failure(let error):
+        guard case .invalidAuthToken = error else {
+          return XCTFail("Was expecting invalid auth token error, instead recieved:\(error)")
+        }
+
+      case .success:
+        XCTFail("Should not succeed")
+      }
+      completionWasInvoked = true
+    }
+
+    XCTAssert(completionWasInvoked)
+  }
+
+  func testFetchTournamentsWithoutAccessToken() throws {
+    var completionWasInvoked = false
+
+    AccessToken.current = nil
+    fetcher.fetchTournaments { result in
+      switch result {
+      case .failure(let error):
+        guard case .invalidAccessToken = error else {
+          return XCTFail("Was expecting invalid access token error, instead recieved:\(error)")
+        }
+
+      case .success:
+        XCTFail("Should not succeed")
+      }
+      completionWasInvoked = true
+    }
+
+    XCTAssert(completionWasInvoked)
   }
 
   func testHandlingTournamentFetchError() throws {
