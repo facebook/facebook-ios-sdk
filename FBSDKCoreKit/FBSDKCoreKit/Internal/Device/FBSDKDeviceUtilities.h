@@ -22,14 +22,18 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(DeviceUtilities)
 @interface FBSDKDeviceUtilities : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (UIImage *)buildQRCodeWithAuthorizationCode:(NSString *)authorizationCode;
++ (UIImage *)buildQRCodeWithAuthorizationCode:(nullable NSString *)authorizationCode;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
