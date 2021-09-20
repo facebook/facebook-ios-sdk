@@ -68,6 +68,10 @@ aggregateTargets:
         path: ../scripts/xcode/build-universal-framework.sh
 
 schemes:
+  FacebookGamingServices-Static:
+    build:
+      targets:
+        FacebookGamingServices-Static: all
   FacebookGamingServices-Dynamic:
     build:
       targets:

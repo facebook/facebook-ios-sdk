@@ -378,6 +378,10 @@ schemes:
         - FBSDKCoreKit_Basics/FBSDKCoreKit_BasicsTests
       coverageTargets:
         - FBSDKCoreKit-Dynamic
+  FBSDKCoreKit_TV-Static:
+    build:
+      targets:
+        FBSDKCoreKit_TV-Static: all
   FBSDKCoreKit_TV-Dynamic:
     build:
       targets:

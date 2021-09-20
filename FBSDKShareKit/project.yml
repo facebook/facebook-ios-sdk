@@ -288,6 +288,10 @@ schemes:
     test:
       targets:
         - FBSDKShareKitTests
+  FBSDKShareKit_TV-Static:
+    build:
+      targets:
+        FBSDKShareKit_TV-Static: all
   FBSDKShareKit_TV-Dynamic:
     build:
       targets:

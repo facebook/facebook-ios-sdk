@@ -263,6 +263,10 @@ schemes:
         - FBSDKLoginKitTests
       coverageTargets:
         - FBSDKLoginKit-Dynamic
+  FBSDKLoginKit_TV-Static:
+    build:
+      targets:
+        FBSDKLoginKit_TV-Static: all
   FBSDKLoginKit_TV-Dynamic:
     build:
       targets:

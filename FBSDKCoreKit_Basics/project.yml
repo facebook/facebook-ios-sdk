@@ -130,6 +130,10 @@ schemes:
       targets: [FBSDKCoreKit_BasicsTests]
       coverageTargets:
         - FBSDKCoreKit_Basics-Dynamic
+  FBSDKCoreKit_Basics_TV-Static:
+    build:
+      targets:
+        FBSDKCoreKit_Basics_TV-Static: all
   FBSDKCoreKit_Basics_TV-Dynamic:
     build:
       targets:
