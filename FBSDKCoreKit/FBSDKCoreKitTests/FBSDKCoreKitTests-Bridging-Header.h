@@ -92,7 +92,6 @@
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCrashHandler+Testing.h"
 #import "FBSDKCrashObserver+Internal.h"
-#import "FBSDKCrashObserver+Testing.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKError+Testing.h"

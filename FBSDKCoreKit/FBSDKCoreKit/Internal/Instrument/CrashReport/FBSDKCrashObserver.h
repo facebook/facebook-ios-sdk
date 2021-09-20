@@ -29,9 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CrashObserver)
 @interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                    graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                              settings:(id<FBSDKSettings>)settings;
+                              settings:(id<FBSDKSettings>)settings
+                          crashHandler:(id<FBSDKCrashHandler>)crashHandler
+NS_SWIFT_NAME(init(featureChecker:graphRequestFactory:settings:crashHandler:));
 
 @end
 

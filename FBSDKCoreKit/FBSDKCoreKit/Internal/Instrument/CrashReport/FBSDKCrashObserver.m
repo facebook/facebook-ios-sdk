@@ -16,7 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKCrashObserver.h"
+#import "FBSDKCrashObserver+Internal.h"
+
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureChecking.h"
@@ -27,13 +29,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
-@interface FBSDKCrashObserver ()
-
-@property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
-@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-
-@end
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKCrashObserver
 
@@ -42,6 +38,7 @@
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                    graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                               settings:(id<FBSDKSettings>)settings
+                          crashHandler:(id<FBSDKCrashHandler>)crashHandler
 {
   if ((self = [super init])) {
     prefixes = @[@"FBSDK", @"_FBSDK"];
@@ -53,6 +50,7 @@
     _featureChecker = featureChecker;
     _graphRequestFactory = graphRequestFactory;
     _settings = settings;
+    _crashHandler = crashHandler;
   }
   return self;
 }
@@ -63,7 +61,7 @@
     return;
   }
   if (0 == processedCrashLogs.count) {
-    [FBSDKCrashHandler clearCrashReportFiles];
+    [self.crashHandler clearCrashReportFiles];
     return;
   }
   NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:processedCrashLogs options:0 error:nil];
@@ -76,7 +74,7 @@
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {
-        [FBSDKCrashHandler clearCrashReportFiles];
+        [self.crashHandler clearCrashReportFiles];
       }
     }];
   }
@@ -87,14 +85,6 @@
   }];
 }
 
-#if DEBUG
- #if FBTEST
-- (id<FBSDKSettings>)settings
-{
-  return _settings;
-}
-
- #endif
-#endif
-
 @end
+
+NS_ASSUME_NONNULL_END

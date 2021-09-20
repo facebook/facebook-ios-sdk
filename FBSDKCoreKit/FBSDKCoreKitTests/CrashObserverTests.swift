@@ -22,39 +22,47 @@ import XCTest
 
 class CrashObserverTests: XCTestCase {
 
-  var graphRequestFactory: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
-  var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
-  var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
-  let featureManager = TestFeatureManager()
+  let graphRequestFactory = TestGraphRequestFactory()
+  let settings = TestSettings()
+  let featureChecker = TestFeatureManager()
+  let crashHandler = TestCrashHandler()
 
-  override func setUp() {
-    super.setUp()
-    graphRequestFactory = TestGraphRequestFactory()
-    settings = TestSettings()
-    crashObserver = CrashObserver(
-      featureChecker: featureManager,
-      graphRequestFactory: graphRequestFactory,
-      settings: settings
-    )
-  }
+  lazy var crashObserver = CrashObserver(
+    featureChecker: featureChecker,
+    graphRequestFactory: graphRequestFactory,
+    settings: settings,
+    crashHandler: crashHandler
+  )
 
-  func testCreatingWithCustomSettings() {
+  func testCreatingWithDependencies() {
     XCTAssertTrue(
-      crashObserver.settings is TestSettings,
+      crashObserver.graphRequestFactory === graphRequestFactory,
+      "Should be able to create with a custom graph request factory"
+    )
+    XCTAssertTrue(
+      crashObserver.settings === settings,
       "Should be able to create with custom settings"
+    )
+    XCTAssertTrue(
+      crashObserver.featureChecker === featureChecker,
+      "Should be able to create with a custom feature checker"
+    )
+    XCTAssertTrue(
+      crashObserver.crashHandler === crashHandler,
+      "Should be able to create with a custom crash handler"
     )
   }
 
   func testDidReceiveCrashLogs() {
     crashObserver.didReceiveCrashLogs([])
-    XCTAssertEqual(featureManager.capturedFeatures, [])
+    XCTAssertEqual(featureChecker.capturedFeatures, [])
 
     let processedCrashLogs = CrashObserverTests.getCrashLogs()
 
     crashObserver.didReceiveCrashLogs(processedCrashLogs)
 
     XCTAssertTrue(
-      featureManager.capturedFeatures.contains(SDKFeature.crashShield),
+      featureChecker.capturedFeatures.contains(SDKFeature.crashShield),
       "Receiving crash logs should check to see if the crash shield feature is enabled"
     )
   }

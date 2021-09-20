@@ -2564,7 +2564,6 @@
 		A8E6D56FFF7B4F340A94E688 /* FBSDKAuthenticationTokenClaims+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAuthenticationTokenClaims+Internal.h"; sourceTree = "<group>"; };
 		A95217B8DAA0785362C0E8E3 /* FBSDKEventProcessing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKEventProcessing.h; sourceTree = "<group>"; };
 		A95A4D1D7D587DF11E9C3041 /* FBSDKMetadataIndexer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMetadataIndexer.m; sourceTree = "<group>"; };
-		A95C2741D89DDB0AE2F1DF44 /* FBSDKCrashObserver+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCrashObserver+Testing.h"; sourceTree = "<group>"; };
 		A9F5C820B351EF672671910F /* FBSDKEventBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventBinding.m; sourceTree = "<group>"; };
 		AA6B1615FAA0E1E11C1A8629 /* FBSDKServerConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKServerConfiguration.m; sourceTree = "<group>"; };
 		AAD5B42583020CE9F07C1D1E /* FBSDKViewHierarchyMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKViewHierarchyMacros.h; sourceTree = "<group>"; };
@@ -3971,7 +3970,6 @@
 				360BDCE9A7A7257AA43C72C7 /* FBSDKBridgeAPIProtocolWebV2+Testing.h */,
 				F77F87644DE4EBAFAE70D61E /* FBSDKCloseIcon+Testing.h */,
 				923CDBE092906B984B3AB347 /* FBSDKCrashHandler+Testing.h */,
-				A95C2741D89DDB0AE2F1DF44 /* FBSDKCrashObserver+Testing.h */,
 				65874B2A6162DEB93C9A7A30 /* FBSDKError+Testing.h */,
 				3D2D4A8C7E0F4C2E5050A9D6 /* FBSDKErrorReport+Testing.h */,
 				2ACCB3BFCF7FE3D30B1C0974 /* FBSDKEventBinding+Testing.h */,

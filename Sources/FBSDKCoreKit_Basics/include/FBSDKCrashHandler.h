@@ -27,12 +27,13 @@ NS_SWIFT_NAME(CrashHandler)
 
 @property (class, nonatomic, readonly) FBSDKCrashHandler *shared;
 
-- (void)disable;
 + (void)disable;
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer;
 + (void)clearCrashReportFiles;
 + (NSString *)getFBSDKVersion;
+
+- (void)disable;
 
 @end
 

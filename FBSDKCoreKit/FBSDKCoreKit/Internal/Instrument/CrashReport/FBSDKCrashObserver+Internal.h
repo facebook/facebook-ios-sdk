@@ -22,9 +22,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKCrashObserver (Internal)
+@interface FBSDKCrashObserver ()
 
-- (id<FBSDKSettings>)settings;
+@property (nonatomic) id<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKCrashHandler> crashHandler;
 
 @end
 
