@@ -364,6 +364,41 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingConfiguresInstrumentManager() throws {
+    InstrumentManager.shared.reset()
+    delegate.initializeSDK(launchOptions: [:])
+
+    let crashObserver = try XCTUnwrap(
+      InstrumentManager.shared.crashObserver as? CrashObserver,
+      "Should configure with a crash observer"
+    )
+
+    XCTAssertTrue(
+      crashObserver.featureChecker === InstrumentManager.shared.featureChecker,
+      "Should use the same feature checker for the crash observer and the instrument manager"
+    )
+    XCTAssertTrue(
+      crashObserver.settings === InstrumentManager.shared.settings,
+      "Should use the same settings for the crash observer and the instrument manager"
+    )
+    XCTAssertTrue(
+      InstrumentManager.shared.featureChecker is FeatureManager,
+      "Should configure with the expected feature checker"
+    )
+    XCTAssertTrue(
+      InstrumentManager.shared.settings === Settings.shared,
+      "Should configure with the shared settings instance"
+    )
+    XCTAssertTrue(
+      InstrumentManager.shared.errorReport === ErrorReport.shared,
+      "Should configure with the shared error report instance"
+    )
+    XCTAssertTrue(
+      InstrumentManager.shared.crashHandler === CrashHandler.shared,
+      "Should configure with the shared Crash Handler instance"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

@@ -20,12 +20,10 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCrashObserver.h"
-#import "FBSDKErrorReport+ErrorReporting.h"
+#import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureManager+FeatureChecking.h"
-#import "FBSDKGraphRequestFactory.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKInstrumentManager ()
 
@@ -39,34 +37,17 @@
 
 @implementation FBSDKInstrumentManager
 
-- (instancetype)init
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                           settings:(id<FBSDKSettings>)settings
+                      crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                        errorReport:(id<FBSDKErrorReporting>)errorReport
+                       crashHandler:(id<FBSDKCrashHandler>)crashHandler
 {
-  FBSDKCrashObserver *crashObserver = [[FBSDKCrashObserver alloc] initWithFeatureChecker:FBSDKFeatureManager.shared
-                                                                     graphRequestFactory:[FBSDKGraphRequestFactory new]
-                                                                                settings:FBSDKSettings.sharedSettings
-                                                                            crashHandler:FBSDKCrashHandler.shared];
-
-  return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.shared
-                                     settings:FBSDKSettings.sharedSettings
-                                crashObserver:crashObserver
-                                  errorReport:FBSDKErrorReport.shared
-                                 crashHandler:FBSDKCrashHandler.shared];
-}
-
-- (instancetype)initWithFeatureCheckerProvider:(id<FBSDKFeatureChecking>)featureChecker
-                                      settings:(id<FBSDKSettings>)settings
-                                 crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                                   errorReport:(id<FBSDKErrorReporting>)errorReport
-                                  crashHandler:(id<FBSDKCrashHandler>)crashHandler
-{
-  if ((self = [super init])) {
-    _featureChecker = featureChecker;
-    _settings = settings;
-    _crashObserver = crashObserver;
-    _errorReport = errorReport;
-    _crashHandler = crashHandler;
-  }
-  return self;
+  _featureChecker = featureChecker;
+  _settings = settings;
+  _crashObserver = crashObserver;
+  _errorReport = errorReport;
+  _crashHandler = crashHandler;
 }
 
 + (instancetype)shared
@@ -96,5 +77,19 @@
     }
   }];
 }
+
+#if DEBUG && FBTEST
+
+- (void)reset
+{
+  self.featureChecker = nil;
+  self.settings = nil;
+  self.crashObserver = nil;
+  self.errorReport = nil;
+  self.crashHandler = nil;
+  self.featureChecker = nil;
+}
+
+#endif
 
 @end

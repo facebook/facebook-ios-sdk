@@ -21,51 +21,55 @@ import XCTest
 
 class InstrumentManagerTests: XCTestCase {
 
-  var manager: InstrumentManager! // swiftlint:disable:this implicitly_unwrapped_optional
+  var manager = InstrumentManager()
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
   let errorReporter = TestErrorReport()
   let crashHandler = TestCrashHandler()
   let featureManager = TestFeatureManager()
 
+  override class func setUp() {
+    super.setUp()
+    InstrumentManager.shared.reset()
+  }
   override func setUp() {
     super.setUp()
 
-    manager = InstrumentManager(
-      featureCheckerProvider: featureManager,
+    manager.configure(
+      featureChecker: featureManager,
       settings: settings,
       crashObserver: crashObserver,
       errorReport: errorReporter,
       crashHandler: crashHandler
     )
   }
+  override func tearDown() {
+    super.tearDown()
+    InstrumentManager.shared.reset()
+  }
 
   func testDefaultDependencies() {
     let manager = InstrumentManager.shared
 
-    XCTAssertTrue(
-      manager.featureChecker is FeatureManager,
-      "Should use the expected feature checker type by default"
+    XCTAssertNil(
+      manager.featureChecker,
+      "Should not have a feature checker by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.settings),
-      ObjectIdentifier(Settings.shared),
-      "Should use the shared settings instance by default"
+    XCTAssertNil(
+      manager.settings,
+      "Should not have settings by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(self.manager.crashObserver),
-      ObjectIdentifier(crashObserver),
-      "Should be the same instance passed in initialization"
+    XCTAssertNil(
+      manager.crashObserver,
+      "Should not have a crash observer by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.errorReport),
-      ObjectIdentifier(ErrorReport.shared),
-      "Should use the shared error report instance by default"
+    XCTAssertNil(
+      manager.errorReport,
+      "Should not have an error report by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.crashHandler),
-      ObjectIdentifier(CrashHandler.shared),
-      "Should use the shared Crash Handler instance by default"
+    XCTAssertNil(
+      manager.crashHandler,
+      "Should not have a crash handler by default"
     )
   }
 

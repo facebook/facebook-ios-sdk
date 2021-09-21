@@ -42,6 +42,7 @@
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
+#import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
@@ -646,7 +647,12 @@ static UIApplicationState _applicationState;
   id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
   id<FBSDKServerConfigurationProviding> serverConfigurationProvider = FBSDKServerConfigurationManager.shared;
-
+  id<FBSDKFeatureChecking> sharedFeatureChecker = FBSDKFeatureManager.shared;
+  id<FBSDKCrashHandler> sharedCrashHandler = FBSDKCrashHandler.shared;
+  id<FBSDKCrashObserving> crashObserver = [[FBSDKCrashObserver alloc] initWithFeatureChecker:sharedFeatureChecker
+                                                                         graphRequestFactory:graphRequestFactory
+                                                                                    settings:sharedSettings
+                                                                                crashHandler:sharedCrashHandler];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
@@ -662,6 +668,11 @@ static UIApplicationState _applicationState;
                             graphRequestFactory:graphRequestFactory
                   graphRequestConnectionFactory:graphRequestConnectionFactory
                                           store:store];
+  [FBSDKInstrumentManager.shared configureWithFeatureChecker:sharedFeatureChecker
+                                                    settings:sharedSettings
+                                               crashObserver:crashObserver
+                                                 errorReport:FBSDKErrorReport.shared
+                                                crashHandler:sharedCrashHandler];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings];
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setGraphRequestConnectionFactory:graphRequestConnectionFactory];

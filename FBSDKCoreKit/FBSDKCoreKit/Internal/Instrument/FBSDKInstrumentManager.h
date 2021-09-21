@@ -20,10 +20,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+@protocol FBSDKFeatureChecking;
+@protocol FBSDKSettings;
+@protocol FBSDKCrashObserving;
+@protocol FBSDKErrorReporting;
+@protocol FBSDKCrashHandler;
+
 NS_SWIFT_NAME(InstrumentManager)
 @interface FBSDKInstrumentManager : NSObject
 
 @property (class, nonatomic, readonly) FBSDKInstrumentManager *shared;
+
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                           settings:(id<FBSDKSettings>)settings
+                      crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                        errorReport:(id<FBSDKErrorReporting>)errorReport
+                       crashHandler:(id<FBSDKCrashHandler>)crashHandler
+NS_SWIFT_NAME(configure(featureChecker:settings:crashObserver:errorReport:crashHandler:));
 
 - (void)enable;
 
