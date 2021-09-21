@@ -19,30 +19,33 @@
 /**
  Web Share Block
  */
+
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
 NS_SWIFT_NAME(WebPhotoContentBlock);
 
 NS_SWIFT_NAME(ShareUtilityProtocol)
 @protocol FBSDKShareUtility
 
-+ (NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content;
++ (nullable NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content;
 
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
                 completionHandler:(FBSDKWebPhotoContentBlock)completion;
 
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
-                  methodName:(NSString *__autoreleasing *)methodNameRef
-                  parameters:(NSDictionary<NSString *, id> *__autoreleasing *)parametersRef
-                       error:(NSError *__autoreleasing *)errorRef;
+                  methodName:(NSString *_Nonnull *_Nullable)methodNameRef
+                  parameters:(NSDictionary<NSString *, id> *_Nonnull *_Nullable)parametersRef
+                       error:(NSError *_Nullable *)errorRef;
 
-+ (NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag;
++ (nullable NSString *)hashtagStringFromHashtag:(nullable FBSDKHashtag *)hashtag;
 
 + (NSDictionary<NSString *, id> *)parametersForShareContent:(id<FBSDKSharingContent>)shareContent
                                               bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
                                       shouldFailOnDataError:(BOOL)shouldFailOnDataError;
 
 + (void)testShareContent:(id<FBSDKSharingContent>)shareContent
-           containsMedia:(BOOL *)containsMediaRef
+           containsMedia:(nullable BOOL *)containsMediaRef
           containsPhotos:(BOOL *)containsPhotosRef
           containsVideos:(BOOL *)containsVideosRef;
 
@@ -50,6 +53,8 @@ NS_SWIFT_NAME(ShareUtilityProtocol)
 
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent
                bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-                       error:(NSError *__autoreleasing *)errorRef;
+                       error:(NSError *_Nullable*)errorRef;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -32,7 +32,7 @@ final class TestShareUtility: NSObject, ShareUtilityProtocol {
     stubbedHashtagString = nil
   }
 
-  static func feedShareDictionary(for content: SharingContent) -> [String: Any] {
+  static func feedShareDictionary(for content: SharingContent) -> [String: Any]? {
     [:]
   }
 
@@ -44,12 +44,12 @@ final class TestShareUtility: NSObject, ShareUtilityProtocol {
 
   static func buildWebShare(
     _ content: SharingContent,
-    methodName methodNameRef: AutoreleasingUnsafeMutablePointer<NSString?>,
-    parameters parametersRef: AutoreleasingUnsafeMutablePointer<NSDictionary?>
+    methodName methodNameRef: AutoreleasingUnsafeMutablePointer<NSString>?,
+    parameters parametersRef: AutoreleasingUnsafeMutablePointer<NSDictionary>?
   ) throws {
   }
 
-  static func hashtagString(from hashtag: Hashtag) -> String {
+  static func hashtagString(from hashtag: Hashtag?) -> String? {
     stubbedHashtagString ?? ""
   }
 
@@ -63,11 +63,11 @@ final class TestShareUtility: NSObject, ShareUtilityProtocol {
 
   static func testShare(
     _ shareContent: SharingContent,
-    containsMedia containsMediaRef: UnsafeMutablePointer<ObjCBool>,
+    containsMedia containsMediaRef: UnsafeMutablePointer<ObjCBool>?,
     containsPhotos containsPhotosRef: UnsafeMutablePointer<ObjCBool>,
     containsVideos containsVideosRef: UnsafeMutablePointer<ObjCBool>
   ) {
-    containsMediaRef.pointee = ObjCBool(stubbedTestShareContainsMedia)
+    containsMediaRef?.pointee = ObjCBool(stubbedTestShareContainsMedia)
     containsPhotosRef.pointee = ObjCBool(stubbedTestShareContainsPhotos)
     containsVideosRef.pointee = ObjCBool(stubbedTestShareContainsVideos)
   }
