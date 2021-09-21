@@ -18,6 +18,8 @@
 
 @import FBSDKCoreKit;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKLoginManager (Testing)
 
 @property (nonatomic) FBSDKLoginManagerLoginResultBlock handler;
@@ -30,15 +32,15 @@
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
 @property (nonatomic) id<FBSDKURLOpener> urlOpener;
 
-- (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
+- (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
 
-- (NSString *)loadExpectedNonce;
+- (nullable NSString *)loadExpectedNonce;
 
-- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
+- (void)storeExpectedNonce:(nullable NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
 
 - (FBSDKLoginConfiguration *)configuration;
 
-- (void)storeExpectedNonce:(NSString *)nonceExpected;
+- (void)storeExpectedNonce:(nullable NSString *)nonceExpected;
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
 
@@ -48,7 +50,7 @@
                                                         withToken:(FBSDKAccessToken *)currentToken
                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
-- (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
+- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
 
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(UIViewController *)viewController
@@ -63,3 +65,5 @@
                               urlOpener:(id<FBSDKURLOpener>)urlOpener;
 
 @end
+
+NS_ASSUME_NONNULL_END
