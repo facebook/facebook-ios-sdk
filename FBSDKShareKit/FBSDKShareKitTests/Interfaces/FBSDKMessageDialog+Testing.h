@@ -18,15 +18,19 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKAppInstallCheck;
 
 @interface FBSDKMessageDialog (Testing)
 
 @property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
++ (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
                          delegate:(id<FBSDKSharingDelegate>)delegate
            appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
 NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
 
 @end
+
+NS_ASSUME_NONNULL_END
