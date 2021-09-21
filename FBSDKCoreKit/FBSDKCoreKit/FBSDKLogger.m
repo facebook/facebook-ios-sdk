@@ -33,10 +33,11 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 @property (nonatomic, readonly, strong) NSMutableString *internalContents;
 @end
 
-@implementation FBSDKLogger
-NSUInteger _loggerSerialNumber;
-FBSDKLoggingBehavior _loggingBehavior;
-BOOL _active;
+@implementation FBSDKLogger {
+    NSUInteger _loggerSerialNumber;
+    FBSDKLoggingBehavior _loggingBehavior;
+    BOOL _active;
+}
 
 // Lifetime
 
