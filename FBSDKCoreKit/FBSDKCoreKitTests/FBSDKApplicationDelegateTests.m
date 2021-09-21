@@ -340,18 +340,13 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
   NSObject *graphRequestFactory = (NSObject *)FBSDKGateKeeperManager.graphRequestFactory;
   NSObject *graphRequestConnectionFactory = (NSObject *)FBSDKGateKeeperManager.graphRequestConnectionFactory;
-  NSObject *settings = (NSObject *)FBSDKGateKeeperManager.settings;
   NSObject *store = (NSObject *)FBSDKGateKeeperManager.store;
 
   XCTAssertTrue(
     [FBSDKGateKeeperManager canLoadGateKeepers],
     "Initializing the SDK should enable loading gatekeepers"
   );
-  XCTAssertEqualObjects(
-    settings,
-    FBSDKSettings.class,
-    "Should be configured with the expected concrete settings"
-  );
+
   XCTAssertEqualObjects(
     graphRequestFactory.class,
     FBSDKGraphRequestFactory.class,

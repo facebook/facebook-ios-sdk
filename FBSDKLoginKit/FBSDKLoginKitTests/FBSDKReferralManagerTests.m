@@ -70,7 +70,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
                          didFinishLaunchingWithOptions:@{}];
 
   _manager = [FBSDKReferralManager new];
-  [FBSDKSettings setAppID:_mockAppID];
+  FBSDKSettings.sharedSettings.appID = _mockAppID;
 }
 
 - (void)mockURLScheme

@@ -75,7 +75,7 @@ static BOOL _isConfigured;
       }
     }
 
-    NSString *appID = [FBSDKSettings appID];
+    NSString *appID = FBSDKSettings.sharedSettings.appID;
 
     // Deferred app links are only currently used for engagement ads, thus we consider the app to be an advertising one.
     // If this is considered for organic, non-ads scenarios, we'll need to retrieve the FBAppEventsUtility.shouldAccessAdvertisingID

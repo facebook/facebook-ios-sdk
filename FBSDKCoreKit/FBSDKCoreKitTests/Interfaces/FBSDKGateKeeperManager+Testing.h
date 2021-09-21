@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
 @property (class, nonatomic, nullable) FBSDKLogger *logger;
-@property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
+@property (class, nonatomic, nullable) id<FBSDKSettings> settings;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, nullable) NSDate *timestamp;
 @property (class, nonatomic) BOOL isLoadingGateKeepers;
 
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                         store:(id<FBSDKDataPersisting>)store

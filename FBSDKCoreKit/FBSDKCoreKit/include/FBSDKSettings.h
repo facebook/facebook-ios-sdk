@@ -37,7 +37,12 @@ NS_SWIFT_NAME(Settings)
 /**
  Retrieve the current iOS SDK version.
  */
-@property (class, nonatomic, copy, readonly) NSString *sdkVersion;
+@property (nonatomic, copy, readonly) NSString *sdkVersion;
+
+/**
+ Retrieve the current iOS SDK version.
+ */
+@property (class, nonatomic, readonly, copy) NSString *sdkVersion DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings sdkVersion]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] sdkVersion]`");
 
 /**
  Retrieve the current default Graph API version.
@@ -102,7 +107,14 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
-@property (class, nonatomic, copy, nullable) NSString *appID;
+@property (nonatomic, copy, nullable) NSString *appID;
+
+/**
+  The Facebook App ID used by the SDK.
+
+ If not explicitly set, the default will be read from the application's plist (FacebookAppID).
+ */
+@property (class, nullable, nonatomic, copy) NSString *appID DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings appID]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] appID]`");
 
 /**
   The default url scheme suffix used for sessions.
@@ -112,7 +124,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (class, nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
 
 /**
-  The Client Token that has been set via [FBSDKSettings setClientToken].
+  The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
  This is needed for certain API calls when made anonymously, without a user-based access token.
 
  The Facebook App's "client token", which, for a given appid can be found in the Security
@@ -120,8 +132,18 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
  */
-@property (class, nonatomic, copy, nullable) NSString *clientToken;
+@property (nonatomic, copy, nullable) NSString *clientToken;
 
+/**
+  The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
+ This is needed for certain API calls when made anonymously, without a user-based access token.
+
+ The Facebook App's "client token", which, for a given appid can be found in the Security
+ section of the Advanced tab of the Facebook App settings found at <https://developers.facebook.com/apps/[your-app-id]>
+
+ If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
+ */
+@property (class, nullable, nonatomic, copy) NSString *clientToken DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings clientToken]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] clientToken]`");
 /**
   The Facebook Display Name used by the SDK.
 
@@ -161,6 +183,14 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  Defaults to `FBSDK_DEFAULT_GRAPH_API_VERSION`.
 */
 @property (class, nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+@property (nullable, nonatomic, copy) NSString *userAgentSuffix;
 
 /**
  The value of the flag advertiser_tracking_enabled that controls the advertiser tracking status of the data sent to Facebook

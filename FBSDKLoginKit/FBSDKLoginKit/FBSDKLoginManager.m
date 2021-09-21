@@ -192,7 +192,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   NSDictionary<NSString *, id> *params = [self logInParametersFromURL:url];
   if (params) {
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params
-                                                                                         appID:FBSDKSettings.appID
+                                                                                         appID:FBSDKSettings.sharedSettings.appID
                                                                  graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                     authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
@@ -365,7 +365,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [FBSDKInternalUtility.sharedUtility validateURLSchemes];
 
   NSMutableDictionary<NSString *, id> *loginParams = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:FBSDKSettings.sharedSettings.appID forKey:@"client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
@@ -693,7 +693,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   if (isFacebookURL) {
     NSDictionary<NSString *, id> *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
-                                                                                         appID:FBSDKSettings.appID
+                                                                                         appID:FBSDKSettings.sharedSettings.appID
                                                                  graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                     authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
 
@@ -717,7 +717,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
          annotation:(id)annotation
 {
   // verify the URL is intended as a callback for the SDK's log in
-  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"authorize"];
 }
 
@@ -736,7 +736,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (BOOL)shouldStopPropagationOfURL:(NSURL *)url
 {
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"no-op"];
 }
 

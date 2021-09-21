@@ -126,7 +126,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
   NSString *host = self.targetURL.host;
   NSString *scheme = self.targetURL.scheme;
   NSString *expectedHost = @"applinks";
-  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
+  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
   BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
   return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
 }

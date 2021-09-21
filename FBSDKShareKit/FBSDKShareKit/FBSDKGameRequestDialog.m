@@ -180,7 +180,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 - (BOOL)isValidCallbackURL:(NSURL *)url
 {
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:FBSDK_GAME_REQUEST_URL_HOST];
 }
 

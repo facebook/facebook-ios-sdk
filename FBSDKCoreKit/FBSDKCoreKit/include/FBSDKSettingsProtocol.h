@@ -16,37 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKLoggingBehavior.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
+#import "FBSDKLoggingBehavior.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(SettingsProtocol)
 @protocol FBSDKSettings
 
-@property (class, nonatomic, copy, nullable) NSString *appID;
-@property (class, nonatomic, copy, nullable) NSString *clientToken;
-@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-@property (class, nonatomic, readonly, copy) NSString *sdkVersion;
-@property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
-
-@property (nonatomic, copy, nullable) NSString *appID;
-@property (nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
+@property (nullable, nonatomic, copy) NSString *appID;
+@property (nullable, nonatomic, copy) NSString *clientToken;
+@property (nullable, nonatomic, copy) NSString *userAgentSuffix;
+@property (nonatomic, readonly, copy) NSString *sdkVersion;
+@property (class, nonnull, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+@property (nullable, nonatomic, copy) NSString *appURLSchemeSuffix;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;
 @property (nonatomic, readonly) BOOL isAutoLogAppEventsEnabled;
 @property (nonatomic, readonly) BOOL isSetATETimeExceedsInstallTime;
 @property (nonatomic, readonly) BOOL isSKAdNetworkReportEnabled;
-@property (nonatomic, readonly, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+@property (nonnull, nonatomic, readonly) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 @property (nonatomic, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
-@property (nonatomic, readonly, nullable) NSDate* installTimestamp;
-@property (nonatomic, readonly, nullable) NSDate* advertiserTrackingEnabledTimestamp;
+@property (nullable, nonatomic, readonly) NSDate *installTimestamp;
+@property (nullable, nonatomic, readonly) NSDate *advertiserTrackingEnabledTimestamp;
 @property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
-@property (nonatomic, copy, readonly) NSString * _Nonnull graphAPIVersion;
+@property (nonatomic, readonly, copy) NSString *_Nonnull graphAPIVersion;
 @property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
-@property (nonatomic, readonly, copy, nullable) NSString *graphAPIDebugParamValue;
-@property (nonatomic, readonly, copy) NSString *sdkVersion;
-
+@property (nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @end
 
 NS_ASSUME_NONNULL_END

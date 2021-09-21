@@ -28,22 +28,25 @@ class GateKeeperManagerTests: XCTestCase {
   let graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
   let store = UserDefaultsSpy()
   let storeIdentifierPrefix = "com.facebook.sdk:GateKeepers"
+let settings = TestSettings()
 
   override func setUp() {
     super.setUp()
 
     graphRequestConnectionFactory.stubbedConnection = connection
     GateKeeperManager.configure(
-      settings: TestSettings.self,
+      settings: settings,
       graphRequestFactory: graphRequestFactory,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       store: store
     )
+
   }
 
   override func tearDown() {
     super.tearDown()
 
+    settings.reset()
     TestSettings.reset()
     GateKeeperManager.reset()
   }
@@ -74,7 +77,6 @@ class GateKeeperManagerTests: XCTestCase {
   func testConfiguringWithDependencies() {
     XCTAssertTrue(GateKeeperManager.graphRequestFactory === graphRequestFactory)
     XCTAssertTrue(GateKeeperManager.graphRequestConnectionFactory === graphRequestConnectionFactory)
-    XCTAssertTrue(GateKeeperManager.settings is TestSettings.Type)
     XCTAssertTrue(GateKeeperManager.store === store)
   }
 
@@ -131,7 +133,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testLoadingGateKeepersWithoutAppIdWithoutCompletion() {
-    TestSettings.appID = nil
+    settings.appID = nil
     GateKeeperManager.gateKeepers = ["foo": "true"]
     GateKeeperManager.loadGateKeepers(nil)
     XCTAssertNil(
@@ -153,7 +155,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testLoadingGateKeepersWhenValid() {
-    TestSettings.appID = name
+    settings.appID = name
     self.updateGateKeeperValidity(isValid: true)
 
     var didInvokeCompletion = false
@@ -176,7 +178,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testLoadingGateKeepersWhenInvalidWhenNotCurrentlyLoading() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.gateKeepers = ["foo": "true"]
     self.updateGateKeeperValidity(isValid: false)
 
@@ -191,7 +193,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testLoadingGateKeepersWhenInvalidWhenCurrentlyLoading() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.gateKeepers = ["foo": "true"]
     self.updateGateKeeperValidity(isValid: false)
 
@@ -215,7 +217,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testLoadingGateKeepersWithNonEmptyStore() {
-    TestSettings.appID = name
+    settings.appID = name
 
     let data = NSKeyedArchiver.archivedData(withRootObject: SampleRawRemoteGatekeeper.validEnabled)
     store.setValue(data, forKey: storeIdentifierPrefix + name)
@@ -235,7 +237,7 @@ class GateKeeperManagerTests: XCTestCase {
   // MARK: - Caching & Persistence
 
   func testUsesAppIdentifierForRetrieval() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.loadGateKeepers(nil)
 
     XCTAssertEqual(
@@ -246,7 +248,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testInitialDataForCurrentAppIdentifier() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.loadGateKeepers(nil)
 
     XCTAssertNil(
@@ -260,8 +262,8 @@ class GateKeeperManagerTests: XCTestCase {
   func testCreatingRequest() {
     let appIdentifier = "foo"
     let version = "bar"
-    TestSettings.appID = appIdentifier
-    TestSettings.stubbedSdkVersion = version
+    settings.appID = appIdentifier
+    settings.sdkVersion = version
     _ = GateKeeperManager.requestToLoadGateKeepers()
 
     XCTAssertEqual(
@@ -307,7 +309,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testParsingWithError() {
-    TestSettings.appID = name
+    settings.appID = name
     updateGateKeeperValidity(isValid: false)
     let error = SampleError() as NSError
 
@@ -356,7 +358,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testParsingWithValidGateKeepersCaches() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.parse(
       result: SampleRawRemoteGatekeeperList.validHeterogeneous,
       error: nil
@@ -389,7 +391,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testRetrievingGateKeeperTriggersLoading() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.bool(forKey: "foo", defaultValue: false)
     XCTAssertNotNil(
       store.capturedObjectRetrievalKey,
@@ -398,17 +400,17 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testRetrievingMissingGateKeeper() {
-    TestSettings.appID = name
+    settings.appID = name
     XCTAssertTrue(GateKeeperManager.bool(forKey: name, defaultValue: true))
     XCTAssertFalse(GateKeeperManager.bool(forKey: name, defaultValue: false))
 
-    TestSettings.appID = nil
+    settings.appID = nil
     XCTAssertTrue(GateKeeperManager.bool(forKey: name, defaultValue: true))
     XCTAssertFalse(GateKeeperManager.bool(forKey: name, defaultValue: false))
   }
 
   func testRetrievingGateKeeperWithAppID() {
-    TestSettings.appID = name
+    settings.appID = name
     GateKeeperManager.gateKeepers = [name: false]
     XCTAssertFalse(
       GateKeeperManager.bool(forKey: name, defaultValue: true),

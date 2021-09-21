@@ -175,7 +175,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                             permissions:permissions.allObjects
                                                                     declinedPermissions:declinedPermissions.allObjects
                                                                      expiredPermissions:expiredPermissions.allObjects
-                                                                                  appID:[FBSDKSettings appID]
+                                                                                  appID:FBSDKSettings.sharedSettings.appID
                                                                                  userID:userID
                                                                          expirationDate:expirationDate
                                                                             refreshDate:nil

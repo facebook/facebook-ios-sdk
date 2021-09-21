@@ -556,8 +556,8 @@ static id <FBSDKDataPersisting> _store;
   if ([self.accessTokenProvider currentAccessToken]) {
     [FBSDKTypeUtility dictionary:queryParameters setObject:[[self.accessTokenProvider currentAccessToken] tokenString]
                           forKey:accessTokenKey];
-  } else if (FBSDKSettings.clientToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.clientToken forKey:accessTokenKey];
+  } else if (FBSDKSettings.sharedSettings.clientToken) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.sharedSettings.clientToken forKey:accessTokenKey];
   } else {
     NSLog(@"As of Graph API v8.0, profile images may not be retrieved without an access token. This can be the current access token from logging in with Facebook or it can be set via the plist or in code. Providing neither will cause this call to return a silhouette image.");
   }

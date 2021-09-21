@@ -329,7 +329,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingDisallowed];
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
-  [FBSDKSettings setAppID:@"123"];
+  FBSDKSettings.sharedSettings.appID = @"123";
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertFalse(
@@ -343,7 +343,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingUnspecified];
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
-  [FBSDKSettings setAppID:@"123"];
+  FBSDKSettings.sharedSettings.appID = @"123";
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertTrue(
@@ -361,7 +361,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingAllowed];
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
-  [FBSDKSettings setAppID:@"123"];
+  FBSDKSettings.sharedSettings.appID = @"123";
   [FBSDKAppEvents logEvent:@"event"];
 
   XCTAssertTrue(
@@ -379,7 +379,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingDisallowed];
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:YES];
 
-  [FBSDKSettings setAppID:@"123"];
+  FBSDKSettings.sharedSettings.appID = @"123";
   [FBSDKAppEvents logEvent:@"event"];
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -450,8 +450,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -463,8 +463,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -476,8 +476,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = SampleAccessTokens.validToken.appID;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -489,8 +489,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:@"abc"];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = @"abc";
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
@@ -503,8 +503,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
@@ -517,8 +517,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
@@ -531,8 +531,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:@"456"];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = @"456";
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
@@ -546,8 +546,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:@"456"];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = @"456";
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
@@ -561,8 +561,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -574,8 +574,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -587,8 +587,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = SampleAccessTokens.validToken.appID;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -600,8 +600,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = SampleAccessTokens.validToken.appID;
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -613,8 +613,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -626,8 +626,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:nil];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -639,8 +639,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:@"456"];
-  [FBSDKSettings setClientToken:nil];
+  FBSDKSettings.sharedSettings.appID = @"456";
+  FBSDKSettings.sharedSettings.clientToken = nil;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -652,8 +652,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:@"456"];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = @"456";
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
@@ -665,8 +665,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:SampleAccessTokens.validToken.appID];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken];
-  [FBSDKSettings setAppID:@"456"];
-  [FBSDKSettings setClientToken:@"toktok"];
+  FBSDKSettings.sharedSettings.appID = @"456";
+  FBSDKSettings.sharedSettings.clientToken = @"toktok";
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,

@@ -52,8 +52,8 @@ class DeviceLoginManagerTests: XCTestCase {
     InternalUtility.shared.isConfigured = true
     Settings.shared.isConfigured = true
 
-    Settings.appID = fakeAppID
-    Settings.clientToken = fakeClientToken
+    Settings.shared.appID = fakeAppID
+    Settings.shared.clientToken = fakeClientToken
 
     manager.redirectURL = redirectURL
     manager.delegate = delegate

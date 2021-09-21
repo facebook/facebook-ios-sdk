@@ -42,7 +42,7 @@ NS_SWIFT_NAME(GateKeeperManager)
 /**
  Configures the manager with various dependencies that are required to load the gate keepers
  */
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                         store:(id<FBSDKDataPersisting>)store;

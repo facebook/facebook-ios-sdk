@@ -658,7 +658,7 @@ static UIApplicationState _applicationState;
           currentAccessTokenStringProvider:FBSDKAccessToken.class
              graphRequestConnectionFactory:graphRequestConnectionFactory];
   [FBSDKGraphRequestConnection setCanMakeRequests];
-  [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
+  [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.sharedSettings
                             graphRequestFactory:graphRequestFactory
                   graphRequestConnectionFactory:graphRequestConnectionFactory
                                           store:store];
@@ -731,7 +731,7 @@ static UIApplicationState _applicationState;
   }
   if (@available(iOS 14.0, *)) {
     [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new]
-                                    appID:[FBSDKSettings appID]
+                                    appID:FBSDKSettings.sharedSettings.appID
                                  reporter:self.skAdNetworkReporter];
   }
   [FBSDKProfile configureWithStore:store

@@ -125,7 +125,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithClientTokenNoAccessToken
 {
-  FBSDKSettings.clientToken = _validClientToken;
+  FBSDKSettings.sharedSettings.clientToken = _validClientToken;
 
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
@@ -167,7 +167,7 @@ NSString *const heightKey = @"height";
 - (void)testCreatingImageURLWithAccessTokenAndClientToken
 {
   [TestAccessTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
-  FBSDKSettings.clientToken = _validClientToken;
+  FBSDKSettings.sharedSettings.clientToken = _validClientToken;
 
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];

@@ -28,14 +28,13 @@
 
 @interface FBSDKSettings ()
 + (void)reset;
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
 @end
 
 @interface FBSDKSettingsTests : XCTestCase
 @property (nonatomic) UserDefaultsSpy *userDefaultsSpy;
 @property (nonatomic) TestBundle *bundle;
 @property (nonatomic) TestEventLogger *logger;
+@property (nonatomic) NSString *userAgentSuffix;
 @end
 
 #pragma clang diagnostic push
@@ -274,7 +273,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     clientToken,
     "A developer should be able to set any string as the client token"
   );
@@ -283,7 +282,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testClientTokenFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     "A client token should not have a default value if it is not available in the plist"
   );
 }
@@ -294,7 +293,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     emptyString,
     "Should not use an empty string as a facebook client token but it will"
   );
@@ -306,7 +305,7 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookClientToken" : clientToken}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.clientToken = @"foo";
+  FBSDKSettings.sharedSettings.clientToken = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
@@ -318,7 +317,7 @@ static NSString *const whiteSpaceToken = @"   ";
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     @"foo",
     "Settings should return the explicitly set client token over one gleaned from a plist entry"
   );
@@ -326,14 +325,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingClientTokenWithoutPlistEntry
 {
-  FBSDKSettings.clientToken = @"foo";
+  FBSDKSettings.sharedSettings.clientToken = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     @"foo",
     "Settings should return the explicitly set client token"
   );
@@ -341,14 +340,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyClientToken
 {
-  FBSDKSettings.clientToken = emptyString;
+  FBSDKSettings.sharedSettings.clientToken = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     emptyString,
     "Should not store an invalid token but it will"
   );
@@ -356,14 +355,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyClientToken
 {
-  FBSDKSettings.clientToken = whiteSpaceToken;
+  FBSDKSettings.sharedSettings.clientToken = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     whiteSpaceToken,
     "Should not store a whitespace only client token but it will"
   );
@@ -371,11 +370,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testClientTokenInternalStorage
 {
-  FBSDKSettings.clientToken = @"foo";
+  FBSDKSettings.sharedSettings.clientToken = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.clientToken, "sanity check");
+  XCTAssertNotNil(FBSDKSettings.sharedSettings.clientToken, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -395,7 +394,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     appIdentifier,
     "A developer should be able to set any string as the app identifier"
   );
@@ -404,7 +403,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testAppIdentifierFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     "An app identifier should not have a default value if it is not available in the plist"
   );
 }
@@ -415,7 +414,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     emptyString,
     "Should not use an empty string as an app identifier but it will"
   );
@@ -427,14 +426,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookAppID" : appIdentifier}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.appID = @"foo";
+  FBSDKSettings.sharedSettings.appID = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     @"foo",
     "Settings should return the explicitly set app identifier over one gleaned from a plist entry"
   );
@@ -442,14 +441,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingAppIdentifierWithoutPlistEntry
 {
-  FBSDKSettings.appID = @"foo";
+  FBSDKSettings.sharedSettings.appID = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     @"foo",
     "Settings should return the explicitly set app identifier"
   );
@@ -457,14 +456,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyAppIdentifier
 {
-  FBSDKSettings.appID = emptyString;
+  FBSDKSettings.sharedSettings.appID = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     emptyString,
     "Should not store an empty app identifier but it will"
   );
@@ -472,14 +471,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyAppIdentifier
 {
-  FBSDKSettings.appID = whiteSpaceToken;
+  FBSDKSettings.sharedSettings.appID = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appID,
+    FBSDKSettings.sharedSettings.appID,
     whiteSpaceToken,
     "Should not store a whitespace only app identifier but it will"
   );
@@ -487,11 +486,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testAppIdentifierInternalStorage
 {
-  FBSDKSettings.appID = @"foo";
+  FBSDKSettings.sharedSettings.appID = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.appID, "sanity check");
+  XCTAssertNotNil(FBSDKSettings.sharedSettings.appID, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1230,7 +1229,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testInitialAccessForNonCachablePropertyWithEmptyPlist
 {
   XCTAssertNil(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     "A non-cachable property with no default value and no plist entry should not have a value"
   );
 
@@ -1251,7 +1250,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.clientToken,
+    FBSDKSettings.sharedSettings.clientToken,
     @"abc123",
     "Should retrieve the initial value from the property list"
   );
@@ -1560,17 +1559,17 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testUserAgentSuffix
 {
   XCTAssertNil(
-    FBSDKSettings.userAgentSuffix,
+    self.userAgentSuffix,
     "User agent suffix should be nil by default"
   );
 }
 
 - (void)testSettingUserAgentSuffix
 {
-  FBSDKSettings.userAgentSuffix = @"foo";
+  self.userAgentSuffix = @"foo";
 
   XCTAssertEqual(
-    FBSDKSettings.userAgentSuffix,
+    self.userAgentSuffix,
     @"foo",
     "Settings should return the explicitly set user agent suffix"
   );
@@ -1578,10 +1577,10 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyUserAgentSuffix
 {
-  FBSDKSettings.userAgentSuffix = emptyString;
+  self.userAgentSuffix = emptyString;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.userAgentSuffix,
+    self.userAgentSuffix,
     emptyString,
     "Should not store an empty user agent suffix but it will"
   );
@@ -1589,10 +1588,10 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyUserAgentSuffix
 {
-  FBSDKSettings.userAgentSuffix = whiteSpaceToken;
+  self.userAgentSuffix = whiteSpaceToken;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.userAgentSuffix,
+    self.userAgentSuffix,
     whiteSpaceToken,
     "Should not store a whitespace only user agent suffix but it will"
   );

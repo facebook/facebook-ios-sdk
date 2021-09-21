@@ -74,7 +74,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     // Dots in the version will mess up the bonjour DNS record parsing
-    sdkVersion = [[FBSDKSettings sdkVersion] stringByReplacingOccurrencesOfString:@"." withString:@"|"];
+    sdkVersion = [FBSDKSettings.sharedSettings.sdkVersion stringByReplacingOccurrencesOfString:@"." withString:@"|"];
     if (sdkVersion.length > 10
         || ![NSCharacterSet.decimalDigitCharacterSet characterIsMember:[sdkVersion characterAtIndex:0]]) {
       sdkVersion = @"dev";

@@ -50,7 +50,7 @@ static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
-static Class<FBSDKSettings> _settings;
+static id<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
 
 #pragma mark - Public Class Methods
@@ -66,7 +66,7 @@ static id<FBSDKDataPersisting> _store;
   }
 }
 
-+ (void)  configureWithSettings:(Class<FBSDKSettings>)settings
++ (void)  configureWithSettings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                           store:(id<FBSDKDataPersisting>)store
@@ -96,7 +96,7 @@ static id<FBSDKDataPersisting> _store;
         return;
       }
 
-      NSString *appID = [self.settings appID];
+      NSString *appID = _settings.appID;
       if (!appID) {
         _gateKeepers = nil;
         if (completionBlock != NULL) {
@@ -154,12 +154,12 @@ static id<FBSDKDataPersisting> _store;
 {
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[self.settings sdkVersion] forKey:@"sdk_version"];
+  [FBSDKTypeUtility dictionary:parameters setObject:_settings.sdkVersion forKey:@"sdk_version"];
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
   [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
 
   return [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                    [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
+                                                                    _settings.appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
@@ -199,7 +199,7 @@ static id<FBSDKDataPersisting> _store;
       }
       // update the cached copy in user defaults
       NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
-                              [self.settings appID]];
+                              _settings.appID];
 
     #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:gateKeeper requiringSecureCoding:NO error:NULL];
@@ -244,7 +244,7 @@ static id<FBSDKDataPersisting> _store;
   return _graphRequestFactory;
 }
 
-+ (Class<FBSDKSettings>)settings
++ (id<FBSDKSettings>)settings
 {
   return _settings;
 }

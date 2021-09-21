@@ -115,7 +115,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic, strong) Class<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
@@ -146,7 +146,7 @@ static BOOL _canMakeRequests = NO;
   return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
                    errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
                      piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
-                                     settings:FBSDKSettings.self
+                                     settings:FBSDKSettings.sharedSettings
                 graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
                                   eventLogger:FBSDKAppEvents.shared
                operatingSystemVersionComparer:NSProcessInfo.processInfo
@@ -156,7 +156,7 @@ static BOOL _canMakeRequests = NO;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                       piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-                                      settings:(Class<FBSDKSettings>)settings
+                                      settings:(id<FBSDKSettings>)settings
                  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                 operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
@@ -422,7 +422,7 @@ static BOOL _canMakeRequests = NO;
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
-    BOOL isClientToken = [self.settings.class clientToken] && [individualToken hasSuffix:[self.settings.class clientToken]];
+    BOOL isClientToken = self.settings.clientToken && [individualToken hasSuffix:self.settings.clientToken];
     if (!batchToken
         && !isClientToken) {
       batchToken = individualToken;
@@ -514,12 +514,12 @@ static BOOL _canMakeRequests = NO;
   } else {
     // Find the session with an app ID and use that as the batch_app_id. If we can't
     // find one, try to load it from the plist. As a last resort, pass 0.
-    NSString *batchAppID = [self.settings.class appID];
+    NSString *batchAppID = _settings.appID;
     if (!batchAppID || batchAppID.length == 0) {
       // The Graph API batch method requires either an access token or batch_app_id.
       // If we can't determine an App ID to use for the batch, we can't issue it.
       [[NSException exceptionWithName:NSInternalInconsistencyException
-                               reason:@"FBSDKGraphRequestConnection: [FBSDKSettings appID] must be specified for batch requests"
+                               reason:@"FBSDKGraphRequestConnection: _settings.appID must be specified for batch requests"
                              userInfo:nil]
        raise];
     }
@@ -1146,8 +1146,8 @@ static BOOL _canMakeRequests = NO;
   [self warnIfMissingClientToken];
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
   FBSDKGraphRequestFlags flags = [request flags];
-  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
-    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", [self.settings.class appID], [self.settings.class clientToken]];
+  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.settings.clientToken length] > 0) {
+    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", _settings.appID, self.settings.clientToken];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
     } else {
@@ -1159,14 +1159,14 @@ static BOOL _canMakeRequests = NO;
 
 - (void)registerTokenToOmitFromLog:(NSString *)token
 {
-  if (![[self.settings.class loggingBehaviors] containsObject:FBSDKLoggingBehaviorAccessTokens]) {
+  if (![self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
     [FBSDKLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
   }
 }
 
 - (void)warnIfMissingClientToken
 {
-  if (![self.settings.class clientToken]) {
+  if (!self.settings.clientToken) {
     NSString *const message = @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
     "Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.";
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -1184,8 +1184,8 @@ static BOOL _canMakeRequests = NO;
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBSDK_VERSION_STRING];
   });
   NSString *agentWithSuffix = nil;
-  if ([self.settings.class userAgentSuffix]) {
-    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, [self.settings.class userAgentSuffix]];
+  if (self.settings.userAgentSuffix) {
+    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
     SEL selector = NSSelectorFromString(@"isMacCatalystApp");

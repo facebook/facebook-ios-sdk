@@ -18,23 +18,14 @@
 
 @objcMembers
 class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<LoggingBehavior>()
-  static var stubbedSdkVersion = "v1234"
-  static var sdkVersion: String {
-    stubbedSdkVersion
-  }
-
+  var appID: String?
+  var clientToken: String?
+  var sdkVersion: String = ""
+  var userAgentSuffix: String?
   var logWarningsCallCount = 0
   var logIfSDKSettingsChangedCallCount = 0
   var recordInstallCallCount = 0
-
-  var appID: String?
   var appURLSchemeSuffix: String?
-
   var stubbedGraphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
   var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
   var stubbedIsDataProcessingRestricted = false
@@ -48,7 +39,6 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var shouldUseTokenOptimizations = true
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
-  let sdkVersion = TestSettings.stubbedSdkVersion
 
   var isDataProcessingRestricted: Bool {
     stubbedIsDataProcessingRestricted
@@ -86,6 +76,8 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     stubbedGraphAPIVersion
   }
 
+  static var loggingBehaviors = Set<LoggingBehavior>()
+
   func logWarnings() {
     logWarningsCallCount += 1
   }
@@ -98,10 +90,13 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     recordInstallCallCount += 1
   }
 
-  static func reset() {
+  func reset() {
     appID = nil
     clientToken = nil
     userAgentSuffix = nil
+  }
+
+  static func reset() {
     loggingBehaviors = []
   }
 }

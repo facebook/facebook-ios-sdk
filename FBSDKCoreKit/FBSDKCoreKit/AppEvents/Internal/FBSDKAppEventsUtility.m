@@ -350,9 +350,9 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   NSString *loggingOverrideAppID = [FBSDKAppEvents loggingOverrideAppID];
 
-  NSString *appID = loggingOverrideAppID ?: token.appID ?: [FBSDKSettings appID];
+  NSString *appID = loggingOverrideAppID ?: token.appID ?: FBSDKSettings.sharedSettings.appID;
   NSString *tokenString = token.tokenString;
-  NSString *clientTokenString = [FBSDKSettings clientToken];
+  NSString *clientTokenString = FBSDKSettings.sharedSettings.clientToken;
 
   if (![appID isEqualToString:token.appID]) {
     // If there's a logging override app id present

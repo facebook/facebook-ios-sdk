@@ -61,7 +61,7 @@ class CrashHandlerTests: XCTestCase {
   func testGetFBSDKVersion() {
     XCTAssertEqual(
       CrashHandler.getFBSDKVersion(),
-      Settings.sdkVersion
+      Settings.shared.sdkVersion
     )
   }
 

@@ -51,7 +51,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
 
   func testFailureWhenNoValidAccessTokenPresentAndAppIDIsNull() {
     AccessToken.current = nil
-    Settings.appID = nil
+    Settings.shared.appID = nil
 
     var completionCalled = false
     dialog.launch { _, error in
@@ -68,7 +68,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
 
   func testPresentationWhenTokenIsNilAndAppIDIsSet() {
     AccessToken.current = nil
-    Settings.appID = "appID"
+    Settings.shared.appID = "appID"
 
     var didInvokeCompletion = false
     dialog.launch { success, _ in
@@ -77,7 +77,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
     }
     XCTAssertEqual(
       factory.controller.capturedArgument,
-      Settings.appID,
+      Settings.shared.appID,
       "Should invoke the new controller with the app id in the sdk setting"
     )
     factory.capturedCompletion(true, nil, nil)
@@ -85,7 +85,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
   }
 
   func testPresentationWhenTokenIsSetAndAppIDIsNil() {
-    Settings.appID = nil
+    Settings.shared.appID = nil
 
     var didInvokeCompletion = false
     dialog.launch { _, _ in

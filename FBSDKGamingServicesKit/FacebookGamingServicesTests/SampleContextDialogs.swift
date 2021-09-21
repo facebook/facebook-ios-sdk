@@ -32,7 +32,7 @@ enum SampleContextDialogs {
   }
 
   static func showChooseContextDialogWithInvalidSizes(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
-    Settings.appID = "abc123"
+    Settings.shared.appID = "abc123"
     let content = ChooseContextContent()
     content.minParticipants = 2
     content.maxParticipants = 1

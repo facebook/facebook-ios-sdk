@@ -133,7 +133,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                                urlOpener:self.urlOpener
   ];
 
-  [FBSDKSettings setAppID:kFakeAppID];
+  FBSDKSettings.sharedSettings.appID = kFakeAppID;
   FBSDKProfile *testUser = [[FBSDKProfile alloc] initWithUserID:@"1234"
                                                       firstName:@"Test"
                                                      middleName:@"Middle"

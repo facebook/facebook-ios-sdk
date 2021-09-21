@@ -108,8 +108,8 @@ static NSString *const kErrorCategoryLogin = @"login";
       ?: _configurationDictionary[@"*"][subcode]
         ?: _configurationDictionary[@"*"][@"*"]);
   if (configuration.errorCategory == FBSDKGraphRequestErrorRecoverable
-      && [FBSDKSettings clientToken]
-      && [request.parameters[@"access_token"] hasSuffix:[FBSDKSettings clientToken]]) {
+      && FBSDKSettings.sharedSettings.clientToken
+      && [request.parameters[@"access_token"] hasSuffix:FBSDKSettings.sharedSettings.clientToken]) {
     // do not attempt to recovery client tokens.
     return nil;
   }

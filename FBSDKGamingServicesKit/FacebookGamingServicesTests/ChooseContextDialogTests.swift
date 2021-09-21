@@ -36,7 +36,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
       UIApplication.shared,
       didFinishLaunchingWithOptions: [:]
     )
-    Settings.appID = defaultAppID
+    Settings.shared.appID = defaultAppID
   }
 
   override func tearDown() {
@@ -147,7 +147,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let appIDErrorMessage = "App ID is not set in settings"
     let content = ChooseContextContent()
     let dialog = ChooseContextDialog(content: content, delegate: self)
-    Settings.appID = nil
+    Settings.shared.appID = nil
     dialog.show()
 
     let dialogError = try XCTUnwrap(dialogError)

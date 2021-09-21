@@ -105,7 +105,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   NSURL *url;
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
 
-  [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.appID forKey:@"app_id"];
+  [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.sharedSettings.appID forKey:@"app_id"];
 
   _expectedChallenge = [self stringForChallenge];
   [FBSDKTypeUtility dictionary:params setObject:_expectedChallenge forKey:@"state"];
@@ -234,7 +234,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
          annotation:(id)annotation
 {
   // verify the URL is intended as a callback for the SDK's referral request
-  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.appID]]
+  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"authorize"];
 }
 

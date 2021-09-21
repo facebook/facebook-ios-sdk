@@ -102,7 +102,7 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
-  if (!FBSDKSettings.appID) {
+  if (!FBSDKSettings.sharedSettings.appID) {
     if (errorRef != NULL) {
       *errorRef = [FBSDKError errorWithCode:FBSDKErrorUnknown message:@"App ID is not set in settings"];
     }
@@ -135,7 +135,7 @@
   if (_internalUtility.isFacebookAppInstalled) {
     return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
                                       host:FBSDK_CONTEXT_DIALOG_URL_HOST
-                                      path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.appID]
+                                      path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.sharedSettings.appID]
                            queryParameters:parametersDictionary
                                      error:&error];
   }
@@ -171,7 +171,7 @@
     return appSwitchParameters;
   }
 
-  appSwitchParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY] = [FBSDKSettings appID];
+  appSwitchParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY] = FBSDKSettings.sharedSettings.appID;
   NSString *parameterJSONString = [FBSDKBasicUtility JSONStringForObject:appSwitchParameters
                                                                    error:NULL
                                                     invalidObjectHandler:NULL];
@@ -241,7 +241,7 @@
          annotation:(id)annotation
 {
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]];
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

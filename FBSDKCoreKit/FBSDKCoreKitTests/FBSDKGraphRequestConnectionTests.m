@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, strong) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic, strong) Class<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
@@ -139,8 +139,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
   self.piggybackManager = [TestGraphRequestPiggybackManager new];
   self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
-  TestSettings.appID = self.appID;
-  self.settings = TestSettings.self;
+  self.settings = [TestSettings new];
+  self.settings.appID = self.appID;
   self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
@@ -162,6 +162,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [TestGraphRequestPiggybackManager reset];
   [TestLogger reset];
   [TestSettings reset];
+  [self.settings reset];
   [TestAccessTokenWallet reset];
 
   [super tearDown];
@@ -1295,7 +1296,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithUserAgentSuffix
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = @"UnitTest.1.0.0";
+  self.settings.userAgentSuffix = @"UnitTest.1.0.0";
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1308,7 +1309,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithoutUserAgentSuffix
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = nil;
+  self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1322,7 +1323,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   self.macCatalystDeterminator.stubbedIsMacCatalystApp = YES;
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = nil;
+  self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1428,7 +1429,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   self.connection.logger = [self createLogger];
   NSString *clientToken = @"client_token";
-  TestSettings.clientToken = clientToken;
+  self.settings.clientToken = clientToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
@@ -1443,7 +1444,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAccessTokenWithRequestWithGamingClientToken
 {
   NSString *clientToken = @"client_token";
-  TestSettings.clientToken = clientToken;
+  self.settings.clientToken = clientToken;
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];

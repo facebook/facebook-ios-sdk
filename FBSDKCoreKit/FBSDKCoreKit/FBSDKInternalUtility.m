@@ -110,7 +110,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSString *)appURLScheme
 {
-  NSString *appID = ([FBSDKSettings appID] ?: @"");
+  NSString *appID = (FBSDKSettings.sharedSettings.appID ?: @"");
   NSString *suffix = ([FBSDKSettings appURLSchemeSuffix] ?: @"");
   return [[NSString alloc] initWithFormat:@"fb%@%@", appID, suffix];
 }
@@ -473,9 +473,9 @@ static NSMapTable *_transientObjects;
 - (void)validateAppID
 {
   [self validateConfiguration];
-  if (![FBSDKSettings appID]) {
+  if (!FBSDKSettings.sharedSettings.appID) {
     NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
-    @"FacebookAppID to the Info.plist or call [FBSDKSettings setAppID:].";
+    @"FacebookAppID to the Info.plist or call FBSDKSettings.sharedSettings.appID.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 }
@@ -483,19 +483,19 @@ static NSMapTable *_transientObjects;
 - (NSString *)validateRequiredClientAccessToken
 {
   [self validateConfiguration];
-  if (![FBSDKSettings clientToken]) {
+  if (!FBSDKSettings.sharedSettings.clientToken) {
     NSString *reason = @"ClientToken is required to be set for this operation. "
     @"Set the FacebookClientToken in the Info.plist or call [FBSDKSettings setClientToken:]. "
     @"You can find your client token in your App Settings -> Advanced.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
-  return [NSString stringWithFormat:@"%@|%@", [FBSDKSettings appID], [FBSDKSettings clientToken]];
+  return [NSString stringWithFormat:@"%@|%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.clientToken];
 }
 
 - (void)validateURLSchemes
 {
   [self validateAppID];
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", [FBSDKSettings appID], [FBSDKSettings appURLSchemeSuffix] ?: @""];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, [FBSDKSettings appURLSchemeSuffix] ?: @""];
   if (![self isRegisteredURLScheme:defaultUrlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is not registered as a URL scheme. Please add it in your Info.plist", defaultUrlScheme];
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
@@ -667,7 +667,7 @@ static NSMapTable *_transientObjects;
 
 - (BOOL)isUnity
 {
-  NSString *userAgentSuffix = [FBSDKSettings userAgentSuffix];
+  NSString *userAgentSuffix = FBSDKSettings.sharedSettings.userAgentSuffix;
   if (userAgentSuffix != nil && [userAgentSuffix rangeOfString:@"Unity"].location != NSNotFound) {
     return YES;
   }

@@ -352,7 +352,7 @@ static id<FBSDKSettings> _settings;
   }
 
   // If userAgentSuffix begins with Unity, trigger unity code to upload view hierarchy
-  NSString *userAgentSuffix = [FBSDKSettings userAgentSuffix];
+  NSString *userAgentSuffix = FBSDKSettings.sharedSettings.userAgentSuffix;
   if (userAgentSuffix != nil && [userAgentSuffix hasPrefix:@"Unity"]) {
     Class FBUnityUtility = objc_lookUpClass("FBUnityUtility");
     SEL selector = NSSelectorFromString(@"triggerUploadViewHierarchy");

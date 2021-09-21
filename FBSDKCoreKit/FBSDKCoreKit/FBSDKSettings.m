@@ -85,7 +85,7 @@ static NSString *const FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp = @"co
 static NSString *const FBSDKSettingsUseCachedValuesForExpensiveMetadata = @"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata";
 static NSString *const FBSDKSettingsUseTokenOptimizations = @"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations";
 static BOOL g_disableErrorRecovery;
-static NSString *g_userAgentSuffix;
+
 static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
 
 //
@@ -118,7 +118,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 
 @implementation FBSDKSettings
 {
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, appID);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, appURLSchemeSuffix);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, clientToken);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, displayName);
@@ -131,6 +130,8 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _codelessDebugLogEnabled);
 }
 
+@synthesize userAgentSuffix = _userAgentSuffix;
+@synthesize appID = _appID;
 static dispatch_once_t sharedSettingsNonce;
 
 // Transitional singleton introduced as a way to change the usage semantics
@@ -196,7 +197,6 @@ static dispatch_once_t sharedSettingsNonce;
 
 #pragma mark - Plist Configuration Settings
 
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookAppID, appID, setAppID, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookUrlSchemeSuffix, appURLSchemeSuffix, setAppURLSchemeSuffix, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookClientToken, clientToken, setClientToken, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDisplayName, displayName, setDisplayName, nil, NO);
@@ -214,6 +214,31 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   @0,
   YES
 );
+
+- (NSString *)appID
+{
+  if (!_appID) {
+    _appID = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
+  }
+  return _appID;
+}
+
+- (void)setAppID:(NSString *)appID
+{
+  [self validateConfiguration];
+  _appID = [appID copy];
+  [self logIfSDKSettingsChanged];
+}
+
++ (NSString *)appID
+{
+  return [[FBSDKSettings sharedSettings] appID];
+}
+
++ (void)setAppID:(NSString *)appID
+{
+  FBSDKSettings.sharedSettings.appID = appID;
+}
 
 + (BOOL)isGraphErrorRecoveryEnabled
 {
@@ -485,14 +510,14 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Readonly Configuration Settings
 
-+ (NSString *)sdkVersion
-{
-  return self.sharedSettings.sdkVersion;
-}
-
 - (NSString *)sdkVersion
 {
   return FBSDK_VERSION_STRING;
+}
+
++ (NSString *)sdkVersion
+{
+  return [[FBSDKSettings sharedSettings] sdkVersion];
 }
 
 #pragma mark - Configuration Validation
@@ -512,15 +537,15 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal
 
-+ (NSString *)userAgentSuffix
+- (NSString *)userAgentSuffix
 {
-  return g_userAgentSuffix;
+  return _userAgentSuffix;
 }
 
-+ (void)setUserAgentSuffix:(NSString *)suffix
+- (void)setUserAgentSuffix:(NSString *)suffix
 {
-  if (![g_userAgentSuffix isEqualToString:suffix]) {
-    g_userAgentSuffix = suffix;
+  if (![_userAgentSuffix isEqualToString:suffix]) {
+    _userAgentSuffix = suffix;
   }
 }
 
@@ -746,7 +771,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self.sharedSettings reset];
 
   g_loggingBehaviors = nil;
-  g_userAgentSuffix = nil;
   g_dataProcessingOptions = nil;
 }
 
@@ -756,6 +780,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (sharedSettingsNonce) {
     sharedSettingsNonce = 0;
   }
+  _userAgentSuffix = nil;
 }
 
 + (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider

@@ -21,16 +21,10 @@ import FBSDKCoreKit
 import XCTest
 
 class TestSettings: SettingsProtocol {
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<LoggingBehavior>()
-  static var stubbedSdkVersion = "v1234"
-  static var sdkVersion: String {
-    stubbedSdkVersion
-  }
-
   var appID: String?
+  var clientToken: String?
+  var userAgentSuffix: String?
+  var sdkVersion: String = ""
   var appURLSchemeSuffix: String?
   var isDataProcessingRestricted = false
   var isAutoLogAppEventsEnabled = false
@@ -45,5 +39,6 @@ class TestSettings: SettingsProtocol {
   var graphAPIVersion = ""
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
-  let sdkVersion = TestSettings.stubbedSdkVersion
+  
+  static var loggingBehaviors = Set<LoggingBehavior>()
 }

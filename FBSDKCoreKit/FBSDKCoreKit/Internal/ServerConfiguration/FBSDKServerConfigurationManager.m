@@ -111,14 +111,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   self.serverConfigurationError = nil;
   self.serverConfigurationErrorTimestamp = nil;
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
-  NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, [FBSDKSettings appID]];
+  NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, FBSDKSettings.sharedSettings.appID];
   [defaults removeObjectForKey:defaultsKey];
   [defaults synchronize];
 }
 
 - (FBSDKServerConfiguration *)cachedServerConfiguration
 {
-  NSString *appID = [FBSDKSettings appID];
+  NSString *appID = FBSDKSettings.sharedSettings.appID;
   @synchronized(self) {
     // load the server configuration if we don't have it already
     [self loadServerConfigurationWithCompletionBlock:nil];
@@ -134,7 +134,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {
   @try {
     void (^loadBlock)(void) = nil;
-    NSString *appID = [FBSDKSettings appID];
+    NSString *appID = FBSDKSettings.sharedSettings.appID;
     @synchronized(self) {
       // validate the cached configuration has the correct appID
       if (self.serverConfiguration && ![self.serverConfiguration.appID isEqualToString:appID]) {

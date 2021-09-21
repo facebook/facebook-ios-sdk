@@ -83,7 +83,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
   // Add applink protocol data
   if (!appLinkData[FBSDKAppLinkUserAgentKeyName]) {
-    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", FBSDKSettings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
+    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", FBSDKSettings.sharedSettings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
   }
   if (!appLinkData[FBSDKAppLinkVersionKeyName]) {
     [FBSDKTypeUtility dictionary:appLinkData setObject:FBSDKAppLinkVersion forKey:FBSDKAppLinkVersionKeyName];

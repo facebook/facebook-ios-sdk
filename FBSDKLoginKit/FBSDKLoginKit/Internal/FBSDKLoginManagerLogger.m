@@ -213,7 +213,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 
 - (void)willAttemptAppSwitchingBehavior
 {
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", [FBSDKSettings appID], [FBSDKSettings appURLSchemeSuffix] ?: @""];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, [FBSDKSettings appURLSchemeSuffix] ?: @""];
   BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:defaultUrlScheme];
 
   BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
