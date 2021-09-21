@@ -39,6 +39,6 @@ class TestSettings: SettingsProtocol {
   var graphAPIVersion = ""
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
-  
+
   static var loggingBehaviors = Set<LoggingBehavior>()
 }

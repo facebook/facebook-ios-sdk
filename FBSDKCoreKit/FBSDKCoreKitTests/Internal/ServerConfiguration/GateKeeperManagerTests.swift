@@ -40,7 +40,6 @@ let settings = TestSettings()
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       store: store
     )
-
   }
 
   override func tearDown() {
