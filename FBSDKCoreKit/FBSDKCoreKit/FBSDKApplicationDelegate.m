@@ -709,7 +709,8 @@ static UIApplicationState _applicationState;
                                             fileManager:NSFileManager.defaultManager
                                                   store:store
                                                settings:sharedSettings
-                                          dataExtractor:NSData.class];
+                                          dataExtractor:NSData.class
+                                      gateKeeperManager:FBSDKGateKeeperManager.class];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
                                  infoDictionaryProvider:NSBundle.mainBundle];

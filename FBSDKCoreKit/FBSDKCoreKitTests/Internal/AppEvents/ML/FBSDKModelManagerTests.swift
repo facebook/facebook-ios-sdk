@@ -38,6 +38,7 @@ class FBSDKModelManagerTests: XCTestCase {
     super.setUp()
 
     ModelManager.reset()
+    TestGateKeeperManager.reset()
   }
 
   override func setUp() {
@@ -50,13 +51,15 @@ class FBSDKModelManagerTests: XCTestCase {
       fileManager: fileManager,
       store: store,
       settings: settings,
-      dataExtractor: TestFileDataExtractor.self
+      dataExtractor: TestFileDataExtractor.self,
+      gateKeeperManager: TestGateKeeperManager.self
     )
   }
 
   override func tearDown() {
     ModelManager.reset()
     TestFileDataExtractor.reset()
+    TestGateKeeperManager.reset()
 
     super.tearDown()
   }

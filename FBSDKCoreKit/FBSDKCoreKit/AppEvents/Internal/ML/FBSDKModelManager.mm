@@ -30,7 +30,7 @@
  #import "FBSDKDataPersisting.h"
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
- #import "FBSDKGateKeeperManager.h"
+ #import "FBSDKGateKeeperManaging.h"
  #import "FBSDKGraphRequestFactoryProtocol.h"
  #import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
  #import "FBSDKMLMacros.h"
@@ -64,6 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
+@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 
 @end
 
@@ -91,6 +92,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
+                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
@@ -98,6 +100,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   _store = store;
   _settings = settings;
   _dataExtractor = dataExtractor;
+  _gateKeeperManager = gateKeeperManager;
 }
 
  #pragma mark - Public methods
@@ -322,9 +325,9 @@ static dispatch_once_t enableNonce;
       }];
     }
 
-    if ([self.featureChecker isEnabled:FBSDKFeatureIntelligentIntegrity]) {
+    if ([self.featureChecker isEnabled:FBSDKFeatureIntelligentIntegrity] && self.gateKeeperManager) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
-        [self setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:FBSDKGateKeeperManager.class
+        [self setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:self.gateKeeperManager
                                                                                     integrityProcessor:self]];
         [[self integrityParametersProcessor] enable];
       }];
@@ -484,6 +487,7 @@ static dispatch_once_t enableNonce;
   self.shared.store = nil;
   self.shared.settings = nil;
   self.shared.dataExtractor = nil;
+  self.shared.gateKeeperManager = nil;
 }
 
 + (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo
