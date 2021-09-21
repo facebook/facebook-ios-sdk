@@ -33,7 +33,7 @@ class DrawableTests: XCTestCase {
 
   func testDefaultScale() {
     XCTAssertEqual(
-      HumanSilhouetteIcon().image(size: size).scale,
+      HumanSilhouetteIcon().image(size: size)?.scale,
       UIScreen.main.scale,
       "Icons should default their scale to the scale of the main screen"
     )
@@ -41,7 +41,7 @@ class DrawableTests: XCTestCase {
 
   func testDefaultScaleWithColor() {
     XCTAssertEqual(
-      HumanSilhouetteIcon().image(size: size, color: .red).scale,
+      HumanSilhouetteIcon().image(size: size, color: .red)?.scale,
       UIScreen.main.scale,
       "Scale should not be affected by the color"
     )
@@ -52,7 +52,7 @@ class DrawableTests: XCTestCase {
       HumanSilhouetteIcon().image(
         size: size,
         scale: 2.0
-      ).scale,
+      )?.scale,
       2.0,
       "Icons should accept a custom scale"
     )

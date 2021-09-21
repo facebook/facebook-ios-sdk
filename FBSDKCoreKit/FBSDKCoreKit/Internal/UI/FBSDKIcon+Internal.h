@@ -18,18 +18,22 @@
 
 #import <FBSDKCoreKit/FBSDKIcon.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKIcon (Internal)
 
-- (UIImage *)imageWithSize:(CGSize)size
+- (nullable UIImage *)imageWithSize:(CGSize)size
 NS_SWIFT_NAME(image(size:));
 
-- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale
+- (nullable UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale
 NS_SWIFT_NAME(image(size:scale:));
 
-- (UIImage *)imageWithSize:(CGSize)size color:(UIColor *)color
+- (nullable UIImage *)imageWithSize:(CGSize)size color:(UIColor *)color
 NS_SWIFT_NAME(image(size:color:));
 
-- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
+- (nullable UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
 NS_SWIFT_NAME(image(size:scale:color:));
 
 @end
+
+NS_ASSUME_NONNULL_END
