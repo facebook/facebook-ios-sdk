@@ -16,28 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
- #ifdef BUCK
-  #import <FBSDKLoginKit/FBSDKReferralManager.h>
- #else
-  #import "FBSDKReferralManager.h"
- #endif
-
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKReferralManager () <FBSDKURLOpening>
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
+ @warning UNSAFE - DO NOT USE
+ */
+NS_SWIFT_NAME(DynamicFrameworkLoaderProxy)
+@interface FBSDKDynamicFrameworkLoaderProxy : NSObject
+/**
+  Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
+
+ @return The kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value or nil.
+ */
++ (CFTypeRef)loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

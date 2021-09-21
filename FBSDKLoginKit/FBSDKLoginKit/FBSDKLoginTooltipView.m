@@ -22,8 +22,7 @@
 
  #import "FBSDKLoginTooltipView.h"
 
- #import "FBSDKCoreKit+Internal.h"
-
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 @interface FBSDKLoginTooltipView ()
 @end
 
@@ -47,9 +46,10 @@
   if (self.forceDisplay) {
     [super presentInView:view withArrowPosition:arrowPosition direction:arrowDirection];
   } else {
-    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
-      self.message = serverConfiguration.loginTooltipText;
-      BOOL shouldDisplay = serverConfiguration.loginTooltipEnabled;
+    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+    [provider loadServerConfigurationWithCompletionBlock:^(FBSDKLoginTooltip *_Nullable loginTooltip, NSError *_Nullable error) {
+      self.message = loginTooltip.text;
+      BOOL shouldDisplay = loginTooltip.isEnabled;
       if ([self.delegate respondsToSelector:@selector(loginTooltipView:shouldAppear:)]) {
         shouldDisplay = [self.delegate loginTooltipView:self shouldAppear:shouldDisplay];
       }

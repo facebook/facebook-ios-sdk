@@ -27,7 +27,6 @@
   #import "FBSDKMetadataIndexer.h"
   #import "FBSDKSKAdNetworkReporter.h"
   #import "FBSDKSuggestedEventsIndexer.h"
-  #import "FBSDKUIUtility.h"
   #import "FBSDKViewHierarchy.h"
   #import "FBSDKViewHierarchyMacros.h"
   #import "FBSDKViewImpressionTracker.h"
@@ -78,7 +77,6 @@
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"
-  #import "UI/FBSDKUIUtility.h"
   #import "UI/FBSDKViewImpressionTracker.h"
  #else
   #import "Device/FBSDKDeviceButton+Internal.h"

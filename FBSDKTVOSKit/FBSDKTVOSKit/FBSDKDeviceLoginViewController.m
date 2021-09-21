@@ -62,7 +62,8 @@
   id<FBSDKDeviceLoginViewControllerDelegate> delegate = self.delegate;
   self.delegate = nil;
 
-  NSUInteger smartLoginOptions = FBSDKServerConfigurationProvider.cachedSmartLoginOptions;
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
   NSUInteger smartLoginRequireConfirmation = 1 << 1;
   FBSDKAccessToken *token = result.accessToken;
   BOOL requireConfirm = ((smartLoginOptions & smartLoginRequireConfirmation)
@@ -210,7 +211,8 @@
   _loginManager.delegate = nil;
   [_loginManager cancel];
   _loginManager = nil;
-  NSUInteger smartLoginOptions = FBSDKServerConfigurationProvider.cachedSmartLoginOptions;
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
   NSUInteger smartLoginRequireConfirmation = 1 << 0;
   BOOL enableSmartLogin = (!_isRetry
     && (smartLoginOptions & smartLoginRequireConfirmation));

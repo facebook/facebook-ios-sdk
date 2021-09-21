@@ -16,28 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import "FBSDKDynamicFrameworkLoaderProxy.h"
 
-#if !TARGET_OS_TV
+#import "FBSDKDynamicFrameworkLoader.h"
 
- #ifdef BUCK
-  #import <FBSDKLoginKit/FBSDKReferralManager.h>
- #else
-  #import "FBSDKReferralManager.h"
- #endif
-
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKReferralManager () <FBSDKURLOpening>
+@implementation FBSDKDynamicFrameworkLoaderProxy
++ (CFTypeRef)loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+{
+  return [FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#endif

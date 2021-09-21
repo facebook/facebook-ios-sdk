@@ -16,28 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import "FBSDKLoginTooltip.h"
 
-#if !TARGET_OS_TV
+@implementation FBSDKLoginTooltip
 
- #ifdef BUCK
-  #import <FBSDKLoginKit/FBSDKReferralManager.h>
- #else
-  #import "FBSDKReferralManager.h"
- #endif
-
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKReferralManager () <FBSDKURLOpening>
+- (instancetype)initWithText:(NSString *)text
+                     enabled:(BOOL)enabled
+{
+  if ((self = [super init])) {
+    _text = [text copy];
+    _enabled = enabled;
+  }
+  return self;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#endif

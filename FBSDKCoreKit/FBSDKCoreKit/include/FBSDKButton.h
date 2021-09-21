@@ -37,7 +37,7 @@ NS_SWIFT_NAME(FBButton)
           backgroundColor:(nullable UIColor *)backgroundColor
          highlightedColor:(nullable UIColor *)highlightedColor;
 
-/** 
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -51,7 +51,39 @@ NS_SWIFT_NAME(FBButton)
               selectedIcon:(nullable FBSDKIcon *)selectedIcon
              selectedColor:(nullable UIColor *)selectedColor
   selectedHighlightedColor:(nullable UIColor *)selectedHighlightedColor;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 - (UIColor *)defaultBackgroundColor;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (CGSize)sizeThatFits:(CGSize)size title:(NSString *)title;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (CGSize)textSizeForText:(NSString *)text font:(UIFont *)font constrainedSize:(CGSize)constrainedSize lineBreakMode:(NSLineBreakMode)lineBreakMode;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (void)logTapEventWithEventName:(NSString *)eventName
+                      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 @end
 
 NS_ASSUME_NONNULL_END

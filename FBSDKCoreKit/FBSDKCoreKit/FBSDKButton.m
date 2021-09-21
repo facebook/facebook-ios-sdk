@@ -24,7 +24,6 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKLogo.h"
-#import "FBSDKUIUtility.h"
 #import "FBSDKViewImpressionTracker.h"
 #import "NSNotificationCenter+Extensions.h"
 
@@ -149,12 +148,7 @@ static id _applicationActivationNotifier;
       // to keep the text centered in the button without adding extra blank space to the right when unnecessary
       // 1. the text fits centered within the button without colliding with the image (imagePaddingWidth)
       // 2. the text would run into the image, so adjust the insets to effectively left align it (textPaddingWidth)
-      CGSize titleSize = FBSDKTextSize(
-        titleLabel.text,
-        titleLabel.font,
-        titleRect.size,
-        titleLabel.lineBreakMode
-      );
+      CGSize titleSize = [self textSizeForText:titleLabel.text font:titleLabel.font constrainedSize:titleRect.size lineBreakMode:titleLabel.lineBreakMode];
       CGFloat titlePaddingWidth = (CGRectGetWidth(titleRect) - titleSize.width) / 2;
       CGFloat imagePaddingWidth = titleX / 2;
       CGFloat inset = MIN(titlePaddingWidth, imagePaddingWidth);
@@ -274,11 +268,10 @@ static id _applicationActivationNotifier;
   CGFloat height = [self _heightForFont:font];
 
   UIEdgeInsets contentEdgeInsets = self.contentEdgeInsets;
-
-  CGSize constrainedContentSize = FBSDKEdgeInsetsInsetSize(size, contentEdgeInsets);
-
-  CGSize titleSize = FBSDKTextSize(title, font, constrainedContentSize, self.titleLabel.lineBreakMode);
-
+  CGRect rect = CGRectZero;
+  rect.size = size;
+  CGSize constrainedContentSize = UIEdgeInsetsInsetRect(rect, contentEdgeInsets).size;
+  CGSize titleSize = [self textSizeForText:title font:font constrainedSize:constrainedContentSize lineBreakMode:self.titleLabel.lineBreakMode];
   CGFloat padding = [self _paddingForHeight:height];
   CGFloat textPaddingCorrection = [self _textPaddingCorrectionForHeight:height];
   CGSize contentSize = CGSizeMake(height + padding + titleSize.width - textPaddingCorrection, height);
@@ -289,8 +282,28 @@ static id _applicationActivationNotifier;
   );
 }
 
-#pragma mark - Helper Methods
+- (CGSize)textSizeForText:(NSString *)text font:(UIFont *)font constrainedSize:(CGSize)constrainedSize lineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+  if (!text) {
+    return CGSizeZero;
+  }
 
+  NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+  paragraphStyle.lineBreakMode = lineBreakMode;
+  NSDictionary<NSString *, id> *attributes = @{
+    NSFontAttributeName : font,
+    NSParagraphStyleAttributeName : paragraphStyle,
+  };
+  NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+  CGSize size = [attributedString boundingRectWithSize:constrainedSize
+                                               options:(NSStringDrawingUsesDeviceMetrics
+                                                 | NSStringDrawingUsesLineFragmentOrigin
+                                                 | NSStringDrawingUsesFontLeading)
+                                               context:NULL].size;
+  return CGSizeMake(ceilf(size.width), ceilf(size.height));
+}
+
+#pragma mark - Helper Methods
 - (void)_applicationDidBecomeActiveNotification:(NSNotification *)notification
 {
   [self checkImplicitlyDisabled];

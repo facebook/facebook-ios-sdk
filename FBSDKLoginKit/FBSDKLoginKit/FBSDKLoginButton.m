@@ -154,10 +154,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
   UIFont *font = self.titleLabel.font;
 
-  CGSize selectedSize = FBSDKTextSize([self _logOutTitle], font, size, self.titleLabel.lineBreakMode);
-  CGSize normalSize = FBSDKTextSize([self _longLogInTitle], font, size, self.titleLabel.lineBreakMode);
+  CGSize selectedSize = [self textSizeForText:[self _logOutTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
+  CGSize normalSize = [self textSizeForText:[self _longLogInTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
+
   if (normalSize.width > size.width) {
-    normalSize = FBSDKTextSize([self _shortLogInTitle], font, size, self.titleLabel.lineBreakMode);
+    normalSize = [self textSizeForText:[self _shortLogInTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
   }
 
   CGFloat titleWidth = MAX(normalSize.width, selectedSize.width);

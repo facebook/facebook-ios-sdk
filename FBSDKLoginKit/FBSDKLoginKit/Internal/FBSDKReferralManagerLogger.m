@@ -59,9 +59,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
 
 - (instancetype)init
 {
-  if ((self = [super init])) {
-    FBSDKServerConfiguration *serverConfiguration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
-    NSString *loggingToken = serverConfiguration.loggingToken;
+  if (self = [super init]) {
+    NSString *loggingToken = [FBSDKServerConfigurationProvider new].loggingToken;
     _identifier = [NSUUID UUID].UUIDString;
     _extras = [NSMutableDictionary dictionary];
     _loggingToken = [loggingToken copy];

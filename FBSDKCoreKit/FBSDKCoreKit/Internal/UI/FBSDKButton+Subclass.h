@@ -26,9 +26,6 @@
 @interface FBSDKButton ()
 
 + (void)setApplicationActivationNotifier:(id)notifier;
-
-- (void)logTapEventWithEventName:(NSString *)eventName
-                      parameters:(NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title
@@ -44,6 +41,5 @@
 - (UIColor *)defaultHighlightedColor;
 - (FBSDKIcon *)defaultIcon;
 - (UIColor *)defaultSelectedColor;
-- (CGSize)sizeThatFits:(CGSize)size title:(NSString *)title;
 
 @end

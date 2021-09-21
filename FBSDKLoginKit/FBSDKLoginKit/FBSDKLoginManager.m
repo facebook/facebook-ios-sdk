@@ -16,14 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "TargetConditionals.h"
 #if !TARGET_OS_TV
 
  #import "FBSDKLoginManager+Internal.h"
-
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKLoginCompletion.h"
@@ -63,7 +61,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 {
   if (self == [FBSDKLoginManager class]) {
     [_FBSDKLoginRecoveryAttempter class];
-    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
+    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+    [provider loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -181,8 +180,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:provider.loggingToken
                                                          tracking:FBSDKLoginTrackingEnabled];
   _handler = [handler copy];
 
@@ -349,7 +348,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 }
 
 - (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
+                                                      loggingToken:(NSString *)loggingToken
                                                             logger:(FBSDKLoginManagerLogger *)logger
                                                         authMethod:(NSString *)authMethod
 {
@@ -372,7 +371,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
   [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.authType forKey:@"auth_type"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:serverConfiguration.loggingToken forKey:@"logging_token"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
@@ -430,10 +429,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
-
   if (_configuration) {
-    _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+    _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:provider.loggingToken
                                                            tracking:_configuration.tracking];
   }
   _handler = [handler copy];
@@ -538,13 +536,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (void)performBrowserLogInWithHandler:(FBSDKBrowserLoginSuccessBlock)handler
 {
   [_logger willAttemptAppSwitchingBehavior];
-
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
-  BOOL useSafariViewController = [serverConfiguration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
   NSDictionary<NSString *, id> *loginParams = [self logInParametersWithConfiguration:_configuration
-                                                                 serverConfiguration:serverConfiguration
+                                                                        loggingToken:provider.loggingToken
                                                                               logger:_logger
                                                                           authMethod:authMethod];
   NSError *error;

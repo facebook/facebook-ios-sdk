@@ -59,12 +59,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @end
 
-@interface FBSDKServerConfigurationManager ()
-
-+ (FBSDKServerConfigurationManager *)shared;
-
-@end
-
 @interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
 
 @property (nonatomic) int openURLWithSFVCCount;
@@ -241,7 +235,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     XCTAssertTrue(keychainStore.wasStringForKeyCalled);
     XCTAssertNil(result.authenticationToken);
   }];
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
@@ -283,7 +277,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     XCTAssertTrue(keychainStore.wasStringForKeyCalled);
   };
 
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
   [self.loginManager setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
   [self.loginManager setHandler:handler];
@@ -471,9 +465,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     XCTAssertNil(result.token);
   }];
 
-  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
@@ -530,9 +524,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     handlerCalled = YES;
   }];
 
-  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
@@ -646,7 +640,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
@@ -667,7 +661,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingLimited];
 
-  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"browser_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,graph_domain");
@@ -689,7 +683,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   };
   [self.loginManager setHandler:handler];
 
-  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:nil serverConfiguration:nil logger:nil authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:nil loggingToken:nil logger:nil authMethod:@"sfvc_auth"];
 
   XCTAssertNil(params);
   XCTAssert(wasCalled);
@@ -705,7 +699,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
@@ -727,7 +721,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");

@@ -20,13 +20,18 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKit+Internal.h"
+ #if FBSDK_SWIFT_PACKAGE
+  #import <FBSDKCoreKit.h>
 
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+  #import "FBSDKLoginManager.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+  #import <FBSDKLoginKit/FBSDKLoginManager.h>
+ #endif
 
-#import "FBSDKLoginProviding.h"
+ #import "FBSDKLoginProviding.h"
 
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
@@ -36,7 +41,7 @@
 /**
  Success Block
  */
-typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
+typedef void (^ FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 
 typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
@@ -64,9 +69,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // made available for testing only
 - (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
-                                            logger:(FBSDKLoginManagerLogger *)logger
-                                        authMethod:(NSString *)authMethod;
+                                                      loggingToken:(NSString *)loggingToken
+                                                            logger:(FBSDKLoginManagerLogger *)logger
+                                                        authMethod:(NSString *)authMethod;
 // made available for testing only
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
