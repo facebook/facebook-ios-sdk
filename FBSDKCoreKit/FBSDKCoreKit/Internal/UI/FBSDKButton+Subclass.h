@@ -23,9 +23,13 @@
 
 #import "FBSDKIcon+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKButton ()
 
 + (void)setApplicationActivationNotifier:(id)notifier;
+- (void)logTapEventWithEventName:(NSString *)eventName
+                      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title
@@ -43,3 +47,5 @@
 - (UIColor *)defaultSelectedColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
