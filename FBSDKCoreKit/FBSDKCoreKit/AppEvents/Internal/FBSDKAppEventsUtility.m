@@ -91,12 +91,18 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
 {
+  return [self.shared activityParametersDictionaryForEvent:eventCategory
+                                 shouldAccessAdvertisingID:shouldAccessAdvertisingID];
+}
+
+- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+{
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
   if (shouldAccessAdvertisingID) {
-    NSString *advertiserID = [self.shared advertiserID];
-    [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
+    [FBSDKTypeUtility dictionary:parameters setObject:self.advertiserID forKey:@"advertiser_id"];
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
@@ -409,6 +415,11 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 }
 
 + (BOOL)shouldDropAppEvent
+{
+  return [self.shared shouldDropAppEvents];
+}
+
+- (BOOL)shouldDropAppEvents
 {
   if (@available(iOS 14.0, *)) {
     if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && ![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].eventCollectionEnabled) {

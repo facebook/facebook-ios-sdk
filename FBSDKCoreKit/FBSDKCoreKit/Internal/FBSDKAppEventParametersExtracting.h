@@ -16,15 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkUtility+Internal.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkUtility (Testing)
+/// An internal protocol used to describe anything that can extract parameters for an app event
+NS_SWIFT_NAME(AppEventParametersExtracting)
+@protocol FBSDKAppEventParametersExtracting
 
-+ (void)validateConfiguration;
-+ (void)reset;
+- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 
 @end
 
 NS_ASSUME_NONNULL_END
+

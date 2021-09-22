@@ -30,11 +30,11 @@
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEvents+SourceApplicationTracking.h"
-#import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
-#import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
+#import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
@@ -715,6 +715,7 @@ static UIApplicationState _applicationState;
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
+  FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
                                     graphRequestFactory:graphRequestFactory
                                             fileManager:NSFileManager.defaultManager
@@ -724,7 +725,12 @@ static UIApplicationState _applicationState;
                                       gateKeeperManager:FBSDKGateKeeperManager.class];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
-                                 infoDictionaryProvider:NSBundle.mainBundle];
+                                 infoDictionaryProvider:NSBundle.mainBundle
+                                               settings:sharedSettings
+                         appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.shared
+                                   advertiserIDProvider:sharedAppEventsUtility
+                                appEventsDropDeterminer:sharedAppEventsUtility
+                            appEventParametersExtractor:sharedAppEventsUtility];
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
                                                    store:store

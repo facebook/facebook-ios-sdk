@@ -16,15 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkUtility+Internal.h"
+import FBSDKCoreKit
 
-NS_ASSUME_NONNULL_BEGIN
+class TestAppEventParametersExtractor: AppEventParametersExtracting {
 
-@interface FBSDKAppLinkUtility (Testing)
+  func activityParametersDictionary(
+    forEvent eventCategory: String,
+    shouldAccessAdvertisingID: Bool
+  ) -> NSMutableDictionary {
+    [:]
+  }
 
-+ (void)validateConfiguration;
-+ (void)reset;
-
-@end
-
-NS_ASSUME_NONNULL_END
+}

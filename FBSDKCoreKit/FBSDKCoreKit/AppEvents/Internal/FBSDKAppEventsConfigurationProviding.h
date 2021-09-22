@@ -31,6 +31,7 @@ NS_SWIFT_NAME(AppEventsConfigurationProviding)
 + (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration;
 
 + (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationProvidingBlock)block;
+- (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationProvidingBlock)block;
 
 @end
 

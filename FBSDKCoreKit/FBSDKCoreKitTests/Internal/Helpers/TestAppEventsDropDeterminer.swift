@@ -16,15 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#import "FBSDKAdvertiserIDProviding.h"
-#import "FBSDKAppEventsUtility.h"
+class TestAppEventsDropDeterminer: AppEventDropDetermining {
 
-NS_ASSUME_NONNULL_BEGIN
+  var shouldDropAppEvents = false
 
-// Default conformance to the FBSDKAdvertiserIDProviding protocol
-@interface FBSDKAppEventsUtility (FBSDKAdvertiserIDProviding) <FBSDKAdvertiserIDProviding>
-@end
-
-NS_ASSUME_NONNULL_END
+}

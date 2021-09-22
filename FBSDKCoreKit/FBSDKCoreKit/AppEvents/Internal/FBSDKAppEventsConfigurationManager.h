@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsConfigurationManager)
 @interface FBSDKAppEventsConfigurationManager : NSObject
 
+@property (class, nonatomic, readonly) FBSDKAppEventsConfigurationManager *shared;
+
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
                   settings:(id<FBSDKSettings>)settings
        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -40,6 +42,7 @@ NS_SWIFT_NAME(configure(store:settings:graphRequestFactory:graphRequestConnectio
 + (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration;
 
 + (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
+- (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
 
 @end
 

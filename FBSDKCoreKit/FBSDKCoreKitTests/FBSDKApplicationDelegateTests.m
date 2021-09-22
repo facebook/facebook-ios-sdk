@@ -67,11 +67,6 @@
 - (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 @end
 
-@interface FBSDKAppLinkUtility (Testing)
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-+ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
-@end
-
 @interface FBSDKProfile (Testing)
 + (id<FBSDKDataPersisting>)store;
 @end
@@ -446,24 +441,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     restrictiveDataFilterManager.serverConfigurationProvider,
     FBSDKServerConfigurationManager.shared,
     "Should be configured with the expected concrete server configuration provider"
-  );
-}
-
-- (void)testInitializingSdkConfiguresAppLinkUtility
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *graphRequestFactory = (NSObject *)[FBSDKAppLinkUtility graphRequestFactory];
-  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKAppLinkUtility infoDictionaryProvider];
-  XCTAssertEqualObjects(
-    graphRequestFactory.class,
-    FBSDKGraphRequestFactory.class,
-    "Should be configured with the expected concrete graph request provider"
-  );
-  XCTAssertEqualObjects(
-    infoDictionaryProvider.class,
-    NSBundle.class,
-    "Should be configured with the expected concrete info dictionary provider"
   );
 }
 

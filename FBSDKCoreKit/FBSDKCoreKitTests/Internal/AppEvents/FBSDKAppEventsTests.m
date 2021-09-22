@@ -479,7 +479,7 @@
 
   // The publish call happens after both configs are fetched
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestAppEventsConfigurationProvider.secondCapturedBlock();
+  TestAppEventsConfigurationProvider.lastCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   self.serverConfigurationProvider.secondCapturedCompletionBlock(nil, nil);
 

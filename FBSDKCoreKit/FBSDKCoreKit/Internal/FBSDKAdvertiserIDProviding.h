@@ -18,8 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAdvertiserIDProviding.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 /// An internal protocol used to describe anything that can return an advertiser ID string

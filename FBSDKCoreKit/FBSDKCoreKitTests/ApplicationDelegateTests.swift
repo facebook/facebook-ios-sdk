@@ -351,7 +351,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager is GateKeeperManager.Type,
+      FeatureManager.shared.gateKeeperManager === GateKeeperManager.self,
       "Should configure with the expected concrete gatekeeper manager"
     )
     XCTAssertTrue(
@@ -396,6 +396,40 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       InstrumentManager.shared.crashHandler === CrashHandler.shared,
       "Should configure with the shared Crash Handler instance"
+    )
+  }
+
+  func testInitializingConfiguresAppLinkUtility() {
+    AppLinkUtility.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AppLinkUtility.graphRequestFactory is GraphRequestFactory,
+      "Should configure with the expected graph request factory"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.infoDictionaryProvider === Bundle.main,
+      "Should configure with the expected info dictionary provider"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.settings === Settings.shared,
+      "Should configure with the expected settings"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+      "Should configure with the expected app events configuration manager"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.advertiserIDProvider === AppEventsUtility.shared,
+      "Should configure with the expected advertiser id provider"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.appEventsDropDeterminer === AppEventsUtility.shared,
+      "Should configure with the expected app events drop determiner"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.appEventParametersExtractor === AppEventsUtility.shared,
+      "Should configure with the expected app events parameter extractor"
     )
   }
 

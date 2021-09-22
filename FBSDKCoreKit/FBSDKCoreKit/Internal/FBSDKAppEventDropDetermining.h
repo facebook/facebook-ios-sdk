@@ -16,15 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkUtility+Internal.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkUtility (Testing)
+/// An internal protocol used to describe anything that can determine if all app events should be dropped
+NS_SWIFT_NAME(AppEventDropDetermining)
+@protocol FBSDKAppEventDropDetermining
 
-+ (void)validateConfiguration;
-+ (void)reset;
+@property (nonatomic, readonly) BOOL shouldDropAppEvents;
 
 @end
 
 NS_ASSUME_NONNULL_END
+

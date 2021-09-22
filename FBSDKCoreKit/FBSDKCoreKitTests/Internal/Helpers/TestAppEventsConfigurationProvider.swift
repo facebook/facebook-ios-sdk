@@ -21,7 +21,10 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
   static var stubbedConfiguration: AppEventsConfigurationProtocol?
   static var didRetrieveCachedConfiguration = false
   static var capturedBlock: AppEventsConfigurationProvidingBlock?
-  static var secondCapturedBlock: AppEventsConfigurationProvidingBlock?
+  static var lastCapturedBlock: AppEventsConfigurationProvidingBlock?
+
+  var capturedBlock: AppEventsConfigurationProvidingBlock?
+  var lastCapturedBlock: AppEventsConfigurationProvidingBlock?
 
   static func cachedAppEventsConfiguration() -> AppEventsConfigurationProtocol {
     guard let configuration = stubbedConfiguration else {
@@ -35,15 +38,25 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
     stubbedConfiguration = nil
     didRetrieveCachedConfiguration = false
     capturedBlock = nil
-    secondCapturedBlock = nil
+    lastCapturedBlock = nil
   }
 
   static func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
     guard capturedBlock == nil else {
-      secondCapturedBlock = block
+      lastCapturedBlock = block
       return
     }
 
     capturedBlock = block
   }
+
+  func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
+    guard capturedBlock == nil else {
+      lastCapturedBlock = block
+      return
+    }
+
+    capturedBlock = block
+  }
+
 }

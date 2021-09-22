@@ -19,11 +19,14 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventDropDetermining.h"
+#import "FBSDKAppEventParametersExtracting.h"
 
 @class FBSDKAccessToken;
 
 NS_SWIFT_NAME(AppEventsUtility)
-@interface FBSDKAppEventsUtility : NSObject
+@interface FBSDKAppEventsUtility : NSObject<FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

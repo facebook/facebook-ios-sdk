@@ -26,12 +26,31 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKInfoDictionaryProviding;
+@protocol FBSDKAppEventDropDetermining;
+@protocol FBSDKAppEventParametersExtracting;
+@protocol FBSDKGraphRequestFactory;
+@protocol FBSDKSettings;
+@protocol FBSDKAppEventsConfigurationProviding;
+@protocol FBSDKAdvertiserIDProviding;
 
 @interface FBSDKAppLinkUtility (Internal)
 
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (class, nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (class, nullable, nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (class, nullable, nonatomic) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
+@property (class, nullable, nonatomic) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
+
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-              infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:));
+                  infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                                settings:(id<FBSDKSettings>)settings
+          appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+                 appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
+             appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
+NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:));
 
 @end
 
