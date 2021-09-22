@@ -23,6 +23,8 @@
 #import <Foundation/Foundation.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(LoginUtility)
 @interface FBSDKLoginUtility : NSObject
 
@@ -30,10 +32,12 @@ NS_SWIFT_NAME(LoginUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 + (NSString *)stringForAudience:(FBSDKDefaultAudience)audience;
-+ (NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url;
++ (nullable NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url;
 
-+ (NSString *)userIDFromSignedRequest:(NSString *)signedRequest;
++ (nullable NSString *)userIDFromSignedRequest:(nullable NSString *)signedRequest;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END
