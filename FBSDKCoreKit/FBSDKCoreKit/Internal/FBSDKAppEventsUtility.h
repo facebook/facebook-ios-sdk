@@ -23,6 +23,8 @@
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKAccessToken;
 
 NS_SWIFT_NAME(AppEventsUtility)
@@ -42,11 +44,13 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;
 + (void)logAndNotify:(NSString *)msg;
-+ (NSString *)tokenStringToUseFor:(FBSDKAccessToken *)token;
-+ (BOOL)validateIdentifier:(NSString *)identifier;
++ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token;
++ (BOOL)validateIdentifier:(nullable NSString *)identifier;
 + (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;
-+ (BOOL)isStandardEvent:(NSString *)event;
-+ (NSTimeInterval)convertToUnixTime:(NSDate *)date;
++ (BOOL)isStandardEvent:(nullable NSString *)event;
++ (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
 
 @end
+
+NS_ASSUME_NONNULL_END
