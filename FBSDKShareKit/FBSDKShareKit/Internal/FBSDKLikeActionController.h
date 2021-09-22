@@ -24,6 +24,8 @@
 
 #import "FBSDKLikeObjectType.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 FOUNDATION_EXPORT NSNotificationName const FBSDKLikeActionControllerDidDisableNotification;
@@ -60,3 +62,5 @@ NS_SWIFT_NAME(LikeActionController)
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

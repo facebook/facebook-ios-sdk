@@ -275,11 +275,6 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   return self;
 }
 
-- (instancetype)init
-{
-  return [self initWithObjectID:nil objectType:FBSDKLikeObjectTypeUnknown accessToken:nil];
-}
-
  #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
