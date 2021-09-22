@@ -538,7 +538,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
     XCTAssertFalse(
       store.capturedValues.contains {
-        return $0.value as? String == identifier
+        $0.value as? String == identifier
       },
       "Logging a trial start should clear the original transaction"
     )
