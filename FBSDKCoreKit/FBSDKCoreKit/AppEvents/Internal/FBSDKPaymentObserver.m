@@ -22,7 +22,6 @@
 
 #import "FBSDKPaymentProductRequestor.h"
 #import "FBSDKPaymentProductRequestorCreating.h"
-#import "FBSDKPaymentProductRequestorFactory.h"
 
 @interface FBSDKPaymentObserver () <SKPaymentTransactionObserver>
 
@@ -33,6 +32,8 @@
 @end
 
 @implementation FBSDKPaymentObserver
+
+static FBSDKPaymentObserver *_shared = nil;
 
 - (instancetype)initWithPaymentQueue:(SKPaymentQueue *)paymentQueue
       paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory
@@ -49,13 +50,14 @@
 
 + (FBSDKPaymentObserver *)shared
 {
-  static FBSDKPaymentObserver *shared = nil;
-  static dispatch_once_t nonce;
-  dispatch_once(&nonce, ^{
-    shared = [[FBSDKPaymentObserver alloc] initWithPaymentQueue:SKPaymentQueue.defaultQueue
-                                 paymentProductRequestorFactory:[FBSDKPaymentProductRequestorFactory new]];
-  });
-  return shared;
+  return _shared;
+}
+
++ (void)setShared:(FBSDKPaymentObserver *)shared
+{
+  if (!_shared) {
+    _shared = shared;
+  }
 }
 
 - (void)startObservingTransactions
@@ -100,5 +102,14 @@
   FBSDKPaymentProductRequestor *productRequestor = [self.requestorFactory createRequestorWithTransaction:transaction];
   [productRequestor resolveProducts];
 }
+
+#if FBTEST
+
++ (void)reset
+{
+  _shared = nil;
+}
+
+#endif
 
 @end

@@ -59,6 +59,7 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
+#import "FBSDKPaymentProductRequestorFactory.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveDataFilterManager+Protocols.h"
 #import "FBSDKServerConfiguration.h"
@@ -653,6 +654,8 @@ static UIApplicationState _applicationState;
                                                                          graphRequestFactory:graphRequestFactory
                                                                                     settings:sharedSettings
                                                                                 crashHandler:sharedCrashHandler];
+  FBSDKPaymentObserver.shared = [[FBSDKPaymentObserver alloc] initWithPaymentQueue:SKPaymentQueue.defaultQueue
+                                                    paymentProductRequestorFactory:[FBSDKPaymentProductRequestorFactory new]];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle

@@ -433,6 +433,23 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitialiingCreatesSharedPaymentObserver() {
+    PaymentObserver.reset()
+    delegate.initializeSDK()
+
+    let observer = PaymentObserver.shared
+
+    XCTAssertEqual(
+      observer.paymentQueue,
+      SKPaymentQueue.default(),
+      "Should create the shared instance with the expected concrete payment queue"
+    )
+    XCTAssertTrue(
+      observer.requestorFactory is PaymentProductRequestorFactory,
+      "Should create the shared instance with the expected concrete payment product requestor factory"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

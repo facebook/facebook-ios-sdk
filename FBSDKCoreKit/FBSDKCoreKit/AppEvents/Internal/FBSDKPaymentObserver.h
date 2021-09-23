@@ -17,6 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
+
+@protocol FBSDKPaymentProductRequestorCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,10 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(PaymentObserver)
 @interface FBSDKPaymentObserver : NSObject
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
+@property (class, nonatomic) FBSDKPaymentObserver *shared;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithPaymentQueue:(SKPaymentQueue *)paymentQueue
+      paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory;
 
 - (void)startObservingTransactions;
 - (void)stopObservingTransactions;

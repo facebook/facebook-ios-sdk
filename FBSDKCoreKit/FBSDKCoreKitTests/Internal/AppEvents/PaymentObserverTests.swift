@@ -30,20 +30,6 @@ class PaymentObserverTests: XCTestCase {
 
   // MARK: - Dependencies
 
-  func testCreatingWithDefaults() {
-    observer = PaymentObserver.shared
-
-    XCTAssertEqual(
-      observer.paymentQueue,
-      SKPaymentQueue.default(),
-      "Should use the expected concrete payment queue by default"
-    )
-    XCTAssertTrue(
-      observer.requestorFactory is PaymentProductRequestorFactory,
-      "Should use the expected concrete payment product requestor factory by default"
-    )
-  }
-
   func testCreatingWithCustomDependencies() {
     XCTAssertEqual(
       observer.paymentQueue,
