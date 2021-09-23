@@ -25,6 +25,9 @@
 #import "FBSDKBridgeAPIProtocolType.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIRequestProtocol.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -36,23 +39,25 @@ NS_SWIFT_NAME(BridgeAPIRequest)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-+ (instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
++ (nullable instancetype)bridgeAPIRequestWithProtocolType:( FBSDKBridgeAPIProtocolType)protocolType
                                           scheme:(NSString *)scheme
-                                      methodName:(NSString *)methodName
-                                   methodVersion:(NSString *)methodVersion
-                                      parameters:(NSDictionary<NSString *, id> *)parameters
-                                        userInfo:(NSDictionary<NSString *, id> *)userInfo;
+                                      methodName:(nullable NSString *)methodName
+                                   methodVersion:(nullable NSString *)methodVersion
+                                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                        userInfo:(nullable NSDictionary<NSString *, id> *)userInfo;
 
 @property (nonatomic, copy, readonly) NSString *actionID;
-@property (nonatomic, copy, readonly) NSString *methodName;
-@property (nonatomic, copy, readonly) NSString *methodVersion;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *parameters;
+@property (nonatomic, nullable, copy, readonly) NSString *methodName;
+@property (nonatomic, nullable, copy, readonly) NSString *methodVersion;
+@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *parameters;
 @property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
 @property (nonatomic, copy, readonly) NSString *scheme;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *userInfo;
+@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *userInfo;
 
-- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef;
+- (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END
