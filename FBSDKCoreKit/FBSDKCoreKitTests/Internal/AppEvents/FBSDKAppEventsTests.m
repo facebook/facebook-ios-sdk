@@ -192,6 +192,7 @@
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestGateKeeperManager reset];
+  [self resetTestHelpers];
 
   [super tearDown];
 }
@@ -200,6 +201,7 @@
 {
   [TestSettings reset];
   [TestLogger reset];
+  [TestCodelessEvents reset];
 }
 
 - (void)configureAppEventsSingleton
@@ -224,7 +226,8 @@
 
   [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                             metadataIndexer:self.metadataIndexer
-                                                        skAdNetworkReporter:self.skAdNetworkReporter];
+                                                        skAdNetworkReporter:self.skAdNetworkReporter
+                                                            codelessIndexer:TestCodelessEvents.class];
 }
 
 - (void)testConfiguringSetsSwizzlerDependency
@@ -1025,6 +1028,21 @@
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
     "fetchConfiguration should check if CodelessEvents feature is enabled"
+  );
+}
+
+- (void)testEnablingCodelessEvents
+{
+  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfiguration *configuration = [[TestServerConfiguration alloc] initWithAppID:self.name];
+  configuration.stubbedIsCodelessEventsEnabled = YES;
+
+  self.serverConfigurationProvider.capturedCompletionBlock(configuration, nil);
+  [self.featureManager completeCheckForFeature:FBSDKFeatureCodelessEvents with:YES];
+  XCTAssertTrue(
+    TestCodelessEvents.wasEnabledCalled,
+    "Should enable codeless events when the feature is enabled and the server configuration allows it"
   );
 }
 

@@ -759,7 +759,8 @@ static UIApplicationState _applicationState;
                                          urlOpener:UIApplication.sharedApplication];
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
                                                      metadataIndexer:FBSDKMetadataIndexer.shared
-                                                 skAdNetworkReporter:self.skAdNetworkReporter];
+                                                 skAdNetworkReporter:self.skAdNetworkReporter
+                                                     codelessIndexer:FBSDKCodelessIndexer.class];
 #endif
 }
 

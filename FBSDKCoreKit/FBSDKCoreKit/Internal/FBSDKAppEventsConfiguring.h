@@ -40,6 +40,7 @@
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
 @protocol FBSDKAppEventsReporter;
+@protocol FBSDKEnableable;
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -69,7 +70,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 
 -(void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
-                                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter;
+                                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
+                                          codelessIndexer:(Class<FBSDKEnableable>)codelessIndexer;
 
 #endif
 

@@ -34,6 +34,7 @@ class TestAppEvents: TestEventLogger,
   var wasRegisterAutoResetSourceApplicationCalled = false
   var capturedSetSourceApplication: String?
   var capturedSetSourceApplicationURL: URL?
+  var capturedCodelessIndexer: Enableable.Type?
 
   func activateApp() {
     wasActivateAppCalled = true
@@ -110,11 +111,13 @@ class TestAppEvents: TestEventLogger,
   func configureNonTVComponentsWith(
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
-    skAdNetworkReporter: AppEventsReporter?
+    skAdNetworkReporter: AppEventsReporter?,
+    codelessIndexer: Enableable.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer
     capturedSKAdNetworkReporter = skAdNetworkReporter
+    capturedCodelessIndexer = codelessIndexer
   }
 
   // MARK: - Source Application Tracking

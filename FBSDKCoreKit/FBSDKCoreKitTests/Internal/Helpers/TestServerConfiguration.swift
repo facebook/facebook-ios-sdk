@@ -24,7 +24,9 @@ class TestServerConfiguration: ServerConfiguration {
   var capturedUseNativeDialogName: String?
   var capturedUseSafariControllerName: String?
   var stubbedDefaultShareMode: String?
+  @objc var stubbedIsCodelessEventsEnabled = false
 
+  @objc
   convenience init(
     appID: String = "123"
   ) {
@@ -55,6 +57,10 @@ class TestServerConfiguration: ServerConfiguration {
       aamRules: nil,
       suggestedEventsSetting: nil
     )
+  }
+
+  override var isCodelessEventsEnabled: Bool {
+    stubbedIsCodelessEventsEnabled
   }
 
   override var defaultShareMode: String? {

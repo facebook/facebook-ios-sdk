@@ -282,6 +282,12 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKAppEventsUtility.shared,
     "Initializing the SDK should set concrete advertiser ID provider"
   );
+
+  XCTAssertEqualObjects(
+    self.appEvents.capturedCodelessIndexer,
+    FBSDKCodelessIndexer.class,
+    "Initializing the SDK should set concrete codeless indexer"
+  );
 }
 
 - (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState
