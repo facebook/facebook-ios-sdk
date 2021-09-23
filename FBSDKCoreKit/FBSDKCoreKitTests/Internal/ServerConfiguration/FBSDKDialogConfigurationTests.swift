@@ -43,7 +43,7 @@ class FBSDKDialogConfigurationTests: XCTestCase {
       appVersions: versions
     )
 
-    dialog?.encode(with: coder)
+    dialog.encode(with: coder)
 
     XCTAssertEqual(
       coder.encodedObject[Keys.name] as? String,

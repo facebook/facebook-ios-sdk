@@ -755,8 +755,8 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testRetrievingValidDialogConfigurationForDialogName
 {
   FBSDKDialogConfiguration *fooConfig = [[FBSDKDialogConfiguration alloc] initWithName:@"foo"
-                                                                                   URL:nil
-                                                                           appVersions:nil];
+                                                                                   URL:[NSURL URLWithString:@""]
+                                                                           appVersions:@[@"1", @"2"]];
 
   self.config = [Fixtures configWithDictionary:@{
                    @"dialogConfigurations" : @{

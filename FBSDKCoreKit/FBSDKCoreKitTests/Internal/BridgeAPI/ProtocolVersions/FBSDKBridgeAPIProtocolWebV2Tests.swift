@@ -284,35 +284,28 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   // MARK: - Request URL for DialogConfiguration
 
-  func testRequestURLForDialogConfigurationWithoutScheme() {
-    guard
-      let url = URL(string: "/"),
-      let configuration = DialogConfiguration(name: name, url: url, appVersions: []),
-      let requestURL = try? bridge._requestURL(for: configuration)
-    else {
-      return XCTFail("Should be able to create a configuration with a url")
-    }
+  func testRequestURLForDialogConfigurationWithoutScheme() throws {
+    let url = try XCTUnwrap(URL(string: "/"))
+    let configuration = DialogConfiguration(name: name, url: url, appVersions: [])
+    let requestURL = try? bridge._requestURL(for: configuration)
 
     XCTAssertEqual(
-      requestURL.absoluteString,
+      requestURL?.absoluteString,
       "https://m.facebook.com/\(Settings.shared.graphAPIVersion)/",
       "Should provide a request url for a dialog configuration without a scheme"
     )
   }
 
   func testRequestURLForDialogConfigurationWithScheme() {
-    guard let configuration = DialogConfiguration(
+    let configuration = DialogConfiguration(
       name: name,
       url: SampleURLs.valid(path: name),
       appVersions: []
-    ),
-      let requestURL = try? bridge._requestURL(for: configuration)
-    else {
-      return XCTFail("Should be able to create a configuration with a url")
-    }
+    )
+    let requestURL = try? bridge._requestURL(for: configuration)
 
     XCTAssertEqual(
-      requestURL.absoluteString,
+      requestURL?.absoluteString,
       SampleURLs.valid(path: name).absoluteString,
       "Should use the url from the dialog configuration if it has a scheme"
     )

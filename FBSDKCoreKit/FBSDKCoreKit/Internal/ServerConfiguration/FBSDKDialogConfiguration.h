@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(DialogConfiguration)
 @interface FBSDKDialogConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding>
 
@@ -34,3 +36,5 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, copy, readonly) NSURL *URL;
 
 @end
+
+NS_ASSUME_NONNULL_END
