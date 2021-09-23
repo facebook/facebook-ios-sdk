@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKAccessToken;
 @class FBSDKAuthenticationToken;
 
@@ -36,7 +38,7 @@ NS_SWIFT_NAME(TokenCaching)
 
  @warning UNSAFE - DO NOT USE
  */
-@property (nonatomic, copy) FBSDKAccessToken *accessToken;
+@property (nullable, nonatomic, copy) FBSDKAccessToken *accessToken;
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -44,6 +46,8 @@ NS_SWIFT_NAME(TokenCaching)
 
  @warning UNSAFE - DO NOT USE
  */
-@property (nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
+@property (nullable, nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
 
 @end
+
+NS_ASSUME_NONNULL_END
