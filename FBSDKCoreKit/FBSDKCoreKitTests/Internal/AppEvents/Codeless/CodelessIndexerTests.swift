@@ -40,7 +40,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     size: CGSize(width: 36, height: 36)
   )
   lazy var view = {
-    return UIView(frame: frame)
+    UIView(frame: frame)
   }()
   let autoEventSetupEnabled = "auto_event_setup_enabled"
 

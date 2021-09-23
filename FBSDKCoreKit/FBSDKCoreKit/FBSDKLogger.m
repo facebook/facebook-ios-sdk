@@ -30,13 +30,13 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 
 @interface FBSDKLogger ()
 
+@property (nonatomic) NSUInteger loggerSerialNumber;
+@property (nonatomic, copy) FBSDKLoggingBehavior loggingBehavior;
+@property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic, readonly, strong) NSMutableString *internalContents;
 @end
 
 @implementation FBSDKLogger
-NSUInteger _loggerSerialNumber;
-FBSDKLoggingBehavior _loggingBehavior;
-BOOL _active;
 
 // Lifetime
 
@@ -66,21 +66,6 @@ BOOL _active;
   if (_active) {
     _internalContents = [NSMutableString stringWithString:contents];
   }
-}
-
-- (NSUInteger)loggerSerialNumber
-{
-  return _loggerSerialNumber;
-}
-
-- (FBSDKLoggingBehavior)loggingBehavior
-{
-  return _loggingBehavior;
-}
-
-- (BOOL)isActive
-{
-  return _active;
 }
 
 // Public instance methods
