@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMConfiguration.h"
+#import "FBAEMConfiguration.h"
 
- #import "FBAEMAdvertiserMultiEntryRule.h"
- #import "FBAEMAdvertiserSingleEntryRule.h"
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBAEMAdvertiserMultiEntryRule.h"
+#import "FBAEMAdvertiserSingleEntryRule.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const DEFAULT_CURRENCY_KEY = @"default_currency";
 static NSString *const CUTOFF_TIME_KEY = @"cutoff_time";
@@ -182,7 +180,7 @@ static id<FBAEMAdvertiserRuleProviding> _ruleProvider;
   || (!_businessID && !businessID);
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -219,7 +217,7 @@ static id<FBAEMAdvertiserRuleProviding> _ruleProvider;
   [encoder encodeObject:_conversionValueRules forKey:CONVERSION_RULES_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {

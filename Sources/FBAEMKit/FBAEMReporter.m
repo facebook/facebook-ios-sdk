@@ -16,21 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMReporter.h"
+#import "FBAEMReporter.h"
 
- #include <stdlib.h>
+#include <stdlib.h>
 
- #import "FBAEMAdvertiserRuleFactory.h"
- #import "FBAEMConfiguration.h"
- #import "FBAEMInvocation.h"
- #import "FBAEMNetworker.h"
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBAEMAdvertiserRuleFactory.h"
+#import "FBAEMConfiguration.h"
+#import "FBAEMInvocation.h"
+#import "FBAEMNetworker.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
- #define FB_AEM_CONFIG_TIME_OUT 86400
+#define FB_AEM_CONFIG_TIME_OUT 86400
 
 typedef void (^FBAEMReporterBlock)(NSError *);
 
@@ -325,7 +323,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   return (![self _isConfigRefreshTimestampValid]) || (0 == g_configs.count);
 }
 
- #pragma mark - Deeplink debugging methods
+#pragma mark - Deeplink debugging methods
 
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation
 {
@@ -366,7 +364,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   return [conversionParams copy];
 }
 
- #pragma mark - Background methods
+#pragma mark - Background methods
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs
 {
@@ -601,10 +599,10 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   return NO;
 }
 
- #pragma mark - Testability
+#pragma mark - Testability
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
 {
@@ -666,8 +664,8 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   g_reportFile = path;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMAdvertiserRuleFactory.h"
+#import "FBAEMAdvertiserRuleFactory.h"
 
- #import "FBAEMAdvertiserMultiEntryRule.h"
- #import "FBAEMAdvertiserSingleEntryRule.h"
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBAEMAdvertiserMultiEntryRule.h"
+#import "FBAEMAdvertiserSingleEntryRule.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
 @implementation FBAEMAdvertiserRuleFactory
 

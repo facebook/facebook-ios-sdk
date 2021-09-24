@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMNetworker.h"
+#import "FBAEMNetworker.h"
 
- #import "FBAEMKitVersions.h"
- #import "FBAEMRequestBody.h"
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBAEMKitVersions.h"
+#import "FBAEMRequestBody.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
- #define kNewline @"\r\n"
+#define kNewline @"\r\n"
 
 static NSString *const kSDK = @"ios";
 static NSString *const kUserAgentBase = @"FBiOSAEM";

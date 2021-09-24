@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMEvent.h"
+#import "FBAEMEvent.h"
 
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const EVENT_NAME_KEY = @"event_name";
 static NSString *const VALUES_KEY = @"values";
@@ -72,7 +70,7 @@ static NSString *const AMOUNT_KEY = @"amount";
   return self;
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -94,7 +92,7 @@ static NSString *const AMOUNT_KEY = @"amount";
   }
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {

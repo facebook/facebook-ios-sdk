@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMInvocation.h"
+#import "FBAEMInvocation.h"
 
- #import <CommonCrypto/CommonHMAC.h>
+#import <CommonCrypto/CommonHMAC.h>
 
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
- #define SEC_IN_DAY 86400
+#define SEC_IN_DAY 86400
 
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_ids";
 static NSString *const ACS_TOKEN_KEY = @"acs_token";
@@ -333,7 +331,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   _configMode = config.configMode;
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -394,15 +392,15 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   [encoder encodeBool:_hasSKAN forKey:HAS_SKAN_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {
   return self;
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (void)setRecordedEvents:(NSMutableSet<NSString *> *)recordedEvents
 {
@@ -469,8 +467,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   _hasSKAN = NO;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

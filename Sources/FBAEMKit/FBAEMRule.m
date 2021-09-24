@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMRule.h"
+#import "FBAEMRule.h"
 
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const CONVERSION_VALUE_KEY = @"conversion_value";
 static NSString *const PRIORITY_KEY = @"priority";
@@ -110,7 +108,7 @@ static NSString *const EVENTS_KEY = @"events";
   return [parsedEvents copy];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -132,7 +130,7 @@ static NSString *const EVENTS_KEY = @"events";
   [encoder encodeObject:_events forKey:EVENTS_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {

@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMAdvertiserSingleEntryRule.h"
+#import "FBAEMAdvertiserSingleEntryRule.h"
 
- #import "FBCoreKitBasicsImportForAEMKit.h"
+#import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const OPERATOR_KEY = @"operator";
 static NSString *const PARAMKEY_KEY = @"param_key";
@@ -50,7 +48,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   return self;
 }
 
- #pragma mark - FBAEMAdvertiserRuleMatching
+#pragma mark - FBAEMAdvertiserRuleMatching
 
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
 {
@@ -214,7 +212,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   return [set containsObject:stringValue];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -244,23 +242,23 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   [encoder encodeObject:_arrayCondition forKey:ARRAY_VALUE_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {
   return self;
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (void)setOperator:(FBAEMAdvertiserRuleOperator)operator
 {
   _operator = operator;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 
