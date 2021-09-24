@@ -20,14 +20,18 @@
 
 #import "FBSDKServerConfigurationManager.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKGraphRequest;
 
 @interface FBSDKServerConfigurationManager ()
 
-- (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID;
+- (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error appID:(NSString *)appID;
 
 - (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
 
 - (void)clearCache;
 
 @end
+
+NS_ASSUME_NONNULL_END

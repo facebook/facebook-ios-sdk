@@ -24,7 +24,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
       ServerConfigurationManager.shared.processLoadRequestResponse(
         RawServerConfigurationResponseFixtures.random,
         error: nil,
-        appID: nil
+        appID: "1"
       )
     }
   }
