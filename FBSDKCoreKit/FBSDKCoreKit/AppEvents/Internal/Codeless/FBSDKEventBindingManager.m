@@ -16,31 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKEventBindingManager.h"
+#import "FBSDKEventBindingManager.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/runtime.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/runtime.h>
 
- #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKEventBinding.h"
- #import "FBSDKEventLogging.h"
- #import "FBSDKSwizzling.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKCodelessPathComponent.h"
+#import "FBSDKEventBinding.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKSwizzling.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
- #define ReactNativeTargetKey          @"target"
- #define ReactNativeTouchEndEventName  @"touchEnd"
+#define ReactNativeTargetKey          @"target"
+#define ReactNativeTouchEndEventName  @"touchEnd"
 
- #define ReactNativeClassRCTTextView   "RCTTextView"
- #define ReactNativeClassRCTImageView  "RCTImageView"
- #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
- #define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
+#define ReactNativeClassRCTTextView   "RCTTextView"
+#define ReactNativeClassRCTImageView  "RCTImageView"
+#define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
+#define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
 @interface FBSDKEventBindingManager ()
 
@@ -121,8 +119,8 @@
   return [result copy];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wundeclared-selector"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)start
 {
   if (self.isStarted) {
@@ -370,7 +368,7 @@
   });
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 - (void)updateBindings:(NSArray *)bindings
 {
   if (self.eventBindings.count > 0 && self.eventBindings.count == bindings.count) {
@@ -479,16 +477,16 @@
   return _validClasses;
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (void)setReactBindings:(NSMutableDictionary<NSNumber *, id> *)bindings
 {
   _reactBindings = bindings;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

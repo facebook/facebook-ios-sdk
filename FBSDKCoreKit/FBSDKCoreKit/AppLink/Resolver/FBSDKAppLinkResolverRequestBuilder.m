@@ -17,17 +17,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKAppLinkResolverRequestBuilder.h"
+#import "FBSDKAppLinkResolverRequestBuilder.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequest+Internal.h"
 
 static NSString *const kIOSKey = @"ios";
 static NSString *const kIPhoneKey = @"iphone";

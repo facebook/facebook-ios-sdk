@@ -16,19 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKBridgeAPIResponse.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKBridgeAPIRequest+Private.h"
- #import "FBSDKConstants.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKOperatingSystemVersionComparing.h"
- #import "NSProcessInfo+Protocols.h"
+#import "FBSDKBridgeAPIRequest+Private.h"
+#import "FBSDKConstants.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
+#import "NSProcessInfo+Protocols.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
@@ -40,7 +38,7 @@
 
 @implementation FBSDKBridgeAPIResponse
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request error:(NSError *)error
 {
@@ -130,7 +128,7 @@
                                  error:nil];
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary<NSString *, id> *)responseParameters
@@ -146,7 +144,7 @@
   return self;
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

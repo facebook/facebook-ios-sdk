@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if TARGET_OS_TV
 
- #import "FBSDKSmartDeviceDialogView.h"
+#import "FBSDKSmartDeviceDialogView.h"
 
- #import "FBSDKDeviceUtilities.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKLogo.h"
+#import "FBSDKDeviceUtilities.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLogo.h"
 
 @interface FBSDKSmartDeviceDialogView ()
 @property (nonatomic) UIActivityIndicatorView *spinner;
@@ -42,7 +40,7 @@
   return self;
 }
 
- #pragma mark - Overrides
+#pragma mark - Overrides
 
 - (void)setConfirmationCode:(NSString *)confirmationCode
 {
@@ -67,7 +65,7 @@
   // intentionally blank.
 }
 
- #pragma mark - Helpers
+#pragma mark - Helpers
 
 - (UIColor *)_logoColor
 {

@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if TARGET_OS_TV
 
- #import "FBSDKDeviceButton.h"
+#import "FBSDKDeviceButton.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import "FBSDKMath.h"
+#import "FBSDKMath.h"
 
 static const CGFloat kFBLogoSize = 54.0;
 static const CGFloat kFBLogoLeftMargin = 36.0;
@@ -33,7 +31,7 @@ static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
 
 @implementation FBSDKDeviceButton
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
 {
@@ -84,7 +82,7 @@ static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
   return rect;
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (UIFont *)defaultFont
 {
@@ -112,7 +110,7 @@ static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
   return [self sizeThatFits:size attributedTitle:[self attributedTitleStringFromString:title]];
 }
 
- #pragma mark - Subclasses
+#pragma mark - Subclasses
 
 - (NSAttributedString *)attributedTitleStringFromString:(NSString *)string
 {

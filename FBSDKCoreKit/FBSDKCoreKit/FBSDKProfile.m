@@ -16,33 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKNotificationProtocols.h"
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKProfile+Internal.h"
+#import "FBSDKProfile+Internal.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAccessToken.h"
- #import "FBSDKGraphRequestConnecting.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKLocation.h"
- #import "FBSDKMath.h"
- #import "FBSDKSettings.h"
- #import "FBSDKUnarchiverProvider.h"
- #import "FBSDKUserAgeRange.h"
+#import "FBSDKAccessToken.h"
+#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLocation.h"
+#import "FBSDKMath.h"
+#import "FBSDKNotificationProtocols.h"
+#import "FBSDKSettings.h"
+#import "FBSDKUnarchiverProvider.h"
+#import "FBSDKUserAgeRange.h"
 
- #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
 
- #else
+#else
 
 NSString *const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
 
- #endif
+#endif
 
 NSString *const FBSDKProfileChangeOldKey = @"FBSDKProfileOld";
 NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
@@ -50,25 +48,25 @@ static NSString *const FBSDKProfileUserDefaultsKey = @"com.facebook.sdk.FBSDKPro
 static FBSDKProfile *g_currentProfile;
 static NSDateFormatter *_dateFormatter;
 
- #define FBSDKPROFILE_USERID_KEY @"userID"
- #define FBSDKPROFILE_FIRSTNAME_KEY @"firstName"
- #define FBSDKPROFILE_MIDDLENAME_KEY @"middleName"
- #define FBSDKPROFILE_LASTNAME_KEY @"lastName"
- #define FBSDKPROFILE_NAME_KEY @"name"
- #define FBSDKPROFILE_LINKURL_KEY @"linkURL"
- #define FBSDKPROFILE_REFRESHDATE_KEY @"refreshDate"
- #define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
- #define FBSDKPROFILE_EMAIL_KEY @"email"
- #define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
- #define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
- #define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
- #define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
- #define FBSDKPROFILE_HOMETOWN_KEY @"hometown"
- #define FBSDKPROFILE_LOCATION_KEY @"location"
- #define FBSDKPROFILE_GENDER_KEY @"gender"
+#define FBSDKPROFILE_USERID_KEY @"userID"
+#define FBSDKPROFILE_FIRSTNAME_KEY @"firstName"
+#define FBSDKPROFILE_MIDDLENAME_KEY @"middleName"
+#define FBSDKPROFILE_LASTNAME_KEY @"lastName"
+#define FBSDKPROFILE_NAME_KEY @"name"
+#define FBSDKPROFILE_LINKURL_KEY @"linkURL"
+#define FBSDKPROFILE_REFRESHDATE_KEY @"refreshDate"
+#define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
+#define FBSDKPROFILE_EMAIL_KEY @"email"
+#define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
+#define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
+#define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
+#define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
+#define FBSDKPROFILE_HOMETOWN_KEY @"hometown"
+#define FBSDKPROFILE_LOCATION_KEY @"location"
+#define FBSDKPROFILE_GENDER_KEY @"gender"
 
 // Once a day
- #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
+#define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
 
 @interface FBSDKProfile ()
 
@@ -358,7 +356,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   [self loadProfileWithToken:[self.accessTokenProvider currentAccessToken] completion:completion];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {
@@ -366,7 +364,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   return self;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -422,7 +420,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
     && [_gender isEqual:profile.gender]);
 }
 
- #pragma mark NSCoding
+#pragma mark NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -502,8 +500,8 @@ static id <FBSDKDataPersisting> _store;
   }
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)cacheProfile:(FBSDKProfile *)profile
 {
   if (profile) {
@@ -734,10 +732,10 @@ static id <FBSDKDataPersisting> _store;
   return _dateFormatter;
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (void)resetCurrentProfileCache
 {
@@ -761,8 +759,8 @@ static id <FBSDKDataPersisting> _store;
   _notificationCenter = nil;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

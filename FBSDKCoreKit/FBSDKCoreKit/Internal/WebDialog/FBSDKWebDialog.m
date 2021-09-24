@@ -16,26 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKWebDialog+Internal.h"
+#import "FBSDKWebDialog+Internal.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAccessToken.h"
- #import "FBSDKDynamicFrameworkLoader.h"
- #import "FBSDKError+Internal.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKInternalUtility+WindowFinding.h"
- #import "FBSDKLogger.h"
- #import "FBSDKSettings.h"
- #import "FBSDKWebDialogView.h"
- #import "FBSDKWindowFinding.h"
+#import "FBSDKAccessToken.h"
+#import "FBSDKDynamicFrameworkLoader.h"
+#import "FBSDKError+Internal.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKInternalUtility+WindowFinding.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
+#import "FBSDKWebDialogView.h"
+#import "FBSDKWindowFinding.h"
 
- #define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
- #define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
+#define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
+#define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
 
 typedef void (^FBSDKBoolBlock)(BOOL finished);
 
@@ -51,7 +49,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 @implementation FBSDKWebDialog
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (instancetype)dialogWithName:(NSString *)name
                       delegate:(id<FBSDKWebDialogDelegate>)delegate
@@ -87,7 +85,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   return dialog;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (void)dealloc
 {
@@ -97,7 +95,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   [_backgroundView removeFromSuperview];
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)show
 {
@@ -137,7 +135,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   return YES;
 }
 
- #pragma mark - FBSDKWebDialogViewDelegate
+#pragma mark - FBSDKWebDialogViewDelegate
 
 - (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -166,7 +164,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   }
 }
 
- #pragma mark - Notifications
+#pragma mark - Notifications
 
 - (void)_addObservers
 {
@@ -195,7 +193,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   [nc removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_cancel
 {

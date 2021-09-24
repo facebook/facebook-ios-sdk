@@ -16,26 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKEventBinding.h"
+#import "FBSDKEventBinding.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKEventLogging.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKSwizzler.h"
- #import "FBSDKUtility.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKCodelessPathComponent.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKSwizzler.h"
+#import "FBSDKUtility.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
- #define CODELESS_PATH_TYPE_ABSOLUTE  @"absolute"
- #define CODELESS_PATH_TYPE_RELATIVE  @"relative"
- #define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
- #define PARAMETER_NAME_PRICE          @"_valueToSum"
+#define CODELESS_PATH_TYPE_ABSOLUTE  @"absolute"
+#define CODELESS_PATH_TYPE_RELATIVE  @"relative"
+#define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
+#define PARAMETER_NAME_PRICE          @"_valueToSum"
 
 @interface FBSDKEventBinding ()
 

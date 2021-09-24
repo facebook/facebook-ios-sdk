@@ -16,22 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
 // TODO: Can these all be forward decls?
 
- #import "FBSDKAdvertiserIDProviding.h"
- #import "FBSDKCodelessIndexer.h"
- #import "FBSDKDataPersisting.h"
- #import "FBSDKEnableable.h"
- #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
- #import "FBSDKGraphRequestFactoryProtocol.h"
- #import "FBSDKServerConfigurationProviding.h"
- #import "FBSDKSettingsProtocol.h"
- #import "FBSDKSwizzling.h"
+#import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKCodelessIndexer.h"
+#import "FBSDKDataPersisting.h"
+#import "FBSDKEnableable.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKServerConfigurationProviding.h"
+#import "FBSDKSettingsProtocol.h"
+#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

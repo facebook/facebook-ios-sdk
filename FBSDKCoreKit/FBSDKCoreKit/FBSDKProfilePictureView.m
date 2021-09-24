@@ -16,18 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKProfilePictureView.h"
- #import "FBSDKProfilePictureView+Internal.h"
+#import "FBSDKProfilePictureView.h"
+#import "FBSDKProfilePictureView+Internal.h"
 
- #import "FBSDKAccessToken.h"
- #import "FBSDKHumanSilhouetteIcon.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKMath.h"
- #import "FBSDKProfile+Internal.h"
+#import "FBSDKAccessToken.h"
+#import "FBSDKHumanSilhouetteIcon.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKMath.h"
+#import "FBSDKProfile+Internal.h"
 
 @interface FBSDKProfilePictureViewState : NSObject
 
@@ -117,7 +115,7 @@
 
 @implementation FBSDKProfilePictureView
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -156,7 +154,7 @@
   [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (void)setBounds:(CGRect)bounds
 {
@@ -203,7 +201,7 @@
   }
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (void)setNeedsImageUpdate
 {
@@ -227,7 +225,7 @@
   });
 }
 
- #pragma mark - Internal Methods
+#pragma mark - Internal Methods
 
 - (void)configureProfilePictureView
 {
@@ -249,7 +247,7 @@
                                            object:nil];
 }
 
- #pragma mark - Notifications
+#pragma mark - Notifications
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
@@ -269,7 +267,7 @@
   [self _updateImageWithProfile];
 }
 
- #pragma mark - Image Update
+#pragma mark - Image Update
 
 - (void)_updateImageWithProfile
 {
@@ -344,7 +342,7 @@
   }
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)_imageShouldFit
 {
@@ -450,7 +448,7 @@
   }
 }
 
- #pragma mark - Test Helpers
+#pragma mark - Test Helpers
 
 - (FBSDKProfilePictureViewState *)lastState
 {

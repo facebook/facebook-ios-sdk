@@ -16,28 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKFeatureExtractor.h"
+#import "FBSDKFeatureExtractor.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKModelManager.h"
- #import "FBSDKRulesFromKeyProvider.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKModelManager.h"
+#import "FBSDKRulesFromKeyProvider.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
- #define REGEX_CR_PASSWORD_FIELD @"password"
- #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
- #define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
- #define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
+#define REGEX_CR_PASSWORD_FIELD @"password"
+#define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
+#define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
+#define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
   @"(?i)(sign.*(up|now)|registration|" \
   @"register|(create|apply).*(profile|account)|open.*account|" \
   @"account.*(open|creation|application)|enroll|join.*now)"
- #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
- #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
+#define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
+#define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
 
 static NSDictionary<NSString *, id> *_languageInfo;
 static NSDictionary<NSString *, id> *_eventInfo;
@@ -134,7 +132,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return result;
 }
 
- #pragma mark - Helper functions
+#pragma mark - Helper functions
 + (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node siblings:(NSMutableArray *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
@@ -390,8 +388,8 @@ void sum(float *val0, float *val1)
   return [self regextMatch:pattern text:matchText];
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (id<FBSDKRulesFromKeyProvider>)keyProvider
 {
@@ -403,8 +401,8 @@ void sum(float *val0, float *val1)
   _keyProvider = nil;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

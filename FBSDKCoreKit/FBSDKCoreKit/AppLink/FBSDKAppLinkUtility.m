@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKAppLinkUtility+Internal.h"
+#import "FBSDKAppLinkUtility+Internal.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAdvertiserIDProviding.h"
- #import "FBSDKAppEventDropDetermining.h"
- #import "FBSDKAppEventParametersExtracting.h"
- #import "FBSDKAppEventsConfigurationProviding.h"
- #import "FBSDKGraphRequestFactoryProtocol.h"
- #import "FBSDKGraphRequestHTTPMethod.h"
- #import "FBSDKGraphRequestProtocol.h"
- #import "FBSDKSettingsProtocol.h"
- #import "FBSDKURL.h"
+#import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventDropDetermining.h"
+#import "FBSDKAppEventParametersExtracting.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKSettingsProtocol.h"
+#import "FBSDKURL.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
@@ -277,8 +275,8 @@ static BOOL _isConfigured;
 #endif
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (void)reset
 {
@@ -292,8 +290,8 @@ static BOOL _isConfigured;
   _appEventParametersExtractor = nil;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

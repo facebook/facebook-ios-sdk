@@ -16,39 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKCodelessIndexer.h"
+#import "FBSDKCodelessIndexer.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/runtime.h>
- #import <sys/sysctl.h>
- #import <sys/utsname.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/runtime.h>
+#import <sys/sysctl.h>
+#import <sys/utsname.h>
 
- #import "FBSDKAdvertiserIDProviding.h"
- #import "FBSDKAppEventsUtility.h"
- #import "FBSDKDataPersisting.h"
- #import "FBSDKGraphRequestConnecting.h"
- #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
- #import "FBSDKGraphRequestFactoryProtocol.h"
- #import "FBSDKGraphRequestHTTPMethod.h"
- #import "FBSDKGraphRequestProtocol.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKObjectDecoding.h"
- #import "FBSDKServerConfiguration.h"
- #import "FBSDKServerConfigurationManager.h"
- #import "FBSDKServerConfigurationProviding.h"
- #import "FBSDKSettings+Internal.h"
- #import "FBSDKSettingsProtocol.h"
- #import "FBSDKSwizzling.h"
- #import "FBSDKUnarchiverProvider.h"
- #import "FBSDKUtility.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventsUtility.h"
+#import "FBSDKDataPersisting.h"
+#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKObjectDecoding.h"
+#import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationProviding.h"
+#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
+#import "FBSDKSwizzling.h"
+#import "FBSDKUnarchiverProvider.h"
+#import "FBSDKUtility.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 @interface FBSDKCodelessIndexer ()
 
@@ -158,8 +156,8 @@ static id<FBSDKSettings> _settings;
   });
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 // DO NOT call this function, it is only called once in the enable function
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
@@ -222,7 +220,7 @@ static id<FBSDKSettings> _settings;
   }];
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
 + (id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
@@ -504,8 +502,8 @@ static id<FBSDKSettings> _settings;
   };
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (void)reset
 {
@@ -540,8 +538,8 @@ static id<FBSDKSettings> _settings;
   return _appIndexingTimer;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

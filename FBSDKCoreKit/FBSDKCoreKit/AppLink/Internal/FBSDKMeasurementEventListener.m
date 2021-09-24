@@ -16,18 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKMeasurementEventListener.h"
+#import "FBSDKMeasurementEventListener.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAppEvents+Internal.h"
- #import "FBSDKAppEvents+SourceApplicationTracking.h"
- #import "FBSDKMeasurementEvent.h"
- #import "FBSDKTimeSpentData.h"
+#import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEvents+SourceApplicationTracking.h"
+#import "FBSDKMeasurementEvent.h"
+#import "FBSDKTimeSpentData.h"
 
 static NSString *const FBSDKMeasurementEventName = @"event_name";
 static NSString *const FBSDKMeasurementEventArgs = @"event_args";

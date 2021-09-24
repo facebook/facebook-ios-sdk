@@ -16,28 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKAppLinkResolver.h"
+#import "FBSDKAppLinkResolver.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAppLink.h"
- #import "FBSDKAppLinkResolverRequestBuilder.h"
- #import "FBSDKLogger.h"
- #import "FBSDKSettings+Internal.h"
+#import "FBSDKAppLink.h"
+#import "FBSDKAppLinkResolverRequestBuilder.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings+Internal.h"
 
 // Dependencies
- #import "FBSDKAccessToken+AccessTokenProtocols.h"
- #import "FBSDKAccessTokenProtocols.h"
- #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
- #import "FBSDKAppLinkResolverRequestBuilding.h"
- #import "FBSDKClientTokenProviding.h"
- #import "FBSDKSettings+ClientTokenProviding.h"
+#import "FBSDKAccessToken+AccessTokenProtocols.h"
+#import "FBSDKAccessTokenProtocols.h"
+#import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
+#import "FBSDKAppLinkResolverRequestBuilding.h"
+#import "FBSDKClientTokenProviding.h"
+#import "FBSDKSettings+ClientTokenProviding.h"
 
 static NSString *const kURLKey = @"url";
 static NSString *const kIOSAppStoreIdKey = @"app_store_id";
@@ -169,14 +167,14 @@ static NSString *const kAppLinksKey = @"app_links";
                                      webURL:fallbackUrl];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (instancetype)resolver
 {
   return [[self alloc] initWithUserInterfaceIdiom:UIDevice.currentDevice.userInterfaceIdiom];
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
 @end
 

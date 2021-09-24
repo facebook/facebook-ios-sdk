@@ -16,26 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKSKAdNetworkReporter.h"
+#import "FBSDKSKAdNetworkReporter.h"
 
- #import <StoreKit/StoreKit.h>
+#import <StoreKit/StoreKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/message.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/message.h>
 
- #import "FBSDKAppEventsUtility.h"
- #import "FBSDKConversionValueUpdating.h"
- #import "FBSDKDataPersisting.h"
- #import "FBSDKGraphRequestFactoryProtocol.h"
- #import "FBSDKGraphRequestProtocol.h"
- #import "FBSDKSKAdNetworkConversionConfiguration.h"
- #import "FBSDKSettings.h"
+#import "FBSDKAppEventsUtility.h"
+#import "FBSDKConversionValueUpdating.h"
+#import "FBSDKDataPersisting.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKSKAdNetworkConversionConfiguration.h"
+#import "FBSDKSettings.h"
 
- #define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
+#define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
 
 typedef void (*send_type)(Class, SEL, NSInteger);
 
@@ -269,8 +267,8 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   return (self.config && [self.config.eventSet containsObject:event]);
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_loadReportData
 {
   id cachedJSON = [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
@@ -327,17 +325,17 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   }
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
 - (BOOL)_isConfigRefreshTimestampValid
 {
   return self.configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:self.configRefreshTimestamp] < FBSDK_SKADNETWORK_CONFIG_TIME_OUT;
 }
 
- #pragma mark - Testability
+#pragma mark - Testability
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {
@@ -349,8 +347,8 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   self.isSKAdNetworkReportEnabled = enabled;
 }
 
-  #endif
  #endif
+#endif
 @end
 
 #endif

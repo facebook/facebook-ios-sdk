@@ -16,26 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolNativeV1.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKApplicationLifecycleNotifications.h"
- #import "FBSDKBridgeAPIRequest.h"
- #import "FBSDKConstants.h"
- #import "FBSDKError+Internal.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKPasteboard.h"
- #import "FBSDKSettings.h"
- #import "UIPasteboard+Pasteboard.h"
+#import "FBSDKApplicationLifecycleNotifications.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKConstants.h"
+#import "FBSDKError+Internal.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKPasteboard.h"
+#import "FBSDKSettings.h"
+#import "UIPasteboard+Pasteboard.h"
 
- #define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
+#define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
 
 const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys =
 {
@@ -102,7 +100,7 @@ static const struct {
 
 @implementation FBSDKBridgeAPIProtocolNativeV1
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithAppScheme:(NSString *)appScheme
 {
@@ -126,7 +124,7 @@ static const struct {
   return self;
 }
 
- #pragma mark - FBSDKBridgeAPIProtocol
+#pragma mark - FBSDKBridgeAPIProtocol
 
 - (NSURL *)requestURLWithActionID:(NSString *)actionID
                            scheme:(NSString *)scheme
@@ -234,7 +232,7 @@ static const struct {
   return resultParameters;
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (UIImage *)_appIcon
 {

@@ -16,22 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKWebDialogView.h"
+#import "FBSDKWebDialogView.h"
 
- #import <WebKit/WebKit.h>
+#import <WebKit/WebKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCloseIcon.h"
- #import "FBSDKError+Internal.h"
- #import "FBSDKInternalURLOpener.h"
- #import "FBSDKWebViewProviding.h"
+#import "FBSDKCloseIcon.h"
+#import "FBSDKError+Internal.h"
+#import "FBSDKInternalURLOpener.h"
+#import "FBSDKWebViewProviding.h"
 
- #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
+#define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
 
 @interface FBSDKWebDialogView () <WKNavigationDelegate>
 
@@ -63,7 +61,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   return FBSDKWebDialogView.urlOpener;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -118,7 +116,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   self.webView.navigationDelegate = nil;
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (void)loadURL:(NSURL *)URL
 {
@@ -132,7 +130,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   [self.loadingView stopAnimating];
 }
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (void)drawRect:(CGRect)rect
 {
@@ -179,14 +177,14 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   }
 }
 
- #pragma mark - Actions
+#pragma mark - Actions
 
 - (void)_close:(id)sender
 {
   [self.delegate webDialogViewDidCancel:self];
 }
 
- #pragma mark - WKNavigationDelegate
+#pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
@@ -245,8 +243,8 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   [self.delegate webDialogViewDidFinishLoad:self];
 }
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (void)reset
 {
@@ -259,8 +257,8 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   return _webViewProvider;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

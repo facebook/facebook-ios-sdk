@@ -16,36 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKSuggestedEventsIndexer.h"
+#import "FBSDKSuggestedEventsIndexer.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/runtime.h>
- #import <sys/sysctl.h>
- #import <sys/utsname.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/runtime.h>
+#import <sys/sysctl.h>
+#import <sys/utsname.h>
 
- #import "FBSDKAppEvents.h"
- #import "FBSDKAppEvents+EventLogging.h"
- #import "FBSDKAppEventsUtility.h"
- #import "FBSDKEventProcessing.h"
- #import "FBSDKFeatureExtracting.h"
- #import "FBSDKFeatureExtractor.h"
- #import "FBSDKGraphRequestFactory.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKMLMacros.h"
- #import "FBSDKModelManager.h"
- #import "FBSDKModelUtility.h"
- #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
- #import "FBSDKSettings+Internal.h"
- #import "FBSDKSwizzler+Swizzling.h"
- #import "FBSDKSwizzling.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKAppEvents.h"
+#import "FBSDKAppEvents+EventLogging.h"
+#import "FBSDKAppEventsUtility.h"
+#import "FBSDKEventProcessing.h"
+#import "FBSDKFeatureExtracting.h"
+#import "FBSDKFeatureExtractor.h"
+#import "FBSDKGraphRequestFactory.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKMLMacros.h"
+#import "FBSDKModelManager.h"
+#import "FBSDKModelUtility.h"
+#import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
+#import "FBSDKSettings+Internal.h"
+#import "FBSDKSwizzler+Swizzling.h"
+#import "FBSDKSwizzling.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 NSString *const OptInEvents = @"production_events";
 NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
@@ -311,7 +309,7 @@ static dispatch_once_t setupNonce;
   });
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (NSString *)getDenseFeaure:(float *)denseData
 {
@@ -360,9 +358,9 @@ static dispatch_once_t setupNonce;
   return;
 }
 
- #pragma mark - Testability
+#pragma mark - Testability
 
- #if FBTEST
+#if FBTEST
 
 + (void)reset
 {
@@ -371,7 +369,7 @@ static dispatch_once_t setupNonce;
   }
 }
 
- #endif
+#endif
 
 @end
 

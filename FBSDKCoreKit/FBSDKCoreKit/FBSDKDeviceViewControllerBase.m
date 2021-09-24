@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if TARGET_OS_TV
 
- #import "FBSDKDeviceViewControllerBase+Internal.h"
+#import "FBSDKDeviceViewControllerBase+Internal.h"
 
- #import "FBSDKModalFormPresentationController.h"
- #import "FBSDKServerConfigurationProvider.h"
- #import "FBSDKSmartDeviceDialogView.h"
+#import "FBSDKModalFormPresentationController.h"
+#import "FBSDKServerConfigurationProvider.h"
+#import "FBSDKSmartDeviceDialogView.h"
 
 static const NSTimeInterval kAnimationDurationTimeInterval = .5;
 
@@ -64,7 +62,7 @@ Subclasses should generally:
   return (FBSDKDeviceDialogView *)self.view;
 }
 
- #pragma mark - UIViewControllerAnimatedTransitioning
+#pragma mark - UIViewControllerAnimatedTransitioning
 
 // Extract this out to another class if we have other similar transitions.
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
@@ -106,7 +104,7 @@ Subclasses should generally:
   }
 }
 
- #pragma mark - UIViewControllerTransitioningDelegate
+#pragma mark - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
@@ -126,7 +124,7 @@ Subclasses should generally:
                                                               presentingViewController:presenting];
 }
 
- #pragma mark - FBSDKDeviceDialogViewDelegate
+#pragma mark - FBSDKDeviceDialogViewDelegate
 
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView
 {

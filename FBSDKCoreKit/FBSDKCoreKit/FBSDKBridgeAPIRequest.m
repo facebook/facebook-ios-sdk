@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIRequest.h"
- #import "FBSDKBridgeAPIRequest+Private.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIRequest+Private.h"
 
- #import <UIKit/UIApplication.h>
+#import <UIKit/UIApplication.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKBridgeAPIProtocolNativeV1.h"
- #import "FBSDKBridgeAPIProtocolWebV1.h"
- #import "FBSDKBridgeAPIProtocolWebV2.h"
- #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKSettings.h"
- #import "UIApplication+URLOpener.h"
+#import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolWebV1.h"
+#import "FBSDKBridgeAPIProtocolWebV2.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKSettings.h"
+#import "UIApplication+URLOpener.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
@@ -40,7 +38,7 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
 @implementation FBSDKBridgeAPIRequest
 
- #pragma mark - Class dependencies
+#pragma mark - Class dependencies
 
 static BOOL _hasBeenConfigured;
 
@@ -90,7 +88,7 @@ static _Nullable id<FBSDKSettings> _settings;
   _settings = settings;
 }
 
- #pragma mark - Class Configuration
+#pragma mark - Class Configuration
 
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKInternalURLOpener>)internalURLOpener
                        internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
@@ -114,7 +112,7 @@ static _Nullable id<FBSDKSettings> _settings;
                               settings:FBSDKSettings.sharedSettings];
 }
 
- #if FBTEST
+#if FBTEST
 
 + (void)resetClassDependencies
 {
@@ -125,9 +123,9 @@ static _Nullable id<FBSDKSettings> _settings;
   self.hasBeenConfigured = NO;
 }
 
- #endif
+#endif
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                           scheme:(NSString *)scheme
@@ -165,7 +163,7 @@ static _Nullable id<FBSDKSettings> _settings;
   return _protocolMap;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
@@ -194,7 +192,7 @@ static _Nullable id<FBSDKSettings> _settings;
   return self;
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
 {
@@ -224,7 +222,7 @@ static _Nullable id<FBSDKSettings> _settings;
   return requestURL;
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

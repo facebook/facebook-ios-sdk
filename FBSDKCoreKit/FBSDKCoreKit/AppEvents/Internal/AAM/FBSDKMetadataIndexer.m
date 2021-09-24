@@ -16,24 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKMetadataIndexer.h"
+#import "FBSDKMetadataIndexer.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/runtime.h>
- #import <sys/sysctl.h>
- #import <sys/utsname.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/runtime.h>
+#import <sys/sysctl.h>
+#import <sys/utsname.h>
 
- #import "FBSDKAppEventsUtility.h"
- #import "FBSDKServerConfigurationManager.h"
- #import "FBSDKSwizzler.h"
- #import "FBSDKUtility.h"
- #import "FBSDKViewHierarchy.h"
+#import "FBSDKAppEventsUtility.h"
+#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKSwizzler.h"
+#import "FBSDKUtility.h"
+#import "FBSDKViewHierarchy.h"
 
 @interface FBSDKUserDataStore (Internal)
 
@@ -276,7 +274,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   }
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)checkAndAppendData:(NSString *)data
                     forKey:(NSString *)key
