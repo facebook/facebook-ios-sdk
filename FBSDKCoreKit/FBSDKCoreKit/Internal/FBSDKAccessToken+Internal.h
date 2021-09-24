@@ -20,16 +20,20 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKTokenCaching;
 @protocol FBSDKGraphRequestConnectionFactory;
 
 @interface FBSDKAccessToken (Internal)
 
-@property (class, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
 + (void)resetTokenCache;
 
-+ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
++ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
           shouldDispatchNotif:(BOOL)shouldDispatchNotif;
 
 @end
+
+NS_ASSUME_NONNULL_END

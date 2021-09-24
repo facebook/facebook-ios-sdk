@@ -187,7 +187,7 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
   return g_graphRequestConnectionFactory;
 }
 
-+ (void)setGraphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
++ (void)setGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   if (g_graphRequestConnectionFactory != graphRequestConnectionFactory) {
     g_graphRequestConnectionFactory = graphRequestConnectionFactory;

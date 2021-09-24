@@ -29,7 +29,7 @@ class AccessTokenTests: XCTestCase {
     super.tearDown()
 
     AccessToken.current = nil
-    AccessToken.graphRequestConnectionFactory = nil
+    AccessToken.graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
     AccessToken.resetTokenCache()
   }
 

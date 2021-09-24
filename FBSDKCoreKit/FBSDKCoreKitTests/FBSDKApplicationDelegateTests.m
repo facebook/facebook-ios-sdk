@@ -523,7 +523,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 - (void)testInitializingSdkConfiguresAccessTokenConnectionFactory
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  FBSDKAccessToken.graphRequestConnectionFactory = nil;
+  FBSDKAccessToken.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *graphRequestConnectionFactory = (NSObject *) FBSDKAccessToken.graphRequestConnectionFactory;
