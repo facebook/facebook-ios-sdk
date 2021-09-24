@@ -19,7 +19,7 @@
 
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKTokenCaching.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
