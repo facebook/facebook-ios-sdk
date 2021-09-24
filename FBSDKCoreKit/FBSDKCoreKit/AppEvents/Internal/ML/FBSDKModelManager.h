@@ -29,6 +29,7 @@
  @protocol FBSDKSettings;
  @protocol FBSDKFileDataExtracting;
  @protocol FBSDKGateKeeperManaging;
+ @protocol FBSDKSuggestedEventsIndexer;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,7 +49,8 @@ NS_SWIFT_NAME(ModelManager)
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
-                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager;
+                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer;
 
 @end
 

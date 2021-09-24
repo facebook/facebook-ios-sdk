@@ -67,6 +67,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings+SettingsLogging.h"
 #import "FBSDKSettingsLogging.h"
+#import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKSwizzler+Swizzling.h"
 #import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
@@ -613,7 +614,7 @@ static UIApplicationState _applicationState;
 
   NSInteger bitmask = 0;
   NSInteger bit = 0;
-  NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
+  NSMutableDictionary<NSString *, NSNumber *> *params = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:params setObject:@1 forKey:@"core_lib_included"];
   for (NSString *className in metaInfo.allKeys) {
     NSString *keyName = [FBSDKTypeUtility dictionary:metaInfo objectForKey:className ofType:NSObject.class];
@@ -731,7 +732,8 @@ static UIApplicationState _applicationState;
                                                   store:store
                                                settings:sharedSettings
                                           dataExtractor:NSData.class
-                                      gateKeeperManager:FBSDKGateKeeperManager.class];
+                                      gateKeeperManager:FBSDKGateKeeperManager.class
+                                 suggestedEventsIndexer:FBSDKSuggestedEventsIndexer.shared];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
                                  infoDictionaryProvider:NSBundle.mainBundle

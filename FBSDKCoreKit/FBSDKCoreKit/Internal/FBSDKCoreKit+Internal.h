@@ -73,7 +73,6 @@
   #import "../AppEvents/Internal/AAM/FBSDKMetadataIndexer.h"
   #import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"
   #import "../AppEvents/Internal/SKAdNetwork/FBSDKSKAdNetworkReporter.h"
-  #import "../AppEvents/Internal/SuggestedEvents/FBSDKSuggestedEventsIndexer.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"

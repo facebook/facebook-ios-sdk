@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 @property (class, nullable, nonatomic) NSString *directoryPath;
 
 + (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo;
@@ -46,7 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
-                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager;
+                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer;
 
 @end
 

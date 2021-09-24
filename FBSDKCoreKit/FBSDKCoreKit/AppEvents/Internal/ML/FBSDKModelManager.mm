@@ -36,7 +36,7 @@
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKSuggestedEventsIndexer.h"
+#import "FBSDKSuggestedEventsIndexerProtocol.h"
 
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
@@ -63,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 
 @end
 
@@ -91,6 +92,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
@@ -99,6 +101,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   _settings = settings;
   _dataExtractor = dataExtractor;
   _gateKeeperManager = gateKeeperManager;
+  _suggestedEventsIndexer = suggestedEventsIndexer;
 }
 
 #pragma mark - Public methods
@@ -310,7 +313,7 @@ static dispatch_once_t enableNonce;
 - (void)checkFeaturesAndExecuteForMTML
 {
   [self getModelAndRules:MTMLKey onSuccess:^() {
-    NSData *data = [FBSDKModelManager.shared getWeightsForKey:MTMLKey];
+    NSData *data = [self getWeightsForKey:MTMLKey];
     _MTMLWeights = [FBSDKModelParser parseWeightsData:data];
     if (![FBSDKModelParser validateWeights:_MTMLWeights forKey:MTMLKey]) {
       return;
@@ -319,7 +322,7 @@ static dispatch_once_t enableNonce;
     if ([self.featureChecker isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
-        [FBSDKSuggestedEventsIndexer.shared enable];
+        [self.suggestedEventsIndexer enable];
       }];
     }
 
@@ -486,6 +489,7 @@ static dispatch_once_t enableNonce;
   self.shared.settings = nil;
   self.shared.dataExtractor = nil;
   self.shared.gateKeeperManager = nil;
+  self.shared.suggestedEventsIndexer = nil;
 }
 
 + (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo

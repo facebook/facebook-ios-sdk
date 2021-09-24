@@ -28,6 +28,7 @@ class FBSDKModelManagerTests: XCTestCase {
   lazy var fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
   let store = UserDefaultsSpy()
   let settings = TestSettings()
+  let suggestedEventsIndexer = TestSuggestedEventsIndexer()
 
   enum Keys {
     static let modelInfoPersistence = "com.facebook.sdk:FBSDKModelInfo"
@@ -52,7 +53,8 @@ class FBSDKModelManagerTests: XCTestCase {
       store: store,
       settings: settings,
       dataExtractor: TestFileDataExtractor.self,
-      gateKeeperManager: TestGateKeeperManager.self
+      gateKeeperManager: TestGateKeeperManager.self,
+      suggestedEventsIndexer: suggestedEventsIndexer
     )
   }
 

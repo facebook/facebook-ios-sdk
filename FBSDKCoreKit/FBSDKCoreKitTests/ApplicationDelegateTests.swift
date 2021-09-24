@@ -301,6 +301,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertNil(ModelManager.shared.settings, "Should not have a settings by default")
     XCTAssertNil(ModelManager.shared.dataExtractor, "Should not have a data extractor by default")
     XCTAssertNil(ModelManager.shared.gateKeeperManager, "Should not have a gate keeper manager by default")
+    XCTAssertNil(ModelManager.shared.suggestedEventsIndexer, "Should not have a suggested events indexer by default")
 
     delegate.initializeSDK(launchOptions: [:])
 
