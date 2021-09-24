@@ -232,12 +232,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSString *)appID
 {
-  return [[FBSDKSettings sharedSettings] appID];
+  return self.sharedSettings.appID;
 }
 
 + (void)setAppID:(NSString *)appID
 {
-  FBSDKSettings.sharedSettings.appID = appID;
+  self.sharedSettings.appID = appID;
 }
 
 + (BOOL)isGraphErrorRecoveryEnabled
@@ -517,7 +517,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSString *)sdkVersion
 {
-  return [[FBSDKSettings sharedSettings] sdkVersion];
+  return self.sharedSettings.sdkVersion;
 }
 
 #pragma mark - Configuration Validation
@@ -558,17 +558,22 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSString *)defaultGraphAPIVersion
 {
+  return self.sharedSettings.defaultGraphAPIVersion;
+}
+
+- (NSString *)defaultGraphAPIVersion
+{
   return FBSDK_DEFAULT_GRAPH_API_VERSION;
 }
 
 + (NSString *)graphAPIVersion
 {
-  return [self.sharedSettings graphAPIVersion];
+  return self.sharedSettings.graphAPIVersion;
 }
 
 - (NSString *)graphAPIVersion
 {
-  return _graphAPIVersion ?: FBSDKSettings.defaultGraphAPIVersion;
+  return _graphAPIVersion ?: self.defaultGraphAPIVersion;
 }
 
 + (NSNumber *)appEventSettingsForPlistKey:(NSString *)plistKey

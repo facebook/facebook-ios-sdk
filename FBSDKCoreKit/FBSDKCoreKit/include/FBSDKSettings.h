@@ -47,7 +47,12 @@ NS_SWIFT_NAME(Settings)
 /**
  Retrieve the current default Graph API version.
  */
-@property (class, nonatomic, copy, readonly) NSString *defaultGraphAPIVersion;
+@property (class, nonatomic, copy, readonly) NSString *defaultGraphAPIVersion DEPRECATED_MSG_ATTRIBUTE("`Settings.defaultGraphAPIVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.defaultGraphAPIVersion` instead");
+
+/**
+ Retrieve the current default Graph API version.
+ */
+@property (nonatomic, copy, readonly) NSString *defaultGraphAPIVersion;
 
 /**
  The quality of JPEG images sent to Facebook from the SDK,
