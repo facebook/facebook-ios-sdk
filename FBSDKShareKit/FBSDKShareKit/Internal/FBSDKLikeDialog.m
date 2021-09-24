@@ -16,26 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLikeDialog.h"
+#import "FBSDKLikeDialog.h"
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKShareConstants.h"
- #import "FBSDKShareDefines.h"
+#import "FBSDKShareConstants.h"
+#import "FBSDKShareDefines.h"
 
 @implementation FBSDKLikeDialog
 
- #define FBSDK_LIKE_METHOD_MIN_VERSION @"20140410"
- #define FBSDK_LIKE_METHOD_NAME @"like"
- #define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_LIKE @"like"
- #define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_UNLIKE @"unlike"
+#define FBSDK_LIKE_METHOD_MIN_VERSION @"20140410"
+#define FBSDK_LIKE_METHOD_NAME @"like"
+#define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_LIKE @"like"
+#define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_UNLIKE @"unlike"
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (instancetype)likeWithObjectID:(NSString *)objectID
                       objectType:(FBSDKLikeObjectType)objectType
@@ -49,7 +47,7 @@
   return dialog;
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)canLike
 {
@@ -135,7 +133,7 @@
   return YES;
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)_canLikeNative
 {

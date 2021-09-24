@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLikeActionControllerCache.h"
+#import "FBSDKLikeActionControllerCache.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLikeActionController.h"
+#import "FBSDKLikeActionController.h"
 
 // after 1 day, expire the cached states
- #define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_TIMEOUT 60 * 24
+#define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_TIMEOUT (60 * 24)
 
- #define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ACCESS_TOKEN_KEY @"accessTokenString"
- #define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ITEMS_KEY @"items"
+#define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ACCESS_TOKEN_KEY @"accessTokenString"
+#define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ITEMS_KEY @"items"
 
 @interface FBSDKLikeActionControllerCache ()
 
@@ -43,7 +41,7 @@
 
 @implementation FBSDKLikeActionControllerCache
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithAccessTokenString:(NSString *)accessTokenString
 {
@@ -54,7 +52,7 @@
   return self;
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -81,7 +79,7 @@
   [encoder encodeObject:_items forKey:FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ITEMS_KEY];
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (id)objectForKeyedSubscript:(id)key
 {
@@ -99,7 +97,7 @@
   [FBSDKTypeUtility dictionary:_items setObject:object forKey:key];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_prune
 {

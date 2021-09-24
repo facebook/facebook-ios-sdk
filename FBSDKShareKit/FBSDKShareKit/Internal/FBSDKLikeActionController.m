@@ -16,19 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLikeActionController.h"
+#import "FBSDKLikeActionController.h"
 
- #import <QuartzCore/QuartzCore.h>
+#import <QuartzCore/QuartzCore.h>
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLikeActionControllerCache.h"
- #import "FBSDKLikeDialog.h"
+#import "FBSDKLikeActionControllerCache.h"
+#import "FBSDKLikeDialog.h"
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidDisable = @"fb_like_control_did_disable";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidLike = @"fb_like_control_did_like";
@@ -71,41 +69,41 @@ BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue)
   }
 }
 
- #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKLikeActionControllerDidDisableNotification = @"FBSDKLikeActionControllerDidDisableNotification";
 NSNotificationName const FBSDKLikeActionControllerDidResetNotification = @"FBSDKLikeActionControllerDidResetNotification";
 NSNotificationName const FBSDKLikeActionControllerDidUpdateNotification = @"FBSDKLikeActionControllerDidUpdateNotification";
 
- #else
+#else
 
 NSString *const FBSDKLikeActionControllerDidDisableNotification = @"FBSDKLikeActionControllerDidDisableNotification";
 NSString *const FBSDKLikeActionControllerDidResetNotification = @"FBSDKLikeActionControllerDidResetNotification";
 NSString *const FBSDKLikeActionControllerDidUpdateNotification = @"FBSDKLikeActionControllerDidUpdateNotification";
 
- #endif
+#endif
 
 NSString *const FBSDKLikeActionControllerAnimatedKey = @"animated";
 
- #define FBSDK_LIKE_ACTION_CONTROLLER_ANIMATION_DELAY 0.5
- #define FBSDK_LIKE_ACTION_CONTROLLER_SOUND_DELAY 0.15
- #define FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION @"v2.1"
+#define FBSDK_LIKE_ACTION_CONTROLLER_ANIMATION_DELAY 0.5
+#define FBSDK_LIKE_ACTION_CONTROLLER_SOUND_DELAY 0.15
+#define FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION @"v2.1"
 
- #define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_PROPERTY_KEY @"like"
- #define FBSDK_LIKE_ACTION_CONTROLLER_REFRESH_PROPERTY_KEY @"refresh"
+#define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_PROPERTY_KEY @"like"
+#define FBSDK_LIKE_ACTION_CONTROLLER_REFRESH_PROPERTY_KEY @"refresh"
 
- #define FBSDK_LIKE_ACTION_CONTROLLER_LAST_UPDATE_TIME_KEY @"lastUpdateTime"
- #define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITH_LIKE_KEY @"likeCountStringWithLike"
- #define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITHOUT_LIKE_KEY @"likeCountStringWithoutLike"
- #define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_ID_KEY @"objectID"
- #define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_IS_LIKED_KEY @"objectIsLiked"
- #define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_TYPE_KEY @"objectType"
- #define FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITH_LIKE_KEY @"socialSentenceWithLike"
- #define FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITHOUT_LIKE_KEY @"socialSentenceWithoutLike"
- #define FBSDK_LIKE_ACTION_CONTROLLER_UNLIKE_TOKEN_KEY @"unlikeToken"
- #define FBSDK_LIKE_ACTION_CONTROLLER_VERSION_KEY @"version"
+#define FBSDK_LIKE_ACTION_CONTROLLER_LAST_UPDATE_TIME_KEY @"lastUpdateTime"
+#define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITH_LIKE_KEY @"likeCountStringWithLike"
+#define FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITHOUT_LIKE_KEY @"likeCountStringWithoutLike"
+#define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_ID_KEY @"objectID"
+#define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_IS_LIKED_KEY @"objectIsLiked"
+#define FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_TYPE_KEY @"objectType"
+#define FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITH_LIKE_KEY @"socialSentenceWithLike"
+#define FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITHOUT_LIKE_KEY @"socialSentenceWithoutLike"
+#define FBSDK_LIKE_ACTION_CONTROLLER_UNLIKE_TOKEN_KEY @"unlikeToken"
+#define FBSDK_LIKE_ACTION_CONTROLLER_VERSION_KEY @"version"
 
- #define FBSDK_LIKE_ACTION_CONTROLLER_VERSION 4
+#define FBSDK_LIKE_ACTION_CONTROLLER_VERSION 4
 
 typedef NS_ENUM(NSUInteger, FBSDKLikeActionControllerRefreshMode) {
   FBSDKLikeActionControllerRefreshModeInitial,
@@ -151,7 +149,7 @@ typedef void (^fbsdk_like_action_controller_ensure_verified_object_id_completion
 
 @implementation FBSDKLikeActionController
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 static BOOL _fbsdkLikeActionControllerDisabled = YES;
 
@@ -259,7 +257,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   }
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithObjectID:(NSString *)objectID
                       objectType:(FBSDKLikeObjectType)objectType
@@ -275,7 +273,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   return self;
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -330,7 +328,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   [coder encodeInteger:FBSDK_LIKE_ACTION_CONTROLLER_VERSION forKey:FBSDK_LIKE_ACTION_CONTROLLER_VERSION_KEY];
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (NSString *)likeCountString
 {
@@ -342,14 +340,14 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   return (_objectIsLiked ? _socialSentenceWithLike : _socialSentenceWithoutLike);
 }
 
- #pragma mark - Public API
+#pragma mark - Public API
 
 - (void)refresh
 {
   [self _refreshWithMode:FBSDKLikeActionControllerRefreshModeForce];
 }
 
- #pragma mark - NSDiscardableContent
+#pragma mark - NSDiscardableContent
 
 - (BOOL)beginContentAccess
 {
@@ -375,7 +373,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   return _contentDiscarded;
 }
 
- #pragma mark - FBSDKLikeDialogDelegate
+#pragma mark - FBSDKLikeDialogDelegate
 
 - (void)likeDialog:(FBSDKLikeDialog *)likeDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -426,7 +424,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   [self _setExecuting:NO forKey:FBSDK_LIKE_ACTION_CONTROLLER_LIKE_PROPERTY_KEY];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_configure
 {

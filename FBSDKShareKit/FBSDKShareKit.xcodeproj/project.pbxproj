@@ -1798,6 +1798,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1810,6 +1811,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

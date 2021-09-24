@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLikeBoxView.h"
+#import "FBSDKLikeBoxView.h"
 
- #import "FBSDKLikeBoxBorderView.h"
+#import "FBSDKLikeBoxBorderView.h"
 
 @interface FBSDKLikeBoxView ()
 
@@ -33,7 +31,7 @@
 
 @implementation FBSDKLikeBoxView
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -51,7 +49,7 @@
   return self;
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (void)setCaretPosition:(FBSDKLikeBoxCaretPosition)caretPosition
 {
@@ -77,7 +75,7 @@
   }
 }
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (CGSize)intrinsicContentSize
 {
@@ -97,7 +95,7 @@
   return [_borderView sizeThatFits:size];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_initializeContent
 {

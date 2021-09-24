@@ -16,46 +16,44 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKShareDialog+Internal.h"
+#import "FBSDKShareDialog+Internal.h"
 
- #import <Social/Social.h>
- #import <UIKit/UIApplication.h>
+#import <Social/Social.h>
+#import <UIKit/UIApplication.h>
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
- #import <objc/runtime.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <objc/runtime.h>
 
- #import "FBSDKShareAppEventNames.h"
- #import "FBSDKShareBridgeAPIRequestFactory.h"
- #import "FBSDKShareCameraEffectContent.h"
- #import "FBSDKShareConstants.h"
- #import "FBSDKShareDefines.h"
- #import "FBSDKShareExtension.h"
- #import "FBSDKShareInternalURLOpening.h"
- #import "FBSDKShareLinkContent.h"
- #import "FBSDKShareMediaContent.h"
- #import "FBSDKSharePhoto.h"
- #import "FBSDKSharePhotoContent.h"
- #import "FBSDKShareUtility.h"
- #import "FBSDKShareUtilityProtocol.h"
- #import "FBSDKShareVideo.h"
- #import "FBSDKShareVideoContent.h"
- #import "FBSDKSocialComposeViewController.h"
- #import "FBSDKSocialComposeViewControllerFactory.h"
- #import "UIApplication+ShareInternalURLOpening.h"
+#import "FBSDKShareAppEventNames.h"
+#import "FBSDKShareBridgeAPIRequestFactory.h"
+#import "FBSDKShareCameraEffectContent.h"
+#import "FBSDKShareConstants.h"
+#import "FBSDKShareDefines.h"
+#import "FBSDKShareExtension.h"
+#import "FBSDKShareInternalURLOpening.h"
+#import "FBSDKShareLinkContent.h"
+#import "FBSDKShareMediaContent.h"
+#import "FBSDKSharePhoto.h"
+#import "FBSDKSharePhotoContent.h"
+#import "FBSDKShareUtility.h"
+#import "FBSDKShareUtilityProtocol.h"
+#import "FBSDKShareVideo.h"
+#import "FBSDKShareVideoContent.h"
+#import "FBSDKSocialComposeViewController.h"
+#import "FBSDKSocialComposeViewControllerFactory.h"
+#import "UIApplication+ShareInternalURLOpening.h"
 
- #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
- #define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
- #define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
- #define FBSDK_SHARE_METHOD_PHOTOS_MIN_VERSION @"20140116"
- #define FBSDK_SHARE_METHOD_VIDEO_MIN_VERSION @"20150313"
- #define FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION @"20150629"
- #define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
- #define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
+#define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
+#define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
+#define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
+#define FBSDK_SHARE_METHOD_PHOTOS_MIN_VERSION @"20140116"
+#define FBSDK_SHARE_METHOD_VIDEO_MIN_VERSION @"20150313"
+#define FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION @"20150629"
+#define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
+#define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogShow = @"fb_dialog_share_show";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_share_result";
@@ -72,7 +70,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_sha
   NSMutableArray<NSURL *> *_temporaryFiles;
 }
 
- #pragma mark - Class Properties
+#pragma mark - Class Properties
 
 static BOOL _hasBeenConfigured;
 
@@ -171,7 +169,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
   _socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 }
 
- #pragma mark - Class Configuration
+#pragma mark - Class Configuration
 
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
                        internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
@@ -241,7 +239,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   self.hasBeenConfigured = NO;
 }
 
- #pragma mark - Factory Methods
+#pragma mark - Factory Methods
 
 + (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
                              withContent:(id<FBSDKSharingContent>)content
@@ -265,7 +263,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return dialog;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -286,13 +284,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   }
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -374,7 +372,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return [self _validateWithError:errorRef] && [self _validateFullyCompatibleWithError:errorRef];
 }
 
- #pragma mark - FBSDKWebDialogDelegate
+#pragma mark - FBSDKWebDialogDelegate
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -421,7 +419,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   [self.class.internalUtility unregisterTransientObject:self];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)_isDefaultToShareSheet
 {

@@ -16,28 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKGameRequestContent.h"
+#import "FBSDKGameRequestContent.h"
 
- #import "FBSDKHasher.h"
- #import "FBSDKShareConstants.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKHasher.h"
+#import "FBSDKShareConstants.h"
+#import "FBSDKShareUtility.h"
 
- #define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"
- #define FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY @"message"
- #define FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY @"actionType"
- #define FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY @"objectID"
- #define FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY @"filters"
- #define FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY @"suggestions"
- #define FBSDK_APP_REQUEST_CONTENT_DATA_KEY @"data"
- #define FBSDK_APP_REQUEST_CONTENT_TITLE_KEY @"title"
+#define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"
+#define FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY @"message"
+#define FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY @"actionType"
+#define FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY @"objectID"
+#define FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY @"filters"
+#define FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY @"suggestions"
+#define FBSDK_APP_REQUEST_CONTENT_DATA_KEY @"data"
+#define FBSDK_APP_REQUEST_CONTENT_TITLE_KEY @"title"
 
 @implementation FBSDKGameRequestContent
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (void)setRecipients:(NSArray *)recipients
 {
@@ -75,7 +73,7 @@
   self.recipients = to;
 }
 
- #pragma mark - FBSDKSharingValidation
+#pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
@@ -161,7 +159,7 @@
                                            error:errorRef];
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -202,7 +200,7 @@
     && [FBSDKInternalUtility.sharedUtility object:_recipients isEqualToObject:content.recipients]);
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -236,7 +234,7 @@
   [encoder encodeObject:_recipients forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

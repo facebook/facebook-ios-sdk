@@ -16,20 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKMessageDialog.h"
+#import "FBSDKMessageDialog.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKShareAppEventNames.h"
- #import "FBSDKShareDefines.h"
- #import "FBSDKShareUtility.h"
- #import "FBSDKShareVideoContent.h"
+#import "FBSDKShareAppEventNames.h"
+#import "FBSDKShareDefines.h"
+#import "FBSDKShareUtility.h"
+#import "FBSDKShareVideoContent.h"
 
- #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
+#define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
 
 @interface FBSDKMessageDialog ()
 
@@ -44,7 +42,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult = @"fb_m
 NSString *const FBSDKAppEventParameterDialogShareContentPageID = @"fb_dialog_share_content_page_id";
 NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share_content_uuid";
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (void)initialize
 {
@@ -83,13 +81,13 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   return dialog;
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -162,7 +160,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                            error:errorRef];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)_canShowNative
 {

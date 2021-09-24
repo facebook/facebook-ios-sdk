@@ -16,20 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLikeBoxBorderView.h"
+#import "FBSDKLikeBoxBorderView.h"
 
- #define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
- #define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
- #define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
- #define FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING 4.0
+#define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
+#define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
+#define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
+#define FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING 4.0
 
 @implementation FBSDKLikeBoxBorderView
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -47,7 +45,7 @@
   return self;
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
@@ -122,7 +120,7 @@
   }
 }
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (CGSize)intrinsicContentSize
 {
@@ -145,7 +143,7 @@
   return size;
 }
 
- #pragma mark - Drawing
+#pragma mark - Drawing
 
 - (void)drawRect:(CGRect)rect
 {
@@ -305,7 +303,7 @@
   CGContextRestoreGState(context);
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 typedef float (*FBSDKLimitFunctionType)(float);
 static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFunction,

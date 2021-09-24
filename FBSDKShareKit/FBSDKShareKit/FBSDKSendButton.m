@@ -16,14 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKSendButton.h"
+#import "FBSDKSendButton.h"
 
- #import "FBSDKMessageDialog.h"
- #import "FBSDKMessengerIcon.h"
+#import "FBSDKMessageDialog.h"
+#import "FBSDKMessengerIcon.h"
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
@@ -34,7 +32,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
 @implementation FBSDKSendButton
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (id<FBSDKSharingContent>)shareContent
 {
@@ -47,7 +45,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   [self checkImplicitlyDisabled];
 }
 
- #pragma mark - FBSDKButtonImpressionTracking
+#pragma mark - FBSDKButtonImpressionTracking
 
 - (NSDictionary<NSString *, id> *)analyticsParameters
 {
@@ -64,7 +62,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   return @"send";
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (void)configureButton
 {
@@ -94,7 +92,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   return !_dialog.canShow || ![_dialog validateWithError:NULL];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_share:(id)sender
 {

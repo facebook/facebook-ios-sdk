@@ -245,6 +245,8 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
   FBSDKShareKitTests:
     type: bundle.unit-test
     platform: iOS

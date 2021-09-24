@@ -16,20 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKGameRequestDialog.h"
+#import "FBSDKGameRequestDialog.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKGameRequestFrictionlessRecipientCache.h"
- #import "FBSDKShareConstants.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKGameRequestFrictionlessRecipientCache.h"
+#import "FBSDKShareConstants.h"
+#import "FBSDKShareUtility.h"
 
- #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
- #define FBSDK_GAME_REQUEST_URL_HOST @"game_requests"
+#define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
+#define FBSDK_GAME_REQUEST_URL_HOST @"game_requests"
 
 @interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate, FBSDKURLOpening>
 @end
@@ -42,7 +40,7 @@
 
 @implementation FBSDKGameRequestDialog
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 
@@ -122,7 +120,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [self _cleanUp];
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
@@ -175,7 +173,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   }
 }
 
- #pragma mark - Helpers
+#pragma mark - Helpers
 
 - (BOOL)isValidCallbackURL:(NSURL *)url
 {
@@ -205,7 +203,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   return parsedURLQuery;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -216,7 +214,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   return self;
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -315,7 +313,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   return parameters;
 }
 
- #pragma mark - FBSDKWebDialogDelegate
+#pragma mark - FBSDKWebDialogDelegate
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -344,7 +342,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [self _didCancel];
 }
 
- #pragma mark - FBSDKBridgeAPI
+#pragma mark - FBSDKBridgeAPI
 
 - (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary<NSString *, id> *)parameters
 {
@@ -394,7 +392,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [self _didCompleteWithResults:response.responseParameters];
 }
 
- #pragma mark - Response Handling
+#pragma mark - Response Handling
 
 - (void)_didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -448,7 +446,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_cleanUp
 {

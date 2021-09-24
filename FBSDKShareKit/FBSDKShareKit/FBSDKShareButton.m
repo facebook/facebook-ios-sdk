@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKShareButton.h"
+#import "FBSDKShareButton.h"
 
- #import "FBSDKShareDialog.h"
+#import "FBSDKShareDialog.h"
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonImpression = @"fb_share_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_did_tap";
@@ -33,7 +31,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
 
 @implementation FBSDKShareButton
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (id<FBSDKSharingContent>)shareContent
 {
@@ -46,7 +44,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   [self checkImplicitlyDisabled];
 }
 
- #pragma mark - FBSDKButtonImpressionTracking
+#pragma mark - FBSDKButtonImpressionTracking
 
 - (NSDictionary<NSString *, id> *)analyticsParameters
 {
@@ -63,7 +61,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   return @"share";
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (void)configureButton
 {
@@ -90,7 +88,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   return ![_dialog canShow] || ![_dialog validateWithError:NULL];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_share:(id)sender
 {

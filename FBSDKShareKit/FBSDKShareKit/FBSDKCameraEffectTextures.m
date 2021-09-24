@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKCameraEffectTextures.h"
+#import "FBSDKCameraEffectTextures.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKShareUtility.h"
+#import "FBSDKShareUtility.h"
 
 static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
@@ -34,7 +32,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 @implementation FBSDKCameraEffectTextures
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -59,7 +57,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return _textures;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -82,7 +80,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return [FBSDKInternalUtility.sharedUtility object:_textures isEqualToObject:[object allTextures]];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -103,7 +101,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   [encoder encodeObject:_textures forKey:FBSDKCameraEffectTexturesTexturesKey];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -112,7 +110,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return copy;
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_setValue:(id)value forKey:(NSString *)key
 {

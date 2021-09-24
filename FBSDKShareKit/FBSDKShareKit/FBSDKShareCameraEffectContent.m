@@ -16,19 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKShareCameraEffectContent+Internal.h"
+#import "FBSDKShareCameraEffectContent+Internal.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCameraEffectArguments+Internal.h"
- #import "FBSDKCameraEffectTextures+Internal.h"
- #import "FBSDKHasher.h"
- #import "FBSDKHashtag.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKCameraEffectArguments+Internal.h"
+#import "FBSDKCameraEffectTextures+Internal.h"
+#import "FBSDKHasher.h"
+#import "FBSDKHashtag.h"
+#import "FBSDKShareUtility.h"
 
 static NSString *const kFBSDKShareCameraEffectContentEffectIDKey = @"effectID";
 static NSString *const kFBSDKShareCameraEffectContentEffectArgumentsKey = @"effectArguments";
@@ -49,7 +47,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 @implementation FBSDKShareCameraEffectContent
 
- #pragma mark - Instance Properties
+#pragma mark - Instance Properties
 
 @synthesize effectID = _effectID;
 @synthesize effectArguments = _effectArguments;
@@ -62,7 +60,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 @synthesize pageID = _pageID;
 @synthesize shareUUID = _shareUUID;
 
- #pragma mark - Class Properties
+#pragma mark - Class Properties
 
 static BOOL _hasBeenConfigured;
 
@@ -88,7 +86,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   _internalUtility = internalUtility;
 }
 
- #pragma mark - Class Configuration
+#pragma mark - Class Configuration
 
 + (void)configureWithInternalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
 {
@@ -105,7 +103,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   [self configureWithInternalUtility:FBSDKInternalUtility.sharedUtility];
 }
 
- #if FBTEST
+#if FBTEST
 
 + (void)resetClassDependencies
 {
@@ -113,9 +111,9 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   self.hasBeenConfigured = NO;
 }
 
- #endif
+#endif
 
- #pragma mark - Initializer
+#pragma mark - Initializer
 
 - (instancetype)init
 {
@@ -128,7 +126,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return self;
 }
 
- #pragma mark - FBSDKSharingContent
+#pragma mark - FBSDKSharingContent
 
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
@@ -174,7 +172,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return updatedParameters;
 }
 
- #pragma mark - FBSDKSharingScheme
+#pragma mark - FBSDKSharingScheme
 
 - (NSString *)schemeForMode:(FBSDKShareDialogMode)mode
 {
@@ -187,7 +185,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return nil;
 }
 
- #pragma mark - FBSDKSharingValidation
+#pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
@@ -206,7 +204,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return YES;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -262,7 +260,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return [object isEqual:other];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -300,7 +298,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   [encoder encodeObject:_shareUUID forKey:kFBSDKShareCameraEffectContentUUIDKey];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

@@ -26,7 +26,6 @@
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharing.h"
 #import "FBSDKSharingContent.h"
-#import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
  #import "FBSDKAppGroupContent.h"

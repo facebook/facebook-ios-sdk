@@ -16,14 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKGameRequestFrictionlessRecipientCache.h"
+#import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKGameRequestFrictionlessRecipientCache ()
 @property (nonatomic) NSSet *recipientIDs;
@@ -31,7 +29,7 @@
 
 @implementation FBSDKGameRequestFrictionlessRecipientCache
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -50,7 +48,7 @@
   [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
- #pragma mark - Public API
+#pragma mark - Public API
 
 - (BOOL)recipientsAreFrictionless:(id)recipients
 {
@@ -77,7 +75,7 @@
   }
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
