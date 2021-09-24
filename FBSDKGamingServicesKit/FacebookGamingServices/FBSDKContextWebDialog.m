@@ -15,17 +15,16 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
- #import "FBSDKContextWebDialog.h"
+#import "FBSDKContextWebDialog.h"
 
- #import <Foundation/Foundation.h>
- #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKGamingContext.h"
+#import "FBSDKGamingContext.h"
 
 @implementation FBSDKContextWebDialog
 
@@ -50,7 +49,7 @@
   return false;
 }
 
- #pragma mark - FBSDKWebDialogDelegate
+#pragma mark - FBSDKWebDialogDelegate
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
@@ -82,7 +81,7 @@
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
 {

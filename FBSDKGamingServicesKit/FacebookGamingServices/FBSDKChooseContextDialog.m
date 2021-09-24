@@ -16,31 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKChooseContextDialog.h"
+#import "FBSDKChooseContextDialog.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKChooseContextContent.h"
- #import "FBSDKGamingContext.h"
+#import "FBSDKChooseContextContent.h"
+#import "FBSDKGamingContext.h"
 
 // Deeplink url constants
- #define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
- #define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
- #define FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH @"/dialog/choosecontext/%@/"
- #define FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH @"/dialog/choosecontext/"
+#define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
+#define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
+#define FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH @"/dialog/choosecontext/%@/"
+#define FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH @"/dialog/choosecontext/"
 
- #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY @"filter"
- #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY @"min_size"
- #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY @"max_size"
- #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY @"app_id"
- #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY @"params"
- #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY @"path"
- #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
- #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
+#define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY @"filter"
+#define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY @"min_size"
+#define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY @"max_size"
+#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY @"app_id"
+#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY @"params"
+#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY @"path"
+#define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
+#define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
 @end
@@ -121,7 +119,7 @@
   return [self.dialogContent validateWithError:errorRef];
 }
 
- #pragma mark - Helpers
+#pragma mark - Helpers
 
 - (void)_handleDialogError:(NSError *)dialogError
 {
@@ -209,7 +207,7 @@
   return FBSDKGamingContext.currentContext;
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication

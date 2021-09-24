@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKSwitchContextContent.h"
+#import "FBSDKSwitchContextContent.h"
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
- #define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
+#define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
 
 @interface FBSDKSwitchContextContent () <NSCopying, NSObject>
 @end
@@ -39,7 +37,7 @@
   return self;
 }
 
- #pragma mark - FBSDKSharingValidation
+#pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
@@ -56,7 +54,7 @@
   return YES;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -88,7 +86,7 @@
     && [FBSDKInternalUtility.sharedUtility object:self.contextTokenID isEqualToObject:content.contextTokenID]);
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -108,7 +106,7 @@
   [encoder encodeObject:self.contextTokenID forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
