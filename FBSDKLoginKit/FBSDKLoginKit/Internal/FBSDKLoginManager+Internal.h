@@ -31,6 +31,8 @@
 
  #import "FBSDKLoginProviding.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManagerLogger;
@@ -51,10 +53,10 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 };
 
 @interface FBSDKLoginManager () <FBSDKURLOpening, FBSDKLoginProviding>
-@property (nonatomic, weak) UIViewController *fromViewController;
-@property (nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
-@property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
-@property (nonatomic, strong) FBSDKLoginConfiguration *config;
+@property (nullable, nonatomic, weak) UIViewController *fromViewController;
+@property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
+@property (nullable, nonatomic, strong) FBSDKLoginManagerLogger *logger;
+@property (nullable, nonatomic, strong) FBSDKLoginConfiguration *config;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
 
@@ -66,10 +68,10 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)logIn;
 
 // made available for testing only
-- (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                                                      loggingToken:(NSString *)loggingToken
-                                                            logger:(FBSDKLoginManagerLogger *)logger
-                                                        authMethod:(NSString *)authMethod;
+- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(nullable FBSDKLoginConfiguration *)configuration
+                                                               loggingToken:(NSString *)loggingToken
+                                            logger:(FBSDKLoginManagerLogger *)logger
+                                        authMethod:(NSString *)authMethod;
 // made available for testing only
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
@@ -80,12 +82,14 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // available to internal modules
 - (void)handleImplicitCancelOfLogIn;
-- (void)invokeHandler:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
+- (void)invokeHandler:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error;
 - (BOOL)validateLoginStartState;
 - (BOOL)isPerformingLogin;
 + (NSString *)stringForChallenge;
-- (void)storeExpectedChallenge:(NSString *)expectedChallenge;
+- (void)storeExpectedChallenge:(nullable NSString *)expectedChallenge;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END
