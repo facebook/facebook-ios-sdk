@@ -42,7 +42,7 @@ NS_SWIFT_NAME(Settings)
 /**
  Retrieve the current iOS SDK version.
  */
-@property (class, nonatomic, readonly, copy) NSString *sdkVersion DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings sdkVersion]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] sdkVersion]`");
+@property (class, nonatomic, readonly, copy) NSString *sdkVersion DEPRECATED_MSG_ATTRIBUTE("`Settings.sdkVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.sdkVersion` instead");
 
 /**
  Retrieve the current default Graph API version.
@@ -114,14 +114,21 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
-@property (class, nullable, nonatomic, copy) NSString *appID DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings appID]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] appID]`");
+@property (class, nullable, nonatomic, copy) NSString *appID DEPRECATED_MSG_ATTRIBUTE("`Settings.appID` is deprecated and will be removed in the next major release, please use `Settings.shared.appID` instead");
 
 /**
   The default url scheme suffix used for sessions.
 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
-@property (class, nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
+@property (class, nonatomic, copy, nullable) NSString *appURLSchemeSuffix DEPRECATED_MSG_ATTRIBUTE("`Settings.appURLSchemeSuffix` is deprecated and will be removed in the next major release, please use `Settings.shared.appURLSchemeSuffix` instead");
+
+/**
+  The default url scheme suffix used for sessions.
+
+ If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
+ */
+@property (nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
 
 /**
   The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
@@ -143,7 +150,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
  */
-@property (class, nullable, nonatomic, copy) NSString *clientToken DEPRECATED_MSG_ATTRIBUTE("`[FBSDKSettings clientToken]` will be deprecated in the next major SDK release version; please use `[[FBSDKSettings shareSettings] clientToken]`");
+@property (class, nullable, nonatomic, copy) NSString *clientToken DEPRECATED_MSG_ATTRIBUTE("`Settings.clientToken` is deprecated and will be removed in the next major release, please use `Settings.shared.clientToken` instead");
 /**
   The Facebook Display Name used by the SDK.
 

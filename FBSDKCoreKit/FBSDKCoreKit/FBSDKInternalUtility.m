@@ -111,7 +111,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 - (NSString *)appURLScheme
 {
   NSString *appID = (FBSDKSettings.sharedSettings.appID ?: @"");
-  NSString *suffix = ([FBSDKSettings appURLSchemeSuffix] ?: @"");
+  NSString *suffix = (FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @"");
   return [[NSString alloc] initWithFormat:@"fb%@%@", appID, suffix];
 }
 
@@ -495,7 +495,7 @@ static NSMapTable *_transientObjects;
 - (void)validateURLSchemes
 {
   [self validateAppID];
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, [FBSDKSettings appURLSchemeSuffix] ?: @""];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
   if (![self isRegisteredURLScheme:defaultUrlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is not registered as a URL scheme. Please add it in your Info.plist", defaultUrlScheme];
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];

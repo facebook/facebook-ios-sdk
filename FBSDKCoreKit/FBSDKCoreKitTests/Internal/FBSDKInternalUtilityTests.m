@@ -332,7 +332,7 @@
 - (void)testAppURLSchemeWithMissingAppIdMissingSuffix
 {
   FBSDKSettings.sharedSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility.sharedUtility appURLScheme],
@@ -344,7 +344,7 @@
 - (void)testAppURLSchemeWithMissingAppIdInvalidSuffix
 {
   FBSDKSettings.sharedSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = @"   ";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"   ";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility.sharedUtility appURLScheme],
@@ -356,7 +356,7 @@
 - (void)testAppURLSchemeWithMissingAppIdValidSuffix
 {
   FBSDKSettings.sharedSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility.sharedUtility appURLScheme],
@@ -368,7 +368,7 @@
 - (void)testAppURLSchemeWithInvalidAppIdMissingSuffix
 {
   FBSDKSettings.sharedSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
 
   // This is not desired behavior but accurately reflects what is currently written.
@@ -382,8 +382,8 @@
 - (void)testAppURLSchemeWithInvalidAppIdInvalidSuffix
 {
   FBSDKSettings.sharedSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = @" ";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @" ";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -396,8 +396,8 @@
 - (void)testAppURLSchemeWithInvalidAppIdValidSuffix
 {
   FBSDKSettings.sharedSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
-  NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -410,7 +410,7 @@
 - (void)testAppURLSchemeWithValidAppIdMissingSuffix
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
 
   XCTAssertEqualObjects(
@@ -423,8 +423,8 @@
 - (void)testAppURLSchemeWithValidAppIdInvalidSuffix
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"   ";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"   ";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -437,8 +437,8 @@
 - (void)testAppURLSchemeWithValidAppIdValidSuffix
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   XCTAssertEqualObjects(
     [FBSDKInternalUtility.sharedUtility appURLScheme],
@@ -452,7 +452,7 @@
 - (void)testAppUrlWithEmptyHost
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
 
@@ -462,7 +462,7 @@
 - (void)testAppUrlWithValidHost
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
 
@@ -1090,7 +1090,7 @@
 {
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
 
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbappid"]];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
@@ -1104,7 +1104,7 @@
 - (void)testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry
 {
   FBSDKSettings.sharedSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
 
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb123"]];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];

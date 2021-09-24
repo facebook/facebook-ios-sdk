@@ -745,7 +745,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqual(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     urlSchemeSuffix,
     "A developer should be able to set any string as the url scheme suffix"
   );
@@ -754,7 +754,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testURLSchemeSuffixFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     "A url scheme suffix should not have a default value if it is not available in the plist"
   );
 }
@@ -765,7 +765,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     emptyString,
     "Should not use an empty string as a url scheme suffix but it will"
   );
@@ -777,14 +777,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookUrlSchemeSuffix" : urlSchemeSuffix}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     @"foo",
     "Settings should return the explicitly set url scheme suffix over one gleaned from a plist entry"
   );
@@ -792,14 +792,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingURLSchemeSuffixWithoutPlistEntry
 {
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     @"foo",
     "Settings should return the explicitly set url scheme suffix"
   );
@@ -807,14 +807,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyURLSchemeSuffix
 {
-  FBSDKSettings.appURLSchemeSuffix = emptyString;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     emptyString,
     "Should not store an empty url scheme suffix but it will"
   );
@@ -822,14 +822,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyURLSchemeSuffix
 {
-  FBSDKSettings.appURLSchemeSuffix = whiteSpaceToken;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.appURLSchemeSuffix,
+    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
     whiteSpaceToken,
     "Should not store a whitespace only url scheme suffix but it will"
   );
@@ -837,11 +837,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testURLSchemeSuffixInternalStorage
 {
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.appURLSchemeSuffix, "sanity check");
+  XCTAssertNotNil(FBSDKSettings.sharedSettings.appURLSchemeSuffix, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
