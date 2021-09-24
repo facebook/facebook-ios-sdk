@@ -143,7 +143,8 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
                                                                          store:self.store
                                                      authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                profileProvider:TestProfileProvider.class
-                                                         backgroundEventLogger:self.backgroundEventLogger];
+                                                         backgroundEventLogger:self.backgroundEventLogger
+                                                               paymentObserver:[TestPaymentObserver new]];
   self.delegate.isAppLaunched = NO;
 
   [self.delegate resetApplicationObserverCache];
@@ -233,7 +234,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     self.appEvents.capturedConfigurePaymentObserver,
-    FBSDKPaymentObserver.shared,
+    self.delegate.paymentObserver,
     "Initializing the SDK should set concrete payment observer for event logging"
   );
   XCTAssertTrue(

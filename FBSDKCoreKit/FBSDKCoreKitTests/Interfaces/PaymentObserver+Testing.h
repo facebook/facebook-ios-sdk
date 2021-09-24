@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
       paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory
 NS_SWIFT_NAME(init(paymentQueue:paymentProductRequestorFactory:));
 
-+ (void)reset;
-
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions;
 
 @end

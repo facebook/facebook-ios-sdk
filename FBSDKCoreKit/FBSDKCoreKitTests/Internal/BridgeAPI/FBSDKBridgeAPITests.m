@@ -64,7 +64,8 @@
                                                                                               store:[UserDefaultsSpy new]
                                                                           authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                                     profileProvider:TestProfileProvider.class
-                                                                              backgroundEventLogger:backgroundEventLogger];
+                                                                              backgroundEventLogger:backgroundEventLogger
+                                                                                    paymentObserver:[TestPaymentObserver new]];
   [delegate initializeSDKWithLaunchOptions:@{}];
 }
 

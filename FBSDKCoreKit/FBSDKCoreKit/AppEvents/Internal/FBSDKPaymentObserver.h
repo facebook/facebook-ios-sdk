@@ -27,8 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(PaymentObserver)
 @interface FBSDKPaymentObserver : NSObject
 
-@property (class, nonatomic) FBSDKPaymentObserver *shared;
-
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 

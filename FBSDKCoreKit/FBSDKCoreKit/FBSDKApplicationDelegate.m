@@ -114,6 +114,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
+@property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
@@ -160,6 +161,10 @@ static UIApplicationState _applicationState;
 #else
   FBSDKBackgroundEventLogger *backgroundEventLogger = [[FBSDKBackgroundEventLogger alloc] initWithInfoDictionaryProvider:NSBundle.mainBundle
                                                                                                              eventLogger:FBSDKAppEvents.shared];
+  id<FBSDKPaymentObserving> paymentObserver = [[FBSDKPaymentObserver alloc]
+                                               initWithPaymentQueue:SKPaymentQueue.defaultQueue
+                                               paymentProductRequestorFactory:[FBSDKPaymentProductRequestorFactory new]];
+
   return [self initWithNotificationCenter:NSNotificationCenter.defaultCenter
                               tokenWallet:FBSDKAccessToken.class
                                  settings:FBSDKSettings.sharedSettings
@@ -169,7 +174,8 @@ static UIApplicationState _applicationState;
                                     store:NSUserDefaults.standardUserDefaults
                 authenticationTokenWallet:FBSDKAuthenticationToken.class
                           profileProvider:FBSDKProfile.class
-                    backgroundEventLogger:backgroundEventLogger];
+                    backgroundEventLogger:backgroundEventLogger
+                          paymentObserver:paymentObserver];
 #endif
 }
 
@@ -209,6 +215,7 @@ static UIApplicationState _applicationState;
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                            profileProvider:(Class<FBSDKProfileProviding>)profileProvider
                      backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
+                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
 {
   if ((self = [super init])) {
     _applicationObservers = [NSHashTable new];
@@ -223,6 +230,7 @@ static UIApplicationState _applicationState;
     _profileProvider = profileProvider;
     _backgroundEventLogger = backgroundEventLogger;
     _accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:notificationCenter];
+    _paymentObserver = paymentObserver;
   }
   return self;
 }
@@ -654,8 +662,6 @@ static UIApplicationState _applicationState;
                                                                          graphRequestFactory:graphRequestFactory
                                                                                     settings:sharedSettings
                                                                                 crashHandler:sharedCrashHandler];
-  FBSDKPaymentObserver.shared = [[FBSDKPaymentObserver alloc] initWithPaymentQueue:SKPaymentQueue.defaultQueue
-                                                    paymentProductRequestorFactory:[FBSDKPaymentProductRequestorFactory new]];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
@@ -697,7 +703,7 @@ static UIApplicationState _applicationState;
                                            store:store
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
-                                 paymentObserver:FBSDKPaymentObserver.shared
+                                 paymentObserver:self.paymentObserver
                         timeSpentRecorderFactory:timeSpentRecordingFactory
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
              eventDeactivationParameterProcessor:eventDeactivationManager

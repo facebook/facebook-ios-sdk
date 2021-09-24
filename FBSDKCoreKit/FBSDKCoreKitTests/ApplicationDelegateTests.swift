@@ -45,6 +45,7 @@ class ApplicationDelegateTests: XCTestCase {
     linkURL: nil,
     refreshDate: nil
   )
+  let paymentObserver = TestPaymentObserver()
 
   override class func setUp() {
     super.setUp()
@@ -66,7 +67,8 @@ class ApplicationDelegateTests: XCTestCase {
       store: store,
       authenticationTokenWallet: TestAuthenticationTokenWallet.self,
       profileProvider: TestProfileProvider.self,
-      backgroundEventLogger: backgroundEventLogger
+      backgroundEventLogger: backgroundEventLogger,
+      paymentObserver: paymentObserver
     )
   }
 
@@ -85,42 +87,47 @@ class ApplicationDelegateTests: XCTestCase {
   }
 
   func testDefaultDependencies() {
+    delegate = ApplicationDelegate.shared
+
     XCTAssertEqual(
-      ApplicationDelegate.shared.notificationObserver as? NotificationCenter,
+      delegate.notificationObserver as? NotificationCenter,
       NotificationCenter.default,
       "Should use the default system notification center"
     )
     XCTAssertTrue(
-      ApplicationDelegate.shared.tokenWallet is AccessToken.Type,
+      delegate.tokenWallet is AccessToken.Type,
       "Should use the expected default access token setter"
     )
     XCTAssertEqual(
-      ApplicationDelegate.shared.featureChecker as? FeatureManager,
+      delegate.featureChecker as? FeatureManager,
       FeatureManager.shared,
       "Should use the default feature checker"
     )
     XCTAssertEqual(
-      ApplicationDelegate.shared.appEvents as? AppEvents,
+      delegate.appEvents as? AppEvents,
       AppEvents.shared,
       "Should use the expected default app events instance"
     )
     XCTAssertTrue(
-      ApplicationDelegate.shared.serverConfigurationProvider is ServerConfigurationManager,
+      delegate.serverConfigurationProvider is ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertEqual(
-      ApplicationDelegate.shared.store as? UserDefaults,
+      delegate.store as? UserDefaults,
       UserDefaults.standard,
       "Should use the expected default persistent store"
     )
     XCTAssertTrue(
-      ApplicationDelegate.shared.authenticationTokenWallet is AuthenticationToken.Type,
+      delegate.authenticationTokenWallet is AuthenticationToken.Type,
       "Should use the expected default access token setter"
     )
-    XCTAssertEqual(
-      ApplicationDelegate.shared.settings as? Settings,
-      Settings.shared,
+    XCTAssertTrue(
+      delegate.settings === Settings.shared,
       "Should use the expected default settings"
+    )
+    XCTAssertTrue(
+      delegate.paymentObserver is PaymentObserver,
+      "Should use the expected concrete payment observer"
     )
   }
 
@@ -433,11 +440,10 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
-  func testInitialiingCreatesSharedPaymentObserver() {
-    PaymentObserver.reset()
-    delegate.initializeSDK()
-
-    let observer = PaymentObserver.shared
+  func testInitializingCreatesPaymentObserver() throws {
+    let observer = try XCTUnwrap(
+      ApplicationDelegate.shared.paymentObserver as? PaymentObserver
+    )
 
     XCTAssertEqual(
       observer.paymentQueue,

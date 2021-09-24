@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKProfileProviding;
 @protocol FBSDKTimeSpentRecording;
 @protocol FBSDKDataPersisting;
+@protocol FBSDKPaymentObserving;
 @class FBSDKAccessTokenExpirer;
 
 @interface FBSDKApplicationDelegate (Testing)
@@ -53,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKSettingsLogging> settings;
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
+@property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 
 + (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
@@ -66,7 +68,8 @@ NS_SWIFT_NAME(reset());
                                      store:(id<FBSDKDataPersisting>)store
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                            profileProvider:(Class<FBSDKProfileProviding>)profileProvider
-                     backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger;
+                     backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
+                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
