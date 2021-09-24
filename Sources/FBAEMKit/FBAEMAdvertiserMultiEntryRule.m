@@ -16,13 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBAEMAdvertiserMultiEntryRule.h"
+#import "FBAEMAdvertiserMultiEntryRule.h"
 
- #import "FBAEMAdvertiserSingleEntryRule.h"
+#import "FBAEMAdvertiserSingleEntryRule.h"
 
 static NSString *const OPERATOR_KEY = @"operator";
 static NSString *const RULES_KEY = @"rules";
@@ -39,7 +37,7 @@ static NSString *const RULES_KEY = @"rules";
   return self;
 }
 
- #pragma mark - FBAEMAdvertiserRuleMatching
+#pragma mark - FBAEMAdvertiserRuleMatching
 
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
 {
@@ -68,7 +66,7 @@ static NSString *const RULES_KEY = @"rules";
   }
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -89,7 +87,7 @@ static NSString *const RULES_KEY = @"rules";
   [encoder encodeObject:_rules forKey:RULES_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {

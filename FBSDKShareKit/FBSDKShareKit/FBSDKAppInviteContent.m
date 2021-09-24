@@ -16,20 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKAppInviteContent.h"
+#import "FBSDKAppInviteContent.h"
 
- #import "FBSDKHasher.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKHasher.h"
+#import "FBSDKShareUtility.h"
 
- #define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
- #define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
- #define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
- #define FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY @"promoText"
- #define FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY @"destination"
+#define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
+#define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
+#define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
+#define FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY @"promoText"
+#define FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY @"destination"
 
 @implementation FBSDKAppInviteContent
 
@@ -43,7 +41,7 @@
   self.appInvitePreviewImageURL = previewImageURL;
 }
 
- #pragma mark - FBSDKSharingValidation
+#pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
@@ -96,7 +94,7 @@
   return YES;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -131,7 +129,7 @@
   );
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -162,7 +160,7 @@
   [encoder encodeInt:(int)_destination forKey:FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

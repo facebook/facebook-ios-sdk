@@ -16,25 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #include <cassert>
- #include <cmath>
- #include <cstring>
- #include <iostream>
- #include <memory>
- #include <unordered_map>
- #include <vector>
+#include <cassert>
+#include <cmath>
+#include <cstring>
+#include <iostream>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
- #include <stddef.h>
- #include <stdint.h>
+#include <stddef.h>
+#include <stdint.h>
 
- #import <Accelerate/Accelerate.h>
+#import <Accelerate/Accelerate.h>
 
 // minimal aten implementation
- #define MAT_ALWAYS_INLINE inline __attribute__((always_inline))
+#define MAT_ALWAYS_INLINE inline __attribute__((always_inline))
 namespace fbsdk {
   static void *MAllocateMemory(size_t nbytes)
   {

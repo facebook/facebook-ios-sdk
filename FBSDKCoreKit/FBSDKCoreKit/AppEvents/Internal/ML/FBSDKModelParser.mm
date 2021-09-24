@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKModelParser.h"
+#import "FBSDKModelParser.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKMLMacros.h"
+#import "FBSDKMLMacros.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -106,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
   return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
 
- #pragma mark - private methods
+#pragma mark - private methods
 
 + (NSDictionary<NSString *, NSString *> *)getKeysMapping
 {

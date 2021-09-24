@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPI.h"
+#import "FBSDKBridgeAPI.h"
 
- #import "FBSDKApplicationLifecycleNotifications.h"
- #import "FBSDKBridgeAPIResponseCreating.h"
- #import "FBSDKBridgeAPIResponseFactory.h"
- #import "FBSDKContainerViewController.h"
- #import "FBSDKDynamicFrameworkLoader.h"
- #import "FBSDKError+Internal.h"
- #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
- #import "FBSDKLogger+Internal.h"
- #import "FBSDKOperatingSystemVersionComparing.h"
- #import "NSProcessInfo+Protocols.h"
- #import "UIApplication+URLOpener.h"
+#import "FBSDKApplicationLifecycleNotifications.h"
+#import "FBSDKBridgeAPIResponseCreating.h"
+#import "FBSDKBridgeAPIResponseFactory.h"
+#import "FBSDKContainerViewController.h"
+#import "FBSDKDynamicFrameworkLoader.h"
+#import "FBSDKError+Internal.h"
+#import "FBSDKInternalUtility+AppURLSchemeProviding.h"
+#import "FBSDKLogger+Internal.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
+#import "NSProcessInfo+Protocols.h"
+#import "UIApplication+URLOpener.h"
 
 /**
  Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
@@ -60,12 +58,12 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @end
 
- #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-  #import <AuthenticationServices/AuthenticationServices.h>
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+ #import <AuthenticationServices/AuthenticationServices.h>
 @interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate, ASWebAuthenticationPresentationContextProviding>
- #else
+#else
 @interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate>
- #endif
+#endif
 
 @property (nonnull, nonatomic) FBSDKLogger *logger;
 @property (nonatomic, readonly) id<FBSDKInternalURLOpener> urlOpener;
@@ -288,8 +286,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     || _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem);
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
 {
   _expectingBackground = YES;
@@ -327,7 +325,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 #endif
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
 - (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
      useSafariViewController:(BOOL)useSafariViewController
@@ -494,7 +492,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   return _authenticationSessionCompletionHandler;
 }
 
- #pragma mark -- SFSafariViewControllerDelegate
+#pragma mark -- SFSafariViewControllerDelegate
 
 // This means the user tapped "Done" which we should treat as a cancellation.
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController
@@ -513,7 +511,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   _safariViewController = nil;
 }
 
- #pragma mark -- FBSDKContainerViewControllerDelegate
+#pragma mark -- FBSDKContainerViewControllerDelegate
 
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated
 {
@@ -525,7 +523,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   }
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
 {
@@ -575,23 +573,23 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   _pendingRequestCompletionBlock = NULL;
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
- #pragma mark - ASWebAuthenticationPresentationContextProviding
- #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma mark - ASWebAuthenticationPresentationContextProviding
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 - (ASPresentationAnchor)presentationAnchorForWebAuthenticationSession:(ASWebAuthenticationSession *)session API_AVAILABLE(ios(13.0))
 {
- #else
+#else
 - (UIWindow *)presentationAnchorForWebAuthenticationSession:(id<FBSDKAuthenticationSession>)session API_AVAILABLE(ios(11.0)) {
 #endif
   return UIApplication.sharedApplication.keyWindow;
 }
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
- #pragma mark - Testability
+#pragma mark - Testability
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (id<FBSDKAuthenticationSession>)authenticationSession
 {
@@ -693,8 +691,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   return _processInfo;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

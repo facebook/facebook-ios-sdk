@@ -16,22 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #include <unordered_map>
+#include <unordered_map>
 
- #include <float.h>
- #include <math.h>
- #include <stdint.h>
+#include <float.h>
+#include <math.h>
+#include <stdint.h>
 
- #import <Accelerate/Accelerate.h>
+#import <Accelerate/Accelerate.h>
 
- #include "FBSDKTensor.hpp"
+#include "FBSDKTensor.hpp"
 
- #define SEQ_LEN 128
- #define DENSE_FEATURE_LEN 30
+#define SEQ_LEN 128
+#define DENSE_FEATURE_LEN 30
 
 namespace fbsdk {
   static void relu(MTensor &x)

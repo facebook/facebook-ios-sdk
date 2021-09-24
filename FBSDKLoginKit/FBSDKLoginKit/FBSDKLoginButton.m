@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginButton.h"
+#import "FBSDKLoginButton.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLoginManager+Internal.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKNonceUtility.h"
+#import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginTooltipView.h"
+#import "FBSDKNonceUtility.h"
 
 static const CGFloat kFBLogoSize = 16.0;
 static const CGFloat kFBLogoLeftMargin = 6.0;
@@ -51,14 +49,14 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   id<FBSDKGraphRequestFactory> _graphRequestFactory;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
 - (void)dealloc
 {
   [self _unsubscribeFromNotifications];
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (FBSDKDefaultAudience)defaultAudience
 {
@@ -99,7 +97,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
 }
 
- #pragma mark - UIView
+#pragma mark - UIView
 
 - (void)didMoveToWindow
 {
@@ -112,7 +110,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
 }
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
 {
@@ -166,7 +164,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (void)configureButton
 {
@@ -198,7 +196,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   [self _updateNotificationObservers];
 }
 
- #pragma mark - Helper Methods
+#pragma mark - Helper Methods
 
 - (void)_unsubscribeFromNotifications
 {
@@ -470,8 +468,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 // MARK: - Testability
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 - (NSString *)userName
 {
@@ -493,8 +491,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   _graphRequestFactory = graphRequestFactory;
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

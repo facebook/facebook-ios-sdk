@@ -16,29 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKModelManager.h"
- #import "FBSDKModelManager+IntegrityProcessing.h"
+#import "FBSDKModelManager.h"
+#import "FBSDKModelManager+IntegrityProcessing.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAppEvents+Internal.h"
- #import "FBSDKAppEventsParameterProcessing.h"
- #import "FBSDKDataPersisting.h"
- #import "FBSDKFeatureChecking.h"
- #import "FBSDKFeatureExtractor.h"
- #import "FBSDKGateKeeperManaging.h"
- #import "FBSDKGraphRequestFactoryProtocol.h"
- #import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
- #import "FBSDKMLMacros.h"
- #import "FBSDKModelParser.h"
- #import "FBSDKModelRuntime.hpp"
- #import "FBSDKModelUtility.h"
- #import "FBSDKSettingsProtocol.h"
- #import "FBSDKSuggestedEventsIndexer.h"
+#import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKDataPersisting.h"
+#import "FBSDKFeatureChecking.h"
+#import "FBSDKFeatureExtractor.h"
+#import "FBSDKGateKeeperManaging.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
+#import "FBSDKMLMacros.h"
+#import "FBSDKModelParser.h"
+#import "FBSDKModelRuntime.hpp"
+#import "FBSDKModelUtility.h"
+#import "FBSDKSettingsProtocol.h"
+#import "FBSDKSuggestedEventsIndexer.h"
 
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
@@ -84,7 +82,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   return instance;
 }
 
- #pragma mark - Dependency Management
+#pragma mark - Dependency Management
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -103,7 +101,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   _gateKeeperManager = gateKeeperManager;
 }
 
- #pragma mark - Public methods
+#pragma mark - Public methods
 
 static dispatch_once_t enableNonce;
 
@@ -205,7 +203,7 @@ static dispatch_once_t enableNonce;
   return modelInfo[THRESHOLDS_KEY];
 }
 
- #pragma mark - Integrity Inferencer method
+#pragma mark - Integrity Inferencer method
 
 // Used by the `integrityParametersProcessor` which holds a weak reference to this instance
 - (BOOL)processIntegrity:(nullable NSString *)param
@@ -239,7 +237,7 @@ static dispatch_once_t enableNonce;
   return ![integrityType isEqualToString:INTEGRITY_NONE];
 }
 
- #pragma mark - SuggestedEvents Inferencer method
+#pragma mark - SuggestedEvents Inferencer method
 
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
 {
@@ -271,7 +269,7 @@ static dispatch_once_t enableNonce;
   return SUGGESTED_EVENT_OTHER;
 }
 
- #pragma mark - Private methods
+#pragma mark - Private methods
 
 + (BOOL)isValidTimestamp:(NSDate *)timestamp
 {
@@ -471,7 +469,7 @@ static dispatch_once_t enableNonce;
     FBSDKAppEventNameInitiatedCheckout];
 }
 
- #if DEBUG && FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -500,7 +498,7 @@ static dispatch_once_t enableNonce;
   _directoryPath = directoryPath;
 }
 
- #endif
+#endif
 
 @end
 
