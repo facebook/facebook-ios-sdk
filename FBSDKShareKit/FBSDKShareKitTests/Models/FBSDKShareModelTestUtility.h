@@ -19,6 +19,8 @@
 #import <UIKit/UIKit.h>
 @import FBSDKShareKit;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ShareModelTestUtility)
 @interface FBSDKShareModelTestUtility : NSObject
 
@@ -58,3 +60,5 @@ NS_SWIFT_NAME(ShareModelTestUtility)
 + (FBSDKShareCameraEffectContent *)cameraEffectContent;
 
 @end
+
+NS_ASSUME_NONNULL_END

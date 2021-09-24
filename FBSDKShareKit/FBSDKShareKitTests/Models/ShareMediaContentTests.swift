@@ -37,10 +37,8 @@ class ShareMediaContentTests: XCTestCase {
   }
 
   func testCopy() {
-    guard
-      let content = ShareModelTestUtility.mediaContent(),
-      let contentCopy = content.copy() as? ShareMediaContent
-    else {
+    let content = ShareModelTestUtility.mediaContent()
+    guard let contentCopy = content.copy() as? ShareMediaContent else {
       XCTFail("Unable to make a copy or casting to 'ShareMediaContent' failed")
       return
     }

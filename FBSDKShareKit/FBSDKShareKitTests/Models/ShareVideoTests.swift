@@ -22,21 +22,16 @@ import XCTest
 class ShareVideoTests: XCTestCase {
 
   func testImageProperties() {
-    guard let video = ShareModelTestUtility.videoWithPreviewPhoto() else {
-      XCTFail("unable to get a 'ShareVideo'")
-      return
-    }
+    let video = ShareModelTestUtility.videoWithPreviewPhoto()
 
     XCTAssertEqual(video.videoURL, ShareModelTestUtility.videoURL())
     XCTAssertEqual(video.previewPhoto, ShareModelTestUtility.photoWithImageURL())
   }
 
   func testCopy() throws {
-    guard
-      let video = ShareModelTestUtility.video(),
-      let videoCopy = video.copy() as? ShareVideo
-    else {
-      XCTFail("unable to get a 'ShareVideo' or make a copy")
+    let video = ShareModelTestUtility.video()
+    guard let videoCopy = video.copy() as? ShareVideo else {
+      XCTFail("unable to make a copy of 'ShareVideo'")
       return
     }
 
@@ -44,12 +39,7 @@ class ShareVideoTests: XCTestCase {
   }
 
   func testCoding() throws {
-    guard
-      let video = ShareModelTestUtility.videoWithPreviewPhoto()
-    else {
-      XCTFail("unable to get a 'ShareVideo'")
-      return
-    }
+    let video = ShareModelTestUtility.videoWithPreviewPhoto()
 
     var unarchivedContent: ShareVideo?
     var data: Data
