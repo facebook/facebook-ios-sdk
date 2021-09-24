@@ -35,7 +35,7 @@ public class TournamentFetcher {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  public func fetchTournaments(completionHandler: @escaping (Result<Tournament, TournamentFetchError>) -> Void) {
+  public func fetchTournaments(completionHandler: @escaping (Result<[Tournament], TournamentFetchError>) -> Void) {
     guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
       return completionHandler(.failure(TournamentFetchError.invalidAuthToken))
     }
@@ -47,20 +47,21 @@ public class TournamentFetcher {
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: "\(accessToken.userID)/tournaments",
       parameters: [:])
+
     request.start { _, result, error in
       if let error = error {
         completionHandler(.failure(.server(error)))
         return
       }
       guard
-        let result = result,
+        let result = result as? [String: Any],
         let data = try? JSONSerialization.data(withJSONObject: result, options: []),
-        let tournament = try? JSONDecoder().decode(Tournament.self, from: data)
+        let graphAPIResponse = try? JSONDecoder().decode(GraphAPIResponse<[Tournament]>.self, from: data)
       else {
         completionHandler(.failure(.decoding))
         return
       }
-      completionHandler(.success(tournament))
+      completionHandler(.success(graphAPIResponse.data))
     }
   }
 }

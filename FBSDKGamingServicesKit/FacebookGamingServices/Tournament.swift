@@ -18,7 +18,9 @@
 
 import Foundation
 
-public struct TournamentDecodingError: Error {}
+public enum TournamentDecodingError: Error {
+  case invalidExpirationDate
+}
 
 public struct Tournament: Codable {
 
@@ -39,11 +41,13 @@ public struct Tournament: Codable {
 
     identifier = try container.decode(String.self, forKey: .identifier)
     let dateStamp = try container.decode(String.self, forKey: .expiration)
-    if let timeInterval = Double(dateStamp) {
-      expiration = Date(timeIntervalSince1970: timeInterval)
+
+    if let expirationDate = DateFormatter.format(ISODateString: dateStamp) {
+      expiration = expirationDate
     } else {
-      throw TournamentDecodingError()
+      throw TournamentDecodingError.invalidExpirationDate
     }
+
     title = try container.decodeIfPresent(String.self, forKey: .title)
     payload = try container.decodeIfPresent(String.self, forKey: .payload)
   }

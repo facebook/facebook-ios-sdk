@@ -19,6 +19,7 @@
 @testable import FacebookGamingServices
 
 import FBSDKCoreKit
+import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -35,9 +36,9 @@ class TournamentFetcherTests: XCTestCase {
   }
 
   enum Values {
-    static let date = Date()
+    static let date = DateFormatter.format(ISODateString: "2021-09-24T18:03:47+0000")
     static let tournamentID = "4227416214015447"
-    static let tournamentEndTime = "\(date.timeIntervalSince1970)"
+    static let tournamentEndTime = "2021-09-24T18:03:47+0000"
     static let tournamentTitle = "test title"
     static let tournamentPayload = "test payload"
   }
@@ -158,6 +159,28 @@ class TournamentFetcherTests: XCTestCase {
     XCTAssert(completionWasInvoked)
   }
 
+  func testHandlingTournamentFetchInvalidGraphResponse() throws {
+    var completionWasInvoked = false
+    fetcher.fetchTournaments { result in
+      switch result {
+      case .failure(let error):
+        guard case .decoding = error else {
+          return XCTFail(
+            "An graph response should complete with a decoding error, instead received: \(error)"
+          )
+        }
+      case .success:
+        XCTFail("Should not succeed")
+      }
+      completionWasInvoked = true
+    }
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+
+    completion(nil, SampleTournamentResults.invalidGraphAPIResponse, nil)
+
+    XCTAssert(completionWasInvoked)
+  }
+
   func testHandlingTournamentFetchResultAndError() throws {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
@@ -203,9 +226,10 @@ class TournamentFetcherTests: XCTestCase {
   }
 
   func testHandlingTournamentFetchValidResult() throws {
+    let date = try XCTUnwrap(Values.date)
     let expectedTournament = Tournament(
       identifier: Values.tournamentID,
-      expiration: Values.date,
+      expiration: date,
       title: Values.tournamentTitle,
       payload: Values.tournamentPayload
     )
@@ -215,7 +239,10 @@ class TournamentFetcherTests: XCTestCase {
       switch result {
       case .failure(let error):
         XCTFail("Unexpected error received: \(error)")
-      case .success(let tournament):
+      case .success(let tournaments):
+        guard let tournament = tournaments.first else {
+          return XCTFail("Tournaments array was empty")
+        }
         XCTAssertEqual(tournament.identifier, expectedTournament.identifier)
         XCTAssertEqual(
           tournament.expiration.timeIntervalSince1970,
@@ -236,22 +263,24 @@ class TournamentFetcherTests: XCTestCase {
 
   enum SampleTournamentResults {
 
-    static let validPartial = [
+    static let validPartial = ["data": [[
       Keys.tournamentTitle: Values.tournamentTitle,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentID: Values.tournamentID
-    ]
+    ]]]
 
-    static let validFull = [
+    static let validFull = ["data": [[
       Keys.tournamentTitle: Values.tournamentTitle,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentPayload: Values.tournamentPayload
-    ]
+    ]]]
 
-    static let missingIdentifier = [
+    static let missingIdentifier = ["data": [[
       Keys.tournamentTitle: Values.tournamentTitle,
       Keys.tournamentEndTime: Values.tournamentEndTime
-    ]
+    ]]]
+
+    static let invalidGraphAPIResponse = ["not_data": []]
   }
 }

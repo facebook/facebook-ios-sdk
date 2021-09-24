@@ -32,7 +32,7 @@ class TournamentTests: XCTestCase {
 
   enum Values {
     static let tournamentID = "4227416214015447"
-    static let tournamentEndTime = "\(Date().timeIntervalSince1970)"
+    static let tournamentEndTime = "2021-09-24T18:03:47+0000"
     static let tournamentTitle = "test title"
     static let tournamentPayload = "test payload"
   }
