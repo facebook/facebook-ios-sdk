@@ -21,6 +21,8 @@
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // login kit
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLogin;
 
@@ -45,55 +47,55 @@ NS_SWIFT_NAME(ServerConfiguration)
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithAppID:(NSString *)appID
-                      appName:(NSString *)appName
+                      appName:(nullable NSString *)appName
           loginTooltipEnabled:(BOOL)loginTooltipEnabled
-             loginTooltipText:(NSString *)loginTooltipText
-             defaultShareMode:(NSString *)defaultShareMode
+             loginTooltipText:(nullable NSString *)loginTooltipText
+             defaultShareMode:(nullable NSString *)defaultShareMode
          advertisingIDEnabled:(BOOL)advertisingIDEnabled
        implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
         codelessEventsEnabled:(BOOL)codelessEventsEnabled
      uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
-         dialogConfigurations:(NSDictionary<NSString *, id> *)dialogConfigurations
-                  dialogFlows:(NSDictionary<NSString *, id> *)dialogFlows
-                    timestamp:(NSDate *)timestamp
-           errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
+         dialogConfigurations:(nullable NSDictionary<NSString *, id> *)dialogConfigurations
+                  dialogFlows:(nullable NSDictionary<NSString *, id> *)dialogFlows
+                    timestamp:(nullable NSDate *)timestamp
+           errorConfiguration:(nullable FBSDKErrorConfiguration *)errorConfiguration
        sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval
                      defaults:(BOOL)defaults
-                 loggingToken:(NSString *)loggingToken
+                 loggingToken:(nullable NSString *)loggingToken
             smartLoginOptions:(FBSDKServerConfigurationSmartLoginOptions)smartLoginOptions
-    smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
-        smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
-                updateMessage:(NSString *)updateMessage
-                eventBindings:(NSArray *)eventBindings
-            restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
-                     AAMRules:(NSDictionary<NSString *, id> *)AAMRules
-       suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+    smartLoginBookmarkIconURL:(nullable NSURL *)smartLoginBookmarkIconURL
+        smartLoginMenuIconURL:(nullable NSURL *)smartLoginMenuIconURL
+                updateMessage:(nullable NSString *)updateMessage
+                eventBindings:(nullable NSArray *)eventBindings
+            restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams
+                     AAMRules:(nullable NSDictionary<NSString *, id> *)AAMRules
+       suggestedEventsSetting:(nullable NSDictionary<NSString *, id> *)suggestedEventsSetting
 NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, assign, readonly, getter=isAdvertisingIDEnabled) BOOL advertisingIDEnabled;
 @property (nonatomic, copy, readonly) NSString *appID;
-@property (nonatomic, copy, readonly) NSString *appName;
+@property (nonatomic, nullable, copy, readonly) NSString *appName;
 @property (nonatomic, assign, readonly, getter=isDefaults) BOOL defaults;
-@property (nonatomic, copy, readonly) NSString *defaultShareMode;
-@property (nonatomic, strong, readonly) FBSDKErrorConfiguration *errorConfiguration;
+@property (nonatomic, nullable, copy, readonly) NSString *defaultShareMode;
+@property (nonatomic, nullable, strong, readonly) FBSDKErrorConfiguration *errorConfiguration;
 @property (nonatomic, assign, readonly, getter=isImplicitLoggingSupported) BOOL implicitLoggingEnabled;
 @property (nonatomic, assign, readonly, getter=isImplicitPurchaseLoggingSupported) BOOL implicitPurchaseLoggingEnabled;
 @property (nonatomic, assign, readonly, getter=isCodelessEventsEnabled) BOOL codelessEventsEnabled;
 @property (nonatomic, assign, readonly, getter=isLoginTooltipEnabled) BOOL loginTooltipEnabled;
 @property (nonatomic, assign, readonly, getter=isUninstallTrackingEnabled) BOOL uninstallTrackingEnabled;
-@property (nonatomic, copy, readonly) NSString *loginTooltipText;
-@property (nonatomic, copy, readonly) NSDate *timestamp;
+@property (nonatomic, nullable, copy, readonly) NSString *loginTooltipText;
+@property (nonatomic, nullable, copy, readonly) NSDate *timestamp;
 @property (nonatomic, assign) NSTimeInterval sessionTimoutInterval;
-@property (nonatomic, copy, readonly) NSString *loggingToken;
+@property (nonatomic, nullable, copy, readonly) NSString *loggingToken;
 @property (nonatomic, assign, readonly) FBSDKServerConfigurationSmartLoginOptions smartLoginOptions;
-@property (nonatomic, copy, readonly) NSURL *smartLoginBookmarkIconURL;
-@property (nonatomic, copy, readonly) NSURL *smartLoginMenuIconURL;
-@property (nonatomic, copy, readonly) NSString *updateMessage;
-@property (nonatomic, copy, readonly) NSArray *eventBindings;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *restrictiveParams;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *AAMRules;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *suggestedEventsSetting;
+@property (nonatomic, nullable, copy, readonly) NSURL *smartLoginBookmarkIconURL;
+@property (nonatomic, nullable, copy, readonly) NSURL *smartLoginMenuIconURL;
+@property (nonatomic, nullable, copy, readonly) NSString *updateMessage;
+@property (nonatomic, nullable, copy, readonly) NSArray *eventBindings;
+@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *restrictiveParams;
+@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *AAMRules;
+@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *suggestedEventsSetting;
 @property (nonatomic, readonly) NSInteger version;
 
 - (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
@@ -101,3 +103,5 @@ NS_DESIGNATED_INITIALIZER;
 - (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
 
 @end
+
+NS_ASSUME_NONNULL_END
