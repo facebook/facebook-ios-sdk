@@ -16,23 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "TargetConditionals.h"
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginManager+Internal.h"
 
- #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKLoginCompletion.h"
- #import "FBSDKLoginConstants.h"
- #import "FBSDKLoginError.h"
- #import "FBSDKLoginManagerLogger.h"
- #import "FBSDKLoginManagerLoginResult+Internal.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKMonotonicTime.h"
- #import "FBSDKPermission.h"
- #import "_FBSDKLoginRecoveryAttempter.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAuthenticationTokenFactory.h"
+#import "FBSDKLoginCompletion.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKLoginError.h"
+#import "FBSDKLoginManagerLogger.h"
+#import "FBSDKLoginManagerLoginResult+Internal.h"
+#import "FBSDKLoginUtility.h"
+#import "FBSDKMonotonicTime.h"
+#import "FBSDKPermission.h"
+#import "_FBSDKLoginRecoveryAttempter.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
@@ -200,7 +200,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
- #pragma mark - Private
+#pragma mark - Private
 
 - (void)handleImplicitCancelOfLogIn
 {
@@ -638,7 +638,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
- #pragma mark - Permissions Helpers
+#pragma mark - Permissions Helpers
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
@@ -661,7 +661,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return recentlyDeclinedPermissions;
 }
 
- #pragma mark - Test Methods
+#pragma mark - Test Methods
 
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
 {
@@ -678,7 +678,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return _configuration;
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
   BOOL isFacebookURL = [self canOpenURL:url forApplication:application sourceApplication:sourceApplication annotation:annotation];

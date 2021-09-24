@@ -16,16 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKReferralManagerLogger.h"
+#import "FBSDKReferralManagerLogger.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLoginConstants.h"
- #import "FBSDKReferralManagerResult.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKReferralManagerResult.h"
 
 static NSString *const FBSDKReferralManagerLoggerParamIdentifierKey = @"0_logger_id";
 static NSString *const FBSDKReferralManagerLoggerParamTimestampKey = @"1_timestamp_ms";

@@ -16,18 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginManagerLogger.h"
+#import "FBSDKLoginManagerLogger.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLoginError.h"
- #import "FBSDKLoginManagerLoginResult+Internal.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKMonotonicTime.h"
+#import "FBSDKLoginError.h"
+#import "FBSDKLoginManagerLoginResult+Internal.h"
+#import "FBSDKLoginUtility.h"
+#import "FBSDKMonotonicTime.h"
 
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Native = @"fb_application_web_auth";
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser = @"browser_auth";
@@ -241,7 +239,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   [FBSDKTypeUtility dictionary:_extras setObject:extra forKey:key];
 }
 
- #pragma mark - Private
+#pragma mark - Private
 
 - (NSString *)identifier
 {

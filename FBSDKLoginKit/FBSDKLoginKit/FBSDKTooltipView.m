@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKTooltipView.h"
+#import "FBSDKTooltipView.h"
 
- #import <CoreText/CoreText.h>
+#import <CoreText/CoreText.h>
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
@@ -43,7 +41,7 @@ static const CGFloat kNUXCrossGlyphSize = 11;
 static CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 
- #pragma mark -
+#pragma mark -
 
 @interface FBSDKTooltipView ()
 
@@ -115,7 +113,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [_insideTapGestureRecognizer removeTarget:self action:NULL];
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (void)setMessage:(NSString *)message
 {
@@ -133,7 +131,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }
 }
 
- #pragma mark Presentation
+#pragma mark Presentation
 
 - (void)presentFromView:(UIView *)anchorView
 {
@@ -194,7 +192,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }];
 }
 
- #pragma mark Style
+#pragma mark Style
 
 - (void)setColorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
@@ -223,8 +221,8 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   _textLabel.textColor = UIColor.whiteColor;
 }
 
- #pragma mark - Private Methods
- #pragma mark Animation
+#pragma mark - Private Methods
+#pragma mark Animation
 
 - (void)animateFadeIn
 {
@@ -306,7 +304,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
                    }];
 }
 
- #pragma mark Gestures
+#pragma mark Gestures
 
 - (void)onTapInTooltip:(UIGestureRecognizer *)sender
 {
@@ -319,7 +317,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [self dismiss];
 }
 
- #pragma mark Drawing
+#pragma mark Drawing
 
 CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius)
 {
@@ -490,7 +488,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CFRelease(crossCloseGlyphPath);
 }
 
- #pragma mark Layout
+#pragma mark Layout
 
 - (void)layoutSubviews
 {
@@ -501,8 +499,8 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self layoutSubviewsAndDetermineFrame];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (CGRect)layoutSubviewsAndDetermineFrame
 {
   // Compute the positioning of the arrow.
@@ -572,9 +570,9 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   );
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
- #pragma mark Message & Tagline
+#pragma mark Message & Tagline
 
 - (void)setMessage:(NSString *)message tagline:(NSString *)tagline
 {
@@ -610,7 +608,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self setNeedsDisplay];
 }
 
- #pragma mark Auto Dismiss Timeout
+#pragma mark Auto Dismiss Timeout
 
 - (void)scheduleAutomaticFadeout
 {

@@ -16,21 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #ifdef BUCK
-  #import <FBSDKLoginKit/FBSDKReferralManager.h>
- #else
-  #import "FBSDKReferralManager.h"
- #endif
+#ifdef BUCK
+ #import <FBSDKLoginKit/FBSDKReferralManager.h>
+#else
+ #import "FBSDKReferralManager.h"
+#endif
 
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
+#if FBSDK_SWIFT_PACKAGE
+ #import <FBSDKCoreKit.h>
+#else
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

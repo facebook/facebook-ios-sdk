@@ -16,22 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginCompletion+Internal.h"
+#import "FBSDKLoginCompletion+Internal.h"
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKAuthenticationTokenCreating.h"
- #import "FBSDKLoginConstants.h"
- #import "FBSDKLoginError.h"
- #import "FBSDKLoginManager+Internal.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKPermission.h"
- #import "FBSDKProfileFactory.h"
+#import "FBSDKAuthenticationTokenCreating.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKLoginError.h"
+#import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginUtility.h"
+#import "FBSDKPermission.h"
+#import "FBSDKProfileFactory.h"
 
 @implementation FBSDKLoginCompletionParameters
 
@@ -50,7 +48,7 @@
 
 @end
 
- #pragma mark - Completers
+#pragma mark - Completers
 
 @interface FBSDKLoginURLCompleter ()
 
@@ -349,8 +347,8 @@ static NSDateFormatter *_dateFormatter;
 
 // MARK: Test Helpers
 
- #if DEBUG
-  #if FBTEST
+#if DEBUG
+ #if FBTEST
 
 + (id<FBSDKProfileCreating>)profileFactory
 {
@@ -372,8 +370,8 @@ static NSDateFormatter *_dateFormatter;
   _profileFactory = [FBSDKProfileFactory new];
 }
 
-  #endif
  #endif
+#endif
 
 @end
 

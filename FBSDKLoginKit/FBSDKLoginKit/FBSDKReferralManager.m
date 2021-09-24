@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
- #import "FBSDKReferralManager+Internal.h"
+#import "FBSDKReferralManager+Internal.h"
 
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKLoginConstants.h"
- #import "FBSDKReferralManagerLogger.h"
- #import "FBSDKReferralManagerResult.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKReferralManagerLogger.h"
+#import "FBSDKReferralManagerResult.h"
 
 static NSString *const FBSDKReferralPath = @"/dialog/share_referral";
 static NSString *const ReferralCodesKey = @"fb_referral_codes";
@@ -185,7 +183,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   return challengeValid;
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
