@@ -81,6 +81,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit-Dynamic:
     type: framework
     platform: iOS
@@ -115,6 +116,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit_TV-Static:
     type: framework
     platform: tvOS
@@ -165,6 +167,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -215,6 +218,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKitTests:
     type: bundle.unit-test
     platform: iOS

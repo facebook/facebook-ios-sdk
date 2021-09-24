@@ -100,6 +100,7 @@
 		301A53D5D64BB813950C54D7 /* FBSDKSocialComposeViewControllerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F3FAC33EAC96EBBE0A83BD86 /* FBSDKSocialComposeViewControllerFactory.h */; };
 		302255F9145A0E919DD415EF /* FBSDKShareLinkContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 62FCBAE4F95AC8A0374BFF4F /* FBSDKShareLinkContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31A78318ADAFCF0A427D4826 /* FBSDKCoreKit_Basics_TV-Dynamic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 521DE2AC8A51546D3D94B215 /* FBSDKCoreKit_Basics_TV-Dynamic.framework */; };
+		32B884EFAEB6B8B7E810FFCB /* FBSDKShareKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */; };
 		35818D96DAC9F0D25E7B2A88 /* FBSDKShareButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 71F506744437CB004A863527 /* FBSDKShareButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35ED606FE54C1615EEC35C00 /* FBSDKHashtag.h in Headers */ = {isa = PBXBuildFile; fileRef = 2931BBF6624C21AD56984829 /* FBSDKHashtag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		361B79CA9361674A720B6D0D /* FBSDKShareVideoContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 476361D501517937DBD9A9E3 /* FBSDKShareVideoContent.m */; };
@@ -118,7 +119,9 @@
 		451162EDE6E2E8C2B8968EE2 /* FBSDKGameRequestURLProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D034C19B57361B3418C2B70 /* FBSDKGameRequestURLProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		456B08DDE40A3DA579BF1DC6 /* FBSDKShareVideoContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 476361D501517937DBD9A9E3 /* FBSDKShareVideoContent.m */; };
 		45E27C07BD92B8F773081938 /* FBSDKCameraEffectArgumentsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1D4BFDC08DEFD7863035E3 /* FBSDKCameraEffectArgumentsTests.m */; };
+		473E3C4FB7F7122A2569B8AE /* FBSDKShareKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */; };
 		496AE9515FADA2210CB516D3 /* FBSDKShareCameraEffectContent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 82E1A686D0718A1712A98688 /* FBSDKShareCameraEffectContent+Internal.h */; };
+		496E59B46D654280C6EC2839 /* FBSDKShareKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */; };
 		4A9770D34F6922DE403CE1E1 /* FBSDKHasher.h in Headers */ = {isa = PBXBuildFile; fileRef = EACCA566611F96F557CB8082 /* FBSDKHasher.h */; };
 		4BF12284A9522708AC646029 /* FBSDKShareDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = C72DD54A5C516FDB507EFA52 /* FBSDKShareDialog.m */; };
 		4C2D5B80E82F12307E774F53 /* FBSDKGameRequestContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B4A9DA50733DF7DB505049 /* FBSDKGameRequestContent.m */; };
@@ -162,6 +165,7 @@
 		67A9A4A5CA43222E411FECA8 /* ShareVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CB3C5F0256CAD48245B469 /* ShareVideoTests.swift */; };
 		67BD647B1DA91558433B09E5 /* FBSDKGameRequestContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC819EA1776D11FB997F79D /* FBSDKGameRequestContentTests.m */; };
 		67FF25A862AA8808079AB9F5 /* FBSDKAppInviteContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AD54DDAA7C56250AE88347AC /* FBSDKAppInviteContentTests.m */; };
+		687DAE0E1938EC21C70AD839 /* FBSDKShareKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */; };
 		694113E13F8C1116F9DBB0E6 /* FBSDKHashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = F8661FCBD7D670165A857453 /* FBSDKHashtag.m */; };
 		69621D57E68464EE368653F7 /* FBSDKShareMediaContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 605C232A330B4E0E8120A7D9 /* FBSDKShareMediaContent.m */; };
 		6994430321420D3297DCAB9B /* FBSDKShareLinkContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 62FCBAE4F95AC8A0374BFF4F /* FBSDKShareLinkContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -561,6 +565,7 @@
 		74D980E099769793DAB2FAD3 /* FBSDKShareVideoContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareVideoContent.h; sourceTree = "<group>"; };
 		75FB70CAEAEB282F9CF0FEC5 /* FBSDKShareVideoContentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareVideoContentTests.m; sourceTree = "<group>"; };
 		76C32929A5493A08BFAC1A96 /* FBSDKShareModelTestUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareModelTestUtility.h; sourceTree = "<group>"; };
+		7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKShareKit-Prefix-Header.h"; sourceTree = "<group>"; };
 		7B5FDC2467A3BB5A24198EAF /* FBSDKLikeActionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLikeActionController.h; sourceTree = "<group>"; };
 		7C1544B8B69A7B6653C13F92 /* ShareCameraEffectContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCameraEffectContentTests.swift; sourceTree = "<group>"; };
 		7E4A9E45835BB8A4E2D48774 /* FBSDKShareAppEventNames.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareAppEventNames.h; sourceTree = "<group>"; };
@@ -741,6 +746,7 @@
 				20F7ABEAA225D497EA0453F6 /* FBSDKShareExtension.h */,
 				6C4F34F5B98E29F023B4348F /* FBSDKShareExtension.m */,
 				A62A0FE77AD8E4489BC8D6F5 /* FBSDKShareInternalURLOpening.h */,
+				7B21FE77B63CBA2DFD600E2A /* FBSDKShareKit-Prefix-Header.h */,
 				E176B5701501C57595466E7D /* FBSDKShareKit+Internal.h */,
 				A3792CF9A2CF2741E5C85F8E /* FBSDKShareUtility.h */,
 				068195043F6B7EE42F59D10E /* FBSDKShareUtility.m */,
@@ -1006,6 +1012,7 @@
 				87AB72398FFF6308D23613E4 /* FBSDKShareExtension.h in Headers */,
 				89A2530EC6DC460306F00F30 /* FBSDKShareInternalURLOpening.h in Headers */,
 				C3E1AC93E35F163A7B711BFE /* FBSDKShareKit+Internal.h in Headers */,
+				32B884EFAEB6B8B7E810FFCB /* FBSDKShareKit-Prefix-Header.h in Headers */,
 				D8923A9BBC5F8176F3EDE687 /* FBSDKShareKit.h in Headers */,
 				6994430321420D3297DCAB9B /* FBSDKShareLinkContent.h in Headers */,
 				AB5B9DF9E0BD393A4BD9CB61 /* FBSDKShareMediaContent.h in Headers */,
@@ -1068,6 +1075,7 @@
 				12D2321AC643E305F247C395 /* FBSDKShareExtension.h in Headers */,
 				1900107F21F64D51DB00DF75 /* FBSDKShareInternalURLOpening.h in Headers */,
 				14DDC496516FE4C4CA92D393 /* FBSDKShareKit+Internal.h in Headers */,
+				473E3C4FB7F7122A2569B8AE /* FBSDKShareKit-Prefix-Header.h in Headers */,
 				5FEA3402EB677C07B8EB1540 /* FBSDKShareKit.h in Headers */,
 				2C3966E6004B4EAE45A82A30 /* FBSDKShareLinkContent.h in Headers */,
 				8A8528C416E8498CB5D64CBD /* FBSDKShareMediaContent.h in Headers */,
@@ -1102,6 +1110,7 @@
 				A8770BCBAAE8F5C7CF9C6AA9 /* FBSDKShareDefines.h in Headers */,
 				BFB9CB962858812FC198F494 /* FBSDKShareDialog+Internal.h in Headers */,
 				1CDA18CBC0C122D1D5E2AD01 /* FBSDKShareInternalURLOpening.h in Headers */,
+				496E59B46D654280C6EC2839 /* FBSDKShareKit-Prefix-Header.h in Headers */,
 				0FAACDD33255A2E7CB5EF344 /* FBSDKShareKit.h in Headers */,
 				2C48DCBEE4F4646078C9F9EE /* FBSDKShareLinkContent.h in Headers */,
 				0B5008F73B75E81285025207 /* FBSDKShareMediaContent.h in Headers */,
@@ -1134,6 +1143,7 @@
 				158B75F255EDE23761D6522C /* FBSDKShareDefines.h in Headers */,
 				3FC87566FA27625CF2B9DD43 /* FBSDKShareDialog+Internal.h in Headers */,
 				593AA955BD947EA86EFC5D19 /* FBSDKShareInternalURLOpening.h in Headers */,
+				687DAE0E1938EC21C70AD839 /* FBSDKShareKit-Prefix-Header.h in Headers */,
 				C78B7F8EE7605CA5AF6C968F /* FBSDKShareKit.h in Headers */,
 				302255F9145A0E919DD415EF /* FBSDKShareLinkContent.h in Headers */,
 				A4B7D1DD6241A2FCC1F0E1E1 /* FBSDKShareMediaContent.h in Headers */,
@@ -1725,6 +1735,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1754,6 +1765,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1766,6 +1778,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_FILE = FBSDKShareKitTests/Info.plist;
 			};
@@ -1839,6 +1852,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1854,6 +1868,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1872,6 +1887,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_FILE = FBSDKShareKitTests/Info.plist;
 			};
@@ -1884,6 +1900,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1899,6 +1916,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h";
 				INFOPLIST_FILE = FBSDKShareKit/Info.plist;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

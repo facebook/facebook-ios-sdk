@@ -49,6 +49,7 @@
 		0B03EDC1DAED8611181CD8A1 /* FBSDKContextDialogFactoryProtocols.h in Headers */ = {isa = PBXBuildFile; fileRef = E00235D25B2A76DD41A47331 /* FBSDKContextDialogFactoryProtocols.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0E0A5D866B04E29063491A61 /* TournamentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AB6A50CAA62569BBFE8640 /* TournamentTests.swift */; };
 		0E4571B0320E360925F54E12 /* FBSDKFriendFinderDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DD8470B351D25D787CFBBF5 /* FBSDKFriendFinderDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1096AEFD0CF75790890EF389 /* FBSDKGamingServicesKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D0B59AE7E82B440635AA87 /* FBSDKGamingServicesKit-Prefix-Header.h */; };
 		1097C8083BC62B4DFF3D9A29 /* FBSDKGamingVideoUploaderConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A39176CD946FA2022FA9D3E /* FBSDKGamingVideoUploaderConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		115CB366817144118029EBA9 /* FBSDKContextDialogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B3F891941CB74FBC3C60B3 /* FBSDKContextDialogPresenter.swift */; };
 		1255EAD276374BF8BCA85BF3 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A046570DA2563D7973FB46 /* FBSDKGamingVideoUploaderConfiguration.m */; };
@@ -168,6 +169,7 @@
 		7C2CB19B552C44D820E15809 /* CreateContextDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E093F1792C6B2997C7B77E /* CreateContextDialogTests.swift */; };
 		7CCD56E14D665F36A6BF093B /* FBSDKGamingServiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052C7A5BC491DD7D5D4F8FD6 /* FBSDKGamingServiceController.m */; };
 		80E2F29E5C6792EEF951AAB8 /* InternalUtility+WindowFinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E459F36CA1065CD6AD5268 /* InternalUtility+WindowFinding.swift */; };
+		8287876B88A91F25BD9B8F0D /* FBSDKGamingServicesKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D0B59AE7E82B440635AA87 /* FBSDKGamingServicesKit-Prefix-Header.h */; };
 		82A837C06A33F387D6E6D3E4 /* FBSDKCreateContextDialogFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AF7D03A157604A1525B552 /* FBSDKCreateContextDialogFactoryTests.swift */; };
 		839B1E46C32DAB1935BEB130 /* FBSDKVideoUploaderFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED79F75A5E307C0966CDF6B /* FBSDKVideoUploaderFactory.m */; };
 		845989848768342C492EA517 /* FBSDKVideoUploaderFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6675D136CA6845AE75304542 /* FBSDKVideoUploaderFactoryTests.swift */; };
@@ -703,6 +705,7 @@
 		8D591E325067D9EBE083A0E8 /* SampleUnparsedAppLinkURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUnparsedAppLinkURLs.swift; sourceTree = "<group>"; };
 		90969539E82BD8C0582FD44E /* ContextDialogPresenterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextDialogPresenterError.swift; sourceTree = "<group>"; };
 		90B60853C1D3DCE7E7AEAB32 /* AccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenProvider.swift; sourceTree = "<group>"; };
+		91D0B59AE7E82B440635AA87 /* FBSDKGamingServicesKit-Prefix-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingServicesKit-Prefix-Header.h"; sourceTree = "<group>"; };
 		9276891AB5F2CF9AEB9FDF16 /* CustomUpdateMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUpdateMedia.swift; sourceTree = "<group>"; };
 		934AEC6FE9EA6310149C9E28 /* TestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSettings.swift; sourceTree = "<group>"; };
 		98BACE4583D1015605380349 /* FBSDKChooseContextContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKChooseContextContent.m; sourceTree = "<group>"; };
@@ -1154,6 +1157,7 @@
 				A8A577A8E6E17809402FB845 /* FBSDKGamingServiceControllerFactory.h */,
 				0D5C1972998168D586DB1064 /* FBSDKGamingServiceControllerFactory.m */,
 				9AA783219392218199A5437C /* FBSDKGamingServiceControllerProtocol.h */,
+				91D0B59AE7E82B440635AA87 /* FBSDKGamingServicesKit-Prefix-Header.h */,
 				0631C479F4E89F885CD07D60 /* FBSDKVideoUploader.h */,
 				8028EA21356BD2D9F7A00A7F /* FBSDKVideoUploader.m */,
 				FC511ADEB66498560AA8D8E4 /* FBSDKVideoUploader+VideoUploading.h */,
@@ -1248,6 +1252,7 @@
 				87C1E310A1480D399B4642FB /* FBSDKGamingServiceControllerCreating.h in Headers */,
 				876577B3B834CB67287DC826 /* FBSDKGamingServiceControllerFactory.h in Headers */,
 				4E6FDA277ABE577ABE95FC20 /* FBSDKGamingServiceControllerProtocol.h in Headers */,
+				8287876B88A91F25BD9B8F0D /* FBSDKGamingServicesKit-Prefix-Header.h in Headers */,
 				868B4F42348F8D405F305B19 /* FBSDKGamingVideoUploader.h in Headers */,
 				1097C8083BC62B4DFF3D9A29 /* FBSDKGamingVideoUploaderConfiguration.h in Headers */,
 				2DEE13B1B04CCDC8F066075B /* FBSDKShowable.h in Headers */,
@@ -1292,6 +1297,7 @@
 				C0F094F05959F14399BED05D /* FBSDKGamingServiceControllerCreating.h in Headers */,
 				BB8CB1C0F030D5E5D4BCD2C5 /* FBSDKGamingServiceControllerFactory.h in Headers */,
 				C75DE082426D4B45A1B07071 /* FBSDKGamingServiceControllerProtocol.h in Headers */,
+				1096AEFD0CF75790890EF389 /* FBSDKGamingServicesKit-Prefix-Header.h in Headers */,
 				2E23A9E4EB085D664DEEF36C /* FBSDKGamingVideoUploader.h in Headers */,
 				05A84D0F5DFEC86EBB800F59 /* FBSDKGamingVideoUploaderConfiguration.h in Headers */,
 				AD52FF1FC4C5BB9F5E9E4965 /* FBSDKShowable.h in Headers */,
@@ -2068,6 +2074,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2110,6 +2117,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2122,6 +2130,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2160,6 +2169,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2173,6 +2183,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2194,6 +2205,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2206,6 +2218,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2226,6 +2239,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

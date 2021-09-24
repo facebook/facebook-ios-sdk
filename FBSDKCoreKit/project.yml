@@ -77,6 +77,8 @@ targets:
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit-Dynamic:
     type: framework
     platform: iOS
@@ -123,6 +125,8 @@ targets:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKCoreKit
       ENABLE_NS_ASSERTIONS: YES
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit_TV-Static:
     type: framework
     platform: tvOS
@@ -220,6 +224,9 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -324,6 +331,9 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKitTests:
     type: bundle.unit-test
     platform: iOS

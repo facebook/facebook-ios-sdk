@@ -43,6 +43,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
     transitivelyLinkDependencies: true
   FBSDKGamingServicesKit-Dynamic:
     type: framework
@@ -63,4 +64,5 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit FacebookGamingServicesTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
     transitivelyLinkDependencies: true

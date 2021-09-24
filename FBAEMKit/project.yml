@@ -60,6 +60,8 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
   FBAEMKit-Dynamic:
     type: framework
     platform: iOS
@@ -78,6 +80,8 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh

@@ -42,6 +42,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
   FBSDKGamingServicesKit-Static:
     type: framework
     platform: iOS
@@ -59,3 +60,4 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
