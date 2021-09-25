@@ -18,13 +18,8 @@
 
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
-
-#if defined FBSDKCOCOAPODS || defined BUCK
- #import "FBSDKCoreKitAEMImport.h"
-#else
- #import "../../../Internal/FBSDKCoreKitAEMImport.h"
-#endif
+#import <FBAEMKit/FBAEMKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

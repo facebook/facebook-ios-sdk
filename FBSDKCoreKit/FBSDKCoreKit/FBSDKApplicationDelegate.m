@@ -81,7 +81,6 @@
  #import "FBSDKBackgroundEventLogging.h"
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
- #import "FBSDKCoreKitAEMImport.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKFeatureExtractor+Internal.h"
  #import "FBSDKMeasurementEventListener.h"

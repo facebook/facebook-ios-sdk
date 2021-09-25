@@ -20,6 +20,8 @@
 
 @import TestTools;
 
+#import <FBAEMKit/FBAEMKit.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
@@ -29,7 +31,6 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
-#import "FBSDKCoreKitAEMImport.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestProtocol.h"

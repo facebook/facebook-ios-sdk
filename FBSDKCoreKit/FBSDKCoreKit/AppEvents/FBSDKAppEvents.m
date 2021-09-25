@@ -62,7 +62,8 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKCoreKitAEMImport.h"
+ #import <FBAEMKit/FBAEMKit.h>
+
  #import "FBSDKEventBindingManager.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
