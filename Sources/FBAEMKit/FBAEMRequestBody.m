@@ -103,7 +103,7 @@ typedef void (^AEMCodeBlock)(void);
   [self appendUTF8:[[NSString alloc] initWithFormat:@"%@", kNewline]];
 }
 
-- (NSData *)compressedData
+- (nullable NSData *)compressedData
 {
   if (!self.data.length) {
     return nil;
