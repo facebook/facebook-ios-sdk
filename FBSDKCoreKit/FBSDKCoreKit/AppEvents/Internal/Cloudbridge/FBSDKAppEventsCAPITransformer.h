@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import "FBSDKAppEvents.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FBSDKAppEventsCAPITransformer)
 @interface FBSDKAppEventsCAPITransformer : NSObject
 
@@ -28,3 +30,5 @@ NS_SWIFT_NAME(FBSDKAppEventsCAPITransformer)
 FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventsUserDataSection;
 
 @end
+
+NS_ASSUME_NONNULL_END
