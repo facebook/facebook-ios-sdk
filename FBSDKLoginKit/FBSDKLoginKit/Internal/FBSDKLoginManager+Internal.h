@@ -72,8 +72,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
                                                                loggingToken:(NSString *)loggingToken
                                             logger:(FBSDKLoginManagerLogger *)logger
                                         authMethod:(NSString *)authMethod;
-// made available for testing only
-- (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
 // for testing only
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;

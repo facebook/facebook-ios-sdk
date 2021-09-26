@@ -18,6 +18,12 @@
 
 @import FBSDKCoreKit;
 
+#ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKLoginKit+Internal.h>
+#else
+ #import "FBSDKLoginManager+Internal.h"
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginManager (Testing)
@@ -49,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)validateReauthenticationWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                                         withToken:(FBSDKAccessToken *)currentToken
                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
+
+- (void)validateReauthentication:(FBSDKAccessToken *)currentToken
+                      withResult:(nullable FBSDKLoginManagerLoginResult *)loginResult;
 
 - (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
 

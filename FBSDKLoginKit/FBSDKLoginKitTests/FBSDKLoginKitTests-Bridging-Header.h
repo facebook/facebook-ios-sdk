@@ -43,6 +43,7 @@
 #endif
 
 #import "FBSDKInternalUtility+Testing.h"
+#import "FBSDKLoginManager+Testing.h"
 #import "FBSDKSettings+Testing.h"
 
 @class FBSDKAuthenticationTokenClaims;
