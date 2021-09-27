@@ -7,27 +7,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+As of v12.0, CocoaPods and Swift Package Manager (SPM) will be vending pre-built XCFrameworks.
+
+What this means for you as a developer is that you no longer need to build the SDK when using CocoaPods or SPM. This should save anywhere from a few seconds to a few minutes per build depending on your particular setup.
+
+Because XCFrameworks do not allow for embedded frameworks, they require their dependent frameworks to be included. When you install the SDK using CocoaPods, the generated Pods project will include the dependencies for you, however, when you install the SDK using SPM, you will be required to add the dependencies yourself.
+
+What this means for you as a developer is that you'll need to include `FacebookAEM` and `FacebookBasics` even though you won't use them directly. If you don't you'll experience a crash at runtime upon app launch when the dependencies cannot be resolved.
+
+More detailed instructions can be found at: https://developers.facebook.com/docs/ios/getting-started
+
+FacebookGamingServices vs FBSDKGamingServicesKit - You'll notice there are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you do not require an Objective-C interface for these types,
+we recommend using only `FacebookGamingServices`.
+
 ### Added
 
 - Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
 
 ### Removed
 
-- `AccessToken.graphDomain` Replacement - `AuthenticationToken.graphDomain`
-- `AccessToken`'s convenience initializers that include `graphDomain`
-- `AccessToken.refreshCurrentAccessToken(completionHandler:)` Replacement - `AccessToken.refreshCurrentAccessToken(completion:)`
-- `AppEvents.activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
+Support for building from source using Carthage. Instead Carthage can be used to obtain the pre-built XCFrameworks. For update instructions, see: https://github.com/Carthage/Carthage#migrating-a-project-from-framework-bundles-to-xcframeworks
+
+- `AccessToken`
+  - `graphDomain` class property. Replacement - `graphDomain` instance property
+  - convenience initializers that include `graphDomain`
+  - `refreshCurrentAccessToken(completionHandler:)` Replacement - `refreshCurrentAccessToken(completion:)`
+- `AppEvents`
+  - `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
 - Ability to create new instances of `FBSDKGraphErrorRecoveryProcessor` without using designated initializers.
-- `GraphRequest.start(completionHandler:)` Replacement -  `GraphRequest.start(completion:)`
+- `GraphRequest`
+  - `start(completionHandler:)` Replacement - `start(completion:)`
 - `GraphRequestBlock` Replacement -  `GraphRequestCompletion`
-- `GraphRequestConnection.add(_:completionHandler:)` Replacement - `GraphRequestConnection.add(_:completion:)`
-- `GraphRequestConnection.add(_:batchEntryName:completionHandler:)` Replacement - `GraphRequestConnection.add(_:name:completion:)`
-- `GraphRequestConnection.add(_:batchParameters:completionHandler:)` Replacement - `GraphRequestConnection.add(_:parameters:completion:)`
+- `GraphRequestConnection`
+  - `add(_:completionHandler:)` Replacement - `add(_:completion:)`
+  - `add(_:batchEntryName:completionHandler:)` Replacement - `add(_:name:completion:)`
+  - `add(_:batchParameters:completionHandler:)` Replacement - `add(_:parameters:completion:)`
 - `GamingContext.type`
-- `GamingImageUploader.uploadImage(configuration:andResultCompletionHandler:)` Replacement - `GamingImageUploader.uploadImage(configuration:andResultCompletion:)`
-- `GamingImageUploader.uploadImage(configuration:completionHandler:andProgressHandler:)` Replacement - `GamingImageUploader.uploadImage(configuration:completion:andProgressHandler:)`
-- `GamingImageUploader.uploadVideo(configuration:andResultCompletionHandler:)` Replacement - `GamingImageUploader.uploadVideo(configuration:andResultCompletion:)`
-- `GamingImageUploader.uploadVideo(configuration:completionHandler:andProgressHandler:)` Replacement - `GamingImageUploader.uploadVideo(configuration:completion:andProgressHandler:)`
+- `GamingImageUploader`
+  - `uploadImage(configuration:andResultCompletionHandler:)` Replacement - `uploadImage(configuration:andResultCompletion:)`
+  - `uploadImage(configuration:completionHandler:andProgressHandler:)` Replacement - `uploadImage(configuration:completion:andProgressHandler:)`
+- `GamingVideoUploader`
+  - `uploadVideo(configuration:andResultCompletionHandler:)` Replacement - `uploadVideo(configuration:andResultCompletion:)`
+  - `uploadVideo(configuration:completionHandler:andProgressHandler:)` Replacement - `uploadVideo(configuration:completion:andProgressHandler:)`
 - `GamingPayload.gameRequestID` You can obtain the game request idea from `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
 - `GamingPayloadDelegate.updatedURLContaining(_:)` Replacement - `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
 - `GamingPayloadObserver.shared`. Instances of this object now must be created with a delegate.
