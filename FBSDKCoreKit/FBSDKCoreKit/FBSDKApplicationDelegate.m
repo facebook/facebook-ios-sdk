@@ -498,7 +498,7 @@ static UIApplicationState _applicationState;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-  [self setApplicationState:UIApplicationStateBackground];
+  self.applicationState = UIApplicationStateBackground;
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
@@ -509,7 +509,7 @@ static UIApplicationState _applicationState;
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-  [self setApplicationState:UIApplicationStateActive];
+  self.applicationState = UIApplicationStateActive;
   // Auto log basic events in case autoLogAppEventsEnabled is set
   if (self.settings.isAutoLogAppEventsEnabled) {
     [self.appEvents activateApp];
@@ -528,7 +528,7 @@ static UIApplicationState _applicationState;
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-  [self setApplicationState:UIApplicationStateInactive];
+  self.applicationState = UIApplicationStateInactive;
   NSArray<id<FBSDKApplicationObserving>> *const observers = [self.applicationObservers copy];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationWillResignActive:)]) {
@@ -683,9 +683,9 @@ static UIApplicationState _applicationState;
                                                  errorReport:FBSDKErrorReport.shared
                                                 crashHandler:sharedCrashHandler];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings];
-  [FBSDKAccessToken setTokenCache:tokenCache];
-  [FBSDKAccessToken setGraphRequestConnectionFactory:graphRequestConnectionFactory];
-  [FBSDKAuthenticationToken setTokenCache:tokenCache];
+  FBSDKAccessToken.tokenCache = tokenCache;
+  FBSDKAccessToken.graphRequestConnectionFactory = graphRequestConnectionFactory;
+  FBSDKAuthenticationToken.tokenCache = tokenCache;
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestFactory
                                                                                          settings:sharedSettings];
@@ -721,7 +721,7 @@ static UIApplicationState _applicationState;
                                                      settings:sharedSettings
                                           serverConfiguration:serverConfigurationProvider
                                           graphRequestFactory:graphRequestFactory];
-  [FBSDKButton setApplicationActivationNotifier:self];
+  FBSDKButton.applicationActivationNotifier = self;
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
   FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;

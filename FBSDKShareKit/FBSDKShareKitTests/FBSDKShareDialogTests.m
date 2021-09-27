@@ -754,9 +754,9 @@
     return;
   }
   FBSDKAccessToken *oldToken = [FBSDKAccessToken currentAccessToken];
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  FBSDKAccessToken.currentAccessToken = accessToken;
   block();
-  [FBSDKAccessToken setCurrentAccessToken:oldToken];
+  FBSDKAccessToken.currentAccessToken = oldToken;
 }
 
 @end

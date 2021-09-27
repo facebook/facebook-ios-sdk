@@ -45,10 +45,10 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
 
-  [request setHTTPMethod:method];
+  request.HTTPMethod = method;
   [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
   [request setValue:FB_GRAPH_API_CONTENT_TYPE forHTTPHeaderField:@"Content-Type"];
-  [request setHTTPShouldHandleCookies:NO];
+  request.HTTPShouldHandleCookies = NO;
 
   // add parameters to body
   FBAEMRequestBody *body = [FBAEMRequestBody new];

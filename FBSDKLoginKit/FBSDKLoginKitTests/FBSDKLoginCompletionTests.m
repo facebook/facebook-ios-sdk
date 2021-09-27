@@ -606,7 +606,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     "Should request a profile using the friend identifiers from the claims"
   );
   NSDateFormatter *formatter = NSDateFormatter.new;
-  [formatter setDateFormat:@"MM/dd/yyyy"];
+  formatter.dateFormat = @"MM/dd/yyyy";
   XCTAssertEqualObjects(
     [formatter stringFromDate:factory.capturedBirthday],
     claim.userBirthday,

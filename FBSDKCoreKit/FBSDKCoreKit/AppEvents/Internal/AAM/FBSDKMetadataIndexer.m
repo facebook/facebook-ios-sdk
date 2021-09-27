@@ -116,7 +116,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
 
     if (isEnabled) {
-      [FBSDKUserDataStore setEnabledRules:_rules.allKeys];
+      FBSDKUserDataStore.enabledRules = _rules.allKeys;
       [self setupMetadataIndexing];
     }
   });

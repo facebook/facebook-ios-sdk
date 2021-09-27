@@ -89,7 +89,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                             tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                              HTTPMethod:@"POST"
                                                                                   flags:FBSDKGraphRequestFlagNone];
-  [request setGraphErrorRecoveryDisabled:YES];
+  request.graphErrorRecoveryDisabled = YES;
   FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
       [self _processError:error];
@@ -182,7 +182,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                dataAccessExpirationDate:dataAccessExpirationDate];
           FBSDKDeviceLoginManagerResult *result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:accessToken
                                                                                            isCancelled:NO];
-          [FBSDKAccessToken setCurrentAccessToken:accessToken];
+          FBSDKAccessToken.currentAccessToken = accessToken;
           completeWithResult(result);
           return;
         }
@@ -233,7 +233,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                                              tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                                               HTTPMethod:@"POST"
                                                                                                    flags:FBSDKGraphRequestFlagNone];
-             [request setGraphErrorRecoveryDisabled:YES];
+             request.graphErrorRecoveryDisabled = YES;
              FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
                if (self->_isCancelled) {
                  return;

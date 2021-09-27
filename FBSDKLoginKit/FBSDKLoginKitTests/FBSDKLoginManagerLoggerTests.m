@@ -161,12 +161,12 @@
 - (void)testExtrasForAddSingleLoggingExtra
 {
   FBSDKSettings.sharedSettings.isConfigured = YES;
-  [FBSDKSettings setAutoLogAppEventsEnabled:YES];
+  FBSDKSettings.autoLogAppEventsEnabled = YES;
 
   FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
 
   TestAppEvents *testAppEvents = [[TestAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorAuto flushPeriodInSeconds:15];
-  [FBSDKAppEvents setSingletonInstanceToInstance:testAppEvents];
+  FBSDKAppEvents.singletonInstanceToInstance = testAppEvents;
 
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:nil
                                                                                  tracking:FBSDKLoginTrackingEnabled];

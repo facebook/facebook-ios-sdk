@@ -599,7 +599,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
   NSMutableDictionary<NSString *, id> *dict = [NSMutableDictionary dictionary];
   if (nil != parameters) {
-    [dict setValuesForKeysWithDictionary:parameters];
+    dict.valuesForKeysWithDictionary = parameters;
   }
 
   [FBSDKTypeUtility dictionary:dict setObject:itemID forKey:FBSDKAppEventParameterProductItemID];
@@ -681,7 +681,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self.shared validateConfiguration];
 
   NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
-  [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
+  if (deviceTokenString) {
+    FBSDKAppEvents.pushNotificationsDeviceTokenString = deviceTokenString;
+  }
 }
 
 + (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
@@ -902,12 +904,12 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
-  [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
-  [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
+  FBSDKAppEvents.appEventsConfigurationProvider = appEventsConfigurationProvider;
+  FBSDKAppEvents.serverConfigurationProvider = serverConfigurationProvider;
   g_gateKeeperManager = gateKeeperManager;
   g_logger = logger;
-  [FBSDKAppEvents setGraphRequestFactory:provider];
-  [FBSDKAppEvents setFeatureChecker:featureChecker];
+  FBSDKAppEvents.graphRequestFactory = provider;
+  FBSDKAppEvents.featureChecker = featureChecker;
   g_settings = settings;
   g_paymentObserver = paymentObserver;
   g_appEventsStateStore = appEventsStateStore;

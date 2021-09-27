@@ -114,7 +114,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
     }
     NSLog(@"FBSDKLog: %@", logString);
 
-    [_internalContents setString:@""];
+    _internalContents.string = @"";
   }
 }
 

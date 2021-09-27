@@ -147,7 +147,7 @@
 - (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
                             token:(FBSDKAccessToken *)token
 {
-  [FBSDKAccessToken setCurrentAccessToken:token];
+  FBSDKAccessToken.currentAccessToken = token;
   [delegate deviceLoginViewControllerDidFinish:self];
 }
 

@@ -112,7 +112,7 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 
 + (void)resetTokenCache
 {
-  [FBSDKAccessToken setTokenCache:nil];
+  FBSDKAccessToken.tokenCache = nil;
 }
 
 + (FBSDKAccessToken *)currentAccessToken

@@ -154,7 +154,7 @@
                                                              defaultVersion:@"v2.0"
                                                                       error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v1/dialog/share");
-  [FBSDKSettings setFacebookDomainPart:tier];
+  FBSDKSettings.facebookDomainPart = tier;
 
   FBSDKSettings.graphAPIVersion = @"v3.3";
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
@@ -178,7 +178,7 @@
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
   NSString *URLString;
 
   URLString = [FBSDKInternalUtility.sharedUtility

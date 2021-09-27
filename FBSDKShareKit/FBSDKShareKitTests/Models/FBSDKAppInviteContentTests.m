@@ -49,7 +49,7 @@
   FBSDKAppInviteContent *content = [self.class _content];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
+  unarchiver.requiresSecureCoding = YES;
   FBSDKAppInviteContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKAppInviteContent.class
                                                                      forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);

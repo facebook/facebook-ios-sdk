@@ -56,7 +56,7 @@
   FBSDKShareVideoContent *content = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
+  unarchiver.requiresSecureCoding = YES;
   FBSDKShareVideoContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKShareVideoContent.class
                                                                       forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);

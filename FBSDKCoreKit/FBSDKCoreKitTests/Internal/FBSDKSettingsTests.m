@@ -188,7 +188,7 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookDomainPart" : domainPrefix}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  [FBSDKSettings setFacebookDomainPart:@"foo"];
+  FBSDKSettings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -204,7 +204,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingDomainPrefixWithoutPlistEntry
 {
-  [FBSDKSettings setFacebookDomainPart:@"foo"];
+  FBSDKSettings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -219,7 +219,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDomainPrefix
 {
-  [FBSDKSettings setFacebookDomainPart:emptyString];
+  FBSDKSettings.facebookDomainPart = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -234,7 +234,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyDomainPrefix
 {
-  [FBSDKSettings setFacebookDomainPart:whiteSpaceToken];
+  FBSDKSettings.facebookDomainPart = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -1270,10 +1270,10 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSetGraphErrorRecoveryEnabled
 {
-  [FBSDKSettings setGraphErrorRecoveryEnabled:YES];
+  FBSDKSettings.graphErrorRecoveryEnabled = YES;
   XCTAssertTrue([FBSDKSettings isGraphErrorRecoveryEnabled]);
 
-  [FBSDKSettings setGraphErrorRecoveryEnabled:NO];
+  FBSDKSettings.graphErrorRecoveryEnabled = NO;
   XCTAssertFalse([FBSDKSettings isGraphErrorRecoveryEnabled]);
 }
 
@@ -1540,7 +1540,7 @@ static NSString *const whiteSpaceToken = @"   ";
   NSSet<FBSDKLoggingBehavior> *mockLoggingBehaviors =
   [NSSet setWithObjects:FBSDKLoggingBehaviorAppEvents, FBSDKLoggingBehaviorNetworkRequests, nil];
 
-  [FBSDKSettings setLoggingBehaviors:mockLoggingBehaviors];
+  FBSDKSettings.loggingBehaviors = mockLoggingBehaviors;
   XCTAssertEqualObjects(mockLoggingBehaviors, [FBSDKSettings loggingBehaviors]);
 
   // test enable logging behavior
@@ -1600,22 +1600,22 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSetGraphAPIVersion
 {
   NSString *mockGraphAPIVersion = @"mockGraphAPIVersion";
-  [FBSDKSettings setGraphAPIVersion:mockGraphAPIVersion];
+  FBSDKSettings.graphAPIVersion = mockGraphAPIVersion;
   XCTAssertEqualObjects(mockGraphAPIVersion, [FBSDKSettings graphAPIVersion]);
 
-  [FBSDKSettings setGraphAPIVersion:nil];
+  FBSDKSettings.graphAPIVersion = nil;
   XCTAssertEqualObjects(FBSDK_DEFAULT_GRAPH_API_VERSION, [FBSDKSettings graphAPIVersion]);
 }
 
 - (void)testIsDataProcessingRestricted
 {
-  [FBSDKSettings setDataProcessingOptions:@[@"LDU"]];
+  FBSDKSettings.dataProcessingOptions = @[@"LDU"];
   XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
-  [FBSDKSettings setDataProcessingOptions:@[]];
+  FBSDKSettings.dataProcessingOptions = @[];
   XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
-  [FBSDKSettings setDataProcessingOptions:@[@"ldu"]];
+  FBSDKSettings.dataProcessingOptions = @[@"ldu"];
   XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
-  [FBSDKSettings setDataProcessingOptions:nil];
+  FBSDKSettings.dataProcessingOptions = nil;
   XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
 }
 

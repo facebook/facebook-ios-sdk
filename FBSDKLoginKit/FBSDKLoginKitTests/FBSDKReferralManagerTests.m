@@ -117,7 +117,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
   [self mockURLScheme];
 
   TestBridgeAPIRequestOpener *testBridgeAPI = [TestBridgeAPIRequestOpener new];
-  [FBSDKReferralManager setBridgeAPIRequestOpener:testBridgeAPI];
+  FBSDKReferralManager.bridgeAPIRequestOpener = testBridgeAPI;
 
   [_manager startReferralWithCompletionHandler:nil];
   XCTAssertEqual(testBridgeAPI.openURLWithSFVCCount, 1, "openURLWithSafariViewController should be called");

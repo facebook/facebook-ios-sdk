@@ -480,7 +480,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 - (void)testInitializingSdkConfiguresAccessTokenCache
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKAccessToken setTokenCache:nil];
+  FBSDKAccessToken.tokenCache = nil;
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *tokenCache = (NSObject *) FBSDKAccessToken.tokenCache;
@@ -765,7 +765,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   FBSDKAccessToken *expected = SampleAccessTokens.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
-  [TestAccessTokenWallet setTokenCache:cache];
+  TestAccessTokenWallet.tokenCache = cache;
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -794,7 +794,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   FBSDKAuthenticationToken *expected = SampleAuthenticationToken.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil
                                                   authenticationToken:expected];
-  [TestAuthenticationTokenWallet setTokenCache:cache];
+  TestAuthenticationTokenWallet.tokenCache = cache;
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   XCTAssertEqualObjects(
@@ -807,7 +807,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache
 {
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
-  [TestAuthenticationTokenWallet setTokenCache:cache];
+  TestAuthenticationTokenWallet.tokenCache = cache;
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 

@@ -57,7 +57,7 @@
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
+  unarchiver.requiresSecureCoding = YES;
   FBSDKShareLinkContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKShareLinkContent.class
                                                                      forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);

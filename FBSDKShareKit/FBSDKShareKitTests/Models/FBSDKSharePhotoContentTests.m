@@ -55,7 +55,7 @@
   FBSDKSharePhotoContent *content = [FBSDKShareModelTestUtility photoContent];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
+  unarchiver.requiresSecureCoding = YES;
   FBSDKSharePhotoContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKSharePhotoContent.class
                                                                       forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);

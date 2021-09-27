@@ -56,7 +56,7 @@
   FBSDKGameRequestContent *content = [self.class _contentWithAllProperties];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
+  unarchiver.requiresSecureCoding = YES;
   FBSDKGameRequestContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKGameRequestContent.class
                                                                        forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);

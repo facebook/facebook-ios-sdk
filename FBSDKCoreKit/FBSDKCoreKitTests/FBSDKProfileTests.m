@@ -146,7 +146,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithAccessTokenNoClientToken
 {
-  [TestAccessTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
@@ -166,7 +166,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithAccessTokenAndClientToken
 {
-  [TestAccessTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   FBSDKSettings.sharedSettings.clientToken = _validClientToken;
 
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
@@ -385,7 +385,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfile
 {
   NSDateFormatter *formatter = NSDateFormatter.new;
-  [formatter setDateFormat:@"MM/dd/yyyy"];
+  formatter.dateFormat = @"MM/dd/yyyy";
 
   __block BOOL didInvokeCompletion = NO;
   [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
@@ -625,7 +625,7 @@ NSString *const heightKey = @"height";
 
 - (void)testProfileNotRefreshedIfNotStale
 {
-  [FBSDKProfile setCurrentProfile:SampleUserProfiles.valid];
+  FBSDKProfile.currentProfile = SampleUserProfiles.valid;
 
   __block BOOL didInvokeCompletion = NO;
   [FBSDKProfile loadProfileWithToken:nil
@@ -652,7 +652,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfileWithLimitedProfileWithoutToken
 {
   FBSDKProfile *expected = SampleUserProfiles.validLimited;
-  [FBSDKProfile setCurrentProfile:expected];
+  FBSDKProfile.currentProfile = expected;
   TestGraphRequest *request = [TestGraphRequest new];
   [FBSDKProfile loadProfileWithToken:nil
                           completion:^(FBSDKProfile *profile, NSError *error) {
@@ -672,7 +672,7 @@ NSString *const heightKey = @"height";
 
 - (void)testLoadingProfileWithLimitedProfileWithToken
 {
-  [FBSDKProfile setCurrentProfile:SampleUserProfiles.validLimited];
+  FBSDKProfile.currentProfile = SampleUserProfiles.validLimited;
   TestGraphRequest *request = [TestGraphRequest new];
   [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
                           completion:^(FBSDKProfile *profile, NSError *error) {
@@ -689,7 +689,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfileWithExpiredNonLimitedProfileWithToken
 {
   FBSDKProfile *expected = [SampleUserProfiles createValidWithIsExpired:YES];
-  [FBSDKProfile setCurrentProfile:expected];
+  FBSDKProfile.currentProfile = expected;
   TestGraphRequest *request = [TestGraphRequest new];
   [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
                           completion:^(FBSDKProfile *profile, NSError *error) {
@@ -706,7 +706,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfileWithCurrentlyLoadingProfile
 {
   FBSDKProfile *expected = [SampleUserProfiles createValidWithIsExpired:YES];
-  [FBSDKProfile setCurrentProfile:expected];
+  FBSDKProfile.currentProfile = expected;
   TestGraphRequest *request = [TestGraphRequest new];
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   request.stubbedConnection = connection;

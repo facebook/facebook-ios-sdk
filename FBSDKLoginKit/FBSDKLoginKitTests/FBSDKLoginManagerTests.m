@@ -147,9 +147,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                          gender:@"male"
                                                       isLimited:NO
   ];
-  [TestProfileProvider setCurrentProfile:testUser];
+  TestProfileProvider.currentProfile = testUser;
 
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
+  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
   TestAccessTokenWallet.currentAccessToken = nil;
   [self mockURLScheme];
   [self.internalUtility validateURLSchemes];
@@ -301,7 +301,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   };
   FBSDKLoginManager *target = self.loginManager;
   [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
-  [target setHandler:handler];
+  target.handler = handler;
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
@@ -321,7 +321,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                                    expirationDate:nil
                                                                       refreshDate:nil
                                                          dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:existingToken];
+  FBSDKAccessToken.currentAccessToken = existingToken;
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile,read_stream&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
 
   FBSDKLoginManager *target = self.loginManager;
@@ -356,7 +356,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                                    expirationDate:nil
                                                                       refreshDate:nil
                                                          dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:existingToken];
+  FBSDKAccessToken.currentAccessToken = existingToken;
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile,read_stream&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
 
   FBSDKLoginManager *target = self.loginManager;
@@ -368,7 +368,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     "Should create a graph request with the expected graph path"
   );
 
-  [target setRequestedPermissions:nil];
+  target.requestedPermissions = nil;
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 }
@@ -412,7 +412,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   NSURL *url = [NSURL URLWithString:@"test://test?granted_scopes=public_profile&access_token=sometoken&expires_in=5183949"];
   FBSDKLoginManager *target = self.loginManager;
-  [target setState:FBSDKLoginManagerStatePerformingLogin];
+  target.state = FBSDKLoginManagerStatePerformingLogin;
 
   XCTAssertFalse([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   XCTAssertEqual(
@@ -425,7 +425,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testOpenURLAuthWithAuthenticationToken
 {
   __block BOOL handlerCalled;
-  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
+  FBSDKAuthenticationTokenFactory.skipSignatureVerification = YES;
 
   NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
   NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
@@ -473,7 +473,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
 
-  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
+  FBSDKAuthenticationTokenFactory.skipSignatureVerification = NO;
 }
 
 - (void)testOpenURLAuthWithInvalidAuthenticationToken
@@ -484,7 +484,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertNotNil(error);
-    [TestAuthenticationTokenWallet setCurrentAuthenticationToken:nil];
+    TestAuthenticationTokenWallet.currentAuthenticationToken = nil;
     resultBlockInvoked = YES;
   }];
 
@@ -496,7 +496,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   __block BOOL handlerCalled;
   __weak FBSDKLoginManager *target = self.loginManager;
-  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
+  FBSDKAuthenticationTokenFactory.skipSignatureVerification = YES;
 
   NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
   NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
@@ -532,7 +532,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
 
-  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
+  FBSDKAuthenticationTokenFactory.skipSignatureVerification = NO;
 }
 
 // MARK: FBSDKURLOpening
@@ -540,7 +540,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testApplicationDidBecomeActiveWhileLogin
 {
   FBSDKLoginManager *manager = self.loginManager;
-  [manager setState:FBSDKLoginManagerStatePerformingLogin];
+  manager.state = FBSDKLoginManagerStatePerformingLogin;
 
   [manager applicationDidBecomeActive:nil];
 
@@ -821,7 +821,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testReauthorizingWithAccessToken
 {
-  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
+  TestAccessTokenWallet.currentAccessToken = self.sampleAccessToken;
   FBSDKLoginManager *manager = self.loginManager;
 
   [self.loginManager reauthorizeDataAccess:[UIViewController new]
@@ -835,7 +835,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testReauthorizingWithInvalidStartState
 {
   FBSDKLoginManager *manager = self.loginManager;
-  [manager setState:FBSDKLoginManagerStateStart];
+  manager.state = FBSDKLoginManagerStateStart;
 
   [manager reauthorizeDataAccess:[UIViewController new]
                          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
@@ -858,7 +858,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedPermissions
 {
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
-  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
+  TestAccessTokenWallet.currentAccessToken = self.sampleAccessToken;
 
   NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
   XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
@@ -889,7 +889,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedAndRequestedPermissions
 {
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
-  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
+  TestAccessTokenWallet.currentAccessToken = self.sampleAccessToken;
   [self.loginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
 
   NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
@@ -1068,7 +1068,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
   XCTAssertEqualObjects(profile.friendIDs, _claims[@"user_friends"], @"failed to parse user friends");
   NSDateFormatter *formatter = NSDateFormatter.new;
-  [formatter setDateFormat:@"MM/dd/yyyy"];
+  formatter.dateFormat = @"MM/dd/yyyy";
   XCTAssertEqualObjects(
     [formatter stringFromDate:profile.birthday],
     _claims[@"user_birthday"],

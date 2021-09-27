@@ -162,7 +162,7 @@
     [alertController addAction:[UIAlertAction actionWithTitle:logOutTitle
                                                         style:UIAlertActionStyleDestructive
                                                       handler:^(UIAlertAction *_Nonnull action) {
-                                                        [FBSDKAccessToken setCurrentAccessToken:nil];
+                                                        FBSDKAccessToken.currentAccessToken = nil;
                                                         [self.delegate deviceLoginButtonDidLogOut:self];
                                                       }]];
     [alertController addAction:[UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:NULL]];

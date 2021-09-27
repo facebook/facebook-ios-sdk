@@ -558,7 +558,7 @@ static BOOL _canMakeRequests = NO;
   }
   [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
   [request setValue:[body mimeContentType] forHTTPHeaderField:@"Content-Type"];
-  [request setHTTPShouldHandleCookies:NO];
+  request.HTTPShouldHandleCookies = NO;
 
   [self logRequest:request bodyLength:(request.HTTPBody.length / 1024) bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
@@ -894,7 +894,7 @@ static BOOL _canMakeRequests = NO;
     if (errorSubcode == 493) {
       [FBSDKAccessToken setCurrentAccessToken:_CreateExpiredAccessToken([FBSDKAccessToken currentAccessToken])];
     } else {
-      [FBSDKAccessToken setCurrentAccessToken:nil];
+      FBSDKAccessToken.currentAccessToken = nil;
     }
   };
 

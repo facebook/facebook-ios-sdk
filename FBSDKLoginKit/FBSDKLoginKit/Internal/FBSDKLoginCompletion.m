@@ -95,7 +95,7 @@ static NSDateFormatter *_dateFormatter;
     if (hasNonEmptyAccessTokenString || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)) {
       [self setParametersWithDictionary:parameters appID:appID];
     } else if ([FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] || [FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class]) {
-      [self setErrorWithDictionary:parameters];
+      self.errorWithDictionary = parameters;
     } else if (hasBothNonceAndIdToken) {
       // If a nonce is present in the parameter we assume that
       // user logged in by app switching.

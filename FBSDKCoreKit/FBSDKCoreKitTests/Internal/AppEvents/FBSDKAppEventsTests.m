@@ -144,7 +144,7 @@
 
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                        flushPeriodInSeconds:0];
-  [FBSDKAppEvents setSingletonInstanceToInstance:appEvents];
+  FBSDKAppEvents.singletonInstanceToInstance = appEvents;
 
   [self resetTestHelpers];
   self.settings = [TestSettings new];
@@ -184,7 +184,7 @@
 
   [self configureAppEventsSingleton];
 
-  [FBSDKAppEvents setLoggingOverrideAppID:self.mockAppID];
+  FBSDKAppEvents.loggingOverrideAppID = self.mockAppID;
 }
 
 - (void)tearDown
@@ -441,7 +441,7 @@
 
 - (void)testSetAndClearUserID
 {
-  [FBSDKAppEvents setUserID:self.mockUserID];
+  FBSDKAppEvents.userID = self.mockUserID;
   XCTAssertEqualObjects([FBSDKAppEvents userID], self.mockUserID);
   [FBSDKAppEvents clearUserID];
   XCTAssertNil([FBSDKAppEvents userID]);
@@ -450,7 +450,7 @@
 - (void)testSetLoggingOverrideAppID
 {
   NSString *mockOverrideAppID = @"2";
-  [FBSDKAppEvents setLoggingOverrideAppID:mockOverrideAppID];
+  FBSDKAppEvents.loggingOverrideAppID = mockOverrideAppID;
   XCTAssertEqualObjects([FBSDKAppEvents loggingOverrideAppID], mockOverrideAppID);
 }
 
@@ -459,7 +459,7 @@
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
   self.eventName = @"fb_mobile_obtain_push_token";
 
-  [FBSDKAppEvents setPushNotificationsDeviceTokenString:mockDeviceTokenString];
+  FBSDKAppEvents.pushNotificationsDeviceTokenString = mockDeviceTokenString;
 
   XCTAssertEqualObjects(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
@@ -707,10 +707,10 @@
 
 - (void)testSetFlushBehavior
 {
-  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto];
+  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
   XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, FBSDKAppEvents.flushBehavior);
 
-  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorExplicitOnly;
   XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.flushBehavior);
 }
 
@@ -785,7 +785,7 @@
   self.settings.stubbedLimitEventAndDataUsage = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
-  [FBSDKAppEvents setLoggingOverrideAppID:token.appID];
+  FBSDKAppEvents.loggingOverrideAppID = token.appID;
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
@@ -802,7 +802,7 @@
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithAdvertiserID
 {
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
-  [FBSDKAppEvents setLoggingOverrideAppID:token.appID];
+  FBSDKAppEvents.loggingOverrideAppID = token.appID;
   NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", token.appID];
   NSString *advertiserID = @"abc123";
   self.settings.stubbedLimitEventAndDataUsage = NO;

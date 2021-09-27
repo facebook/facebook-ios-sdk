@@ -360,7 +360,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testOverridingDefaultConnectionTimeoutWithInvalidTimeout
 {
-  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:-1];
+  FBSDKGraphRequestConnection.defaultConnectionTimeout = -1;
   XCTAssertEqual(
     FBSDKGraphRequestConnection.defaultConnectionTimeout,
     60,
@@ -370,7 +370,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testOverridingDefaultConnectionTimeoutWithValidTimeout
 {
-  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:100];
+  FBSDKGraphRequestConnection.defaultConnectionTimeout = 100;
   XCTAssertEqual(
     FBSDKGraphRequestConnection.defaultConnectionTimeout,
     100,
@@ -1195,7 +1195,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  FBSDKAccessToken.currentAccessToken = accessToken;
   TestAccessTokenWallet.currentAccessToken = accessToken;
 
   [self.connection addRequest:[self requestWithTokenString:accessToken.tokenString]
@@ -1235,7 +1235,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
 
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  FBSDKAccessToken.currentAccessToken = accessToken;
 
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me"
                                                                    parameters:@{@"fields" : @""}
@@ -1274,7 +1274,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  FBSDKAccessToken.currentAccessToken = accessToken;
 
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
   [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
@@ -1295,7 +1295,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithUserAgentSuffix
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  FBSDKAccessToken.currentAccessToken = nil;
   self.settings.userAgentSuffix = @"UnitTest.1.0.0";
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
@@ -1308,7 +1308,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithoutUserAgentSuffix
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  FBSDKAccessToken.currentAccessToken = nil;
   self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
@@ -1322,7 +1322,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithMacCatalystUserAgent
 {
   self.macCatalystDeterminator.stubbedIsMacCatalystApp = YES;
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  FBSDKAccessToken.currentAccessToken = nil;
   self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
@@ -1448,13 +1448,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
 
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
+  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
 }
 
 #pragma mark - Error recovery.

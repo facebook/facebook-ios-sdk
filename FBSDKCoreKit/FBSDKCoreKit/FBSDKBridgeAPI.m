@@ -392,7 +392,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
   if (@available(iOS 11.0, *)) {
     if ([sender isAuthenticationURL:url]) {
-      [self setSessionCompletionHandlerFromHandler:handler];
+      self.sessionCompletionHandlerFromHandler = handler;
       [self openURLWithAuthenticationSession:url];
       return;
     }
