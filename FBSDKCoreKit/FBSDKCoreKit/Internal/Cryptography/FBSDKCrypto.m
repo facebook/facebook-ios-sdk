@@ -45,9 +45,12 @@ static inline void FBSDKCryptoBlankData(NSData *data)
   return [NSData dataWithBytesNoCopy:buffer length:numOfBytes];
 }
 
-+ (NSString *)randomString:(NSUInteger)numOfBytes
++ (nullable NSString *)randomString:(NSUInteger)numOfBytes
 {
   NSData *randomStringData = [FBSDKCrypto randomBytes:numOfBytes];
+  if (!randomStringData) {
+    return nil;
+  }
   NSString *randomString = [FBSDKBase64 encodeData:randomStringData];
   FBSDKCryptoBlankData(randomStringData);
   return randomString;
