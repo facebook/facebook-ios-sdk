@@ -25,6 +25,8 @@
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingContent.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ShareUtility)
 @interface FBSDKShareUtility : NSObject <FBSDKShareUtility>
 
@@ -33,21 +35,23 @@ NS_SWIFT_NAME(ShareUtility)
 
 + (void)assertCollection:(id<NSFastEnumeration>)collection ofClass:itemClass name:(NSString *)name;
 + (void)assertCollection:(id<NSFastEnumeration>)collection ofClassStrings:(NSArray *)classStrings name:(NSString *)name;
-+ (NSString *)buildWebShareTags:(NSArray<NSString *> *)peopleIDs;
-+ (NSDictionary<NSString *, id> *)convertPhoto:(FBSDKSharePhoto *)photo;
-+ (UIImage *)imageWithCircleColor:(UIColor *)color
++ (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs;
++ (nullable NSDictionary<NSString *, id> *)convertPhoto:(nullable FBSDKSharePhoto *)photo;
++ (nullable UIImage *)imageWithCircleColor:(nullable UIColor *)color
                        canvasSize:(CGSize)canvasSize
                        circleSize:(CGSize)circleSize;
 + (BOOL)validateArgumentWithName:(NSString *)argumentName
                            value:(NSUInteger)value
                             isIn:(NSArray<NSNumber *> *)possibleValues
-                           error:(NSError *__autoreleasing *)errorRef;
+                           error:(NSError *_Nullable *)errorRef;
 + (BOOL)validateArray:(NSArray<id> *)array
              minCount:(NSUInteger)minCount
              maxCount:(NSUInteger)maxCount
                  name:(NSString *)name
-                error:(NSError *__autoreleasing *)errorRef;
-+ (BOOL)validateNetworkURL:(NSURL *)URL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef;
-+ (BOOL)validateRequiredValue:(id)value name:(NSString *)name error:(NSError *__autoreleasing *)errorRef;
+                error:(NSError *_Nullable *)errorRef;
++ (BOOL)validateNetworkURL:(NSURL *)URL name:(NSString *)name error:(NSError *_Nullable *)errorRef;
++ (BOOL)validateRequiredValue:(id)value name:(NSString *)name error:(NSError *_Nullable *)errorRef;
 
 @end
+
+NS_ASSUME_NONNULL_END
