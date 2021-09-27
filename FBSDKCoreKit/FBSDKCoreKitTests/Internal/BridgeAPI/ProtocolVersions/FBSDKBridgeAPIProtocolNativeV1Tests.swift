@@ -564,7 +564,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func stubData(with image: UIImage?) -> Data? {
-    image?.jpegData(compressionQuality: Settings.jpegCompressionQuality)
+    image?.jpegData(compressionQuality: Settings.shared.jpegCompressionQuality)
   }
 
   func stubImage() -> UIImage {

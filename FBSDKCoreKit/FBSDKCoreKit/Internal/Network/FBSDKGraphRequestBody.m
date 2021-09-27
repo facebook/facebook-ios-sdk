@@ -85,7 +85,7 @@
            imageValue:(UIImage *)image
                logger:(FBSDKLogger *)logger
 {
-  NSData *data = UIImageJPEGRepresentation(image, [FBSDKSettings JPEGCompressionQuality]);
+  NSData *data = UIImageJPEGRepresentation(image, FBSDKSettings.sharedSettings.JPEGCompressionQuality);
   [self _appendWithKey:key filename:key contentType:@"image/jpeg" contentBlock:^{
     [self->_data appendData:data];
   }];

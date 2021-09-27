@@ -626,7 +626,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     jpegCompressionQuality.doubleValue,
     0.01,
     "A developer should be able to set a jpeg compression quality via the plist"
@@ -636,7 +636,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testJPEGCompressionQualityFromMissingPlistEntry
 {
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     0.9,
     0.01,
     "There should be a known default value for jpeg compression quality"
@@ -649,7 +649,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertNotEqual(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     -0.2,
     "Should not use a negative value as a jpeg compression quality"
   );
@@ -660,14 +660,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookJpegCompressionQuality" : @0.2}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.JPEGCompressionQuality = 0.3;
+  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 0.3;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     @(0.3).doubleValue,
     0.01,
     "Settings should return the explicitly set jpeg compression quality over one gleaned from a plist entry"
@@ -676,14 +676,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityWithoutPlistEntry
 {
-  FBSDKSettings.JPEGCompressionQuality = 1.0;
+  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1.0;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     1.0,
     "Settings should return the explicitly set jpeg compression quality"
   );
@@ -691,14 +691,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityTooLow
 {
-  FBSDKSettings.JPEGCompressionQuality = -0.1;
+  FBSDKSettings.sharedSettings.JPEGCompressionQuality = -0.1;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertNotEqual(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     -0.1,
     "Should not store a negative jpeg compression quality"
   );
@@ -706,14 +706,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityTooHigh
 {
-  FBSDKSettings.JPEGCompressionQuality = 1.1;
+  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1.1;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertNotEqual(
-    FBSDKSettings.JPEGCompressionQuality,
+    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
     1.1,
     "Should not store a jpeg compression quality that is larger than 1.0"
   );
@@ -721,11 +721,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testJPEGCompressionQualityInternalStorage
 {
-  FBSDKSettings.JPEGCompressionQuality = 1;
+  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1;
 
   [self resetLoggingSideEffects];
 
-  XCTAssertEqual(FBSDKSettings.JPEGCompressionQuality, 1, "Sanity check");
+  XCTAssertEqual(FBSDKSettings.sharedSettings.JPEGCompressionQuality, 1, "Sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"

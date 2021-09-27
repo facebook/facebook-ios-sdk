@@ -283,7 +283,7 @@ static const struct {
     if ([invalidObject isKindOfClass:UIImage.class]) {
       UIImage *image = (UIImage *)invalidObject;
       // due to backward compatibility, we must send UIImage as NSData even though UIPasteboard can handle UIImage
-      invalidObject = UIImageJPEGRepresentation(image, [FBSDKSettings JPEGCompressionQuality]);
+      invalidObject = UIImageJPEGRepresentation(image, FBSDKSettings.sharedSettings.JPEGCompressionQuality);
       dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.image;
     }
     if ([invalidObject isKindOfClass:NSData.class]) {

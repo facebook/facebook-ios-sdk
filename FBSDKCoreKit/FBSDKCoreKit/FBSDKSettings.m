@@ -122,7 +122,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, clientToken);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, displayName);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, facebookDomainPart);
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _JPEGCompressionQualityNumber);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _instrumentEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _autoLogAppEventsEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _advertiserIDCollectionEnabled);
@@ -132,6 +131,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 
 @synthesize userAgentSuffix = _userAgentSuffix;
 @synthesize appID = _appID;
+@synthesize JPEGCompressionQuality = _JPEGCompressionQuality;
 static dispatch_once_t sharedSettingsNonce;
 
 // Transitional singleton introduced as a way to change the usage semantics
@@ -201,7 +201,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookUrlSchemeSuffix
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookClientToken, clientToken, setClientToken, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDisplayName, displayName, setDisplayName, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDomainPart, facebookDomainPart, setFacebookDomainPart, nil, NO);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompressionQuality, _JPEGCompressionQualityNumber, _setJPEGCompressionQualityNumber, @0.9, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookInstrumentEnabled, _instrumentEnabled, _setInstrumentEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEventsEnabled, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled, @1, YES);
@@ -227,6 +226,23 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   [self validateConfiguration];
   _appID = [appID copy];
+  [self logIfSDKSettingsChanged];
+}
+
+- (CGFloat)JPEGCompressionQuality
+{
+  if (!_JPEGCompressionQuality) {
+    NSNumber *compressionQuality = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
+    _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:compressionQuality.floatValue ?: 0.9];
+  }
+  return _JPEGCompressionQuality;
+}
+
+- (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
+{
+  [self validateConfiguration];
+
+  _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:JPEGCompressionQuality];
   [self logIfSDKSettingsChanged];
 }
 
@@ -257,12 +273,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (CGFloat)JPEGCompressionQuality
 {
-  return self.sharedSettings._JPEGCompressionQualityNumber.floatValue;
+  return self.sharedSettings.JPEGCompressionQuality;
 }
 
 + (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
 {
-  [self.sharedSettings _setJPEGCompressionQualityNumber:@(JPEGCompressionQuality)];
+  [self.sharedSettings setJPEGCompressionQuality:JPEGCompressionQuality];
 }
 
 + (BOOL)isInstrumentEnabled
@@ -506,6 +522,13 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
   [g_loggingBehaviors removeObject:loggingBehavior];
   [self updateGraphAPIDebugBehavior];
+}
+
+// MARK: - Helper methods
+
+- (CGFloat)_validateJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
+{
+  return MIN(MAX(0, JPEGCompressionQuality), 1);
 }
 
 #pragma mark - Readonly Configuration Settings

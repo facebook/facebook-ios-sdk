@@ -24,7 +24,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Settings)
-@interface FBSDKSettings : NSObject<FBSDKSettings>
+@interface FBSDKSettings : NSObject <FBSDKSettings>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -37,22 +37,24 @@ NS_SWIFT_NAME(Settings)
 /**
  Retrieve the current iOS SDK version.
  */
-@property (nonatomic, copy, readonly) NSString *sdkVersion;
+@property (nonatomic, readonly, copy) NSString *sdkVersion;
 
 /**
  Retrieve the current iOS SDK version.
  */
-@property (class, nonatomic, readonly, copy) NSString *sdkVersion DEPRECATED_MSG_ATTRIBUTE("`Settings.sdkVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.sdkVersion` instead");
+@property (class, nonatomic, readonly, copy) NSString *sdkVersion
+  DEPRECATED_MSG_ATTRIBUTE("`Settings.sdkVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.sdkVersion` instead");
 
 /**
  Retrieve the current default Graph API version.
  */
-@property (class, nonatomic, copy, readonly) NSString *defaultGraphAPIVersion DEPRECATED_MSG_ATTRIBUTE("`Settings.defaultGraphAPIVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.defaultGraphAPIVersion` instead");
+@property (class, nonatomic, readonly, copy) NSString *defaultGraphAPIVersion
+  DEPRECATED_MSG_ATTRIBUTE("`Settings.defaultGraphAPIVersion` is deprecated and will be removed in the next major release, please use `Settings.shared.defaultGraphAPIVersion` instead");
 
 /**
  Retrieve the current default Graph API version.
  */
-@property (nonatomic, copy, readonly) NSString *defaultGraphAPIVersion;
+@property (nonatomic, readonly, copy) NSString *defaultGraphAPIVersion;
 
 /**
  The quality of JPEG images sent to Facebook from the SDK,
@@ -61,79 +63,92 @@ NS_SWIFT_NAME(Settings)
  If not explicitly set, the default is 0.9.
 
  @see [UIImageJPEGRepresentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKitFunctionReference/#//apple_ref/c/func/UIImageJPEGRepresentation) */
-@property (class, nonatomic, assign) CGFloat JPEGCompressionQuality
+@property (class, nonatomic) CGFloat JPEGCompressionQuality
+NS_SWIFT_NAME(jpegCompressionQuality)
+DEPRECATED_MSG_ATTRIBUTE("`Settings.JPEGCompressionQuality` is deprecated and will be removed in the next major release, please use `Settings.shared.JPEGCompressionQuality` instead");
+
+/**
+ The quality of JPEG images sent to Facebook from the SDK,
+ expressed as a value from 0.0 to 1.0.
+
+ If not explicitly set, the default is 0.9.
+
+ @see [UIImageJPEGRepresentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKitFunctionReference/#//apple_ref/c/func/UIImageJPEGRepresentation) */
+@property (nonatomic) CGFloat JPEGCompressionQuality
 NS_SWIFT_NAME(jpegCompressionQuality);
 
 /**
  Controls the auto logging of basic app events, such as activateApp and deactivateApp.
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, assign, getter=isAutoLogAppEventsEnabled) BOOL autoLogAppEventsEnabled;
+@property (class, nonatomic, getter = isAutoLogAppEventsEnabled, assign) BOOL autoLogAppEventsEnabled;
 
 /**
  Controls the fb_codeless_debug logging event
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, assign, getter=isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
+@property (class, nonatomic, getter = isCodelessDebugLogEnabled, assign) BOOL codelessDebugLogEnabled;
 
 /**
  Controls the access to IDFA
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, assign, getter=isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
+@property (class, nonatomic, getter = isAdvertiserIDCollectionEnabled, assign) BOOL advertiserIDCollectionEnabled;
 
 /**
  Controls the SKAdNetwork report
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, assign, getter=isSKAdNetworkReportEnabled) BOOL SKAdNetworkReportEnabled;
+@property (class, nonatomic, getter = isSKAdNetworkReportEnabled, assign) BOOL SKAdNetworkReportEnabled;
 
 /**
  Whether data such as that generated through FBSDKAppEvents and sent to Facebook
  should be restricted from being used for other than analytics and conversions.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, assign, getter=shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage;
+@property (class, nonatomic, getter = shouldLimitEventAndDataUsage, assign) BOOL limitEventAndDataUsage;
 
 /**
  Whether in memory cached values should be used for expensive metadata fields, such as
  carrier and advertiser ID, that are fetched on many applicationDidBecomeActive notifications.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, assign, getter=shouldUseCachedValuesForExpensiveMetadata) BOOL shouldUseCachedValuesForExpensiveMetadata;
+@property (class, nonatomic, getter = shouldUseCachedValuesForExpensiveMetadata, assign) BOOL shouldUseCachedValuesForExpensiveMetadata;
 
 /**
  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
  */
-@property (class, nonatomic, assign, getter=isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled;
+@property (class, nonatomic, getter = isGraphErrorRecoveryEnabled, assign) BOOL graphErrorRecoveryEnabled;
 
 /**
   The Facebook App ID used by the SDK.
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
-@property (nonatomic, copy, nullable) NSString *appID;
+@property (nullable, nonatomic, copy) NSString *appID;
 
 /**
   The Facebook App ID used by the SDK.
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
-@property (class, nullable, nonatomic, copy) NSString *appID DEPRECATED_MSG_ATTRIBUTE("`Settings.appID` is deprecated and will be removed in the next major release, please use `Settings.shared.appID` instead");
+@property (class, nullable, nonatomic, copy) NSString *appID
+  DEPRECATED_MSG_ATTRIBUTE("`Settings.appID` is deprecated and will be removed in the next major release, please use `Settings.shared.appID` instead");
 
 /**
   The default url scheme suffix used for sessions.
 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
-@property (class, nonatomic, copy, nullable) NSString *appURLSchemeSuffix DEPRECATED_MSG_ATTRIBUTE("`Settings.appURLSchemeSuffix` is deprecated and will be removed in the next major release, please use `Settings.shared.appURLSchemeSuffix` instead");
+@property (class, nullable, nonatomic, copy) NSString *appURLSchemeSuffix
+  DEPRECATED_MSG_ATTRIBUTE("`Settings.appURLSchemeSuffix` is deprecated and will be removed in the next major release, please use `Settings.shared.appURLSchemeSuffix` instead");
 
 /**
   The default url scheme suffix used for sessions.
 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
-@property (nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
+@property (nullable, nonatomic, copy) NSString *appURLSchemeSuffix;
 
 /**
   The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
@@ -144,7 +159,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
  */
-@property (nonatomic, copy, nullable) NSString *clientToken;
+@property (nullable, nonatomic, copy) NSString *clientToken;
 
 /**
   The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
@@ -155,7 +170,8 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
  */
-@property (class, nullable, nonatomic, copy) NSString *clientToken DEPRECATED_MSG_ATTRIBUTE("`Settings.clientToken` is deprecated and will be removed in the next major release, please use `Settings.shared.clientToken` instead");
+@property (class, nullable, nonatomic, copy) NSString *clientToken
+  DEPRECATED_MSG_ATTRIBUTE("`Settings.clientToken` is deprecated and will be removed in the next major release, please use `Settings.shared.clientToken` instead");
 /**
   The Facebook Display Name used by the SDK.
 
@@ -164,7 +180,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookDisplayName).
  */
-@property (class, nonatomic, copy, nullable) NSString *displayName;
+@property (class, nullable, nonatomic, copy) NSString *displayName;
 
 /**
  The Facebook domain part. This can be used to change the Facebook domain
@@ -172,7 +188,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookDomainPart).
  */
-@property (class, nonatomic, copy, nullable) NSString *facebookDomainPart;
+@property (class, nullable, nonatomic, copy) NSString *facebookDomainPart;
 
 /**
   The current Facebook SDK logging behavior. This should consist of strings
@@ -194,7 +210,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  Defaults to `FBSDK_DEFAULT_GRAPH_API_VERSION`.
 */
-@property (class, nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+@property (class, null_resettable, nonatomic, copy) NSString *graphAPIVersion;
 
 /**
  Internal property exposed to facilitate transition to Swift.
