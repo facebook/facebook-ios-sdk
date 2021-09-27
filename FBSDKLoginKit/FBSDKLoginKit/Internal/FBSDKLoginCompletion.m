@@ -56,13 +56,11 @@
 @property (nonatomic) BOOL performExplicitFallback;
 @property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
+@property (nonatomic) FBSDKLoginCompletionParameters *parameters;
 
 @end
 
 @implementation FBSDKLoginURLCompleter
-{
-  FBSDKLoginCompletionParameters *_parameters;
-}
 
 static id<FBSDKProfileCreating> _profileFactory;
 static NSDateFormatter *_dateFormatter;
@@ -358,11 +356,6 @@ static NSDateFormatter *_dateFormatter;
 + (void)setProfileFactory:(id<FBSDKProfileCreating>)factory
 {
   _profileFactory = factory;
-}
-
-- (FBSDKLoginCompletionParameters *)parameters
-{
-  return _parameters;
 }
 
 + (void)reset

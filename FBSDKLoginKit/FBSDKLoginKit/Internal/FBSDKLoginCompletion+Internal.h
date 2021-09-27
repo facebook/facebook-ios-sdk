@@ -49,12 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FBSDKLoginURLCompleter ()
-
-@property (nonatomic, strong) FBSDKLoginCompletionParameters *parameters;
-
-@end
-
 NS_ASSUME_NONNULL_END
 
 #endif
