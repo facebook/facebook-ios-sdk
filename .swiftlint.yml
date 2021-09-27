@@ -182,6 +182,7 @@ only_rules:
   - vertical_parameter_alignment
   - vertical_parameter_alignment_on_call
   - vertical_whitespace
+  - vertical_whitespace_closing_braces
   - void_return
   - xct_specific_matcher
   - xctfail_message

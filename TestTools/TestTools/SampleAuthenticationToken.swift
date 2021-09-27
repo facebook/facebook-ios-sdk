@@ -36,5 +36,4 @@ public class SampleAuthenticationToken: NSObject {
       graphDomain: domain
     )
   }
-
 }

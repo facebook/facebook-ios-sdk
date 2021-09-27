@@ -41,5 +41,4 @@ struct SwitchContextDialogFactory: SwitchContextDialogMaking {
       delegate: delegate
     )
   }
-
 }

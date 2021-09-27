@@ -161,5 +161,4 @@ class TournamentUpdaterTest: XCTestCase {
     static let successFalse = ["success": 0]
     static let invalid = ["not_success": "value"]
   }
-
 }

@@ -154,5 +154,4 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
       didThrowNotInGamingContextError,
       "Should throw a not in gaming context error when the user is not currently in gaming context")
   }
-
 }

@@ -58,5 +58,4 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
 
     capturedBlock = block
   }
-
 }

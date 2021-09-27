@@ -42,7 +42,6 @@ enum CustomUpdateContentObjects {
   static let mediaContentInvalidMessage = CustomUpdateContentMedia(message: "", media: gifMedia)
   static let mediaContentInvalidMedia = CustomUpdateContentMedia(message: validMessage, media: invalidGifMedia)
   static let mediaContentValid = CustomUpdateContentMedia(message: validMessage, media: gifMedia)
-
 }
 
 enum CustomUpdateContentObjectsParameters {

@@ -21,5 +21,4 @@ import FBSDKCoreKit
 class TestAppEventsDropDeterminer: AppEventDropDetermining {
 
   var shouldDropAppEvents = false
-
 }

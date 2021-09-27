@@ -26,5 +26,4 @@ class TestAppEventParametersExtractor: AppEventParametersExtracting {
   ) -> NSMutableDictionary {
     [:]
   }
-
 }

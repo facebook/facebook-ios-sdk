@@ -145,5 +145,4 @@ class GameRequestPayloadObserverDelegate: GamingPayloadDelegate {
     capturedGameRequestID = gameRequestID
     capturedPayload = payload
   }
-
 }

@@ -53,5 +53,4 @@ public class CustomUpdateContentImage {
     self.messageLocalization = messageLocalization
     self.ctaLocalization = ctaLocalization
   }
-
 }
