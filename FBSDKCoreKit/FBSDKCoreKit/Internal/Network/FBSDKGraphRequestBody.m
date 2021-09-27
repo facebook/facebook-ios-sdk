@@ -29,12 +29,15 @@
 
 #define kNewline @"\r\n"
 
+@interface FBSDKGraphRequestBody ()
+
+@property (nonatomic) NSMutableData *data;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *json;
+@property (nonatomic) NSString *stringBoundary;
+
+@end
+
 @implementation FBSDKGraphRequestBody
-{
-  NSMutableData *_data;
-  NSMutableDictionary<NSString *, id> *_json;
-  NSString *_stringBoundary;
-}
 
 - (instancetype)init
 {

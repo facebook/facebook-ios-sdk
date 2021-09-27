@@ -41,15 +41,10 @@
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
+@property (nonatomic) id<FBSDKInternalUtility> internalUtility;
 @end
 
 @implementation FBSDKChooseContextDialog
-{
-  id<FBSDKInternalUtility> _internalUtility;
-}
-
-@synthesize dialogContent = _dialogContent;
-@synthesize delegate = _delegate;
 
 + (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {

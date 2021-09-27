@@ -18,10 +18,12 @@
 
 #import "FBSDKCoreKitTests-Swift.h"
 
+@interface ObjCTestObject ()
+@property (nonatomic) NSString *a;
+@end
+
 @implementation ObjCTestObject
-{
-  NSString *_a;
-}
+
 - (instancetype)init
 {
   if ((self = [super init])) {

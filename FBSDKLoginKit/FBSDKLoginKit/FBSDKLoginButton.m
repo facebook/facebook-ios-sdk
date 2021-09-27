@@ -45,9 +45,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 @end
 
 @implementation FBSDKLoginButton
-{
-  id<FBSDKGraphRequestFactory> _graphRequestFactory;
-}
 
 #pragma mark - Object Lifecycle
 
@@ -465,34 +462,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
   return _graphRequestFactory;
 }
-
-// MARK: - Testability
-
-#if DEBUG
- #if FBTEST
-
-- (NSString *)userName
-{
-  return _userName;
-}
-
-- (NSString *)userID
-{
-  return _userID;
-}
-
-- (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider
-{
-  _loginProvider = loginProvider;
-}
-
-- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
-{
-  _graphRequestFactory = graphRequestFactory;
-}
-
- #endif
-#endif
 
 @end
 

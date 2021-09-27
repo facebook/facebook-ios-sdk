@@ -62,13 +62,12 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_sha
 
 @property (class, nonatomic) BOOL hasBeenConfigured;
 
+@property (nonatomic) FBSDKWebDialog *webDialog;
+@property (nonatomic) NSMutableArray<NSURL *> *temporaryFiles;
+
 @end
 
 @implementation FBSDKShareDialog
-{
-  FBSDKWebDialog *_webDialog;
-  NSMutableArray<NSURL *> *_temporaryFiles;
-}
 
 #pragma mark - Class Properties
 
