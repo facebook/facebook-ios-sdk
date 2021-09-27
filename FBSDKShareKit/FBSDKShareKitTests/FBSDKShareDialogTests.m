@@ -708,7 +708,7 @@
   self.settings.appID = @"AppID";
   id<FBSDKBridgeAPIRequest> stubbedRequest = [[TestBridgeAPIRequest alloc] initWithUrl:nil
                                                                           protocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                                                scheme:nil];
+                                                                                scheme:@"1"];
   self.bridgeAPIRequestFactory.stubbedBridgeAPIRequest = stubbedRequest;
 
   UIViewController *vc = [UIViewController new];

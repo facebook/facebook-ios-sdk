@@ -24,6 +24,8 @@
 
 @protocol FBSDKBridgeAPIProtocol;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -35,12 +37,14 @@ NS_SWIFT_NAME(BridgeAPIRequestProtocol)
 
 @property (nonatomic, copy, readonly) NSString *scheme;
 @property (nonatomic, copy, readonly) NSString *actionID;
-@property (nonatomic, copy, readonly) NSString *methodName;
+@property (nonatomic, nullable, copy, readonly) NSString *methodName;
 @property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
-@property (nonatomic, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
+@property (nonatomic, nullable, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
 
-- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef;
+- (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

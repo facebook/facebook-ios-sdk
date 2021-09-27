@@ -18,18 +18,19 @@
 
 @objcMembers
 class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
-  var actionID: String?
+  var actionID: String
   var methodName: String?
   var protocolType: FBSDKBridgeAPIProtocolType
   var `protocol`: BridgeAPIProtocol?
-  var scheme: String?
+  var scheme: String
 
   let url: URL?
 
-  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String? = nil) {
+  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String = "1") {
     self.url = url
     self.protocolType = protocolType
     self.scheme = scheme
+    self.actionID = "1"
   }
 
   func copy(with zone: NSZone? = nil) -> Any {

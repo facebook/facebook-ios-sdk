@@ -745,7 +745,7 @@
 {
   return [[TestBridgeAPIRequest alloc] initWithUrl:self.sampleUrl
                                       protocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                            scheme:nil];
+                                            scheme:@"1"];
 }
 
 - (NSURL *)sampleUrl
