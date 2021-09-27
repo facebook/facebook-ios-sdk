@@ -127,65 +127,67 @@ class FeatureExtractorTests: XCTestCase {
     "hint": "Confirm Order"
   ]
 
-  let siblings = [[
-    "classname": "UILabel",
-    "classtypebitmask": "1024",
-    "text": "Order Summary"
-  ],
-  [
-    "classname": "UIStackView",
-    "classtypebitmask": "0",
-    "childviews": [
-      [
-        "classname": "UIView",
-        "classtypebitmask": "0"
-      ],
-      [
-        "classname": "UILabel",
-        "classtypebitmask": "1024",
-        "text": "Coffee 5"
-      ],
-      [
-        "classname": "UILabel",
-        "classtypebitmask": "Price: $5.99"
+  let siblings = [
+    [
+      "classname": "UILabel",
+      "classtypebitmask": "1024",
+      "text": "Order Summary"
+    ],
+    [
+      "classname": "UIStackView",
+      "classtypebitmask": "0",
+      "childviews": [
+        [
+          "classname": "UIView",
+          "classtypebitmask": "0"
+        ],
+        [
+          "classname": "UILabel",
+          "classtypebitmask": "1024",
+          "text": "Coffee 5"
+        ],
+        [
+          "classname": "UILabel",
+          "classtypebitmask": "Price: $5.99"
+        ]
       ]
-    ]
-  ],
-  [
-    "classname": "UIStackView",
-    "classtypebitmask": "0",
-    "childviews": [
-      [
-        "classname": "UIView",
-        "classtypebitmask": "0"
-      ],
-      [
-        "classname": "UILabel",
-        "classtypebitmask": "1024",
-        "text": "Quantity"
-      ],
-      [
-        "classname": "UILabel",
-        "classtypebitmask": "1"
+    ],
+    [
+      "classname": "UIStackView",
+      "classtypebitmask": "0",
+      "childviews": [
+        [
+          "classname": "UIView",
+          "classtypebitmask": "0"
+        ],
+        [
+          "classname": "UILabel",
+          "classtypebitmask": "1024",
+          "text": "Quantity"
+        ],
+        [
+          "classname": "UILabel",
+          "classtypebitmask": "1"
+        ]
       ]
+    ],
+    [
+      "classname": "UITextField",
+      "classtypebitmask": "2056",
+      "hint": "Credit Card Credit Card"
+    ],
+    [
+      "classname": "UITextField",
+      "classtypebitmask": "2056",
+      "hint": "Shipping Address Shipping Address"
+    ],
+    [
+      "classname": "UIButton",
+      "classtypebitmask": "24",
+      "is_interacted": 1,
+      "hint": "Confirm Order"
     ]
-  ],
-  [
-    "classname": "UITextField",
-    "classtypebitmask": "2056",
-    "hint": "Credit Card Credit Card"
-  ],
-  [
-    "classname": "UITextField",
-    "classtypebitmask": "2056",
-    "hint": "Shipping Address Shipping Address"
-  ],
-  [
-    "classname": "UIButton",
-    "classtypebitmask": "24",
-    "is_interacted": 1,
-    "hint": "Confirm Order"
-  ]]
+  ]
 
   let modelManager = TestOnDeviceMLModelManager()
 

@@ -55,6 +55,7 @@ only_rules:
   - closure_end_indentation
   - closure_parameter_position
   - closure_spacing
+  - collection_alignment
   - colon
   - comma
   - comment_spacing
