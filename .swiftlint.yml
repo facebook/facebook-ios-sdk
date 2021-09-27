@@ -127,7 +127,6 @@ only_rules:
   - no_space_in_method_call
   - notification_center_detachment
   - nsobject_prefer_isequal
-  - object_literal
   - opening_brace
   - operator_usage_whitespace
   - operator_whitespace
