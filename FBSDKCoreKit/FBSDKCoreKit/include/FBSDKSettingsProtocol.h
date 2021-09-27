@@ -28,6 +28,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nullable, nonatomic, copy) NSString *clientToken;
 @property (nullable, nonatomic, copy) NSString *userAgentSuffix;
 @property (nonatomic, readonly, copy) NSString *sdkVersion;
+@property (nullable, nonatomic, copy) NSString *displayName;
 @property (class, nonnull, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 @property (nullable, nonatomic, copy) NSString *appURLSchemeSuffix;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;

@@ -22,6 +22,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var clientToken: String?
   var sdkVersion: String = ""
   var userAgentSuffix: String?
+  var displayName: String?
   var logWarningsCallCount = 0
   var logIfSDKSettingsChangedCallCount = 0
   var recordInstallCallCount = 0

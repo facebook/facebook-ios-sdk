@@ -22,6 +22,7 @@ final class TestSettings: NSObject, SettingsProtocol {
   var clientToken: String?
   var sdkVersion: String = ""
   var userAgentSuffix: String?
+  var displayName: String?
   var appURLSchemeSuffix: String?
   var isDataProcessingRestricted = false
   var isAutoLogAppEventsEnabled = false

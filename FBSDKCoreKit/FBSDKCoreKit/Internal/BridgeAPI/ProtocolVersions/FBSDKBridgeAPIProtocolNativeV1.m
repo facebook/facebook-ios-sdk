@@ -255,7 +255,7 @@ static const struct {
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.actionID];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:[self _appIcon]
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appIcon];
-  [FBSDKTypeUtility dictionary:bridgeParameters setObject:[FBSDKSettings displayName]
+  [FBSDKTypeUtility dictionary:bridgeParameters setObject:FBSDKSettings.sharedSettings.displayName
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appName];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:FBSDKSettings.sharedSettings.sdkVersion
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.sdkVersion];

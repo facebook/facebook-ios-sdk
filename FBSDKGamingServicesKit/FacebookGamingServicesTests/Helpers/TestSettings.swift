@@ -25,6 +25,7 @@ class TestSettings: SettingsProtocol {
   var clientToken: String?
   var userAgentSuffix: String?
   var sdkVersion: String = ""
+  var displayName: String?
   var appURLSchemeSuffix: String?
   var isDataProcessingRestricted = false
   var isAutoLogAppEventsEnabled = false

@@ -510,7 +510,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     displayName,
     "A developer should be able to set any string as the display name"
   );
@@ -519,7 +519,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testDisplayNameFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     "A display name should not have a default value if it is not available in the plist"
   );
 }
@@ -530,7 +530,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     emptyString,
     "Should not use an empty string as a display name but it will"
   );
@@ -542,14 +542,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookDisplayName" : displayName}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.displayName = @"foo";
+  FBSDKSettings.sharedSettings.displayName = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     @"foo",
     "Settings should return the explicitly set display name over one gleaned from a plist entry"
   );
@@ -557,14 +557,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingDisplayNameWithoutPlistEntry
 {
-  FBSDKSettings.displayName = @"foo";
+  FBSDKSettings.sharedSettings.displayName = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     @"foo",
     "Settings should return the explicitly set display name"
   );
@@ -572,14 +572,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDisplayName
 {
-  FBSDKSettings.displayName = emptyString;
+  FBSDKSettings.sharedSettings.displayName = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     emptyString,
     "Should not store an empty display name but it will"
   );
@@ -587,14 +587,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyDisplayName
 {
-  FBSDKSettings.displayName = whiteSpaceToken;
+  FBSDKSettings.sharedSettings.displayName = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.displayName,
+    FBSDKSettings.sharedSettings.displayName,
     whiteSpaceToken,
     "Should not store a whitespace only display name but it will"
   );
@@ -602,11 +602,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDisplayNameInternalStorage
 {
-  FBSDKSettings.displayName = @"foo";
+  FBSDKSettings.sharedSettings.displayName = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.displayName, "sanity check");
+  XCTAssertNotNil(FBSDKSettings.sharedSettings.displayName, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"

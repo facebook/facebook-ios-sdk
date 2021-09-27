@@ -172,6 +172,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  */
 @property (class, nullable, nonatomic, copy) NSString *clientToken
   DEPRECATED_MSG_ATTRIBUTE("`Settings.clientToken` is deprecated and will be removed in the next major release, please use `Settings.shared.clientToken` instead");
+
 /**
   The Facebook Display Name used by the SDK.
 
@@ -180,7 +181,18 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  If not explicitly set, the default will be read from the application's plist (FacebookDisplayName).
  */
-@property (class, nullable, nonatomic, copy) NSString *displayName;
+@property (class, nullable, nonatomic, copy) NSString *displayName
+DEPRECATED_MSG_ATTRIBUTE("`Settings.displayName` is deprecated and will be removed in the next major release, please use `Settings.shared.displayName` instead");
+
+/**
+  The Facebook Display Name used by the SDK.
+
+ This should match the Display Name that has been set for the app with the corresponding Facebook App ID,
+ in the Facebook App Dashboard.
+
+ If not explicitly set, the default will be read from the application's plist (FacebookDisplayName).
+ */
+@property (nullable, nonatomic, copy) NSString *displayName;
 
 /**
  The Facebook domain part. This can be used to change the Facebook domain
