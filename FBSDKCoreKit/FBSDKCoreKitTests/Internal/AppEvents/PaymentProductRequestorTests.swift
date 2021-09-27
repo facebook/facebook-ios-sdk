@@ -476,10 +476,9 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       eventLogger.capturedEventName,
       "Should not log a previously logged purchased subscription"
     )
-    XCTAssertFalse(
+    XCTAssertTrue(
       store.capturedValues.compactMap { $0.value as? String }
-        .filter { $0.contains(identifier) }
-        .isEmpty,
+        .contains { $0.contains(identifier) },
       "Should not clear the persisted identifier of the previously logged purchase"
     )
   }
@@ -498,10 +497,9 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
       Values.didSubscribeEventName,
       "Should log a previously unlogged purchased subscription"
     )
-    XCTAssertFalse(
+    XCTAssertTrue(
       store.capturedValues.compactMap { $0.value as? String }
-        .filter { $0.contains(identifier) }
-        .isEmpty,
+        .contains { $0.contains(identifier) },
       "Should persist the identifier of the purchase"
     )
   }

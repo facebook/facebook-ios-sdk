@@ -61,6 +61,7 @@ only_rules:
   - comment_spacing
   - compiler_protocol_init
   - computed_accessors_order
+  - contains_over_filter_is_empty
   - contains_over_first_not_nil
   - control_statement
   - convenience_type
