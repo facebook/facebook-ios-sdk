@@ -74,16 +74,18 @@ class CrashObserverTests: XCTestCase {
       "(22 DEV METHODS)"
     ]
 
-    let crashLogs = [[
-      "callstack": callstack,
-      "reason": "NSInternalInconsistencyException",
-      "fb_sdk_version": "5.6.0",
-      "timestamp": "1572036095",
-      "app_id": "2416630768476176",
-      "device_model": "iPad5,3",
-      "device_os": "ios",
-      "device_os_version": "13.1.3",
-    ]]
+    let crashLogs = [
+      [
+        "callstack": callstack,
+        "reason": "NSInternalInconsistencyException",
+        "fb_sdk_version": "5.6.0",
+        "timestamp": "1572036095",
+        "app_id": "2416630768476176",
+        "device_model": "iPad5,3",
+        "device_os": "ios",
+        "device_os_version": "13.1.3",
+      ]
+    ]
     return crashLogs
   }
 }

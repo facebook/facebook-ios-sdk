@@ -263,23 +263,35 @@ class TournamentFetcherTests: XCTestCase {
 
   enum SampleTournamentResults {
 
-    static let validPartial = ["data": [[
-      Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentEndTime: Values.tournamentEndTime,
-      Keys.tournamentID: Values.tournamentID
-    ]]]
+    static let validPartial = [
+      "data": [
+        [
+          Keys.tournamentTitle: Values.tournamentTitle,
+          Keys.tournamentEndTime: Values.tournamentEndTime,
+          Keys.tournamentID: Values.tournamentID
+        ]
+      ]
+    ]
 
-    static let validFull = ["data": [[
-      Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentEndTime: Values.tournamentEndTime,
-      Keys.tournamentID: Values.tournamentID,
-      Keys.tournamentPayload: Values.tournamentPayload
-    ]]]
+    static let validFull = [
+      "data": [
+        [
+          Keys.tournamentTitle: Values.tournamentTitle,
+          Keys.tournamentEndTime: Values.tournamentEndTime,
+          Keys.tournamentID: Values.tournamentID,
+          Keys.tournamentPayload: Values.tournamentPayload
+        ]
+      ]
+    ]
 
-    static let missingIdentifier = ["data": [[
-      Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentEndTime: Values.tournamentEndTime
-    ]]]
+    static let missingIdentifier = [
+      "data": [
+        [
+          Keys.tournamentTitle: Values.tournamentTitle,
+          Keys.tournamentEndTime: Values.tournamentEndTime
+        ]
+      ]
+    ]
 
     static let invalidGraphAPIResponse = ["not_data": []]
   }
