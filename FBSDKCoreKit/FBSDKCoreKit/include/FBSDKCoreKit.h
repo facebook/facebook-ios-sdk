@@ -70,6 +70,7 @@
 #import "FBSDKLogging.h"
 #import "FBSDKLoggingBehavior.h"
 #import "FBSDKLoginTooltip.h"
+#import "FBSDKProductCondition.h"
 #import "FBSDKRandom.h"
 #import "FBSDKServerConfigurationProvider.h"
 #import "FBSDKSettings.h"

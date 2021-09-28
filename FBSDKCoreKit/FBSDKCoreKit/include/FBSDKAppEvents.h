@@ -27,6 +27,7 @@
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventsFlushBehavior.h"
+#import "FBSDKProductCondition.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -77,17 +78,6 @@ typedef NS_ENUM(NSUInteger, FBSDKProductAvailability)
    */
   FBSDKProductAvailabilityDiscontinued,
 } NS_SWIFT_NAME(AppEvents.ProductAvailability);
-
-/**
- NS_ENUM(NSUInteger, FBSDKProductCondition)
- Specifies product condition for Product Catalog product item update
- */
-typedef NS_ENUM(NSUInteger, FBSDKProductCondition)
-{
-  FBSDKProductConditionNew = 0,
-  FBSDKProductConditionRefurbished,
-  FBSDKProductConditionUsed,
-} NS_SWIFT_NAME(AppEvents.ProductCondition);
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM;
