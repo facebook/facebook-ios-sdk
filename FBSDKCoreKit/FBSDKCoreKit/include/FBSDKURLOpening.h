@@ -20,6 +20,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -32,10 +34,10 @@ NS_SWIFT_NAME(URLOpening)
 // Implementations should make sure they can handle nil parameters
 // which is possible in SafariViewController.
 // see canOpenURL below.
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation;
+- (BOOL)application:(nullable UIApplication *)application
+            openURL:(nullable NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation;
 
 // create a different handler to return YES/NO if the receiver can process the above openURL:.
 // This is separated so that we can process the openURL: in callbacks, while still returning
@@ -43,7 +45,7 @@ NS_SWIFT_NAME(URLOpening)
 - (BOOL)canOpenURL:(NSURL *)url
     forApplication:(UIApplication *)application
  sourceApplication:(NSString *)sourceApplication
-        annotation:(id)annotation;
+        annotation:(nullable id)annotation;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application;
 
@@ -55,3 +57,5 @@ NS_SWIFT_NAME(URLOpening)
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END
