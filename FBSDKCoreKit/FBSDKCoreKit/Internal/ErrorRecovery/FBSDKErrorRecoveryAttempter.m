@@ -46,7 +46,7 @@
     return nil;
   }
   if ([configuration.recoveryActionName isEqualToString:@"login"]) {
-    Class loginRecoveryAttmpterClass = NSClassFromString(@"_FBSDKLoginRecoveryAttempter");
+    Class loginRecoveryAttmpterClass = NSClassFromString(@"FBSDKLoginRecoveryAttempter");
     if (loginRecoveryAttmpterClass) {
       return [loginRecoveryAttmpterClass new];
     }

@@ -29,10 +29,10 @@
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
+#import "FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginUtility.h"
 #import "FBSDKMonotonicTime.h"
 #import "FBSDKPermission.h"
-#import "_FBSDKLoginRecoveryAttempter.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
@@ -60,7 +60,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 + (void)initialize
 {
   if (self == [FBSDKLoginManager class]) {
-    [_FBSDKLoginRecoveryAttempter class];
+    [FBSDKLoginRecoveryAttempter class];
     FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
     [provider loadServerConfigurationWithCompletionBlock:NULL];
   }
@@ -487,14 +487,14 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 {
   [self.keychainStore setString:challengeExpected
                          forKey:FBSDKExpectedChallengeKey
-                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 - (void)storeExpectedNonce:(NSString *)nonceExpected
 {
   [self.keychainStore setString:nonceExpected
                          forKey:FBSDKExpectedNonceKey
-                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 + (NSString *)stringForChallenge
@@ -537,7 +537,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 {
   [_logger willAttemptAppSwitchingBehavior];
   FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
+  BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:@"login"];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
   NSDictionary<NSString *, id> *loginParams = [self logInParametersWithConfiguration:_configuration

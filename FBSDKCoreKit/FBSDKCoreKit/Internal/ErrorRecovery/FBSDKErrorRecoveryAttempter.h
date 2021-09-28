@@ -25,7 +25,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ErrorRecoveryAttempter)
-@interface FBSDKErrorRecoveryAttempter : NSObject<FBSDKErrorRecoveryAttempting>
+@interface FBSDKErrorRecoveryAttempter : NSObject <FBSDKErrorRecoveryAttempting>
 
 // can return nil if configuration is not supported.
 + (nullable instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration;

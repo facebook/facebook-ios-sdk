@@ -18,12 +18,11 @@
 
 #if !TARGET_OS_TV
 
-#import "_FBSDKLoginRecoveryAttempter.h"
-
+#import "FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginKit+Internal.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 
-@implementation _FBSDKLoginRecoveryAttempter
+@implementation FBSDKLoginRecoveryAttempter
 
 - (void)attemptRecoveryFromError:(NSError *)error
                      optionIndex:(NSUInteger)recoveryOptionIndex
