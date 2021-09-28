@@ -786,6 +786,29 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
 {
+  [self.shared setUserEmail:email
+                  firstName:firstName
+                   lastName:lastName
+                      phone:phone
+                dateOfBirth:dateOfBirth
+                     gender:gender
+                       city:city
+                      state:state
+                        zip:zip
+                    country:country];
+}
+
+- (void)setUserEmail:(nullable NSString *)email
+           firstName:(nullable NSString *)firstName
+            lastName:(nullable NSString *)lastName
+               phone:(nullable NSString *)phone
+         dateOfBirth:(nullable NSString *)dateOfBirth
+              gender:(nullable NSString *)gender
+                city:(nullable NSString *)city
+               state:(nullable NSString *)state
+                 zip:(nullable NSString *)zip
+             country:(nullable NSString *)country
+{
   [FBSDKUserDataStore setUserEmail:email
                          firstName:firstName
                           lastName:lastName
@@ -801,10 +824,20 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (NSString *)getUserData
 {
+  return [self.shared getUserData];
+}
+
+- (NSString *)getUserData
+{
   return [FBSDKUserDataStore getUserData];
 }
 
 + (void)clearUserData
+{
+  [self.shared clearUserData];
+}
+
+- (void)clearUserData
 {
   [FBSDKUserDataStore clearUserData];
 }
@@ -812,10 +845,21 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type
 {
+  [self.shared setUserData:data forType:type];
+}
+
+- (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type
+{
   [FBSDKUserDataStore setUserData:data forType:type];
 }
 
 + (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
+{
+  [self.shared clearUserDataForType:type];
+}
+
+- (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
 {
   [FBSDKUserDataStore clearUserDataForType:type];
 }

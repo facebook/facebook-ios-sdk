@@ -615,12 +615,12 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
  */
 + (nullable FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken;
 
-/*
+/**
  Clears the custom user ID to associate with all app events.
  */
 + (void)clearUserID;
 
-/*
+/**
   Sets custom user data to associate with all app events. All user data are hashed
   and used to match Facebook user from this instance of an application.
 
@@ -647,19 +647,61 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
                state:(nullable NSString *)state
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
+NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:))
+DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+
+/**
+  Sets custom user data to associate with all app events. All user data are hashed
+  and used to match Facebook user from this instance of an application.
+
+  The user data will be persisted between application instances.
+
+ @param email user's email
+ @param firstName user's first name
+ @param lastName user's last name
+ @param phone user's phone
+ @param dateOfBirth user's date of birth
+ @param gender user's gender
+ @param city user's city
+ @param state user's state
+ @param zip user's zip
+ @param country user's country
+ */
+- (void)setUserEmail:(nullable NSString *)email
+           firstName:(nullable NSString *)firstName
+            lastName:(nullable NSString *)lastName
+               phone:(nullable NSString *)phone
+         dateOfBirth:(nullable NSString *)dateOfBirth
+              gender:(nullable NSString *)gender
+                city:(nullable NSString *)city
+               state:(nullable NSString *)state
+                 zip:(nullable NSString *)zip
+             country:(nullable NSString *)country
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
 
-/*
+/**
   Returns the set user data else nil
 */
-+ (nullable NSString *)getUserData;
++ (nullable NSString *)getUserData
+DEPRECATED_MSG_ATTRIBUTE("Class methods for getting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
-/*
+/**
+  Returns the set user data else nil
+*/
+- (nullable NSString *)getUserData;
+
+/**
   Clears the current user data
 */
-+ (void)clearUserData;
++ (void)clearUserData
+DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
-/*
+/**
+  Clears the current user data
+*/
+- (void)clearUserData;
+
+/**
  Sets custom user data to associate with all app events. All user data are hashed
  and used to match Facebook user from this instance of an application.
 
@@ -669,15 +711,34 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @param type  data type, e.g. FBSDKAppEventEmail, FBSDKAppEventPhone
  */
 + (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type
+DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+
+/**
+ Sets custom user data to associate with all app events. All user data are hashed
+ and used to match Facebook user from this instance of an application.
+
+ The user data will be persisted between application instances.
+
+ @param data  data
+ @param type  data type, e.g. FBSDKAppEventEmail, FBSDKAppEventPhone
+ */
+- (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type;
 
-/*
+/**
  Clears the current user data of certain type
  */
-+ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
++ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
+DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+
+/**
+ Clears the current user data of certain type
+ */
+- (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
 #if !TARGET_OS_TV
-/*
+/**
   Intended to be used as part of a hybrid webapp.
  If you call this method, the FB SDK will inject a new JavaScript object into your webview.
  If the FB Pixel is used within the webview, and references the app ID of this app,
@@ -702,7 +763,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 + (void)setIsUnityInit:(BOOL)isUnityInit;
 
-/*
+/**
  Send event binding to Unity
  */
 + (void)sendEventBindingsToUnity;

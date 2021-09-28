@@ -398,28 +398,28 @@
   NSString *mockLastName = @"test_ln";
   NSString *mockPhone = @"123";
 
-  [FBSDKAppEvents setUserEmail:mockEmail
-                     firstName:mockFirstName
-                      lastName:mockLastName
-                         phone:mockPhone
-                   dateOfBirth:nil
-                        gender:nil
-                          city:nil
-                         state:nil
-                           zip:nil
-                       country:nil];
+  [FBSDKAppEvents.shared setUserEmail:mockEmail
+                            firstName:mockFirstName
+                             lastName:mockLastName
+                                phone:mockPhone
+                          dateOfBirth:nil
+                               gender:nil
+                                 city:nil
+                                state:nil
+                                  zip:nil
+                              country:nil];
 
   NSDictionary<NSString *, NSString *> *expectedUserData = @{@"em" : [FBSDKUtility SHA256Hash:mockEmail],
                                                              @"fn" : [FBSDKUtility SHA256Hash:mockFirstName],
                                                              @"ln" : [FBSDKUtility SHA256Hash:mockLastName],
                                                              @"ph" : [FBSDKUtility SHA256Hash:mockPhone], };
-  NSDictionary<NSString *, NSString *> *userData = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[[FBSDKAppEvents getUserData] dataUsingEncoding:NSUTF8StringEncoding]
+  NSDictionary<NSString *, NSString *> *userData = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[[FBSDKAppEvents.shared getUserData] dataUsingEncoding:NSUTF8StringEncoding]
                                                                                           options: NSJSONReadingMutableContainers
                                                                                           error: nil];
   XCTAssertEqualObjects(userData, expectedUserData);
 
-  [FBSDKAppEvents clearUserData];
-  NSString *clearedUserData = [FBSDKAppEvents getUserData];
+  [FBSDKAppEvents.shared clearUserData];
+  NSString *clearedUserData = [FBSDKAppEvents.shared getUserData];
   XCTAssertEqualObjects(clearedUserData, @"{}");
 }
 
@@ -428,13 +428,13 @@
   NSString *testEmail = @"apptest@fb.com";
   NSString *hashedEmailString = [FBSDKUtility SHA256Hash:testEmail];
 
-  [FBSDKAppEvents setUserData:testEmail forType:FBSDKAppEventEmail];
-  NSString *userData = [FBSDKAppEvents getUserData];
+  [FBSDKAppEvents.shared setUserData:testEmail forType:FBSDKAppEventEmail];
+  NSString *userData = [FBSDKAppEvents.shared getUserData];
   XCTAssertTrue([userData containsString:@"em"]);
   XCTAssertTrue([userData containsString:hashedEmailString]);
 
-  [FBSDKAppEvents clearUserDataForType:FBSDKAppEventEmail];
-  userData = [FBSDKAppEvents getUserData];
+  [FBSDKAppEvents.shared clearUserDataForType:FBSDKAppEventEmail];
+  userData = [FBSDKAppEvents.shared getUserData];
   XCTAssertFalse([userData containsString:@"em"]);
   XCTAssertFalse([userData containsString:hashedEmailString]);
 }
@@ -598,21 +598,21 @@
 
   XCTAssertNoThrow([FBSDKAppEvents setIsUnityInit:YES]);
   XCTAssertNoThrow(FBSDKAppEvents.anonymousID);
-  XCTAssertNoThrow([FBSDKAppEvents setUserData:foo forType:foo]);
+  XCTAssertNoThrow([FBSDKAppEvents.shared setUserData:foo forType:foo]);
   XCTAssertNoThrow(
-    [FBSDKAppEvents setUserEmail:nil
-                       firstName:nil
-                        lastName:nil
-                           phone:nil
-                     dateOfBirth:nil
-                          gender:nil
-                            city:nil
-                           state:nil
-                             zip:nil
-                         country:nil]
+    [FBSDKAppEvents.shared setUserEmail:nil
+                              firstName:nil
+                               lastName:nil
+                                  phone:nil
+                            dateOfBirth:nil
+                                 gender:nil
+                                   city:nil
+                                  state:nil
+                                    zip:nil
+                                country:nil]
   );
-  XCTAssertNoThrow([FBSDKAppEvents getUserData]);
-  XCTAssertNoThrow([FBSDKAppEvents clearUserDataForType:foo]);
+  XCTAssertNoThrow([FBSDKAppEvents.shared getUserData]);
+  XCTAssertNoThrow([FBSDKAppEvents.shared clearUserDataForType:foo]);
 
   XCTAssertFalse(
     self.timeSpentRecorder.restoreWasCalled,

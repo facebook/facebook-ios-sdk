@@ -112,7 +112,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
     [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKSettings isAdvertiserTrackingEnabled]).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
-  NSString *userData = [FBSDKAppEvents getUserData];
+  NSString *userData = [FBSDKAppEvents.shared getUserData];
   if (userData) {
     [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
   }

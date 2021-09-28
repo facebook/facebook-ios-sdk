@@ -174,14 +174,14 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *testCity = @"menlopark";
   NSString *testState = @"test_s";
   NSString *testExternalId = @"facebook123";
-  [FBSDKAppEvents setUserData:testEmail forType:FBSDKAppEventEmail];
-  [FBSDKAppEvents setUserData:testFirstName forType:FBSDKAppEventFirstName];
-  [FBSDKAppEvents setUserData:testLastName forType:FBSDKAppEventLastName];
-  [FBSDKAppEvents setUserData:testPhone forType:FBSDKAppEventPhone];
-  [FBSDKAppEvents setUserData:testGender forType:FBSDKAppEventGender];
-  [FBSDKAppEvents setUserData:testCity forType:FBSDKAppEventCity];
-  [FBSDKAppEvents setUserData:testState forType:FBSDKAppEventState];
-  [FBSDKAppEvents setUserData:testExternalId forType:FBSDKAppEventExternalId];
+  [FBSDKAppEvents.shared setUserData:testEmail forType:FBSDKAppEventEmail];
+  [FBSDKAppEvents.shared setUserData:testFirstName forType:FBSDKAppEventFirstName];
+  [FBSDKAppEvents.shared setUserData:testLastName forType:FBSDKAppEventLastName];
+  [FBSDKAppEvents.shared setUserData:testPhone forType:FBSDKAppEventPhone];
+  [FBSDKAppEvents.shared setUserData:testGender forType:FBSDKAppEventGender];
+  [FBSDKAppEvents.shared setUserData:testCity forType:FBSDKAppEventCity];
+  [FBSDKAppEvents.shared setUserData:testState forType:FBSDKAppEventState];
+  [FBSDKAppEvents.shared setUserData:testExternalId forType:FBSDKAppEventExternalId];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                            shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -199,7 +199,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                                                                                     options: NSJSONReadingMutableContainers
                                                                                                     error: nil];
   XCTAssertEqualObjects(actualUserDataDict, expectedUserDataDict);
-  [FBSDKAppEvents clearUserData];
+  [FBSDKAppEvents.shared clearUserData];
 
   FBSDKSettings.limitEventAndDataUsage = YES;
   [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
