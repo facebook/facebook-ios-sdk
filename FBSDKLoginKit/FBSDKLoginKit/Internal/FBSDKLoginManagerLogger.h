@@ -20,6 +20,8 @@
 
 #import "FBSDKLoginManager+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Native;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
@@ -28,13 +30,13 @@ FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
 
 NS_SWIFT_NAME(LoginManagerLogger)
 @interface FBSDKLoginManagerLogger : NSObject
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary<NSString *, id> *)parameters
++ (nullable FBSDKLoginManagerLogger *)loggerFromParameters:(nullable NSDictionary<NSString *, id> *)parameters
                                          tracking:(FBSDKLoginTracking)tracking;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithLoggingToken:(NSString *)loggingToken
+- (instancetype)initWithLoggingToken:(nullable NSString *)loggingToken
                             tracking:(FBSDKLoginTracking)tracking
 NS_DESIGNATED_INITIALIZER;
 
@@ -43,19 +45,21 @@ NS_DESIGNATED_INITIALIZER;
 - (void)endSession;
 
 - (void)startAuthMethod:(NSString *)authMethod;
-- (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
+- (void)endLoginWithResult:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error;
 
 - (void)postLoginHeartbeat;
 
-+ (NSString *)clientStateForAuthMethod:(NSString *)authMethod
-                      andExistingState:(NSDictionary<NSString *, id> *)existingState
-                                logger:(FBSDKLoginManagerLogger *)logger;
++ (nullable NSString *)clientStateForAuthMethod:(nullable NSString *)authMethod
+                      andExistingState:(nullable NSDictionary<NSString *, id> *)existingState
+                                logger:(nullable FBSDKLoginManagerLogger *)logger;
 
 - (void)willAttemptAppSwitchingBehavior;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 
-- (void)addSingleLoggingExtra:(id)extra forKey:(NSString *)key;
+- (void)addSingleLoggingExtra:(id)extra forKey:(nullable NSString *)key;
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END
