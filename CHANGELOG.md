@@ -54,7 +54,12 @@ Support for building from source using Carthage. Instead Carthage can be used to
 - `GamingPayloadObserver.shared`. Instances of this object now must be created with a delegate.
 - `GamingServiceResultCompletionHandler` Replacement - `GamingServiceResultCompletion`
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.0...HEAD)
+
+## 12.0.0
+
+[2021-09-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...v12.0.0)
 
 ## 11.2.1
 

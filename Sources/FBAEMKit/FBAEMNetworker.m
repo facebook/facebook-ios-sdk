@@ -31,7 +31,7 @@ static NSString *const kUserAgentBase = @"FBiOSAEM";
 
 @implementation FBAEMNetworker
 
-static NSString *const FB_GRAPH_API_ENDPOINT = @"https://graph.facebook.com/v11.0/";
+static NSString *const FB_GRAPH_API_ENDPOINT = @"https://graph.facebook.com/v12.0/";
 static NSString *const FB_GRAPH_API_CONTENT_TYPE = @"application/json";
 NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 
