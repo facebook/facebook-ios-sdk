@@ -18,7 +18,7 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
-#import "FBSDKAccessToken.h"
+#import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKConstants.h"
@@ -93,17 +93,6 @@ static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken
 #endif
 
 // ----------------------------------------------------------------------------
-// FBSDKGraphRequestConnectionState
-
-typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
-  kStateCreated,
-  kStateSerialized,
-  kStateStarted,
-  kStateCompleted,
-  kStateCancelled,
-};
-
-// ----------------------------------------------------------------------------
 // Private properties and methods
 
 @interface FBSDKGraphRequestConnection () <
@@ -112,21 +101,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   , FBSDKGraphErrorRecoveryProcessorDelegate
 #endif
 >
-
-@property (nonatomic, retain) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
-@property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
-@property (nonatomic, strong) FBSDKLogger *logger;
-@property (nonatomic, assign) uint64_t requestStartTime;
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
-@property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
-@property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, strong) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
-@property (nonatomic, strong) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
-
 @end
 
 // ----------------------------------------------------------------------------
@@ -156,7 +130,9 @@ static BOOL _canMakeRequests = NO;
                 graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
                                   eventLogger:FBSDKAppEvents.shared
                operatingSystemVersionComparer:NSProcessInfo.processInfo
-                      macCatalystDeterminator:NSProcessInfo.processInfo];
+                      macCatalystDeterminator:NSProcessInfo.processInfo
+                          accessTokenProvider:FBSDKAccessToken.class
+                            accessTokenSetter:FBSDKAccessToken.class];
 }
 
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
@@ -167,6 +143,8 @@ static BOOL _canMakeRequests = NO;
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                 operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                        macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                           accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                             accessTokenSetter:(Class<FBSDKAccessTokenSetting>)accessTokenSetter
 {
   if ((self = [super init])) {
     _requests = [NSMutableArray new];
@@ -182,6 +160,8 @@ static BOOL _canMakeRequests = NO;
     _eventLogger = eventLogger;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
     _macCatalystDeterminator = macCatalystDeterminator;
+    _accessTokenProvider = accessTokenProvider;
+    _accessTokenSetter = accessTokenSetter;
   }
   return self;
 }
@@ -858,7 +838,7 @@ static BOOL _canMakeRequests = NO;
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc]
-                                       initWithAccessTokenString:FBSDKAccessToken.currentAccessToken.tokenString];
+                                       initWithAccessTokenString:[[self.accessTokenProvider currentAccessToken] tokenString]];
       if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
         return;
       }
@@ -898,14 +878,14 @@ static BOOL _canMakeRequests = NO;
       return;
     }
     if (errorSubcode == 493) {
-      [FBSDKAccessToken setCurrentAccessToken:_CreateExpiredAccessToken([FBSDKAccessToken currentAccessToken])];
+      [self.accessTokenSetter setCurrentAccessToken:_CreateExpiredAccessToken([self.accessTokenProvider currentAccessToken])];
     } else {
-      FBSDKAccessToken.currentAccessToken = nil;
+      [self.accessTokenSetter setCurrentAccessToken:nil];
     }
   };
 
   NSString *metadataTokenString = metadata.request.tokenString;
-  NSString *currentTokenString = [FBSDKAccessToken currentAccessToken].tokenString;
+  NSString *currentTokenString = [[self.accessTokenProvider currentAccessToken] tokenString];
 
   if ([metadataTokenString isEqualToString:currentTokenString]) {
     NSInteger errorCode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue];
@@ -1233,7 +1213,7 @@ static BOOL _canMakeRequests = NO;
       id<FBSDKGraphRequest> originalRequest = _recoveringRequestMetadata.request;
       id<FBSDKGraphRequest> retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
                                                                              parameters:originalRequest.parameters
-                                                                            tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                            tokenString:[[self.accessTokenProvider currentAccessToken] tokenString]
                                                                              HTTPMethod:originalRequest.HTTPMethod
                                                                                 version:originalRequest.version
                                                                                   flags:FBSDKGraphRequestFlagDisableErrorRecovery

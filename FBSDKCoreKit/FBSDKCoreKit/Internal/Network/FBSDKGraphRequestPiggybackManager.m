@@ -24,6 +24,7 @@
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKServerConfigurationLoading.h"
