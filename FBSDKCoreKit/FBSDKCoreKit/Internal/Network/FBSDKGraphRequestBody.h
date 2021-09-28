@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIImage.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKGraphRequestDataAttachment;
 @class FBSDKLogger;
 
@@ -35,22 +37,24 @@ NS_SWIFT_NAME(GraphRequestBody)
 
 - (void)appendWithKey:(NSString *)key
             formValue:(NSString *)value
-               logger:(FBSDKLogger *)logger;
+               logger:(nullable FBSDKLogger *)logger;
 
 - (void)appendWithKey:(NSString *)key
            imageValue:(UIImage *)image
-               logger:(FBSDKLogger *)logger;
+               logger:(nullable FBSDKLogger *)logger;
 
 - (void)appendWithKey:(NSString *)key
             dataValue:(NSData *)data
-               logger:(FBSDKLogger *)logger;
+               logger:(nullable FBSDKLogger *)logger;
 
 - (void)appendWithKey:(NSString *)key
   dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)dataAttachment
-               logger:(FBSDKLogger *)logger;
+               logger:(nullable FBSDKLogger *)logger;
 
 - (NSString *)mimeContentType;
 
-- (NSData *)compressedData;
+- (nullable NSData *)compressedData;
 
 @end
+
+NS_ASSUME_NONNULL_END
