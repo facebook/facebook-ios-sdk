@@ -105,10 +105,10 @@ static NSString *const _fakeChallence = @"some_challenge";
     @"denied_scopes" : @"email",
     @"signed_request" : @"some_signed_request",
     @"user_id" : @"123",
-    @"expires" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 60) stringValue],
-    @"expires_at" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 60) stringValue],
-    @"expires_in" : [@(secInDay * 60) stringValue],
-    @"data_access_expiration_time" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 90) stringValue],
+    @"expires" : @(NSDate.date.timeIntervalSince1970 + secInDay * 60),
+    @"expires_at" : @(NSDate.date.timeIntervalSince1970 + secInDay * 60),
+    @"expires_in" : @(secInDay * 60),
+    @"data_access_expiration_time" : @(NSDate.date.timeIntervalSince1970 + secInDay * 90),
     @"state" : [NSString stringWithFormat:@"{\"challenge\":\"%@\"}", _fakeChallence],
     @"graph_domain" : @"facebook",
     @"error" : @"some_error",
@@ -156,7 +156,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithAccessToken
@@ -164,7 +164,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   NSDictionary<NSString *, id> *parameters = self.parametersWithAccessToken;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithNonce
@@ -172,7 +172,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   NSDictionary<NSString *, id> *parameters = self.parametersWithNonce;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithIDToken
@@ -180,7 +180,15 @@ static NSString *const _fakeChallence = @"some_challenge";
   NSDictionary<NSString *, id> *parameters = self.parametersWithIDtoken;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
+}
+
+- (void)testInitWithStringExpirations
+{
+  NSDictionary<NSString *, id> *parameters = self.parametersWithStringExpirations;
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
+
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithoutAccessTokenWithoutIDTokenWithoutNonce
@@ -510,7 +518,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   __block BOOL wasCalled = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
     wasCalled = YES;
-    [self verifyParameters:parameters urlParameter:self.parametersWithAccessToken];
+    [self verifyParameters:parameters expectedParameters:self.parametersWithAccessToken];
   };
 
   [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
@@ -695,6 +703,17 @@ static NSString *const _fakeChallence = @"some_challenge";
   return parameters;
 }
 
+- (NSDictionary<NSString *, id> *)parametersWithStringExpirations
+{
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
+  [parameters setValue:[_parameters[@"expires"] stringValue] forKey:@"expires"];
+  [parameters setValue:[_parameters[@"expires_at"] stringValue] forKey:@"expires_at"];
+  [parameters setValue:[_parameters[@"expires_in"] stringValue] forKey:@"expires_in"];
+  [parameters setValue:[_parameters[@"data_access_expiration_time"] stringValue] forKey:@"data_access_expiration_time"];
+  return parameters;
+}
+
 - (NSDictionary<NSString *, id> *)parametersWithError
 {
   NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
@@ -702,26 +721,33 @@ static NSString *const _fakeChallence = @"some_challenge";
   return parameters;
 }
 
-- (void)verifyParameters:(FBSDKLoginCompletionParameters *)parameters urlParameter:(NSDictionary<NSString *, id> *)urlParameters
+- (void)verifyParameters:(FBSDKLoginCompletionParameters *)parameters expectedParameters:(NSDictionary<NSString *, id> *)expectedParameters
 {
-  XCTAssertEqualObjects(parameters.accessTokenString, urlParameters[@"access_token"]);
-  XCTAssertEqualObjects(parameters.authenticationTokenString, urlParameters[@"id_token"]);
+  XCTAssertEqualObjects(parameters.accessTokenString, expectedParameters[@"access_token"]);
+  XCTAssertEqualObjects(parameters.authenticationTokenString, expectedParameters[@"id_token"]);
   XCTAssertEqualObjects(parameters.appID, _fakeAppID);
   XCTAssertEqualObjects(parameters.challenge, _fakeChallence);
-  NSSet *permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"granted_scopes"] componentsSeparatedByString:@","]]];
+  NSSet *permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[expectedParameters[@"granted_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.permissions, permissions);
-  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"denied_scopes"] componentsSeparatedByString:@","]]];
+  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[expectedParameters[@"denied_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.declinedPermissions, declinedPermissions);
-  XCTAssertEqualObjects(parameters.userID, urlParameters[@"user_id"]);
-  XCTAssertEqualObjects(parameters.graphDomain, urlParameters[@"graph_domain"]);
+  XCTAssertEqualObjects(parameters.userID, expectedParameters[@"user_id"]);
+  XCTAssertEqualObjects(parameters.graphDomain, expectedParameters[@"graph_domain"]);
 
-  if (urlParameters[@"expires"] || urlParameters[@"expires_at"] || urlParameters[@"expires_in"]) {
-    XCTAssertNotNil(parameters.expirationDate);
+  if (expectedParameters[@"expires"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires"]], 100);
   }
-  if (urlParameters[@"data_access_expiration_time"]) {
-    XCTAssertNotNil(parameters.dataAccessExpirationDate);
+  if (expectedParameters[@"expires_at"] || expectedParameters[@"expires_in"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires_at"]], 100);
   }
-  XCTAssertEqualObjects(parameters.nonceString, urlParameters[@"nonce"]);
+  if (expectedParameters[@"expires_in"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSinceNow, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires_in"]], 100);
+  }
+  if (expectedParameters[@"data_access_expiration_time"]) {
+    XCTAssertEqualWithAccuracy(parameters.dataAccessExpirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"data_access_expiration_time"]], 100);
+  }
+
+  XCTAssertEqualObjects(parameters.nonceString, expectedParameters[@"nonce"]);
   XCTAssertNil(parameters.error);
 }
 

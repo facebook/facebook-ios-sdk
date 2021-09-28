@@ -114,6 +114,17 @@
   }
 }
 
++ (double)doubleValue:(id)object
+{
+  if ([object isKindOfClass:NSNumber.class]) {
+    return ((NSNumber *)object).doubleValue;
+  } else if ([object isKindOfClass:NSString.class]) {
+    return ((NSString *)object).doubleValue;
+  } else {
+    return 0;
+  }
+}
+
 + (NSString *)stringValueOrNil:(id)object
 {
   return [self _objectValue:object ofClass:NSString.class];

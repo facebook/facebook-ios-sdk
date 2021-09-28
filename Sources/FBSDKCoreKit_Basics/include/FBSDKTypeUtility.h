@@ -77,6 +77,9 @@ NS_SWIFT_NAME(TypeUtility)
 /// Returns an NSInteger if the provided object is an NSInteger, otherwise returns nil.
 + (NSInteger)integerValue:(id)object;
 
+/// Returns a double if the provided object is a double, otherwise returns 0.
++ (double)doubleValue:(id)object;
+
 /// Returns an NSNumber if the provided object is an NSNumber, otherwise returns nil.
 + (NSNumber *)numberValue:(id)object;
 

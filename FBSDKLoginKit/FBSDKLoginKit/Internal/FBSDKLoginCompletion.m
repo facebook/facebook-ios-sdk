@@ -294,15 +294,24 @@ static NSDateFormatter *_dateFormatter;
 
 + (NSDate *)expirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
-  NSString *expiresString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires" ofType:NSString.class];
-  NSString *expiresAtString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_at" ofType:NSString.class];
-  NSString *expiresInString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_in" ofType:NSString.class];
-  NSString *expirationDateString = expiresString ?: expiresAtString;
+  double expires = [FBSDKTypeUtility
+                    doubleValue:[FBSDKTypeUtility dictionary:parameters
+                                                objectForKey:@"expires"
+                                                      ofType:NSObject.class]];
+  double expiresAt = [FBSDKTypeUtility
+                      doubleValue:[FBSDKTypeUtility dictionary:parameters
+                                                  objectForKey:@"expires_at"
+                                                        ofType:NSObject.class]];
+  double expiresIn = [FBSDKTypeUtility
+                      doubleValue:[FBSDKTypeUtility dictionary:parameters
+                                                  objectForKey:@"expires_in"
+                                                        ofType:NSObject.class]];
+  double expirationDate = expires ?: expiresAt;
 
-  if (expirationDateString.doubleValue > 0) {
-    return [NSDate dateWithTimeIntervalSince1970:expirationDateString.doubleValue];
-  } else if (expiresInString.integerValue > 0) {
-    return [NSDate dateWithTimeIntervalSinceNow:expiresInString.integerValue];
+  if (expirationDate > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:expirationDate];
+  } else if (expiresIn > 0) {
+    return [NSDate dateWithTimeIntervalSinceNow:expiresIn];
   } else {
     return NSDate.distantFuture;
   }
@@ -310,9 +319,12 @@ static NSDateFormatter *_dateFormatter;
 
 + (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
-  NSString *dataAccessExpirationDateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"data_access_expiration_time" ofType:NSString.class];
-  if (dataAccessExpirationDateString.integerValue > 0) {
-    return [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateString.integerValue];
+  double dataAccessExpirationDate = [FBSDKTypeUtility
+                                     doubleValue:[FBSDKTypeUtility dictionary:parameters
+                                                                 objectForKey:@"data_access_expiration_time"
+                                                                       ofType:NSObject.class]];
+  if (dataAccessExpirationDate > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDate];
   } else {
     return NSDate.distantFuture;
   }
