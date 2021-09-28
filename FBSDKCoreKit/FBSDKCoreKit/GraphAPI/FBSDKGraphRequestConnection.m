@@ -18,10 +18,15 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
+#import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents+EventLogging.h"
+#import "FBSDKAuthenticationToken.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitVersions.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
+#import "FBSDKErrorRecoveryAttempter.h"
+#import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
@@ -31,6 +36,7 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKSettings.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSession+URLSessionProxying.h"
 #import "FBSDKURLSessionProxyFactory.h"

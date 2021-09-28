@@ -19,14 +19,13 @@
 @class FBSDKGraphRequestBody;
 @protocol FBSDKURLSessionProxying;
 @protocol FBSDKURLSessionProxyProviding;
-
+@protocol FBSDKGraphRequestConnecting;
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
 #import "FBSDKGraphRequestMetadata.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGraphRequestConnection (Internal)
+@interface FBSDKGraphRequestConnection (Internal) <FBSDKGraphRequestConnecting>
 
 @property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 

@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKGraphRequestConnecting.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -34,7 +36,6 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 
 @class FBSDKGraphRequestConnection;
 @protocol FBSDKGraphRequest;
-@protocol FBSDKGraphRequestConnecting;
 
 /**
  FBSDKGraphRequestCompletion
