@@ -27,6 +27,8 @@ public class TestKeychainStore: NSObject, KeychainStoreProtocol {
   public var value: String?
   public var key: String?
   public var keychainDictionary: [String: String] = [:]
+  public var wasDictionaryForKeyCalled = false
+  public var wasSetDictionaryCalled = false
 
   public convenience init(
     service: String,
@@ -42,9 +44,19 @@ public class TestKeychainStore: NSObject, KeychainStoreProtocol {
     return keychainDictionary[key]
   }
 
-  public func setString(_ value: String?, forKey key: String, accessibility: CFTypeRef) -> Bool {
+  public func setString(_ value: String?, forKey key: String, accessibility: CFTypeRef?) -> Bool {
     keychainDictionary[key] = value
     wasSetStringCalled = true
+    return true
+  }
+
+  public func dictionary(forKey key: String) -> [String: Any]? {
+    wasDictionaryForKeyCalled = true
+    return [:]
+  }
+
+  public func setDictionary(_ value: [String: Any]?, forKey key: String, accessibility: CFTypeRef?) -> Bool {
+    wasSetDictionaryCalled = true
     return true
   }
 }

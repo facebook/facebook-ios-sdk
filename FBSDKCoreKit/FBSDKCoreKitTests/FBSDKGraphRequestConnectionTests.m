@@ -107,7 +107,6 @@
   [TestLogger reset];
   [TestSettings reset];
   [self.settings reset];
-  [TestAccessTokenWallet reset];
 
   [super tearDown];
 }

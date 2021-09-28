@@ -20,7 +20,7 @@
 
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKKeychainStore.h"
+#import "FBSDKKeychainStoreProviding.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"
 
@@ -35,7 +35,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
 @interface FBSDKTokenCache ()
 
-@property (nonatomic) FBSDKKeychainStore *keychainStore;
+@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
 @property (nonatomic) id<FBSDKSettings> settings;
 
 @end
@@ -43,10 +43,11 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 @implementation FBSDKTokenCache
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
+            keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
 {
   if ((self = [super init])) {
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", NSBundle.mainBundle.bundleIdentifier];
-    _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
+    _keychainStore = [keychainStoreFactory createKeychainStoreWithService:keyChainServiceIdentifier accessGroup:nil];
     _settings = settings;
   }
   return self;
@@ -59,9 +60,9 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 {
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
-  NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
+  NSDictionary<NSString *, id> *dict = [self.keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
 
-  if (_settings.shouldUseTokenOptimizations) {
+  if (self.settings.shouldUseTokenOptimizations) {
     if (!uuid && !dict) {
       return nil;
     }
@@ -119,18 +120,18 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     kFBSDKTokenEncodedKey : tokenData
   };
 
-  [_keychainStore setDictionary:dict
-                         forKey:kFBSDKAccessTokenKeychainKey
-                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  [self.keychainStore setDictionary:dict
+                             forKey:kFBSDKAccessTokenKeychainKey
+                      accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 - (FBSDKAuthenticationToken *)authenticationToken
 {
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
-  NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAuthenticationTokenKeychainKey];
+  NSDictionary<NSString *, id> *dict = [self.keychainStore dictionaryForKey:kFBSDKAuthenticationTokenKeychainKey];
 
-  if (_settings.shouldUseTokenOptimizations) {
+  if (self.settings.shouldUseTokenOptimizations) {
     if (!uuid && !dict) {
       return nil;
     }
@@ -188,18 +189,18 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     kFBSDKTokenEncodedKey : tokenData
   };
 
-  [_keychainStore setDictionary:dict
-                         forKey:kFBSDKAuthenticationTokenKeychainKey
-                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  [self.keychainStore setDictionary:dict
+                             forKey:kFBSDKAuthenticationTokenKeychainKey
+                      accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 #pragma clang diagnostic pop
 
 - (void)clearAuthenticationTokenCache
 {
-  [_keychainStore setDictionary:nil
-                         forKey:kFBSDKAuthenticationTokenKeychainKey
-                  accessibility:NULL];
+  [self.keychainStore setDictionary:nil
+                             forKey:kFBSDKAuthenticationTokenKeychainKey
+                      accessibility:NULL];
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
   [defaults synchronize];
@@ -207,9 +208,9 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
 - (void)clearAccessTokenCache
 {
-  [_keychainStore setDictionary:nil
-                         forKey:kFBSDKAccessTokenKeychainKey
-                  accessibility:NULL];
+  [self.keychainStore setDictionary:nil
+                             forKey:kFBSDKAccessTokenKeychainKey
+                      accessibility:NULL];
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAccessTokenUserDefaultsKey];
   [defaults synchronize];

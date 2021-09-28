@@ -20,6 +20,8 @@
 
 #import "FBSDKKeychainStoreProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(KeychainStore)
 @interface FBSDKKeychainStore : NSObject <FBSDKKeychainStore>
 
@@ -28,19 +30,15 @@ NS_SWIFT_NAME(KeychainStore)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
 
-- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key;
+- (instancetype)initWithService:(NSString *)service accessGroup:(nullable NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
 
-- (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSString *)stringForKey:(NSString *)key;
-
-- (BOOL)setData:(NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSData *)dataForKey:(NSString *)key;
+- (BOOL)setData:(nullable NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
+- (nullable NSData *)dataForKey:(NSString *)key;
 
 // hook for subclasses to override keychain query construction.
 - (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key;
 
 @end
 
+NS_ASSUME_NONNULL_END

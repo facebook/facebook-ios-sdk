@@ -22,8 +22,10 @@ NS_SWIFT_NAME(KeychainStoreProtocol)
 @protocol FBSDKKeychainStore
 
 - (nullable NSString *)stringForKey:(NSString *)key;
+- (nullable NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key;
 
-- (BOOL)setString:(nullable NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
+- (BOOL)setString:(nullable NSString *)value forKey:(NSString *)key accessibility:(nullable CFTypeRef)accessibility;
+- (BOOL)setDictionary:(nullable NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(nullable CFTypeRef)accessibility;
 
 @end
 

@@ -56,6 +56,7 @@
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKKeychainStoreFactory.h"
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
@@ -682,7 +683,8 @@ static UIApplicationState _applicationState;
                                                crashObserver:crashObserver
                                                  errorReport:FBSDKErrorReport.shared
                                                 crashHandler:sharedCrashHandler];
-  FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings];
+  FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings
+                                                     keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
   FBSDKAccessToken.tokenCache = tokenCache;
   FBSDKAccessToken.graphRequestConnectionFactory = graphRequestConnectionFactory;
   FBSDKAuthenticationToken.tokenCache = tokenCache;
