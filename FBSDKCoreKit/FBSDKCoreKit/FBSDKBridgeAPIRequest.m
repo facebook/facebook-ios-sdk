@@ -210,7 +210,7 @@ static _Nullable id<FBSDKSettings> _settings;
 
   NSDictionary<NSString *, NSString *> *requestQueryParameters = [FBSDKBasicUtility dictionaryWithQueryString:requestURL.query];
   NSMutableDictionary<NSString *, id> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:self.class.settings forKey:FBSDKBridgeAPIAppIDKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:self.class.settings.appID forKey:FBSDKBridgeAPIAppIDKey];
   [FBSDKTypeUtility dictionary:queryParameters
                      setObject:self.class.settings.appURLSchemeSuffix
                         forKey:FBSDKBridgeAPISchemeSuffixKey];
