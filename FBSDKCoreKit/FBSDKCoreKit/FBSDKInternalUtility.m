@@ -467,7 +467,7 @@ static NSMapTable *_transientObjects;
   }
 
   components.path = @"/";
-  return [[UIApplication sharedApplication] canOpenURL:components.URL];
+  return [UIApplication.sharedApplication canOpenURL:components.URL];
 }
 
 - (void)validateAppID
@@ -516,10 +516,10 @@ static NSMapTable *_transientObjects;
 {
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  UIWindow *topWindow = [UIApplication sharedApplication].keyWindow;
+  UIWindow *topWindow = UIApplication.sharedApplication.keyWindow;
   #pragma clang diagnostic pop
   if (topWindow == nil || topWindow.windowLevel < UIWindowLevelNormal) {
-    for (UIWindow *window in [UIApplication sharedApplication].windows) {
+    for (UIWindow *window in UIApplication.sharedApplication.windows) {
       if (window.windowLevel >= topWindow.windowLevel && !window.isHidden) {
         topWindow = window;
       }
@@ -532,7 +532,7 @@ static NSMapTable *_transientObjects;
 
   // Find active key window from UIScene
   if (@available(iOS 13.0, tvOS 13, *)) {
-    NSSet *scenes = [[UIApplication sharedApplication] valueForKey:@"connectedScenes"];
+    NSSet *scenes = [UIApplication.sharedApplication valueForKey:@"connectedScenes"];
     for (id scene in scenes) {
       id activationState = [scene valueForKeyPath:@"activationState"];
       BOOL isActive = activationState != nil && [activationState integerValue] == 0;

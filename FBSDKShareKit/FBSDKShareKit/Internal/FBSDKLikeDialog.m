@@ -95,23 +95,23 @@
                                                                                           userInfo:nil];
     void (^networkCompletionBlock)(FBSDKBridgeAPIResponse *) = ^(FBSDKBridgeAPIResponse *response) {
       if (response.error.code == FBSDKErrorAppVersionUnsupported) {
-        [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:webRequest
-                                      useSafariViewController:useSafariViewController
-                                           fromViewController:self.fromViewController
-                                              completionBlock:completionBlock];
+        [FBSDKBridgeAPI.sharedInstance openBridgeAPIRequest:webRequest
+                                    useSafariViewController:useSafariViewController
+                                         fromViewController:self.fromViewController
+                                            completionBlock:completionBlock];
       } else {
         completionBlock(response);
       }
     };
-    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:nativeRequest
-                                  useSafariViewController:useSafariViewController
-                                       fromViewController:self.fromViewController
-                                          completionBlock:networkCompletionBlock];
+    [FBSDKBridgeAPI.sharedInstance openBridgeAPIRequest:nativeRequest
+                                useSafariViewController:useSafariViewController
+                                     fromViewController:self.fromViewController
+                                        completionBlock:networkCompletionBlock];
   } else {
-    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:webRequest
-                                  useSafariViewController:useSafariViewController
-                                       fromViewController:self.fromViewController
-                                          completionBlock:completionBlock];
+    [FBSDKBridgeAPI.sharedInstance openBridgeAPIRequest:webRequest
+                                useSafariViewController:useSafariViewController
+                                     fromViewController:self.fromViewController
+                                        completionBlock:completionBlock];
   }
 
   return YES;

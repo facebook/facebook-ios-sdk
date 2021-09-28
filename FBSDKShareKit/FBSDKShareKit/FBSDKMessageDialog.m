@@ -129,10 +129,10 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
     [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
   };
-  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                useSafariViewController:useSafariViewController
-                                     fromViewController:nil
-                                        completionBlock:completionBlock];
+  [FBSDKBridgeAPI.sharedInstance openBridgeAPIRequest:request
+                              useSafariViewController:useSafariViewController
+                                   fromViewController:nil
+                                      completionBlock:completionBlock];
 
   [self _logDialogShow];
   [FBSDKInternalUtility.sharedUtility registerTransientObject:self];

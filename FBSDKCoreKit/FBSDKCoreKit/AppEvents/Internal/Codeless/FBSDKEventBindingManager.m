@@ -210,7 +210,7 @@
     return;
   }
 
-  NSArray *windows = [UIApplication sharedApplication].windows;
+  NSArray *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     [self matchSubviewsIn:window];
   }

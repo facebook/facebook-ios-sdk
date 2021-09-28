@@ -336,7 +336,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   if (defaultResolver) {
     return defaultResolver;
   }
-  return [FBSDKWebViewAppLinkResolver sharedInstance];
+  return FBSDKWebViewAppLinkResolver.sharedInstance;
 }
 
 + (void)setDefaultResolver:(id<FBSDKAppLinkResolving>)resolver

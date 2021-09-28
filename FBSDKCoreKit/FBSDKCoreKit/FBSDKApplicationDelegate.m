@@ -259,7 +259,7 @@ static UIApplicationState _applicationState;
   [self logInitialization];
   [self addObservers];
   [self.appEvents startObservingApplicationLifecycleNotifications];
-  [self application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+  [self application:UIApplication.sharedApplication didFinishLaunchingWithOptions:launchOptions];
   [self handleDeferredActivationIfNeeded];
   [self enableInstrumentation];
 
@@ -283,7 +283,7 @@ static UIApplicationState _applicationState;
 - (void)handleDeferredActivationIfNeeded
 {
   // If sdk initialization is deferred until after the applicationDidBecomeActive notification is received, then we need to manually perform this work in case it hasn't happened at all.
-  if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+  if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
     [self applicationDidBecomeActive:nil];
   }
 }

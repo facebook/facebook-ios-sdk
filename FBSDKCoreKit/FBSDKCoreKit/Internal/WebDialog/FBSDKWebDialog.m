@@ -308,7 +308,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   if (insets.top == 0.0) {
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    insets.top = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    insets.top = [UIApplication.sharedApplication statusBarFrame].size.height;
     #pragma clang diagnostic pop
   }
   applicationFrame.origin.x += insets.left;

@@ -249,7 +249,7 @@ static id<FBSDKSettings> _settings;
 + (void)setupGesture
 {
   _isGestureSet = YES;
-  [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
+  UIApplication.sharedApplication.applicationSupportsShakeToEdit = YES;
   Class class = UIApplication.class;
 
   [self.swizzler swizzleSelector:@selector(motionBegan:withEvent:)
@@ -345,7 +345,7 @@ static id<FBSDKSettings> _settings;
     return;
   }
 
-  if (UIApplicationStateActive != [UIApplication sharedApplication].applicationState) {
+  if (UIApplicationStateActive != UIApplication.sharedApplication.applicationState) {
     return;
   }
 
@@ -421,7 +421,7 @@ static id<FBSDKSettings> _settings;
 {
   NSMutableArray *trees = [NSMutableArray array];
 
-  NSArray *windows = [UIApplication sharedApplication].windows;
+  NSArray *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
                                                                                       targetNode:nil

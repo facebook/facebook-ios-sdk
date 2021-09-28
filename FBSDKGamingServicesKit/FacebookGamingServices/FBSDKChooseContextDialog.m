@@ -50,7 +50,7 @@
 {
   FBSDKChooseContextDialog *dialog = [FBSDKChooseContextDialog dialogWithContent:content
                                                                         delegate:delegate
-                                                                 internalUtility:[FBSDKInternalUtility sharedUtility]];
+                                                                 internalUtility:FBSDKInternalUtility.sharedUtility];
   return dialog;
 }
 
@@ -78,7 +78,7 @@
   }
   NSURL *dialogURL = [self _generateURL];
 
-  [[FBSDKBridgeAPI sharedInstance]
+  [FBSDKBridgeAPI.sharedInstance
    openURL:dialogURL
    sender:weakSelf
    handler:^(BOOL success, NSError *_Nullable bridgeError) {

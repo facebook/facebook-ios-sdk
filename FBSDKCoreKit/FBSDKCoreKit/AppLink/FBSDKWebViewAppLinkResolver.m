@@ -213,7 +213,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
                      MIMEType:response.MIMEType
         characterEncodingName:response.textEncodingName
                       baseURL:response.URL];
-            UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
+            UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
             [window addSubview:webView];
         });
     }];

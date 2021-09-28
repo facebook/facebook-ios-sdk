@@ -479,7 +479,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     BOOL didSucceed = (error == nil && aURL != nil);
     handler(didSucceed, error);
     if (didSucceed) {
-      [strongSelf application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
+      [strongSelf application:UIApplication.sharedApplication openURL:aURL sourceApplication:@"com.apple" annotation:nil];
     }
     strongSelf->_authenticationSession = nil;
     strongSelf->_authenticationSessionCompletionHandler = nil;

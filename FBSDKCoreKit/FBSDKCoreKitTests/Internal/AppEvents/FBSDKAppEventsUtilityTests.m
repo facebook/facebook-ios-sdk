@@ -246,7 +246,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   if (@available(iOS 14.0, *)) {
   #ifndef BUCK
-    // This test fails in buck but passes in Xcode. Even if -FBSDKAppEventsUtility.advertiserID is set directly to [ASIdentifierManager sharedManager].advertisingIdentifier.UUIDString
+    // This test fails in buck but passes in Xcode. Even if -FBSDKAppEventsUtility.advertiserID is set directly to ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString
     XCTAssertNotNil(
       [FBSDKAppEventsUtility.shared advertiserID],
       "Advertiser id should not be nil when collection is enabled"

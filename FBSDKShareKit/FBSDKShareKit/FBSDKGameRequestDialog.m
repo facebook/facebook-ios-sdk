@@ -84,7 +84,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   }
 
   _isAwaitingResult = YES;
-  [[FBSDKBridgeAPI sharedInstance]
+  [FBSDKBridgeAPI.sharedInstance
    openURL:[FBSDKGameRequestURLProvider createDeepLinkURLWithQueryDictionary:contentDictionary]
    sender:weakSelf
    handler:^(BOOL success, NSError *_Nullable bridgeError) {
@@ -366,7 +366,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
 
   __weak typeof(self) weakSelf = self;
-  [[FBSDKBridgeAPI sharedInstance]
+  [FBSDKBridgeAPI.sharedInstance
    openBridgeAPIRequest:request
    useSafariViewController:false
    fromViewController:topMostViewController

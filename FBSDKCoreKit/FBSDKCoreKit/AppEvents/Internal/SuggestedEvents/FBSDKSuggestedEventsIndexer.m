@@ -180,7 +180,7 @@ static dispatch_once_t setupNonce;
 
 - (void)rematchBindings
 {
-  NSArray *windows = [UIApplication sharedApplication].windows;
+  NSArray *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     [self matchSubviewsIn:window];
   }
@@ -256,7 +256,7 @@ static dispatch_once_t setupNonce;
 
   fb_dispatch_on_main_thread(^{
     NSMutableSet<NSObject *> *objAddressSet = [NSMutableSet set];
-    NSArray<UIWindow *> *windows = [UIApplication sharedApplication].windows;
+    NSArray<UIWindow *> *windows = UIApplication.sharedApplication.windows;
     for (UIWindow *window in windows) {
       NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
                                                                                         targetNode:uiResponder

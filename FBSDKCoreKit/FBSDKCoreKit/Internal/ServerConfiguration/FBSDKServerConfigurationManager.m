@@ -270,12 +270,12 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     if (smartLoginEnabled
         && smartLoginMenuIconURL
         && smartLoginBookmarkIconURL) {
-      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
-                                                              ttl:kSmartLoginIconsTTL
-                                                       completion:nil];
-      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
-                                                              ttl:kSmartLoginIconsTTL
-                                                       completion:nil];
+      [FBSDKImageDownloader.sharedInstance downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
+                                                            ttl:kSmartLoginIconsTTL
+                                                     completion:nil];
+      [FBSDKImageDownloader.sharedInstance downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
+                                                            ttl:kSmartLoginIconsTTL
+                                                     completion:nil];
     }
   #endif
     [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
