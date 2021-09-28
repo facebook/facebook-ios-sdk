@@ -153,7 +153,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSettingDomainPrefixFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     "There should be no default value for a facebook domain prefix"
   );
 }
@@ -164,7 +164,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     emptyString,
     "Should not use an empty string as a facebook domain prefix but it does"
   );
@@ -176,7 +176,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     @"beta",
     "A developer should be able to set any string as the facebook domain prefix to use in building urls"
   );
@@ -187,8 +187,7 @@ static NSString *const whiteSpaceToken = @"   ";
   NSString *domainPrefix = @"abc123";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookDomainPart" : domainPrefix}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
-
-  FBSDKSettings.facebookDomainPart = @"foo";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -196,7 +195,7 @@ static NSString *const whiteSpaceToken = @"   ";
   );
 
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     @"foo",
     "Settings should return the explicitly set domain prefix over one gleaned from a plist entry"
   );
@@ -204,14 +203,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingDomainPrefixWithoutPlistEntry
 {
-  FBSDKSettings.facebookDomainPart = @"foo";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     @"foo",
     "Settings should return the explicitly set domain prefix"
   );
@@ -219,14 +218,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDomainPrefix
 {
-  FBSDKSettings.facebookDomainPart = emptyString;
+  FBSDKSettings.sharedSettings.facebookDomainPart = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     emptyString,
     "Should not store an invalid domain prefix but it does"
   );
@@ -234,14 +233,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyDomainPrefix
 {
-  FBSDKSettings.facebookDomainPart = whiteSpaceToken;
+  FBSDKSettings.sharedSettings.facebookDomainPart = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.facebookDomainPart,
+    FBSDKSettings.sharedSettings.facebookDomainPart,
     whiteSpaceToken,
     "Should not store a whitespace only domain prefix but it does"
   );
@@ -249,11 +248,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDomainPartInternalStorage
 {
-  FBSDKSettings.facebookDomainPart = @"foo";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.facebookDomainPart, "sanity check");
+  XCTAssertNotNil(FBSDKSettings.sharedSettings.facebookDomainPart, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"

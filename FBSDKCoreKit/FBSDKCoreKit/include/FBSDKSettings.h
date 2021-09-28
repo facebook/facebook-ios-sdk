@@ -200,7 +200,16 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.displayName` is deprecated and will be remov
 
  If not explicitly set, the default will be read from the application's plist (FacebookDomainPart).
  */
-@property (class, nullable, nonatomic, copy) NSString *facebookDomainPart;
+@property (class, nullable, nonatomic, copy) NSString *facebookDomainPart
+DEPRECATED_MSG_ATTRIBUTE("`Settings.facebookDomainPart` is deprecated and will be removed in the next major release, please use `Settings.shared.facebookDomainPart` instead");
+
+/**
+ The Facebook domain part. This can be used to change the Facebook domain
+ (e.g. @"beta") so that requests will be sent to `graph.beta.facebook.com`
+
+ If not explicitly set, the default will be read from the application's plist (FacebookDomainPart).
+ */
+@property (nullable, nonatomic, copy) NSString *facebookDomainPart;
 
 /**
   The current Facebook SDK logging behavior. This should consist of strings

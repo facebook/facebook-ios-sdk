@@ -26,6 +26,7 @@ class TestSettings: SettingsProtocol {
   var userAgentSuffix: String?
   var sdkVersion: String = ""
   var displayName: String?
+  var facebookDomainPart: String?
   var appURLSchemeSuffix: String?
   var isDataProcessingRestricted = false
   var isAutoLogAppEventsEnabled = false

@@ -23,6 +23,7 @@ final class TestSettings: NSObject, SettingsProtocol {
   var sdkVersion: String = ""
   var userAgentSuffix: String?
   var displayName: String?
+  var facebookDomainPart: String?
   var appURLSchemeSuffix: String?
   var isDataProcessingRestricted = false
   var isAutoLogAppEventsEnabled = false

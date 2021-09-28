@@ -23,6 +23,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var sdkVersion: String = ""
   var userAgentSuffix: String?
   var displayName: String?
+  var facebookDomainPart: String?
   var logWarningsCallCount = 0
   var logIfSDKSettingsChangedCallCount = 0
   var recordInstallCallCount = 0

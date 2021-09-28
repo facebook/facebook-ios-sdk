@@ -245,7 +245,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   ? @"fb.gg"
   : @"facebook.com";
 
-  NSString *domainPart = [FBSDKSettings facebookDomainPart];
+  NSString *domainPart = FBSDKSettings.sharedSettings.facebookDomainPart;
   if (domainPart.length) {
     host = [[NSString alloc] initWithFormat:@"%@.%@", domainPart, host];
   }

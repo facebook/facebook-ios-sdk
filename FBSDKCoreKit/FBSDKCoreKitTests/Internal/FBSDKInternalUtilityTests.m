@@ -69,9 +69,9 @@
 
 - (void)testFacebookURL
 {
-  FBSDKSettings.facebookDomainPart = @"";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"";
   NSString *URLString;
-  NSString *tier = [FBSDKSettings facebookDomainPart];
+  NSString *tier = FBSDKSettings.sharedSettings.facebookDomainPart;
 
   URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@""
@@ -154,8 +154,7 @@
                                                              defaultVersion:@"v2.0"
                                                                       error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v1/dialog/share");
-  FBSDKSettings.facebookDomainPart = tier;
-
+  FBSDKSettings.sharedSettings.facebookDomainPart = tier;
   FBSDKSettings.graphAPIVersion = @"v3.3";
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"/v1/dialog/share"
@@ -174,7 +173,7 @@
 
 - (void)testFacebookGamingURL
 {
-  FBSDKSettings.facebookDomainPart = @"";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"";
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
