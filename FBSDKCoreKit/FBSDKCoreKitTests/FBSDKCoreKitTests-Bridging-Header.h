@@ -113,6 +113,7 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
+#import "FBSDKGraphRequestConnection+Testing.h"
 #import "FBSDKGraphRequest+Testing.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestMetadata.h"
@@ -237,5 +238,8 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 + (FBSDKFeature)featureForString:(NSString *)featureName;
 @end
 
+@interface FBSDKServerConfigurationManager (Testing)
+- (void)reset;
+@end
 
 NS_ASSUME_NONNULL_END

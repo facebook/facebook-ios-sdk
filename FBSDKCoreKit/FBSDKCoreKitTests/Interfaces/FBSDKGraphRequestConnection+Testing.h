@@ -16,26 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import XCTest
+NS_ASSUME_NONNULL_BEGIN
 
-class FBSDKServerConfigurationManagerTests: XCTestCase {
+@interface FBSDKGraphRequestConnection (Testing)
 
-  func testDefaultDependencies() {
-    ServerConfigurationManager.shared.reset()
++ (void)resetCanMakeRequests;
++ (void)resetDefaultConnectionTimeout;
 
-    XCTAssertNil(
-      ServerConfigurationManager.shared.graphRequestFactory,
-      "Should not have a graph request factory by default"
-    )
-  }
+- (NSString *)_overrideVersionPart;
 
-  func testParsingResponses() {
-    for _ in 0..<100 {
-      ServerConfigurationManager.shared.processLoadRequestResponse(
-        RawServerConfigurationResponseFixtures.random,
-        error: nil,
-        appID: name
-      )
-    }
-  }
-}
+@end
+
+NS_ASSUME_NONNULL_END

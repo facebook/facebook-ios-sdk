@@ -663,6 +663,8 @@ static UIApplicationState _applicationState;
                                                                          graphRequestFactory:graphRequestFactory
                                                                                     settings:sharedSettings
                                                                                 crashHandler:sharedCrashHandler];
+
+  [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle

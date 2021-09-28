@@ -23,6 +23,8 @@
 
 #define FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
 
+@protocol FBSDKGraphRequestFactory;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ServerConfigurationManager)
@@ -47,6 +49,8 @@ NS_SWIFT_NAME(ServerConfigurationManager)
  This method will use a cached configuration if it is valid and not expired.
  */
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
+
+- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory;
 
 @end
 

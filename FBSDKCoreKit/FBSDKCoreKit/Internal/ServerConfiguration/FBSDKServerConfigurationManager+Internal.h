@@ -20,15 +20,17 @@
 
 #import "FBSDKServerConfigurationManager.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@protocol FBSDKGraphRequestFactory;
 
-@class FBSDKGraphRequest;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKServerConfigurationManager ()
 
+@property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+
 - (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error appID:(NSString *)appID;
 
-- (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
+- (id<FBSDKGraphRequest>)requestToLoadServerConfiguration:(NSString *)appID;
 
 - (void)clearCache;
 

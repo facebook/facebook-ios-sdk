@@ -70,8 +70,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 + (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;
-+ (void)resetCanMakeRequests;
-+ (void)resetDefaultConnectionTimeout;
 
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
@@ -97,11 +95,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
               addFormData:(BOOL)addFormData
                    logger:(FBSDKLogger *)logger;
 
-- (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request;
+- (nullable NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request;
 
 - (nullable NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request;
-
-- (NSString *)_overrideVersionPart;
 
 - (NSArray<id> *)parseJSONResponse:(NSData *)data
                              error:(NSError **)error

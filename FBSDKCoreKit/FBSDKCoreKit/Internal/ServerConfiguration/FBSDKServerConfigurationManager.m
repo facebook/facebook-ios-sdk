@@ -22,10 +22,9 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
+#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
@@ -103,6 +102,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   return instance;
 }
 
+- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+{
+  self.graphRequestFactory = graphRequestFactory;
+}
+
 #pragma mark - Public
 
 - (void)clearCache
@@ -178,7 +182,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
         if (!self.loadingServerConfiguration) {
           // load the configuration from the network
           self.loadingServerConfiguration = YES;
-          FBSDKGraphRequest *request = [self requestToLoadServerConfiguration:appID];
+          id<FBSDKGraphRequest> request = [self requestToLoadServerConfiguration:appID];
 
           // start request with specified timeout instead of the default 180s
           id<FBSDKGraphRequestConnecting> requestConnection = [FBSDKGraphRequestConnection new];
@@ -282,7 +286,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   } @catch (NSException *exception) {}
 }
 
-- (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID
+- (id<FBSDKGraphRequest>)requestToLoadServerConfiguration:(NSString *)appID
 {
   NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility.sharedUtility operatingSystemVersion];
   NSString *osVersion = [NSString stringWithFormat:@"%ti.%ti.%ti",
@@ -321,12 +325,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : [fields componentsJoinedByString:@","],
                                                         @"os_version" : osVersion};
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
-                                                                 parameters:parameters
-                                                                tokenString:nil
-                                                                 HTTPMethod:nil
-                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
-  return request;
+  return [self.graphRequestFactory createGraphRequestWithGraphPath:appID
+                                                        parameters:parameters
+                                                       tokenString:nil
+                                                        HTTPMethod:nil
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 #pragma mark - Helper Class Methods
@@ -433,5 +436,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     loadBlock(serverConfiguration, serverConfigurationError);
   };
 }
+
+#if FBTEST
+
+- (void)reset
+{
+  self.graphRequestFactory = nil;
+}
+
+#endif
 
 @end

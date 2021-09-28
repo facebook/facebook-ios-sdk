@@ -2723,6 +2723,7 @@
 		D70CB4BCB89798999AA36A91 /* FBSDKCrypto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrypto.m; sourceTree = "<group>"; };
 		D72E27AA4ADDBC35BB3103DD /* FBSDKMeasurementEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMeasurementEvent.m; sourceTree = "<group>"; };
 		D7CE0D25699D90EEBEAC2C09 /* FBSDKImpressionTrackingButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKImpressionTrackingButton.h; sourceTree = "<group>"; };
+		D7EE0048E11A5D768305AF2D /* FBSDKGraphRequestConnection+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGraphRequestConnection+Testing.h"; sourceTree = "<group>"; };
 		D91C2D0437F65B96DDEA30F7 /* FBSDKSKAdNetworkEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKSKAdNetworkEventTests.swift; sourceTree = "<group>"; };
 		D9CC939DFF20008DB9606BA3 /* TestAtePublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAtePublisher.swift; sourceTree = "<group>"; };
 		DA3CDB99FBB0F50F25FBC75C /* FBSDKAppEvents+SourceApplicationTracking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAppEvents+SourceApplicationTracking.h"; sourceTree = "<group>"; };
@@ -3993,6 +3994,7 @@
 				21E5DD3976C264B2F74B1356 /* FBSDKFeatureExtractor+Testing.h */,
 				65691A90DBBA51037F4BA074 /* FBSDKGateKeeperManager+Testing.h */,
 				42D8588175AEB4CC82B23361 /* FBSDKGraphRequest+Testing.h */,
+				D7EE0048E11A5D768305AF2D /* FBSDKGraphRequestConnection+Testing.h */,
 				05E23AE4FCBABAA97560F9E1 /* FBSDKGraphRequestPiggybackManager+Testing.h */,
 				6CECC45CF62657D8D9416536 /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
 				A1D11BCDA226F563635E449F /* FBSDKInstrumentManager+Testing.h */,

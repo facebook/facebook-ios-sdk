@@ -457,6 +457,14 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingConfiguresServerConfigurationManager() {
+    let manager = ServerConfigurationManager.shared
+    manager.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
