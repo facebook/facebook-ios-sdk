@@ -555,7 +555,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func stubDataSerialized(_ data: Data?, tag: String?) -> [String: Any]? {
-    let string: String = Base64.encode(data)
+    guard let string = Base64.encode(data) else { return nil }
+
     return [
       "isBase64": NSNumber(value: true),
       "tag": tag ?? "",

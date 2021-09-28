@@ -18,6 +18,8 @@
 
 #import "FBSDKBase64.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKBase64
 
 static FBSDKBase64 *_decoder;
@@ -33,22 +35,22 @@ static FBSDKBase64 *_encoder;
   }
 }
 
-+ (NSData *)decodeAsData:(NSString *)string
++ (nullable NSData *)decodeAsData:(nullable NSString *)string
 {
   return [_decoder decodeAsData:string];
 }
 
-+ (NSString *)decodeAsString:(NSString *)string
++ (nullable NSString *)decodeAsString:(nullable NSString *)string
 {
   return [_decoder decodeAsString:string];
 }
 
-+ (NSString *)encodeData:(NSData *)data
++ (nullable NSString *)encodeData:(nullable NSData *)data
 {
   return [_encoder encodeData:data];
 }
 
-+ (NSString *)encodeString:(NSString *)string
++ (nullable NSString *)encodeString:(nullable NSString *)string
 {
   return [_encoder encodeString:string];
 }
@@ -65,7 +67,7 @@ static FBSDKBase64 *_encoder;
 
 #pragma mark - Implementation Methods
 
-- (NSData *)decodeAsData:(NSString *)string
+- (nullable NSData *)decodeAsData:(nullable NSString *)string
 {
   if (!string) {
     return nil;
@@ -81,7 +83,7 @@ static FBSDKBase64 *_encoder;
   return [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
-- (NSString *)decodeAsString:(NSString *)string
+- (nullable NSString *)decodeAsString:(nullable NSString *)string
 {
   NSData *data = [self decodeAsData:string];
   if (!data) {
@@ -90,7 +92,7 @@ static FBSDKBase64 *_encoder;
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)encodeData:(NSData *)data
+- (nullable NSString *)encodeData:(nullable NSData *)data
 {
   if (!data) {
     return nil;
@@ -99,9 +101,11 @@ static FBSDKBase64 *_encoder;
   return [data base64EncodedStringWithOptions:0];
 }
 
-- (NSString *)encodeString:(NSString *)string
+- (nullable NSString *)encodeString:(nullable NSString *)string
 {
   return [self encodeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

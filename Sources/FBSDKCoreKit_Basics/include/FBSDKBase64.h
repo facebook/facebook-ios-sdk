@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(Base64)
 @interface FBSDKBase64 : NSObject
 
@@ -26,28 +28,28 @@ NS_SWIFT_NAME(Base64)
  @param string The base-64 encoded string.
  @return NSData containing the decoded bytes.
  */
-+ (NSData *)decodeAsData:(NSString *)string;
++ (nullable NSData *)decodeAsData:(nullable NSString *)string;
 
 /**
   Decodes a base-64 encoded string into a string.
  @param string The base-64 encoded string.
  @return NSString with the decoded UTF-8 value.
  */
-+ (NSString *)decodeAsString:(NSString *)string;
++ (nullable NSString *)decodeAsString:(nullable NSString *)string;
 
 /**
   Encodes data into a string.
  @param data The data to be encoded.
  @return The base-64 encoded string.
  */
-+ (NSString *)encodeData:(NSData *)data;
++ (nullable NSString *)encodeData:(nullable NSData *)data;
 
 /**
   Encodes string into a base-64 representation.
  @param string The string to be encoded.
  @return The base-64 encoded string.
  */
-+ (NSString *)encodeString:(NSString *)string;
++ (nullable NSString *)encodeString:(nullable NSString *)string;
 
 /**
   Encodes URL string into a base-64 representation.
@@ -57,3 +59,5 @@ NS_SWIFT_NAME(Base64)
 + (NSString *)base64FromBase64Url:(NSString *)base64Url;
 
 @end
+
+NS_ASSUME_NONNULL_END
