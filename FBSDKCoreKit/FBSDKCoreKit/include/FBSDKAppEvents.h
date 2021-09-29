@@ -27,6 +27,7 @@
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventsFlushBehavior.h"
+#import "FBSDKProductAvailability.h"
 #import "FBSDKProductCondition.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -50,34 +51,6 @@ NS_SWIFT_NAME(AppEventsLoggingResultNotification);
 /**  optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
-
-/**
-  NS_ENUM(NSUInteger, FBSDKProductAvailability)
-    Specifies product availability for Product Catalog product item update
- */
-typedef NS_ENUM(NSUInteger, FBSDKProductAvailability)
-{
-  /**
-   * Item ships immediately
-   */
-  FBSDKProductAvailabilityInStock = 0,
-  /**
-   * No plan to restock
-   */
-  FBSDKProductAvailabilityOutOfStock,
-  /**
-   * Available in future
-   */
-  FBSDKProductAvailabilityPreOrder,
-  /**
-   * Ships in 1-2 weeks
-   */
-  FBSDKProductAvailabilityAvailableForOrder,
-  /**
-   * Discontinued
-   */
-  FBSDKProductAvailabilityDiscontinued,
-} NS_SWIFT_NAME(AppEvents.ProductAvailability);
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM;
