@@ -30,7 +30,7 @@
 
 - (instancetype)initWithRequest:(NSURLRequest *)request
                     fromSession:(id<FBSDKSessionProviding>)session
-              completionHandler:(FBSDKURLSessionTaskBlock)handler
+              completionHandler:(nullable FBSDKURLSessionTaskBlock)handler
 {
   if ((self = [self init])) {
     self.requestStartTime = (uint64_t)([self.requestStartDate timeIntervalSince1970] * 1000);
