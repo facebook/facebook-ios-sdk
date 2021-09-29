@@ -313,7 +313,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                     #if !TARGET_OS_TV
                       , FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
                     #endif
-                    #ifdef DEBUG
+                    #if DEBUG
                       , FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
                     #endif
                     #if TARGET_OS_TV
@@ -360,7 +360,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       _serverConfigurationError = nil;
       _serverConfigurationErrorTimestamp = nil;
 
-    #ifdef DEBUG
+    #if DEBUG
       NSString *updateMessage = _serverConfiguration.updateMessage;
       if (updateMessage && updateMessage.length > 0 && !_printedUpdateMessage) {
         _printedUpdateMessage = YES;

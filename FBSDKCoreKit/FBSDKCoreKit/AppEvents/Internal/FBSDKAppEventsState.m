@@ -198,7 +198,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   return [FBSDKBasicUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
 }
 
-#ifdef DEBUG
+#if DEBUG
  #if FBTEST
 + (NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {
