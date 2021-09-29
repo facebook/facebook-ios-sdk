@@ -158,6 +158,7 @@ only_rules:
   - single_test_class
   - sorted_first_last
   - sorted_imports
+  - statement_position
   - strict_fileprivate
   - superfluous_disable_command
   - switch_case_alignment

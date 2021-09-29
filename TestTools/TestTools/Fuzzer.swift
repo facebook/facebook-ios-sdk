@@ -80,11 +80,9 @@ public class Fuzzer: NSObject {
   public class func randomize(json: Any) -> Any {
     if var dictionary = json as? [String: Any] {
       return randomizeInPlace(json: &dictionary)
-    }
-    else if var array = json as? [Any] {
+    } else if var array = json as? [Any] {
       return randomizeInPlace(array: &array)
-    }
-    else {
+    } else {
       return json
     }
   }
@@ -113,13 +111,10 @@ public class Fuzzer: NSObject {
       // randomize array values if they are dictionaries
       else if var values = json[key] as? [Any] {
         json[key] = Bool.random() ? values : randomizeInPlace(array: &values)
-      }
-      else {
+      } else {
         if Bool.random() {
           json[key] = random
-        }
-
-        else if Bool.random() {
+        } else if Bool.random() {
           json.removeValue(forKey: key)
         }
       }
