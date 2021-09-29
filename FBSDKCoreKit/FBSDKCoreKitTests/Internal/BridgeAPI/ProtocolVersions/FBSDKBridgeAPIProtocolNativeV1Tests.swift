@@ -25,7 +25,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
   let scheme = UUID().uuidString
   let methodName = UUID().uuidString
   let methodVersion = UUID().uuidString
-  lazy var protocolNativeV1 = BridgeAPIProtocolNativeV1(appScheme: scheme)! // swiftlint:disable:this force_unwrapping
+  lazy var protocolNativeV1 = BridgeAPIProtocolNativeV1(appScheme: scheme)
   // swiftlint:enable force_unwrapping
   let pasteboard = TestPasteboard()
 
@@ -319,7 +319,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     ]
 
     do {
-      let requestURL = try protocolNative?.requestURL(
+      let requestURL = try protocolNative.requestURL(
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
@@ -328,10 +328,10 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL?.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
-      let queryParameters = Utility.dictionary(withQuery: requestURL?.query ?? "")
+      let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
       let expectedKeys = Set(["bridge_args", "method_args", "version"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
@@ -371,7 +371,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     ]
 
     do {
-      let requestURL = try protocolNative?.requestURL(
+      let requestURL = try protocolNative.requestURL(
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
@@ -380,10 +380,10 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL?.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
-      let queryParameters = Utility.dictionary(withQuery: requestURL?.query ?? "")
+      let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
       let expectedKeys = Set(["bridge_args", "method_args", "version"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
@@ -428,7 +428,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     ]
 
     do {
-      let requestURL = try protocolNative?.requestURL(
+      let requestURL = try protocolNative.requestURL(
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
@@ -440,10 +440,10 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       XCTAssertEqual(pasteboard.capturedPasteboardType, "com.facebook.Facebook.FBAppBridgeType")
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL?.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
-      let queryParameters = Utility.dictionary(withQuery: requestURL?.query ?? "")
+      let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
       let expectedKeys = Set(["bridge_args", "method_args", "version"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
@@ -480,7 +480,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     ]
 
     do {
-      let requestURL = try protocolNative?.requestURL(
+      let requestURL = try protocolNative.requestURL(
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
@@ -492,10 +492,10 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       XCTAssertEqual(pasteboard.capturedPasteboardType, "com.facebook.Facebook.FBAppBridgeType")
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL?.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
-      let queryParameters = Utility.dictionary(withQuery: requestURL?.query ?? "")
+      let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
       let expectedKeys = Set(["bridge_args", "method_args", "version"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters

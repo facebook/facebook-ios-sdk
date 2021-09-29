@@ -102,7 +102,7 @@ static const struct {
 
 #pragma mark - Object Lifecycle
 
-- (instancetype)initWithAppScheme:(NSString *)appScheme
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme
 {
   return [self initWithAppScheme:appScheme
                       pasteboard:[UIPasteboard generalPasteboard]
@@ -110,8 +110,8 @@ static const struct {
                   includeAppIcon:YES];
 }
 
-- (instancetype)initWithAppScheme:(NSString *)appScheme
-                       pasteboard:(id<FBSDKPasteboard>)pasteboard
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme
+                       pasteboard:(nullable id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
 {
