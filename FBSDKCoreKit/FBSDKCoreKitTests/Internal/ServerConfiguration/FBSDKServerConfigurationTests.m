@@ -58,11 +58,6 @@ typedef ServerConfigurationFixtures Fixtures;
   XCTAssertFalse(self.config.defaults, "Should store whether or not defaults are being used");
 }
 
-- (void)testCreatingWithoutAppID
-{
-  XCTAssertNil(self.config.appID, "Should not use a default value for app identifier");
-}
-
 - (void)testCreatingWithEmptyAppID
 {
   self.config = [Fixtures configWithDictionary:@{@"appID" : @""}];

@@ -20,6 +20,8 @@
 
 #import "FBSDKServerConfiguration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameDefault;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameSharing;
 
@@ -31,3 +33,5 @@ FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationFeatureUseSafariViewCo
 + (FBSDKServerConfiguration *)defaultServerConfigurationForAppID:(NSString *)appID;
 
 @end
+
+NS_ASSUME_NONNULL_END
