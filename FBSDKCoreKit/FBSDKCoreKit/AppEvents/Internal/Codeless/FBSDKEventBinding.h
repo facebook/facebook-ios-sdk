@@ -22,6 +22,8 @@
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKCodelessParameterComponent.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKEventLogging;
 
 NS_SWIFT_NAME(EventBinding)
@@ -42,9 +44,11 @@ NS_SWIFT_NAME(EventBinding)
 + (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath;
 - (FBSDKEventBinding *)initWithJSON:(NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger;
-- (void)trackEvent:(id)sender;
+- (void)trackEvent:(nullable id)sender;
 - (BOOL)isEqualToBinding:(FBSDKEventBinding *)binding;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

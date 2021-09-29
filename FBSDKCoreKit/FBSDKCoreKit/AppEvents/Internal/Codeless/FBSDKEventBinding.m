@@ -90,7 +90,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return self;
 }
 
-- (void)trackEvent:(id)sender
+- (void)trackEvent:(nullable id)sender
 {
   UIView *sourceView = [sender isKindOfClass:UIView.class] ? (UIView *)sender : nil;
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];

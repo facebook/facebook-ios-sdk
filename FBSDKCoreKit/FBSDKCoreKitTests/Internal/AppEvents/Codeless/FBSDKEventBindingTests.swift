@@ -78,7 +78,7 @@ class FBSDKEventBindingTests: XCTestCase {
   func testCreatingWithDependencies() {
     let binding = EventBinding(json: [:], eventLogger: eventLogger)
     XCTAssertEqual(
-      binding?.eventLogger as? TestEventLogger,
+      binding.eventLogger as? TestEventLogger,
       eventLogger,
       "Should store the provided event logger"
     )
