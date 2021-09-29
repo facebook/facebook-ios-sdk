@@ -64,14 +64,14 @@ extension FBSDKLoginManager: URLOpening {
     return FBSDKLoginManager.stubbedOpenUrlSuccess
   }
 
-  public func applicationDidBecomeActive(_ application: UIApplication?) {
+  public func applicationDidBecomeActive(_ application: UIApplication) {
     // empty
   }
 
   public func canOpen(
-    _ url: URL?,
-    for application: UIApplication?,
-    sourceApplication: String?,
+    _ url: URL,
+    for application: UIApplication,
+    sourceApplication: String,
     annotation: Any?
   ) -> Bool {
     capturedCanOpenUrl = url
@@ -80,7 +80,7 @@ extension FBSDKLoginManager: URLOpening {
     return stubbedCanOpenUrl
   }
 
-  public func isAuthenticationURL(_ url: URL?) -> Bool {
+  public func isAuthenticationURL(_ url: URL) -> Bool {
     stubbedIsAuthenticationUrl
   }
 }

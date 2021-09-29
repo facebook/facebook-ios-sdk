@@ -24,28 +24,24 @@ class TestGraphRequestBody: GraphRequestBody {
   var capturedData: Data?
   var capturedAttachment: GraphRequestDataAttachment?
 
-  // swiftlint:disable implicitly_unwrapped_optional
-
-  override func append(withKey key: String!, formValue value: String!, logger: Logger!) {
+  override func append(withKey key: String, formValue value: String, logger: Logger?) {
     capturedKey = key
     capturedFormValue = value
   }
 
-  override func append(withKey key: String!, imageValue image: UIImage!, logger: Logger!) {
+  override func append(withKey key: String, imageValue image: UIImage, logger: Logger?) {
     capturedImage = image
   }
 
-  override func append(withKey key: String!, dataValue data: Data!, logger: Logger!) {
+  override func append(withKey key: String, dataValue data: Data, logger: Logger?) {
     capturedData = data
   }
 
   override func append(
-    withKey key: String!,
-    dataAttachmentValue dataAttachment: GraphRequestDataAttachment!,
-    logger: Logger!
+    withKey key: String,
+    dataAttachmentValue dataAttachment: GraphRequestDataAttachment,
+    logger: Logger?
   ) {
     capturedAttachment = dataAttachment
   }
-
-  // swiftlint:enable implicitly_unwrapped_optional
 }
