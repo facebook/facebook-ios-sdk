@@ -61,12 +61,13 @@ public class TournamentUpdater {
     tournament: Tournament,
     score: Int,
     completionHandler: @escaping (Result<Void, TournamentUpdaterError>) -> Void
-    ) {
+  ) {
     let parameters = [GraphRequest.scoreParameterKey: score]
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: GraphRequest.path(identifier: tournament.identifier),
       parameters: parameters,
-      httpMethod: .post)
+      httpMethod: .post
+    )
 
     request.start { _, result, error in
       if let error = error {

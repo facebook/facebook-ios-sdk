@@ -46,7 +46,8 @@ public class TournamentFetcher {
 
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: "\(accessToken.userID)/tournaments",
-      parameters: [:])
+      parameters: [:]
+    )
 
     request.start { _, result, error in
       if let error = error {

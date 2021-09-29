@@ -28,7 +28,7 @@ class GateKeeperManagerTests: XCTestCase {
   let graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
   let store = UserDefaultsSpy()
   let storeIdentifierPrefix = "com.facebook.sdk:GateKeepers"
-let settings = TestSettings()
+  let settings = TestSettings()
 
   override func setUp() {
     super.setUp()

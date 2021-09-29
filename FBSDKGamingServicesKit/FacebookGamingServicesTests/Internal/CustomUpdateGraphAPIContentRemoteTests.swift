@@ -39,7 +39,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
     do {
       remoteContent = try CustomUpdateGraphAPIContentRemote(
-      customUpdateContentImage: CustomUpdateContentObjects.imageContentValid
+        customUpdateContentImage: CustomUpdateContentObjects.imageContentValid
       )
     } catch {
       XCTFail("Was not expecting an error thrown but got: \(error)")
@@ -52,7 +52,8 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
     XCTAssertEqual(
       validContent.contextTokenID,
       GamingContext.current?.identifier,
-      "The context token identifier should be the same identifer as the current gaming context token id")
+      "The context token identifier should be the same identifer as the current gaming context token id"
+    )
   }
 
   func testImageContentInitWithInvalidMessage() throws {
@@ -61,7 +62,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
     do {
       remoteContent = try CustomUpdateGraphAPIContentRemote(
-      customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidMessage
+        customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidMessage
       )
     } catch CustomUpdateContentError.invalidMessage {
     } catch {
@@ -77,7 +78,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
     do {
       remoteContent = try CustomUpdateGraphAPIContentRemote(
-      customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidImage
+        customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidImage
       )
     } catch CustomUpdateContentError.invalidImage {
     } catch {
@@ -92,7 +93,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
     do {
       remoteContent = try CustomUpdateGraphAPIContentRemote(
-      customUpdateContentImage: CustomUpdateContentObjects.imageContentValid
+        customUpdateContentImage: CustomUpdateContentObjects.imageContentValid
       )
     } catch CustomUpdateContentError.notInGameContext {
     } catch {
@@ -152,6 +153,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
     XCTAssertNil(remoteContent, "A remote content object should if no gaming context is present")
     XCTAssertTrue(
       didThrowNotInGamingContextError,
-      "Should throw a not in gaming context error when the user is not currently in gaming context")
+      "Should throw a not in gaming context error when the user is not currently in gaming context"
+    )
   }
 }
