@@ -32,5 +32,4 @@
 #import "FBSDKTypeUtility.h"
 #import "FBSDKURLSession.h"
 #import "FBSDKURLSessionTask.h"
-#import "FBSDKUserDataStore.h"
 #import "NSBundle+InfoDictionaryProviding.h"
