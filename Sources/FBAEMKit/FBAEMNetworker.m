@@ -138,11 +138,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBAEMKit_VERSION_STRING];
   });
   if (@available(iOS 13.0, *)) {
-    SEL selector = NSSelectorFromString(@"isMacCatalystApp");
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if (selector && [NSProcessInfo.processInfo respondsToSelector:selector] && [NSProcessInfo.processInfo performSelector:selector]) {
-      #pragma clang diagnostic pop
+    if (NSProcessInfo.processInfo.isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agent, @"macOS"];
     }
   }

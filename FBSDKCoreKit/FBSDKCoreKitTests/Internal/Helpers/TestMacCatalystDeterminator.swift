@@ -23,7 +23,7 @@ import Foundation
 class TestMacCatalystDeterminator: NSObject, MacCatalystDetermining {
   var stubbedIsMacCatalystApp = false
 
-  func isMacCatalystApp() -> Bool {
+  var isMacCatalystApp: Bool {
     stubbedIsMacCatalystApp
   }
 }

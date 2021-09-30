@@ -1160,8 +1160,6 @@ static BOOL _canMakeRequests = NO;
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (NSString *)userAgent
 {
   static NSString *agent = nil;
@@ -1174,16 +1172,13 @@ static BOOL _canMakeRequests = NO;
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
-    SEL selector = NSSelectorFromString(@"isMacCatalystApp");
-    if (selector && [self.macCatalystDeterminator respondsToSelector:selector] && [self.macCatalystDeterminator performSelector:selector]) {
+    if (self.macCatalystDeterminator.isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }
 
   return agentWithSuffix ?: agent;
 }
-
-#pragma clang diagnostic pop
 
 #pragma mark - NSURLSessionDataDelegate
 

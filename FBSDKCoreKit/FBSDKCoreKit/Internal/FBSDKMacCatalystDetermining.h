@@ -25,7 +25,7 @@ NS_SWIFT_NAME(MacCatalystDetermining)
 
 @protocol FBSDKMacCatalystDetermining <NSObject>
 
-- (BOOL)isMacCatalystApp;
+@property (readonly, getter=isMacCatalystApp) BOOL macCatalystApp;
 
 @end
 
