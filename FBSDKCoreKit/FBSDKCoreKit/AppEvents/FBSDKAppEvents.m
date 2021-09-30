@@ -58,7 +58,6 @@
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentRecordingCreating.h"
-#import "FBSDKUserDataStore.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
@@ -71,22 +70,6 @@
  #import "FBSDKIntegrityParametersProcessorProvider.h"
 
 #endif
-
-//
-// Public event user data types
-//
-
-FBSDKAppEventUserDataType FBSDKAppEventEmail = @"em";
-FBSDKAppEventUserDataType FBSDKAppEventFirstName = @"fn";
-FBSDKAppEventUserDataType FBSDKAppEventLastName = @"ln";
-FBSDKAppEventUserDataType FBSDKAppEventPhone = @"ph";
-FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth = @"dob";
-FBSDKAppEventUserDataType FBSDKAppEventGender = @"ge";
-FBSDKAppEventUserDataType FBSDKAppEventCity = @"ct";
-FBSDKAppEventUserDataType FBSDKAppEventState = @"st";
-FBSDKAppEventUserDataType FBSDKAppEventZip = @"zp";
-FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
-FBSDKAppEventUserDataType FBSDKAppEventExternalId = @"external_id";
 
 //
 // Public event names
