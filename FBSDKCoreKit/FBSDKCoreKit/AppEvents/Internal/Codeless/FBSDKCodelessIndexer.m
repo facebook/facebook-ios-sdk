@@ -502,8 +502,7 @@ static id<FBSDKSettings> _settings;
   };
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -538,7 +537,6 @@ static id<FBSDKSettings> _settings;
   return _appIndexingTimer;
 }
 
- #endif
 #endif
 
 @end

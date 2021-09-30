@@ -399,8 +399,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   return self;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)setRecordedEvents:(NSMutableSet<NSString *> *)recordedEvents
 {
@@ -467,7 +466,6 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   _hasSKAN = NO;
 }
 
- #endif
 #endif
 
 @end

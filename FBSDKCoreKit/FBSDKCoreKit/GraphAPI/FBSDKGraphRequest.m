@@ -295,8 +295,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   return result;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -315,7 +314,6 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   return _settings;
 }
 
- #endif
 #endif
 
 @end

@@ -734,8 +734,7 @@ static id <FBSDKDataPersisting> _store;
 
 #pragma clang diagnostic pop
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)resetCurrentProfileCache
 {
@@ -759,7 +758,6 @@ static id <FBSDKDataPersisting> _store;
   _notificationCenter = nil;
 }
 
- #endif
 #endif
 
 @end

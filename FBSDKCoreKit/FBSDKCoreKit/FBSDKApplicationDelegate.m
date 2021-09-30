@@ -780,8 +780,7 @@ static UIApplicationState _applicationState;
 
 // MARK: - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)resetHasInitializeBeenCalled
 {
@@ -793,7 +792,6 @@ static UIApplicationState _applicationState;
   _applicationObservers = [NSHashTable new];
 }
 
- #endif
 #endif
 
 @end

@@ -334,8 +334,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {
@@ -347,7 +346,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   self.isSKAdNetworkReportEnabled = enabled;
 }
 
- #endif
 #endif
 @end
 

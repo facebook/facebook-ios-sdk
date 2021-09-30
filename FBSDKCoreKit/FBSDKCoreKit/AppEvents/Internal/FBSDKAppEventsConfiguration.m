@@ -104,15 +104,13 @@
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status
 {
   _defaultATEStatus = status;
 }
 
- #endif
 #endif
 
 @end

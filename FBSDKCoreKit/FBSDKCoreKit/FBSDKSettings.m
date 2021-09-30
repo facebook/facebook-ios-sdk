@@ -791,8 +791,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -816,7 +815,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   self.sharedSettings.infoDictionaryProvider = provider;
 }
 
- #endif
 #endif
 
 @end

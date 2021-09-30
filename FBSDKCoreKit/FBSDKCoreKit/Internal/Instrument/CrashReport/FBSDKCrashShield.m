@@ -212,8 +212,7 @@ static id<FBSDKSettings> _settings;
   return className;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -222,7 +221,6 @@ static id<FBSDKSettings> _settings;
   _featureChecking = nil;
 }
 
- #endif
 #endif
 
 @end

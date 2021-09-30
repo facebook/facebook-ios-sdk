@@ -588,8 +588,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (id<FBSDKAuthenticationSession>)authenticationSession
 {
@@ -691,7 +690,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   return _processInfo;
 }
 
- #endif
 #endif
 
 @end

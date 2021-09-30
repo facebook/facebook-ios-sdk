@@ -210,15 +210,13 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   return [self.directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"error_report_%@.json", timestamp]];
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)reset
 {
   _isEnabled = NO;
 }
 
- #endif
 #endif
 
 @end

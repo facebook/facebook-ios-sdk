@@ -181,8 +181,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   return self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < 3600;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -197,7 +196,6 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   }
 }
 
- #endif
 #endif
 
 @end

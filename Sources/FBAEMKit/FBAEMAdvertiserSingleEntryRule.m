@@ -249,15 +249,13 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   return self;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)setOperator:(FBAEMAdvertiserRuleOperator)operator
 {
   _operator = operator;
 }
 
- #endif
 #endif
 
 @end

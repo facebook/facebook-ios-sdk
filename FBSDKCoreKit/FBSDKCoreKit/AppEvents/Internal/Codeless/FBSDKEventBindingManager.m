@@ -477,15 +477,13 @@
   return _validClasses;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 - (void)setReactBindings:(NSMutableDictionary<NSNumber *, id> *)bindings
 {
   _reactBindings = bindings;
 }
 
- #endif
 #endif
 
 @end

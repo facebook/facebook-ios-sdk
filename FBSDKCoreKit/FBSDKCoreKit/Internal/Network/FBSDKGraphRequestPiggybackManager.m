@@ -236,8 +236,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   _lastRefreshTry = date;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)setTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
@@ -250,7 +249,6 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   _lastRefreshTry = nil;
 }
 
- #endif
 #endif
 
 @end

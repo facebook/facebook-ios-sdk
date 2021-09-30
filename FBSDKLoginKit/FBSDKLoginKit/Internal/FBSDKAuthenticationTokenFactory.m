@@ -250,8 +250,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 #pragma mark - Test methods
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 static BOOL _skipSignatureVerification;
 
@@ -270,7 +269,6 @@ static BOOL _skipSignatureVerification;
   _cert = certificate;
 }
 
- #endif
 #endif
 
 @end

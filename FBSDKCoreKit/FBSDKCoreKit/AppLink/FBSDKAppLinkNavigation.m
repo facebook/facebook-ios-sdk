@@ -344,15 +344,13 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   defaultResolver = resolver;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
   defaultResolver = nil;
 }
 
- #endif
 #endif
 
 @end

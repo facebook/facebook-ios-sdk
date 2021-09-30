@@ -482,8 +482,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return matches > 0;
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager
 {
@@ -495,7 +494,6 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   _cachedAdvertiserIdentifierManager = manager;
 }
 
- #endif
 #endif
 
 @end

@@ -689,8 +689,7 @@ static NSMapTable *_transientObjects;
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -720,7 +719,6 @@ static NSMapTable *_transientObjects;
   }
 }
 
- #endif
 #endif
 
 @end

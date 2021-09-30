@@ -128,8 +128,7 @@ static dispatch_once_t token;
   [_trackedImpressions removeAllObjects];
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -143,7 +142,6 @@ static dispatch_once_t token;
   return _trackedImpressions;
 }
 
- #endif
 #endif
 
 @end

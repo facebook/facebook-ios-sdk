@@ -243,8 +243,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   [self.delegate webDialogViewDidFinishLoad:self];
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -257,7 +256,6 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   return _webViewProvider;
 }
 
- #endif
 #endif
 
 @end

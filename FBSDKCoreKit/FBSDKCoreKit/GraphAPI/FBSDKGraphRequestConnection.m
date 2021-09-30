@@ -1252,8 +1252,7 @@ static BOOL _canMakeRequests = NO;
 
 // MARK: - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 /// Resets the default connection timeout to 60 seconds
 + (void)resetDefaultConnectionTimeout
@@ -1271,7 +1270,6 @@ static BOOL _canMakeRequests = NO;
   _canMakeRequests = NO;
 }
 
- #endif
 #endif
 
 @end

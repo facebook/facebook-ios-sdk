@@ -299,15 +299,13 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 
 #pragma mark - Testability
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)resetCurrentAccessTokenCache
 {
   g_currentAccessToken = nil;
 }
 
- #endif
 #endif
 
 @end

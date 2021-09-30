@@ -224,15 +224,13 @@ static id<FBSDKErrorReporting> _errorReporter;
   }
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
   _errorReporter = nil;
 }
 
- #endif
 #endif
 
 @end

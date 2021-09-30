@@ -275,8 +275,7 @@ static BOOL _isConfigured;
 #endif
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
@@ -290,7 +289,6 @@ static BOOL _isConfigured;
   _appEventParametersExtractor = nil;
 }
 
- #endif
 #endif
 
 @end

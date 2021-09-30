@@ -388,8 +388,7 @@ void sum(float *val0, float *val1)
   return [self regextMatch:pattern text:matchText];
 }
 
-#if DEBUG
- #if FBTEST
+#if DEBUG && FBTEST
 
 + (id<FBSDKRulesFromKeyProvider>)keyProvider
 {
@@ -401,7 +400,6 @@ void sum(float *val0, float *val1)
   _keyProvider = nil;
 }
 
- #endif
 #endif
 
 @end
