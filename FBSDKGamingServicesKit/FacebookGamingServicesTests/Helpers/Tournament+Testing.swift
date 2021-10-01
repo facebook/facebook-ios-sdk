@@ -16,37 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import TestTools
-import XCTest
-
-@objcMembers
-class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
-  var openURLWithSFVCCount = 0
-
-  func openURL(
-    withSafariViewController url: URL,
-    sender: URLOpening,
-    from fromViewController: UIViewController,
-    handler: @escaping SuccessBlock
-  ) {
-    openURLWithSFVCCount += 1
-    handler(true, nil)
-  }
-
-  func open(
-    _ request: BridgeAPIRequestProtocol,
-    useSafariViewController: Bool,
-    from fromViewController: UIViewController?,
-    completionBlock: @escaping BridgeAPIResponseBlock
-  ) {
-    // BridgeAPIRequestOpening protocol requirement
-  }
-
-  func open(
-    _ url: URL,
-    sender: URLOpening?,
-    handler: @escaping SuccessBlock
-  ) {
-    // BridgeAPIRequestOpening protocol requirement
+extension Tournament: Equatable {
+  public static func == (lhs: Tournament, rhs: Tournament) -> Bool {
+    lhs.identifier == rhs.identifier
   }
 }

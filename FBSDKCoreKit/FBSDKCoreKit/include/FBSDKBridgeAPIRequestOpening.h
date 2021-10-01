@@ -48,6 +48,10 @@ NS_SWIFT_NAME(BridgeAPIRequestOpening)
                      fromViewController:(UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler;
 
+
+- (void)openURL:(NSURL *)url
+         sender:(nullable id<FBSDKURLOpening>)sender
+        handler:(FBSDKSuccessBlock)handler;
 @end
 
 NS_ASSUME_NONNULL_END

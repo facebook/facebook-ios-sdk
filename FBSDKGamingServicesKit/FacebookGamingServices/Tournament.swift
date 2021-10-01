@@ -45,11 +45,24 @@ public struct Tournament: Codable {
    */
   public internal(set) var payload: String?
 
-  init(identifier: String, expiration: Date, title: String?, payload: String?) {
+  /**
+   The current score for the player for this  tournament.
+   You can update the score by calling the `TournamentUpdater` and passing in the tournament and new score.
+   */
+  public internal(set) var score: Int?
+
+  init(
+    identifier: String,
+    expiration: Date,
+    score: Int? = nil,
+    title: String? = nil,
+    payload: String? = nil
+  ) {
     self.identifier = identifier
     self.expiration = expiration
     self.title = title
     self.payload = payload
+    self.score = score
   }
 
   public init(from decoder: Decoder) throws {
@@ -66,6 +79,7 @@ public struct Tournament: Codable {
 
     title = try container.decodeIfPresent(String.self, forKey: .title)
     payload = try container.decodeIfPresent(String.self, forKey: .payload)
+    score = try container.decodeIfPresent(Int.self, forKey: .score)
   }
 
   enum CodingKeys: String, CodingKey {
@@ -73,5 +87,6 @@ public struct Tournament: Codable {
     case expiration = "tournament_end_time"
     case title = "tournament_title"
     case payload = "tournament_payload"
+    case score
   }
 }

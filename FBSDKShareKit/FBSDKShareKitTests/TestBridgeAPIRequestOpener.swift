@@ -41,4 +41,12 @@ final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
     from fromViewController: UIViewController,
     handler: @escaping SuccessBlock
   ) {}
+
+  func open(
+    _ url: URL,
+    sender: URLOpening?,
+    handler: @escaping SuccessBlock
+  ) {
+    // BridgeAPIRequestOpening protocol requirement
+  }
 }
