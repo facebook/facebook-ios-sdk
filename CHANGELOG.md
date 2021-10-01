@@ -20,6 +20,12 @@ More detailed instructions can be found at: https://developers.facebook.com/docs
 FacebookGamingServices vs FBSDKGamingServicesKit - You'll notice there are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you do not require an Objective-C interface for these types,
 we recommend using only `FacebookGamingServices`.
 
+🚨 NOTICE: Changes to Facebook Login button when defined in a Storyboard or XIB file 🚨
+
+There is a known issue with using XCFrameworks in conjunction with Storyboard or XIB files. If you do not include the code below, your login button will not load or decorate correctly. Any methods that you call on it may result in a **runtime crash**.
+
+Please follow the instructions on using Interface Builder at https://developers.facebook.com/docs/facebook-login/ios/advanced/
+
 ### Added
 
 - Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
