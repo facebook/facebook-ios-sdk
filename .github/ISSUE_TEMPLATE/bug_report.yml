@@ -7,8 +7,8 @@ body:
     label: Checklist before submitting a bug report
     options:
     - label: "I've updated to the latest released version of the SDK"
-      required: true
-    - label: "I've searched for existing [Github issues](https://github.com/facebook/facebook-ios-sdk/issues)"
+      required: false
+    - label: "I've searched for existing [GitHub issues](https://github.com/facebook/facebook-ios-sdk/issues)"
       required: true
     - label: "I've looked for existing answers on [Stack Overflow](https://facebook.stackoverflow.com), the [Facebook Developer Community Forum](https://developers.facebook.com/community/) and the [Facebook Developers Group](https://www.facebook.com/groups/fbdevelopers)"
       required: true
@@ -20,22 +20,24 @@ body:
   id: xcode-version
   attributes:
     label: Xcode version
-    description: "Which Xcode version are you using when you find the bug?"
+    description: "Which Xcode version are you using?"
     placeholder: "X.X.X"
   validations:
     required: true
 - type: input
-  id: swift-version
+  id: fbsdk-version
   attributes:
-    label: Swift version
-    description: "Which Swift version are you using when you find the bug?"
-    placeholder: "X.X.X (if issue is Swift related)"
+    label: Facebook iOS SDK version
+    description: "Which version of the Facebook iOS SDK are you using when you find the bug?"
+    placeholder: "X.X.X"
+  validations:
+    required: true
 - type: input
   id: install-platform-and-version
   attributes:
     label: Installation platform & version
     description: "Which install platform (package manager) are you using when you find the bug?"
-    placeholder: "[Cocoapods|Carthage|Manual] version X.X.X"
+    placeholder: "[SPM|Cocoapods|Carthage|Manual] version X.X.X"
   validations:
     required: true
 - type: dropdown
