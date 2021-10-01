@@ -48,6 +48,16 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 #pragma mark - Object Lifecycle
 
+- (void)awakeFromNib
+{
+  [super awakeFromNib];
+
+  // Workaround for blank button showing when created in a storyboard in Xcode 13
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
+  self.configuration = nil;
+#endif
+}
+
 - (void)dealloc
 {
   [self _unsubscribeFromNotifications];
