@@ -35,7 +35,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
 @property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedValues;
 
+@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nonnull, nonatomic, readonly) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
+
+- (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration;
+- (void)_loadReportData;
+- (void)_recordAndUpdateEvent:(NSString *)event
+                     currency:(nullable NSString *)currency
+                        value:(nullable NSNumber *)value;
+- (void)_updateConversionValue:(NSInteger)value;
+
+- (void)setSKAdNetworkReportEnabled:(BOOL)enabled;
+
 - (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
+- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                   store:(id<FBSDKDataPersisting>)store;
+
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                      store:(id<FBSDKDataPersisting>)store
+                   conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 
 @end
 
