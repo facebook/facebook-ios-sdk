@@ -2,6 +2,7 @@
 
 Pod::Spec.new do |s|
 
+  s.name         = 'FBSDKShareKit'
   s.version      = '12.0.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
