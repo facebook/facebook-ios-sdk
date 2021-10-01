@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKLogger.h>
 #import <FBSDKCoreKit/FBSDKLogging.h>
 
 NS_ASSUME_NONNULL_BEGIN

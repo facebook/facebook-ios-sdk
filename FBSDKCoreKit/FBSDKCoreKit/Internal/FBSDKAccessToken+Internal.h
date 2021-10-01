@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKAccessToken.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
