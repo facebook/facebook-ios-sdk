@@ -46,8 +46,6 @@
 #import "FBSDKLoginManager+Testing.h"
 #import "FBSDKSettings+Testing.h"
 
-@class FBSDKAuthenticationTokenClaims;
-
 @protocol FBSDKLoginProviding;
 
 NS_ASSUME_NONNULL_BEGIN

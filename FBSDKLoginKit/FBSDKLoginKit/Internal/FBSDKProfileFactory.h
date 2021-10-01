@@ -22,7 +22,6 @@
 
  #import "FBSDKProfileCreating.h"
 
-@class FBSDKProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 

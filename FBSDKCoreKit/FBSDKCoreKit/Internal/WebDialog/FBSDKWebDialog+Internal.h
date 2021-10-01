@@ -26,7 +26,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKWebDialogDelegate;
-@protocol FBSDKWindowFinding;
 
 @interface FBSDKWebDialog ()
 

@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKAccessToken;
 
 NS_ASSUME_NONNULL_BEGIN
 

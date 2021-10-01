@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKErrorReporting;
 
 NS_ASSUME_NONNULL_BEGIN
 

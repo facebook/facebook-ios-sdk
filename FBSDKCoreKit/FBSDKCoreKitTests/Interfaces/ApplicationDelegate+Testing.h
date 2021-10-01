@@ -35,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKServerConfigurationProviding;
 @protocol FBSDKSourceApplicationTracking;
 @protocol FBSDKProfileProviding;
-@protocol FBSDKTimeSpentRecording;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKPaymentObserving;
 @class FBSDKAccessTokenExpirer;

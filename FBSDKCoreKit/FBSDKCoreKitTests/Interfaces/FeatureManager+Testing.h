@@ -18,8 +18,6 @@
 
 #import "FBSDKFeatureManager.h"
 
-@protocol FBSDKSessionProviding;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKFeatureManager (Testing)

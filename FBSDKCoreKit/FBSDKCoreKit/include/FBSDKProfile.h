@@ -20,7 +20,6 @@
 
 #import "FBSDKProfilePictureView.h"
 
-@class FBSDKAuthenticationTokenClaims;
 @class FBSDKLocation;
 @class FBSDKProfile;
 @class FBSDKUserAgeRange;

@@ -33,7 +33,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManagerLogger;
 @class FBSDKPermission;

@@ -24,7 +24,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FBSDKBridgeAPIRequest;
 
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIAppIDKey;
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPISchemeSuffixKey;

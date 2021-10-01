@@ -19,7 +19,6 @@
 #import <Foundation/Foundation.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@class FBSDKGameRequestContent;
 
 NS_ASSUME_NONNULL_BEGIN
 /**

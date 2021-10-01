@@ -22,7 +22,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKTokenCaching;
 @protocol FBSDKGraphRequestConnectionFactory;
 
 @interface FBSDKAccessToken (Internal)

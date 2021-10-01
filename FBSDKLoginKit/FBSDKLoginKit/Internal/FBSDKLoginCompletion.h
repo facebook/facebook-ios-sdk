@@ -21,9 +21,7 @@
 #import <Foundation/Foundation.h>
 
 @class FBSDKAuthenticationToken;
-@class FBSDKAuthenticationTokenClaims;
 @class FBSDKLoginCompletionParameters;
-@class FBSDKLoginManager;
 @class FBSDKPermission;
 @class FBSDKProfile;
 

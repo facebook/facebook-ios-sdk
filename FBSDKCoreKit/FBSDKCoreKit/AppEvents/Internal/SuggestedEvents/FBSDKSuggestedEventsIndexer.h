@@ -21,7 +21,6 @@
  #import <Foundation/Foundation.h>
  #import "FBSDKSuggestedEventsIndexerProtocol.h"
 
-@protocol FBSDKModelManagerDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 

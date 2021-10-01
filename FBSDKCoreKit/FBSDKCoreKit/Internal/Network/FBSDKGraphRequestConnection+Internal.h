@@ -21,7 +21,6 @@
 @protocol FBSDKErrorConfigurationProviding;
 @protocol FBSDKURLSessionProxying;
 @protocol FBSDKURLSessionProxyProviding;
-@protocol FBSDKGraphRequestPiggybackManaging;
 @protocol FBSDKGraphRequestPiggybackManagerProviding;
 @protocol FBSDKSettings;
 @protocol FBSDKGraphRequestConnectionFactory;

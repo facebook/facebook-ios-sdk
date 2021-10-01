@@ -20,7 +20,6 @@
 
 @protocol FBSDKProductsRequest;
 @protocol FBSDKProductsRequestCreating;
-@class SKPaymentQueue;
 
 NS_ASSUME_NONNULL_BEGIN
 
