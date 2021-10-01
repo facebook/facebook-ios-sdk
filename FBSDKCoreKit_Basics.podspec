@@ -41,6 +41,9 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.library = 'z'
 
-  s.source = { http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK.xcframework.zip" }
+  s.source = {
+    http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK.xcframework.zip",
+    sha1: 'f1521b2c67ef1986e2ecd5d5695c387961e4ba25'
+  }
   s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit_Basics.xcframework'
 end

@@ -28,9 +28,7 @@ let package = Package(
         .tvOS(.v10)
     ],
     products: [
-        /*
-         The Kernel of the SDK. Must be included as a runtime dependency.
-         */
+         // The Kernel of the SDK. Must be included as a runtime dependency.
         .library(
             name: "FacebookBasics",
             targets: ["FBSDKCoreKit_Basics"]
@@ -52,85 +50,74 @@ let package = Package(
             targets: ["FacebookCore", "FBSDKCoreKit"]
         ),
 
-        /*
-          The Facebook Login SDK
-        */
+        //  The Facebook Login SDK
         .library(
             name: "FacebookLogin",
             targets: ["FacebookLogin"]
         ),
 
-        /*
-          The Facebook Share SDK
-        */
+        //  The Facebook Share SDK
         .library(
             name: "FacebookShare",
             targets: ["FBSDKShareKit", "FacebookShare"]
         ),
 
-        /*
-          The Facebook Gaming Services SDK
-        */
+        //  The Facebook Gaming Services SDK
         .library(
             name: "FacebookGamingServices",
             targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
         ),
 
-        /*
-          The Facebook AEM Kit
-        */
+        // The Facebook AEM Kit
         .library(
             name: "FacebookAEM",
             targets: ["FBAEMKit", "FacebookAEM"]
         )
     ],
     targets: [
-        /*
-          The kernel of the SDK
-        */
+        // The kernel of the SDK
         .binaryTarget(
             name: "FBSDKCoreKit_Basics",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKCoreKit_Basics_XCFramework.zip",
-            checksum: "4c1a5e69b1e858be4ceeff1547e71ce7ef758864edc1061166c39502075a7ba0"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKCoreKit_Basics-Static_XCFramework.zip",
+            checksum: "2cd19de995235d3dd5092cc430f67117680127b506c481b9a6821fdc4925553c"
         ),
 
         /*
-          The legacy Objective-C implementation of AEM Kit
+          The legacy Objective-C implementation that will be converted to Swift.
+          This will not contain interfaces for new features written in Swift.
         */
         .binaryTarget(
             name: "FBAEMKit",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBAEMKit_XCFramework.zip",
-            checksum: "f7ad5812f0f1c5ca10e577c034400358bf50a5220696f697bf3a1bc300f1f995"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBAEMKit-Static_XCFramework.zip",
+            checksum: "161931add858d21a3511c4d1d255349d2ba1fd782fea9fbf3e26b12d91720218"
         ),
 
-        /*
-          The main AEM module
-         */
+        // The main AEM module
         .target(
           name: "FacebookAEM",
           dependencies: ["FBAEMKit"]
         ),
 
         /*
-          The legacy Objective-C interface that will be used to maintain
-          backwards compatibility with types that have been converted to Swift.
-
+          The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
         .binaryTarget(
             name: "FBSDKCoreKit",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKCoreKit_XCFramework.zip",
-            checksum: "4bd619e776cc82c53908bb94d85c9ada0d386f8c437f72ea26fc056dc121e272"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKCoreKit-Static_XCFramework.zip",
+            checksum: "a17b1043cde6afc4a1ca4ddd4cff5f7c354742d59d419c54cd6602f318ece47a"
         ),
 
+        // The main Core SDK module
         .target(
             name: "FacebookCore",
-            dependencies: ["FBSDKCoreKit"]
+            dependencies: ["FBSDKCoreKit"],
+            linkerSettings: [
+                .linkedLibrary("c++"),
+                .linkedLibrary("z"),
+                .linkedFramework("Accelerate")
+            ]
         ),
-
-        /*
-          The main Core SDK module
-        */
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
@@ -138,13 +125,11 @@ let package = Package(
         */
         .binaryTarget(
             name: "FBSDKLoginKit",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKLoginKit_XCFramework.zip",
-            checksum: "589eb1edfc91ab36f0b66830866b8ec8b75c9b54528e80640032e8154a77021b"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKLoginKit-Static_XCFramework.zip",
+            checksum: "7e993959b35a6708cdd9f7f939cf09a2f139b5cacbfcbedf5425d0558ad9487e"
         ),
 
-        /*
-          The main Login SDK module
-        */
+        // The main Login SDK module
         .target(
             name: "FacebookLogin",
             dependencies: ["FacebookCore", "FBSDKLoginKit"]
@@ -156,28 +141,25 @@ let package = Package(
         */
         .binaryTarget(
             name: "FBSDKShareKit",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FBSDKShareKit_XCFramework.zip",
-            checksum: "c8b161a7151b4b79985be256e20994e146007562b927a876afa6c30b5b2b5c61"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKShareKit-Static_XCFramework.zip",
+            checksum: "3a9d3067d90886ab90b047191ba841633a76ef39bca908f1e461c4932615443c"
         ),
 
-        /*
-          The main Share SDK module
-        */
+        // The main Share SDK module
         .target(
             name: "FacebookShare",
             dependencies: ["FacebookCore", "FBSDKShareKit"]
         ),
 
+        // The main Facebook Gaming Services module
         .binaryTarget(
             name: "FacebookGamingServices",
-            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v11.2.0/FacebookGamingServices_XCFramework.zip",
-            checksum: "ed9edc676e5937652902e39f3d98f6fe37505d0e6a1ee8130621f04317c425f3"
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FacebookGamingServices-Static_XCFramework.zip",
+            checksum: "e2883a25acb5c556025540df23c1bb5e061327e849dbe460b4cc3df61c5ee950"
         ),
 
         /*
-          The legacy Objective-C interface that will be used to maintain
-          backwards compatibility with types that have been converted to Swift.
-
+          The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
         .target(
