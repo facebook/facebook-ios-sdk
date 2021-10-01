@@ -25,6 +25,8 @@ public enum ShareTournamentDialogError: Error {
   case tournamentMissingIdentifier
   case tournamentMissingScore
   case missingUpdateScore
+  case unableToCreateDialogUrl
+  case unknownBridgeError
   case bridgeError(Error)
 }
 
@@ -38,17 +40,20 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   var bridgeURLOpener: BridgeAPIRequestOpening
   var tournament: Tournament
   var shareType: ShareType
+  weak var delegate: ShareTournamentDialogDelegate?
 
   init(
     tournament: Tournament,
     score: Int?,
     urlOpener: BridgeAPIRequestOpening,
-    shareType: ShareType
+    shareType: ShareType,
+    delegate: ShareTournamentDialogDelegate
   ) {
     self.tournament = tournament
     self.bridgeURLOpener = urlOpener
     self.shareType = shareType
     self.tournament.score = score
+    self.delegate = delegate
   }
 
   /**
@@ -58,31 +63,44 @@ public class ShareTournamentDialog: NSObject, URLOpening {
       - Parameter score: The new score to update in the given tournament
       - Parameter payload: Optional blob of data to attach to the update.
                            Must be less than or equal to 1000 characters when stringified.
+      - Parameter Delegate: The delegate for the dialog to be invoked in case of error , cancellation or completion
    */
   public convenience init(
     update tournament: Tournament,
     score: Int,
-    payload: String? = nil
+    payload: String? = nil,
+    delegate: ShareTournamentDialogDelegate
   ) {
-    self.init(tournament: tournament, score: score, urlOpener: BridgeAPI.shared, shareType: .update)
+    self.init(tournament: tournament, score: score, urlOpener: BridgeAPI.shared, shareType: .update, delegate: delegate)
     self.tournament.payload = payload
   }
 
   public func show() throws {
     try validateTournamentForUpdate()
     guard let accessToken = AccessToken.current else {
-      return
+      throw ShareTournamentDialogError.invalidAccessToken
     }
 
     guard let url = ShareTournamentDialogURLBuilder.update(self.tournament).url(withPathAppID: accessToken.appID) else {
-      return
+      throw ShareTournamentDialogError.unableToCreateDialogUrl
     }
-    bridgeURLOpener.open(url, sender: self) { _, _ in }
-    return
+
+    bridgeURLOpener.open(url, sender: self) { [weak self] success, error in
+      guard let strongSelf = self else {
+        return
+      }
+      if let error = error {
+        strongSelf.delegate?.didFail(withError: ShareTournamentDialogError.bridgeError(error), dialog: strongSelf)
+        return
+      }
+      if !success {
+        strongSelf.delegate?.didFail(withError: ShareTournamentDialogError.unknownBridgeError, dialog: strongSelf)
+      }
+    }
   }
 
   func validateTournamentForUpdate() throws {
-    guard tournament.identifier.isEmpty else {
+    guard !tournament.identifier.isEmpty else {
       throw ShareTournamentDialogError.tournamentMissingIdentifier
     }
 
