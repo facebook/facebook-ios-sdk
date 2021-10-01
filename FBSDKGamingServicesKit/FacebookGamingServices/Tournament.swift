@@ -24,10 +24,26 @@ public enum TournamentDecodingError: Error {
 
 public struct Tournament: Codable {
 
-  let identifier: String
-  let expiration: Date
-  let title: String?
-  let payload: String?
+  /**
+   The unique ID that is associated with this tournament.
+   */
+  public internal(set) var identifier: String
+
+  /**
+   Timestamp when the  tournament ends.
+   If the expiration is in the past, then the tournament is already finished and has expired.
+   */
+  public internal(set) var expiration: Date
+
+  /**
+   Title of the tournament provided upon the creation of the tournament.
+   */
+  public internal(set) var title: String?
+
+  /**
+   Payload of the tournament provided upon the creation of the tournament.
+   */
+  public internal(set) var payload: String?
 
   init(identifier: String, expiration: Date, title: String?, payload: String?) {
     self.identifier = identifier
