@@ -27,6 +27,7 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
+#import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSwizzler.h"

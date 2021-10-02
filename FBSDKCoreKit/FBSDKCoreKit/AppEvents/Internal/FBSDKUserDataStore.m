@@ -20,6 +20,8 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKAppEventUserDataType.h"
+
 static NSString *const FBSDKUserDataKey = @"com.facebook.appevents.UserDataStore.userData";
 static NSString *const FBSDKInternalUserDataKey = @"com.facebook.appevents.UserDataStore.internalUserData";
 

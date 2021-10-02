@@ -28,6 +28,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
@@ -71,22 +72,6 @@
  #import "FBSDKIntegrityParametersProcessorProvider.h"
 
 #endif
-
-//
-// Public event user data types
-//
-
-FBSDKAppEventUserDataType FBSDKAppEventEmail = @"em";
-FBSDKAppEventUserDataType FBSDKAppEventFirstName = @"fn";
-FBSDKAppEventUserDataType FBSDKAppEventLastName = @"ln";
-FBSDKAppEventUserDataType FBSDKAppEventPhone = @"ph";
-FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth = @"dob";
-FBSDKAppEventUserDataType FBSDKAppEventGender = @"ge";
-FBSDKAppEventUserDataType FBSDKAppEventCity = @"ct";
-FBSDKAppEventUserDataType FBSDKAppEventState = @"st";
-FBSDKAppEventUserDataType FBSDKAppEventZip = @"zp";
-FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
-FBSDKAppEventUserDataType FBSDKAppEventExternalId = @"external_id";
 
 //
 // Public event names

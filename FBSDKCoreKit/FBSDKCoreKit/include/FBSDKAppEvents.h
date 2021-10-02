@@ -26,6 +26,7 @@
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventName.h"
+#import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsFlushBehavior.h"
 #import "FBSDKProductAvailability.h"
 #import "FBSDKProductCondition.h"
@@ -41,42 +42,6 @@ NS_SWIFT_NAME(AppEventsLoggingResult);
 /**  optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
-
-/// typedef for FBSDKAppEventUserDataType
-typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM;
-
-/** Parameter key used to specify user's email. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventEmail;
-
-/** Parameter key used to specify user's first name. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventFirstName;
-
-/** Parameter key used to specify user's last name. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventLastName;
-
-/** Parameter key used to specify user's phone. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventPhone;
-
-/** Parameter key used to specify user's date of birth. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth;
-
-/** Parameter key used to specify user's gender. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventGender;
-
-/** Parameter key used to specify user's city. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCity;
-
-/** Parameter key used to specify user's state. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventState;
-
-/** Parameter key used to specify user's zip. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventZip;
-
-/** Parameter key used to specify user's country. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCountry;
-
-/** Parameter key used to specify user's external id. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventExternalId;
 
 /** Parameter key used to specify event name. */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterEventName;
