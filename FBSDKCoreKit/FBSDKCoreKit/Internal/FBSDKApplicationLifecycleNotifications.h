@@ -18,12 +18,4 @@
 
 #import <Foundation/Foundation.h>
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 extern NSNotificationName const FBSDKApplicationDidBecomeActiveNotification;
-
-#else
-
-extern NSString *const FBSDKApplicationDidBecomeActiveNotification;
-
-#endif

@@ -23,8 +23,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 /**
   Notification indicating that the `currentAccessToken` has changed.
 
@@ -34,19 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 FOUNDATION_EXPORT NSNotificationName const FBSDKAccessTokenDidChangeNotification
 NS_SWIFT_NAME(AccessTokenDidChange);
-
-#else
-
-/**
- Notification indicating that the `currentAccessToken` has changed.
-
- the userInfo dictionary of the notification will contain keys
- `FBSDKAccessTokenChangeOldKey` and
- `FBSDKAccessTokenChangeNewKey`.
- */
-FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidChangeNotification
-NS_SWIFT_NAME(AccessTokenDidChangeNotification);
-#endif
 
 /**
   A key in the notification's userInfo that will be set

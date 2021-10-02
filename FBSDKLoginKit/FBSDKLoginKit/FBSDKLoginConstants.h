@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
 
 /**
  The error domain for all errors from FBSDKLoginKit
@@ -30,17 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSErrorDomain const FBSDKLoginErrorDomain
 NS_SWIFT_NAME(LoginErrorDomain);
 
-#else
-
-/**
- The error domain for all errors from FBSDKLoginKit
-
- Error codes from the SDK in the range 300-399 are reserved for this domain.
- */
-FOUNDATION_EXPORT NSString *const FBSDKLoginErrorDomain
-NS_SWIFT_NAME(LoginErrorDomain);
-
-#endif
 
 #ifndef NS_ERROR_ENUM
 #define NS_ERROR_ENUM(_domain, _name) \

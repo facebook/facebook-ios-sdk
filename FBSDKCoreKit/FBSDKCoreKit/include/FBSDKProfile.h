@@ -26,7 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
 
 /**
   Notification indicating that the `currentProfile` has changed.
@@ -37,20 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 FOUNDATION_EXPORT NSNotificationName const FBSDKProfileDidChangeNotification
 NS_SWIFT_NAME(ProfileDidChange);
-
-#else
-
-/**
- Notification indicating that the `currentProfile` has changed.
-
- the userInfo dictionary of the notification will contain keys
- `FBSDKProfileChangeOldKey` and
- `FBSDKProfileChangeNewKey`.
- */
-FOUNDATION_EXPORT NSString *const FBSDKProfileDidChangeNotification
-NS_SWIFT_NAME(ProfileDidChangeNotification);
-
-#endif
 
 /*   key in notification's userInfo object for getting the old profile.
 

@@ -65,7 +65,6 @@ NS_SWIFT_NAME(shared);
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nullable id)annotation;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
 /**
   Call this method from the [UIApplicationDelegate application:openURL:options:] method
  of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
@@ -82,7 +81,6 @@ NS_SWIFT_NAME(shared);
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options;
-#endif
 
 /**
   Call this method from the [UIApplicationDelegate application:didFinishLaunchingWithOptions:] method

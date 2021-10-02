@@ -34,19 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 /**  NSNotificationCenter name indicating a result of a failed log flush attempt. The posted object will be an NSError instance. */
 FOUNDATION_EXPORT NSNotificationName const FBSDKAppEventsLoggingResultNotification
 NS_SWIFT_NAME(AppEventsLoggingResult);
-
-#else
-
-/**  NSNotificationCenter name indicating a result of a failed log flush attempt. The posted object will be an NSError instance. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsLoggingResultNotification
-NS_SWIFT_NAME(AppEventsLoggingResultNotification);
-
-#endif
 
 /**  optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey

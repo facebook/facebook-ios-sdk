@@ -36,15 +36,7 @@
 #define FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID @"upload_session_id"
 #define FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS @"success"
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 static NSErrorDomain const FBSDKGamingVideoUploadErrorDomain = @"com.facebook.sdk.gaming.videoupload";
-
-#else
-
-static NSString *const FBSDKGamingVideoUploadErrorDomain = @"com.facebook.sdk.gaming.videoupload";
-
-#endif
 
 static NSString *const FBSDKVideoUploaderDefaultGraphNode = @"me";
 static NSString *const FBSDKVideoUploaderEdge = @"videos";

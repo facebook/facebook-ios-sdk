@@ -21,15 +21,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKMeasurementEvent_Internal.h"
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
-
-#else
-
-NSString *const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
-
-#endif
 
 NSString *const FBSDKMeasurementEventNotificationName = @"com.facebook.facebook-objc-sdk.measurement_event";
 

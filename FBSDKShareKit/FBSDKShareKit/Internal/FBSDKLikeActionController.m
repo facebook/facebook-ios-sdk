@@ -69,19 +69,9 @@ BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue)
   }
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 NSNotificationName const FBSDKLikeActionControllerDidDisableNotification = @"FBSDKLikeActionControllerDidDisableNotification";
 NSNotificationName const FBSDKLikeActionControllerDidResetNotification = @"FBSDKLikeActionControllerDidResetNotification";
 NSNotificationName const FBSDKLikeActionControllerDidUpdateNotification = @"FBSDKLikeActionControllerDidUpdateNotification";
-
-#else
-
-NSString *const FBSDKLikeActionControllerDidDisableNotification = @"FBSDKLikeActionControllerDidDisableNotification";
-NSString *const FBSDKLikeActionControllerDidResetNotification = @"FBSDKLikeActionControllerDidResetNotification";
-NSString *const FBSDKLikeActionControllerDidUpdateNotification = @"FBSDKLikeActionControllerDidUpdateNotification";
-
-#endif
 
 NSString *const FBSDKLikeActionControllerAnimatedKey = @"animated";
 

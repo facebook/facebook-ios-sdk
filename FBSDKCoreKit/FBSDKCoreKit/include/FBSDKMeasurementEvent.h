@@ -22,19 +22,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 /** The name of the notification posted by FBSDKMeasurementEvent */
 FOUNDATION_EXPORT NSNotificationName const FBSDKMeasurementEventNotification
 NS_SWIFT_NAME(MeasurementEvent);
-
-#else
-
-/** The name of the notification posted by FBSDKMeasurementEvent */
-FOUNDATION_EXPORT NSString *const FBSDKMeasurementEventNotification
-NS_SWIFT_NAME(MeasurementEventNotification);
-
-#endif
 
 /** Defines keys in the userInfo object for the notification named FBSDKMeasurementEventNotificationName */
 /** The string field for the name of the event */

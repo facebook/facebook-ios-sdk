@@ -20,8 +20,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 /**
  The error domain for all errors from FBSDKCoreKit.
 
@@ -29,18 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 FOUNDATION_EXPORT NSErrorDomain const FBSDKErrorDomain
 NS_SWIFT_NAME(ErrorDomain);
-
-#else
-
-/**
- The error domain for all errors from FBSDKCoreKit.
-
- Error codes from the SDK in the range 0-99 are reserved for this domain.
- */
-FOUNDATION_EXPORT NSString *const FBSDKErrorDomain
-NS_SWIFT_NAME(ErrorDomain);
-
-#endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
 

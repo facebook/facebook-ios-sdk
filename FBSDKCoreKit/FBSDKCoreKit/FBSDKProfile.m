@@ -32,15 +32,7 @@
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUserAgeRange.h"
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
 NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
-
-#else
-
-NSString *const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
-
-#endif
 
 NSString *const FBSDKProfileChangeOldKey = @"FBSDKProfileOld";
 NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
