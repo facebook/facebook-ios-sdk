@@ -72,6 +72,12 @@ static id _applicationActivationNotifier;
   _skipIntrinsicContentSizing = YES;
   [self configureButton];
   _skipIntrinsicContentSizing = NO;
+
+  // Workaround for blank button showing when created in a Storyboard in Xcode 13
+  if ([self respondsToSelector:@selector(setConfiguration:)]) {
+    [self performSelector:@selector(setConfiguration:) withObject:nil];
+  }
+  self.titleLabel.font = [self defaultFont];
 }
 
 - (void)dealloc
@@ -234,7 +240,8 @@ static id _applicationActivationNotifier;
 
 - (UIFont *)defaultFont
 {
-  return [UIFont systemFontOfSize:14];
+  CGFloat size = 15;
+  return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
 }
 
 - (UIColor *)defaultHighlightedColor
