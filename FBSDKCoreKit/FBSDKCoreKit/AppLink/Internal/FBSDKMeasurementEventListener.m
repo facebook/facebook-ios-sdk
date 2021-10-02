@@ -74,11 +74,6 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
                 isImplicitlyLogged:YES];
 }
 
-- (void)dealloc
-{
-  [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
 @end
 
 #endif

@@ -48,7 +48,6 @@
 {
   [_timer invalidate];
   _timer = nil;
-  [self.notificationCenter removeObserver:self];
 }
 
 - (void)_checkAccessTokenExpirationDate

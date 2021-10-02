@@ -33,11 +33,6 @@
 
 #pragma mark - Object Lifecycle
 
-- (void)dealloc
-{
-  [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
 - (void)layoutSubviews
 {
   NSAttributedString *title = [self _loginTitle];

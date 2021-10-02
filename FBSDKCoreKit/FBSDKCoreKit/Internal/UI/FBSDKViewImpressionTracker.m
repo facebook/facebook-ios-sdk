@@ -94,11 +94,6 @@ static dispatch_once_t token;
   return self;
 }
 
-- (void)dealloc
-{
-  [self.notificationObserver removeObserver:self];
-}
-
 #pragma mark - Public API
 
 - (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary<NSString *, id> *)parameters

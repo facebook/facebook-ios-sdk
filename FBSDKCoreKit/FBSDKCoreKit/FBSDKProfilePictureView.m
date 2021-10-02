@@ -149,11 +149,6 @@
   return [self initWithFrame:CGRectZero profile:profile];
 }
 
-- (void)dealloc
-{
-  [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
 #pragma mark - Properties
 
 - (void)setBounds:(CGRect)bounds

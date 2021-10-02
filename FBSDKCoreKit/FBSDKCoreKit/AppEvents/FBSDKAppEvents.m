@@ -372,7 +372,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)dealloc
 {
-  [NSNotificationCenter.defaultCenter removeObserver:self];
   [FBSDKUtility stopGCDTimer:self.flushTimer];
 }
 

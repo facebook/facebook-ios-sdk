@@ -89,7 +89,6 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 - (void)dealloc
 {
-  [NSNotificationCenter.defaultCenter removeObserver:self];
   _dialogView.delegate = nil;
   [_dialogView removeFromSuperview];
   [_backgroundView removeFromSuperview];

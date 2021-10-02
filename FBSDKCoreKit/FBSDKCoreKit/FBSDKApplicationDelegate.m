@@ -359,11 +359,6 @@ static UIApplicationState _applicationState;
 #endif
 }
 
-- (void)dealloc
-{
-  [self.notificationObserver removeObserver:self];
-}
-
 #pragma mark - UIApplicationDelegate
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED> __IPHONE_9_0

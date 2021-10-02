@@ -80,11 +80,6 @@ static id _applicationActivationNotifier;
   self.titleLabel.font = [self defaultFont];
 }
 
-- (void)dealloc
-{
-  [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
 #pragma mark - Properties
 
 - (void)setEnabled:(BOOL)enabled

@@ -46,13 +46,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 @implementation FBSDKLoginButton
 
-#pragma mark - Object Lifecycle
-
-- (void)dealloc
-{
-  [self _unsubscribeFromNotifications];
-}
-
 #pragma mark - Properties
 
 - (FBSDKDefaultAudience)defaultAudience
@@ -183,11 +176,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 }
 
 #pragma mark - Helper Methods
-
-- (void)_unsubscribeFromNotifications
-{
-  [NSNotificationCenter.defaultCenter removeObserver:self];
-}
 
 - (void)_updateNotificationObservers
 {
