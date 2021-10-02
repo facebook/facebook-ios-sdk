@@ -18,8 +18,7 @@
 
 #import "FBSDKUserDataStore.h"
 
-#import "FBSDKBasicUtility.h"
-#import "FBSDKTypeUtility.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 static NSString *const FBSDKUserDataKey = @"com.facebook.appevents.UserDataStore.userData";
 static NSString *const FBSDKInternalUserDataKey = @"com.facebook.appevents.UserDataStore.internalUserData";
@@ -29,22 +28,6 @@ static NSMutableDictionary<NSString *, NSString *> *internalHashedUserData;
 static NSMutableSet<NSString *> *enabledRules;
 
 static dispatch_queue_t serialQueue;
-
-//
-// Public event user data types
-//
-
-FBSDKAppEventUserDataType FBSDKAppEventEmail = @"em";
-FBSDKAppEventUserDataType FBSDKAppEventFirstName = @"fn";
-FBSDKAppEventUserDataType FBSDKAppEventLastName = @"ln";
-FBSDKAppEventUserDataType FBSDKAppEventPhone = @"ph";
-FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth = @"dob";
-FBSDKAppEventUserDataType FBSDKAppEventGender = @"ge";
-FBSDKAppEventUserDataType FBSDKAppEventCity = @"ct";
-FBSDKAppEventUserDataType FBSDKAppEventState = @"st";
-FBSDKAppEventUserDataType FBSDKAppEventZip = @"zp";
-FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
-FBSDKAppEventUserDataType FBSDKAppEventExternalId = @"external_id";
 
 @implementation FBSDKUserDataStore
 
