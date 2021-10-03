@@ -94,7 +94,14 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.isAutoLogAppEventsEnabled` is deprecated and
  Controls the fb_codeless_debug logging event
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
+@property (class, nonatomic, getter = isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isCodelessDebugLogEnabled` is deprecated and will be removed in the next major release, please use `Settings.shared.isCodelessDebugLogEnabled` instead");
+
+/**
+ Controls the fb_codeless_debug logging event
+ If not explicitly set, the default is true
+ */
+@property (nonatomic, getter = isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
 
 /**
  Controls the access to IDFA

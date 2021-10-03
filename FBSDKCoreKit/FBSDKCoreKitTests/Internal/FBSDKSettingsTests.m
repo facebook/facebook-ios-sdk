@@ -1090,7 +1090,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isCodelessDebugLogEnabled,
+    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
     "A developer should be able to set whether codeless debug logging is enabled from the plist"
   );
 }
@@ -1101,7 +1101,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isCodelessDebugLogEnabled,
+    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
     "Codeless debug logging enabled should default to false when there is no plist value given"
   );
 }
@@ -1112,7 +1112,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isCodelessDebugLogEnabled,
+    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
     "Codeless debug logging enabled should default to true when there is an invalid plist value given but it does not"
   );
 }
@@ -1134,13 +1134,13 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testOverridingCachedFacebookCodelessDebugLogEnabled
 {
   FBSDKSettings.codelessDebugLogEnabled = true;
-  XCTAssertTrue(FBSDKSettings.isCodelessDebugLogEnabled);
+  XCTAssertTrue(FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled);
 
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookCodelessDebugLogEnabled" : @NO}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertTrue(
-    FBSDKSettings.isCodelessDebugLogEnabled,
+    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
     "Should favor cached properties over those set in the plist"
   );
 }

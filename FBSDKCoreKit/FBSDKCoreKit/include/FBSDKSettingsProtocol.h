@@ -36,6 +36,7 @@ DEPRECATED_MSG_ATTRIBUTE("property class `loggingBehaviors` is deprecated and wi
 @property (nullable, nonatomic, copy) NSString *appURLSchemeSuffix;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;
 @property (nonatomic, readonly) BOOL isAutoLogAppEventsEnabled;
+@property (nonatomic, getter = isCodelessDebugLogEnabled, assign) BOOL codelessDebugLogEnabled;
 @property (nonatomic, readonly) BOOL isSetATETimeExceedsInstallTime;
 @property (nonatomic, readonly) BOOL isSKAdNetworkReportEnabled;
 @property (nonatomic, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;

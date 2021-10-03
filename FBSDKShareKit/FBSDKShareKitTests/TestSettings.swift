@@ -39,5 +39,6 @@ final class TestSettings: NSObject, SettingsProtocol {
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
   var isAdvertiserTrackingEnabled = false
+  var isCodelessDebugLogEnabled: Bool = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 }

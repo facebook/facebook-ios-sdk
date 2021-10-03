@@ -297,6 +297,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return self.sharedSettings._codelessDebugLogEnabled.boolValue;
 }
 
+- (BOOL)isCodelessDebugLogEnabled
+{
+  return self._codelessDebugLogEnabled.boolValue;
+}
+
 + (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
 {
   [self.sharedSettings _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
