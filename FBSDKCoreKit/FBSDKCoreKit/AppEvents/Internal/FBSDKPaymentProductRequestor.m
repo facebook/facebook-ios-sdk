@@ -162,11 +162,9 @@ static NSMutableArray *_pendingRequestors;
 - (BOOL)isSubscription:(SKProduct *)product
 {
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
   }
-#endif
 #endif
   return NO;
 }
@@ -213,7 +211,6 @@ static NSMutableArray *_pendingRequestors;
   }
 
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     if ([self isSubscription:product]) {
       // subs inapp
@@ -235,7 +232,6 @@ static NSMutableArray *_pendingRequestors;
       [FBSDKTypeUtility dictionary:eventParameters setObject:@"inapp" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
     }
   }
-#endif
 #endif
   return eventParameters;
 }
@@ -264,9 +260,6 @@ static NSMutableArray *_pendingRequestors;
            ofProduct:(SKProduct *)product
 {
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_4
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_12_1
   // promotional offer starting from iOS 12.2
   if (@available(iOS 12.2, *)) {
     SKPaymentDiscount *paymentDiscount = transaction.payment.paymentDiscount;
@@ -280,8 +273,6 @@ static NSMutableArray *_pendingRequestors;
       }
     }
   }
-#endif
-#endif
   // introductory offer starting from iOS 11.2
   if (@available(iOS 11.2, *)) {
     if (product.introductoryPrice
@@ -294,14 +285,12 @@ static NSMutableArray *_pendingRequestors;
     }
   }
 #endif
-#endif
   return NO;
 }
 
 - (NSString *)durationOfSubscriptionPeriod:(id)subcriptionPeriod
 {
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:SKProductSubscriptionPeriod.class]) {
       SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subcriptionPeriod;
@@ -315,7 +304,6 @@ static NSMutableArray *_pendingRequestors;
       return [NSString stringWithFormat:@"P%lu%@", (unsigned long)period.numberOfUnits, unit];
     }
   }
-#endif
 #endif
   return nil;
 }

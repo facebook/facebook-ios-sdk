@@ -361,7 +361,6 @@ static UIApplicationState _applicationState;
 
 #pragma mark - UIApplicationDelegate
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED> __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
@@ -373,8 +372,6 @@ static UIApplicationState _applicationState;
 
   return NO;
 }
-
-#endif
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url

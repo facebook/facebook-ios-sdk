@@ -20,6 +20,8 @@
 
 #import "FBSDKBridgeAPI.h"
 
+#import <AuthenticationServices/AuthenticationServices.h>
+
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
 #import "FBSDKBridgeAPIResponseFactory.h"
@@ -58,12 +60,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @end
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
- #import <AuthenticationServices/AuthenticationServices.h>
 @interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate, ASWebAuthenticationPresentationContextProviding>
-#else
-@interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate>
-#endif
 
 @property (nonnull, nonatomic) FBSDKLogger *logger;
 @property (nonatomic, readonly) id<FBSDKInternalURLOpener> urlOpener;
@@ -576,12 +573,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma mark - ASWebAuthenticationPresentationContextProviding
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 - (ASPresentationAnchor)presentationAnchorForWebAuthenticationSession:(ASWebAuthenticationSession *)session API_AVAILABLE(ios(13.0))
 {
-#else
-- (UIWindow *)presentationAnchorForWebAuthenticationSession:(id<FBSDKAuthenticationSession>)session API_AVAILABLE(ios(11.0)) {
-#endif
   return UIApplication.sharedApplication.keyWindow;
 }
 #pragma clang diagnostic pop

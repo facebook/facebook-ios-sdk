@@ -298,11 +298,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
   CGRect applicationFrame = _dialogView.window.screen.bounds;
 
   UIEdgeInsets insets = UIEdgeInsetsZero;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
   if (@available(iOS 11.0, *)) {
     insets = _dialogView.window.safeAreaInsets;
   }
-#endif
 
   if (insets.top == 0.0) {
     #pragma clang diagnostic push

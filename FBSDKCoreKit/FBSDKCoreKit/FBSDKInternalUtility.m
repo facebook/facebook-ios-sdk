@@ -580,15 +580,11 @@ static NSMapTable *_transientObjects;
 #if !TARGET_OS_TV
 - (UIInterfaceOrientation)statusBarOrientation
 {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
   if (@available(iOS 13.0, *)) {
     return [self findWindow].windowScene.interfaceOrientation;
   } else {
     return UIInterfaceOrientationUnknown;
   }
-#else
-  return UIApplication.sharedApplication.statusBarOrientation;
-#endif
 }
 
 #endif
