@@ -26,6 +26,7 @@
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventParameterProduct.h"
+#import "FBSDKAppEventParameterValue.h"
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsFlushBehavior.h"

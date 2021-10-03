@@ -130,13 +130,6 @@ FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType = @"ad_type";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID = @"fb_order_id";
 
 //
-// Public event parameter values
-//
-
-FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo = @"0";
-FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes = @"1";
-
-//
 // Event names internal to this file
 //
 FBSDKAppEventName FBSDKAppEventNameShareSheetLaunch = @"fb_share_sheet_launch";

@@ -49,20 +49,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterEventName;
 /** Parameter key used to specify event log time. */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLogTime;
 
-/*
- @methodgroup Predefined values to assign to event parameters that accompany events logged through the `logEvent` family
- of methods on `FBSDKAppEvents`.  Common event parameters are provided in the `FBSDKAppEventParameterName*` constants.
- */
-
-/// typedef for FBSDKAppEventParameterValue
-typedef NSString *const FBSDKAppEventParameterValue NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.ParameterValue);
-
-/** Yes-valued parameter value to be used with parameter keys that need a Yes/No value */
-FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes;
-
-/** No-valued parameter value to be used with parameter keys that need a Yes/No value */
-FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo;
-
 /** Parameter key used to specify the type of ad in an FBSDKAppEventNameAdImpression
  * or FBSDKAppEventNameAdClick event.
  * E.g. "banner", "interstitial", "rewarded_video", "native" */
