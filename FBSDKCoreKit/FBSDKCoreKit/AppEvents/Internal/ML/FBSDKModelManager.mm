@@ -23,6 +23,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKAppEventName.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKDataPersisting.h"
@@ -41,11 +42,6 @@
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
 static NSString *const INTEGRITY_HEALTH = @"health";
-
-extern FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
-extern FBSDKAppEventName FBSDKAppEventNameAddedToCart;
-extern FBSDKAppEventName FBSDKAppEventNamePurchased;
-extern FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;

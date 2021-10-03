@@ -26,44 +26,19 @@
 /// typedef for FBSDKAppEventName
 typedef NSString *const FBSDKAppEventName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.Name);
 
-/** Log this event when the user has achieved a level in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAchievedLevel;
+#pragma mark - General Purpose
 
-/** Log this event when the user has entered their payment info. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo;
+/** Log this event when the user clicks an ad. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdClick;
 
-/** Log this event when the user has added an item to their cart.  The valueToSum passed to logEvent should be the item's price. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToCart;
-
-/** Log this event when the user has added an item to their wishlist.  The valueToSum passed to logEvent should be the item's price. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToWishlist;
+/** Log this event when the user views an ad. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdImpression;
 
 /** Log this event when a user has completed registration with the app. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
 
 /** Log this event when the user has completed a tutorial in the app. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCompletedTutorial;
-
-/** Log this event when the user has entered the checkout process.  The valueToSum passed to logEvent should be the total price in the cart. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
-
-/** Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchased;
-
-/** Log this event when the user has rated an item in the app.  The valueToSum passed to logEvent should be the numeric rating. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameRated;
-
-/** Log this event when a user has performed a search within the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSearched;
-
-/** Log this event when the user has spent app credits.  The valueToSum passed to logEvent should be the number of credits spent. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSpentCredits;
-
-/** Log this event when the user has unlocked an achievement in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement;
-
-/** Log this event when a user has viewed a form of content in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameViewedContent;
 
 /** A telephone/SMS, email, chat or other type of contact between a customer and your business. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameContact;
@@ -77,8 +52,14 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameDonate;
 /** When a person finds one of your locations via web or application, with an intention to visit (example: find product at a local store). */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameFindLocation;
 
+/** Log this event when the user has rated an item in the app.  The valueToSum passed to logEvent should be the numeric rating. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameRated;
+
 /** The booking of an appointment to visit one of your locations. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSchedule;
+
+/** Log this event when a user has performed a search within the app. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSearched;
 
 /** The start of a free trial of a product or service you offer (example: trial subscription). */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameStartTrial;
@@ -89,8 +70,33 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubmitApplication;
 /** The start of a paid subscription for a product or service you offer. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribe;
 
-/** Log this event when the user views an ad. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdImpression;
+/** Log this event when a user has viewed a form of content in the app. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameViewedContent;
 
-/** Log this event when the user clicks an ad. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdClick;
+#pragma mark - E-Commerce
+
+/** Log this event when the user has entered their payment info. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo;
+
+/** Log this event when the user has added an item to their cart.  The valueToSum passed to logEvent should be the item's price. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToCart;
+
+/** Log this event when the user has added an item to their wishlist.  The valueToSum passed to logEvent should be the item's price. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToWishlist;
+
+/** Log this event when the user has entered the checkout process.  The valueToSum passed to logEvent should be the total price in the cart. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
+
+/** Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchased;
+
+#pragma mark - Gaming
+
+/** Log this event when the user has achieved a level in the app. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAchievedLevel;
+
+/** Log this event when the user has unlocked an achievement in the app. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement;
+
+/** Log this event when the user has spent app credits.  The valueToSum passed to logEvent should be the number of credits spent. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSpentCredits;

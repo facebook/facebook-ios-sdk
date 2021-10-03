@@ -16,30 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKAppEventName.h"
 
-@protocol FBSDKEventLogging;
-@protocol FBSDKServerConfigurationProviding;
+#pragma mark - E-Commerce
 
-NS_ASSUME_NONNULL_BEGIN
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchaseFailed;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchaseRestored;
 
-// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents.shared activateApp].  The activate app App Event is
-// logged when restore: is called with sufficient time since the last deactivation.
-NS_SWIFT_NAME(TimeSpentData)
-@interface FBSDKTimeSpentData : NSObject
+#pragma mark - Push Notifications
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePushOpened;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePushTokenObtained;
 
-- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+#pragma mark - Time Spent
 
-- (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(nullable NSURL *)url;
-- (void)setSourceApplication:(nullable NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;
-- (void)registerAutoResetSourceApplication;
-- (void)suspend;
-- (void)restore:(BOOL)calledFromActivateApp;
-
-@end
-
-NS_ASSUME_NONNULL_END
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameActivatedApp;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameDeactivatedApp;

@@ -28,6 +28,8 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventName.h"
+#import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterProduct.h"
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
@@ -76,41 +78,6 @@
 #endif
 
 //
-// Public event names
-//
-
-// General purpose
-FBSDKAppEventName FBSDKAppEventNameCompletedRegistration = @"fb_mobile_complete_registration";
-FBSDKAppEventName FBSDKAppEventNameViewedContent = @"fb_mobile_content_view";
-FBSDKAppEventName FBSDKAppEventNameSearched = @"fb_mobile_search";
-FBSDKAppEventName FBSDKAppEventNameRated = @"fb_mobile_rate";
-FBSDKAppEventName FBSDKAppEventNameCompletedTutorial = @"fb_mobile_tutorial_completion";
-FBSDKAppEventName FBSDKAppEventNameContact = @"Contact";
-FBSDKAppEventName FBSDKAppEventNameCustomizeProduct = @"CustomizeProduct";
-FBSDKAppEventName FBSDKAppEventNameDonate = @"Donate";
-FBSDKAppEventName FBSDKAppEventNameFindLocation = @"FindLocation";
-FBSDKAppEventName FBSDKAppEventNameSchedule = @"Schedule";
-FBSDKAppEventName FBSDKAppEventNameStartTrial = @"StartTrial";
-FBSDKAppEventName FBSDKAppEventNameSubmitApplication = @"SubmitApplication";
-FBSDKAppEventName FBSDKAppEventNameSubscribe = @"Subscribe";
-FBSDKAppEventName FBSDKAppEventNameSubscriptionHeartbeat = @"SubscriptionHeartbeat";
-FBSDKAppEventName FBSDKAppEventNameAdImpression = @"AdImpression";
-FBSDKAppEventName FBSDKAppEventNameAdClick = @"AdClick";
-
-// Ecommerce related
-FBSDKAppEventName FBSDKAppEventNameAddedToCart = @"fb_mobile_add_to_cart";
-FBSDKAppEventName FBSDKAppEventNameAddedToWishlist = @"fb_mobile_add_to_wishlist";
-FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout = @"fb_mobile_initiated_checkout";
-FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo = @"fb_mobile_add_payment_info";
-FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate = @"fb_mobile_catalog_update";
-FBSDKAppEventName FBSDKAppEventNamePurchased = @"fb_mobile_purchase";
-
-// Gaming related
-FBSDKAppEventName FBSDKAppEventNameAchievedLevel = @"fb_mobile_level_achieved";
-FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement = @"fb_mobile_achievement_unlocked";
-FBSDKAppEventName FBSDKAppEventNameSpentCredits = @"fb_mobile_spent_credits";
-
-//
 // Public event parameter names
 //
 
@@ -128,42 +95,6 @@ FBSDKAppEventParameterName FBSDKAppEventParameterNameLevel = @"fb_level";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameDescription = @"fb_description";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType = @"ad_type";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID = @"fb_order_id";
-
-//
-// Event names internal to this file
-//
-FBSDKAppEventName FBSDKAppEventNameShareSheetLaunch = @"fb_share_sheet_launch";
-FBSDKAppEventName FBSDKAppEventNameShareSheetDismiss = @"fb_share_sheet_dismiss";
-FBSDKAppEventName FBSDKAppEventNameShareTrayDidLaunch = @"fb_share_tray_did_launch";
-FBSDKAppEventName FBSDKAppEventNameShareTrayDidSelectActivity = @"fb_share_tray_did_select_activity";
-FBSDKAppEventName FBSDKAppEventNamePermissionsUILaunch = @"fb_permissions_ui_launch";
-FBSDKAppEventName FBSDKAppEventNamePermissionsUIDismiss = @"fb_permissions_ui_dismiss";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialog = @"fb_dialogs_present_share";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialogPhoto = @"fb_dialogs_present_share_photo";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialogOG = @"fb_dialogs_present_share_og";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentLikeDialogOG = @"fb_dialogs_present_like_og";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialog = @"fb_dialogs_present_message";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto = @"fb_dialogs_present_message_photo";
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeButtonImpression = @"fb_like_button_impression";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingButtonImpression = @"fb_live_streaming_button_impression";
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeButtonDidTap = @"fb_like_button_did_tap";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap = @"fb_live_streaming_button_did_tap";
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult = @"fb_app_invite_dialog_share_result";
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow = @"fb_app_invite_share_show";
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingStart = @"fb_sdk_live_streaming_start";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingStop = @"fb_sdk_live_streaming_stop";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingPause = @"fb_sdk_live_streaming_pause";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingResume = @"fb_sdk_live_streaming_resume";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingError = @"fb_sdk_live_streaming_error";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingUpdateStatus = @"fb_sdk_live_streaming_update_status";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingVideoID = @"fb_sdk_live_streaming_video_id";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingMic = @"fb_sdk_live_streaming_mic";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingCamera = @"fb_sdk_live_streaming_camera";
 
 // Public Event Parameters
 NSString *const FBSDKAppEventParameterEventName = @"_eventName";
@@ -195,9 +126,6 @@ NSString *const FBSDKAppEventsOverrideAppIDBundleKey = @"FacebookLoggingOverride
 //
 // Activities Endpoint Parameter
 static NSString *const FBSDKActivitesParameterPushDeviceToken = @"device_token";
-// Event Names
-static FBSDKAppEventName FBSDKAppEventNamePushTokenObtained = @"fb_mobile_obtain_push_token";
-static FBSDKAppEventName FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 // Event Parameter
 static NSString *const FBSDKAppEventParameterPushCampaign = @"fb_push_campaign";
 static NSString *const FBSDKAppEventParameterPushAction = @"fb_push_action";

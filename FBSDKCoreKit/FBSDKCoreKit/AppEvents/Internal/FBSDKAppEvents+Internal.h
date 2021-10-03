@@ -20,57 +20,10 @@
 
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
 
+#import "FBSDKAppEventName.h"
 #import "FBSDKAppEventsUtility.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-// Internally known event names
-
-/** Use to log that the share dialog was launched */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameShareSheetLaunch;
-
-/** Use to log that the share dialog was dismissed */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameShareSheetDismiss;
-
-/** Use to log that the permissions UI was launched */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNamePermissionsUILaunch;
-
-/** Use to log that the permissions UI was dismissed */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNamePermissionsUIDismiss;
-
-/** Use to log that the share tray launched. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameShareTrayDidLaunch;
-
-/** Use to log that the person selected a sharing target. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameShareTrayDidSelectActivity;
-
-// Internally known event parameters
-
-/** Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialog;
-
-/** Use to log the result of a call to FBDialogs presentLikeDialogWithLikeParams: */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentLikeDialogOG;
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogPhoto;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialog;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto;
-
-/** Use to log the live streaming events from sdk */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingStart;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingStop;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingPause;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingResume;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingError;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingUpdateStatus;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingVideoID;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingMic;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingCamera;
-
-/** Use to log the results of a share dialog */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult;
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow;
 
 /** Use to log parameters for share tray use */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterShareTrayActivityName;
@@ -88,12 +41,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingCameraEnabl
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression;
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap;
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesHandlerKey;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesActionKey;

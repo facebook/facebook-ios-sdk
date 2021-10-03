@@ -22,7 +22,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppEventName.h"
+#import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppStoreReceiptProviding.h"
@@ -37,8 +37,6 @@ static NSString *const FBSDKPaymentObserverOriginalTransactionKey = @"com.facebo
 static NSString *const FBSDKPaymentObserverDelimiter = @",";
 
 static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase = @"_implicitlyLogged";
-static NSString *const FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
-static NSString *const FBSDKAppEventNamePurchaseRestored = @"fb_mobile_purchase_restored";
 static NSString *const FBSDKAppEventParameterNameInAppPurchaseType = @"fb_iap_product_type";
 static NSString *const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
 static NSString *const FBSDKAppEventParameterNameOriginalTransactionID = @"fb_original_transaction_id";
