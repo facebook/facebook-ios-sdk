@@ -338,17 +338,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)setAdvertiserTrackingEnabled:(BOOL)enabled;
 {
-  return [self.sharedSettings setAdvertiserTrackingEnabled:enabled];
-}
-
-- (BOOL)setAdvertiserTrackingEnabled:(BOOL)enabled;
-{
   if (@available(iOS 14.0, *)) {
-    [self setAdvertiserTrackingStatus:enabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed];
-    [self recordSetAdvertiserTrackingEnabled];
+    [self.sharedSettings setAdvertiserTrackingEnabled:enabled];
     return YES;
   } else {
     return NO;
+  }
+}
+
+- (void)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
+{
+  if (@available(iOS 14.0, *)) {
+    [self setAdvertiserTrackingStatus:advertiserTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed];
+    [self recordSetAdvertiserTrackingEnabled];
   }
 }
 

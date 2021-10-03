@@ -45,6 +45,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, readonly, copy) NSString *_Nonnull graphAPIVersion;
 @property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
 @property (nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
+@property (nonatomic, getter = isAdvertiserTrackingEnabled) BOOL advertiserTrackingEnabled;
 @end
 
 NS_ASSUME_NONNULL_END

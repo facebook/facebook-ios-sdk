@@ -218,6 +218,34 @@ class SettingsTests: XCTestCase {
     )
   }
 
+  func testSettingFacebookAdvertiserTrackingStatusToEnabledProperty() {
+    Settings.shared.isAdvertiserTrackingEnabled = true
+
+    XCTAssertTrue(
+      Settings.shared.isAdvertiserTrackingEnabled,
+      "Setting advertiser tracking status should be allowed"
+    )
+    XCTAssertEqual(
+      store.capturedSetObjectKey,
+      "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
+      "Should persist the time when the tracking status is set to enabled"
+    )
+  }
+
+  func testSettingFacebookAdvertiserTrackingStatusToDisallowedProperty() {
+    Settings.shared.isAdvertiserTrackingEnabled = false
+
+    XCTAssertFalse(
+      Settings.shared.isAdvertiserTrackingEnabled,
+      "Setting advertiser tracking status should be disallowed"
+    )
+    XCTAssertEqual(
+      store.capturedSetObjectKey,
+      "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
+      "Should persist the time when the tracking status is set to disallowed"
+    )
+  }
+
   func testSettingFacebookAdvertiserTrackingStatusToUnspecified() {
     Settings.setAdvertiserTrackingStatus(.unspecified)
 

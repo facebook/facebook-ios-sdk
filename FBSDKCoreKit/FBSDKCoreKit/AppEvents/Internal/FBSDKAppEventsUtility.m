@@ -109,7 +109,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [FBSDKSettings advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
-    [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKSettings isAdvertiserTrackingEnabled]).stringValue forKey:@"advertiser_tracking_enabled"];
+    [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
   NSString *userData = [FBSDKAppEvents.shared getUserData];

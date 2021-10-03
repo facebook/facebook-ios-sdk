@@ -41,6 +41,6 @@ class TestSettings: SettingsProtocol {
   var graphAPIVersion = ""
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
-
+  var isAdvertiserTrackingEnabled = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 }

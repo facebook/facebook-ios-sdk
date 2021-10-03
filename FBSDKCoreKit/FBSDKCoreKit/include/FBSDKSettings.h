@@ -245,7 +245,14 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.facebookDomainPart` is deprecated and will b
  The value of the flag advertiser_tracking_enabled that controls the advertiser tracking status of the data sent to Facebook
  If not explicitly set in iOS14 or above, the default is false in iOS14 or above.
  */
-+ (BOOL)isAdvertiserTrackingEnabled;
+@property (nonatomic, getter = isAdvertiserTrackingEnabled) BOOL advertiserTrackingEnabled;
+
+/**
+ The value of the flag advertiser_tracking_enabled that controls the advertiser tracking status of the data sent to Facebook
+ If not explicitly set in iOS14 or above, the default is false in iOS14 or above.
+ */
++ (BOOL)isAdvertiserTrackingEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isAdvertiserTrackingEnabled()` is deprecated and will be removed in the next major release, please use the `Settings.shared.isAdvertiserTrackingEnabled` property instead");
 
 /**
 Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
@@ -253,7 +260,8 @@ Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
 @param advertiserTrackingEnabled the value of the flag
 @return Whether the the value is set successfully. It will always return NO in iOS 13 and below.
  */
-+ (BOOL)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled;
++ (BOOL)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.setAdvertiserTrackingEnabled(_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.advertiserTrackingEnabled` property to set a value instead");
 
 /**
 Set the data processing options.

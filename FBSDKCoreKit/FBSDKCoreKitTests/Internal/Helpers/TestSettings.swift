@@ -41,7 +41,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var shouldUseTokenOptimizations = true
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
-
+  var isAdvertiserTrackingEnabled = false
   var isDataProcessingRestricted: Bool {
     stubbedIsDataProcessingRestricted
   }
