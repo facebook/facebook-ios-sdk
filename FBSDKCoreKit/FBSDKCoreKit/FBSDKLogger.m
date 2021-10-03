@@ -43,7 +43,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 - (instancetype)initWithLoggingBehavior:(NSString *)loggingBehavior
 {
   if ((self = [super init])) {
-    _active = [FBSDKSettings.loggingBehaviors containsObject:loggingBehavior];
+    _active = [FBSDKSettings.sharedSettings.loggingBehaviors containsObject:loggingBehavior];
     _loggingBehavior = loggingBehavior;
     if (_active) {
       _internalContents = [NSMutableString new];
@@ -136,7 +136,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 
 - (void)logEntry:(NSString *)logEntry
 {
-  if ([FBSDKSettings.loggingBehaviors containsObject:_loggingBehavior]) {
+  if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:_loggingBehavior]) {
     [self appendString:logEntry];
     [self emitToNSLog];
   }
@@ -146,7 +146,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
               timestampTag:(NSObject *)timestampTag
               formatString:(NSString *)formatString, ...
 {
-  if ([FBSDKSettings.loggingBehaviors containsObject:loggingBehavior]) {
+  if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:loggingBehavior]) {
     va_list vaArguments;
     va_start(vaArguments, formatString);
     NSString *logString = [[NSString alloc] initWithFormat:formatString arguments:vaArguments];
@@ -174,7 +174,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 + (void)registerCurrentTime:(NSString *)loggingBehavior
                     withTag:(NSObject *)timestampTag
 {
-  if ([FBSDKSettings.loggingBehaviors containsObject:loggingBehavior]) {
+  if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:loggingBehavior]) {
     if (!g_startTimesWithTags) {
       g_startTimesWithTags = [NSMutableDictionary new];
     }
@@ -198,7 +198,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 {
   // Strings sent in here never get cleaned up, but that's OK, don't ever expect too many.
 
-  if (FBSDKSettings.loggingBehaviors.count > 0) { // otherwise there's no logging.
+  if (FBSDKSettings.sharedSettings.loggingBehaviors.count > 0) { // otherwise there's no logging.
     if (!g_stringsToReplace) {
       g_stringsToReplace = [NSMutableDictionary new];
     }

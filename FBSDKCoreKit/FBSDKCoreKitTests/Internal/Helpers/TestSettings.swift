@@ -42,6 +42,9 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
   var isAdvertiserTrackingEnabled = false
+  var loggingBehaviors = Set<LoggingBehavior>()
+  static var loggingBehaviors = Set<LoggingBehavior>()
+
   var isDataProcessingRestricted: Bool {
     stubbedIsDataProcessingRestricted
   }
@@ -56,10 +59,6 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
   var isSKAdNetworkReportEnabled: Bool {
     stubbedIsSKAdNetworkReportEnabled
-  }
-
-  var loggingBehaviors: Set<LoggingBehavior> {
-    TestSettings.loggingBehaviors
   }
 
   var shouldLimitEventAndDataUsage: Bool {
@@ -78,8 +77,6 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     stubbedGraphAPIVersion
   }
 
-  static var loggingBehaviors = Set<LoggingBehavior>()
-
   func logWarnings() {
     logWarningsCallCount += 1
   }
@@ -96,9 +93,6 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     appID = nil
     clientToken = nil
     userAgentSuffix = nil
-  }
-
-  static func reset() {
     loggingBehaviors = []
   }
 }

@@ -200,7 +200,7 @@
 
 - (void)resetTestHelpers
 {
-  [TestSettings reset];
+  [self.settings reset];
   [TestLogger reset];
   [TestCodelessEvents reset];
 }

@@ -272,7 +272,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 {
   NSString *behaviorToLog = FBSDKLoggingBehaviorAppEvents;
   if (allowLogAsDeveloperError) {
-    if ([FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
+    if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
       // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
       behaviorToLog = FBSDKLoggingBehaviorDeveloperErrors;
     }

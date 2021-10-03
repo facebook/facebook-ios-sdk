@@ -218,11 +218,25 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.facebookDomainPart` is deprecated and will b
  This should consist a set of strings indicating what information should be logged
  defined as constants with FBSDKLoggingBehavior*. Set to an empty set in order to disable all logging.
 
- You can also define this via an array in your app plist with key "FacebookLoggingBehavior" or add and remove individual values via enableLoggingBehavior: or disableLogginBehavior:
+ You can also define this via an array in your app plist with key "FacebookLoggingBehavior" or add and remove individual values via enableLoggingBehavior: or disableLoggingBehavior:
 
  The default is a set consisting of FBSDKLoggingBehaviorDeveloperErrors
  */
-@property (class, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+@property (class, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors
+DEPRECATED_MSG_ATTRIBUTE("`Settings.loggingBehaviors` is deprecated and will be removed in the next major release, please use `Settings.shared.loggingBehaviors` instead");
+
+/**
+  The current Facebook SDK logging behavior. This should consist of strings
+ defined as constants with FBSDKLoggingBehavior*.
+
+ This should consist a set of strings indicating what information should be logged
+ defined as constants with FBSDKLoggingBehavior*. Set to an empty set in order to disable all logging.
+
+ You can also define this via an array in your app plist with key "FacebookLoggingBehavior" or add and remove individual values via enableLoggingBehavior: or disableLoggingBehavior:
+
+ The default is a set consisting of FBSDKLoggingBehaviorDeveloperErrors
+ */
+@property (nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 /**
   Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_DEFAULT_GRAPH_API_VERSION`.
@@ -286,14 +300,30 @@ Set the data processing options.
 
  @param loggingBehavior The LoggingBehavior to enable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
  */
-+ (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
++ (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+DEPRECATED_MSG_ATTRIBUTE("`Settings.enableLoggingBehavior()` is deprecated and will be removed in the next major release, please use `Settings.shared.enableLoggingBehavior()` instead");
+
+/**
+ Enable a particular Facebook SDK logging behavior.
+
+ @param loggingBehavior The LoggingBehavior to enable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
+ */
+- (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 /**
  Disable a particular Facebook SDK logging behavior.
 
  @param loggingBehavior The LoggingBehavior to disable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
  */
-+ (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
++ (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+DEPRECATED_MSG_ATTRIBUTE("`Settings.disableLoggingBehavior()` is deprecated and will be removed in the next major release, please use `Settings.shared.disableLoggingBehavior()` instead");
+
+/**
+ Disable a particular Facebook SDK logging behavior.
+
+ @param loggingBehavior The LoggingBehavior to disable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
+ */
+- (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 @end
 

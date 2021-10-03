@@ -105,7 +105,6 @@
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   [TestGraphRequestPiggybackManager reset];
   [TestLogger reset];
-  [TestSettings reset];
   [self.settings reset];
 
   [super tearDown];

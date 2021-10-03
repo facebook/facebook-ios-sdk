@@ -46,7 +46,6 @@ class GateKeeperManagerTests: XCTestCase {
     super.tearDown()
 
     settings.reset()
-    TestSettings.reset()
     GateKeeperManager.reset()
   }
 

@@ -76,12 +76,12 @@ class ApplicationDelegateTests: XCTestCase {
     super.tearDown()
 
     ApplicationDelegateTests.resetTestData()
+    settings.reset()
   }
 
   static func resetTestData() {
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
-    TestSettings.reset()
     TestGateKeeperManager.reset()
     TestProfileProvider.reset()
   }

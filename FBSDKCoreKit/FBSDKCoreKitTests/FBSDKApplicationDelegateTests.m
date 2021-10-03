@@ -157,6 +157,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   self.delegate = nil;
 
   [self.class resetTestData];
+  [self.settings reset];
 }
 
 + (void)resetTestData
@@ -165,7 +166,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [TestAuthenticationTokenWallet reset];
   [TestGateKeeperManager reset];
   [TestProfileProvider reset];
-  [TestSettings reset];
 }
 
 // MARK: - Lifecycle Methods

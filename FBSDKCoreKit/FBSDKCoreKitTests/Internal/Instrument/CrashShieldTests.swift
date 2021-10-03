@@ -28,7 +28,7 @@ class CrashShieldTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    TestSettings.reset()
+    settings.reset()
     CrashShield.reset()
     CrashShield.configure(
       with: settings,

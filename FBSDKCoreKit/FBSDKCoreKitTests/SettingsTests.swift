@@ -259,10 +259,10 @@ class SettingsTests: XCTestCase {
 
   func testLoggingBehaviors() {
     let behaviors = Set([LoggingBehavior.accessTokens, .appEvents])
-    Settings.loggingBehaviors = behaviors
+    Settings.shared.loggingBehaviors = behaviors
 
     XCTAssertEqual(
-      Settings.loggingBehaviors,
+      Settings.shared.loggingBehaviors,
       behaviors,
       "Should be able to set and retrieve logging behaviors"
     )

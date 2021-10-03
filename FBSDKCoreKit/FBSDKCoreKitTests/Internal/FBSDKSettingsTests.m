@@ -35,6 +35,7 @@
 @property (nonatomic) TestBundle *bundle;
 @property (nonatomic) TestEventLogger *logger;
 @property (nonatomic) NSString *userAgentSuffix;
+@property (nonatomic) FBSDKSettings *settings;
 @end
 
 #pragma clang diagnostic push
@@ -59,6 +60,7 @@ static NSString *const whiteSpaceToken = @"   ";
   self.userDefaultsSpy = [UserDefaultsSpy new];
   self.bundle = [TestBundle new];
   self.logger = [TestEventLogger new];
+  self.settings = FBSDKSettings.sharedSettings;
 
   [FBSDKSettings configureWithStore:self.userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
@@ -89,7 +91,7 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   NSSet<FBSDKLoggingBehavior> *expected = [NSSet setWithArray:@[FBSDKLoggingBehaviorDeveloperErrors]];
   XCTAssertEqualObjects(
-    FBSDKSettings.loggingBehaviors,
+    self.settings.loggingBehaviors,
     expected,
     "Logging behaviors should default to developer errors when there is no plist entry"
   );
@@ -100,7 +102,7 @@ static NSString *const whiteSpaceToken = @"   ";
   NSSet<FBSDKLoggingBehavior> *expected = [NSSet setWithArray:@[FBSDKLoggingBehaviorDeveloperErrors]];
 
   XCTAssertEqualObjects(
-    FBSDKSettings.loggingBehaviors,
+    self.settings.loggingBehaviors,
     expected,
     "Logging behaviors should default to developer errors when settings are created with an empty plist entry"
   );
@@ -113,7 +115,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
   NSSet<FBSDKLoggingBehavior> *expected = [NSSet setWithArray:@[@"Foo"]];
   XCTAssertEqualObjects(
-    FBSDKSettings.loggingBehaviors,
+    self.settings.loggingBehaviors,
     expected,
     "Logging behaviors should default to developer errors when settings are created with a plist that only has invalid entries but it does not"
   );
@@ -126,7 +128,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
   NSSet<FBSDKLoggingBehavior> *expected = [NSSet setWithArray:@[FBSDKLoggingBehaviorInformational]];
   XCTAssertEqualObjects(
-    FBSDKSettings.loggingBehaviors,
+    self.settings.loggingBehaviors,
     expected,
     "Settings should pull information from the bundle"
   );
@@ -135,9 +137,9 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testLoggingBehaviorsInternalStorage
 {
   self.bundle = (TestBundle *) FBSDKSettings.infoDictionaryProvider;
-  FBSDKSettings.loggingBehaviors = [NSSet setWithArray:@[FBSDKLoggingBehaviorInformational]];
+  self.settings.loggingBehaviors = [NSSet setWithArray:@[FBSDKLoggingBehaviorInformational]];
 
-  XCTAssertNotNil(FBSDKSettings.loggingBehaviors, "sanity check");
+  XCTAssertNotNil(self.settings.loggingBehaviors, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -153,7 +155,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSettingDomainPrefixFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     "There should be no default value for a facebook domain prefix"
   );
 }
@@ -164,7 +166,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     emptyString,
     "Should not use an empty string as a facebook domain prefix but it does"
   );
@@ -176,7 +178,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     @"beta",
     "A developer should be able to set any string as the facebook domain prefix to use in building urls"
   );
@@ -187,7 +189,7 @@ static NSString *const whiteSpaceToken = @"   ";
   NSString *domainPrefix = @"abc123";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookDomainPart" : domainPrefix}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
-  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
+  self.settings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
@@ -195,7 +197,7 @@ static NSString *const whiteSpaceToken = @"   ";
   );
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     @"foo",
     "Settings should return the explicitly set domain prefix over one gleaned from a plist entry"
   );
@@ -203,14 +205,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingDomainPrefixWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
+  self.settings.facebookDomainPart = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     @"foo",
     "Settings should return the explicitly set domain prefix"
   );
@@ -218,14 +220,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDomainPrefix
 {
-  FBSDKSettings.sharedSettings.facebookDomainPart = emptyString;
+  self.settings.facebookDomainPart = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     emptyString,
     "Should not store an invalid domain prefix but it does"
   );
@@ -233,14 +235,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyDomainPrefix
 {
-  FBSDKSettings.sharedSettings.facebookDomainPart = whiteSpaceToken;
+  self.settings.facebookDomainPart = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDomainPart"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.facebookDomainPart,
+    self.settings.facebookDomainPart,
     whiteSpaceToken,
     "Should not store a whitespace only domain prefix but it does"
   );
@@ -248,11 +250,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDomainPartInternalStorage
 {
-  FBSDKSettings.sharedSettings.facebookDomainPart = @"foo";
+  self.settings.facebookDomainPart = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.sharedSettings.facebookDomainPart, "sanity check");
+  XCTAssertNotNil(self.settings.facebookDomainPart, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -272,7 +274,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     clientToken,
     "A developer should be able to set any string as the client token"
   );
@@ -281,7 +283,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testClientTokenFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     "A client token should not have a default value if it is not available in the plist"
   );
 }
@@ -292,7 +294,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     emptyString,
     "Should not use an empty string as a facebook client token but it will"
   );
@@ -304,7 +306,7 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookClientToken" : clientToken}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.sharedSettings.clientToken = @"foo";
+  self.settings.clientToken = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
@@ -316,7 +318,7 @@ static NSString *const whiteSpaceToken = @"   ";
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     @"foo",
     "Settings should return the explicitly set client token over one gleaned from a plist entry"
   );
@@ -324,14 +326,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingClientTokenWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.clientToken = @"foo";
+  self.settings.clientToken = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     @"foo",
     "Settings should return the explicitly set client token"
   );
@@ -339,14 +341,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyClientToken
 {
-  FBSDKSettings.sharedSettings.clientToken = emptyString;
+  self.settings.clientToken = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     emptyString,
     "Should not store an invalid token but it will"
   );
@@ -354,14 +356,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyClientToken
 {
-  FBSDKSettings.sharedSettings.clientToken = whiteSpaceToken;
+  self.settings.clientToken = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookClientToken"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     whiteSpaceToken,
     "Should not store a whitespace only client token but it will"
   );
@@ -369,11 +371,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testClientTokenInternalStorage
 {
-  FBSDKSettings.sharedSettings.clientToken = @"foo";
+  self.settings.clientToken = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.sharedSettings.clientToken, "sanity check");
+  XCTAssertNotNil(self.settings.clientToken, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -393,7 +395,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     appIdentifier,
     "A developer should be able to set any string as the app identifier"
   );
@@ -402,7 +404,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testAppIdentifierFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     "An app identifier should not have a default value if it is not available in the plist"
   );
 }
@@ -413,7 +415,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     emptyString,
     "Should not use an empty string as an app identifier but it will"
   );
@@ -425,14 +427,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookAppID" : appIdentifier}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.sharedSettings.appID = @"foo";
+  self.settings.appID = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     @"foo",
     "Settings should return the explicitly set app identifier over one gleaned from a plist entry"
   );
@@ -440,14 +442,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingAppIdentifierWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.appID = @"foo";
+  self.settings.appID = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     @"foo",
     "Settings should return the explicitly set app identifier"
   );
@@ -455,14 +457,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyAppIdentifier
 {
-  FBSDKSettings.sharedSettings.appID = emptyString;
+  self.settings.appID = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     emptyString,
     "Should not store an empty app identifier but it will"
   );
@@ -470,14 +472,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyAppIdentifier
 {
-  FBSDKSettings.sharedSettings.appID = whiteSpaceToken;
+  self.settings.appID = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAppID"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appID,
+    self.settings.appID,
     whiteSpaceToken,
     "Should not store a whitespace only app identifier but it will"
   );
@@ -485,11 +487,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testAppIdentifierInternalStorage
 {
-  FBSDKSettings.sharedSettings.appID = @"foo";
+  self.settings.appID = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.sharedSettings.appID, "sanity check");
+  XCTAssertNotNil(self.settings.appID, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -509,7 +511,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     displayName,
     "A developer should be able to set any string as the display name"
   );
@@ -518,7 +520,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testDisplayNameFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     "A display name should not have a default value if it is not available in the plist"
   );
 }
@@ -529,7 +531,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     emptyString,
     "Should not use an empty string as a display name but it will"
   );
@@ -541,14 +543,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookDisplayName" : displayName}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.sharedSettings.displayName = @"foo";
+  self.settings.displayName = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     @"foo",
     "Settings should return the explicitly set display name over one gleaned from a plist entry"
   );
@@ -556,14 +558,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingDisplayNameWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.displayName = @"foo";
+  self.settings.displayName = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     @"foo",
     "Settings should return the explicitly set display name"
   );
@@ -571,14 +573,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDisplayName
 {
-  FBSDKSettings.sharedSettings.displayName = emptyString;
+  self.settings.displayName = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     emptyString,
     "Should not store an empty display name but it will"
   );
@@ -586,14 +588,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyDisplayName
 {
-  FBSDKSettings.sharedSettings.displayName = whiteSpaceToken;
+  self.settings.displayName = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookDisplayName"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.displayName,
+    self.settings.displayName,
     whiteSpaceToken,
     "Should not store a whitespace only display name but it will"
   );
@@ -601,11 +603,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDisplayNameInternalStorage
 {
-  FBSDKSettings.sharedSettings.displayName = @"foo";
+  self.settings.displayName = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.sharedSettings.displayName, "sanity check");
+  XCTAssertNotNil(self.settings.displayName, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -625,7 +627,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     jpegCompressionQuality.doubleValue,
     0.01,
     "A developer should be able to set a jpeg compression quality via the plist"
@@ -635,7 +637,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testJPEGCompressionQualityFromMissingPlistEntry
 {
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     0.9,
     0.01,
     "There should be a known default value for jpeg compression quality"
@@ -648,7 +650,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertNotEqual(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     -0.2,
     "Should not use a negative value as a jpeg compression quality"
   );
@@ -659,14 +661,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookJpegCompressionQuality" : @0.2}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 0.3;
+  self.settings.JPEGCompressionQuality = 0.3;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualWithAccuracy(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     @(0.3).doubleValue,
     0.01,
     "Settings should return the explicitly set jpeg compression quality over one gleaned from a plist entry"
@@ -675,14 +677,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1.0;
+  self.settings.JPEGCompressionQuality = 1.0;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     1.0,
     "Settings should return the explicitly set jpeg compression quality"
   );
@@ -690,14 +692,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityTooLow
 {
-  FBSDKSettings.sharedSettings.JPEGCompressionQuality = -0.1;
+  self.settings.JPEGCompressionQuality = -0.1;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertNotEqual(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     -0.1,
     "Should not store a negative jpeg compression quality"
   );
@@ -705,14 +707,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingJPEGCompressionQualityTooHigh
 {
-  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1.1;
+  self.settings.JPEGCompressionQuality = 1.1;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookJpegCompressionQuality"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertNotEqual(
-    FBSDKSettings.sharedSettings.JPEGCompressionQuality,
+    self.settings.JPEGCompressionQuality,
     1.1,
     "Should not store a jpeg compression quality that is larger than 1.0"
   );
@@ -720,11 +722,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testJPEGCompressionQualityInternalStorage
 {
-  FBSDKSettings.sharedSettings.JPEGCompressionQuality = 1;
+  self.settings.JPEGCompressionQuality = 1;
 
   [self resetLoggingSideEffects];
 
-  XCTAssertEqual(FBSDKSettings.sharedSettings.JPEGCompressionQuality, 1, "Sanity check");
+  XCTAssertEqual(self.settings.JPEGCompressionQuality, 1, "Sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -744,7 +746,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     urlSchemeSuffix,
     "A developer should be able to set any string as the url scheme suffix"
   );
@@ -753,7 +755,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testURLSchemeSuffixFromMissingPlistEntry
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     "A url scheme suffix should not have a default value if it is not available in the plist"
   );
 }
@@ -764,7 +766,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     emptyString,
     "Should not use an empty string as a url scheme suffix but it will"
   );
@@ -776,14 +778,14 @@ static NSString *const whiteSpaceToken = @"   ";
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookUrlSchemeSuffix" : urlSchemeSuffix}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
-  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  self.settings.appURLSchemeSuffix = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     @"foo",
     "Settings should return the explicitly set url scheme suffix over one gleaned from a plist entry"
   );
@@ -791,14 +793,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingURLSchemeSuffixWithoutPlistEntry
 {
-  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  self.settings.appURLSchemeSuffix = @"foo";
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqual(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     @"foo",
     "Settings should return the explicitly set url scheme suffix"
   );
@@ -806,14 +808,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyURLSchemeSuffix
 {
-  FBSDKSettings.sharedSettings.appURLSchemeSuffix = emptyString;
+  self.settings.appURLSchemeSuffix = emptyString;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     emptyString,
     "Should not store an empty url scheme suffix but it will"
   );
@@ -821,14 +823,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingWhitespaceOnlyURLSchemeSuffix
 {
-  FBSDKSettings.sharedSettings.appURLSchemeSuffix = whiteSpaceToken;
+  self.settings.appURLSchemeSuffix = whiteSpaceToken;
 
   XCTAssertNil(
     self.userDefaultsSpy.capturedValues[@"FacebookUrlSchemeSuffix"],
     "Should not persist the value of a non-cachable property when setting it"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.appURLSchemeSuffix,
+    self.settings.appURLSchemeSuffix,
     whiteSpaceToken,
     "Should not store a whitespace only url scheme suffix but it will"
   );
@@ -836,11 +838,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testURLSchemeSuffixInternalStorage
 {
-  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  self.settings.appURLSchemeSuffix = @"foo";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertNotNil(FBSDKSettings.sharedSettings.appURLSchemeSuffix, "sanity check");
+  XCTAssertNotNil(self.settings.appURLSchemeSuffix, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1228,7 +1230,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testInitialAccessForNonCachablePropertyWithEmptyPlist
 {
   XCTAssertNil(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     "A non-cachable property with no default value and no plist entry should not have a value"
   );
 
@@ -1249,7 +1251,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertEqualObjects(
-    FBSDKSettings.sharedSettings.clientToken,
+    self.settings.clientToken,
     @"abc123",
     "Should retrieve the initial value from the property list"
   );
@@ -1303,7 +1305,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSetUseTokenOptimizations
 {
-  FBSDKSettings.sharedSettings.shouldUseTokenOptimizations = NO;
+  self.settings.shouldUseTokenOptimizations = NO;
 
   XCTAssertEqualObjects(
     self.userDefaultsSpy.capturedValues[@"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations"],
@@ -1311,7 +1313,7 @@ static NSString *const whiteSpaceToken = @"   ";
     "Should store whether or not to use token optimizations"
   );
   XCTAssertFalse(
-    FBSDKSettings.sharedSettings.shouldUseTokenOptimizations,
+    self.settings.shouldUseTokenOptimizations,
     "Should use token optimizations"
   );
 }
@@ -1481,13 +1483,13 @@ static NSString *const whiteSpaceToken = @"   ";
     self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"],
     "Should not persist the value of before setting it"
   );
-  [FBSDKSettings.sharedSettings recordInstall];
+  [self.settings recordInstall];
   XCTAssertNotNil(
     self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"],
     "Should persist the value after setting it"
   );
   NSDate *date = self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  [FBSDKSettings.sharedSettings recordInstall];
+  [self.settings recordInstall];
   XCTAssertEqual(date, self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"], "Should not change the cached install timesstamp");
 }
 
@@ -1505,7 +1507,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsEventDelayTimerExpired
 {
-  [FBSDKSettings.sharedSettings recordInstall];
+  [self.settings recordInstall];
   XCTAssertFalse([FBSDKSettings isEventDelayTimerExpired]);
 
   NSDate *today = [NSDate new];
@@ -1521,7 +1523,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsSetATETimeExceedsInstallTime
 {
-  [FBSDKSettings.sharedSettings recordInstall];
+  [self.settings recordInstall];
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];
   XCTAssertFalse([FBSDKSettings isSetATETimeExceedsInstallTime]);
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];
@@ -1539,16 +1541,16 @@ static NSString *const whiteSpaceToken = @"   ";
   NSSet<FBSDKLoggingBehavior> *mockLoggingBehaviors =
   [NSSet setWithObjects:FBSDKLoggingBehaviorAppEvents, FBSDKLoggingBehaviorNetworkRequests, nil];
 
-  FBSDKSettings.loggingBehaviors = mockLoggingBehaviors;
-  XCTAssertEqualObjects(mockLoggingBehaviors, [FBSDKSettings loggingBehaviors]);
+  [self.settings setLoggingBehaviors:mockLoggingBehaviors];
+  XCTAssertEqualObjects(mockLoggingBehaviors, self.settings.loggingBehaviors);
 
   // test enable logging behavior
   [FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorInformational];
-  XCTAssertTrue([[FBSDKSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorInformational]);
+  XCTAssertTrue([self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorInformational]);
 
   // test disable logging behavior
   [FBSDKSettings disableLoggingBehavior:FBSDKLoggingBehaviorInformational];
-  XCTAssertFalse([[FBSDKSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorInformational]);
+  XCTAssertFalse([self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorInformational]);
 }
 
 #pragma mark - test for internal functions

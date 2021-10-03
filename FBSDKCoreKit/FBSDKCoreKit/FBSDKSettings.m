@@ -75,7 +75,6 @@ FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugWarning = @"graph_api_debu
 FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugInfo = @"graph_api_debug_info";
 FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 
-static NSMutableSet<FBSDKLoggingBehavior> *g_loggingBehaviors;
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
 static NSString *const FBSDKSettingsBitmask = @"com.facebook.sdk:FBSDKSettingsBitmask";
 static NSString *const FBSDKSettingsDataProcessingOptions = @"com.facebook.sdk:FBSDKSettingsDataProcessingOptions";
@@ -127,11 +126,13 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _advertiserIDCollectionEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _SKAdNetworkReportEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _codelessDebugLogEnabled);
+  NSMutableSet<FBSDKLoggingBehavior> *_loggingBehaviors;
 }
 
 @synthesize userAgentSuffix = _userAgentSuffix;
 @synthesize appID = _appID;
 @synthesize JPEGCompressionQuality = _JPEGCompressionQuality;
+@synthesize loggingBehaviors = _loggingBehaviors;
 static dispatch_once_t sharedSettingsNonce;
 
 // Transitional singleton introduced as a way to change the usage semantics
@@ -455,22 +456,36 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
-  if (!g_loggingBehaviors) {
-    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.sharedSettings.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
-    if (bundleLoggingBehaviors) {
-      g_loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
-    } else {
-      // Establish set of default enabled logging behaviors.  You can completely disable logging by
-      // specifying an empty array for FacebookLoggingBehavior in your Info.plist.
-      g_loggingBehaviors = [[NSMutableSet alloc] initWithObjects:FBSDKLoggingBehaviorDeveloperErrors, nil];
-    }
+  return [self.sharedSettings loggingBehaviors];
+}
+
++ (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
+{
+  [self.sharedSettings setLoggingBehaviors:loggingBehaviors];
+}
+
+- (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
+{
+  if (![_loggingBehaviors isEqualToSet:loggingBehaviors]) {
+    _loggingBehaviors = [loggingBehaviors mutableCopy];
+
+    [self updateGraphAPIDebugBehavior];
   }
-  return [g_loggingBehaviors copy];
 }
 
 - (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
-  return [self.class loggingBehaviors];
+  if (!_loggingBehaviors) {
+    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
+    if (bundleLoggingBehaviors) {
+      _loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
+    } else {
+      // Establish set of default enabled logging behaviors.  You can completely disable logging by
+      // specifying an empty array for FacebookLoggingBehavior in your Info.plist.
+      _loggingBehaviors = [[NSMutableSet alloc] initWithObjects:FBSDKLoggingBehaviorDeveloperErrors, nil];
+    }
+  }
+  return [_loggingBehaviors copy];
 }
 
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
@@ -499,30 +514,31 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma clang diagnostic pop
 
-+ (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
-{
-  if (![g_loggingBehaviors isEqualToSet:loggingBehaviors]) {
-    g_loggingBehaviors = [loggingBehaviors mutableCopy];
-
-    [self updateGraphAPIDebugBehavior];
-  }
-}
-
 + (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
 {
-  if (!g_loggingBehaviors) {
-    [self loggingBehaviors];
-  }
-  [g_loggingBehaviors addObject:loggingBehavior];
-  [self updateGraphAPIDebugBehavior];
+  [self.sharedSettings enableLoggingBehavior:loggingBehavior];
 }
 
 + (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
 {
-  if (!g_loggingBehaviors) {
+  [self.sharedSettings disableLoggingBehavior:loggingBehavior];
+}
+
+- (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+{
+  if (!self.loggingBehaviors) {
     [self loggingBehaviors];
   }
-  [g_loggingBehaviors removeObject:loggingBehavior];
+  [_loggingBehaviors addObject:loggingBehavior];
+  [self updateGraphAPIDebugBehavior];
+}
+
+- (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+{
+  if (!self.loggingBehaviors) {
+    [self loggingBehaviors];
+  }
+  [_loggingBehaviors removeObject:loggingBehavior];
   [self updateGraphAPIDebugBehavior];
 }
 
@@ -561,18 +577,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 }
 
 #pragma mark - Internal
-
-- (NSString *)userAgentSuffix
-{
-  return _userAgentSuffix;
-}
-
-- (void)setUserAgentSuffix:(NSString *)suffix
-{
-  if (![_userAgentSuffix isEqualToString:suffix]) {
-    _userAgentSuffix = suffix;
-  }
-}
 
 + (void)setGraphAPIVersion:(NSString *)version
 {
@@ -766,20 +770,20 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal - Graph API Debug
 
-+ (void)updateGraphAPIDebugBehavior
+- (void)updateGraphAPIDebugBehavior
 {
   // Enable Warnings everytime Info is enabled
-  if ([g_loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]
-      && ![g_loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
-    [g_loggingBehaviors addObject:FBSDKLoggingBehaviorGraphAPIDebugWarning];
+  if ([self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]
+      && ![self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
+    [_loggingBehaviors addObject:FBSDKLoggingBehaviorGraphAPIDebugWarning];
   }
 }
 
 + (NSString *)graphAPIDebugParamValue
 {
-  if ([[self loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
+  if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
     return @"info";
-  } else if ([[self loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
+  } else if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
     return @"warning";
   }
 
@@ -798,8 +802,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)reset
 {
   [self.sharedSettings reset];
-
-  g_loggingBehaviors = nil;
   g_dataProcessingOptions = nil;
 }
 
@@ -809,7 +811,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (sharedSettingsNonce) {
     sharedSettingsNonce = 0;
   }
-  _userAgentSuffix = nil;
+  _loggingBehaviors = nil;
 }
 
 + (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
