@@ -1041,7 +1041,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
   XCTAssertEqualObjects(params[@"return_scopes"], @"true");
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
-  XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
+  XCTAssertEqualObjects(params[@"ies"], @(FBSDKSettings.sharedSettings.isAutoLogAppEventsEnabled));
   XCTAssertNotNil(params[@"e2e"]);
 
   NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];

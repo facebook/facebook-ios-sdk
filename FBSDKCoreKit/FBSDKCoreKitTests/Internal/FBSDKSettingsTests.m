@@ -861,7 +861,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "A developer should be able to set the value of auto log app events from the plist"
   );
 }
@@ -869,7 +869,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testAutoLogAppEventsEnabledDefaultValue
 {
   XCTAssertTrue(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Auto logging of app events should default to true when there is no plist value given"
   );
 }
@@ -880,7 +880,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Auto logging of app events should default to true when there is an invalid plist value given but it does not"
   );
 }
@@ -901,13 +901,13 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testOverridingCachedAutoLogAppEventsEnabled
 {
-  XCTAssertTrue(FBSDKSettings.isAutoLogAppEventsEnabled);
+  XCTAssertTrue(self.settings.isAutoLogAppEventsEnabled);
 
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookAutoLogAppEventsEnabled" : @NO}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertTrue(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Should favor cached properties over those set in the plist"
   );
 }
@@ -1170,7 +1170,7 @@ static NSString *const whiteSpaceToken = @"   ";
   self.userDefaultsSpy.capturedValues = @{ @"FacebookAutoLogAppEventsEnabled" : @NO };
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Should retrieve an initial value for a cachable property when there is a non-empty cache"
   );
 
@@ -1192,7 +1192,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Should retrieve an initial value from the property list"
   );
 
@@ -1211,7 +1211,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testInitialAccessForCachablePropertyWithEmptyCacheEmptyPlistAndDefaultValue
 {
   XCTAssertTrue(
-    FBSDKSettings.isAutoLogAppEventsEnabled,
+    self.settings.isAutoLogAppEventsEnabled,
     "Should use the default value for a property when there are no values in the cache or plist"
   );
 

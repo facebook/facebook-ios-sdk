@@ -374,7 +374,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [FBSDKTypeUtility dictionary:loginParams setObject:loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@(FBSDKSettings.sharedSettings.isAutoLogAppEventsEnabled) forKey:@"ies"];
   [FBSDKTypeUtility dictionary:loginParams setObject:FBSDKSettings.sharedSettings.appURLSchemeSuffix forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 

@@ -81,44 +81,51 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  Controls the auto logging of basic app events, such as activateApp and deactivateApp.
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isAutoLogAppEventsEnabled, assign) BOOL autoLogAppEventsEnabled;
+@property (class, nonatomic, getter = isAutoLogAppEventsEnabled) BOOL autoLogAppEventsEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isAutoLogAppEventsEnabled` is deprecated and will be removed in the next major release, please use `Settings.shared.isAutoLogAppEventsEnabled` instead");
+
+/**
+ Controls the auto logging of basic app events, such as activateApp and deactivateApp.
+ If not explicitly set, the default is true
+ */
+@property (nonatomic, getter = isAutoLogAppEventsEnabled) BOOL autoLogAppEventsEnabled;
 
 /**
  Controls the fb_codeless_debug logging event
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isCodelessDebugLogEnabled, assign) BOOL codelessDebugLogEnabled;
+@property (class, nonatomic, getter = isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
 
 /**
  Controls the access to IDFA
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isAdvertiserIDCollectionEnabled, assign) BOOL advertiserIDCollectionEnabled;
+@property (class, nonatomic, getter = isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
 
 /**
  Controls the SKAdNetwork report
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isSKAdNetworkReportEnabled, assign) BOOL SKAdNetworkReportEnabled;
+@property (class, nonatomic, getter = isSKAdNetworkReportEnabled) BOOL SKAdNetworkReportEnabled;
 
 /**
  Whether data such as that generated through FBSDKAppEvents and sent to Facebook
  should be restricted from being used for other than analytics and conversions.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, getter = shouldLimitEventAndDataUsage, assign) BOOL limitEventAndDataUsage;
+@property (class, nonatomic, getter = shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage;
 
 /**
  Whether in memory cached values should be used for expensive metadata fields, such as
  carrier and advertiser ID, that are fetched on many applicationDidBecomeActive notifications.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, getter = shouldUseCachedValuesForExpensiveMetadata, assign) BOOL shouldUseCachedValuesForExpensiveMetadata;
+@property (class, nonatomic, getter = shouldUseCachedValuesForExpensiveMetadata) BOOL shouldUseCachedValuesForExpensiveMetadata;
 
 /**
  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
  */
-@property (class, nonatomic, getter = isGraphErrorRecoveryEnabled, assign) BOOL graphErrorRecoveryEnabled;
+@property (class, nonatomic, getter = isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled;
 
 /**
   The Facebook App ID used by the SDK.

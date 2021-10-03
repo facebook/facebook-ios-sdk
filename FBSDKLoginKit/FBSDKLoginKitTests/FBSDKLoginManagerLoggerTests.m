@@ -161,7 +161,7 @@
 - (void)testExtrasForAddSingleLoggingExtra
 {
   FBSDKSettings.sharedSettings.isConfigured = YES;
-  FBSDKSettings.autoLogAppEventsEnabled = YES;
+  [FBSDKSettings.sharedSettings setAutoLogAppEventsEnabled:YES];
 
   FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
 
