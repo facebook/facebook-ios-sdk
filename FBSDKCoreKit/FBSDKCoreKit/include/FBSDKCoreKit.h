@@ -25,6 +25,7 @@
 #import "FBSDKAppAvailabilityChecker.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppEventParameterProduct.h"
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsFlushBehavior.h"
