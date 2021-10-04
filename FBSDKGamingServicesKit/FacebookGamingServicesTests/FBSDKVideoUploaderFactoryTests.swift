@@ -42,11 +42,9 @@ class FBSDKVideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
 
   // MARK: - VideoUploaderDelegate conformance
 
-  // swiftlint:disable implicitly_unwrapped_optional
-
-  func videoChunkData(for videoUploader: VideoUploader!, startOffset: UInt, endOffset: UInt) -> Data! {
+  func videoChunkData(for videoUploader: VideoUploader, startOffset: UInt, endOffset: UInt) -> Data? {
     Data()
   }
-  func videoUploader(_ videoUploader: VideoUploader!, didCompleteWithResults results: [String: Any]!) {}
-  func videoUploader(_ videoUploader: VideoUploader!, didFailWithError error: Error!) {}
+  func videoUploader(_ videoUploader: VideoUploader, didCompleteWithResults results: [String: Any]) {}
+  func videoUploader(_ videoUploader: VideoUploader, didFailWithError error: Error) {}
 }

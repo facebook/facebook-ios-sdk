@@ -165,8 +165,8 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-
-    delegate.videoUploader(nil, didFailWithError: SampleError())
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    delegate.videoUploader(dummyUploader, didFailWithError: SampleError())
 
     XCTAssertTrue(wasCompletionCalled)
   }
@@ -183,8 +183,8 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-
-    delegate.videoUploader(nil, didCompleteWithResults: ["success": false])
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": false])
 
     XCTAssertTrue(wasCompletionCalled)
   }
@@ -198,8 +198,8 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-
-    delegate.videoUploader(nil, didCompleteWithResults: ["success": "1"])
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": "1"])
 
     XCTAssertTrue(wasCompletionCalled)
   }
@@ -225,9 +225,11 @@ class GamingVideoUploaderTests: XCTestCase {
       andProgressHandler: verifyProgress
     )
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+
 
     // Send first chunk of data
-    delegate.videoChunkData(for: nil, startOffset: 0, endOffset: 500)
+    delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)
 
     // Set expectations
     expectedBytesSent = 500
@@ -237,7 +239,7 @@ class GamingVideoUploaderTests: XCTestCase {
     fileHandle.stubbedReadData = Data(Array(repeating: 1, count: 499))
 
     // Send second chunk of data
-    delegate.videoChunkData(for: nil, startOffset: 500, endOffset: 999)
+    delegate.videoChunkData(for: dummyUploader, startOffset: 500, endOffset: 999)
 
     // Set expectations
     expectedBytesSent = 499
@@ -245,7 +247,7 @@ class GamingVideoUploaderTests: XCTestCase {
     expectedTotalExpected = 999
 
     // Completing calls the progress handler with the final total bytes
-    delegate.videoUploader(nil, didCompleteWithResults: ["success": true])
+    delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": true])
 
     XCTAssertEqual(completionCallCount, 3)
   }

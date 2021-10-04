@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKVideoUploaderDelegate;
 
 /**
@@ -64,6 +66,7 @@ NS_SWIFT_NAME(VideoUploader)
 
 @end
 
+
 /**
   A delegate for `FBSDKVideoUploader`.
 
@@ -78,7 +81,7 @@ NS_SWIFT_NAME(VideoUploaderDelegate)
  @param startOffset The start offset of video chunk to be uploaded
  @param endOffset The end offset of video chunk being to be uploaded
  */
-- (NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader startOffset:(NSUInteger) startOffset endOffset:(NSUInteger) endOffset;
+- (nullable NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader startOffset:(NSUInteger) startOffset endOffset:(NSUInteger) endOffset;
 
 /**
   Notify the delegate that upload process success.
@@ -96,3 +99,5 @@ didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 - (void)videoUploader:(FBSDKVideoUploader *)videoUploader didFailWithError:(NSError *)error;
 
 @end
+
+NS_ASSUME_NONNULL_END
