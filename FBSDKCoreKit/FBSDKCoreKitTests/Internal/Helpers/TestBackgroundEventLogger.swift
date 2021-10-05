@@ -27,7 +27,7 @@ class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
 
   var logBackgroundRefresStatusCallCount = 0
 
-  func logBackgroundRefresStatus(_ status: UIBackgroundRefreshStatus) {
+  func logBackgroundRefreshStatus(_ status: UIBackgroundRefreshStatus) {
     logBackgroundRefresStatusCallCount += 1
   }
 }

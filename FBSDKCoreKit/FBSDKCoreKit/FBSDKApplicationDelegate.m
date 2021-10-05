@@ -320,7 +320,7 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
 - (void)logBackgroundRefreshStatus
 {
-  [self.backgroundEventLogger logBackgroundRefresStatus:[UIApplication.sharedApplication backgroundRefreshStatus]];
+  [self.backgroundEventLogger logBackgroundRefreshStatus:[UIApplication.sharedApplication backgroundRefreshStatus]];
 }
 
 #endif

@@ -43,7 +43,7 @@
   return self;
 }
 
-- (void)logBackgroundRefresStatus:(UIBackgroundRefreshStatus)status
+- (void)logBackgroundRefreshStatus:(UIBackgroundRefreshStatus)status
 {
   BOOL isNewVersion = [self _isNewBackgroundRefresh];
   switch (status) {

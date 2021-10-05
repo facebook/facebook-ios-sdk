@@ -36,7 +36,7 @@ NS_SWIFT_NAME(BackgroundEventLogger)
 - (instancetype)initWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger NS_DESIGNATED_INITIALIZER;
 
-- (void)logBackgroundRefresStatus:(UIBackgroundRefreshStatus)status;
+- (void)logBackgroundRefreshStatus:(UIBackgroundRefreshStatus)status;
 
 @end
 

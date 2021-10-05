@@ -47,7 +47,7 @@ class BackgroundEventLoggerTests: XCTestCase {
   }
 
   func testLogBackgroundStatusWithBackgroundRefreshStatusAvailable() {
-    backgroundEventLogger.logBackgroundRefresStatus(.available)
+    backgroundEventLogger.logBackgroundRefreshStatus(.available)
 
     XCTAssertEqual(
       logger.capturedEventName,
@@ -57,7 +57,7 @@ class BackgroundEventLoggerTests: XCTestCase {
   }
 
   func testLogBackgroundStatusWithBackgroundRefreshStatusDenied() {
-    backgroundEventLogger.logBackgroundRefresStatus(.denied)
+    backgroundEventLogger.logBackgroundRefreshStatus(.denied)
 
     XCTAssertEqual(
       logger.capturedEventName,
@@ -67,7 +67,7 @@ class BackgroundEventLoggerTests: XCTestCase {
   }
 
   func testLogBackgroundStatusWithBackgroundRefreshStatusRestricted() {
-    backgroundEventLogger.logBackgroundRefresStatus(.restricted)
+    backgroundEventLogger.logBackgroundRefreshStatus(.restricted)
 
     XCTAssertEqual(
       logger.capturedEventName,
