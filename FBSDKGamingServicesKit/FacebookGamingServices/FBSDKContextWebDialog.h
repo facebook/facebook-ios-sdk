@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "FBSDKDialogProtocol.h"
+#import <FacebookGamingServices/FBSDKDialogProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServiceCompletionHandler.h"
+#import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

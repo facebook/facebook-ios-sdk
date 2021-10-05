@@ -24,8 +24,8 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-#import "FBSDKDialogProtocol.h"
-#import "FBSDKContextWebDialog.h"
+#import <FacebookGamingServices/FBSDKDialogProtocol.h>
+#import <FacebookGamingServices/FBSDKContextWebDialog.h>
 
 NS_ASSUME_NONNULL_BEGIN
 /**

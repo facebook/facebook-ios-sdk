@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKContextDialogFactoryProtocols.h"
+#import <FacebookGamingServices/FBSDKContextDialogFactoryProtocols.h>
 
 @protocol FBSDKAccessTokenProviding;
 

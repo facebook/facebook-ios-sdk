@@ -16,9 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKChooseContextDialog.h"
-#import "FBSDKCreateContextDialog.h"
-#import "FBSDKShowable.h"
+#import <FacebookGamingServices/FBSDKChooseContextDialog.h>
+#import <FacebookGamingServices/FBSDKCreateContextDialog.h>
+#import <FacebookGamingServices/FBSDKShowable.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

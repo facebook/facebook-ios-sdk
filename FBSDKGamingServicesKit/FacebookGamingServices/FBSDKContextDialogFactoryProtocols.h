@@ -22,9 +22,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCreateContextContent.h"
-#import "FBSDKSwitchContextContent.h"
-#import "FBSDKChooseContextContent.h"
+#import <FacebookGamingServices/FBSDKCreateContextContent.h>
+#import <FacebookGamingServices/FBSDKSwitchContextContent.h>
+#import <FacebookGamingServices/FBSDKChooseContextContent.h>
 
 @protocol FBSDKShowable;
 @protocol FBSDKWindowFinding;

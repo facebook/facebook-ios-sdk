@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <AvailabilityMacros.h>
 
-#import "FBSDKGamingServiceCompletionHandler.h"
+#import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

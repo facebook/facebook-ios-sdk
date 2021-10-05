@@ -21,7 +21,7 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-#import "FBSDKDialogProtocol.h"
+#import <FacebookGamingServices/FBSDKDialogProtocol.h>
 
 typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
   FBSDKChooseContextFilterNone = 0,

@@ -16,29 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKChooseContextDialog.h"
-#import "FBSDKContextWebDialog.h"
-#import "FBSDKCreateContextContent.h"
-#import "FBSDKCreateContextDialog.h"
-#import "FBSDKDialogProtocol.h"
-#import "FBSDKFriendFinderDialog.h"
-#import "FBSDKGamingContext.h"
-#import "FBSDKGamingGroupIntegration.h"
-#import "FBSDKGamingImageUploader.h"
-#import "FBSDKGamingImageUploaderConfiguration.h"
-#import "FBSDKGamingPayload.h"
-#import "FBSDKGamingPayloadObserver.h"
-#import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingVideoUploader.h"
-#import "FBSDKGamingVideoUploaderConfiguration.h"
-#import "FBSDKSwitchContextContent.h"
+#import <FacebookGamingServices/FBSDKChooseContextDialog.h>
+#import <FacebookGamingServices/FBSDKContextWebDialog.h>
+#import <FacebookGamingServices/FBSDKCreateContextContent.h>
+#import <FacebookGamingServices/FBSDKCreateContextDialog.h>
+#import <FacebookGamingServices/FBSDKDialogProtocol.h>
+#import <FacebookGamingServices/FBSDKFriendFinderDialog.h>
+#import <FacebookGamingServices/FBSDKGamingContext.h>
+#import <FacebookGamingServices/FBSDKGamingGroupIntegration.h>
+#import <FacebookGamingServices/FBSDKGamingImageUploader.h>
+#import <FacebookGamingServices/FBSDKGamingImageUploaderConfiguration.h>
+#import <FacebookGamingServices/FBSDKGamingPayload.h>
+#import <FacebookGamingServices/FBSDKGamingPayloadObserver.h>
+#import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
+#import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
+#import <FacebookGamingServices/FBSDKGamingVideoUploaderConfiguration.h>
+#import <FacebookGamingServices/FBSDKSwitchContextContent.h>
 
 // The headers below need to be public since they're used in the Swift files
 // but they probably shouldn't be actually public.
 // Not sure what the correct approach here is...
 
-#import "FBSDKChooseContextDialogFactory.h"
-#import "FBSDKContextDialogFactoryProtocols.h"
-#import "FBSDKContextDialogs+Showable.h"
-#import "FBSDKCreateContextDialogFactory.h"
-#import "FBSDKShowable.h"
+#import <FacebookGamingServices/FBSDKChooseContextDialogFactory.h>
+#import <FacebookGamingServices/FBSDKContextDialogFactoryProtocols.h>
+#import <FacebookGamingServices/FBSDKContextDialogs+Showable.h>
+#import <FacebookGamingServices/FBSDKCreateContextDialogFactory.h>
+#import <FacebookGamingServices/FBSDKShowable.h>

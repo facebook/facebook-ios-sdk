@@ -18,8 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-// #import "FBSDKFileHandling.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKFileHandling;
