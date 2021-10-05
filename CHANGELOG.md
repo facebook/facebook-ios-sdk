@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.0...HEAD)
+
+## 12.0.0
+
 As of v12.0, CocoaPods and Swift Package Manager (SPM) will be vending pre-built XCFrameworks.
 
 What this means for you as a developer is that you no longer need to build the SDK when using CocoaPods or SPM. This should save anywhere from a few seconds to a few minutes per build depending on your particular setup.
@@ -17,18 +21,22 @@ What this means for you as a developer is that you'll need to include `FacebookA
 
 More detailed instructions can be found at: https://developers.facebook.com/docs/ios/getting-started
 
-FacebookGamingServices vs FBSDKGamingServicesKit - You'll notice there are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you do not require an Objective-C interface for these types,
-we recommend using only `FacebookGamingServices`.
+🚨 NOTICE: Changes to FBSDKLoginButton when defined in a Storyboard or XIB file 🚨
 
-🚨 NOTICE: Changes to Facebook Login button when defined in a Storyboard or XIB file 🚨
+There is a known issue with using XCFrameworks in conjunction with Storyboard or XIB files. If you do not follow the instructions on using Interface Builder at https://developers.facebook.com/docs/facebook-login/ios/advanced/, `FBSDKLoginButton` will not load or decorate correctly.
 
-There is a known issue with using XCFrameworks in conjunction with Storyboard or XIB files. If you do not include the code below, your login button will not load or decorate correctly. Any methods that you call on it may result in a **runtime crash**.
-
-Please follow the instructions on using Interface Builder at https://developers.facebook.com/docs/facebook-login/ios/advanced/
+In summary you need to add `[FBSDKLoginButton class]` to `application:didFinishLaunchingWithOptions:` to "pre-load" the class so that the Storyboard can find it. If you don't, any methods that you call on it may result in a **runtime crash**.
 
 ### Added
 
 - Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
+
+### Changed
+
+- FacebookGamingServices vs FBSDKGamingServicesKit - You'll notice there are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you do not require an Objective-C interface for these types,
+we recommend using only `FacebookGamingServices`.
+
+The minimum supported iOS version is now 10.0
 
 ### Removed
 
@@ -59,10 +67,6 @@ Support for building from source using Carthage. Instead Carthage can be used to
 - `GamingPayloadDelegate.updatedURLContaining(_:)` Replacement - `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
 - `GamingPayloadObserver.shared`. Instances of this object now must be created with a delegate.
 - `GamingServiceResultCompletionHandler` Replacement - `GamingServiceResultCompletion`
-
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.0...HEAD)
-
-## 12.0.0
 
 [2021-09-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...v12.0.0)
