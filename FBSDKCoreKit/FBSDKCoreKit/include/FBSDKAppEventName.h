@@ -26,7 +26,7 @@
 /// typedef for FBSDKAppEventName
 typedef NSString *const FBSDKAppEventName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.Name);
 
-#pragma mark - General Purpose
+// MARK: - General Purpose
 
 /** Log this event when the user clicks an ad. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdClick;
@@ -73,7 +73,7 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribe;
 /** Log this event when a user has viewed a form of content in the app. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameViewedContent;
 
-#pragma mark - E-Commerce
+// MARK: - E-Commerce
 
 /** Log this event when the user has entered their payment info. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo;
@@ -90,7 +90,7 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 /** Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchased;
 
-#pragma mark - Gaming
+// MARK: - Gaming
 
 /** Log this event when the user has achieved a level in the app. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAchievedLevel;

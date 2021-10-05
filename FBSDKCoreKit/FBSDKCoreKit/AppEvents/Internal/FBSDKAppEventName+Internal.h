@@ -18,18 +18,28 @@
 
 #import "FBSDKAppEventName.h"
 
-#pragma mark - E-Commerce
+// MARK: - Application Lifecycle
+
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitializeSDK;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameBackgroundStatusAvailable;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameBackgroundStatusDenied;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameBackgroundStatusRestricted;
+
+// MARK: - E-Commerce
 
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate;
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchaseFailed;
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchaseRestored;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribeInitiatedCheckout;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribeFailed;
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribeRestore;
 
-#pragma mark - Push Notifications
+// MARK: - Push Notifications
 
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePushOpened;
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePushTokenObtained;
 
-#pragma mark - Time Spent
+// MARK: - Time Spent
 
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameActivatedApp;
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameDeactivatedApp;

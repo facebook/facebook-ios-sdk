@@ -18,7 +18,7 @@
 
 #import "FBSDKAppEventName+Internal.h"
 
-#pragma mark - General Purpose
+// MARK: - General Purpose
 
 // Public
 
@@ -38,7 +38,16 @@ FBSDKAppEventName FBSDKAppEventNameSubmitApplication = @"SubmitApplication";
 FBSDKAppEventName FBSDKAppEventNameSubscribe = @"Subscribe";
 FBSDKAppEventName FBSDKAppEventNameViewedContent = @"fb_mobile_content_view";
 
-#pragma mark - E-Commerce
+// MARK: - Application Lifecycle
+
+// Internal
+
+FBSDKAppEventName FBSDKAppEventNameInitializeSDK = @"fb_sdk_initialize";
+FBSDKAppEventName FBSDKAppEventNameBackgroundStatusAvailable = @"fb_sdk_background_status_available";
+FBSDKAppEventName FBSDKAppEventNameBackgroundStatusDenied = @"fb_sdk_background_status_denied";
+FBSDKAppEventName FBSDKAppEventNameBackgroundStatusRestricted = @"fb_sdk_background_status_restricted";
+
+// MARK: - E-Commerce
 
 // Public
 
@@ -53,8 +62,11 @@ FBSDKAppEventName FBSDKAppEventNamePurchased = @"fb_mobile_purchase";
 FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate = @"fb_mobile_catalog_update";
 FBSDKAppEventName FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
 FBSDKAppEventName FBSDKAppEventNamePurchaseRestored = @"fb_mobile_purchase_restored";
+FBSDKAppEventName FBSDKAppEventNameSubscribeInitiatedCheckout = @"SubscriptionInitiatedCheckout";
+FBSDKAppEventName FBSDKAppEventNameSubscribeFailed = @"SubscriptionFailed";
+FBSDKAppEventName FBSDKAppEventNameSubscribeRestore = @"SubscriptionRestore";
 
-#pragma mark - Gaming
+// MARK: - Gaming
 
 // Public
 
@@ -62,14 +74,14 @@ FBSDKAppEventName FBSDKAppEventNameAchievedLevel = @"fb_mobile_level_achieved";
 FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement = @"fb_mobile_achievement_unlocked";
 FBSDKAppEventName FBSDKAppEventNameSpentCredits = @"fb_mobile_spent_credits";
 
-#pragma mark - Push Notifications
+// MARK: - Push Notifications
 
 // Internal
 
 FBSDKAppEventName FBSDKAppEventNamePushTokenObtained = @"fb_mobile_obtain_push_token";
 FBSDKAppEventName FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 
-#pragma mark - Time Spent
+// MARK: - Time Spent
 
 // Internal
 

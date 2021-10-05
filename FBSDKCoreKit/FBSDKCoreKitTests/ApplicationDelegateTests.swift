@@ -204,7 +204,7 @@ class ApplicationDelegateTests: XCTestCase {
 
     XCTAssertEqual(
       appEvents.capturedEventName,
-      "fb_sdk_initialize"
+      AppEvents.Name.initializeSDK.rawValue
     )
     XCTAssertFalse(appEvents.capturedIsImplicitlyLogged)
   }
