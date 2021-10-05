@@ -284,8 +284,10 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   }
 
   func testCompleteLoadingWithError() {
+    var firstCompletionCallCount = 0
     AppEventsConfigurationManager.loadAppEventsConfiguration {
-      XCTFail("Completing with an error should probably invoke the completions but it wont")
+      // Completions now correctly calaled with error. As to not block the main thread.
+      firstCompletionCallCount += 1
     }
     connection.capturedCompletion?(nil, nil, SampleError())
 
@@ -297,6 +299,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       AppEventsConfigurationManager.shared.timestamp,
       "Completing with an error should not set a timestamp"
     )
+    XCTAssertEqual(firstCompletionCallCount, 1)
   }
 
   func testCompleteLoadingWithErrorDoesNotClearPendingCompletions() {
@@ -316,8 +319,8 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     settings.appID = nil
     AppEventsConfigurationManager.loadAppEventsConfiguration {}
 
-    XCTAssertEqual(firstCompletionCallCount, 1)
-    XCTAssertEqual(secondCompletionCallCount, 1)
+    XCTAssertEqual(firstCompletionCallCount, 2)
+    XCTAssertEqual(secondCompletionCallCount, 2)
   }
 
   func testUnarchivesStoredCaptureEvents() {
