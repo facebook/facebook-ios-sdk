@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class WebDialogTests: XCTestCase, WebDialogDelegate {
@@ -110,7 +111,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   func createAndShowDialog(
     name: String = "example",
     parameters: [String: String]? = nil,
-    windowFinder: TestWindowFinder = TestWindowFinder(stubbedWindow: UIWindow()),
+    windowFinder: TestWindowFinder = TestWindowFinder(window: UIWindow()),
     delegate: WebDialogDelegate? = nil
   ) -> WebDialog {
     WebDialog.show(
