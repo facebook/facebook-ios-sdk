@@ -18,7 +18,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKShareDialogMode.h"
+#import <FBSDKShareKit/FBSDKShareDialogMode.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

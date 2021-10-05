@@ -35,9 +35,9 @@ NS_SWIFT_NAME(ShareDialog)
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKShareDialogMode.h"
-#import "FBSDKSharing.h"
-#import "FBSDKSharingContent.h"
+#import <FBSDKShareKit/FBSDKShareDialogMode.h>
+#import <FBSDKShareKit/FBSDKSharing.h>
+#import <FBSDKShareKit/FBSDKSharingContent.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

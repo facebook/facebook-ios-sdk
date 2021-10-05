@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLikeObjectType.h"
+#import <FBSDKShareKit/FBSDKLikeObjectType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

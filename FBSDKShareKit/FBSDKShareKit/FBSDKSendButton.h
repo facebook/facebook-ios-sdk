@@ -22,8 +22,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKShareConstants.h"
-#import "FBSDKSharingButton.h"
+#import <FBSDKShareKit/FBSDKShareConstants.h>
+#import <FBSDKShareKit/FBSDKSharingButton.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -24,7 +24,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKSharingValidation.h"
+#import <FBSDKShareKit/FBSDKSharingValidation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

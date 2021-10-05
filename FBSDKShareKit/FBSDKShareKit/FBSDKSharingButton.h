@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSharingContent.h"
+#import <FBSDKShareKit/FBSDKSharingContent.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

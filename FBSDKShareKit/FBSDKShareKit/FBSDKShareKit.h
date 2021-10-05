@@ -16,29 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKHashtag.h"
-#import "FBSDKShareConstants.h"
-#import "FBSDKShareLinkContent.h"
-#import "FBSDKShareMediaContent.h"
-#import "FBSDKSharePhoto.h"
-#import "FBSDKSharePhotoContent.h"
-#import "FBSDKShareVideo.h"
-#import "FBSDKShareVideoContent.h"
-#import "FBSDKSharing.h"
-#import "FBSDKSharingContent.h"
+#import <FBSDKShareKit/FBSDKHashtag.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
+#import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import <FBSDKShareKit/FBSDKShareMediaContent.h>
+#import <FBSDKShareKit/FBSDKSharePhoto.h>
+#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
+#import <FBSDKShareKit/FBSDKShareVideo.h>
+#import <FBSDKShareKit/FBSDKShareVideoContent.h>
+#import <FBSDKShareKit/FBSDKSharing.h>
+#import <FBSDKShareKit/FBSDKSharingContent.h>
 
 #if !TARGET_OS_TV
- #import "FBSDKAppGroupContent.h"
- #import "FBSDKAppInviteContent.h"
- #import "FBSDKGameRequestContent.h"
- #import "FBSDKGameRequestDialog.h"
- #import "FBSDKGameRequestURLProvider.h"
- #import "FBSDKLikeObjectType.h"
- #import "FBSDKLiking.h"
- #import "FBSDKMessageDialog.h"
- #import "FBSDKSendButton.h"
- #import "FBSDKShareButton.h"
- #import "FBSDKShareCameraEffectContent.h"
- #import "FBSDKShareDialog.h"
- #import "FBSDKShareDialogMode.h"
+ #import <FBSDKShareKit/FBSDKAppGroupContent.h>
+ #import <FBSDKShareKit/FBSDKAppInviteContent.h>
+ #import <FBSDKShareKit/FBSDKGameRequestContent.h>
+ #import <FBSDKShareKit/FBSDKGameRequestDialog.h>
+ #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
+ #import <FBSDKShareKit/FBSDKLikeObjectType.h>
+ #import <FBSDKShareKit/FBSDKLiking.h>
+ #import <FBSDKShareKit/FBSDKMessageDialog.h>
+ #import <FBSDKShareKit/FBSDKSendButton.h>
+ #import <FBSDKShareKit/FBSDKShareButton.h>
+ #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
+ #import <FBSDKShareKit/FBSDKShareDialog.h>
+ #import <FBSDKShareKit/FBSDKShareDialogMode.h>
 #endif
