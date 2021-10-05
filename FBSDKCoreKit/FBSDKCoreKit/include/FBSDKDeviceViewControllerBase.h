@@ -20,7 +20,7 @@
 
  #import <UIKit/UIKit.h>
 
- #import "FBSDKDeviceDialogView.h"
+ #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

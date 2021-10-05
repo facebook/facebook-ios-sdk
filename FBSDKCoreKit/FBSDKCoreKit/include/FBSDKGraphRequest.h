@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestHTTPMethod.h"
-#import "FBSDKGraphRequestProtocol.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
 
 @protocol FBSDKGraphRequestConnecting;
 

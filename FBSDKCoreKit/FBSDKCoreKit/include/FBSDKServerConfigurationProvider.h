@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoginTooltip.h"
+#import <FBSDKCoreKit/FBSDKLoginTooltip.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKProfile.h"
-#import "FBSDKProfileProtocols.h"
+#import <FBSDKCoreKit/FBSDKProfile.h>
+#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

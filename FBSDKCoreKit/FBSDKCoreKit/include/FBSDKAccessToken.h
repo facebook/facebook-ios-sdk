@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKTokenCaching.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKTokenCaching.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

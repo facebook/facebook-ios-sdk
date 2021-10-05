@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKKeychainStoreProviding.h"
+#import <FBSDKCoreKit/FBSDKKeychainStoreProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

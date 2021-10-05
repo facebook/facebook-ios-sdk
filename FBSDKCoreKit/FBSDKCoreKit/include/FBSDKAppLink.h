@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppLinkTarget.h"
+#import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

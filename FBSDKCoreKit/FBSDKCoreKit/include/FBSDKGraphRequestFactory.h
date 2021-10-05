@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestFactoryProtocol.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

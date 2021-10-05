@@ -22,13 +22,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKBridgeAPIProtocol.h"
-#import "FBSDKBridgeAPIProtocolType.h"
-#import "FBSDKBridgeAPIRequest.h"
-#import "FBSDKBridgeAPIRequestOpening.h"
-#import "FBSDKBridgeAPIResponse.h"
-#import "FBSDKConstants.h"
-#import "FBSDKURLOpening.h"
+#import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIRequestOpening.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
+#import <FBSDKCoreKit/FBSDKConstants.h>
+#import <FBSDKCoreKit/FBSDKURLOpening.h>
 
 @class FBSDKLogger;
 @protocol FBSDKOperatingSystemVersionComparing;

@@ -22,14 +22,14 @@
 #import <WebKit/WebKit.h>
 #endif
 
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKAppEventParameterName.h"
-#import "FBSDKAppEventName.h"
-#import "FBSDKAppEventUserDataType.h"
-#import "FBSDKAppEventsFlushBehavior.h"
-#import "FBSDKProductAvailability.h"
-#import "FBSDKProductCondition.h"
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKProductAvailability.h>
+#import <FBSDKCoreKit/FBSDKProductCondition.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

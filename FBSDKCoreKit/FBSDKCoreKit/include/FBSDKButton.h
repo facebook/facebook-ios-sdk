@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKImpressionTrackingButton.h"
+#import <FBSDKCoreKit/FBSDKImpressionTrackingButton.h>
 @class FBSDKIcon;
 
 NS_ASSUME_NONNULL_BEGIN

@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestHTTPMethod.h"
-#import "FBSDKGraphRequestFlags.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

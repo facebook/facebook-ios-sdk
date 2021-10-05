@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKConstants.h"
+#import <FBSDKCoreKit/FBSDKConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -20,9 +20,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPIProtocolType.h"
-#import "FBSDKBridgeAPIRequest.h"
-#import "FBSDKBridgeAPIRequestProtocol.h"
+#import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
+#import <FBSDKCoreKit/FBSDKBridgeAPIRequestProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

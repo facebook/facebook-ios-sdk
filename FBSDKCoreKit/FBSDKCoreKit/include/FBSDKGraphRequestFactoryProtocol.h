@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestFlags.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
 @protocol FBSDKGraphRequest;
 

@@ -20,7 +20,7 @@
 
 @class FBSDKAuthenticationToken;
 
-#import "FBSDKTokenCaching.h"
+#import <FBSDKCoreKit/FBSDKTokenCaching.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

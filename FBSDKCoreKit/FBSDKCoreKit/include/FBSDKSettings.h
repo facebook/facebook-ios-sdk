@@ -18,8 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKLoggingBehavior.h"
-#import "FBSDKSettingsProtocol.h"
+#import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

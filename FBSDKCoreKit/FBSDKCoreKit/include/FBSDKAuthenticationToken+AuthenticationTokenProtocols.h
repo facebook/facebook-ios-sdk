@@ -18,7 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 
-#import "FBSDKAuthenticationTokenProtocols.h"
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

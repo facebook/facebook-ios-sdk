@@ -18,7 +18,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKProfilePictureView.h"
+#import <FBSDKCoreKit/FBSDKProfilePictureView.h>
 
 @class FBSDKLocation;
 @class FBSDKProfile;

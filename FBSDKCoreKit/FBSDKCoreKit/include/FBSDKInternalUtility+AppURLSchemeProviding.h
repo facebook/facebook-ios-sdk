@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppURLSchemeProviding.h"
-#import "FBSDKInternalUtility.h"
+#import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
+#import <FBSDKCoreKit/FBSDKInternalUtility.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -20,8 +20,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppLinkResolving.h"
-#import "FBSDKGraphRequest.h"
+#import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**

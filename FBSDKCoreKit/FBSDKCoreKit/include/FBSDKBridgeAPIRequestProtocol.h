@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPIProtocolType.h"
+#import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
 
 @protocol FBSDKBridgeAPIProtocol;
 

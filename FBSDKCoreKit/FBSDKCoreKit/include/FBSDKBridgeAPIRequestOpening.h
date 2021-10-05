@@ -21,8 +21,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
 
-#import "FBSDKBridgeAPIResponse.h"
-#import "FBSDKConstants.h"
+#import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
+#import <FBSDKCoreKit/FBSDKConstants.h>
 
 @protocol FBSDKBridgeAPIRequest;
 @protocol FBSDKURLOpening;

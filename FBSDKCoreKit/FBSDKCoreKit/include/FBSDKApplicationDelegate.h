@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKApplicationObserving.h"
+#import <FBSDKCoreKit/FBSDKApplicationObserving.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

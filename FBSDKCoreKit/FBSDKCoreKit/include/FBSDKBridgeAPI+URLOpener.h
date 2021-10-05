@@ -19,8 +19,8 @@
 #if !TARGET_OS_TV
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPI.h"
-#import "FBSDKURLOpener.h"
+#import <FBSDKCoreKit/FBSDKBridgeAPI.h>
+#import <FBSDKCoreKit/FBSDKURLOpener.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

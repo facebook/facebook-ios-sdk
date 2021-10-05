@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKTokenStringProviding.h"
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,7 +18,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKProfileProtocols.h"
+#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
