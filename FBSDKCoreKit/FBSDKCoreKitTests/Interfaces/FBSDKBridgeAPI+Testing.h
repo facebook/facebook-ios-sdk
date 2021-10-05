@@ -68,16 +68,16 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
+@property (nullable, nonatomic)  NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
+@property (nullable, nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
+@property (nullable, nonatomic) id<FBSDKURLOpening> pendingURLOpen;
+@property (nullable, nonatomic) id<FBSDKAuthenticationSession> authenticationSession;
+@property (nullable, nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler;
+@property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
+@property (nonatomic) BOOL expectingBackground;
+@property (nonatomic) SFSafariViewController *safariViewController;
+@property (nonatomic) BOOL isDismissingSafariViewController;
 
-- (id<FBSDKAuthenticationSession>)authenticationSession;
-- (FBSDKAuthenticationSession)authenticationSessionState;
-- (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler;
-- (BOOL)expectingBackground;
-- (id<FBSDKURLOpening>)pendingUrlOpen;
-- (SFSafariViewController *)safariViewController;
-- (BOOL)isDismissingSafariViewController;
-- (NSObject<FBSDKBridgeAPIRequest> *)pendingRequest;
-- (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationDidBecomeActive:(UIApplication *)application;
@@ -90,16 +90,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nullable id)annotation;
 
-- (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session;
-- (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state;
-- (void)setAuthenticationSessionCompletionHandler:(nullable FBSDKAuthenticationCompletionHandler)handler;
 - (void)setActive:(BOOL)isActive;
-- (void)setExpectingBackground:(BOOL)isExpectingBackground;
-- (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening;
-- (void)setSafariViewController:(nullable UIViewController *)controller;
-- (void)setIsDismissingSafariViewController:(BOOL)isDismissing;
-- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequest> *)newValue;
-- (void)setPendingRequestCompletionBlock:(nullable FBSDKBridgeAPIResponseBlock)newValue;
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
 - (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request

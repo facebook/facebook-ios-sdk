@@ -28,7 +28,7 @@
   [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:YES];
   urlOpener.stubbedCanOpenUrl = YES;
 
-  self.api.pendingUrlOpen = urlOpener;
+  self.api.pendingURLOpen = urlOpener;
 
   BOOL returnValue = [self.api application:UIApplication.sharedApplication
                                    openURL:self.sampleUrl
@@ -494,11 +494,11 @@
   [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:NO];
   urlOpener.stubbedCanOpenUrl = pendingUrlCanOpenUrl;
 
-  self.api.pendingUrlOpen = urlOpener;
+  self.api.pendingURLOpen = urlOpener;
 
   if (hasSafariViewController) {
     ViewControllerSpy *viewControllerSpy = ViewControllerSpy.makeDefaultSpy;
-    self.api.safariViewController = viewControllerSpy;
+    self.api.safariViewController = (id)viewControllerSpy;
   }
   self.api.isDismissingSafariViewController = isDismissingSafariViewController;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionNone;
@@ -608,9 +608,9 @@
     XCTAssertNil(self.api.pendingRequestCompletionBlock, "The pending request completion block should be nil");
   }
   if (expectedPendingUrlOpenExists) {
-    XCTAssertNotNil(self.api.pendingUrlOpen, "The reference to the url opener should not be nil");
+    XCTAssertNotNil(self.api.pendingURLOpen, "The reference to the url opener should not be nil");
   } else {
-    XCTAssertNil(self.api.pendingUrlOpen, "The reference to the url opener should be nil");
+    XCTAssertNil(self.api.pendingURLOpen, "The reference to the url opener should be nil");
   }
   if (expectedSafariVcExists) {
     XCTAssertNotNil(self.api.safariViewController, "Safari view controller should not be nil");

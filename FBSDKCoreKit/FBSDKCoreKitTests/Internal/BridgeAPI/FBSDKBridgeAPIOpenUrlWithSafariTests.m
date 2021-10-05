@@ -77,7 +77,7 @@
     "Should try to open a url with a non http scheme"
   );
   XCTAssertTrue(self.api.expectingBackground, "Should not modify whether the background is expected to change");
-  XCTAssertNil(self.api.pendingUrlOpen, "Should not set a pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should not set a pending url opener");
 }
 
 - (void)testWithAuthenticationURL
@@ -137,7 +137,7 @@
   XCTAssertNil(self.api.authenticationSessionCompletionHandler);
   XCTAssertNil(self.api.authenticationSession);
   XCTAssertEqualObjects(
-    self.api.pendingUrlOpen,
+    self.api.pendingURLOpen,
     self.loginManager,
     "Should set the pending url opener to the passed in sender"
   );
@@ -282,7 +282,7 @@
 - (void)assertExpectingBackgroundAndPendingUrlOpener
 {
   XCTAssertFalse(self.api.expectingBackground, "Should set expecting background to false");
-  XCTAssertEqualObjects(self.api.pendingUrlOpen, self.loginManager, "Should set the pending url opener to the passed in sender");
+  XCTAssertEqualObjects(self.api.pendingURLOpen, self.loginManager, "Should set the pending url opener to the passed in sender");
 }
 
 - (NSURL *)sampleUrl

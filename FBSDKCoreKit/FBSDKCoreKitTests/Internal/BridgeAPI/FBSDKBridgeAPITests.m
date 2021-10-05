@@ -330,7 +330,7 @@
             handler:^(BOOL _success, NSError *_Nullable error) {}];
 
   XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
-  XCTAssertNil(self.api.pendingUrlOpen, "Should not set the pending url opener if there is no sender");
+  XCTAssertNil(self.api.pendingURLOpen, "Should not set the pending url opener if there is no sender");
 }
 
 - (void)testOpenUrlWithSender
@@ -341,7 +341,7 @@
             handler:^(BOOL _success, NSError *_Nullable error) {}];
 
   XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
-  XCTAssertEqual(self.api.pendingUrlOpen, urlOpener, "Should set the pending url opener to the sender");
+  XCTAssertEqual(self.api.pendingURLOpen, urlOpener, "Should set the pending url opener to the sender");
 }
 
 - (void)testOpenUrlWithVersionBelow10WhenApplicationOpens
@@ -526,8 +526,8 @@
 - (void)testSafariVcDidFinishWithPendingUrlOpener
 {
   FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
-  self.api.pendingUrlOpen = urlOpener;
-  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+  self.api.pendingURLOpen = urlOpener;
+  self.api.safariViewController = (SFSafariViewController *)ViewControllerSpy.makeDefaultSpy;
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
   self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
@@ -536,7 +536,7 @@
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
 
-  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should remove the reference to the pending url opener");
   XCTAssertNil(
     self.api.safariViewController,
     "Should remove the reference to the safari view controller when the delegate method is called"
@@ -551,7 +551,7 @@
 
 - (void)testSafariVcDidFinishWithoutPendingUrlOpener
 {
-  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+  self.api.safariViewController = (id)ViewControllerSpy.makeDefaultSpy;
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
   self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
@@ -560,7 +560,7 @@
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
 
-  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should remove the reference to the pending url opener");
   XCTAssertNil(
     self.api.safariViewController,
     "Should remove the reference to the safari view controller when the delegate method is called"
@@ -577,7 +577,7 @@
 - (void)testViewControllerDidDisappearWithSafariViewController
 {
   UIViewController *viewControllerSpy = ViewControllerSpy.makeDefaultSpy;
-  self.api.safariViewController = viewControllerSpy;
+  self.api.safariViewController = (SFSafariViewController *)viewControllerSpy;
   FBSDKContainerViewController *container = [FBSDKContainerViewController new];
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation

@@ -20,6 +20,8 @@
 
 #import "FBSDKBridgeAPI.h"
 
+#import <SafariServices/SafariServices.h>
+
 #import <AuthenticationServices/AuthenticationServices.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
@@ -67,24 +69,21 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
+@property (nonatomic)  NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
+@property (nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
+@property (nonatomic) id<FBSDKURLOpening> pendingURLOpen;
+@property (nonatomic) id<FBSDKAuthenticationSession> authenticationSession NS_AVAILABLE_IOS(11_0);
+@property (nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
+@property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
+@property (nonatomic) BOOL expectingBackground;
+@property (nonatomic) SFSafariViewController *safariViewController;
+@property (nonatomic) BOOL isDismissingSafariViewController;
+@property (nonatomic) id<FBSDKOperatingSystemVersionComparing> processInfo;
+@property (nonatomic) BOOL isAppLaunched;
 
 @end
 
 @implementation FBSDKBridgeAPI
-{
-  NSObject<FBSDKBridgeAPIRequest> *_pendingRequest;
-  FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
-  id<FBSDKURLOpening> _pendingURLOpen;
-  id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
-  FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
-
-  BOOL _expectingBackground;
-  UIViewController *_safariViewController;
-  BOOL _isDismissingSafariViewController;
-  BOOL _isAppLaunched;
-  FBSDKAuthenticationSession _authenticationSessionState;
-  id<FBSDKOperatingSystemVersionComparing> _processInfo;
-}
 
 + (FBSDKBridgeAPI *)sharedInstance
 {
@@ -583,104 +582,9 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 #if DEBUG && FBTEST
 
-- (id<FBSDKAuthenticationSession>)authenticationSession
-{
-  return _authenticationSession;
-}
-
-- (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session
-{
-  _authenticationSession = session;
-}
-
-- (FBSDKAuthenticationSession)authenticationSessionState
-{
-  return _authenticationSessionState;
-}
-
-- (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state
-{
-  _authenticationSessionState = state;
-}
-
-- (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler
-{
-  return _authenticationSessionCompletionHandler;
-}
-
-- (void)setAuthenticationSessionCompletionHandler:(FBSDKAuthenticationCompletionHandler)handler
-{
-  _authenticationSessionCompletionHandler = handler;
-}
-
 - (void)setActive:(BOOL)isActive
 {
   _active = isActive;
-}
-
-- (BOOL)expectingBackground
-{
-  return _expectingBackground;
-}
-
-- (void)setExpectingBackground:(BOOL)isExpectingBackground
-{
-  _expectingBackground = isExpectingBackground;
-}
-
-- (id<FBSDKURLOpening>)pendingUrlOpen
-{
-  return _pendingURLOpen;
-}
-
-- (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening
-{
-  _pendingURLOpen = opening;
-}
-
-- (UIViewController *)safariViewController
-{
-  return _safariViewController;
-}
-
-- (void)setSafariViewController:(nullable UIViewController *)controller
-{
-  _safariViewController = controller;
-}
-
-- (BOOL)isDismissingSafariViewController
-{
-  return _isDismissingSafariViewController;
-}
-
-- (void)setIsDismissingSafariViewController:(BOOL)isDismissing
-{
-  _isDismissingSafariViewController = isDismissing;
-}
-
-- (NSObject<FBSDKBridgeAPIRequest> *)pendingRequest
-{
-  return _pendingRequest;
-}
-
-- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequest> *)newValue
-{
-  _pendingRequest = newValue;
-}
-
-- (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock
-{
-  return _pendingRequestCompletionBlock;
-}
-
-- (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue
-{
-  _pendingRequestCompletionBlock = newValue;
-}
-
-- (id<FBSDKOperatingSystemVersionComparing>)processInfo
-{
-  return _processInfo;
 }
 
 #endif
