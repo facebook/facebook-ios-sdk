@@ -126,6 +126,7 @@
 @property (nonnull, nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
 @property (nonnull, nonatomic) TestAppEventsReporter *skAdNetworkReporter;
 @property (nonnull, nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
+@property (nonnull, nonatomic) TestUserDataStore *userDataStore;
 
 @end
 
@@ -177,6 +178,7 @@
   self.skAdNetworkReporter = [TestAppEventsReporter new];
   self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
                                       initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
+  self.userDataStore = [TestUserDataStore new];
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
@@ -223,7 +225,8 @@
                                     atePublisherFactory:self.atePublisherFactory
                                  appEventsStateProvider:self.appEventsStateProvider
                                                swizzler:TestSwizzler.class
-                                   advertiserIDProvider:self.advertiserIDProvider];
+                                   advertiserIDProvider:self.advertiserIDProvider
+                                          userDataStore:self.userDataStore];
 
   [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                             metadataIndexer:self.metadataIndexer
@@ -389,54 +392,88 @@
   );
 }
 
-#pragma mark  Tests for set and clear user data
+#pragma mark  Tests for user data
+
+- (void)testGettingUserData
+{
+  [FBSDKAppEvents.shared getUserData];
+
+  XCTAssertTrue(
+    self.userDataStore.wasGetUserDataCalled,
+    "Should rely on the underlying store for user data"
+  );
+}
 
 - (void)testSetAndClearUserData
 {
-  NSString *mockEmail = @"test_em";
-  NSString *mockFirstName = @"test_fn";
-  NSString *mockLastName = @"test_ln";
-  NSString *mockPhone = @"123";
+  NSString *email = @"test_em";
+  NSString *firstName = @"test_fn";
+  NSString *lastName = @"test_ln";
+  NSString *phone = @"test_phone";
+  NSString *dateOfBirth = @"test_dateOfBirth";
+  NSString *gender = @"test_gender";
+  NSString *city = @"test_city";
+  NSString *state = @"test_state";
+  NSString *zip = @"test_zip";
+  NSString *country = @"test_country";
 
-  [FBSDKAppEvents.shared setUserEmail:mockEmail
-                            firstName:mockFirstName
-                             lastName:mockLastName
-                                phone:mockPhone
-                          dateOfBirth:nil
-                               gender:nil
-                                 city:nil
-                                state:nil
-                                  zip:nil
-                              country:nil];
+  // Setting
+  [FBSDKAppEvents.shared setUserEmail:email
+                            firstName:firstName
+                             lastName:lastName
+                                phone:phone
+                          dateOfBirth:dateOfBirth
+                               gender:gender
+                                 city:city
+                                state:state
+                                  zip:zip
+                              country:country];
 
-  NSDictionary<NSString *, NSString *> *expectedUserData = @{@"em" : [FBSDKUtility SHA256Hash:mockEmail],
-                                                             @"fn" : [FBSDKUtility SHA256Hash:mockFirstName],
-                                                             @"ln" : [FBSDKUtility SHA256Hash:mockLastName],
-                                                             @"ph" : [FBSDKUtility SHA256Hash:mockPhone], };
-  NSDictionary<NSString *, NSString *> *userData = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[[FBSDKAppEvents.shared getUserData] dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                          options: NSJSONReadingMutableContainers
-                                                                                          error: nil];
-  XCTAssertEqualObjects(userData, expectedUserData);
+  XCTAssertEqualObjects(self.userDataStore.capturedEmail, email);
+  XCTAssertEqualObjects(self.userDataStore.capturedFirstName, firstName);
+  XCTAssertEqualObjects(self.userDataStore.capturedLastName, lastName);
+  XCTAssertEqualObjects(self.userDataStore.capturedPhone, phone);
+  XCTAssertEqualObjects(self.userDataStore.capturedDateOfBirth, dateOfBirth);
+  XCTAssertEqualObjects(self.userDataStore.capturedGender, gender);
+  XCTAssertEqualObjects(self.userDataStore.capturedCity, city);
+  XCTAssertEqualObjects(self.userDataStore.capturedState, state);
+  XCTAssertEqualObjects(self.userDataStore.capturedZip, zip);
+  XCTAssertEqualObjects(self.userDataStore.capturedCountry, country);
+  XCTAssertNil(self.userDataStore.capturedExternalId);
 
+  // Clearing
   [FBSDKAppEvents.shared clearUserData];
-  NSString *clearedUserData = [FBSDKAppEvents.shared getUserData];
-  XCTAssertEqualObjects(clearedUserData, @"{}");
+  XCTAssertTrue(
+    self.userDataStore.wasClearUserDataCalled,
+    @"Should rely on the underlying store for clearing user data"
+  );
 }
 
-- (void)testSetAndClearUserDataForType
+- (void)testSettingUserDataForType
 {
-  NSString *testEmail = @"apptest@fb.com";
-  NSString *hashedEmailString = [FBSDKUtility SHA256Hash:testEmail];
+  [FBSDKAppEvents.shared setUserData:self.name forType:FBSDKAppEventEmail];
 
-  [FBSDKAppEvents.shared setUserData:testEmail forType:FBSDKAppEventEmail];
-  NSString *userData = [FBSDKAppEvents.shared getUserData];
-  XCTAssertTrue([userData containsString:@"em"]);
-  XCTAssertTrue([userData containsString:hashedEmailString]);
+  XCTAssertEqualObjects(
+    self.userDataStore.capturedSetUserDataForTypeData,
+    self.name,
+    @"Should invoke the underlying store with the expected user data"
+  );
+  XCTAssertEqualObjects(
+    self.userDataStore.capturedSetUserDataForTypeType,
+    FBSDKAppEventEmail,
+    @"Should invoke the underlying store with the expected user data type"
+  );
+}
 
+- (void)testClearingUserDataForType
+{
   [FBSDKAppEvents.shared clearUserDataForType:FBSDKAppEventEmail];
-  userData = [FBSDKAppEvents.shared getUserData];
-  XCTAssertFalse([userData containsString:@"em"]);
-  XCTAssertFalse([userData containsString:hashedEmailString]);
+
+  XCTAssertEqualObjects(
+    self.userDataStore.capturedClearUserDataForTypeType,
+    FBSDKAppEventEmail,
+    @"Should rely on the underlying store for clearing user data by type"
+  );
 }
 
 - (void)testSetAndClearUserID

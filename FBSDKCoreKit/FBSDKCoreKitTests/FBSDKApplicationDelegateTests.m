@@ -289,6 +289,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKCodelessIndexer.class,
     "Initializing the SDK should set concrete codeless indexer"
   );
+
+  XCTAssertTrue(
+    [(NSObject *)self.appEvents.capturedUserDataStore isKindOfClass:FBSDKUserDataStore.class],
+    "Initializing the SDK should set the expected concrete user data store"
+  );
 }
 
 - (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState

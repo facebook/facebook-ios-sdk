@@ -187,6 +187,7 @@
 #import "FBSDKTimeSpentRecordingCreating.h"
 #import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
+#import "FBSDKUserDataStore.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKURLSessionProxyProviding.h"

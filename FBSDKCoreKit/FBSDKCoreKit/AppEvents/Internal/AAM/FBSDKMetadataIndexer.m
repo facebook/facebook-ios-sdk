@@ -48,6 +48,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 @property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *rules;
 @property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
 @property (nonatomic, readonly, strong) dispatch_queue_t serialQueue;
+@property (nonatomic, readonly, strong) FBSDKUserDataStore *userDataStore;
 
 @end
 
@@ -67,6 +68,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 {
   _rules = [NSMutableDictionary new];
   _serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
+  _userDataStore = [FBSDKUserDataStore new];
   return self;
 }
 
@@ -108,7 +110,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
 
     if (isEnabled) {
-      FBSDKUserDataStore.enabledRules = _rules.allKeys;
+      self.userDataStore.enabledRules = _rules.allKeys;
       [self setupMetadataIndexing];
     }
   });
@@ -118,7 +120,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 {
   _store = [NSMutableDictionary new];
   for (NSString *key in _rules) {
-    NSString *data = [FBSDKUserDataStore getInternalHashedDataForType:key];
+    NSString *data = [self.userDataStore getInternalHashedDataForType:key];
     if (data.length > 0) {
       [FBSDKTypeUtility dictionary:_store setObject:[NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]] forKey:key];
     }
@@ -282,7 +284,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
       [weakStore[key] removeObjectAtIndex:0];
     }
     [FBSDKTypeUtility array:weakStore[key] addObject:hashData];
-    [FBSDKUserDataStore setInternalHashData:[weakStore[key] componentsJoinedByString:FIELD_K_DELIMITER]
+    [self.userDataStore setInternalHashData:[weakStore[key] componentsJoinedByString:FIELD_K_DELIMITER]
                                     forType:key];
   };
 #if FBTEST

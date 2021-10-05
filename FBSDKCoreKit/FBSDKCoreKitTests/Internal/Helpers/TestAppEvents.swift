@@ -68,6 +68,7 @@ class TestAppEvents: TestEventLogger,
   var capturedOnDeviceMLModelManager: EventProcessing?
   var capturedMetadataIndexer: MetadataIndexing?
   var capturedSKAdNetworkReporter: AppEventsReporter?
+  var capturedUserDataStore: UserDataPersisting?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -87,7 +88,8 @@ class TestAppEvents: TestEventLogger,
     atePublisherFactory: AtePublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
     swizzler: Swizzling.Type,
-    advertiserIDProvider: AdvertiserIDProviding
+    advertiserIDProvider: AdvertiserIDProviding,
+    userDataStore: UserDataPersisting
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -106,6 +108,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedConfigureSwizzler = swizzler
     capturedAdvertiserIDProvider = advertiserIDProvider
+    capturedUserDataStore = userDataStore
   }
 
   func configureNonTVComponentsWith(

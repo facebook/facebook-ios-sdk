@@ -78,6 +78,7 @@
 #import "FBSDKSwizzler+Swizzling.h"
 #import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
+#import "FBSDKUserDataStore.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
@@ -122,6 +123,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
+@property (nonnull, nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
 
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
@@ -238,6 +240,7 @@ static UIApplicationState _applicationState;
     _backgroundEventLogger = backgroundEventLogger;
     _accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:notificationCenter];
     _paymentObserver = paymentObserver;
+    _userDataStore = [FBSDKUserDataStore new];
   }
   return self;
 }
@@ -713,7 +716,8 @@ static UIApplicationState _applicationState;
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                                         swizzler:FBSDKSwizzler.class
-                            advertiserIDProvider:FBSDKAppEventsUtility.shared];
+                            advertiserIDProvider:FBSDKAppEventsUtility.shared
+                                   userDataStore:self.userDataStore];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings

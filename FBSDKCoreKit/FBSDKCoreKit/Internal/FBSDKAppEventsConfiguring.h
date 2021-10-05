@@ -35,6 +35,7 @@
 @protocol FBSDKAppEventsStateProviding;
 @protocol FBSDKSwizzling;
 @protocol FBSDKAdvertiserIDProviding;
+@protocol FBSDKUserDataPersisting;
 
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
@@ -64,7 +65,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
-                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider;
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore;
 
 #if !TARGET_OS_TV
 

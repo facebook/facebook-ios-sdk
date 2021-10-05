@@ -63,7 +63,7 @@
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentRecordingCreating.h"
-#import "FBSDKUserDataStore.h"
+#import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
@@ -178,6 +178,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic) id<FBSDKAtePublisherCreating> atePublisherFactory;
+@property (nonatomic) id<FBSDKUserDataPersisting> userDataStore;
 @property (nonatomic) BOOL isConfigured;
 
 #if !TARGET_OS_TV
@@ -686,7 +687,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
 {
-  [FBSDKUserDataStore setUserEmail:email
+  [self.userDataStore setUserEmail:email
                          firstName:firstName
                           lastName:lastName
                              phone:phone
@@ -706,7 +707,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (NSString *)getUserData
 {
-  return [FBSDKUserDataStore getUserData];
+  return [self.userDataStore getUserData];
 }
 
 + (void)clearUserData
@@ -716,7 +717,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)clearUserData
 {
-  [FBSDKUserDataStore clearUserData];
+  [self.userDataStore clearUserData];
 }
 
 + (void)setUserData:(nullable NSString *)data
@@ -728,7 +729,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 - (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type
 {
-  [FBSDKUserDataStore setUserData:data forType:type];
+  [self.userDataStore setUserData:data forType:type];
 }
 
 + (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
@@ -738,7 +739,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
 {
-  [FBSDKUserDataStore clearUserDataForType:type];
+  [self.userDataStore clearUserDataForType:type];
 }
 
 + (NSString *)anonymousID
@@ -824,6 +825,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 {
   FBSDKAppEvents.appEventsConfigurationProvider = appEventsConfigurationProvider;
   FBSDKAppEvents.serverConfigurationProvider = serverConfigurationProvider;
@@ -843,6 +845,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
   self.appEventsStateProvider = appEventsStateProvider;
   self.advertiserIDProvider = advertiserIDProvider;
+  self.userDataStore = userDataStore;
 
   self.isConfigured = YES;
 
