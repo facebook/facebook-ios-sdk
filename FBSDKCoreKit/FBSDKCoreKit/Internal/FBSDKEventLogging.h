@@ -33,21 +33,21 @@ NS_SWIFT_NAME(EventLogging)
 - (void)flushForReason:(NSUInteger)flushReason;
 
 - (void)logEvent:(NSString *)eventName
-      parameters:(NSDictionary<NSString *, id> *)parameters;
+      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 - (void)logEvent:(NSString *)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary<NSString *, id> *)parameters;
+      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 - (void)logInternalEvent:(NSString *)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 

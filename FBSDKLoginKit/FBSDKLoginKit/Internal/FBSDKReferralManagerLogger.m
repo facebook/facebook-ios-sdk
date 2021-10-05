@@ -151,7 +151,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary<NSString *, id> *)params
+- (void)logEvent:(NSString *)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras

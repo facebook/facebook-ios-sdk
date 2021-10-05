@@ -18,11 +18,11 @@
 
 @objcMembers
 class TestAppEvents: AppEvents {
-  var capturedParameters = [String: Any]()
+  var capturedParameters: [String: Any]?
 
   override func logInternalEvent(
     _ eventName: AppEvents.Name,
-    parameters: [String: Any],
+    parameters: [String: Any]?,
     isImplicitlyLogged: Bool
   ) {
     self.capturedParameters = parameters

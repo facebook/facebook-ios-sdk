@@ -198,7 +198,7 @@ NS_SWIFT_NAME(AppEvents)
  are provided in `FBSDKAppEventParameterName*` constants.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 /**
 
@@ -219,7 +219,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 
 /**
@@ -244,7 +244,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(nullable NSNumber *)valueToSum
-      parameters:(NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
      accessToken:(nullable FBSDKAccessToken *)accessToken;
 
 /*
@@ -292,7 +292,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary<NSString *, id> *)parameters;
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 /**
 
@@ -319,7 +319,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken;
 
 
@@ -624,7 +624,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
  @warning UNSAFE - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 /**
@@ -634,7 +634,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
  @warning UNSAFE - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 

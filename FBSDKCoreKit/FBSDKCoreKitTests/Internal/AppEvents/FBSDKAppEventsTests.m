@@ -55,7 +55,7 @@
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
@@ -78,23 +78,23 @@
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 + (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
 + (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;
 
 @end

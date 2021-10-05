@@ -415,7 +415,7 @@ static NSMutableArray *_pendingRequestors;
 
 - (void)logImplicitTransactionEvent:(NSString *)eventName
                          valueToSum:(double)valueToSum
-                         parameters:(NSDictionary<NSString *, id> *)parameters
+                         parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 

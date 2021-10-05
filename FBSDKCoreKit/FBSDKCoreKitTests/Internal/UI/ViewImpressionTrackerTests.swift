@@ -166,7 +166,7 @@ class ViewImpressionTrackerTests: XCTestCase {
       "Should log an impression from a new tracker even if the impression is not valid"
     )
     XCTAssertNil(
-      logger.capturedParameters["__view_impression_identifier__"],
+      logger.capturedParameters?["__view_impression_identifier__"],
       "Should not log the same impression twice even if the trackers are different"
     )
   }

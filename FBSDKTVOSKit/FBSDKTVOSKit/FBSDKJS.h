@@ -57,7 +57,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  @param parameters the parameters (optional).
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters;
++ (void)logEvent:(NSString *)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
@@ -76,7 +76,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary<NSString *, id> *)parameters;
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 @end
 
