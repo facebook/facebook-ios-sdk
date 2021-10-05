@@ -163,7 +163,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
       for (FBSDKAppEventsConfigurationManagerBlock completionBlock in self.completionBlocks) {
         completionBlock();
       }
-      [g_completionBlocks removeAllObjects];
+      [self.completionBlocks removeAllObjects];
       return;
     }
     self.configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:response];
