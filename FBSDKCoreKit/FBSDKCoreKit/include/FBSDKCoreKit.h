@@ -16,8 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
-
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKAccessToken+TokenStringProviding.h>
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
@@ -84,6 +82,8 @@
 #import <FBSDKCoreKit/FBSDKTransformer.h>
 #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
 #import <FBSDKCoreKit/FBSDKUtility.h>
+
+#import <UIKit/UIKit.h>
 
 #if !TARGET_OS_TV
  #import <FBSDKCoreKit/FBSDKAppLink.h>
