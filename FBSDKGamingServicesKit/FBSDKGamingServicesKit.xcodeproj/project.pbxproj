@@ -66,6 +66,7 @@
 		1FCA0EEFC72E54AC37AA439C /* FBSDKSwitchContextDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB6F7A506244BD6E778F61 /* FBSDKSwitchContextDialog.swift */; };
 		20863F66850C1B51CDB4DDC3 /* TestContextDialogDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441ADCFFCA34E48110C6AA97 /* TestContextDialogDelegate.swift */; };
 		2089293DBFFF8AC2830A0D98 /* GamingTestAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD7E2B3D1B06CBE59A584EB /* GamingTestAssets.xcassets */; };
+		21077F5BB54E201486AD3A4E /* SymbolVisibilityTests+FacebookGamingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC0B2AE702A8C46CD43887 /* SymbolVisibilityTests+FacebookGamingServices.swift */; };
 		214FCC85674A2B744C1229FB /* FBSDKVideoUploaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 73DA4D175A40E5FC8B0EA072 /* FBSDKVideoUploaderFactory.h */; };
 		21603B91D7121BAB3BD76AA3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A640B85CB0EE1DE6580A89B9 /* CoreGraphics.framework */; };
 		2253873DD02061B5559F9090 /* FBSDKChooseContextDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3277E7FE53C039ABE2D87C70 /* FBSDKChooseContextDialog.m */; };
@@ -116,6 +117,7 @@
 		43B37AE966496B032C4824D8 /* ShareTournamentDialogDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5D9786A188065862B1574 /* ShareTournamentDialogDelegate.swift */; };
 		44202A51F04E160AB82C35F8 /* CustomUpdateMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9276891AB5F2CF9AEB9FDF16 /* CustomUpdateMedia.swift */; };
 		45573F0905DDB6DF94DD244B /* FBSDKGamingServiceController+GamingServiceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA1982EC7B79769A0233253 /* FBSDKGamingServiceController+GamingServiceControllerProtocol.h */; };
+		46642BDD1D59C27FA3A1DB3D /* SymbolVisibilityTests+FBSDKGamingServicesKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75C5258857FAB8E3982FB1F /* SymbolVisibilityTests+FBSDKGamingServicesKit.swift */; };
 		46C24B5D878C81BE6531FA79 /* TournamentUpdaterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211491FA3D44BC310742AA61 /* TournamentUpdaterTest.swift */; };
 		482F1E889427B99AC2D00E9C /* FBSDKGamingGroupIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = C6B08DB12970186790CC9B4B /* FBSDKGamingGroupIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		482FE040E8C0AEBE5B95D740 /* CustomUpdateLocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB001059AE9F96EEF9A6F8D /* CustomUpdateLocalizedText.swift */; };
@@ -239,11 +241,9 @@
 		B51603EB147D64DF3C408EB9 /* CustomUpdateContentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783110450768401B7FAE085 /* CustomUpdateContentMedia.swift */; };
 		B576860A4DB95AECAF071597 /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0005E3E185D36B77B576E /* TestInternalUtility.swift */; };
 		B5D543CC4C0602DBDDA9B868 /* SwitchContextDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6BE7DA3D21C0F5888884E3 /* SwitchContextDialog.swift */; };
-		B5FBDC363C917CB74CB3E504 /* SymbolVisibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D085655575480E8339ACBBF /* SymbolVisibilityTests.swift */; };
 		B621C8998F614358006AA8E2 /* FBSDKGamingImageUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB7019FE26E5E766E6B927E /* FBSDKGamingImageUploader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B66B20D643451DDF5ED2CBF2 /* GraphAPIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C4D9B6FAB1742B5FCB75E2 /* GraphAPIResponse.swift */; };
 		B98B1D7DD5D7A38F97A0729E /* FBSDKCreateContextDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CCB9031F8262F2E6BB7AFDD /* FBSDKCreateContextDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BAA48016DD1F04B27BB29377 /* SymbolVisibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46891EB731080244C6ADB6D /* SymbolVisibilityTests.swift */; };
 		BB6F1A1AD32C6360245FE47C /* SwitchContextDialogFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1437185C7CD7638A5831169C /* SwitchContextDialogFactoryTests.swift */; };
 		BB8CB1C0F030D5E5D4BCD2C5 /* FBSDKGamingServiceControllerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = A8A577A8E6E17809402FB845 /* FBSDKGamingServiceControllerFactory.h */; };
 		BBE7B9622E1E43805C90728C /* CustomUpdateGraphAPIContentRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16B217AD12FE47380C0089E /* CustomUpdateGraphAPIContentRemote.swift */; };
@@ -630,7 +630,6 @@
 		079EC06711E7A932AC152CB2 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
 		0977FD1604142EFA33332380 /* ChooseContextDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseContextDialogTests.swift; sourceTree = "<group>"; };
 		09F454EF069D5CB079B5E3FC /* FBSDKGamingVideoUploader+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingVideoUploader+Testing.h"; sourceTree = "<group>"; };
-		0D085655575480E8339ACBBF /* SymbolVisibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolVisibilityTests.swift; sourceTree = "<group>"; };
 		0D5C1972998168D586DB1064 /* FBSDKGamingServiceControllerFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingServiceControllerFactory.m; sourceTree = "<group>"; };
 		0D8ACA63652A281B6BC51CF7 /* FBSDKGamingPayload+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingPayload+Testing.h"; sourceTree = "<group>"; };
 		104AB974ECE1B200B6BA4465 /* FacebookVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookVideo.swift; sourceTree = "<group>"; };
@@ -693,6 +692,7 @@
 		5A39176CD946FA2022FA9D3E /* FBSDKGamingVideoUploaderConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingVideoUploaderConfiguration.h; sourceTree = "<group>"; };
 		5AB001059AE9F96EEF9A6F8D /* CustomUpdateLocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUpdateLocalizedText.swift; sourceTree = "<group>"; };
 		5B4ECDEE737E72B840E8E478 /* FBSDKCreateContextDialogFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCreateContextDialogFactory.m; sourceTree = "<group>"; };
+		5CBC0B2AE702A8C46CD43887 /* SymbolVisibilityTests+FacebookGamingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SymbolVisibilityTests+FacebookGamingServices.swift"; sourceTree = "<group>"; };
 		6166FDC89766463ABF86EE19 /* SwitchContextDialogProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchContextDialogProtocol.swift; sourceTree = "<group>"; };
 		6285A6B276DB32CC75900845 /* FacebookGIF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookGIF.swift; sourceTree = "<group>"; };
 		642C3CD2551A245AB3E923EB /* FacebookGamingServices-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FacebookGamingServices-Dynamic.xcconfig"; sourceTree = "<group>"; };
@@ -773,6 +773,7 @@
 		D0295F5E2904875C406D95BD /* CustomUpdateGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUpdateGraphRequest.swift; sourceTree = "<group>"; };
 		D23CB9E341019127FBD0F1FE /* FBSDKCreateContextContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCreateContextContent.h; sourceTree = "<group>"; };
 		D25A059BE87775164BB9A15A /* FBSDKFileHandleFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKFileHandleFactory.m; sourceTree = "<group>"; };
+		D75C5258857FAB8E3982FB1F /* SymbolVisibilityTests+FBSDKGamingServicesKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SymbolVisibilityTests+FBSDKGamingServicesKit.swift"; sourceTree = "<group>"; };
 		D916B19E323584D47413BC54 /* URLMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLMedia.swift; sourceTree = "<group>"; };
 		D9A046570DA2563D7973FB46 /* FBSDKGamingVideoUploaderConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingVideoUploaderConfiguration.m; sourceTree = "<group>"; };
 		D9AB6A50CAA62569BBFE8640 /* TournamentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentTests.swift; sourceTree = "<group>"; };
@@ -783,7 +784,6 @@
 		E248CC5E151AB2121AC09511 /* FBSDKFileHandleFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKFileHandleFactory.h; sourceTree = "<group>"; };
 		E290F22B5C98382FA567DD4D /* TestChooseContextDialogFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestChooseContextDialogFactory.swift; sourceTree = "<group>"; };
 		E415D8DA668D677503919BFD /* CustomUpdateGraphAPIContentRemoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUpdateGraphAPIContentRemoteTests.swift; sourceTree = "<group>"; };
-		E46891EB731080244C6ADB6D /* SymbolVisibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolVisibilityTests.swift; sourceTree = "<group>"; };
 		E74EC8802516BC5DCCDAC5D6 /* ShareTournamentDialogURLBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTournamentDialogURLBuilder.swift; sourceTree = "<group>"; };
 		E853F9AC1B5F96BE7C68EEC1 /* FBSDKGamingGroupIntegration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingGroupIntegration.m; sourceTree = "<group>"; };
 		EDA46DEE68BA46D2E69FC528 /* FBSDKGamingGroupIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKGamingGroupIntegrationTests.swift; sourceTree = "<group>"; };
@@ -892,7 +892,7 @@
 				4E0FFDF64D1D0120E9708C02 /* FBSDKContextDialogPresenterTests.m */,
 				06572B74E80B7F31FF666448 /* FBSDKSwitchContextDialogTests.m */,
 				6A40D6A4771CE6766B8C982C /* FBSDKSwitchContextDialogWrapperTests.swift */,
-				E46891EB731080244C6ADB6D /* SymbolVisibilityTests.swift */,
+				D75C5258857FAB8E3982FB1F /* SymbolVisibilityTests+FBSDKGamingServicesKit.swift */,
 				AA08340286D18FA001DF86FC /* Helpers */,
 			);
 			name = FBSDKGamingServicesKit;
@@ -1076,7 +1076,7 @@
 				FD9DAE9757A6C94C5B5FFF47 /* SampleContextDialogs.swift */,
 				1437185C7CD7638A5831169C /* SwitchContextDialogFactoryTests.swift */,
 				826166BA67FE5F503816DA26 /* SwitchContextDialogTests.swift */,
-				0D085655575480E8339ACBBF /* SymbolVisibilityTests.swift */,
+				5CBC0B2AE702A8C46CD43887 /* SymbolVisibilityTests+FacebookGamingServices.swift */,
 				FDF0005E3E185D36B77B576E /* TestInternalUtility.swift */,
 				2EBFF4E34133393E0AE3BE31 /* TournamentFetcherTests.swift */,
 				D9AB6A50CAA62569BBFE8640 /* TournamentTests.swift */,
@@ -1866,7 +1866,7 @@
 				7A832FEA353C8F03CA2B5184 /* ShareTournamentDialogURLBuilderTests.swift in Sources */,
 				BB6F1A1AD32C6360245FE47C /* SwitchContextDialogFactoryTests.swift in Sources */,
 				8B1928413D641D0445B5BA27 /* SwitchContextDialogTests.swift in Sources */,
-				B5FBDC363C917CB74CB3E504 /* SymbolVisibilityTests.swift in Sources */,
+				21077F5BB54E201486AD3A4E /* SymbolVisibilityTests+FacebookGamingServices.swift in Sources */,
 				C29B7296D21963DC374D7692 /* TestBridgeAPIRequestOpener.swift in Sources */,
 				53357F1E6ABB32F996EE0BD0 /* TestChooseContextDialogFactory.swift in Sources */,
 				20863F66850C1B51CDB4DDC3 /* TestContextDialogDelegate.swift in Sources */,
@@ -1973,7 +1973,7 @@
 				B2E04EBC48BDEB7F170501C6 /* FBSDKContextDialogPresenterTests.m in Sources */,
 				656E86C334E7150B077B9954 /* FBSDKSwitchContextDialogTests.m in Sources */,
 				2899D2948D0B141E053C0DDE /* FBSDKSwitchContextDialogWrapperTests.swift in Sources */,
-				BAA48016DD1F04B27BB29377 /* SymbolVisibilityTests.swift in Sources */,
+				46642BDD1D59C27FA3A1DB3D /* SymbolVisibilityTests+FBSDKGamingServicesKit.swift in Sources */,
 				5AD73679D08DFEC11EDF8457 /* TestSwitchContextDialog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
