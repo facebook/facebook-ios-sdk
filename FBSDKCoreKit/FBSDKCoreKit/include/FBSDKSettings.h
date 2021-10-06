@@ -141,7 +141,15 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.isSKAdNetworkReportEnabled` is deprecated an
  carrier and advertiser ID, that are fetched on many applicationDidBecomeActive notifications.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, getter = shouldUseCachedValuesForExpensiveMetadata) BOOL shouldUseCachedValuesForExpensiveMetadata;
+@property (class, nonatomic, getter = shouldUseCachedValuesForExpensiveMetadata) BOOL shouldUseCachedValuesForExpensiveMetadata
+DEPRECATED_MSG_ATTRIBUTE("`Settings.shouldUseCachedValuesForExpensiveMetadata` is deprecated and will be removed in the next major release, please use `Settings.shared.shouldUseCachedValuesForExpensiveMetadata` instead");
+
+/**
+ Whether in memory cached values should be used for expensive metadata fields, such as
+ carrier and advertiser ID, that are fetched on many applicationDidBecomeActive notifications.
+ Defaults to NO. This value is stored on the device and persists across app launches.
+ */
+@property (nonatomic) BOOL shouldUseCachedValuesForExpensiveMetadata;
 
 /**
  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.

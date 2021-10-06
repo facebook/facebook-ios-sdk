@@ -41,5 +41,7 @@ final class TestSettings: NSObject, SettingsProtocol {
   var isAdvertiserTrackingEnabled = false
   var isCodelessDebugLogEnabled: Bool = false
   var isAdvertiserIDCollectionEnabled = false
+  // swiftlint:disable:next identifier_name
+  var shouldUseCachedValuesForExpensiveMetadata = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 }

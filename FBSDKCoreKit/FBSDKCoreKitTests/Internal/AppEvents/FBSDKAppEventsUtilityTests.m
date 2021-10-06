@@ -147,7 +147,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testParamsDictionary
 {
-  FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
+  FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
 
   NSString *identifier = @"68753A44-4D6F-1226-9C60-0050E4C00067";

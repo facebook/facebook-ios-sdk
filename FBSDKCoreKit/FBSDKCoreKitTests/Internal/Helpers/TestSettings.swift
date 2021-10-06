@@ -45,6 +45,8 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var loggingBehaviors = Set<LoggingBehavior>()
   var isCodelessDebugLogEnabled = false
   var isAdvertiserIDCollectionEnabled = false
+  // swiftlint:disable:next identifier_name
+  var shouldUseCachedValuesForExpensiveMetadata = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 
   var isDataProcessingRestricted: Bool {

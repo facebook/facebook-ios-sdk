@@ -49,5 +49,6 @@ DEPRECATED_MSG_ATTRIBUTE("property class `loggingBehaviors` is deprecated and wi
 @property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
 @property (nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic, getter = isAdvertiserTrackingEnabled) BOOL advertiserTrackingEnabled;
+@property (nonatomic) BOOL shouldUseCachedValuesForExpensiveMetadata;
 @end
 NS_ASSUME_NONNULL_END

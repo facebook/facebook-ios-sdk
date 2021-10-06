@@ -183,7 +183,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 // This data is collected only once every GROUP1_RECHECK_DURATION.
 - (void)_collectGroup1Data
 {
-  const BOOL shouldUseCachedValues = [FBSDKSettings shouldUseCachedValuesForExpensiveMetadata];
+  const BOOL shouldUseCachedValues = FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata;
 
   if (!_carrierName || !shouldUseCachedValues) {
     NSString *newCarrierName = [FBSDKAppEventsDeviceInfo _getCarrier];

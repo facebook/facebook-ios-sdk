@@ -459,6 +459,16 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
+  return [self.sharedSettings shouldUseCachedValuesForExpensiveMetadata];
+}
+
++ (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
+{
+  [self setShouldUseCachedValuesForExpensiveMetadata:shouldUseCachedValuesForExpensiveMetadata];
+}
+
+- (BOOL)shouldUseCachedValuesForExpensiveMetadata
+{
   NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
   if (storedValue == nil) {
     return NO;
@@ -466,7 +476,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return storedValue.boolValue;
 }
 
-+ (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
+- (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
   [self.store setObject:@(shouldUseCachedValuesForExpensiveMetadata) forKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
 }

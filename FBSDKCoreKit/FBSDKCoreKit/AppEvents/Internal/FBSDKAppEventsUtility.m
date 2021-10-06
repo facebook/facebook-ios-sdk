@@ -167,7 +167,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 - (NSString *)advertiserID
 {
-  BOOL shouldUseCachedManagerIfAvailable = [FBSDKSettings shouldUseCachedValuesForExpensiveMetadata];
+  BOOL shouldUseCachedManagerIfAvailable = FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata;
   id<FBSDKDynamicFrameworkResolving> dynamicFrameworkResolver = FBSDKDynamicFrameworkLoader.shared;
   return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver
                                   shouldUseCachedManager:shouldUseCachedManagerIfAvailable];

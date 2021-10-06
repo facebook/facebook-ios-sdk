@@ -1290,7 +1290,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSetUseCachedValuesForExpensiveMetadata
 {
-  FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
+  self.settings.shouldUseCachedValuesForExpensiveMetadata = YES;
 
   XCTAssertEqualObjects(
     self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"],
@@ -1298,7 +1298,7 @@ static NSString *const whiteSpaceToken = @"   ";
     "Should store whether or not to limit event and data usage in the user defaults"
   );
   XCTAssertTrue(
-    FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata,
+    self.settings.shouldUseCachedValuesForExpensiveMetadata,
     "should use cached values for expensive metadata"
   );
 }
