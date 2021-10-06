@@ -324,12 +324,22 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isAdvertiserIDCollectionEnabled
 {
-  return self.sharedSettings._advertiserIDCollectionEnabled.boolValue;
+  return self.sharedSettings.isAdvertiserIDCollectionEnabled;
+}
+
+- (BOOL)isAdvertiserIDCollectionEnabled
+{
+  return self._advertiserIDCollectionEnabled.boolValue;
 }
 
 + (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
 {
-  [self.sharedSettings _setAdvertiserIDCollectionEnabled:@(advertiserIDCollectionEnabled)];
+  [self.sharedSettings setAdvertiserIDCollectionEnabled:advertiserIDCollectionEnabled];
+}
+
+- (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
+{
+  [self _setAdvertiserIDCollectionEnabled:@(advertiserIDCollectionEnabled)];
 }
 
 + (BOOL)isAdvertiserTrackingEnabled

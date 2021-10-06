@@ -43,5 +43,6 @@ class TestSettings: SettingsProtocol {
   var graphAPIDebugParamValue: String?
   var isAdvertiserTrackingEnabled = false
   var isCodelessDebugLogEnabled: Bool = false
+  var isAdvertiserIDCollectionEnabled = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 }

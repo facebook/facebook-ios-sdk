@@ -937,7 +937,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isAdvertiserIDCollectionEnabled,
+    self.settings.isAdvertiserIDCollectionEnabled,
     "A developer should be able to set whether advertiser ID collection is enabled from the plist"
   );
 }
@@ -945,7 +945,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testFacebookAdvertiserIDCollectionEnabledDefaultValue
 {
   XCTAssertTrue(
-    FBSDKSettings.isAdvertiserIDCollectionEnabled,
+    self.settings.isAdvertiserIDCollectionEnabled,
     "Auto collection of advertiser id should default to true when there is no plist value given"
   );
 }
@@ -956,46 +956,46 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.isAdvertiserIDCollectionEnabled,
+    self.settings.isAdvertiserIDCollectionEnabled,
     "Auto collection of advertiser id should default to true when there is an invalid plist value given but it does not"
   );
 }
 
 - (void)testSettingFacebookAdvertiserIDCollectionEnabled
 {
-  FBSDKSettings.advertiserIDCollectionEnabled = false;
+  self.settings.advertiserIDCollectionEnabled = false;
 
   XCTAssertNotNil(
     self.userDefaultsSpy.capturedValues[@"FacebookAdvertiserIDCollectionEnabled"],
     "Should persist the value of a cachable property when setting it"
   );
   XCTAssertFalse(
-    FBSDKSettings.advertiserIDCollectionEnabled,
+    self.settings.isAdvertiserIDCollectionEnabled,
     "Should use the explicitly set property"
   );
 }
 
 - (void)testOverridingCachedFacebookAdvertiserIDCollectionEnabled
 {
-  FBSDKSettings.advertiserIDCollectionEnabled = true;
-  XCTAssertTrue(FBSDKSettings.isAdvertiserIDCollectionEnabled);
+  self.settings.advertiserIDCollectionEnabled = true;
+  XCTAssertTrue(self.settings.isAdvertiserIDCollectionEnabled);
 
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookAdvertiserIDCollectionEnabled" : @NO}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertTrue(
-    FBSDKSettings.isAdvertiserIDCollectionEnabled,
+    self.settings.isAdvertiserIDCollectionEnabled,
     "Should favor cached properties over those set in the plist"
   );
 }
 
 - (void)testAdvertiserIDCollectionEnabledInternalStorage
 {
-  FBSDKSettings.advertiserIDCollectionEnabled = @YES;
+  self.settings.advertiserIDCollectionEnabled = @YES;
 
   [self resetLoggingSideEffects];
 
-  XCTAssertTrue(FBSDKSettings.advertiserIDCollectionEnabled, "sanity check");
+  XCTAssertTrue(self.settings.advertiserIDCollectionEnabled, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1090,7 +1090,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
+    self.settings.isCodelessDebugLogEnabled,
     "A developer should be able to set whether codeless debug logging is enabled from the plist"
   );
 }
@@ -1101,7 +1101,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
+    self.settings.isCodelessDebugLogEnabled,
     "Codeless debug logging enabled should default to false when there is no plist value given"
   );
 }
@@ -1112,7 +1112,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
+    self.settings.isCodelessDebugLogEnabled,
     "Codeless debug logging enabled should default to true when there is an invalid plist value given but it does not"
   );
 }
@@ -1134,13 +1134,13 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testOverridingCachedFacebookCodelessDebugLogEnabled
 {
   FBSDKSettings.codelessDebugLogEnabled = true;
-  XCTAssertTrue(FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled);
+  XCTAssertTrue(self.settings.isCodelessDebugLogEnabled);
 
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookCodelessDebugLogEnabled" : @NO}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertTrue(
-    FBSDKSettings.sharedSettings.isCodelessDebugLogEnabled,
+    self.settings.isCodelessDebugLogEnabled,
     "Should favor cached properties over those set in the plist"
   );
 }

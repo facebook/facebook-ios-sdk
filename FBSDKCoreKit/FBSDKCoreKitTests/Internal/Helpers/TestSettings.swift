@@ -44,6 +44,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var isAdvertiserTrackingEnabled = false
   var loggingBehaviors = Set<LoggingBehavior>()
   var isCodelessDebugLogEnabled = false
+  var isAdvertiserIDCollectionEnabled = false
   static var loggingBehaviors = Set<LoggingBehavior>()
 
   var isDataProcessingRestricted: Bool {

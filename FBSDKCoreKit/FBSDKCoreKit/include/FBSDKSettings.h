@@ -107,7 +107,14 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.isCodelessDebugLogEnabled` is deprecated and
  Controls the access to IDFA
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
+@property (class, nonatomic, getter = isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isAdvertiserIDCollectionEnabled` is deprecated and will be removed in the next major release, please use `Settings.shared.isAdvertiserIDCollectionEnabled` instead");
+
+/**
+ Controls the access to IDFA
+ If not explicitly set, the default is true
+ */
+@property (nonatomic, getter = isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
 
 /**
  Controls the SKAdNetwork report

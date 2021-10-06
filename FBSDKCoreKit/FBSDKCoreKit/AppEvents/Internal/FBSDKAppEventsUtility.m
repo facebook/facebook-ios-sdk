@@ -118,7 +118,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
   NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
@@ -176,7 +176,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 - (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
                                  shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
-  if (!FBSDKSettings.isAdvertiserIDCollectionEnabled) {
+  if (!FBSDKSettings.sharedSettings.isAdvertiserIDCollectionEnabled) {
     return nil;
   }
 
