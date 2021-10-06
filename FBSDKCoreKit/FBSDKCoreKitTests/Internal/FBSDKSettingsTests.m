@@ -995,7 +995,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
   [self resetLoggingSideEffects];
 
-  XCTAssertTrue(self.settings.advertiserIDCollectionEnabled, "sanity check");
+  XCTAssertTrue(self.settings.isAdvertiserIDCollectionEnabled, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1014,7 +1014,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.SKAdNetworkReportEnabled,
+    self.settings.isSKAdNetworkReportEnabled,
     "A developer should be able to set the value of SKAdNetwork Report from the plist"
   );
 }
@@ -1022,7 +1022,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testFacebookSKAdNetworkReportEnabledDefaultValue
 {
   XCTAssertTrue(
-    FBSDKSettings.SKAdNetworkReportEnabled,
+    self.settings.isSKAdNetworkReportEnabled,
     "SKAdNetwork Report should default to true when there is no plist value given"
   );
 }
@@ -1033,45 +1033,45 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertFalse(
-    FBSDKSettings.SKAdNetworkReportEnabled,
+    self.settings.isSKAdNetworkReportEnabled,
     "SKAdNetwork Report should default to true when there is an invalid plist value given but it does not"
   );
 }
 
 - (void)testSettingFacebookSKAdNetworkReportEnabled
 {
-  FBSDKSettings.SKAdNetworkReportEnabled = NO;
+  self.settings.skAdNetworkReportEnabled = NO;
 
   XCTAssertNotNil(
     self.userDefaultsSpy.capturedValues[@"FacebookSKAdNetworkReportEnabled"],
     "Should persist the value of a cachable property when setting it"
   );
   XCTAssertFalse(
-    FBSDKSettings.SKAdNetworkReportEnabled,
+    self.settings.isSKAdNetworkReportEnabled,
     "Should use the explicitly set property"
   );
 }
 
 - (void)testOverridingCachedFacebookSKAdNetworkReportEnabled
 {
-  XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled);
+  XCTAssertTrue(self.settings.isSKAdNetworkReportEnabled);
 
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookSKAdNetworkReportEnabled" : @NO}];
   FBSDKSettings.infoDictionaryProvider = self.bundle;
 
   XCTAssertTrue(
-    FBSDKSettings.SKAdNetworkReportEnabled,
+    self.settings.isSKAdNetworkReportEnabled,
     "Should favor cached properties over those set in the plist"
   );
 }
 
 - (void)testFacebookSKAdNetworkReportEnabledInternalStorage
 {
-  FBSDKSettings.SKAdNetworkReportEnabled = YES;
+  self.settings.skAdNetworkReportEnabled = YES;
 
   [self resetLoggingSideEffects];
 
-  XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled, "sanity check");
+  XCTAssertTrue(self.settings.isSKAdNetworkReportEnabled, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"

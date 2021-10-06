@@ -83,6 +83,7 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
 static NSString *const FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp = @"com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp";
 static NSString *const FBSDKSettingsUseCachedValuesForExpensiveMetadata = @"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata";
 static NSString *const FBSDKSettingsUseTokenOptimizations = @"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations";
+static NSString *const FacebookSKAdNetworkReportEnabled = @"FacebookSKAdNetworkReportEnabled";
 static BOOL g_disableErrorRecovery;
 
 static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
@@ -124,9 +125,9 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _instrumentEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _autoLogAppEventsEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _advertiserIDCollectionEnabled);
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _SKAdNetworkReportEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _codelessDebugLogEnabled);
   NSMutableSet<FBSDKLoggingBehavior> *_loggingBehaviors;
+  NSNumber *_SKAdNetworkReportEnabled;
 }
 
 @synthesize userAgentSuffix = _userAgentSuffix;
@@ -205,7 +206,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDomainPart, fac
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookInstrumentEnabled, _instrumentEnabled, _setInstrumentEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEventsEnabled, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled, @1, YES);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookSKAdNetworkReportEnabled, _SKAdNetworkReportEnabled, _setSKAdNetworkReportEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   NSNumber,
   FacebookCodelessDebugLogEnabled,
@@ -409,12 +409,28 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isSKAdNetworkReportEnabled
 {
-  return [self _SKAdNetworkReportEnabled].boolValue;
+  if (_SKAdNetworkReportEnabled == nil) {
+    _SKAdNetworkReportEnabled = [[self.store objectForKey:FacebookSKAdNetworkReportEnabled] copy];
+  }
+
+  if (_SKAdNetworkReportEnabled == nil) {
+    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
+  }
+
+  return _SKAdNetworkReportEnabled.boolValue;
+}
+
+- (void)setSkAdNetworkReportEnabled:(BOOL)skAdNetworkReportEnabled
+{
+  [self validateConfiguration];
+  _SKAdNetworkReportEnabled = @(skAdNetworkReportEnabled);
+  [self.store setObject:@(skAdNetworkReportEnabled) forKey:FacebookSKAdNetworkReportEnabled];
+  [self logIfSDKSettingsChanged];
 }
 
 + (void)setSKAdNetworkReportEnabled:(BOOL)SKAdNetworkReportEnabled
 {
-  [self _setSKAdNetworkReportEnabled:@(SKAdNetworkReportEnabled)];
+  [self.sharedSettings setSkAdNetworkReportEnabled:SKAdNetworkReportEnabled];
 }
 
 + (BOOL)shouldLimitEventAndDataUsage

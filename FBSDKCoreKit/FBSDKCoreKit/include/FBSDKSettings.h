@@ -120,7 +120,14 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.isAdvertiserIDCollectionEnabled` is deprecat
  Controls the SKAdNetwork report
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, getter = isSKAdNetworkReportEnabled) BOOL SKAdNetworkReportEnabled;
+@property (class, nonatomic, getter = isSKAdNetworkReportEnabled) BOOL SKAdNetworkReportEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isSKAdNetworkReportEnabled` is deprecated and will be removed in the next major release, please use `Settings.shared.isSKAdNetworkReportEnabled` instead");
+
+/**
+ Controls the SKAdNetwork report
+ If not explicitly set, the default is true
+ */
+@property (nonatomic, getter = isSKAdNetworkReportEnabled) BOOL skAdNetworkReportEnabled;
 
 /**
  Whether data such as that generated through FBSDKAppEvents and sent to Facebook
