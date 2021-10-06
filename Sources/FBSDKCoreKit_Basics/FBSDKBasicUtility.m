@@ -134,7 +134,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   return object;
 }
 
-+ (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef
++ (nullable id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef
 {
   NSData *data = [[FBSDKTypeUtility stringValueOrNil:string] dataUsingEncoding:NSUTF8StringEncoding];
   if (!data) {
@@ -148,7 +148,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 + (nullable NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
                                            error:(NSError *__autoreleasing *)errorRef
-                            invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
+                            invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler
 {
   NSMutableString *queryString = [NSMutableString new];
   __block BOOL hasParameters = NO;
@@ -253,7 +253,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   return value;
 }
 
-+ (NSData *)gzip:(NSData *)data
++ (nullable NSData *)gzip:(NSData *)data
 {
   const void *bytes = data.bytes;
   const NSUInteger length = data.length;
@@ -345,7 +345,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
                  error:nil];
 }
 
-+ (NSString *)SHA256Hash:(NSObject *)input
++ (nullable NSString *)SHA256Hash:(nullable NSObject *)input
 {
   NSData *data = nil;
 

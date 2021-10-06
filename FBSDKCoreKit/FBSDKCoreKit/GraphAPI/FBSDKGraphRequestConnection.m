@@ -185,7 +185,8 @@ static BOOL _canMakeRequests = NO;
   return g_defaultTimeout;
 }
 
-- (void)addRequest:(id<FBSDKGraphRequest>)request completion:(FBSDKGraphRequestCompletion)completion
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+        completion:(FBSDKGraphRequestCompletion)completion
 {
   [self addRequest:request name:@"" completion:completion];
 }
@@ -199,7 +200,7 @@ static BOOL _canMakeRequests = NO;
 }
 
 - (void)addRequest:(id<FBSDKGraphRequest>)request
-        parameters:(NSDictionary<NSString *, id> *)parameters
+        parameters:(nullable NSDictionary<NSString *, id> *)parameters
         completion:(FBSDKGraphRequestCompletion)completion
 {
   if (self.state != kStateCreated) {

@@ -267,7 +267,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   return [params copy];
 }
 
-- (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(NSURL *)url
+- (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(nullable NSURL *)url
 {
   [self setSourceApplication:sourceApplication
                isFromAppLink:[FBSDKInternalUtility.sharedUtility parametersFromFBURL:url][@"al_applink_data"] != nil];

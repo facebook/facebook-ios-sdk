@@ -48,10 +48,10 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-                                 responseURL:(NSURL *)responseURL
-                           sourceApplication:(NSString *)sourceApplication
-                                       error:(NSError *__autoreleasing *)errorRef
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+                                          responseURL:(NSURL *)responseURL
+                                    sourceApplication:(nullable NSString *)sourceApplication
+                                                error:(NSError *__autoreleasing *)errorRef
 {
   return [self bridgeAPIResponseWithRequest:request
                                 responseURL:responseURL

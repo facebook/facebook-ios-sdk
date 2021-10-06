@@ -80,7 +80,7 @@
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (BOOL)setData:(NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
+- (BOOL)setData:(nullable NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
   if (!key) {
     return NO;
@@ -124,7 +124,7 @@
 #endif
 }
 
-- (NSData *)dataForKey:(NSString *)key
+- (nullable NSData *)dataForKey:(NSString *)key
 {
   if (!key) {
     return nil;

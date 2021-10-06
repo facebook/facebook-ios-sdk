@@ -139,7 +139,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
                          userInfo:userInfo];
 }
 
-+ (NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters
++ (nullable NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSError *error = nil;
 
@@ -164,7 +164,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   return error;
 }
 
-+ (NSError *)fbErrorFromServerError:(NSError *)serverError
++ (nullable NSError *)fbErrorFromServerError:(NSError *)serverError
 {
   NSError *loginError = nil;
 

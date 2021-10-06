@@ -22,7 +22,7 @@
 
 #pragma mark - Class Methods
 
-+ (NSArray *)arrayValue:(id)object
++ (nullable NSArray *)arrayValue:(id)object
 {
   return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
 }
@@ -36,7 +36,7 @@
   return nil;
 }
 
-+ (void)array:(NSMutableArray *)array addObject:(id)object
++ (void)array:(NSMutableArray *)array addObject:(nullable id)object
 {
   if (object && [array isKindOfClass:NSMutableArray.class]) {
     [array addObject:object];
@@ -67,12 +67,12 @@
   }
 }
 
-+ (NSDictionary<NSString *, id> *)dictionaryValue:(id)object
++ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
   return (NSDictionary<NSString *, id> *)[self _objectValue: object ofClass:[NSDictionary<NSString *, id> class]];
 }
 
-+ (id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
++ (nullable id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
 {
   id potentialValue = [self dictionaryValue:dictionary][key];
 
@@ -83,7 +83,9 @@
   }
 }
 
-+ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
++ (void)dictionary:(NSMutableDictionary *)dictionary
+         setObject:(nullable id)object
+            forKey:(nullable id<NSCopying>)key
 {
   if (object && key) {
     dictionary[key] = object;
@@ -130,12 +132,12 @@
   return [self _objectValue:object ofClass:NSString.class];
 }
 
-+ (id)objectValue:(id)object
++ (nullable id)objectValue:(id)object
 {
   return ([object isKindOfClass:NSNull.class] ? nil : object);
 }
 
-+ (NSString *)coercedToStringValue:(id)object
++ (nullable NSString *)coercedToStringValue:(id)object
 {
   if ([object isKindOfClass:NSString.class]) {
     return (NSString *)object;
@@ -174,7 +176,7 @@
   }
 }
 
-+ (NSURL *)URLValue:(id)object
++ (nullable NSURL *)URLValue:(id)object
 {
   if ([object isKindOfClass:NSURL.class]) {
     return (NSURL *)object;

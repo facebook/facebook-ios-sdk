@@ -85,8 +85,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 
 @implementation FBSDKLoginManagerLogger
 
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary<NSString *, id> *)parameters
-                                         tracking:(FBSDKLoginTracking)tracking
++ (nullable FBSDKLoginManagerLogger *)loggerFromParameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                  tracking:(FBSDKLoginTracking)tracking
 {
   NSDictionary<id, id> *clientState = [FBSDKBasicUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
 
@@ -154,7 +154,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   [self logEvent:FBSDKAppEventNameFBSessionAuthMethodStart params:[self _parametersForNewEvent]];
 }
 
-- (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error
+- (void)endLoginWithResult:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error
 {
   NSString *resultString = @"";
 
@@ -234,7 +234,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   }
 }
 
-- (void)addSingleLoggingExtra:(id)extra forKey:(NSString *)key
+- (void)addSingleLoggingExtra:(id)extra forKey:(nullable NSString *)key
 {
   [FBSDKTypeUtility dictionary:_extras setObject:extra forKey:key];
 }
@@ -246,9 +246,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return _identifier;
 }
 
-+ (NSString *)clientStateForAuthMethod:(NSString *)authMethod
-                      andExistingState:(NSDictionary<NSString *, id> *)existingState
-                                logger:(FBSDKLoginManagerLogger *)logger
++ (nullable NSString *)clientStateForAuthMethod:(nullable NSString *)authMethod
+                               andExistingState:(nullable NSDictionary<NSString *, id> *)existingState
+                                         logger:(nullable FBSDKLoginManagerLogger *)logger
 {
   NSDictionary<NSString *, id> *clientState = @{
     FBSDKLoginManagerLoggerParamAuthMethodKey : authMethod ?: @"",

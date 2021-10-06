@@ -52,7 +52,9 @@
   [FBSDKAppEvents logPurchase:purchaseAmount currency:currency];
 }
 
-+ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(nullable NSDictionary<NSString *, id> *)parameters
++ (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logPurchase:purchaseAmount currency:currency parameters:parameters];
 }

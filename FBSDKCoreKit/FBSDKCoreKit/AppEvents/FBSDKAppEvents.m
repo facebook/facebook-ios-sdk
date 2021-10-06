@@ -369,7 +369,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-        accessToken:(FBSDKAccessToken *)accessToken
+        accessToken:(nullable FBSDKAccessToken *)accessToken
 {
   [self.shared validateConfiguration];
 
@@ -438,9 +438,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                  title:(NSString *)title
            priceAmount:(double)priceAmount
               currency:(NSString *)currency
-                  gtin:(NSString *)gtin
-                   mpn:(NSString *)mpn
-                 brand:(NSString *)brand
+                  gtin:(nullable NSString *)gtin
+                   mpn:(nullable NSString *)mpn
+                 brand:(nullable NSString *)brand
             parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [self.shared validateConfiguration];
@@ -705,7 +705,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   return [self.shared getUserData];
 }
 
-- (NSString *)getUserData
+- (nullable NSString *)getUserData
 {
   return [self.userDataStore getUserData];
 }

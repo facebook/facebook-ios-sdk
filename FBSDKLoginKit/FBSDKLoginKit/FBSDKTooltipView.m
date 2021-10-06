@@ -69,7 +69,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 
 @implementation FBSDKTooltipView
 
-- (instancetype)initWithTagline:(NSString *)tagline message:(NSString *)message colorStyle:(FBSDKTooltipColorStyle)colorStyle
+- (instancetype)initWithTagline:(nullable NSString *)tagline
+                        message:(nullable NSString *)message
+                     colorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {

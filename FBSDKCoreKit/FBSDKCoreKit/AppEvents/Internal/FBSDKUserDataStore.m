@@ -142,7 +142,7 @@ static dispatch_queue_t serialQueue;
   [self setUserData:nil forType:type];
 }
 
-- (NSString *)getUserData
+- (nullable NSString *)getUserData
 {
   return [self getHashedData];
 }
@@ -178,7 +178,7 @@ static dispatch_queue_t serialQueue;
           externalId:nil];
 }
 
-- (NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type
+- (nullable NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type
 {
   __block NSString *hashedData;
   dispatch_sync(serialQueue, ^{

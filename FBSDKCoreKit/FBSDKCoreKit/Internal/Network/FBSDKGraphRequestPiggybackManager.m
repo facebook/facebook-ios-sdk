@@ -96,7 +96,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   }
 }
 
-+ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestCompletion)permissionHandler
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(nullable FBSDKGraphRequestCompletion)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [self.tokenWallet currentAccessToken];
   if (!expectedToken) {

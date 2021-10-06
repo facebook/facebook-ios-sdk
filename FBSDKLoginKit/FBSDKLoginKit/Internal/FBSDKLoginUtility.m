@@ -39,7 +39,7 @@
   }
 }
 
-+ (NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url
++ (nullable NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url
 {
   NSString *expectedUrlPrefix = [FBSDKInternalUtility.sharedUtility
                                  appURLWithHost:@"authorize"
@@ -63,7 +63,7 @@
   return params;
 }
 
-+ (NSString *)userIDFromSignedRequest:(NSString *)signedRequest
++ (nullable NSString *)userIDFromSignedRequest:(nullable NSString *)signedRequest
 {
   if (!signedRequest) {
     return nil;

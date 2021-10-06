@@ -71,7 +71,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
   }
 }
 
-- (FBSDKAuthenticationTokenClaims *)claims
+- (nullable FBSDKAuthenticationTokenClaims *)claims
 {
   NSArray *segments = [_tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {

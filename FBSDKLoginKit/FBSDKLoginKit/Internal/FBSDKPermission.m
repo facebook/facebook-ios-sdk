@@ -40,7 +40,7 @@
   return self;
 }
 
-+ (NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions
++ (nullable NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions
 {
   NSMutableSet *permissions = NSMutableSet.new;
 

@@ -37,7 +37,7 @@
   return [FBSDKServerConfigurationManager.shared.cachedServerConfiguration useSafariViewControllerForDialogName:dialogName];
 }
 
-- (void)loadServerConfigurationWithCompletionBlock:(FBSDKLoginTooltipBlock)completionBlock
+- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKLoginTooltipBlock)completionBlock
 {
   [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *_Nullable serverConfiguration, NSError *_Nullable error) {
     dispatch_async(dispatch_get_main_queue(), ^{

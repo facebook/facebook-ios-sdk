@@ -96,7 +96,7 @@
   return YES;
 }
 
-+ (NSString *)buildWebShareTags:(NSArray<NSString *> *)peopleIDs
++ (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs
 {
   if (peopleIDs.count > 0) {
     NSMutableString *tags = [NSMutableString new];
@@ -168,9 +168,9 @@
   }
 }
 
-+ (UIImage *)imageWithCircleColor:(UIColor *)color
-                       canvasSize:(CGSize)canvasSize
-                       circleSize:(CGSize)circleSize
++ (nullable UIImage *)imageWithCircleColor:(nullable UIColor *)color
+                                canvasSize:(CGSize)canvasSize
+                                circleSize:(CGSize)circleSize
 {
   CGRect circleFrame = CGRectMake(
     (canvasSize.width - circleSize.width) / 2.0,
@@ -303,7 +303,7 @@
   return object;
 }
 
-+ (NSDictionary<NSString *, id> *)convertPhoto:(FBSDKSharePhoto *)photo
++ (nullable NSDictionary<NSString *, id> *)convertPhoto:(nullable FBSDKSharePhoto *)photo
 {
   if (!photo) {
     return nil;

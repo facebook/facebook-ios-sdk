@@ -71,7 +71,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
 - (void)downloadImageWithURL:(NSURL *)url
                          ttl:(NSTimeInterval)ttl
-                  completion:(FBSDKImageDownloadBlock)completion
+                  completion:(nullable FBSDKImageDownloadBlock)completion
 {
   NSURLRequest *request = [NSURLRequest requestWithURL:url];
   NSCachedURLResponse *cachedResponse = [self.urlCache cachedResponseForRequest:request];

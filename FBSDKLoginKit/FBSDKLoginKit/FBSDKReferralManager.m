@@ -58,7 +58,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
 }
 
-- (instancetype)initWithViewController:(UIViewController *)viewController
+- (instancetype)initWithViewController:(nullable UIViewController *)viewController
 {
   self = [super init];
   if (self) {

@@ -47,7 +47,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   [self _setValue:[string copy] forKey:key];
 }
 
-- (NSString *)stringForKey:(NSString *)key
+- (nullable NSString *)stringForKey:(NSString *)key
 {
   return [self _valueOfClass:NSString.class forKey:key];
 }
@@ -57,7 +57,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   [self _setValue:[array copy] forKey:key];
 }
 
-- (NSArray<NSString *> *)arrayForKey:(NSString *)key
+- (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key
 {
   return [self _valueOfClass:NSArray.class forKey:key];
 }

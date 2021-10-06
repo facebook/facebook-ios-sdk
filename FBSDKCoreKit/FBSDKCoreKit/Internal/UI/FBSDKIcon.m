@@ -53,7 +53,7 @@
   return image;
 }
 
-- (CGPathRef)pathWithSize:(CGSize)size
+- (nullable CGPathRef)pathWithSize:(CGSize)size
 {
   return NULL;
 }

@@ -85,7 +85,7 @@ static id<FBSDKDataPersisting> _store;
   return _gateKeepers[key] != nil ? [_gateKeepers[key] boolValue] : defaultValue;
 }
 
-+ (void)loadGateKeepers:(FBSDKGKManagerBlock)completionBlock
++ (void)loadGateKeepers:(nullable FBSDKGKManagerBlock)completionBlock
 {
   @try {
     @synchronized(self) {

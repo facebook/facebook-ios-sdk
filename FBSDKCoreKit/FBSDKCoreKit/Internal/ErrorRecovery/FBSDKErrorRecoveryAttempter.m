@@ -38,7 +38,7 @@
 
 @implementation FBSDKErrorRecoveryAttempter
 
-+ (instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration
++ (nullable instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration
 {
   if (configuration.errorCategory == FBSDKGraphRequestErrorTransient) {
     return [FBSDKTemporaryErrorRecoveryAttempter new];

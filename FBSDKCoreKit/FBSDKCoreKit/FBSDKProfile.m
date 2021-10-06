@@ -82,12 +82,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
 {
   return [self initWithUserID:userID
                     firstName:firstName
@@ -107,12 +107,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
 {
@@ -134,12 +134,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -162,12 +162,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -192,12 +192,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -224,20 +224,20 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
-                      imageURL:(NSURL *)imageURL
-                         email:(NSString *)email
-                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
-                      birthday:(NSDate *)birthday
-                      ageRange:(FBSDKUserAgeRange *)ageRange
-                      hometown:(FBSDKLocation *)hometown
-                      location:(FBSDKLocation *)location
-                        gender:(NSString *)gender
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
+                      imageURL:(nullable NSURL *)imageURL
+                         email:(nullable NSString *)email
+                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(nullable NSDate *)birthday
+                      ageRange:(nullable FBSDKUserAgeRange *)ageRange
+                      hometown:(nullable FBSDKLocation *)hometown
+                      location:(nullable FBSDKLocation *)location
+                        gender:(nullable NSString *)gender
                      isLimited:(BOOL)isLimited
 {
   self = [self initWithUserID:userID
@@ -261,12 +261,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -343,7 +343,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   }
 }
 
-+ (void)loadCurrentProfileWithCompletion:(FBSDKProfileBlock)completion
++ (void)loadCurrentProfileWithCompletion:(nullable FBSDKProfileBlock)completion
 {
   [self loadProfileWithToken:[self.accessTokenProvider currentAccessToken] completion:completion];
 }

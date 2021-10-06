@@ -86,8 +86,8 @@ static FBSDKRestrictiveDataFilterManager *_instance;
   }
 }
 
-- (NSDictionary<NSString *, id> *)processParameters:(NSDictionary<NSString *, id> *)parameters
-                                          eventName:(NSString *)eventName
+- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                   eventName:(NSString *)eventName
 {
   if (!self.isRestrictiveEventFilterEnabled) {
     return parameters;

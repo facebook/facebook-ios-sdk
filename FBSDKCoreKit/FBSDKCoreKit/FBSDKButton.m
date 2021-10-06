@@ -162,7 +162,8 @@ static id _applicationActivationNotifier;
 
 #pragma mark - Subclass Methods
 
-- (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
+- (void)logTapEventWithEventName:(NSString *)eventName
+                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters
@@ -189,10 +190,10 @@ static id _applicationActivationNotifier;
          highlightedColor:[self defaultHighlightedColor]];
 }
 
-- (void)configureWithIcon:(FBSDKIcon *)icon
-                    title:(NSString *)title
-          backgroundColor:(UIColor *)backgroundColor
-         highlightedColor:(UIColor *)highlightedColor
+- (void)configureWithIcon:(nullable FBSDKIcon *)icon
+                    title:(nullable NSString *)title
+          backgroundColor:(nullable UIColor *)backgroundColor
+         highlightedColor:(nullable UIColor *)highlightedColor
 {
   [self _configureWithIcon:icon
                       title:title
@@ -204,14 +205,14 @@ static id _applicationActivationNotifier;
    selectedHighlightedColor:nil];
 }
 
-- (void) configureWithIcon:(FBSDKIcon *)icon
-                     title:(NSString *)title
-           backgroundColor:(UIColor *)backgroundColor
-          highlightedColor:(UIColor *)highlightedColor
-             selectedTitle:(NSString *)selectedTitle
-              selectedIcon:(FBSDKIcon *)selectedIcon
-             selectedColor:(UIColor *)selectedColor
-  selectedHighlightedColor:(UIColor *)selectedHighlightedColor
+- (void) configureWithIcon:(nullable FBSDKIcon *)icon
+                     title:(nullable NSString *)title
+           backgroundColor:(nullable UIColor *)backgroundColor
+          highlightedColor:(nullable UIColor *)highlightedColor
+             selectedTitle:(nullable NSString *)selectedTitle
+              selectedIcon:(nullable FBSDKIcon *)selectedIcon
+             selectedColor:(nullable UIColor *)selectedColor
+  selectedHighlightedColor:(nullable UIColor *)selectedHighlightedColor
 {
   [self _configureWithIcon:icon
                       title:title

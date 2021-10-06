@@ -284,7 +284,9 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
+- (void)openURL:(NSURL *)url
+         sender:(nullable id<FBSDKURLOpening>)sender
+        handler:(FBSDKSuccessBlock)handler
 {
   _expectingBackground = YES;
   _pendingURLOpen = sender;
@@ -374,8 +376,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 }
 
 - (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
+                                 sender:(nullable id<FBSDKURLOpening>)sender
+                     fromViewController:(nullable UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 {
   if (![url.scheme hasPrefix:@"http"]) {

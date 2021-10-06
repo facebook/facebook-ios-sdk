@@ -85,7 +85,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary<NSString *, id> *)parameters
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
                             flags:(FBSDKGraphRequestFlags)requestFlags
 {
   return [self initWithGraphPath:graphPath
@@ -264,7 +264,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   _settings = settings;
 }
 
-- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(FBSDKGraphRequestCompletion)completion
+- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
 {
   id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
   id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;

@@ -335,7 +335,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return YES;
 }
 
-+ (BOOL)validateIdentifier:(NSString *)identifier
++ (BOOL)validateIdentifier:(nullable NSString *)identifier
 {
   if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self.class regexValidateIdentifier:identifier]) {
     [self.class logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
@@ -348,7 +348,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 // Given a candidate token (which may be nil), find the real token to string to use.
 // Precedence: 1) provided token, 2) current token, 3) app | client token, 4) fully anonymous session.
-+ (NSString *)tokenStringToUseFor:(FBSDKAccessToken *)token
++ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
 {
   if (!token) {
     token = [FBSDKAccessToken currentAccessToken];
@@ -381,7 +381,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return round([NSDate date].timeIntervalSince1970);
 }
 
-+ (NSTimeInterval)convertToUnixTime:(NSDate *)date
++ (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date
 {
   return round([date timeIntervalSince1970]);
 }

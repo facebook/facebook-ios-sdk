@@ -36,7 +36,7 @@
 
 - (void)invokeCompletionHandlerForConnection:(id<FBSDKGraphRequestConnecting>)connection
                                  withResults:(id)results
-                                       error:(NSError *)error
+                                       error:(nullable NSError *)error
 {
   if (self.completionHandler) {
     self.completionHandler(connection, results, error);

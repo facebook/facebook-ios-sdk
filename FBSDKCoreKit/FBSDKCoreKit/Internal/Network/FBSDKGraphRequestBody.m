@@ -73,7 +73,7 @@
 
 - (void)appendWithKey:(NSString *)key
             formValue:(NSString *)value
-               logger:(FBSDKLogger *)logger
+               logger:(nullable FBSDKLogger *)logger
 {
   [self _appendWithKey:key filename:nil contentType:nil contentBlock:^{
     [self appendUTF8:value];
@@ -86,7 +86,7 @@
 
 - (void)appendWithKey:(NSString *)key
            imageValue:(UIImage *)image
-               logger:(FBSDKLogger *)logger
+               logger:(nullable FBSDKLogger *)logger
 {
   NSData *data = UIImageJPEGRepresentation(image, FBSDKSettings.sharedSettings.JPEGCompressionQuality);
   [self _appendWithKey:key filename:key contentType:@"image/jpeg" contentBlock:^{
@@ -98,7 +98,7 @@
 
 - (void)appendWithKey:(NSString *)key
             dataValue:(NSData *)data
-               logger:(FBSDKLogger *)logger
+               logger:(nullable FBSDKLogger *)logger
 {
   [self _appendWithKey:key filename:key contentType:@"content/unknown" contentBlock:^{
     [self->_data appendData:data];
@@ -109,7 +109,7 @@
 
 - (void)appendWithKey:(NSString *)key
   dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)dataAttachment
-               logger:(FBSDKLogger *)logger
+               logger:(nullable FBSDKLogger *)logger
 {
   NSString *filename = dataAttachment.filename ?: key;
   NSString *contentType = dataAttachment.contentType ?: @"content/unknown";
@@ -161,7 +161,7 @@
   [self appendUTF8:[[NSString alloc] initWithFormat:@"%@--%@%@", kNewline, _stringBoundary, kNewline]];
 }
 
-- (NSData *)compressedData
+- (nullable NSData *)compressedData
 {
   if (!self.data.length || ![[self mimeContentType] isEqualToString:@"application/json"]) {
     return nil;

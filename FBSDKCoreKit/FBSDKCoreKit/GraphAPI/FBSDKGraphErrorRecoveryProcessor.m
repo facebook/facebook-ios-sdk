@@ -56,7 +56,7 @@
 
 - (BOOL)processError:(NSError *)error
              request:(id<FBSDKGraphRequest>)request
-            delegate:(id<FBSDKGraphErrorRecoveryProcessorDelegate>)delegate
+            delegate:(nullable id<FBSDKGraphErrorRecoveryProcessorDelegate>)delegate
 {
   if ([delegate respondsToSelector:@selector(processorWillProcessError:error:)]) {
     if (![delegate processorWillProcessError:self error:error]) {

@@ -22,7 +22,7 @@
 
 @implementation FBSDKDeviceUtilities
 
-+ (UIImage *)buildQRCodeWithAuthorizationCode:(NSString *)authorizationCode
++ (UIImage *)buildQRCodeWithAuthorizationCode:(nullable NSString *)authorizationCode
 {
   NSString *authorizationUri = @"https://facebook.com/device";
   if ([authorizationCode length] > 0) {

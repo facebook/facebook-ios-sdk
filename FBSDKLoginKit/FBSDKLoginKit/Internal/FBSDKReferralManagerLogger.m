@@ -71,7 +71,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   [self logEvent:FBSDKAppEventNameFBReferralStart params:[self _parametersForNewEvent]];
 }
 
-- (void)logReferralEnd:(FBSDKReferralManagerResult *)result error:(NSError *)error
+- (void)logReferralEnd:(nullable FBSDKReferralManagerResult *)result error:(nullable NSError *)error
 {
   NSString *resultString = FBSDKReferralManagerLoggerValueEmpty;
 

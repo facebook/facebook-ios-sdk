@@ -156,7 +156,7 @@ static BOOL _isConfigured;
 
 // MARK: - Public Methods
 
-+ (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
++ (void)fetchDeferredAppLink:(nullable FBSDKURLBlock)handler
 {
   [self validateConfiguration];
   NSAssert(NSThread.isMainThread, @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
@@ -223,7 +223,7 @@ static BOOL _isConfigured;
   }];
 }
 
-+ (NSString *)appInvitePromotionCodeFromURL:(NSURL *)url
++ (nullable NSString *)appInvitePromotionCodeFromURL:(NSURL *)url
 {
   [self validateConfiguration];
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];

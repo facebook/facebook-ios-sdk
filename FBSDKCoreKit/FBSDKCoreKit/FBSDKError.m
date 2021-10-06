@@ -51,25 +51,27 @@ static id<FBSDKErrorReporting> _errorReporter;
   self.errorReporter = errorReporter;
 }
 
-+ (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message
++ (NSError *)errorWithCode:(NSInteger)code message:(nullable NSString *)message
 {
   return [self errorWithCode:code message:message underlyingError:nil];
 }
 
-+ (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code message:(NSString *)message
++ (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code message:(nullable NSString *)message
 {
   return [self errorWithDomain:domain code:code message:message underlyingError:nil];
 }
 
-+ (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message underlyingError:(NSError *)underlyingError
++ (NSError *)errorWithCode:(NSInteger)code
+                   message:(nullable NSString *)message
+           underlyingError:(nullable NSError *)underlyingError
 {
   return [self errorWithCode:code userInfo:@{} message:message underlyingError:underlyingError];
 }
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain
                         code:(NSInteger)code
-                     message:(NSString *)message
-             underlyingError:(NSError *)underlyingError
+                     message:(nullable NSString *)message
+             underlyingError:(nullable NSError *)underlyingError
 {
   return [self errorWithDomain:domain code:code userInfo:@{} message:message underlyingError:underlyingError];
 }
@@ -88,9 +90,9 @@ static id<FBSDKErrorReporting> _errorReporter;
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain
                         code:(NSInteger)code
-                    userInfo:(NSDictionary<NSErrorUserInfoKey, id> *)userInfo
-                     message:(NSString *)message
-             underlyingError:(NSError *)underlyingError
+                    userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
+                     message:(nullable NSString *)message
+             underlyingError:(nullable NSError *)underlyingError
 {
   NSMutableDictionary<NSString *, id> *fullUserInfo = [[NSMutableDictionary alloc] initWithDictionary:userInfo];
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
@@ -101,15 +103,17 @@ static id<FBSDKErrorReporting> _errorReporter;
   return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 }
 
-+ (NSError *)invalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message
++ (NSError *)invalidArgumentErrorWithName:(NSString *)name
+                                    value:(nullable id)value
+                                  message:(nullable NSString *)message
 {
   return [self invalidArgumentErrorWithName:name value:value message:message underlyingError:nil];
 }
 
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
                                        name:(NSString *)name
-                                      value:(id)value
-                                    message:(NSString *)message
+                                      value:(nullable id)value
+                                    message:(nullable NSString *)message
 {
   return [self invalidArgumentErrorWithDomain:domain name:name value:value message:message underlyingError:nil];
 }
@@ -128,9 +132,9 @@ static id<FBSDKErrorReporting> _errorReporter;
 
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
                                        name:(NSString *)name
-                                      value:(id)value
-                                    message:(NSString *)message
-                            underlyingError:(NSError *)underlyingError
+                                      value:(nullable id)value
+                                    message:(nullable NSString *)message
+                            underlyingError:(nullable NSError *)underlyingError
 {
   if (!message) {
     message = [[NSString alloc] initWithFormat:@"Invalid value for %@: %@", name, value];
@@ -178,7 +182,9 @@ static id<FBSDKErrorReporting> _errorReporter;
   return [self requiredArgumentErrorWithName:name message:message underlyingError:nil];
 }
 
-+ (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain name:(NSString *)name message:(NSString *)message
++ (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
+                                        name:(NSString *)name
+                                     message:(nullable NSString *)message
 {
   if (!message) {
     message = [[NSString alloc] initWithFormat:@"Value for %@ is required.", name];

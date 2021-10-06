@@ -409,7 +409,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
-- (UIViewController *)viewControllerForView:(UIView *)view
+- (nullable UIViewController *)viewControllerForView:(UIView *)view
 {
   UIResponder *responder = view.nextResponder;
   while (responder) {
@@ -512,7 +512,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
-- (UIWindow *)findWindow
+- (nullable UIWindow *)findWindow
 {
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -559,7 +559,7 @@ static NSMapTable *_transientObjects;
   return topWindow;
 }
 
-- (UIViewController *)topMostViewController
+- (nullable UIViewController *)topMostViewController
 {
   UIWindow *keyWindow = [self findWindow];
   // SDK expects a key window at this point, if it is not, make it one

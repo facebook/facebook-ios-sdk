@@ -378,8 +378,8 @@ static UIApplicationState _applicationState;
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
 {
   if (sourceApplication != nil && ![sourceApplication isKindOfClass:NSString.class]) {
     @throw [NSException exceptionWithName:NSInvalidArgumentException
