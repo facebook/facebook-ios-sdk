@@ -22,68 +22,68 @@
 
 // Public
 
-FBSDKAppEventName FBSDKAppEventNameAdClick = @"AdClick";
-FBSDKAppEventName FBSDKAppEventNameAdImpression = @"AdImpression";
-FBSDKAppEventName FBSDKAppEventNameCompletedRegistration = @"fb_mobile_complete_registration";
-FBSDKAppEventName FBSDKAppEventNameCompletedTutorial = @"fb_mobile_tutorial_completion";
-FBSDKAppEventName FBSDKAppEventNameContact = @"Contact";
-FBSDKAppEventName FBSDKAppEventNameCustomizeProduct = @"CustomizeProduct";
-FBSDKAppEventName FBSDKAppEventNameDonate = @"Donate";
-FBSDKAppEventName FBSDKAppEventNameFindLocation = @"FindLocation";
-FBSDKAppEventName FBSDKAppEventNameRated = @"fb_mobile_rate";
-FBSDKAppEventName FBSDKAppEventNameSchedule = @"Schedule";
-FBSDKAppEventName FBSDKAppEventNameSearched = @"fb_mobile_search";
-FBSDKAppEventName FBSDKAppEventNameStartTrial = @"StartTrial";
-FBSDKAppEventName FBSDKAppEventNameSubmitApplication = @"SubmitApplication";
-FBSDKAppEventName FBSDKAppEventNameSubscribe = @"Subscribe";
-FBSDKAppEventName FBSDKAppEventNameViewedContent = @"fb_mobile_content_view";
+FBSDKAppEventName const FBSDKAppEventNameAdClick = @"AdClick";
+FBSDKAppEventName const FBSDKAppEventNameAdImpression = @"AdImpression";
+FBSDKAppEventName const FBSDKAppEventNameCompletedRegistration = @"fb_mobile_complete_registration";
+FBSDKAppEventName const FBSDKAppEventNameCompletedTutorial = @"fb_mobile_tutorial_completion";
+FBSDKAppEventName const FBSDKAppEventNameContact = @"Contact";
+FBSDKAppEventName const FBSDKAppEventNameCustomizeProduct = @"CustomizeProduct";
+FBSDKAppEventName const FBSDKAppEventNameDonate = @"Donate";
+FBSDKAppEventName const FBSDKAppEventNameFindLocation = @"FindLocation";
+FBSDKAppEventName const FBSDKAppEventNameRated = @"fb_mobile_rate";
+FBSDKAppEventName const FBSDKAppEventNameSchedule = @"Schedule";
+FBSDKAppEventName const FBSDKAppEventNameSearched = @"fb_mobile_search";
+FBSDKAppEventName const FBSDKAppEventNameStartTrial = @"StartTrial";
+FBSDKAppEventName const FBSDKAppEventNameSubmitApplication = @"SubmitApplication";
+FBSDKAppEventName const FBSDKAppEventNameSubscribe = @"Subscribe";
+FBSDKAppEventName const FBSDKAppEventNameViewedContent = @"fb_mobile_content_view";
 
 // MARK: - Application Lifecycle
 
 // Internal
 
-FBSDKAppEventName FBSDKAppEventNameInitializeSDK = @"fb_sdk_initialize";
-FBSDKAppEventName FBSDKAppEventNameBackgroundStatusAvailable = @"fb_sdk_background_status_available";
-FBSDKAppEventName FBSDKAppEventNameBackgroundStatusDenied = @"fb_sdk_background_status_denied";
-FBSDKAppEventName FBSDKAppEventNameBackgroundStatusRestricted = @"fb_sdk_background_status_restricted";
+FBSDKAppEventName const FBSDKAppEventNameInitializeSDK = @"fb_sdk_initialize";
+FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable = @"fb_sdk_background_status_available";
+FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied = @"fb_sdk_background_status_denied";
+FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted = @"fb_sdk_background_status_restricted";
 
 // MARK: - E-Commerce
 
 // Public
 
-FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo = @"fb_mobile_add_payment_info";
-FBSDKAppEventName FBSDKAppEventNameAddedToCart = @"fb_mobile_add_to_cart";
-FBSDKAppEventName FBSDKAppEventNameAddedToWishlist = @"fb_mobile_add_to_wishlist";
-FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout = @"fb_mobile_initiated_checkout";
-FBSDKAppEventName FBSDKAppEventNamePurchased = @"fb_mobile_purchase";
+FBSDKAppEventName const FBSDKAppEventNameAddedPaymentInfo = @"fb_mobile_add_payment_info";
+FBSDKAppEventName const FBSDKAppEventNameAddedToCart = @"fb_mobile_add_to_cart";
+FBSDKAppEventName const FBSDKAppEventNameAddedToWishlist = @"fb_mobile_add_to_wishlist";
+FBSDKAppEventName const FBSDKAppEventNameInitiatedCheckout = @"fb_mobile_initiated_checkout";
+FBSDKAppEventName const FBSDKAppEventNamePurchased = @"fb_mobile_purchase";
 
 // Internal
 
-FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate = @"fb_mobile_catalog_update";
-FBSDKAppEventName FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
-FBSDKAppEventName FBSDKAppEventNamePurchaseRestored = @"fb_mobile_purchase_restored";
-FBSDKAppEventName FBSDKAppEventNameSubscribeInitiatedCheckout = @"SubscriptionInitiatedCheckout";
-FBSDKAppEventName FBSDKAppEventNameSubscribeFailed = @"SubscriptionFailed";
-FBSDKAppEventName FBSDKAppEventNameSubscribeRestore = @"SubscriptionRestore";
+FBSDKAppEventName const FBSDKAppEventNameProductCatalogUpdate = @"fb_mobile_catalog_update";
+FBSDKAppEventName const FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
+FBSDKAppEventName const FBSDKAppEventNamePurchaseRestored = @"fb_mobile_purchase_restored";
+FBSDKAppEventName const FBSDKAppEventNameSubscribeInitiatedCheckout = @"SubscriptionInitiatedCheckout";
+FBSDKAppEventName const FBSDKAppEventNameSubscribeFailed = @"SubscriptionFailed";
+FBSDKAppEventName const FBSDKAppEventNameSubscribeRestore = @"SubscriptionRestore";
 
 // MARK: - Gaming
 
 // Public
 
-FBSDKAppEventName FBSDKAppEventNameAchievedLevel = @"fb_mobile_level_achieved";
-FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement = @"fb_mobile_achievement_unlocked";
-FBSDKAppEventName FBSDKAppEventNameSpentCredits = @"fb_mobile_spent_credits";
+FBSDKAppEventName const FBSDKAppEventNameAchievedLevel = @"fb_mobile_level_achieved";
+FBSDKAppEventName const FBSDKAppEventNameUnlockedAchievement = @"fb_mobile_achievement_unlocked";
+FBSDKAppEventName const FBSDKAppEventNameSpentCredits = @"fb_mobile_spent_credits";
 
 // MARK: - Push Notifications
 
 // Internal
 
-FBSDKAppEventName FBSDKAppEventNamePushTokenObtained = @"fb_mobile_obtain_push_token";
-FBSDKAppEventName FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
+FBSDKAppEventName const FBSDKAppEventNamePushTokenObtained = @"fb_mobile_obtain_push_token";
+FBSDKAppEventName const FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 
 // MARK: - Time Spent
 
 // Internal
 
-FBSDKAppEventName FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
-FBSDKAppEventName FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate_app";
+FBSDKAppEventName const FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
+FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate_app";
