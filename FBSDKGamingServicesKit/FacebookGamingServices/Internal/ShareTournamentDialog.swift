@@ -44,7 +44,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
 
   init(
     tournament: Tournament,
-    score: Int?,
     urlOpener: BridgeAPIRequestOpening,
     shareType: ShareType,
     delegate: ShareTournamentDialogDelegate
@@ -56,13 +55,13 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   }
 
   /**
-     Creates a share a dialog that will share and update the given tournament with the given score and payload.
+   Creates a share a dialog that will share and update the given tournament with the given score and payload.
 
-      - Parameter tournament: The Tournament to update and share
-      - Parameter score: The new score to update in the given tournament
-      - Parameter payload: Optional blob of data to attach to the update.
-                           Must be less than or equal to 1000 characters when stringified.
-      - Parameter Delegate: The delegate for the dialog to be invoked in case of error , cancellation or completion
+   - Parameter tournament: The Tournament to update and share
+   - Parameter score: The new score to update in the given tournament
+   - Parameter payload: Optional blob of data to attach to the update.
+   Must be less than or equal to 1000 characters when stringified.
+   - Parameter Delegate: The delegate for the dialog to be invoked in case of error , cancellation or completion
    */
   public convenience init(
     update tournament: Tournament,
@@ -70,12 +69,17 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     payload: String? = nil,
     delegate: ShareTournamentDialogDelegate
   ) {
-    self.init(tournament: tournament, score: score, urlOpener: BridgeAPI.shared, shareType: .update, delegate: delegate)
+    self.init(tournament: tournament, urlOpener: BridgeAPI.shared, shareType: .update, delegate: delegate)
     self.tournament.payload = payload
   }
 
-  public func show() throws {
-    try validateTournamentForUpdate()
+  /**
+   Attempts to share the given score by showing the share dialog
+   - Parameter score: A score to  share in the tournament. Try `NumericScore` or `TimeScore`
+   - throws  Will throw if an error occurs when attempting to show the dialog
+   */
+  public func share<T: Score>(score: T) throws {
+    try self.tournament.update(score: score)
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -95,16 +99,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
       if !success {
         strongSelf.delegate?.didFail(withError: ShareTournamentDialogError.unknownBridgeError, dialog: strongSelf)
       }
-    }
-  }
-
-  func validateTournamentForUpdate() throws {
-    guard !tournament.identifier.isEmpty else {
-      throw ShareTournamentDialogError.tournamentMissingIdentifier
-    }
-
-    guard tournament.score != nil else {
-      throw ShareTournamentDialogError.tournamentMissingScore
     }
   }
 
