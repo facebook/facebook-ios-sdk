@@ -227,7 +227,6 @@ class GamingVideoUploaderTests: XCTestCase {
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
     let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
 
-
     // Send first chunk of data
     delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)
 
