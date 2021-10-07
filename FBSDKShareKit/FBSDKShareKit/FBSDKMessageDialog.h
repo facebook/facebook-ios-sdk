@@ -44,20 +44,28 @@ NS_SWIFT_NAME(MessageDialog)
 @interface FBSDKMessageDialog : NSObject <FBSDKSharingDialog>
 
 /**
+ Convenience initializer to return a Message Share Dialog with content and a delegate.
+ @param content The content to be shared.
+ @param delegate The receiver's delegate.
+ */
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate;
+
+/**
  Convenience method to return a Message Share Dialog with content and a delegate.
  @param content The content to be shared.
  @param delegate The receiver's delegate.
  */
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
++ (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
                          delegate:(nullable id<FBSDKSharingDelegate>)delegate
-NS_SWIFT_NAME(init(content:delegate:));
+NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
 
 /**
  Convenience method to show a Message Share Dialog with content and a delegate.
  @param content The content to be shared.
  @param delegate The receiver's delegate.
  */
-+ (instancetype)showWithContent:(id<FBSDKSharingContent>)content
++ (instancetype)showWithContent:(nullable id<FBSDKSharingContent>)content
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 

@@ -20,15 +20,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface FBSDKMessageDialog (Testing)
 
 @property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
 
-+ (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
+         appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker;
 
 @end
 

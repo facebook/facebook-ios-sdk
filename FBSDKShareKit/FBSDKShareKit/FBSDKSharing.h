@@ -42,7 +42,7 @@ NS_SWIFT_NAME(Sharing)
 /**
   The content to be shared.
  */
-@property (nonatomic, copy) id<FBSDKSharingContent> shareContent;
+@property (nullable, nonatomic, copy) id<FBSDKSharingContent> shareContent;
 
 /**
   A Boolean value that indicates whether the receiver should fail if it finds an error with the share content.

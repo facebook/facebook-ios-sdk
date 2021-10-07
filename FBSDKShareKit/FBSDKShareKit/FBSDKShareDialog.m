@@ -236,29 +236,11 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   self.hasBeenConfigured = NO;
 }
 
-#pragma mark - Factory Methods
+#pragma mark - Properties
 
-+ (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
-                             withContent:(id<FBSDKSharingContent>)content
-                                delegate:(nullable id<FBSDKSharingDelegate>)delegate
-{
-  FBSDKShareDialog *dialog = [self new];
-  dialog.fromViewController = viewController;
-  dialog.shareContent = content;
-  dialog.delegate = delegate;
-  return dialog;
-}
-
-+ (instancetype)showFromViewController:(UIViewController *)viewController
-                           withContent:(id<FBSDKSharingContent>)content
-                              delegate:(id<FBSDKSharingDelegate>)delegate
-{
-  FBSDKShareDialog *dialog = [self dialogWithViewController:viewController
-                                                withContent:content
-                                                   delegate:delegate];
-  [dialog show];
-  return dialog;
-}
+@synthesize delegate = _delegate;
+@synthesize shareContent = _shareContent;
+@synthesize shouldFailOnDataError = _shouldFailOnDataError;
 
 #pragma mark - Object Lifecycle
 
@@ -281,11 +263,40 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   }
 }
 
-#pragma mark - Properties
+- (instancetype)initWithViewController:(nullable UIViewController *)viewController
+                               content:(nullable id<FBSDKSharingContent>)content
+                              delegate:(nullable id<FBSDKSharingDelegate>)delegate
+{
+  if ((self = [super init])) {
+    _fromViewController = viewController;
+    _shareContent = content;
+    _delegate = delegate;
+  }
 
-@synthesize delegate = _delegate;
-@synthesize shareContent = _shareContent;
-@synthesize shouldFailOnDataError = _shouldFailOnDataError;
+  return self;
+}
+
+#pragma mark - Factory Methods
+
++ (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
+                             withContent:(nullable id<FBSDKSharingContent>)content
+                                delegate:(nullable id<FBSDKSharingDelegate>)delegate
+{
+  return [[FBSDKShareDialog alloc] initWithViewController:viewController
+                                                  content:content
+                                                 delegate:delegate];
+}
+
++ (instancetype)showFromViewController:(UIViewController *)viewController
+                           withContent:(id<FBSDKSharingContent>)content
+                              delegate:(id<FBSDKSharingDelegate>)delegate
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] initWithViewController:viewController
+                                                                      content:content
+                                                                     delegate:delegate];
+  [dialog show];
+  return dialog;
+}
 
 #pragma mark - Public Methods
 

@@ -50,33 +50,43 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   }
 }
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
+- (instancetype)init
+{
+  return [self initWithContent:nil delegate:nil];
+}
+
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
+{
+  return [self initWithContent:content
+                      delegate:delegate
+        appAvailabilityChecker:FBSDKInternalUtility.sharedUtility];
+}
+
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
+         appAvailabilityChecker:(nonnull id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+{
+  if ((self = [super init])) {
+    _shareContent = content;
+    _delegate = delegate;
+    _appAvailabilityChecker = appAvailabilityChecker;
+  }
+
+  return self;
+}
+
++ (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
                          delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  return [self dialogWithContent:content
-                        delegate:delegate
-          appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
-  ];
+  return [[self alloc] initWithContent:content delegate:delegate];
 }
 
-+ (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
++ (instancetype)showWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKMessageDialog *dialog = [self dialogWithContent:content
-                                              delegate:delegate
-                                appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
-  ];
+  FBSDKMessageDialog *dialog = [[self alloc] initWithContent:content delegate:delegate];
   [dialog show];
-  return dialog;
-}
-
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(id<FBSDKSharingDelegate>)delegate
-           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-{
-  FBSDKMessageDialog *dialog = [self new];
-  dialog.shareContent = content;
-  dialog.delegate = delegate;
-  dialog.appAvailabilityChecker = appAvailabilityChecker;
   return dialog;
 }
 

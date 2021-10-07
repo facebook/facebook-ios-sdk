@@ -51,11 +51,9 @@
 
   self.appAvailabilityChecker = [TestInternalUtility new];
   self.delegate = [FakeSharingDelegate new];
-  self.dialog = [FBSDKMessageDialog
-                 dialogWithContent:nil
-                 delegate:self.delegate
-                 appAvailabilityChecker:self.appAvailabilityChecker
-  ];
+  self.dialog = [[FBSDKMessageDialog alloc] initWithContent:nil
+                                                   delegate:self.delegate
+                                     appAvailabilityChecker:self.appAvailabilityChecker];
 }
 
 - (void)testCanShow
@@ -172,10 +170,9 @@
 
 - (void)testShowInvokesDelegateWhenCannotValidate
 {
-  FBSDKMessageDialog *dialog = [FBSDKMessageDialog dialogWithContent:[FBSDKShareModelTestUtility cameraEffectContent]
-                                                            delegate:self.delegate
-                                              appAvailabilityChecker:self.appAvailabilityChecker
-  ];
+  FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] initWithContent:[FBSDKShareModelTestUtility cameraEffectContent]
+                                                                  delegate:self.delegate
+                                                    appAvailabilityChecker:self.appAvailabilityChecker];
   self.appAvailabilityChecker.isMessengerAppInstalled = YES;
   [dialog show];
 
