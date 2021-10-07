@@ -20,10 +20,8 @@
 
 #import "FBSDKShareButton.h"
 
+#import "FBSDKShareAppEventName.h"
 #import "FBSDKShareDialog.h"
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonImpression = @"fb_share_button_impression";
-FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_did_tap";
 
 @interface FBSDKShareButton ()
 @property (nonatomic) FBSDKShareDialog *dialog;
@@ -51,9 +49,9 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   return nil;
 }
 
-- (NSString *)impressionTrackingEventName
+- (FBSDKAppEventName)impressionTrackingEventName
 {
-  return FBSDKAppEventNameFBSDKShareButtonImpression;
+  return FBSDKAppEventNameShareButtonImpression;
 }
 
 - (NSString *)impressionTrackingIdentifier
@@ -92,7 +90,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
 
 - (void)_share:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKShareButtonDidTap parameters:[self analyticsParameters]];
+  [self logTapEventWithEventName:FBSDKAppEventNameShareButtonDidTap parameters:[self analyticsParameters]];
   [_dialog show];
 }
 

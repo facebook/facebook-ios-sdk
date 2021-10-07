@@ -27,7 +27,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKShareAppEventNames.h"
+#import "FBSDKShareAppEventName.h"
+#import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareConstants.h"
@@ -54,9 +55,6 @@
 #define FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION @"20150629"
 #define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
 #define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogShow = @"fb_dialog_share_show";
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_share_result";
 
 @interface FBSDKShareDialog () <FBSDKWebDialogDelegate>
 
@@ -1220,7 +1218,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1234,7 +1232,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1249,7 +1247,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1279,7 +1277,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogShareContentType : contentType,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventShareDialogShow
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogShow
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];

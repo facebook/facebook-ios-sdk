@@ -22,9 +22,7 @@
 
 #import "FBSDKMessageDialog.h"
 #import "FBSDKMessengerIcon.h"
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_impression";
-FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
+#import "FBSDKShareAppEventName.h"
 
 @interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
 @property (nonatomic) FBSDKMessageDialog *dialog;
@@ -52,9 +50,9 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   return nil;
 }
 
-- (NSString *)impressionTrackingEventName
+- (FBSDKAppEventName)impressionTrackingEventName
 {
-  return FBSDKAppEventNameFBSDKSendButtonImpression;
+  return FBSDKAppEventNameSendButtonImpression;
 }
 
 - (NSString *)impressionTrackingIdentifier
@@ -96,7 +94,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
 - (void)_share:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
+  [self logTapEventWithEventName:FBSDKAppEventNameSendButtonDidTap parameters:self.analyticsParameters];
   [_dialog show];
 }
 

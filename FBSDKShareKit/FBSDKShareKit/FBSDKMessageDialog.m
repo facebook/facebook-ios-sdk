@@ -22,7 +22,8 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKShareAppEventNames.h"
+#import "FBSDKShareAppEventName.h"
+#import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
@@ -37,8 +38,6 @@
 
 @implementation FBSDKMessageDialog
 
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow = @"fb_messenger_dialog_share_show";
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult = @"fb_messenger_dialog_share_result";
 NSString *const FBSDKAppEventParameterDialogShareContentPageID = @"fb_dialog_share_content_page_id";
 NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share_content_uuid";
 
@@ -189,7 +188,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -207,7 +206,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -225,7 +224,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
 
-    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
+    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
                           parameters:parameters
                   isImplicitlyLogged:YES
                          accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -255,7 +254,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                                FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
                                                FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogShow
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
                         parameters:parameters
                 isImplicitlyLogged:YES
                        accessToken:[FBSDKAccessToken currentAccessToken]];

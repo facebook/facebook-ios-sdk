@@ -27,13 +27,7 @@
 
 #import "FBSDKLikeActionControllerCache.h"
 #import "FBSDKLikeDialog.h"
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidDisable = @"fb_like_control_did_disable";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidLike = @"fb_like_control_did_like";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidPresentDialog = @"fb_like_control_did_present_dialog";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidUnlike = @"fb_like_control_did_unlike";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlError = @"fb_like_control_error";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable = @"fb_like_control_network_unavailable";
+#import "FBSDKShareAppEventName.h"
 
 typedef NS_ENUM(NSInteger, FBSDKTriStateBOOL) {
   FBSDKTriStateBOOLValueUnknown = -1,
@@ -400,7 +394,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   if ([error.userInfo[@"error_reason"] isEqualToString:@"dialog_disabled"]) {
     _fbsdkLikeActionControllerDisabled = YES;
 
-    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidDisable
+    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameLikeControlDidDisable
                           parameters:[_dialogToAnalyticsParametersMap objectForKey:likeDialog]
                   isImplicitlyLogged:YES
                          accessToken:_accessToken];
@@ -441,8 +435,8 @@ static void FBSDKLikeActionControllerLogError(NSString *currentAction,
     @"error" : error.description ?: @"",
   };
   NSString *eventName = ([FBSDKError isNetworkError:error]
-    ? FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable
-    : FBSDKAppEventNameFBSDKLikeControlError);
+    ? FBSDKAppEventNameLikeControlNetworkUnavailable
+    : FBSDKAppEventNameLikeControlError);
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters
                 isImplicitlyLogged:YES
@@ -781,7 +775,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                       analyticsParameters:(NSDictionary<NSString *, id> *)analyticsParameters
                        fromViewController:(UIViewController *)fromViewController
 {
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidPresentDialog
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameLikeControlDidPresentDialog
                         parameters:analyticsParameters
                 isImplicitlyLogged:YES
                        accessToken:_accessToken];
@@ -823,7 +817,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                                                                                      NSString *unlikeToken) {
                                                                                        self->_objectIsLikedIsPending = NO;
                                                                                        if (success) {
-                                                                                         [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidLike
+                                                                                         [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameLikeControlDidLike
                                                                                                                parameters:analyticsParameters
                                                                                                        isImplicitlyLogged:YES
                                                                                                               accessToken:self->_accessToken];
@@ -867,7 +861,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
   fbsdk_like_action_controller_publish_unlike_completion_block completionHandler = ^(BOOL success) {
     self->_objectIsLikedIsPending = NO;
     if (success) {
-      [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidUnlike
+      [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameLikeControlDidUnlike
                             parameters:analyticsParameters
                     isImplicitlyLogged:YES
                            accessToken:self->_accessToken];
