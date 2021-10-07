@@ -49,7 +49,7 @@ class TournamentUpdaterTest: XCTestCase {
   }
 
   func testUpdate() throws {
-    updater.update(tournament: tournament, score: score) { _ in
+    updater.update(tournament: tournament, score: NumericScore(value: score)) { _ in
       XCTFail("Should not reach here")
     }
 
@@ -74,7 +74,7 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateError() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: score) { result in
+    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -96,7 +96,7 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateInvalidResult() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: score) { result in
+    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -116,13 +116,13 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateSuccessFalse() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: score) { result in
+    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
           return XCTFail("Should fail with decoding error but instead failed with: \(error)")
         }
-      case .success():
+      case .success:
         XCTFail("Should not succeed")
       }
       completionWasInvoked = true
@@ -137,13 +137,13 @@ class TournamentUpdaterTest: XCTestCase {
   func testHandlingUpdateSuccess() throws {
     var completionWasInvoked = false
     var didSucceed = false
-    updater.update(tournament: tournament, score: score) { result in
+    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
       switch result {
       case .failure(let error):
         return XCTFail(
           "Expecting the request to succeed instead received: \(error)"
         )
-      case .success():
+      case .success:
         didSucceed = true
       }
       completionWasInvoked = true

@@ -20,6 +20,7 @@ import FBSDKCoreKit
 
 public enum TournamentUpdaterError: Error {
   case server(Error)
+  case invalidScoreType
   case decoding
 }
 
@@ -57,15 +58,22 @@ public class TournamentUpdater {
    - Parameter completionHandler: The caller's completion handler to invoke once the graph request is complete
    */
 
-  public func update(
+  public func update<T: Score>(
     tournament: Tournament,
-    score: Int,
-    completionHandler: @escaping (Result<Void, TournamentUpdaterError>) -> Void
+    score: T,
+    completionHandler: @escaping (Result<Tournament, TournamentUpdaterError>) -> Void
   ) {
-    let parameters = [GraphRequest.scoreParameterKey: score]
+    var tournamentToUpdate = tournament
+    do {
+      try tournamentToUpdate.update(score: score)
+    } catch {
+      completionHandler(.failure(TournamentUpdaterError.invalidScoreType))
+    }
+
+    let parameters = [GraphRequest.scoreParameterKey: tournamentToUpdate.score]
     let request = graphRequestFactory.createGraphRequest(
-      withGraphPath: GraphRequest.path(identifier: tournament.identifier),
-      parameters: parameters,
+      withGraphPath: GraphRequest.path(identifier: tournamentToUpdate.identifier),
+      parameters: parameters as [String: Any],
       httpMethod: .post
     )
 
@@ -83,7 +91,7 @@ public class TournamentUpdater {
         completionHandler(.failure(.decoding))
         return
       }
-      completionHandler(.success(()))
+      completionHandler(.success(tournamentToUpdate))
     }
   }
 }
