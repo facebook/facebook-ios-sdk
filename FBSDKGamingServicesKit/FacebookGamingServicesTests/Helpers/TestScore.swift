@@ -16,13 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-extension Tournament: Equatable {
-  public static func == (lhs: Tournament, rhs: Tournament) -> Bool {
-    lhs.identifier == rhs.identifier
-      && lhs.score == rhs.score
-      && lhs.title == rhs.title
-      && lhs.expiration == rhs.expiration
-      && lhs.payload == rhs.payload
-      && lhs.sortOrder == rhs.sortOrder
-  }
+import Foundation
+
+struct TestScore: Score {
+  var value: Bool
+  var scoreType: ScoreType = .custom
 }
