@@ -23,10 +23,15 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
   lazy var tournament = Tournament(
     identifier: "1234",
     expiration: expirationDate,
-    score: 1000,
     title: "Test",
     payload: "Hello"
   )
+
+  override func setUp() {
+    super.setUp()
+
+    try? tournament.update(score: NumericScore(value: 1000))
+  }
 
   func testUpdateQueryItems() {
     let queryItems = ShareTournamentDialogURLBuilder.update(tournament).queryItems

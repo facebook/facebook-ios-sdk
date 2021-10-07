@@ -27,7 +27,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   let bridgeOpener = TestBridgeAPIRequestOpener()
   let expirationDate = Date()
-  lazy var validTournament = Tournament(identifier: "1234", expiration: expirationDate, score: 0)
+  lazy var validTournament = Tournament(identifier: "1234", expiration: expirationDate)
   lazy var tournamentWithInvalidIdentifier = Tournament(identifier: "", expiration: expirationDate)
   lazy var updateShareDialog = ShareTournamentDialog(
     tournament: validTournament,
@@ -44,6 +44,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     self.dialogDidCancel = false
     self.dialogError = nil
     AccessToken.current = SampleAccessTokens.validToken
+    try? validTournament.update(score: NumericScore(value: 120))
   }
 
   override func tearDown() {

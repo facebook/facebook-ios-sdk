@@ -245,9 +245,8 @@ class TournamentFetcherTests: XCTestCase {
         }
         XCTAssertEqual(tournament.identifier, expectedTournament.identifier)
         XCTAssertEqual(
-          tournament.expiration.timeIntervalSince1970,
-          expectedTournament.expiration.timeIntervalSince1970,
-          accuracy: 100
+          tournament.expiration?.timeIntervalSince1970,
+          expectedTournament.expiration?.timeIntervalSince1970
         )
         XCTAssertEqual(tournament.title, expectedTournament.title)
         XCTAssertEqual(tournament.payload, expectedTournament.payload)

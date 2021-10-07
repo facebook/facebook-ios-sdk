@@ -20,6 +20,7 @@ import Foundation
 
 public enum TournamentDecodingError: Error {
   case invalidExpirationDate
+  case invalidScoreType
 }
 
 public struct Tournament: Codable {
@@ -33,7 +34,7 @@ public struct Tournament: Codable {
    Timestamp when the  tournament ends.
    If the expiration is in the past, then the tournament is already finished and has expired.
    */
-  public internal(set) var expiration: Date
+  public internal(set) var expiration: Date?
 
   /**
    Title of the tournament provided upon the creation of the tournament.
@@ -41,20 +42,39 @@ public struct Tournament: Codable {
   public internal(set) var title: String?
 
   /**
+   The sort order of the score for the tournament provided upon the creation of the tournament.
+   */
+  public internal(set) var sortOrder: TournamentSortOrder?
+
+  /**
    Payload of the tournament provided upon the creation of the tournament.
    */
   public internal(set) var payload: String?
 
   /**
+   The image associated with the tournament
+   */
+  public internal(set) var image: UIImage?
+
+  /**
    The current score for the player for this  tournament.
    You can update the score by calling the `TournamentUpdater` and passing in the tournament and new score.
    */
-  public internal(set) var score: Int?
+  public var score: Int? {
+    if let numericScore = numericScore?.value {
+      return numericScore
+    } else if let time = timeScore?.value {
+      return Int(time)
+    }
+    return nil
+  }
+
+  var numericScore: NumericScore?
+  var timeScore: TimeScore?
 
   init(
     identifier: String,
-    expiration: Date,
-    score: Int? = nil,
+    expiration: Date? = nil,
     title: String? = nil,
     payload: String? = nil
   ) {
@@ -62,9 +82,40 @@ public struct Tournament: Codable {
     self.expiration = expiration
     self.title = title
     self.payload = payload
-    self.score = score
   }
 
+  // swiftlint:disable line_length
+  /// Creates a new tournament with the given parameters. Passing the created tournament to the `ShareTournamentDialog.init(create:delegate:)` will share and create the tournament server side.
+  ///
+  /// - Parameter title: Optional text title for the tournament
+  /// - Parameter expiration: Optional input for setting a custom end time for the tournament. if not specified, the default is a week after creation date.
+  /// - Parameter scoreType: Optional input for the formatting of the scores in the tournament leaderboard. See enum `ScoreType`, if not specified, the default is `ScoreType.numeric`.
+  /// - Parameter sortOrder: Optional input for the ordering of which score is best in the tournament. See enum `TournamentSortOrder`, if not specified, the default is `TournamentSortOrder.descending`.
+  /// - Parameter image: Optional image that will be associated with the tournament and included in any posts.
+  /// - Parameter payload: Optional data to attach to the update.All game sessions launched from the update will be able to access this blob. Must be less than or equal to 1000 characters when stringified.
+  ///
+  // swiftlint:enable line_length
+  public init(
+    title: String? = nil,
+    expiration: Date? = nil,
+    sortOrder: TournamentSortOrder? = nil,
+    image: UIImage? = nil,
+    payload: String? = nil
+  ) {
+    self.init(identifier: "", expiration: expiration, title: title, payload: payload)
+    self.sortOrder = sortOrder
+    self.image = image
+  }
+
+  mutating func update<T: Score>(score: T) throws {
+    if let numericScore = score as? NumericScore {
+      self.numericScore = numericScore
+    } else if let time = score.value as? TimeScore {
+      self.timeScore = time
+    } else {
+      throw TournamentDecodingError.invalidScoreType
+    }
+  }
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -79,7 +130,6 @@ public struct Tournament: Codable {
 
     title = try container.decodeIfPresent(String.self, forKey: .title)
     payload = try container.decodeIfPresent(String.self, forKey: .payload)
-    score = try container.decodeIfPresent(Int.self, forKey: .score)
   }
 
   enum CodingKeys: String, CodingKey {
@@ -87,6 +137,5 @@ public struct Tournament: Codable {
     case expiration = "tournament_end_time"
     case title = "tournament_title"
     case payload = "tournament_payload"
-    case score
   }
 }

@@ -52,7 +52,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     self.tournament = tournament
     self.bridgeURLOpener = urlOpener
     self.shareType = shareType
-    self.tournament.score = score
     self.delegate = delegate
   }
 
