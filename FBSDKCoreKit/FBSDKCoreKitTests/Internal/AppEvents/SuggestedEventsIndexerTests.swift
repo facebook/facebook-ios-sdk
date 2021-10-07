@@ -52,7 +52,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     static let unconfirmedEvents = optInEvents.map { $0 + "1" }
     static let buttonText = "Purchase"
     static let denseFeature = "1,2,3"
-    static let processedEvent = "purchase"
+  }
+
+  enum AppEventNames {
+    static let processedEvent = AppEvents.Name("purchase")
   }
 
   override func setUp() {
@@ -281,7 +284,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   func testLoggingEventWithoutDenseFeature() {
     indexer.logSuggestedEvent(
-      name,
+      AppEvents.Name(name),
       text: Values.buttonText,
       denseFeature: nil
     )
@@ -294,7 +297,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   func testLoggingEventWithDenseFeature() {
     indexer.logSuggestedEvent(
-      name,
+      AppEvents.Name(name),
       text: Values.buttonText,
       denseFeature: Values.denseFeature
     )
@@ -429,7 +432,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | no                                  | no                        |
   func testPredictingWithProcessedEventsMatchingNone() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
@@ -447,10 +450,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | no                        |
   func testPredictingWithProcessedEventsMatchingOptinEvent() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
-      optInEvents: [Values.processedEvent],
+      optInEvents: [AppEventNames.processedEvent.rawValue],
       unconfirmedEvents: Values.unconfirmedEvents
     )
 
@@ -458,7 +461,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.processedEvent,
+      AppEventNames.processedEvent,
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertEqual(
@@ -474,11 +477,11 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | processed event | matches optin | matches unconfirmed | dense data |
   // | yes             | no            | yes                 | null       |
   func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
-      unconfirmedEvents: [Values.processedEvent]
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
@@ -500,11 +503,11 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
 
     TestFeatureExtractor.stub(denseFeatures: pointer)
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
-      unconfirmedEvents: [Values.processedEvent]
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
@@ -523,18 +526,18 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | yes                       |
   func testPredictingWithProcessedEventMatchingBoth() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
-      optInEvents: [Values.processedEvent],
-      unconfirmedEvents: [Values.processedEvent]
+      optInEvents: [AppEventNames.processedEvent.rawValue],
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.processedEvent,
+      AppEventNames.processedEvent,
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertNil(

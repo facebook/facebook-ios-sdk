@@ -20,7 +20,7 @@
 class TestEventLogger: NSObject, EventLogging {
   var flushCallCount = 0
   var flushBehavior: AppEvents.FlushBehavior = .auto
-  var capturedEventName: String?
+  var capturedEventName: AppEvents.Name?
   var capturedParameters: [String: Any]?
   var capturedIsImplicitlyLogged = false
   var capturedAccessToken: AccessToken?
@@ -32,13 +32,13 @@ class TestEventLogger: NSObject, EventLogging {
     capturedFlushReason = flushReason
   }
 
-  func logEvent(_ eventName: String, parameters: [String: Any]?) {
+  func logEvent(_ eventName: AppEvents.Name, parameters: [String: Any]?) {
     capturedEventName = eventName
     capturedParameters = parameters
   }
 
   func logEvent(
-    _ eventName: String,
+    _ eventName: AppEvents.Name,
     valueToSum: Double,
     parameters: [String: Any]?
   ) {
@@ -47,13 +47,13 @@ class TestEventLogger: NSObject, EventLogging {
     capturedParameters = parameters
   }
 
-  func logInternalEvent(_ eventName: String, isImplicitlyLogged: Bool) {
+  func logInternalEvent(_ eventName: AppEvents.Name, isImplicitlyLogged: Bool) {
     capturedEventName = eventName
     capturedIsImplicitlyLogged = isImplicitlyLogged
   }
 
   func logInternalEvent(
-    _ eventName: String,
+    _ eventName: AppEvents.Name,
     parameters: [String: Any]?,
     isImplicitlyLogged: Bool
   ) {
@@ -63,7 +63,7 @@ class TestEventLogger: NSObject, EventLogging {
   }
 
   func logInternalEvent(
-    _ eventName: String,
+    _ eventName: AppEvents.Name,
     parameters: [String: Any]?,
     isImplicitlyLogged: Bool,
     accessToken: AccessToken
@@ -75,7 +75,7 @@ class TestEventLogger: NSObject, EventLogging {
   }
 
   func logInternalEvent(
-    _ eventName: String,
+    _ eventName: AppEvents.Name,
     valueToSum: Double,
     isImplicitlyLogged: Bool
   ) {

@@ -204,7 +204,7 @@ class ApplicationDelegateTests: XCTestCase {
 
     XCTAssertEqual(
       appEvents.capturedEventName,
-      AppEvents.Name.initializeSDK.rawValue
+      .initializeSDK
     )
     XCTAssertFalse(appEvents.capturedIsImplicitlyLogged)
   }

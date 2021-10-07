@@ -51,7 +51,7 @@ class BackgroundEventLoggerTests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedEventName,
-      AppEvents.Name.backgroundStatusAvailable.rawValue,
+      .backgroundStatusAvailable,
       "AppEvents instance should log fb_sdk_background_status_available if background refresh status is available"
     )
   }
@@ -61,7 +61,7 @@ class BackgroundEventLoggerTests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedEventName,
-      AppEvents.Name.backgroundStatusDenied.rawValue,
+      .backgroundStatusDenied,
       "AppEvents instance should log fb_sdk_background_status_denied if background refresh status is available"
     )
   }
@@ -71,7 +71,7 @@ class BackgroundEventLoggerTests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedEventName,
-      AppEvents.Name.backgroundStatusRestricted.rawValue,
+      .backgroundStatusRestricted,
       "AppEvents instance should log fb_sdk_background_status_restricted if background refresh status is available"
     )
   }

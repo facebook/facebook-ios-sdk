@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
 
 - (NSData *)fetchDeviceReceipt;
-- (void)logImplicitTransactionEvent:(NSString *)eventName
+- (void)logImplicitTransactionEvent:(FBSDKAppEventName)eventName
                          valueToSum:(double)valueToSum
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 - (BOOL)isSubscription:(SKProduct *)product;

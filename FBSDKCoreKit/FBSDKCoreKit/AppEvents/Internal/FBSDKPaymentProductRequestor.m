@@ -413,7 +413,7 @@ static NSMutableArray *_pendingRequestors;
                          parameters:[self getEventParametersOfProduct:product withTransaction:transaction]];
 }
 
-- (void)logImplicitTransactionEvent:(NSString *)eventName
+- (void)logImplicitTransactionEvent:(FBSDKAppEventName)eventName
                          valueToSum:(double)valueToSum
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {

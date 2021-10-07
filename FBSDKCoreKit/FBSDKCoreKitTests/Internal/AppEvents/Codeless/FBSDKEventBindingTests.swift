@@ -132,7 +132,7 @@ class FBSDKEventBindingTests: XCTestCase {
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      "Quantity Changed",
+      AppEvents.Name("Quantity Changed"),
       "Tracking events should log the event name"
     )
     XCTAssertEqual(
@@ -149,7 +149,7 @@ class FBSDKEventBindingTests: XCTestCase {
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      "Add To Cart",
+      AppEvents.Name("Add To Cart"),
       "Tracking events should log the event name"
     )
     XCTAssertEqual(

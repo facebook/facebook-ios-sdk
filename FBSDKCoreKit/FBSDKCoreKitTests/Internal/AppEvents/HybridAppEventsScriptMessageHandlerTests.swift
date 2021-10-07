@@ -205,7 +205,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
   ) {
     XCTAssertEqual(
       logger.capturedEventName,
-      name,
+      AppEvents.Name(name),
       "Should log the expected event name",
       file: file,
       line: line

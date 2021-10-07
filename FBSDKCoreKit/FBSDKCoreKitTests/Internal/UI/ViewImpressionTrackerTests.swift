@@ -25,7 +25,7 @@ class ViewImpressionTrackerTests: XCTestCase {
   let graphRequestFactory = TestGraphRequestFactory()
   let logger = TestEventLogger()
   let notificationCenter = TestNotificationCenter()
-  let sharedTrackerName = "shared"
+  let sharedTrackerName = AppEvents.Name("shared")
   let impressionIdentifier = "foo"
   let parameters = ["bar": "baz"]
 
@@ -153,7 +153,7 @@ class ViewImpressionTrackerTests: XCTestCase {
     )
 
     logger.capturedEventName = nil
-    tracker = createImpressionTracker(named: name)
+    tracker = createImpressionTracker(named: AppEvents.Name(name))
 
     tracker.logImpression(
       withIdentifier: impressionIdentifier,
@@ -162,7 +162,7 @@ class ViewImpressionTrackerTests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedEventName,
-      name,
+      AppEvents.Name(name),
       "Should log an impression from a new tracker even if the impression is not valid"
     )
     XCTAssertNil(
@@ -198,7 +198,7 @@ class ViewImpressionTrackerTests: XCTestCase {
     )
 
     logger.capturedEventName = nil
-    tracker = createImpressionTracker(named: name)
+    tracker = createImpressionTracker(named: AppEvents.Name(name))
 
     tracker.logImpression(
       withIdentifier: name,
@@ -207,14 +207,14 @@ class ViewImpressionTrackerTests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedEventName,
-      name,
+      AppEvents.Name(name),
       "Should be able to log different impressions using different trackers"
     )
   }
 
   // MARK: - Helpers
 
-  func createImpressionTracker(named name: String) -> ViewImpressionTracker {
+  func createImpressionTracker(named name: AppEvents.Name) -> ViewImpressionTracker {
     ViewImpressionTracker(
       eventName: name,
       graphRequestFactory: graphRequestFactory,

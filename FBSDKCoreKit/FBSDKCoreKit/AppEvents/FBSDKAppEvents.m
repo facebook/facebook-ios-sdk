@@ -297,7 +297,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
              parameters:parameters];
 }
 
-- (void)logEvent:(NSString *)eventName
+- (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName
@@ -995,7 +995,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
              accessToken:nil];
 }
 
-+ (void)logInternalEvent:(NSString *)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
@@ -1008,7 +1008,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                     accessToken:accessToken];
 }
 
-- (void)logInternalEvent:(NSString *)eventName
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
@@ -1023,7 +1023,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 }
 
-+ (void)logImplicitEvent:(NSString *)eventName
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
@@ -1035,7 +1035,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                     accessToken:accessToken];
 }
 
-- (void)logImplicitEvent:(NSString *)eventName
+- (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken

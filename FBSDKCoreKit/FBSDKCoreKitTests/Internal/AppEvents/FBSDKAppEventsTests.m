@@ -81,18 +81,18 @@
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
-+ (void)logInternalEvent:(NSString *)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
-+ (void)logInternalEvent:(NSString *)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
-+ (void)logImplicitEvent:(NSString *)eventName
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;

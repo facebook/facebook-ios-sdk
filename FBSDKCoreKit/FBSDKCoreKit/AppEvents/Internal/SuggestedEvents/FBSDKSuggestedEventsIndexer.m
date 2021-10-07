@@ -333,7 +333,7 @@ static dispatch_once_t setupNonce;
   return [textArray componentsJoinedByString:@" "];
 }
 
-- (void)logSuggestedEvent:(NSString *)event
+- (void)logSuggestedEvent:(FBSDKAppEventName)event
                      text:(NSString *)text
              denseFeature:(NSString *)denseFeature
 {

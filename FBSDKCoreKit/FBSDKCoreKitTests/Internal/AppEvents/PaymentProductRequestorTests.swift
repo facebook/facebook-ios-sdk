@@ -71,12 +71,6 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     static let inApp = "inapp"
     static let subscription = "subs"
     static let oneDaySubscriptionPeriod = "P1D"
-    static let willSubscribeEventName = "SubscriptionInitiatedCheckout"
-    static let didSubscribeEventName = "Subscribe"
-    static let startTrialEventName = "StartTrial"
-    static let subscriptionFailedEventName = "SubscriptionFailed"
-    static let subscriptionRestoredEventName = "SubscriptionRestore"
-    static let mobilePurchase = "fb_mobile_purchase"
   }
 
   func testResolvingProducts() {
@@ -130,7 +124,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
     try [AppEvents.Name.purchased, AppEvents.Name.subscribe, AppEvents.Name.startTrial].forEach { eventName in
       requestor.logImplicitTransactionEvent(
-        eventName.rawValue,
+        eventName,
         valueToSum: 100,
         parameters: [Keys.passThroughParameter: Values.passThroughValue]
       )
@@ -157,33 +151,35 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     try seedReceiptData()
     receiptProvider.stubbedURL = tempURL
 
-    try ["foo", "bar", "baz"].forEach { eventName in
-      requestor.logImplicitTransactionEvent(
-        eventName,
-        valueToSum: 100,
-        parameters: [Keys.passThroughParameter: Values.passThroughValue]
-      )
+    try ["foo", "bar", "baz"]
+      .map(AppEvents.Name.init(_:))
+      .forEach { eventName in
+        requestor.logImplicitTransactionEvent(
+          eventName,
+          valueToSum: 100,
+          parameters: [Keys.passThroughParameter: Values.passThroughValue]
+        )
 
-      let expected = PaymentProductParameters(
-        isImplicitlyLogged: "1",
-        passThroughParameter: Values.passThroughValue
-      )
+        let expected = PaymentProductParameters(
+          isImplicitlyLogged: "1",
+          passThroughParameter: Values.passThroughValue
+        )
 
-      XCTAssertEqual(
-        try decodedEventParameters(),
-        expected,
-        "Should not fetch and include the receipt data for events that do not match transaction names"
-      )
-      XCTAssertEqual(
-        eventLogger.capturedValueToSum,
-        100,
-        "Should log the value to sum"
-      )
-    }
+        XCTAssertEqual(
+          try decodedEventParameters(),
+          expected,
+          "Should not fetch and include the receipt data for events that do not match transaction names"
+        )
+        XCTAssertEqual(
+          eventLogger.capturedValueToSum,
+          100,
+          "Should log the value to sum"
+        )
+      }
   }
 
   func testLoggingImplicitTransactionFlushes() {
-    requestor.logImplicitTransactionEvent("foo", valueToSum: 100, parameters: [:])
+    requestor.logImplicitTransactionEvent(AppEvents.Name("foo"), valueToSum: 100, parameters: [:])
 
     XCTAssertEqual(
       eventLogger.flushCallCount,
@@ -199,7 +195,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
   func testLoggingWithExplicitFlushBehavior() {
     eventLogger.flushBehavior = .explicitOnly
-    requestor.logImplicitTransactionEvent("foo", valueToSum: 100, parameters: [:])
+    requestor.logImplicitTransactionEvent(AppEvents.Name("foo"), valueToSum: 100, parameters: [:])
 
     XCTAssertEqual(
       eventLogger.flushCallCount,
@@ -449,7 +445,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.willSubscribeEventName,
+      .subscribeInitiatedCheckout,
       "Should log the expected name"
     )
     XCTAssertNil(
@@ -494,7 +490,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.didSubscribeEventName,
+      .subscribe,
       "Should log a previously unlogged purchased subscription"
     )
     XCTAssertTrue(
@@ -525,7 +521,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.startTrialEventName,
+      .startTrial,
       "Should log whether a purchase marks the start of a trial"
     )
     // Clears original transaction ID
@@ -545,15 +541,15 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   // MARK: Failed, Restored, Deferred
 
   func testLoggingSubscriptions() {
-    let testData: [(paymentState: SKPaymentTransactionState, eventName: String?, message: String)] = [
+    let testData: [(paymentState: SKPaymentTransactionState, eventName: AppEvents.Name?, message: String)] = [
       (
         .failed,
-        Values.subscriptionFailedEventName,
+        .subscribeFailed,
         "Should log the expected event name for a subscription failure"
       ),
       (
         .restored,
-        Values.subscriptionRestoredEventName,
+        .subscribeRestore,
         "Should log the expected event name for a subscription restoration"
       ),
       (
@@ -605,7 +601,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.mobilePurchase,
+      .purchased,
       "bar"
     )
   }
@@ -683,7 +679,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.mobilePurchase,
+      .purchased,
       "Should log an event when the request fails. This seems like it might be a bug."
     )
   }

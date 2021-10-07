@@ -43,7 +43,7 @@ static dispatch_once_t token;
 
 #pragma mark - Class Methods
 
-+ (instancetype)impressionTrackerWithEventName:(NSString *)eventName
++ (instancetype)impressionTrackerWithEventName:(FBSDKAppEventName)eventName
                            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
                           notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
@@ -72,7 +72,7 @@ static dispatch_once_t token;
 
 #pragma mark - Object Lifecycle
 
-- (instancetype)initWithEventName:(NSString *)eventName
+- (instancetype)initWithEventName:(FBSDKAppEventName)eventName
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                       eventLogger:(id<FBSDKEventLogging>)eventLogger
              notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
