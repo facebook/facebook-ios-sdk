@@ -21,6 +21,10 @@ name: FBSDKCoreKit_Basics
 include:
   - ../xcodegen_project_common.yml
 
+projectReferences:
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
   Release: Configurations/Shared/Configuration/Release.xcconfig
@@ -122,6 +126,9 @@ targets:
       Release: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
     dependencies:
       - target: FBSDKCoreKit_Basics-Dynamic
+      - target: TestTools/TestTools
+        link: false
+        embed: false
 
 aggregateTargets:
   FBSDKCoreKit_Basics-Universal:

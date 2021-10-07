@@ -20,6 +20,8 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+@import TestTools;
+
 #import "FBSDKCoreKit_BasicsTests-Swift.h"
 
 @interface FBSDKTypeUtilityTests : XCTestCase
