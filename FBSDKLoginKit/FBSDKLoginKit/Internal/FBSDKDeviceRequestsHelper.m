@@ -24,6 +24,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <sys/utsname.h>
 
+#import "FBSDKLoginAppEventName.h"
+
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"
 #define FBSDK_HEADER @"fbsdk"
@@ -33,8 +35,6 @@
  #define FBSDK_FLAVOR @"tvos"
 #endif
 #define FBSDK_SERVICE_TYPE @"_fb._tcp."
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_login_service";
 
 static NSMapTable *g_mdnsAdvertisementServices;
 

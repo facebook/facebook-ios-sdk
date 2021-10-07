@@ -49,6 +49,7 @@
 		0AA512D8DA83D06976793394 /* FBSDKLoginTooltipView.m in Sources */ = {isa = PBXBuildFile; fileRef = D798D4D9AF2B9FE855C2615B /* FBSDKLoginTooltipView.m */; };
 		0C21252B8E687D4F09CA6D61 /* FBSDKLoginUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 07658CBD88E9B85A318A2C7B /* FBSDKLoginUtility.h */; };
 		0C650284BAC4C992607629BB /* FBSDKDevicePoller.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FE51AE36E4757C21F7E8C3 /* FBSDKDevicePoller.h */; };
+		0C8A3FA0595056498F3B8D68 /* FBSDKLoginAppEventName.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */; };
 		0C8E9B823BCF3EBC3BF7FF95 /* FBSDKDeviceLoginManagerResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C80B0C6F6B39D3E7A09BAE0 /* FBSDKDeviceLoginManagerResultTests.swift */; };
 		0D70249A63E7864EEFB00909 /* FBSDKMonotonicTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B1C7642B879509C5BFE97DA /* FBSDKMonotonicTime.h */; };
 		0DC9349F6819EA9C76F8ABB1 /* FBSDKDeviceLoginCodeInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 40D212CA78E2E04BB0970ECB /* FBSDKDeviceLoginCodeInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -82,6 +83,7 @@
 		29A25E8D7A2C7C423AC09354 /* FBSDKLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E52CF469915633BEFE149A /* FBSDKLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29B5E33CEFBF73D8C342962B /* FBSDKProfileFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 09577FC8D4C192134EE3C5EF /* FBSDKProfileFactory.h */; };
 		2A71C1081291989D2F393439 /* FBSDKLoginProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BD98769468F59C0B19252D9 /* FBSDKLoginProviding.h */; };
+		2B2C95938FA4A7669FDD142A /* FBSDKLoginAppEventName.m in Sources */ = {isa = PBXBuildFile; fileRef = 650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */; };
 		2F336C9D7F21D58D3A93A19B /* FBSDKReferralManagerLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCF68176A15301618033CC /* FBSDKReferralManagerLogger.m */; };
 		3018B93691CDDACD74A7C5EE /* FBSDKDeviceLoginManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B96530AD5B7A27BB23CD7C /* FBSDKDeviceLoginManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3052D6E99B39927EECFD5647 /* FBSDKLoginKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690638A34C1A5CDA7969FF /* FBSDKLoginKit+Internal.h */; };
@@ -100,6 +102,7 @@
 		4660D83AC913C7A75AEA405C /* FBSDKDeviceLoginManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B96530AD5B7A27BB23CD7C /* FBSDKDeviceLoginManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		47CAA7323B3638335C525C7B /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C772586DE313A5228005340 /* FBSDKDeviceLoginCodeInfo+Internal.h */; };
 		4B061167474CF4FA959D1B76 /* FBSDKLoginRecoveryAttempter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE997F1BC44B34725B9E889 /* FBSDKLoginRecoveryAttempter.m */; };
+		4B6DC10F1F2993673FEDAD94 /* FBSDKLoginAppEventName.m in Sources */ = {isa = PBXBuildFile; fileRef = 650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */; };
 		4CAC43D95286A60941C47B15 /* FBSDKLoginCompletion.m in Sources */ = {isa = PBXBuildFile; fileRef = 392C06EE7C6C8A9993DF46B8 /* FBSDKLoginCompletion.m */; };
 		4E69E1297B79AF15A800B688 /* FBSDKNonceUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0B26B66DA79CF8FB23512E /* FBSDKNonceUtility.h */; };
 		5002A0B536A4869FC14E4A97 /* FBSDKLoginButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 60A1350E92A087927A63254E /* FBSDKLoginButton.m */; };
@@ -119,6 +122,7 @@
 		5DDF75EDAF607C87FCBA4948 /* FBSDKDeviceLoginCodeInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A51FC91B0B1981196A268837 /* FBSDKDeviceLoginCodeInfoTests.m */; };
 		6221BD6233D4387EFA57EAB5 /* FBSDKDeviceLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = EE69F0BA348C662F6C4B140D /* FBSDKDeviceLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62F505CA39968E62E9DBDCAA /* FBSDKNonceUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0B26B66DA79CF8FB23512E /* FBSDKNonceUtility.h */; };
+		6500D761D51E8068DC34BB01 /* FBSDKLoginAppEventName.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */; };
 		663E720653052D475D0A1A08 /* FBSDKLoginManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AF579553CBAA45086C992D74 /* FBSDKLoginManagerTests.m */; };
 		664906762D5D6E0452EE7136 /* FBSDKLoginKit-Prefix-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 92514317F6B9D8B62B55E013 /* FBSDKLoginKit-Prefix-Header.h */; };
 		66568EFD283AD396F0625F38 /* FBSDKDeviceLoginManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 44B96530AD5B7A27BB23CD7C /* FBSDKDeviceLoginManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -150,6 +154,7 @@
 		81B607DBC68B2294A184DA32 /* FBSDKLoginConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 31067A9FF406BEC0D34C4D89 /* FBSDKLoginConstants.m */; };
 		83869DAE4D8027FEA49D3724 /* FBSDKDeviceLoginManagerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 229BC22FB01B4DA5523F3930 /* FBSDKDeviceLoginManagerResult.m */; };
 		83E3C6FA491C10C0930F98A6 /* FBSDKDeviceLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD29D8763E982D6AD9B698C /* FBSDKDeviceLoginManager.m */; };
+		8439BB4E95D73FB115563AD3 /* FBSDKLoginAppEventName.m in Sources */ = {isa = PBXBuildFile; fileRef = 650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */; };
 		84A6D5B8EFD28230CEE791A5 /* FBSDKLoginConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 3486AC1F0669FADD46A006B8 /* FBSDKLoginConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		855120D35E8559A33725F6AD /* DevicePollerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1515275536A622077C05EBC /* DevicePollerTests.swift */; };
 		85C243178AC8596EA46CA132 /* FBSDKDeviceLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = EE69F0BA348C662F6C4B140D /* FBSDKDeviceLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +162,7 @@
 		874E57F5256E534CDAE79AA7 /* FBSDKReferralCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0580E794DBA6974CD714D977 /* FBSDKReferralCode.m */; };
 		87B5A869C400224AB65CDB68 /* FBSDKDevicePolling.h in Headers */ = {isa = PBXBuildFile; fileRef = 919E9599C8B90233435979D9 /* FBSDKDevicePolling.h */; };
 		881F582EDB3A6406B2933E78 /* FBSDKReferralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 166F987F874885D447F216DC /* FBSDKReferralManager.m */; };
+		8857FBE337CDC3AB0F22BD74 /* FBSDKLoginAppEventName.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */; };
 		8BABA33A54A4A4A8302199A1 /* FBSDKDeviceLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD29D8763E982D6AD9B698C /* FBSDKDeviceLoginManager.m */; };
 		8CBE465B9D0C3C21FAFF6246 /* FBSDKLoginManagerLoginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = F830166A1087C275C27D63FB /* FBSDKLoginManagerLoginResult.m */; };
 		8D46CCB621D077BDF20D13A1 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 164F4061370FA79EA7334FB6 /* FBSDKDeviceLoginManagerResult+Internal.h */; };
@@ -207,6 +213,7 @@
 		B8F4DF5467F8E8D67F3FA047 /* FBSDKLoginManagerLoginResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D1B5BB849DB8AD9A8AA43B9 /* FBSDKLoginManagerLoginResult+Internal.h */; };
 		B91BC96BB32F5C1880181B10 /* FBSDKDeviceLoginCodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 901015B40BCB59F38B17DF6E /* FBSDKDeviceLoginCodeInfo.m */; };
 		B9257E2604ECB708C0DE8E0E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F93FAC96C21B0AAF80907E6 /* UIKit.framework */; };
+		B95005D083D9842C7BA49F7F /* FBSDKLoginAppEventName.h in Headers */ = {isa = PBXBuildFile; fileRef = 49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */; };
 		BAFDE33F3FF3A578AE55016E /* FBLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0683D862CAEB113BB9033C1 /* FBLoginButton.swift */; };
 		BC9823E1E1F05596BC914AA0 /* FBSDKReferralCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B0B5D5C4EAD833920828D4EE /* FBSDKReferralCodeTests.m */; };
 		BDE21CC4847249C06A0F7DA0 /* FBSDKLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F5344F80C527A029A77EEA86 /* FBSDKLoginButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -259,6 +266,7 @@
 		F8A6B37DD6DB14A650CFBE29 /* FBSDKReferralManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E131FB2AEEAA6E87E025823C /* FBSDKReferralManagerTests.m */; };
 		F9617D1B2F775EA872353F12 /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C32BDD8E419610D79FEF3E4 /* FBSDKCoreKit+Internal.h */; };
 		FB453251D39D27B7CA1EE687 /* FBSDKProfileCreating.h in Headers */ = {isa = PBXBuildFile; fileRef = F36BD322FA28A2824629622F /* FBSDKProfileCreating.h */; };
+		FB482944198C292A0CBCCF7C /* FBSDKLoginAppEventName.m in Sources */ = {isa = PBXBuildFile; fileRef = 650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */; };
 		FB873EB031611ED6A9AE93DC /* FBSDKDeviceLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = EE69F0BA348C662F6C4B140D /* FBSDKDeviceLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FD9F77D1A73CE1BC422A4075 /* FBSDKTooltipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40533EA2A7626966B8B9AC2B /* FBSDKTooltipView.m */; };
 		FFE9684AB28D5E1C8CEEE9FA /* FBSDKLoginManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = D47B542D0ED26B7D4BF14F61 /* FBSDKLoginManager+Internal.h */; };
@@ -452,6 +460,7 @@
 		42785B8F24B02484BEEFFDF6 /* FBSDKTooltipView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTooltipView.h; sourceTree = "<group>"; };
 		44B96530AD5B7A27BB23CD7C /* FBSDKDeviceLoginManagerResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceLoginManagerResult.h; sourceTree = "<group>"; };
 		49B86CE52E525908C4D015EC /* FBSDKLoginManagerLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginManagerLoggerTests.m; sourceTree = "<group>"; };
+		49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginAppEventName.h; sourceTree = "<group>"; };
 		4C7421625AE0A2FD3EF8A888 /* LoginButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonTests.swift; sourceTree = "<group>"; };
 		4C772586DE313A5228005340 /* FBSDKDeviceLoginCodeInfo+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKDeviceLoginCodeInfo+Internal.h"; sourceTree = "<group>"; };
 		4D0C859A5FD629547F11C09D /* FBSDKLoginUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginUtility.m; sourceTree = "<group>"; };
@@ -459,6 +468,7 @@
 		52B73E0D13B16A28C1F3FDF9 /* FBSDKDevicePoller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKDevicePoller.m; sourceTree = "<group>"; };
 		5B1C7642B879509C5BFE97DA /* FBSDKMonotonicTime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMonotonicTime.h; sourceTree = "<group>"; };
 		60A1350E92A087927A63254E /* FBSDKLoginButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginButton.m; sourceTree = "<group>"; };
+		650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginAppEventName.m; sourceTree = "<group>"; };
 		65FE51AE36E4757C21F7E8C3 /* FBSDKDevicePoller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKDevicePoller.h; sourceTree = "<group>"; };
 		6A067F51765A099770B3F067 /* FBSDKLoginKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		6FD29D8763E982D6AD9B698C /* FBSDKDeviceLoginManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceLoginManager.m; sourceTree = "<group>"; };
@@ -744,6 +754,8 @@
 				919E9599C8B90233435979D9 /* FBSDKDevicePolling.h */,
 				AC65D57C7B301671411A59E9 /* FBSDKDeviceRequestsHelper.h */,
 				27031CCB2DAC42BBAEC12AFE /* FBSDKDeviceRequestsHelper.m */,
+				49DBE6DAB5EA46157E64C1F6 /* FBSDKLoginAppEventName.h */,
+				650D3914C29515C3EEE524AD /* FBSDKLoginAppEventName.m */,
 				B67F726ACB0B82D74A2A5F36 /* FBSDKLoginCompletion.h */,
 				392C06EE7C6C8A9993DF46B8 /* FBSDKLoginCompletion.m */,
 				ACFB0E70B273362E13270880 /* FBSDKLoginCompletion+Internal.h */,
@@ -835,6 +847,7 @@
 				F6D1AC9E5369EBE569874C0C /* FBSDKDevicePoller.h in Headers */,
 				87B5A869C400224AB65CDB68 /* FBSDKDevicePolling.h in Headers */,
 				D67ED6F0B081FF26DEDAE0F0 /* FBSDKDeviceRequestsHelper.h in Headers */,
+				8857FBE337CDC3AB0F22BD74 /* FBSDKLoginAppEventName.h in Headers */,
 				90E5AE93FB69BE2EA0535992 /* FBSDKLoginButton.h in Headers */,
 				088D0F4FD1A356DF191B4458 /* FBSDKLoginCompletion+Internal.h in Headers */,
 				9C09DA20B866AC5AA220A891 /* FBSDKLoginCompletion.h in Headers */,
@@ -880,6 +893,7 @@
 				5D03DA2642E9CA0D7A28BC4A /* FBSDKDevicePoller.h in Headers */,
 				089AAF2953042509277C2511 /* FBSDKDevicePolling.h in Headers */,
 				390FCC4071FCC2A73C0188BA /* FBSDKDeviceRequestsHelper.h in Headers */,
+				6500D761D51E8068DC34BB01 /* FBSDKLoginAppEventName.h in Headers */,
 				10D9000D2EF6CEE1F43CA76F /* FBSDKLoginConstants.h in Headers */,
 				CBEDDC1CDA763E7DBAC0C4E2 /* FBSDKLoginKit+Internal.h in Headers */,
 				A65FF02452AAF0276969B013 /* FBSDKLoginKit-Prefix-Header.h in Headers */,
@@ -908,6 +922,7 @@
 				151C51F9529D1AEA9A2CC6AA /* FBSDKDevicePoller.h in Headers */,
 				DEA9ADB77EA34B3B7213BE3E /* FBSDKDevicePolling.h in Headers */,
 				A1838E6A7DF856A881F80B6C /* FBSDKDeviceRequestsHelper.h in Headers */,
+				0C8A3FA0595056498F3B8D68 /* FBSDKLoginAppEventName.h in Headers */,
 				BDE21CC4847249C06A0F7DA0 /* FBSDKLoginButton.h in Headers */,
 				70A34544E7750EEC77A11758 /* FBSDKLoginCompletion+Internal.h in Headers */,
 				9D5D8663B1544F2F7BBE5ADA /* FBSDKLoginCompletion.h in Headers */,
@@ -953,6 +968,7 @@
 				0C650284BAC4C992607629BB /* FBSDKDevicePoller.h in Headers */,
 				59E83D0359D0EF3D11EC69F2 /* FBSDKDevicePolling.h in Headers */,
 				5BB48561286CD6DA4487BED1 /* FBSDKDeviceRequestsHelper.h in Headers */,
+				B95005D083D9842C7BA49F7F /* FBSDKLoginAppEventName.h in Headers */,
 				B43649D88B9C9B244F27A5DB /* FBSDKLoginConstants.h in Headers */,
 				3052D6E99B39927EECFD5647 /* FBSDKLoginKit+Internal.h in Headers */,
 				664906762D5D6E0452EE7136 /* FBSDKLoginKit-Prefix-Header.h in Headers */,
@@ -1299,6 +1315,7 @@
 				15BE9032097584C98AE298AB /* FBSDKDeviceLoginManagerResult.m in Sources */,
 				AC4F6D034A19D9E268CCCFA5 /* FBSDKDevicePoller.m in Sources */,
 				7B2DA175CE6922E05DC6CB62 /* FBSDKDeviceRequestsHelper.m in Sources */,
+				4B6DC10F1F2993673FEDAD94 /* FBSDKLoginAppEventName.m in Sources */,
 				F50652768759782617742560 /* FBSDKLoginConstants.m in Sources */,
 				3E594F262E77940947E65F2A /* FBSDKLoginRecoveryAttempter.m in Sources */,
 				986C59D8133C2CAC6CBA215E /* FBSDKNonceUtility.m in Sources */,
@@ -1314,6 +1331,7 @@
 				83869DAE4D8027FEA49D3724 /* FBSDKDeviceLoginManagerResult.m in Sources */,
 				C7B09D2EC464FCAF90D4292D /* FBSDKDevicePoller.m in Sources */,
 				C4F2B49DAEFC6D68F5E02C94 /* FBSDKDeviceRequestsHelper.m in Sources */,
+				2B2C95938FA4A7669FDD142A /* FBSDKLoginAppEventName.m in Sources */,
 				BF042AF24DF17AE38FFF14F6 /* FBSDKLoginConstants.m in Sources */,
 				5DDAC5FB76F75BBD50C8874B /* FBSDKLoginRecoveryAttempter.m in Sources */,
 				207955CCAEC5143D3C4D413A /* FBSDKNonceUtility.m in Sources */,
@@ -1332,6 +1350,7 @@
 				8E3019341F142210BDEEEF05 /* FBSDKDeviceLoginManagerResult.m in Sources */,
 				E234357462ADB004AA0C7A60 /* FBSDKDevicePoller.m in Sources */,
 				D64B92D92C462FB3D73F23F7 /* FBSDKDeviceRequestsHelper.m in Sources */,
+				8439BB4E95D73FB115563AD3 /* FBSDKLoginAppEventName.m in Sources */,
 				5002A0B536A4869FC14E4A97 /* FBSDKLoginButton.m in Sources */,
 				4CAC43D95286A60941C47B15 /* FBSDKLoginCompletion.m in Sources */,
 				AA63D56F7B34B487833CFDD2 /* FBSDKLoginConfiguration.m in Sources */,
@@ -1400,6 +1419,7 @@
 				1EFA5D0F217A29DD3B23EC79 /* FBSDKDeviceLoginManagerResult.m in Sources */,
 				E6B7C72FA14D313DA8EA7BAB /* FBSDKDevicePoller.m in Sources */,
 				52D8C406E881E2EA4CC3A3D6 /* FBSDKDeviceRequestsHelper.m in Sources */,
+				FB482944198C292A0CBCCF7C /* FBSDKLoginAppEventName.m in Sources */,
 				100B15EE70137461856CBE6B /* FBSDKLoginButton.m in Sources */,
 				21613502CDB4320D5447A28B /* FBSDKLoginCompletion.m in Sources */,
 				3B19BC45EB082EC60F5DE138 /* FBSDKLoginConfiguration.m in Sources */,

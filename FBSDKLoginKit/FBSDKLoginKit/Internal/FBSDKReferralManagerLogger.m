@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKLoginAppEventName.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKReferralManagerResult.h"
 
@@ -38,12 +39,6 @@ static NSString *const FBSDKReferralManagerLoggerValueEmpty = @"";
 static NSString *const FBSDKReferralManagerLoggerResultSuccessString = @"success";
 static NSString *const FBSDKReferralManagerLoggerResultCancelString = @"cancelled";
 static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
-
-/** Use to log the start of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
-
-/** Use to log the end of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
 
 @interface FBSDKReferralManagerLogger ()
 
@@ -151,7 +146,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
+- (void)logEvent:(FBSDKAppEventName)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras

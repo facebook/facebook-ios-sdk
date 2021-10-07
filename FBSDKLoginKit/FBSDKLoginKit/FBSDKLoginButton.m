@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKLoginAppEventName.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginTooltipView.h"
 #import "FBSDKNonceUtility.h"
@@ -31,8 +32,6 @@ static const CGFloat kFBLogoLeftMargin = 6.0;
 static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
-
-FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
 
 @interface FBSDKLoginButton ()
 
