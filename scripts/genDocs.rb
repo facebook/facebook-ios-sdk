@@ -87,7 +87,7 @@ end
 
 def generateSourceKittenOutputForSwift(kit)
   File.delete("tmpSwift") if File.exist?("tmpSwift")
-  system "sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{kit} > tmpSwift"
+  system "sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{kit}-Dynamic > tmpSwift"
 end
 
 def combineSourceKittenOutputFor(kit)
