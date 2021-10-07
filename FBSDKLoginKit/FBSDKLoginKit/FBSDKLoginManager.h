@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKLoginConfiguration.h"
+#import <FBSDKLoginKit/FBSDKLoginConfiguration.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

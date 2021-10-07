@@ -16,21 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
+#import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
+#import <FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h>
+#import <FBSDKLoginKit/FBSDKLoginConstants.h>
+
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConstants.h"
-
 #if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginConfiguration.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
+ #import <FBSDKLoginKit/FBSDKLoginButton.h>
+ #import <FBSDKLoginKit/FBSDKLoginConfiguration.h>
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
+ #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
+ #import <FBSDKLoginKit/FBSDKLoginTooltipView.h>
+ #import <FBSDKLoginKit/FBSDKReferralManager.h>
+ #import <FBSDKLoginKit/FBSDKReferralManagerResult.h>
 #endif

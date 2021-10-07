@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKReferralCode.h"
+#import <FBSDKLoginKit/FBSDKReferralCode.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

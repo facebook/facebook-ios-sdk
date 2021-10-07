@@ -32,8 +32,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKLoginManager.h"
-#import "FBSDKTooltipView.h"
+#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import <FBSDKLoginKit/FBSDKTooltipView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -20,14 +20,8 @@
 
  #import <UIKit/UIKit.h>
 
- #if FBSDK_SWIFT_PACKAGE
-  #import <FBSDKCoreKit.h>
-
-  #import "FBSDKLoginManager.h"
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
-  #import <FBSDKLoginKit/FBSDKLoginManager.h>
- #endif
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
  #import "FBSDKLoginProviding.h"
 
