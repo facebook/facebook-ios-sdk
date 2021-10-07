@@ -85,8 +85,8 @@ setJSONStringForObject:(id)object
  @return Query string representation of the parameters.
  */
 + (nullable NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
-                                  error:(NSError *__autoreleasing *)errorRef
-                   invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
+                                           error:(NSError *__autoreleasing *)errorRef
+                            invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
 
 /**
  Converts simple value types to the string equivalent for serializing to a request query or body.
