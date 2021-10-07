@@ -204,7 +204,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertEqualObjects(actualUserDataDict, expectedUserDataDict);
   [FBSDKAppEvents.shared clearUserData];
 */
-  FBSDKSettings.limitEventAndDataUsage = YES;
+  FBSDKSettings.sharedSettings.isEventDataUsageLimited = YES;
   [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
                                            shouldAccessAdvertisingID:NO];
@@ -215,7 +215,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:100]]);
   XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:1]]);
 
-  FBSDKSettings.limitEventAndDataUsage = NO;
+  FBSDKSettings.sharedSettings.isEventDataUsageLimited = NO;
   FBSDKSettings.dataProcessingOptions = @[];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                            shouldAccessAdvertisingID:YES];

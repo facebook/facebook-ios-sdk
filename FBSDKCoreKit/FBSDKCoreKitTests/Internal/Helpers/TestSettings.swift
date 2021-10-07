@@ -37,7 +37,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var stubbedSetAdvertiserTrackingEnabledTimestamp: Date?
   var stubbedIsSetATETimeExceedsInstallTime = false
   var stubbedIsSKAdNetworkReportEnabled = false
-  var stubbedLimitEventAndDataUsage = false
+  var isEventDataUsageLimited = false
   var shouldUseTokenOptimizations = true
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
@@ -63,10 +63,6 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
   var isSKAdNetworkReportEnabled: Bool {
     stubbedIsSKAdNetworkReportEnabled
-  }
-
-  var shouldLimitEventAndDataUsage: Bool {
-    stubbedLimitEventAndDataUsage
   }
 
   var installTimestamp: Date? {

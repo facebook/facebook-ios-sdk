@@ -117,7 +117,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
     [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
   }
 
-  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.sharedSettings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
   [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
   NSString *userID = [FBSDKAppEvents userID];

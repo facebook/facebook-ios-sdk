@@ -435,10 +435,10 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)shouldLimitEventAndDataUsage
 {
-  return self.sharedSettings.shouldLimitEventAndDataUsage;
+  return self.sharedSettings.isEventDataUsageLimited;
 }
 
-- (BOOL)shouldLimitEventAndDataUsage
+- (BOOL)isEventDataUsageLimited
 {
   NSNumber *storedValue = [FBSDKSettings.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
@@ -449,12 +449,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
 {
-  [self.sharedSettings setLimitEventAndDataUsage:limitEventAndDataUsage];
+  [self.sharedSettings setIsEventDataUsageLimited:limitEventAndDataUsage];
 }
 
-- (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
+- (void)setIsEventDataUsageLimited:(BOOL)isEventDataUsageLimited
 {
-  [_store setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
+  [_store setObject:@(isEventDataUsageLimited) forKey:FBSDKSettingsLimitEventAndDataUsage];
 }
 
 + (BOOL)shouldUseCachedValuesForExpensiveMetadata

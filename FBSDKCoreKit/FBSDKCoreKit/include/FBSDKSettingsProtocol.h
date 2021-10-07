@@ -43,7 +43,7 @@ DEPRECATED_MSG_ATTRIBUTE("property class `loggingBehaviors` is deprecated and wi
 @property (nonatomic, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
 @property (nullable, nonatomic, readonly) NSDate *installTimestamp;
 @property (nullable, nonatomic, readonly) NSDate *advertiserTrackingEnabledTimestamp;
-@property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
+@property (nonatomic) BOOL isEventDataUsageLimited;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
 @property (nonatomic, readonly, copy) NSString *_Nonnull graphAPIVersion;
 @property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;

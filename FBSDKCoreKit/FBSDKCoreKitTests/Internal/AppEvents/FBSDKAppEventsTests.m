@@ -777,7 +777,7 @@
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage
 {
-  self.settings.stubbedLimitEventAndDataUsage = YES;
+  self.settings.isEventDataUsageLimited = YES;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
@@ -792,7 +792,7 @@
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID
 {
-  self.settings.stubbedLimitEventAndDataUsage = NO;
+  self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
@@ -804,7 +804,7 @@
 - (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID
 {
   NSString *advertiserID = @"abc123";
-  self.settings.stubbedLimitEventAndDataUsage = NO;
+  self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
 
@@ -819,7 +819,7 @@
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID
 {
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
-  self.settings.stubbedLimitEventAndDataUsage = NO;
+  self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   FBSDKAppEvents.loggingOverrideAppID = token.appID;
@@ -842,7 +842,7 @@
   FBSDKAppEvents.loggingOverrideAppID = token.appID;
   NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", token.appID];
   NSString *advertiserID = @"abc123";
-  self.settings.stubbedLimitEventAndDataUsage = NO;
+  self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
 

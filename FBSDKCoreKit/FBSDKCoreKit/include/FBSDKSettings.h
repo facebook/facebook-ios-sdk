@@ -134,7 +134,15 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.isSKAdNetworkReportEnabled` is deprecated an
  should be restricted from being used for other than analytics and conversions.
  Defaults to NO. This value is stored on the device and persists across app launches.
  */
-@property (class, nonatomic, getter = shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage;
+@property (class, nonatomic, getter = shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage
+DEPRECATED_MSG_ATTRIBUTE("`Settings.shouldLimitEventAndDataUsage` is deprecated and will be removed in the next major release, please use `Settings.shared.isEventDataUsageLimited` instead");
+
+/**
+ Whether data such as that generated through FBSDKAppEvents and sent to Facebook
+ should be restricted from being used for other than analytics and conversions.
+ Defaults to NO. This value is stored on the device and persists across app launches.
+ */
+@property (nonatomic) BOOL isEventDataUsageLimited;
 
 /**
  Whether in memory cached values should be used for expensive metadata fields, such as

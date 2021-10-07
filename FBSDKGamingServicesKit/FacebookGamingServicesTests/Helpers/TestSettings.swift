@@ -36,7 +36,7 @@ class TestSettings: SettingsProtocol {
   var advertisingTrackingStatus = AdvertisingTrackingStatus.unspecified
   var installTimestamp: Date?
   var advertiserTrackingEnabledTimestamp: Date?
-  var shouldLimitEventAndDataUsage = false
+  var isEventDataUsageLimited = false
   var shouldUseTokenOptimizations = false
   var graphAPIVersion = ""
   var isGraphErrorRecoveryEnabled = false

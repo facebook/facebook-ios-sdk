@@ -1283,7 +1283,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSetLimitEventAndDataUsageDefault
 {
   XCTAssertFalse(
-    FBSDKSettings.shouldLimitEventAndDataUsage,
+    self.settings.isEventDataUsageLimited,
     "Should limit event data usage by default"
   );
 }
@@ -1328,7 +1328,7 @@ static NSString *const whiteSpaceToken = @"   ";
     "Should store whether or not to limit event and data usage in the user defaults"
   );
   XCTAssertTrue(
-    FBSDKSettings.shouldLimitEventAndDataUsage,
+    self.settings.isEventDataUsageLimited,
     "Should be able to set whether event data usage is limited"
   );
 }
@@ -1336,11 +1336,11 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSetLimitEventAndDataUsageWithNonEmptyCache
 {
   FBSDKSettings.limitEventAndDataUsage = YES;
-  XCTAssertTrue(FBSDKSettings.shouldLimitEventAndDataUsage, "sanity check");
+  XCTAssertTrue(self.settings.isEventDataUsageLimited, "sanity check");
 
   FBSDKSettings.limitEventAndDataUsage = NO;
   XCTAssertFalse(
-    FBSDKSettings.shouldLimitEventAndDataUsage,
+    self.settings.isEventDataUsageLimited,
     "Should be able to override the existing value of should limit event data usage"
   );
   XCTAssertEqualObjects(
