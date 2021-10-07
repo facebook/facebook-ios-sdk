@@ -22,13 +22,20 @@ import FBSDKCoreKit
 
 enum ShareTournamentDialogURLBuilder {
 
-  enum UpdateConstants {
+  enum Constants {
     static let scheme = "https"
     static let host = "fb.gg"
-    static let payloadQueryItem = "tournament_payload"
-    static let scoreQueryItem = "score"
-    static let tournamentID = "tournament_id"
     static let path = "/me/instant_tournament/"
+  }
+
+  enum QueryKeys {
+    static let score = "score"
+    static let tournamentID = "tournament_id"
+    static let title = "tournament_title"
+    static let scoreFormat = "score_format"
+    static let sortOrder = "sort_order"
+    static let endTime = "end_time"
+    static let payload = "tournament_payload"
   }
 
   case create(Tournament)
@@ -36,37 +43,54 @@ enum ShareTournamentDialogURLBuilder {
 
   var queryItems: [URLQueryItem] {
     switch self {
-    case .create: return []
+    case .create(let tournament):
+      return self.queryItems(for: tournament)
     case .update(let tournament):
-      guard let score = tournament.score else {
-        return []
-      }
-      var updateQueryItems = [
-        URLQueryItem(
-          name: UpdateConstants.tournamentID,
-          value: String(describing: tournament.identifier)
-        ),
-        URLQueryItem(
-          name: UpdateConstants.scoreQueryItem,
-          value: String(describing: score)
-        )
-      ]
+      return self.queryItems(for: tournament)
+    }
+  }
 
-      if let payload = tournament.payload {
-        updateQueryItems.append(URLQueryItem(
-          name: UpdateConstants.payloadQueryItem,
-          value: "\(payload)"
-        ))
+  func queryItems(for tournament: Tournament) -> [URLQueryItem] {
+    guard let score = tournament.score else {
+      return []
+    }
+    var tournamentDictionary = [String: String]()
+    tournamentDictionary[QueryKeys.score] = "\(score)"
+
+    if let payload = tournament.payload {
+      tournamentDictionary[QueryKeys.payload] = payload
+    }
+    if !tournament.identifier.isEmpty {
+      tournamentDictionary[QueryKeys.tournamentID] = tournament.identifier
+      return tournamentDictionary.map { queryName, value in
+        URLQueryItem(name: queryName, value: value)
       }
-      return updateQueryItems
+    }
+    if let endTime = tournament.expiration?.timeIntervalSince1970 {
+      tournamentDictionary[QueryKeys.endTime] = "\(Int(endTime))"
+    }
+    if let title = tournament.title {
+      tournamentDictionary[QueryKeys.title] = title
+    }
+    if let sortOrder = tournament.sortOrder?.rawValue {
+      tournamentDictionary[QueryKeys.sortOrder] = sortOrder
+    }
+    if tournament.numericScore != nil {
+      tournamentDictionary[QueryKeys.scoreFormat] = ScoreType.numeric.rawValue
+    }
+    if tournament.timeScore != nil {
+      tournamentDictionary[QueryKeys.scoreFormat] = ScoreType.time.rawValue
+    }
+    return tournamentDictionary.map { queryName, value in
+      URLQueryItem(name: queryName, value: value)
     }
   }
 
   func url(withPathAppID appID: String) -> URL? {
     var components = URLComponents()
-    components.scheme = UpdateConstants.scheme
-    components.host = UpdateConstants.host
-    components.path = "\(UpdateConstants.path)\(appID)"
+    components.scheme = Constants.scheme
+    components.host = Constants.host
+    components.path = "\(Constants.path)\(appID)"
     components.queryItems = queryItems
     return components.url
   }

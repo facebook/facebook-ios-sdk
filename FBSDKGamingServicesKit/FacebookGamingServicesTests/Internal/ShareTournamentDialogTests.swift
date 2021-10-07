@@ -28,12 +28,10 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   let bridgeOpener = TestBridgeAPIRequestOpener()
   let expirationDate = Date()
   lazy var validTournament = Tournament(identifier: "1234", expiration: expirationDate)
-  lazy var tournamentWithInvalidIdentifier = Tournament(identifier: "", expiration: expirationDate)
   lazy var updateShareDialog = ShareTournamentDialog(
     tournament: validTournament,
-    urlOpener: bridgeOpener,
-    shareType: .update,
-    delegate: self
+    delegate: self,
+    urlOpener: bridgeOpener
   )
 
   override func setUp() {
@@ -55,10 +53,10 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   func testCreatingUpdateShareDialog() {
     let dialog = ShareTournamentDialog(
       tournament: validTournament,
-      urlOpener: bridgeOpener,
-      shareType: .update,
-      delegate: self
+      delegate: self,
+      urlOpener: bridgeOpener
     )
+
     XCTAssertNotNil(dialog.delegate)
     XCTAssertEqual(dialog.tournament, validTournament)
     XCTAssertEqual(dialog.shareType, .update)

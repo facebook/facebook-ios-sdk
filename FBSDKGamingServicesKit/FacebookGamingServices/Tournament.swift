@@ -31,7 +31,7 @@ public struct Tournament: Codable {
   public internal(set) var identifier: String
 
   /**
-   Timestamp when the  tournament ends.
+   Timestamp when the tournament ends.
    If the expiration is in the past, then the tournament is already finished and has expired.
    */
   public internal(set) var expiration: Date?

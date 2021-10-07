@@ -20,44 +20,64 @@
 
 class ShareTournamentDialogURLBuilderTests: XCTestCase {
   let expirationDate = Date()
-  lazy var tournament = Tournament(
+  lazy var updateTournament = Tournament(
     identifier: "1234",
-    expiration: expirationDate,
-    title: "Test",
     payload: "Hello"
   )
 
   override func setUp() {
     super.setUp()
 
-    try? tournament.update(score: NumericScore(value: 1000))
+    try? updateTournament.update(score: NumericScore(value: 1000))
   }
 
-  func testUpdateQueryItems() {
-    let queryItems = ShareTournamentDialogURLBuilder.update(tournament).queryItems
+  func testUpdateQueryItemsWithoutScore() throws {
+    let tournamentWithoutScore = Tournament(
+      identifier: "1234",
+      payload: "Hello"
+    )
+    let queryItems = ShareTournamentDialogURLBuilder.update(tournamentWithoutScore).queryItems
+    XCTAssertEqual(queryItems, [])
+  }
+
+  func testUpdateQueryItems() throws {
+    try updateTournament.update(score: NumericScore(value: 1000))
+    let queryItems = ShareTournamentDialogURLBuilder.update(updateTournament).queryItems
+
     let expectedQueryItems = [
-      URLQueryItem(
-        name: "tournament_id",
-        value: "1234"
-      ),
       URLQueryItem(
         name: "score",
         value: "1000"
       ),
       URLQueryItem(
+        name: "tournament_id",
+        value: "1234"
+      ),
+      URLQueryItem(
         name: "tournament_payload",
         value: "Hello"
-      )
+      ),
     ]
 
-    XCTAssertEqual(queryItems, expectedQueryItems)
+    for item in queryItems {
+      if !expectedQueryItems.contains(item) {
+        XCTFail("Missing query item \(item)")
+      }
+    }
   }
 
-  func testUpdateURL() {
-    let expectedURL = URL(
-      string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&score=1000&tournament_payload=Hello"
+  func testUpdateURL() throws {
+    try updateTournament.update(score: NumericScore(value: 1000))
+    let expectedURL = try XCTUnwrap(
+      URL(
+        string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&tournament_payload=Hello&score=1000"
+      )
     )
+    let updateURL = try XCTUnwrap(ShareTournamentDialogURLBuilder.update(updateTournament).url(withPathAppID: "12345"))
 
-    XCTAssertEqual(ShareTournamentDialogURLBuilder.update(tournament).url(withPathAppID: "12345"), expectedURL)
+    XCTAssertEqual(updateURL.scheme, expectedURL.scheme)
+    XCTAssertEqual(updateURL.host, expectedURL.host)
+    XCTAssertEqual(updateURL.path, expectedURL.path)
+    XCTAssertNotNil(updateURL.query)
   }
 }

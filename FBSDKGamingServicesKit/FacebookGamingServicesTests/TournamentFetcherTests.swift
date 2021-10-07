@@ -243,10 +243,14 @@ class TournamentFetcherTests: XCTestCase {
         guard let tournament = tournaments.first else {
           return XCTFail("Tournaments array was empty")
         }
+        guard let expiration = tournament.expiration?.timeIntervalSince1970 else {
+          return XCTFail("Tournament missing expiration")
+        }
+
         XCTAssertEqual(tournament.identifier, expectedTournament.identifier)
         XCTAssertEqual(
-          tournament.expiration?.timeIntervalSince1970,
-          expectedTournament.expiration?.timeIntervalSince1970
+          expiration,
+          date.timeIntervalSince1970
         )
         XCTAssertEqual(tournament.title, expectedTournament.title)
         XCTAssertEqual(tournament.payload, expectedTournament.payload)
