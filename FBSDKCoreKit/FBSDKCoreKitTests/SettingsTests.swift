@@ -195,10 +195,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToEnabled() {
-    XCTAssertTrue(
-      Settings.setAdvertiserTrackingEnabled(true),
-      "Setting advertiser tracking status should indicate success"
-    )
+    Settings.shared.isAdvertiserTrackingEnabled = true
     XCTAssertEqual(
       store.capturedSetObjectKey,
       "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
@@ -207,10 +204,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToDisallowed() {
-    XCTAssertTrue(
-      Settings.setAdvertiserTrackingEnabled(false),
-      "Setting advertiser tracking status should indicate success"
-    )
+    Settings.shared.isAdvertiserTrackingEnabled = false
     XCTAssertEqual(
       store.capturedSetObjectKey,
       "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",

@@ -311,7 +311,7 @@ Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
 @return Whether the the value is set successfully. It will always return NO in iOS 13 and below.
  */
 + (BOOL)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
-DEPRECATED_MSG_ATTRIBUTE("`Settings.setAdvertiserTrackingEnabled(_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.advertiserTrackingEnabled` property to set a value instead");
+DEPRECATED_MSG_ATTRIBUTE("`Settings.setAdvertiserTrackingEnabled(_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.isAdvertiserTrackingEnabled` property to set a value instead");
 
 /**
 Set the data processing options.
