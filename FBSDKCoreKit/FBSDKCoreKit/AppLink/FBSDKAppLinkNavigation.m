@@ -47,6 +47,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 @property (nonatomic, copy) NSDictionary<NSString *, id> *extras;
 @property (nonatomic, copy) NSDictionary<NSString *, id> *appLinkData;
 @property (nonatomic, strong) FBSDKAppLink *appLink;
+@property (nonnull, nonatomic) id<FBSDKSettings> settings;
 
 @end
 
@@ -56,10 +57,19 @@ static id<FBSDKAppLinkResolving> defaultResolver;
                                extras:(NSDictionary<NSString *, id> *)extras
                           appLinkData:(NSDictionary<NSString *, id> *)appLinkData
 {
+  return [self navigationWithAppLink:appLink extras:extras appLinkData:appLinkData settings:FBSDKSettings.sharedSettings];
+}
+
++ (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
+                               extras:(NSDictionary<NSString *, id> *)extras
+                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData
+                             settings:(nonnull id<FBSDKSettings>)settings
+{
   FBSDKAppLinkNavigation *navigation = [self new];
   navigation.appLink = appLink;
   navigation.extras = extras;
   navigation.appLinkData = appLinkData;
+  navigation.settings = settings;
   return navigation;
 }
 
@@ -81,7 +91,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
   // Add applink protocol data
   if (!appLinkData[FBSDKAppLinkUserAgentKeyName]) {
-    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", FBSDKSettings.sharedSettings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
+    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", self.settings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
   }
   if (!appLinkData[FBSDKAppLinkVersionKeyName]) {
     [FBSDKTypeUtility dictionary:appLinkData setObject:FBSDKAppLinkVersion forKey:FBSDKAppLinkVersionKeyName];
@@ -286,12 +296,13 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 {
   return [[FBSDKAppLinkNavigation navigationWithAppLink:link
                                                  extras:@{}
-                                            appLinkData:@{}] navigate:error];
+                                            appLinkData:@{}
+                                               settings:FBSDKSettings.sharedSettings] navigate:error];
 }
 
 + (FBSDKAppLinkNavigationType)navigationTypeForLink:(FBSDKAppLink *)link
 {
-  return [[self navigationWithAppLink:link extras:@{} appLinkData:@{}] navigationType];
+  return [[self navigationWithAppLink:link extras:@{} appLinkData:@{} settings:FBSDKSettings.sharedSettings] navigationType];
 }
 
 - (FBSDKAppLinkNavigationType)navigationType

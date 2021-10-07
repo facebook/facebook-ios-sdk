@@ -40,6 +40,7 @@ class AppLinkNavigationTests: XCTestCase {
   let emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
   let eventPoster = TestMeasurementEvent()
   let resolver = TestAppLinkResolver()
+  let settings = Settings.shared
 
   override class func setUp() {
     super.setUp()
@@ -54,7 +55,8 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(
       appLink: emptyAppLink,
       extras: [:],
-      appLinkData: [:]
+      appLinkData: [:],
+      settings: settings
     )
   }
 
@@ -76,6 +78,15 @@ class AppLinkNavigationTests: XCTestCase {
       AppLinkNavigation.callbackAppLinkData(forApp: "foo", url: "bar"),
       ["referer_app_link": ["app_name": "foo", "url": "bar"]],
       "Should produce the expected app link callback data"
+    )
+  }
+
+  // MARK: - Dependencies Configuration
+
+  func testDependenciesArePassed() {
+    XCTAssertNotNil(
+      navigation.settings,
+      "Settings dependency should not be nil"
     )
   }
 
@@ -101,7 +112,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testAppLinkWithTargetUrlWithValidStartingAppLink() {
     let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:]
+      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
     )
     do {
       let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
@@ -120,7 +131,9 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testAppLinkWithTargetUrlWithInvalidStartingAppLinkData() {
-    navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self])
+    navigation = AppLinkNavigation(
+      appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self], settings: settings
+    )
 
     do {
       let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
@@ -147,7 +160,9 @@ class AppLinkNavigationTests: XCTestCase {
 
   func testAppLinkWithTargetUrlWithValidStartingAppLinkData() {
     let appLinkData = ["user_agent": "foo", "version": "bar"]
-    navigation = AppLinkNavigation(appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData)
+    navigation = AppLinkNavigation(
+      appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData, settings: settings
+    )
 
     do {
       let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
@@ -171,7 +186,7 @@ class AppLinkNavigationTests: XCTestCase {
       encoding: String.Encoding.utf16BigEndian
     )! // swiftlint:disable:this force_unwrapping
     let appLinkData = ["bad value": unencodable]
-    navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: appLinkData)
+    navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: appLinkData, settings: settings)
 
     do {
       let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
@@ -251,7 +266,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testPostingNavigationEventWithAppLink() {
     let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:]
+      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
     )
 
     navigation.postAppLinkNavigateEventNotification(
@@ -309,7 +324,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testPostingNavigationEventWithBackToReferrer() {
     let appLink = AppLink(sourceURL: nil, targets: nil, webURL: nil, isBackToReferrer: true)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:]
+      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
     )
 
     navigation.postAppLinkNavigateEventNotification(
@@ -339,7 +354,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
       navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
@@ -351,7 +366,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithValidTargetWithoutWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
       navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
@@ -363,7 +378,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithValidTargetWithWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
       navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
@@ -375,7 +390,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
       navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
@@ -412,7 +427,7 @@ class AppLinkNavigationTests: XCTestCase {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     let opener = TestInternalURLOpener(canOpenUrl: true)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     do {
       let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
@@ -443,7 +458,7 @@ class AppLinkNavigationTests: XCTestCase {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid(path: name))
     let opener = TestInternalURLOpener(canOpenUrl: true)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     do {
       let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)

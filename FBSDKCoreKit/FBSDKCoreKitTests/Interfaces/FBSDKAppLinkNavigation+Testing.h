@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppLinkNavigation (Testing)
 
+@property (nonnull, nonatomic) id<FBSDKSettings> settings;
+
 + (void)reset;
 
 - (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
