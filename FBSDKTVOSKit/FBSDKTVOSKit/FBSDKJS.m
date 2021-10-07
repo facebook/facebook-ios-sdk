@@ -37,12 +37,12 @@
   return ([FBSDKAccessToken currentAccessToken] != nil);
 }
 
-+ (void)logEvent:(NSString *)eventName
++ (void)logEvent:(FBSDKAppEventName)eventName
 {
   [FBSDKAppEvents logEvent:eventName];
 }
 
-+ (void)logEvent:(NSString *)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters
++ (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName parameters:parameters];
 }

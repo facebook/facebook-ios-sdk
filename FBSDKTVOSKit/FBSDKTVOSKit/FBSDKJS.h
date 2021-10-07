@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -49,7 +50,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  @param eventName the event name
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName;
++ (void)logEvent:(FBSDKAppEventName)eventName;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
@@ -57,7 +58,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  @param parameters the parameters (optional).
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
++ (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
