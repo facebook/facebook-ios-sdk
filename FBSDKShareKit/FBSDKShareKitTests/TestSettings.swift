@@ -39,7 +39,7 @@ final class TestSettings: NSObject, SettingsProtocol {
   var isGraphErrorRecoveryEnabled = false
   var graphAPIDebugParamValue: String?
   var isAdvertiserTrackingEnabled = false
-  var isCodelessDebugLogEnabled: Bool = false
+  var isCodelessDebugLogEnabled = false
   var isAdvertiserIDCollectionEnabled = false
   // swiftlint:disable:next identifier_name
   var shouldUseCachedValuesForExpensiveMetadata = false
