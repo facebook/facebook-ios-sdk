@@ -84,7 +84,6 @@ static NSString *const FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp = @"co
 static NSString *const FBSDKSettingsUseCachedValuesForExpensiveMetadata = @"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata";
 static NSString *const FBSDKSettingsUseTokenOptimizations = @"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations";
 static NSString *const FacebookSKAdNetworkReportEnabled = @"FacebookSKAdNetworkReportEnabled";
-static BOOL g_disableErrorRecovery;
 
 static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
 
@@ -259,17 +258,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isGraphErrorRecoveryEnabled
 {
-  return !g_disableErrorRecovery;
-}
-
-- (BOOL)isGraphErrorRecoveryEnabled
-{
-  return [self.class isGraphErrorRecoveryEnabled];
+  return self.sharedSettings.isGraphErrorRecoveryEnabled;
 }
 
 + (void)setGraphErrorRecoveryEnabled:(BOOL)graphErrorRecoveryEnabled
 {
-  g_disableErrorRecovery = !graphErrorRecoveryEnabled;
+  [self.sharedSettings setIsGraphErrorRecoveryEnabled:graphErrorRecoveryEnabled];
 }
 
 + (CGFloat)JPEGCompressionQuality

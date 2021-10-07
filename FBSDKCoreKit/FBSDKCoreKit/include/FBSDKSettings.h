@@ -162,7 +162,13 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.shouldUseCachedValuesForExpensiveMetadata` i
 /**
  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
  */
-@property (class, nonatomic, getter = isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled;
+@property (class, nonatomic, getter = isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled
+DEPRECATED_MSG_ATTRIBUTE("`Settings.isGraphErrorRecoveryEnabled` is deprecated and will be removed in the next major release, please use `Settings.shared.isGraphErrorRecoveryEnabled` instead");;
+
+/**
+ A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
+ */
+@property (nonatomic) BOOL isGraphErrorRecoveryEnabled;
 
 /**
   The Facebook App ID used by the SDK.

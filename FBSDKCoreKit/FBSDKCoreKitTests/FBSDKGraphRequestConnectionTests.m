@@ -1336,7 +1336,7 @@
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  FBSDKSettings.graphErrorRecoveryEnabled = YES;
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = YES;
 
   TestURLSessionProxy *fakeSession = [TestURLSessionProxy new];
   TestURLSessionProxyFactory *fakeProxyFactory = [TestURLSessionProxyFactory createWithSessions:@[fakeSession]];
@@ -1387,7 +1387,7 @@
 
 - (void)testRetryDisabled
 {
-  FBSDKSettings.graphErrorRecoveryEnabled = NO;
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = NO;
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 

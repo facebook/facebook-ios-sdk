@@ -1271,11 +1271,11 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSetGraphErrorRecoveryEnabled
 {
-  FBSDKSettings.graphErrorRecoveryEnabled = YES;
-  XCTAssertTrue([FBSDKSettings isGraphErrorRecoveryEnabled]);
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = YES;
+  XCTAssertTrue(FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled);
 
-  FBSDKSettings.graphErrorRecoveryEnabled = NO;
-  XCTAssertFalse([FBSDKSettings isGraphErrorRecoveryEnabled]);
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = NO;
+  XCTAssertFalse(FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled);
 }
 
 // MARK: Limit Event and Data Usage
