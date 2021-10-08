@@ -19,13 +19,18 @@
 import FBSDKCoreKit
 
 @objcMembers
-public class TestInternalUtility: NSObject, AppAvailabilityChecker, URLHosting, AppURLSchemeProviding {
+public class TestInternalUtility: NSObject,
+  AppAvailabilityChecker,
+  URLHosting,
+  AppURLSchemeProviding,
+  InternalUtilityProtocol {
+
+  public var isMSQRDPlayerAppInstalled = false
   public var stubbedScheme = "No stub app url scheme provided"
   public var validateURLSchemesCalled = false
-
   public var isFacebookAppInstalled = false
-
   public var isMessengerAppInstalled = false
+  public var stubbedURL: URL?
 
   public func facebookURL(
     withHostPrefix hostPrefix: String,
@@ -48,6 +53,24 @@ public class TestInternalUtility: NSObject, AppAvailabilityChecker, URLHosting, 
   public func appURLScheme() -> String {
     stubbedScheme
   }
+
+  public func url(
+    withScheme scheme: String,
+    host: String,
+    path: String,
+    queryParameters: [String: Any]
+  ) throws -> URL {
+    struct Error: Swift.Error {}
+
+    guard let url = stubbedURL else { throw Error() }
+    return url
+  }
+
+  public func registerTransientObject(_ object: Any) {}
+
+  public func unregisterTransientObject(_ object: Any) {}
+
+  public func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 
   public func validateURLSchemes() {
     validateURLSchemesCalled = true

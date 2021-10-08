@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+@import TestTools;
 
 #ifdef BUCK
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
