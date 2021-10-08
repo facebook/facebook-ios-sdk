@@ -31,24 +31,24 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   var videoData: Data?
 
   func videoChunkData(
-    for videoUploader: VideoUploader!, // swiftlint:disable:this implicitly_unwrapped_optional
+    for videoUploader: VideoUploader,
     startOffset: UInt,
     endOffset: UInt
-  ) -> Data! {
+  ) -> Data? {
     videoData = Data("Some Data".utf8)
     return videoData
   }
 
   func videoUploader(
-    _ videoUploader: VideoUploader!, // swiftlint:disable:this implicitly_unwrapped_optional
-    didCompleteWithResults results: [String: Any]! // swiftlint:disable:this implicitly_unwrapped_optional
+    _ videoUploader: VideoUploader,
+    didCompleteWithResults results: [String: Any]
   ) {
     uploadDidCompleteSuccessfully = true
   }
 
   func videoUploader(
-    _ videoUploader: VideoUploader!, // swiftlint:disable:this implicitly_unwrapped_optional
-    didFailWithError error: Error! // swiftlint:disable:this implicitly_unwrapped_optional
+    _ videoUploader: VideoUploader,
+    didFailWithError error: Error
   ) {
     uploadError = error as NSError
   }
