@@ -57,7 +57,6 @@ NS_DESIGNATED_INITIALIZER;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 
-- (void)addSingleLoggingExtra:(id)extra forKey:(nullable NSString *)key;
 @end
 
 #endif
