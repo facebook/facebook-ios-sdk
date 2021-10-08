@@ -312,7 +312,7 @@ static id<FBSDKSettings> _settings;
   struct utsname systemInfo;
   uname(&systemInfo);
   NSString *machine = @(systemInfo.machine);
-  NSString *advertiserID = [FBSDKAppEventsUtility.shared advertiserID] ?: @"";
+  NSString *advertiserID = self.advertiserIDProvider.advertiserID ?: @"";
   machine = machine ?: @"";
   NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
 #if TARGET_OS_SIMULATOR

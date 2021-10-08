@@ -34,7 +34,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 @property (class, nonatomic, readonly) FBSDKAppEventsUtility *shared;
-@property (nonatomic, copy, readonly) NSString *advertiserID;
+@property (nullable, nonatomic, copy, readonly) NSString *advertiserID;
 @property (class, nonatomic, assign, readonly) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
 
