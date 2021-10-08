@@ -709,9 +709,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 }
 
 - (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+     forApplication:(nullable UIApplication *)application
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
 {
   // verify the URL is intended as a callback for the SDK's log in
   return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]

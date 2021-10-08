@@ -117,8 +117,8 @@ public class ShareTournamentDialog: NSObject, URLOpening {
 
   public func canOpen(
     _ url: URL,
-    for application: UIApplication,
-    sourceApplication: String,
+    for application: UIApplication?,
+    sourceApplication: String?,
     annotation: Any?
   ) -> Bool {
     false

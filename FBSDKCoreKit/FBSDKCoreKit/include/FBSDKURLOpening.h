@@ -43,8 +43,8 @@ NS_SWIFT_NAME(URLOpening)
 // This is separated so that we can process the openURL: in callbacks, while still returning
 // the result of canOpenURL synchronously in FBSDKApplicationDelegate
 - (BOOL)canOpenURL:(NSURL *)url
-    forApplication:(UIApplication *)application
- sourceApplication:(NSString *)sourceApplication
+    forApplication:(nullable UIApplication *)application
+ sourceApplication:(nullable NSString *)sourceApplication
         annotation:(nullable id)annotation;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application;

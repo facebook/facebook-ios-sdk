@@ -141,9 +141,9 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 }
 
 - (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+     forApplication:(nullable UIApplication *)application
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
 {
   return
   [self
