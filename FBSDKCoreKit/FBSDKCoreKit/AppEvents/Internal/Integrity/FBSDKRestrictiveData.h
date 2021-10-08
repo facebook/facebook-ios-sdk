@@ -18,14 +18,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventName.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(RestrictiveData)
 @interface FBSDKRestrictiveData : NSObject
 
-- (instancetype)initWithEventName:(NSString *)eventName params:(id)params;
+- (instancetype)initWithEventName:(FBSDKAppEventName)eventName params:(id)params;
 
-@property (nonatomic, readonly, copy) NSString *eventName;
+@property (nonatomic, readonly, copy) FBSDKAppEventName eventName;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *restrictiveParams;
 @property (nullable, nonatomic, readonly, copy) NSArray<NSString *> *deprecatedParams;
 @property (nonatomic, readonly, assign) BOOL deprecatedEvent;

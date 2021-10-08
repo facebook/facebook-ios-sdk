@@ -28,7 +28,7 @@
 
 @implementation FBSDKRestrictiveData
 
-- (instancetype)initWithEventName:(NSString *)eventName params:(id)params
+- (instancetype)initWithEventName:(FBSDKAppEventName)eventName params:(id)params
 {
   self = [super init];
   if (self) {

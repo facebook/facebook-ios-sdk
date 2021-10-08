@@ -30,18 +30,18 @@ class RestrictiveDataTests: XCTestCase {
   ]
   let deprecatedParam1 = ["deprecated_value_1", "deprecated_value_2"]
   let deprecatedParam2 = ["deprecated_value_3", "deprecated_value_4"]
-  let testEvent1 = "test_event_name_1"
-  let testEvent2 = "test_event_name_2"
+  let testEvent1 = AppEvents.Name("test_event_name_1")
+  let testEvent2 = AppEvents.Name("test_event_name_2")
   lazy var events = [testEvent1, testEvent2]
 
   func testGeneralServerResponse() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "deprecated_param": deprecatedParam1,
         "is_deprecated_event": true
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": deprecatedParam2,
         "is_deprecated_event": false
@@ -55,7 +55,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       restrictiveParam1,
       eventData1.restrictiveParams,
@@ -71,7 +71,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       restrictiveParam2,
       eventData2.restrictiveParams,
@@ -90,13 +90,13 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithExtraFields() { // swiftlint:disable:this function_body_length
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "deprecated_param": deprecatedParam1,
         "new_filed": "new_filed_string_1",
         "is_deprecated_event": true,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": deprecatedParam2,
         "new_filed": "new_filed_string_2",
@@ -110,7 +110,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       restrictiveParam1,
       eventData1.restrictiveParams,
@@ -126,7 +126,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       restrictiveParam2,
       eventData2.restrictiveParams,
@@ -145,11 +145,11 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithMissingRestrictiveParam() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "deprecated_param": deprecatedParam1,
         "is_deprecated_event": true,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "deprecated_param": deprecatedParam2,
         "is_deprecated_event": false,
       ]
@@ -162,7 +162,7 @@ class RestrictiveDataTests: XCTestCase {
 
     let eventData1 = restrictiveData[0]
     XCTAssertEqual(
-      "test_event_name_1",
+      AppEvents.Name("test_event_name_1"),
       eventData1.eventName
     )
     XCTAssertNil(
@@ -179,7 +179,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertNil(
       eventData2.restrictiveParams,
       "The FBSDKRestrictiveData's eventName property should be equal to the actual event name."
@@ -197,11 +197,11 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithMissingDeprecatedParam() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "is_deprecated_event": true,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "is_deprecated_event": false,
       ]
@@ -213,7 +213,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       restrictiveParam1,
       eventData1.restrictiveParams,
@@ -228,7 +228,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       restrictiveParam2,
       eventData2.restrictiveParams,
@@ -246,11 +246,11 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithMissingIsDeprecatedEvent() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "deprecated_param": deprecatedParam1,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": deprecatedParam2
       ]
@@ -262,7 +262,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       restrictiveParam1,
       eventData1.restrictiveParams,
@@ -278,7 +278,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       restrictiveParam2,
       eventData2.restrictiveParams,
@@ -297,12 +297,12 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithEmptyRestrictiveParam() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": [:],
         "deprecated_param": deprecatedParam1,
         "is_deprecated_event": true,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": [:],
         "deprecated_param": deprecatedParam2,
         "is_deprecated_event": false
@@ -315,7 +315,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       [:],
       eventData1.restrictiveParams,
@@ -331,7 +331,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       [:],
       eventData2.restrictiveParams,
@@ -351,12 +351,12 @@ class RestrictiveDataTests: XCTestCase {
 
   func testServerResponseWithEmptyDeprecatedParam() {
     let serverResponse = [
-      testEvent1: [
+      testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "deprecated_param": [],
         "is_deprecated_event": true,
       ],
-      testEvent2: [
+      testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": [],
         "is_deprecated_event": false
@@ -369,7 +369,7 @@ class RestrictiveDataTests: XCTestCase {
     XCTAssertEqual(2, restrictiveData.count, "Unexpected count")
 
     let eventData1 = restrictiveData[0]
-    XCTAssertEqual("test_event_name_1", eventData1.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_1"), eventData1.eventName)
     XCTAssertEqual(
       restrictiveParam1,
       eventData1.restrictiveParams,
@@ -385,7 +385,7 @@ class RestrictiveDataTests: XCTestCase {
       "The FBSDKRestrictiveData's deprecatedEvent property should be equal to the actual is_deprecated_event field."
     )
     let eventData2 = restrictiveData[1]
-    XCTAssertEqual("test_event_name_2", eventData2.eventName)
+    XCTAssertEqual(AppEvents.Name("test_event_name_2"), eventData2.eventName)
     XCTAssertEqual(
       restrictiveParam2,
       eventData2.restrictiveParams,
@@ -403,13 +403,13 @@ class RestrictiveDataTests: XCTestCase {
   }
 
   func createRestrictiveData(
-    events: [String],
+    events: [AppEvents.Name],
     response: [String: Any]
   ) -> [RestrictiveData] {
     events.map {
       RestrictiveData(
         eventName: $0,
-        params: response[$0] as Any
+        params: response[$0.rawValue] as Any
       )
     }
   }
