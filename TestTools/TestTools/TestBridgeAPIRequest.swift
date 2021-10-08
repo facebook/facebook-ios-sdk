@@ -17,41 +17,41 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
-  var actionID: String
-  var methodName: String?
-  var protocolType: FBSDKBridgeAPIProtocolType
-  var `protocol`: BridgeAPIProtocol?
-  var scheme: String
+public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
+  public var actionID: String
+  public var methodName: String?
+  public var protocolType: FBSDKBridgeAPIProtocolType
+  public var `protocol`: BridgeAPIProtocol?
+  public var scheme: String
 
-  let url: URL?
+  public let url: URL?
 
-  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String = "1") {
+  public init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String = "1") {
     self.url = url
     self.protocolType = protocolType
     self.scheme = scheme
     self.actionID = "1"
   }
 
-  func copy(with zone: NSZone? = nil) -> Any {
+  public func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 
-  func requestURL() throws -> URL {
+  public func requestURL() throws -> URL {
     guard let url = url else {
       throw FakeBridgeAPIRequestError(domain: "tests", code: 0, userInfo: [:])
     }
     return url
   }
 
-  static func request(withURL url: URL?) -> TestBridgeAPIRequest {
+  public static func request(withURL url: URL?) -> TestBridgeAPIRequest {
     TestBridgeAPIRequest(url: url)
   }
 
-  static func request(withURL url: URL, scheme: String) -> TestBridgeAPIRequest {
+  public static func request(withURL url: URL, scheme: String) -> TestBridgeAPIRequest {
     TestBridgeAPIRequest(url: url, scheme: scheme)
   }
 }
 
 @objc
-class FakeBridgeAPIRequestError: NSError {}
+public class FakeBridgeAPIRequestError: NSError {}

@@ -343,7 +343,6 @@
 		FA371202B892830775F52416 /* FBSDKHasher.h in Headers */ = {isa = PBXBuildFile; fileRef = EACCA566611F96F557CB8082 /* FBSDKHasher.h */; };
 		FA45BC46F63B21FA55CB67B9 /* FBSDKLikeObjectType.m in Sources */ = {isa = PBXBuildFile; fileRef = F41FBCBF2E502179F58EF83A /* FBSDKLikeObjectType.m */; };
 		FB72AD1A6C778C6A8D9F4D86 /* FBSDKSharingContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0032EB58115BC2C367823CB4 /* FBSDKSharingContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FB76BA0BC3DEAC3B4877FFB5 /* TestBridgeAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */; };
 		FC396C77FC1F7B69C157D6FB /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 941491F769964F03329B3CAD /* FBSDKCoreKit+Internal.h */; };
 		FC62FDE5713E12CE7FB436FD /* FBSDKShareVideoContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 476361D501517937DBD9A9E3 /* FBSDKShareVideoContent.m */; };
 		FCF222BFD21F957F913A5907 /* FBSDKShareDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = C72DD54A5C516FDB507EFA52 /* FBSDKShareDialog.m */; };
@@ -631,7 +630,6 @@
 		CAC74C1B0E5DA2F06DC61047 /* FBSDKShareKitTestUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKitTestUtility.h; sourceTree = "<group>"; };
 		CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalURLOpener.swift; sourceTree = "<group>"; };
 		CCFAA96811868C050A8F2BA2 /* FBSDKShareKit-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKShareKit-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequest.swift; sourceTree = "<group>"; };
 		DA93E28CFC5D7742BB0542D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		DBD93B614791761DC599E568 /* FBSDKSendButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSendButton.m; sourceTree = "<group>"; };
 		DC4D084321DC68182B476082 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -927,7 +925,6 @@
 				953B9D3C327D520BB4C4569C /* ShareBridgeAPIRequestFactoryTests.swift */,
 				7C1544B8B69A7B6653C13F92 /* ShareCameraEffectContentTests.swift */,
 				3DE1ABD032A00EEB79912995 /* test-image.jpeg */,
-				DA2AA350AA0341E489852AC0 /* TestBridgeAPIRequest.swift */,
 				0AFAFA5F7C388441B101ADF4 /* TestBridgeAPIRequestFactory.swift */,
 				7F0131C6C8A09BFC9128B367 /* TestBridgeAPIRequestOpener.swift */,
 				CC5416BC60F4DD261F89224A /* TestInternalURLOpener.swift */,
@@ -1654,7 +1651,6 @@
 				AD97918B02F32D630BA29E28 /* ShareCameraEffectContentTests.swift in Sources */,
 				D549B26A89757C47EFE89CD1 /* ShareMediaContentTests.swift in Sources */,
 				67A9A4A5CA43222E411FECA8 /* ShareVideoTests.swift in Sources */,
-				FB76BA0BC3DEAC3B4877FFB5 /* TestBridgeAPIRequest.swift in Sources */,
 				B49611EA9CB08DCFF167C6E5 /* TestBridgeAPIRequestFactory.swift in Sources */,
 				1630FDC55872BD7499B0999A /* TestBridgeAPIRequestOpener.swift in Sources */,
 				1642842E94B2B901490C95DD /* TestInternalURLOpener.swift in Sources */,
