@@ -59,8 +59,8 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
   return [self initWithContent:content
-                      delegate:delegate
-        appAvailabilityChecker:FBSDKInternalUtility.sharedUtility];
+                        delegate:delegate
+          appAvailabilityChecker:FBSDKInternalUtility.sharedUtility];
 }
 
 - (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
