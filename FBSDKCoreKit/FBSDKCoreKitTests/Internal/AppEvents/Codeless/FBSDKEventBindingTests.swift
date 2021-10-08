@@ -80,33 +80,6 @@ class FBSDKEventBindingTests: XCTestCase {
     )
   }
 
-  func testMatching() throws {
-    let remoteEventBindings = try XCTUnwrap(SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as? [Any])
-    let bindings = eventBindingManager.parseArray(remoteEventBindings)
-    var binding = bindings[0]
-
-    XCTAssertTrue(EventBinding.isViewMatchPath(stepper, path: binding.path))
-
-    binding = bindings[1]
-    var component = binding.parameters[0]
-    XCTAssertTrue(EventBinding.isViewMatchPath(buyButton, path: binding.path))
-    var price = EventBinding.findParameter(ofPath: component.path, pathType: component.pathType, sourceView: buyButton)
-    XCTAssertEqual(price, "$2.0")
-
-    binding = bindings[2]
-    component = binding.parameters[0]
-    XCTAssertTrue(EventBinding.isViewMatchPath(confirmButton, path: binding.path))
-    price = EventBinding.findParameter(ofPath: component.path, pathType: component.pathType, sourceView: confirmButton)
-    XCTAssertEqual(price, "$3.0")
-    component = binding.parameters[1]
-    let action = EventBinding.findParameter(
-      ofPath: component.path,
-      pathType: component.pathType,
-      sourceView: confirmButton
-    )
-    XCTAssertEqual(action, "Confirm")
-  }
-
   func testEventBindingEquation() throws {
     let remoteEventBindings = try XCTUnwrap(SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as? [Any])
     let bindings = eventBindingManager.parseArray(remoteEventBindings)

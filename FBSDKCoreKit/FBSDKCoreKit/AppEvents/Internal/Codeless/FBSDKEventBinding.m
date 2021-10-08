@@ -60,7 +60,7 @@ static id<FBSDKNumberParsing> _numberParser;
   _numberParser = [[FBSDKAppEventsNumberParser alloc] initWithLocale:NSLocale.currentLocale];
 }
 
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary<NSString *, id> *)dict
+- (FBSDKEventBinding *)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
@@ -179,15 +179,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (BOOL)isViewMatchPath:(UIView *)view path:(NSArray *)path
-{
-  NSArray *viewPath = [FBSDKViewHierarchy getPath:view];
-  BOOL isMatch = [self isPath:path matchViewPath:viewPath];
-
-  return isMatch;
-}
-
-+ (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath
++ (BOOL)isPath:(nullable NSArray *)path matchViewPath:(nullable NSArray *)viewPath
 {
   if ((path.count == 0) || (viewPath.count == 0)) {
     return NO;
