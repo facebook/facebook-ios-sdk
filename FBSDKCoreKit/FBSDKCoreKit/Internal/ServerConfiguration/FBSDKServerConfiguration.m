@@ -188,7 +188,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
 
 #pragma mark - Public Methods
 
-- (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName
+- (nullable FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName
 {
   return _dialogConfigurations[dialogName];
 }

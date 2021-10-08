@@ -98,7 +98,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *suggestedEventsSetting;
 @property (nonatomic, readonly) NSInteger version;
 
-- (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
+- (nullable FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
 - (BOOL)useNativeDialogForDialogName:(NSString *)dialogName;
 - (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
 
