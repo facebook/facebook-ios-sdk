@@ -39,14 +39,14 @@ NS_SWIFT_NAME(LikeActionController)
 + (BOOL)isDisabled;
 
 // this method will call beginContentAccess before returning the instance
-+ (instancetype)likeActionControllerForObjectID:(NSString *)objectID objectType:(FBSDKLikeObjectType)objectType;
++ (nullable instancetype)likeActionControllerForObjectID:(nullable NSString *)objectID objectType:(FBSDKLikeObjectType)objectType;
 
-@property (nonatomic, copy, readonly) NSDate *lastUpdateTime;
-@property (nonatomic, copy, readonly) NSString *likeCountString;
-@property (nonatomic, copy, readonly) NSString *objectID;
+@property (nullable, nonatomic, copy, readonly) NSDate *lastUpdateTime;
+@property (nullable, nonatomic, copy, readonly) NSString *likeCountString;
+@property (nullable, nonatomic, copy, readonly) NSString *objectID;
 @property (nonatomic, assign, readonly) FBSDKLikeObjectType objectType;
 @property (nonatomic, assign, readonly) BOOL objectIsLiked;
-@property (nonatomic, copy, readonly) NSString *socialSentence;
+@property (nullable, nonatomic, copy, readonly) NSString *socialSentence;
 
 - (void)refresh;
 

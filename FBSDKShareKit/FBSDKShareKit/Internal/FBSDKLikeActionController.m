@@ -222,7 +222,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   return [directoryURL URLByAppendingPathComponent:@"com-facebook-sdk-like-data"];
 }
 
-+ (instancetype)likeActionControllerForObjectID:(NSString *)objectID objectType:(FBSDKLikeObjectType)objectType
++ (nullable instancetype)likeActionControllerForObjectID:(nullable NSString *)objectID objectType:(FBSDKLikeObjectType)objectType
 {
   if (!objectID) {
     return nil;
@@ -314,12 +314,12 @@ static FBSDKLikeActionControllerCache *_cache = nil;
 
 #pragma mark - Properties
 
-- (NSString *)likeCountString
+- (nullable NSString *)likeCountString
 {
   return (_objectIsLiked ? _likeCountStringWithLike : _likeCountStringWithoutLike);
 }
 
-- (NSString *)socialSentence
+- (nullable NSString *)socialSentence
 {
   return (_objectIsLiked ? _socialSentenceWithLike : _socialSentenceWithoutLike);
 }
