@@ -28,7 +28,7 @@ class UrlSessionTaskTests: XCTestCase {
     request: SampleURLRequest.valid,
     fromSession: provider,
     completionHandler: nil
-  )
+  )! // swiftlint:disable:this force_unwrapping
 
   override func setUp() {
     super.setUp()

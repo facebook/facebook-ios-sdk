@@ -39,9 +39,11 @@ NS_SWIFT_NAME(UrlSessionTask)
 
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                    fromSession:(id<FBSDKSessionProviding>)session
-              completionHandler:(nullable FBSDKURLSessionTaskBlock)handler;
+- (instancetype)init NS_UNAVAILABLE;
+
+- (nullable instancetype)initWithRequest:(NSURLRequest *)request
+                             fromSession:(id<FBSDKSessionProviding>)session
+                       completionHandler:(nullable FBSDKURLSessionTaskBlock)handler;
 
 - (void)start;
 - (void)cancel;
