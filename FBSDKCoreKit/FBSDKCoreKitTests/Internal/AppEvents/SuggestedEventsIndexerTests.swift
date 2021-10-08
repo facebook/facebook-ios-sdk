@@ -19,13 +19,13 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length implicitly_unwrapped_optional
+// swiftlint:disable type_body_length
 class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
-  var eventProcessor: TestOnDeviceMLModelManager! = TestOnDeviceMLModelManager()
+  var eventProcessor: TestOnDeviceMLModelManager? = TestOnDeviceMLModelManager()
   let serverConfigurationProvider = TestServerConfigurationProvider()
   let collectionView = TestCollectionView(
     frame: .zero,
@@ -33,7 +33,15 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   )
   let tableView = TestTableView()
   let button = UIButton()
-  var indexer: SuggestedEventsIndexer!
+  lazy var indexer = SuggestedEventsIndexer(
+    graphRequestFactory: graphRequestFactory,
+    serverConfigurationProvider: serverConfigurationProvider,
+    swizzler: TestSwizzler.self,
+    settings: settings,
+    eventLogger: eventLogger,
+    featureExtractor: TestFeatureExtractor.self,
+    eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
+  )
 
   enum Keys {
     static let productionEvents = "production_events"
@@ -72,7 +80,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       settings: settings,
       eventLogger: eventLogger,
       featureExtractor: TestFeatureExtractor.self,
-      eventProcessor: eventProcessor
+      eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
     )
   }
 
@@ -350,7 +358,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
 
     XCTAssertEqual(
-      eventProcessor.processSuggestedEventsCallCount,
+      eventProcessor?.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is too long"
     )
@@ -368,7 +376,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: "")
 
     XCTAssertEqual(
-      eventProcessor.processSuggestedEventsCallCount,
+      eventProcessor?.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is empty"
     )
@@ -386,7 +394,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: "me@example.com")
 
     XCTAssertEqual(
-      eventProcessor.processSuggestedEventsCallCount,
+      eventProcessor?.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is sensitive"
     )
@@ -419,7 +427,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor.processSuggestedEventsCallCount,
+      eventProcessor?.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
@@ -432,12 +440,12 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | no                                  | no                        |
   func testPredictingWithProcessedEventsMatchingNone() {
-    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor.processSuggestedEventsCallCount,
+      eventProcessor?.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
@@ -450,7 +458,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | no                        |
   func testPredictingWithProcessedEventsMatchingOptinEvent() {
-    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: [AppEventNames.processedEvent.rawValue],
@@ -477,7 +485,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | processed event | matches optin | matches unconfirmed | dense data |
   // | yes             | no            | yes                 | null       |
   func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
-    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
@@ -503,7 +511,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
 
     TestFeatureExtractor.stub(denseFeatures: pointer)
-    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
@@ -526,7 +534,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | yes                       |
   func testPredictingWithProcessedEventMatchingBoth() {
-    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: [AppEventNames.processedEvent.rawValue],

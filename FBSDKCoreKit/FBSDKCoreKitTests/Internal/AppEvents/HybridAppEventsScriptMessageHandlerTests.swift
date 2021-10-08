@@ -38,13 +38,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
 
   let controller = WKUserContentController()
   let logger = TestEventLogger()
-  var handler: HybridAppEventsScriptMessageHandler! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-
-    handler = HybridAppEventsScriptMessageHandler(eventLogger: logger)
-  }
+  lazy var handler = HybridAppEventsScriptMessageHandler(eventLogger: logger)
 
   func testCreatingWithDefaults() {
     handler = HybridAppEventsScriptMessageHandler()

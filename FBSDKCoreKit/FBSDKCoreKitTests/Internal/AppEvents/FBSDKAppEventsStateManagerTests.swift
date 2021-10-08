@@ -21,14 +21,8 @@ import XCTest
 class FBSDKAppEventsStateManagerTests: XCTestCase {
   private let token = "token"
   private let appID = "1234"
-  private var state: AppEventsState! // swiftlint:disable:this implicitly_unwrapped_optional
-  private var manager: AppEventsStateManager!  // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-    state = AppEventsState(token: token, appID: appID)
-    manager = AppEventsStateManager()
-  }
+  private var manager = AppEventsStateManager()
+  private lazy var state = AppEventsState(token: token, appID: appID)
 
   override func tearDown() {
     super.tearDown()

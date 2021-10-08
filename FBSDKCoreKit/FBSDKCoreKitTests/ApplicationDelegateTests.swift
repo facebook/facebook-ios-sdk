@@ -22,8 +22,6 @@ import XCTest
 
 class ApplicationDelegateTests: XCTestCase {
 
-  // swiftlint:disable:next implicitly_unwrapped_optional weak_delegate
-  var delegate: ApplicationDelegate!
   var center = TestNotificationCenter()
   var featureChecker = TestFeatureManager()
   var appEvents = TestAppEvents()
@@ -36,6 +34,7 @@ class ApplicationDelegateTests: XCTestCase {
   )
   let serverConfigurationProvider = TestServerConfigurationProvider()
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
+  let paymentObserver = TestPaymentObserver()
   lazy var profile = Profile(
     userID: name,
     firstName: nil,
@@ -45,7 +44,19 @@ class ApplicationDelegateTests: XCTestCase {
     linkURL: nil,
     refreshDate: nil
   )
-  let paymentObserver = TestPaymentObserver()
+  lazy var delegate = ApplicationDelegate(
+    notificationCenter: center,
+    tokenWallet: TestAccessTokenWallet.self,
+    settings: settings,
+    featureChecker: featureChecker,
+    appEvents: appEvents,
+    serverConfigurationProvider: serverConfigurationProvider,
+    store: store,
+    authenticationTokenWallet: TestAuthenticationTokenWallet.self,
+    profileProvider: TestProfileProvider.self,
+    backgroundEventLogger: backgroundEventLogger,
+    paymentObserver: paymentObserver
+  )
 
   override class func setUp() {
     super.setUp()
@@ -57,19 +68,6 @@ class ApplicationDelegateTests: XCTestCase {
     super.setUp()
 
     ApplicationDelegate.reset()
-    delegate = ApplicationDelegate(
-      notificationCenter: center,
-      tokenWallet: TestAccessTokenWallet.self,
-      settings: settings,
-      featureChecker: featureChecker,
-      appEvents: appEvents,
-      serverConfigurationProvider: serverConfigurationProvider,
-      store: store,
-      authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-      profileProvider: TestProfileProvider.self,
-      backgroundEventLogger: backgroundEventLogger,
-      paymentObserver: paymentObserver
-    )
   }
 
   override func tearDown() {

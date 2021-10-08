@@ -31,17 +31,12 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"
   let enabledConfiguration = ServerConfigurationFixtures.config(withDictionary: ["codelessEventsEnabled": true])
-  var serverConfigurationProvider = TestServerConfigurationProvider()
-  var codelessSettingStorageKey: String! // swiftlint:disable:this implicitly_unwrapped_optional
+  let serverConfigurationProvider = TestServerConfigurationProvider()
+  lazy var codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
   var capturedIsEnabled = false
   var capturedError: Error?
-  let frame = CGRect(
-    origin: CGPoint(x: 20, y: 20),
-    size: CGSize(width: 36, height: 36)
-  )
-  lazy var view = {
-    UIView(frame: frame)
-  }()
+  let frame = CGRect(x: 20, y: 20, width: 36, height: 36)
+  lazy var view = UIView(frame: frame)
   let autoEventSetupEnabled = "auto_event_setup_enabled"
 
   enum Keys {
@@ -58,7 +53,6 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexerTests.reset()
 
     settings.appID = name
-    codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
 
     CodelessIndexer.configure(
       with: graphRequestFactory,

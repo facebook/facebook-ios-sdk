@@ -24,16 +24,10 @@ class BackgroundEventLoggerTests: XCTestCase {
   let bundleWithIdentifier = TestBundle(infoDictionary: ["BGTaskSchedulerPermittedIdentifiers": ["123"]])
   let bundleWithoutIdentifier = TestBundle()
   let logger = TestEventLogger()
-  var backgroundEventLogger: BackgroundEventLogger! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-
-    backgroundEventLogger = BackgroundEventLogger(
-      infoDictionaryProvider: bundleWithIdentifier,
-      eventLogger: logger
-    )
-  }
+  lazy var backgroundEventLogger = BackgroundEventLogger(
+    infoDictionaryProvider: bundleWithIdentifier,
+    eventLogger: logger
+  )
 
   func testCreating() {
     XCTAssertTrue(

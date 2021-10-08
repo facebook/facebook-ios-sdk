@@ -19,7 +19,7 @@
 @objcMembers
 class TestLoggerFactory: LoggingCreating {
   var capturedLoggingBehavior: LoggingBehavior?
-  var logger: TestLogger! // swiftlint:disable:this implicitly_unwrapped_optional
+  var logger = TestLogger(loggingBehavior: .developerErrors)
 
   func createLogger(withLoggingBehavior loggingBehavior: LoggingBehavior) -> Logging {
     capturedLoggingBehavior = loggingBehavior

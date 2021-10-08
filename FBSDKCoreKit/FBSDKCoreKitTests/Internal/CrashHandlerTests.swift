@@ -22,20 +22,13 @@ import XCTest
 
 class CrashHandlerTests: XCTestCase {
 
-  var crashHandler: CrashHandler! // swiftlint:disable:this implicitly_unwrapped_optional
-  var testFileManager: FileManaging! // swiftlint:disable:this implicitly_unwrapped_optional
-  var testBundle: TestBundle! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-    testFileManager = TestFileManager(tempDirectoryURL: URL(fileURLWithPath: "1"))
-    testBundle = TestBundle()
-    crashHandler = CrashHandler(
-      fileManager: testFileManager,
-      bundle: testBundle,
-      dataExtractor: TestFileDataExtractor.self
-    )
-  }
+  let testFileManager = TestFileManager(tempDirectoryURL: URL(fileURLWithPath: "1"))
+  let testBundle = TestBundle()
+  lazy var crashHandler = CrashHandler(
+    fileManager: testFileManager,
+    bundle: testBundle,
+    dataExtractor: TestFileDataExtractor.self
+  )
 
   func testCreatingWithCustomFileManager() {
     XCTAssertTrue(

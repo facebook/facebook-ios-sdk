@@ -35,12 +35,19 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   var error: NSError?
-  var navigation: AppLinkNavigation! // swiftlint:disable:this implicitly_unwrapped_optional
+
   let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: "123", appName: "ExampleApp")
   let emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
   let eventPoster = TestMeasurementEvent()
   let resolver = TestAppLinkResolver()
   let settings = Settings.shared
+
+  lazy var navigation = AppLinkNavigation(
+    appLink: emptyAppLink,
+    extras: [:],
+    appLinkData: [:],
+    settings: settings
+  )
 
   override class func setUp() {
     super.setUp()
@@ -52,12 +59,6 @@ class AppLinkNavigationTests: XCTestCase {
     super.setUp()
 
     AppLinkNavigation.default = resolver
-    navigation = AppLinkNavigation(
-      appLink: emptyAppLink,
-      extras: [:],
-      appLinkData: [:],
-      settings: settings
-    )
   }
 
   override class func tearDown() {

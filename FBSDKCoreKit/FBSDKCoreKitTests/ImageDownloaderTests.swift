@@ -20,31 +20,26 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-// swiftlint:disable implicitly_unwrapped_optional force_unwrapping
+// swiftlint:disable force_unwrapping
 class ImageDownloaderTests: XCTestCase {
 
   let expectedCacheMemory = 1024 * 1024 * 8
   let expectedCacheCapacity = 1024 * 1024 * 100
   let defaultTTL = 60.0
   let provider = TestSessionProvider()
-  var downloader: ImageDownloader!
-  var image: UIImage!
-  var imageData: Data!
-  var url: URL!
-  var request: URLRequest!
+  lazy var downloader = ImageDownloader(sessionProvider: provider)
+  lazy var url = SampleURLs.valid(path: name)
+  lazy var request = URLRequest(url: url)
+  let (image, imageData): (UIImage, Data) = {
+    UIGraphicsBeginImageContextWithOptions(CGSize(width: 36, height: 36), false, 1)
+    let image = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext()
+    let imageData = image.pngData()!
+    return (image, imageData)
+  }()
 
   override func setUp() {
     super.setUp()
-
-    UIGraphicsBeginImageContextWithOptions(CGSize(width: 36, height: 36), false, 1)
-    image = UIGraphicsGetImageFromCurrentImageContext()!
-    UIGraphicsEndImageContext()
-    imageData = image.pngData()!
-
-    url = SampleURLs.valid(path: name)
-    request = URLRequest(url: url)
-
-    downloader = ImageDownloader(sessionProvider: provider)
 
     downloader.urlCache.removeAllCachedResponses()
   }

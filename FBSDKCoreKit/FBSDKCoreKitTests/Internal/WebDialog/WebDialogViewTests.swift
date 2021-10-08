@@ -21,10 +21,10 @@ import XCTest
 
 class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
-  var dialog: FBWebDialogView! // swiftlint:disable:this implicitly_unwrapped_optional
   var webView = TestWebView()
   var factory = TestWebViewFactory()
   let frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+  lazy var dialog = FBWebDialogView(frame: frame)
   var delegateDidFailWithErrorWasCalled = false
   var capturedDelegateDidFailError: Error?
   var capturedDidCompleteResults: [String: String]?
@@ -37,7 +37,6 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
     webView = factory.webView
     FBWebDialogView.configure(withWebViewProvider: factory, urlOpener: urlOpener)
-    dialog = FBWebDialogView(frame: frame)
     dialog.delegate = self
   }
 

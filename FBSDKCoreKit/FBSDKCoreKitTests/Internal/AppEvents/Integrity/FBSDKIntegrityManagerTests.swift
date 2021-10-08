@@ -23,7 +23,10 @@ class FBSDKIntegrityManagerTests: XCTestCase {
   var isGateKeeperEnabled = Bool.random()
   let gatekeeperKey = "FBSDKFeatureIntegritySample"
   let processor = TestIntegrityProcessor()
-  var manager: IntegrityManager! // swiftlint:disable:this implicitly_unwrapped_optional
+  lazy var manager = IntegrityManager(
+    gateKeeperManager: TestGateKeeperManager.self,
+    integrityProcessor: processor
+  )
 
   override class func setUp() {
     super.setUp()
@@ -35,10 +38,6 @@ class FBSDKIntegrityManagerTests: XCTestCase {
     super.setUp()
 
     TestGateKeeperManager.gateKeepers[gatekeeperKey] = isGateKeeperEnabled
-    manager = IntegrityManager(
-      gateKeeperManager: TestGateKeeperManager.self,
-      integrityProcessor: processor
-    )
   }
 
   override func tearDown() {

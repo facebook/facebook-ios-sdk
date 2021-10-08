@@ -64,85 +64,84 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let USD = "USD"
   }
 
-  var validInvocation: AEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
-    = AEMInvocation(
-      campaignID: "test_campaign_1234",
-      acsToken: "test_token_12345",
-      acsSharedSecret: "test_shared_secret",
-      acsConfigID: "test_config_123",
-      businessID: "test_advertiserid_coffee",
-      timestamp: Date(timeIntervalSince1970: 1618383600),
-      configMode: "DEFAULT",
-      configID: 10,
-      recordedEvents: nil,
-      recordedValues: nil,
-      conversionValue: -1,
-      priority: -1,
-      conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
-      isAggregated: false,
-      isTestMode: false,
-      hasSKAN: false
-    )
-  var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
-    = AEMConfiguration(json: [
-      Keys.defaultCurrency: Values.USD,
-      Keys.cutoffTime: 1,
-      Keys.validFrom: 10000,
-      Keys.configMode: Values.defaultMode,
-      Keys.conversionValueRules: [
-        [
-          Keys.conversionValue: 2,
-          Keys.priority: 10,
-          Keys.events: [
-            [
-              Keys.eventName: Values.purchase,
-            ],
-            [
-              Keys.eventName: Values.donate,
-            ],
+  var validInvocation = AEMInvocation(
+    campaignID: "test_campaign_1234",
+    acsToken: "test_token_12345",
+    acsSharedSecret: "test_shared_secret",
+    acsConfigID: "test_config_123",
+    businessID: "test_advertiserid_coffee",
+    timestamp: Date(timeIntervalSince1970: 1618383600),
+    configMode: "DEFAULT",
+    configID: 10,
+    recordedEvents: nil,
+    recordedValues: nil,
+    conversionValue: -1,
+    priority: -1,
+    conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
+    isAggregated: false,
+    isTestMode: false,
+    hasSKAN: false
+  )! // swiftlint:disable:this force_unwrapping
+
+  var config1 = AEMConfiguration(json: [
+    Keys.defaultCurrency: Values.USD,
+    Keys.cutoffTime: 1,
+    Keys.validFrom: 10000,
+    Keys.configMode: Values.defaultMode,
+    Keys.conversionValueRules: [
+      [
+        Keys.conversionValue: 2,
+        Keys.priority: 10,
+        Keys.events: [
+          [
+            Keys.eventName: Values.purchase,
+          ],
+          [
+            Keys.eventName: Values.donate,
           ],
         ],
-        [
-          Keys.conversionValue: 1,
-          Keys.priority: 11,
-          Keys.events: [
-            [
-              Keys.eventName: Values.purchase,
-              Keys.values: [
-                [
-                  Keys.currency: Values.USD,
-                  Keys.amount: 100
-                ]
+      ],
+      [
+        Keys.conversionValue: 1,
+        Keys.priority: 11,
+        Keys.events: [
+          [
+            Keys.eventName: Values.purchase,
+            Keys.values: [
+              [
+                Keys.currency: Values.USD,
+                Keys.amount: 100
               ]
-            ],
-            [
-              Keys.eventName: Values.unlock,
-            ],
+            ]
           ],
-        ]
-      ]
-    ])
-  var config2: AEMConfiguration! // swiftlint:disable:this implicitly_unwrapped_optional
-    = AEMConfiguration(json: [
-      Keys.defaultCurrency: Values.USD,
-      Keys.cutoffTime: 1,
-      Keys.validFrom: 20000,
-      Keys.configMode: Values.defaultMode,
-      Keys.conversionValueRules: [
-        [
-          Keys.conversionValue: 2,
-          Keys.priority: 10,
-          Keys.events: [
-            [
-              Keys.eventName: Values.purchase,
-            ],
-            [
-              Keys.eventName: Values.donate,
-            ],
+          [
+            Keys.eventName: Values.unlock,
           ],
-        ]
+        ],
       ]
-    ])
+    ]
+  ])! // swiftlint:disable:this force_unwrapping
+
+  var config2 = AEMConfiguration(json: [
+    Keys.defaultCurrency: Values.USD,
+    Keys.cutoffTime: 1,
+    Keys.validFrom: 20000,
+    Keys.configMode: Values.defaultMode,
+    Keys.conversionValueRules: [
+      [
+        Keys.conversionValue: 2,
+        Keys.priority: 10,
+        Keys.events: [
+          [
+            Keys.eventName: Values.purchase,
+          ],
+          [
+            Keys.eventName: Values.donate,
+          ],
+        ],
+      ]
+    ]
+  ])! // swiftlint:disable:this force_unwrapping
 
   func testInvocationWithInvalidAppLinkData() {
     var invalidData: [String: Any] = [:]
@@ -313,10 +312,10 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
     let invocation = self.validInvocation
-    invocation?.reset()
-    invocation?.setConfigID(10000)
+    invocation.reset()
+    invocation.setConfigID(10000)
 
-    let config = invocation?._findConfig([
+    let config = invocation._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
       Values.brandMode: [configWithBusinessID]
     ])
@@ -335,11 +334,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
     let invocation = self.validInvocation
-    invocation?.reset()
-    invocation?.setConfigID(10000)
-    invocation?.setBusinessID("test_advertiserid_123")
+    invocation.reset()
+    invocation.setConfigID(10000)
+    invocation.setBusinessID("test_advertiserid_123")
 
-    let config = invocation?._findConfig([
+    let config = invocation._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
       Values.brandMode: [configWithBusinessID]
     ])

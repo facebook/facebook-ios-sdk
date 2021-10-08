@@ -26,14 +26,8 @@ class WebViewAppLinkResolverTests: XCTestCase {
   var result: [String: Any]?
   var error: Error?
   let data = "foo".data(using: .utf8)!
-  var resolver: WebViewAppLinkResolver! // swiftlint:disable:this implicitly_unwrapped_optional
   let provider = TestSessionProvider()
-
-  override func setUp() {
-    super.setUp()
-
-    resolver = WebViewAppLinkResolver(sessionProvider: provider)
-  }
+  lazy var resolver = WebViewAppLinkResolver(sessionProvider: provider)
 
   // MARK: - Dependencies
 

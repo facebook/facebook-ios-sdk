@@ -26,7 +26,7 @@ import XCTest
 class FBSDKAccessTokenExpirerTests: XCTestCase {
 
   let center = TestNotificationCenter()
-  var expirer: AccessTokenExpirer! // swiftlint:disable:this implicitly_unwrapped_optional
+  lazy var expirer = AccessTokenExpirer(notificationCenter: center)
 
   override class func setUp() {
     super.setUp()
@@ -74,7 +74,7 @@ class FBSDKAccessTokenExpirerTests: XCTestCase {
   func testTimerFiring() throws {
     AccessToken.current = SampleAccessTokens.validToken
 
-    expirer?._timerDidFire()
+    expirer._timerDidFire()
 
     let userInfo = try XCTUnwrap(center.capturedPostUserInfos.first)
 

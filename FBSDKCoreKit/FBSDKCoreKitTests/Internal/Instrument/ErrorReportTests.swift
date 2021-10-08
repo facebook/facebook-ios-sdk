@@ -32,7 +32,12 @@ class ErrorReportTests: XCTestCase {
     "error_report_1.json",
     "error_report_2.json"
   ]
-  var report: ErrorReport! // swiftlint:disable:this implicitly_unwrapped_optional
+  lazy var report = ErrorReport(
+    graphRequestFactory: factory,
+    fileManager: fileManager,
+    settings: settings,
+    fileDataExtractor: TestFileDataExtractor.self
+  )
 
   override func setUp() {
     super.setUp()
@@ -41,13 +46,6 @@ class ErrorReportTests: XCTestCase {
     TestFileDataExtractor.reset()
     SDKError.reset()
     TestFileDataExtractor.reset()
-
-    report = ErrorReport(
-      graphRequestFactory: factory,
-      fileManager: fileManager,
-      settings: settings,
-      fileDataExtractor: TestFileDataExtractor.self
-    )
   }
 
   func testCreatingWithDefaults() {

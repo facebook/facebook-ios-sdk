@@ -21,11 +21,11 @@ import XCTest
 
 class ViewImpressionTrackerTests: XCTestCase {
 
-  var tracker: ViewImpressionTracker! // swiftlint:disable:this implicitly_unwrapped_optional
   let graphRequestFactory = TestGraphRequestFactory()
   let logger = TestEventLogger()
   let notificationCenter = TestNotificationCenter()
   let sharedTrackerName = AppEvents.Name("shared")
+  lazy var tracker = createImpressionTracker(named: sharedTrackerName)
   let impressionIdentifier = "foo"
   let parameters = ["bar": "baz"]
 
@@ -34,7 +34,6 @@ class ViewImpressionTrackerTests: XCTestCase {
 
     ViewImpressionTracker.reset()
     TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
-
     tracker = createImpressionTracker(named: sharedTrackerName)
   }
 

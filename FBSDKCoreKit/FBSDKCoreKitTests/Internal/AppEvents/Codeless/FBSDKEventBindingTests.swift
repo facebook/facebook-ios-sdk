@@ -19,7 +19,6 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable implicitly_unwrapped_optional
 class FBSDKEventBindingTests: XCTestCase {
 
   let window = UIWindow()
@@ -29,9 +28,9 @@ class FBSDKEventBindingTests: XCTestCase {
     swizzler: TestSwizzler.self,
     eventLogger: eventLogger
   )
-  var buyButton: UIButton!
-  var confirmButton: UIButton!
-  var stepper: UIStepper!
+  let buyButton = UIButton(type: .custom)
+  let confirmButton = UIButton(type: .custom)
+  let stepper = UIStepper()
 
   override func setUp() {
     super.setUp()
@@ -48,7 +47,6 @@ class FBSDKEventBindingTests: XCTestCase {
     let secondStackView = UIStackView()
     firstStackView.addSubview(secondStackView)
 
-    buyButton = UIButton(type: .custom)
     buyButton.setTitle("Buy", for: .normal)
     firstStackView.addSubview(buyButton)
 
@@ -56,7 +54,6 @@ class FBSDKEventBindingTests: XCTestCase {
     firstStackPriceLabel.text = "$2.0"
     firstStackView.addSubview(firstStackPriceLabel)
 
-    confirmButton = UIButton(type: .custom)
     confirmButton.setTitle("Confirm", for: .normal)
     firstStackView.addSubview(confirmButton)
 
@@ -64,7 +61,6 @@ class FBSDKEventBindingTests: XCTestCase {
     secondStackPriceLabel.text = "$3.0"
     secondStackView.addSubview(secondStackPriceLabel)
 
-    stepper = UIStepper()
     secondStackView.addSubview(stepper)
   }
 

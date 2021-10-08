@@ -23,7 +23,10 @@ class FBSDKBridgeAPIResponseFactoryTests: XCTestCase {
   let factory = BridgeAPIResponseFactory()
   let request = TestBridgeAPIRequest(url: SampleURLs.valid)
   let error = SampleError()
-  var response: BridgeAPIResponse! // swiftlint:disable:this implicitly_unwrapped_optional
+  lazy var response = factory.createResponse(
+    with: request,
+    error: error
+  )
 
   func testCreatingResponseWithError() {
     response = factory.createResponse(

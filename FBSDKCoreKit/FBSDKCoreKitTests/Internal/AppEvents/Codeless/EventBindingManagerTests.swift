@@ -29,7 +29,12 @@ class EventBindingManagerTests: XCTestCase,
                                 UICollectionViewDelegate {
   // swiftformat:enable indent
 
-  var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
+  lazy var manager = EventBindingManager(
+    json: SampleRawRemoteEventBindings.sampleDictionary,
+    swizzler: TestSwizzler.self,
+    eventLogger: eventLogger
+  )
+
   var bindings = SampleEventBinding.validEventBindings
   let eventLogger = TestEventLogger()
 
@@ -44,12 +49,6 @@ class EventBindingManagerTests: XCTestCase,
 
     registerReactNativeClasses()
     TestSwizzler.reset()
-
-    manager = EventBindingManager(
-      json: SampleRawRemoteEventBindings.sampleDictionary,
-      swizzler: TestSwizzler.self,
-      eventLogger: eventLogger
-    )
   }
 
   // MARK: - Dependencies
@@ -80,7 +79,6 @@ class EventBindingManagerTests: XCTestCase,
   }
 
   func testCreatingWithReactNativeUnavailable() {
-    manager = nil
     deregisterReactNativeClasses()
     manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     XCTAssertFalse(
@@ -129,7 +127,6 @@ class EventBindingManagerTests: XCTestCase,
   }
 
   func testStartingWithEventsWhenNotStarted() {
-    manager = nil
     deregisterReactNativeClasses()
     manager = EventBindingManager(
       json: SampleRawRemoteEventBindings.sampleDictionary,
