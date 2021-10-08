@@ -337,12 +337,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
-- (NSString *)loadExpectedChallenge
+- (nullable NSString *)loadExpectedChallenge
 {
   return [self.keychainStore stringForKey:FBSDKExpectedChallengeKey];
 }
 
-- (NSString *)loadExpectedNonce
+- (nullable NSString *)loadExpectedNonce
 {
   return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
