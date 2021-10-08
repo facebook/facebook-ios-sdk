@@ -127,7 +127,6 @@ main() {
   "release") release_sdk "$@" ;;
   "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
-  "verify-spm-headers") verify_spm_headers "$@" ;;
   "verify-xcode-integration") verify_xcode_integration "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
@@ -499,92 +498,6 @@ verify_xcode_integration() {
     -sdk iphonesimulator \
     -workspace testing/TestXcodeIntegration/TestXcodeIntegration.xcworkspace/ \
     -scheme TestXcodeIntegration
-}
-
-verify_spm_headers() {
-  KITS=(
-      "$LOGIN_KIT"
-      "$SHARE_KIT"
-    )
-
-  # Verifies that all public headers exist as symlinks in the 'include' dir
-  # of the SDK they belong to.
-  verify_inclusion() {
-    for kit in "${KITS[@]}"; do
-      cd "$kit/$kit"
-
-      echo "Verifying the following public headers are exposed to SPM for $kit:"
-
-      mkdir -p include
-
-      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*")
-      echo "$(basename ${headers} )" | sort >| headers.txt
-
-      cat headers.txt
-
-      symlinks=$(find ./include -name "*.h")
-      echo "$(basename ${symlinks} )" | sort >| symlinks.txt
-
-      comm -23 headers.txt symlinks.txt >| missingHeaders.txt
-
-      if [ -s missingHeaders.txt ] ; then
-        echo ""
-        echo "Verification failed:"
-        echo "Please symlink the following public headers to the 'include' directory in $kit"
-        echo "so that they can be found by projects using Swift Package Manager."
-        cat missingHeaders.txt
-
-        rm headers.txt
-        rm symlinks.txt
-        rm missingHeaders.txt
-
-        exit 1;
-      fi
-      rm headers.txt
-      rm symlinks.txt
-      rm missingHeaders.txt
-
-      echo ""
-      cd .. || exit
-      cd .. || exit
-    done
-
-    echo "Success! All of your public headers are visible to users of SPM!"
-  }
-
-  # Verifies that existing symlinks are valid since it is easy to break them by moving the
-  # original file
-  verify_validity() {
-    echo ""
-    echo "Verifying that the symlinks used for exposing public headers to SPM are pointing to valid source files."
-
-    for kit in "${KITS[@]}"; do
-      cd "$kit"
-
-      find . -type l ! -exec test -e {} \; -print >| ../BadSymlinks.txt
-      cd .. || exit
-    done
-
-    if [ -s BadSymlinks.txt ] ; then
-      echo ""
-      echo "Bad symlinks found: "
-      cat BadSymlinks.txt
-      echo "Please fix these by recreating the symlink(s) from the include directory with: "
-      echo "ln -s <path_to_source_file(s)> ."
-      echo "run ./scripts/run.sh verify-spm-headers to verify that these are fixed."
-
-      rm BadSymlinks.txt
-
-      exit 1;
-    fi
-
-    rm BadSymlinks.txt
-
-    echo "Success! All of the public header symlinks are valid!"
-  }
-
-  verify_inclusion
-  verify_validity
 }
 
 # --------------
