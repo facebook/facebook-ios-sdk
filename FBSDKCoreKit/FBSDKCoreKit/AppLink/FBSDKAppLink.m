@@ -32,9 +32,9 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
 
 @interface FBSDKAppLink ()
 
-@property (nonatomic, strong) NSURL *sourceURL;
+@property (nullable, nonatomic, readwrite, strong) NSURL *sourceURL;
 @property (nonatomic, copy) NSArray<FBSDKAppLinkTarget *> *targets;
-@property (nonatomic, strong) NSURL *webURL;
+@property (nullable, nonatomic, readwrite, strong) NSURL *webURL;
 
 @property (nonatomic, getter = isBackToReferrer, assign) BOOL backToReferrer;
 
@@ -47,7 +47,8 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
                               webURL:(NSURL *)webURL
                     isBackToReferrer:(BOOL)isBackToReferrer
 {
-  FBSDKAppLink *link = [[self alloc] initWithIsBackToReferrer:isBackToReferrer];
+  FBSDKAppLink *link = [self new];
+  link.backToReferrer = isBackToReferrer;
   link.sourceURL = sourceURL;
   link.targets = [targets copy];
   link.webURL = webURL;
@@ -62,14 +63,6 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
                             targets:targets
                              webURL:webURL
                    isBackToReferrer:NO];
-}
-
-- (FBSDKAppLink *)initWithIsBackToReferrer:(BOOL)backToReferrer
-{
-  if ((self = [super init])) {
-    _backToReferrer = backToReferrer;
-  }
-  return self;
 }
 
 @end

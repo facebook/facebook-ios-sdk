@@ -83,7 +83,7 @@ NS_SWIFT_NAME(encode(urlString:));
 
  @param input The data that needs to be hashed, it could be NSString or NSData.
  */
-+ (nullable NSString *)SHA256Hash:(nullable NSObject *)input
++ (nullable NSString *)SHA256Hash:(NSObject *)input
 NS_SWIFT_NAME(sha256Hash(_:));
 
 /**

@@ -59,7 +59,8 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   return dialog;
 }
 
-+ (instancetype)showWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
++ (instancetype)showWithContent:(FBSDKGameRequestContent *)content
+                       delegate:(nullable id<FBSDKGameRequestDialogDelegate>)delegate
 {
   FBSDKGameRequestDialog *dialog = [self dialogWithContent:content delegate:delegate];
   NSString *graphDomain = [FBSDKUtility getGraphDomainFromToken];
