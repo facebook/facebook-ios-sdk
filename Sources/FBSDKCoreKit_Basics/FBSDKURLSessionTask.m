@@ -28,9 +28,9 @@
   return self;
 }
 
-- (nullable instancetype)initWithRequest:(NSURLRequest *)request
-                             fromSession:(id<FBSDKSessionProviding>)session
-                       completionHandler:(nullable FBSDKURLSessionTaskBlock)handler
+- (instancetype)initWithRequest:(NSURLRequest *)request
+                    fromSession:(id<FBSDKSessionProviding>)session
+              completionHandler:(nullable FBSDKURLSessionTaskBlock)handler
 {
   if ((self = [self init])) {
     self.requestStartTime = (uint64_t)([self.requestStartDate timeIntervalSince1970] * 1000);
