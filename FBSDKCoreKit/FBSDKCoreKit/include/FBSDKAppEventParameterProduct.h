@@ -87,4 +87,3 @@ FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductApp
 
 /** Parameter key used to specify the product item's AppLink app name for Windows Phone. */
 FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductAppLinkWindowsPhoneAppName;
-

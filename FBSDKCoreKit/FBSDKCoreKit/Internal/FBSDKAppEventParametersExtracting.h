@@ -30,4 +30,3 @@ NS_SWIFT_NAME(AppEventParametersExtracting)
 @end
 
 NS_ASSUME_NONNULL_END
-

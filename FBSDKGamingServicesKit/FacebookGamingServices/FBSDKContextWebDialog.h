@@ -50,5 +50,3 @@ NS_SWIFT_NAME(init(delegate:));
 
 @end
 NS_ASSUME_NONNULL_END
-
-

@@ -29,4 +29,3 @@ NS_SWIFT_NAME(AppEventDropDetermining)
 @end
 
 NS_ASSUME_NONNULL_END
-

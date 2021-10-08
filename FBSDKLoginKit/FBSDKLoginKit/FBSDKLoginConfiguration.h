@@ -84,7 +84,7 @@ NS_REFINED_FOR_SWIFT;
  @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
  @param tracking the tracking preference to use for a login attempt.
  @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
- Creation of the configuration will fail if the nonce is invalid. 
+ Creation of the configuration will fail if the nonce is invalid.
  @param messengerPageId the associated page id  to use for a login attempt.
  @param authType auth_type param to use for login.
  */

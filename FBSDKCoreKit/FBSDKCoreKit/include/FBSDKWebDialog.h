@@ -126,4 +126,3 @@ NS_SWIFT_NAME(WebDialogDelegate)
 NS_ASSUME_NONNULL_END
 
 #endif
-

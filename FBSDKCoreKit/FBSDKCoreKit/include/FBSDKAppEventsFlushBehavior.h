@@ -36,5 +36,3 @@ typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushBehavior)
    explicit call to `flush`. */
   FBSDKAppEventsFlushBehaviorExplicitOnly,
 } NS_SWIFT_NAME(AppEvents.FlushBehavior);
-
-

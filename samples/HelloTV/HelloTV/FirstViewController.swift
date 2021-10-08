@@ -125,4 +125,3 @@ extension FirstViewController: DeviceShareViewControllerDelegate {
     print("Device share finished with error?", error as Any)
   }
 }
-

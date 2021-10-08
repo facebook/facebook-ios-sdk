@@ -26,4 +26,3 @@ NS_SWIFT_NAME(EventsProcessing)
 @end
 
 NS_ASSUME_NONNULL_END
-

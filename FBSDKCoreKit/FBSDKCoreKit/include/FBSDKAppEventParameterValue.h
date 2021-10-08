@@ -31,4 +31,3 @@ FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes;
 
 /** No-valued parameter value to be used with parameter keys that need a Yes/No value */
 FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo;
-

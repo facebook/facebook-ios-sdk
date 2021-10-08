@@ -36,7 +36,7 @@ NS_SWIFT_NAME(AEMReporter)
 
  This function should be called in application(_:open:options:) from ApplicationDelegate
  and BEFORE [FBAEMReporter enable] function
- 
+
  @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
  @param appID   The Facebook app ID
  */
@@ -51,7 +51,7 @@ NS_SWIFT_NAME(AEMReporter)
  This function should be called in application(_:open:options:) from ApplicationDelegate
  and BEFORE [FBAEMReporter enable] function. We will use SKAdNetwork reporter to prevent
  double counting.
- 
+
  @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
  @param appID   The Facebook app ID
  @param reporter   The SKAdNetwork repoter
