@@ -194,7 +194,7 @@ static _Nullable id<FBSDKSettings> _settings;
 
 #pragma mark - Public Methods
 
-- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
 {
   NSURL *requestURL = [_protocol requestURLWithActionID:self.actionID
                                                  scheme:self.scheme
@@ -229,7 +229,7 @@ static _Nullable id<FBSDKSettings> _settings;
   return self;
 }
 
-+ (id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(NSString *)scheme
++ (nullable id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(NSString *)scheme
 {
   id<FBSDKBridgeAPIProtocol> protocol = [self protocolMap][@(type)][scheme];
   if (type == FBSDKBridgeAPIProtocolTypeWeb) {

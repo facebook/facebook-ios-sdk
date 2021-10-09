@@ -39,9 +39,9 @@
   return self;
 }
 
-- (id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
-                                           windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                                               delegate:(id<FBSDKContextDialogDelegate>)delegate
+- (nullable id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
+                                                    windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   if ([self.tokenProvider currentAccessToken] == nil) {
     return nil;

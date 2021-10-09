@@ -184,7 +184,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   && [url.host isEqualToString:FBSDK_GAME_REQUEST_URL_HOST];
 }
 
-- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(nonnull NSURL *)url
+- (nullable NSDictionary<NSString *, NSString *> *)parsedPayloadFromURL:(nonnull NSURL *)url
 {
   NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
   if (!urlComponents.queryItems) {

@@ -92,7 +92,7 @@ static NSString *const EVENTS_KEY = @"events";
   return NO;
 }
 
-+ (nullable NSArray<FBAEMEvent *> *)parseEvents:(nullable NSArray<NSDictionary<NSString *, id> *> *)events
++ (nullable NSArray<FBAEMEvent *> *)parseEvents:(NSArray<NSDictionary<NSString *, id> *> *)events
 {
   if (0 == events.count) {
     return nil;

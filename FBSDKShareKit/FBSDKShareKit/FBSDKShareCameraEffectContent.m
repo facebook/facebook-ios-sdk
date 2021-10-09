@@ -174,7 +174,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
 
 #pragma mark - FBSDKSharingScheme
 
-- (NSString *)schemeForMode:(FBSDKShareDialogMode)mode
+- (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode
 {
   if ((FBSDKShareDialogModeNative == mode) || (FBSDKShareDialogModeAutomatic == mode)) {
     if ([self.class.internalUtility isMSQRDPlayerAppInstalled]) {

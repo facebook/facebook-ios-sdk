@@ -288,7 +288,7 @@ static NSMutableArray *_pendingRequestors;
   return NO;
 }
 
-- (NSString *)durationOfSubscriptionPeriod:(id)subcriptionPeriod
+- (nullable NSString *)durationOfSubscriptionPeriod:(id)subcriptionPeriod
 {
 #if !TARGET_OS_TV
   if (@available(iOS 11.2, *)) {

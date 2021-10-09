@@ -814,7 +814,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (NSString *)graphAPIDebugParamValue
++ (nullable NSString *)graphAPIDebugParamValue
 {
   if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
     return @"info";

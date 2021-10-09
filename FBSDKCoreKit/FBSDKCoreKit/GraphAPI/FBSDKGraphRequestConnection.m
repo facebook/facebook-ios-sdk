@@ -69,7 +69,7 @@ static NSString *const kBatchRestMethodBaseURL = @"method/";
 static NSTimeInterval g_defaultTimeout = 60.0;
 
 #if !TARGET_OS_TV
-static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken)
+static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *accessToken)
 {
   if (accessToken == nil) {
     return nil;
@@ -928,7 +928,7 @@ static BOOL _canMakeRequests = NO;
   }];
 }
 
-- (NSError *_Nullable)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request
+- (nullable NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request
 {
   NSDictionary<NSString *, id> *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
   if (!result) {

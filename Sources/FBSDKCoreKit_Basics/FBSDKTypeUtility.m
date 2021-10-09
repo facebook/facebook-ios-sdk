@@ -204,7 +204,7 @@
   return data;
 }
 
-+ (id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
++ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
 {
   if (![data isKindOfClass:NSData.class]) {
     return nil;

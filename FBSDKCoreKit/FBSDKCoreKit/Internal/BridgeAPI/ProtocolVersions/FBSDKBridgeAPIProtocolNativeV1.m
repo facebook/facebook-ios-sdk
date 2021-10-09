@@ -126,12 +126,12 @@ static const struct {
 
 #pragma mark - FBSDKBridgeAPIProtocol
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary<NSString *, id> *)parameters
-                            error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
+                                    scheme:(NSString *)scheme
+                                methodName:(NSString *)methodName
+                             methodVersion:(NSString *)methodVersion
+                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                     error:(NSError *__autoreleasing *)errorRef
 {
   NSString *const host = @"dialog";
   NSString *const path = [@"/" stringByAppendingString:methodName];
@@ -176,10 +176,10 @@ static const struct {
                                                      error:errorRef];
 }
 
-- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
-                                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                                                      cancelled:(BOOL *)cancelledRef
-                                                          error:(NSError *__autoreleasing *)errorRef
+- (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                               cancelled:(BOOL *)cancelledRef
+                                                                   error:(NSError *__autoreleasing *)errorRef
 {
   if (cancelledRef != NULL) {
     *cancelledRef = NO;
@@ -234,7 +234,7 @@ static const struct {
 
 #pragma mark - Helper Methods
 
-- (UIImage *)_appIcon
+- (nullable UIImage *)_appIcon
 {
   if (!_includeAppIcon) {
     return nil;
@@ -262,7 +262,7 @@ static const struct {
   return bridgeParameters;
 }
 
-- (NSError *)_errorWithDictionary:(NSDictionary<NSString *, id> *)dictionary
+- (nullable NSError *)_errorWithDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (!dictionary) {
     return nil;

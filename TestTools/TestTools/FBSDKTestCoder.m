@@ -53,21 +53,21 @@
   self.encodedObject[key] = converted;
 }
 
-- (id)decodeObjectOfClass:(Class)aClass forKey:(NSString *)key
+- (nullable id)decodeObjectOfClass:(Class)aClass forKey:(NSString *)key
 {
   self.decodedObject[key] = aClass;
 
   return nil;
 }
 
-- (id)decodeObjectOfClasses:(NSSet<Class> *)classes forKey:(NSString *)key
+- (nullable id)decodeObjectOfClasses:(NSSet<Class> *)classes forKey:(NSString *)key
 {
   self.decodedObject[key] = classes;
 
   return nil;
 }
 
-- (id)decodeObjectForKey:(NSString *)key
+- (nullable id)decodeObjectForKey:(NSString *)key
 {
   self.decodedObject[key] = @"decodeObjectForKey";
 

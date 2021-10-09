@@ -77,7 +77,7 @@ static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 
 @implementation FBSDKJSONValue
 
-- (instancetype)initWithPotentialJSONObject:(id)obj
+- (nullable instancetype)initWithPotentialJSONObject:(id)obj
 {
   // If this isn't a real JSON object, dump it.
   if (![FBSDKTypeUtility isValidJSONObject:obj]) {
@@ -135,7 +135,7 @@ static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 
 @implementation FBSDKJSONField
 
-- (instancetype)initWithPotentialJSONField:(id)obj
+- (nullable instancetype)initWithPotentialJSONField:(id)obj
 {
   // If this is nil, don't wrap it.
   if (obj == nil) {

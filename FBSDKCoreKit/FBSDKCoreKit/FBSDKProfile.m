@@ -504,7 +504,7 @@ static id <FBSDKDataPersisting> _store;
   }
 }
 
-+ (FBSDKProfile *)fetchCachedProfile
++ (nullable FBSDKProfile *)fetchCachedProfile
 {
   NSData *data = [_store objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
@@ -698,7 +698,7 @@ static id <FBSDKDataPersisting> _store;
   [self loadProfileWithToken:token completion:NULL];
 }
 
-+ (NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
++ (nullable NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
 {
   NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
   NSMutableArray *friendIDs = NSMutableArray.new;

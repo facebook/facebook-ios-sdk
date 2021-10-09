@@ -173,8 +173,8 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
                                   shouldUseCachedManager:shouldUseCachedManagerIfAvailable];
 }
 
-- (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
-                                 shouldUseCachedManager:(BOOL)shouldUseCachedManager
+- (nullable NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
+                                          shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
   if (!FBSDKSettings.sharedSettings.isAdvertiserIDCollectionEnabled) {
     return nil;

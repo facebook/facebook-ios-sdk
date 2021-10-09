@@ -36,8 +36,8 @@ NS_SWIFT_NAME(LoginManagerLogger)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithLoggingToken:(nullable NSString *)loggingToken
-                            tracking:(FBSDKLoginTracking)tracking
+- (nullable instancetype)initWithLoggingToken:(nullable NSString *)loggingToken
+                                     tracking:(FBSDKLoginTracking)tracking
 NS_DESIGNATED_INITIALIZER;
 
 // this must not retain loginManager - only used to conveniently grab various properties to log.

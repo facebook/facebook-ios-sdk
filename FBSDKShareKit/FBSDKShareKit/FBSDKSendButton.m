@@ -45,7 +45,7 @@
 
 #pragma mark - FBSDKButtonImpressionTracking
 
-- (NSDictionary<NSString *, id> *)analyticsParameters
+- (nullable NSDictionary<NSString *, id> *)analyticsParameters
 {
   return nil;
 }

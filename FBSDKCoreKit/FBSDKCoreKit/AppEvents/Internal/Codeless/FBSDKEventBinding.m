@@ -230,7 +230,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
++ (nullable NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
 {
   if (level >= path.count) {
     return nil;
@@ -322,9 +322,9 @@ static id<FBSDKNumberParsing> _numberParser;
 }
 
 // MARK: - find event parameters via relative path
-+ (NSString *)findParameterOfPath:(NSArray *)path
-                         pathType:(NSString *)pathType
-                       sourceView:(UIView *)sourceView
++ (nullable NSString *)findParameterOfPath:(NSArray *)path
+                                  pathType:(NSString *)pathType
+                                sourceView:(UIView *)sourceView
 {
   if (0 == path.count) {
     return nil;

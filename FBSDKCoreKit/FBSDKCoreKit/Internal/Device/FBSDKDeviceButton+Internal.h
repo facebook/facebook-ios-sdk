@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKDeviceButton ()
 
-- (NSAttributedString *)attributedTitleStringFromString:(NSString *)string;
+- (nullable NSAttributedString *)attributedTitleStringFromString:(NSString *)string;
 - (CGSize)sizeThatFits:(CGSize)size title:(NSString *)title;
 - (CGSize)sizeThatFits:(CGSize)size attributedTitle:(NSAttributedString *)title;
 

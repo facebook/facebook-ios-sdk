@@ -305,7 +305,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 }
 
 /// Returns an error if a stored challenge cannot be obtained from the completion parameters
-- (NSError *)_verifyChallengeWithCompletionParameters:(FBSDKLoginCompletionParameters *)parameters
+- (nullable NSError *)_verifyChallengeWithCompletionParameters:(FBSDKLoginCompletionParameters *)parameters
 {
   NSString *challengeReceived = parameters.challenge;
   NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
@@ -348,10 +348,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
-- (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                                                      loggingToken:(NSString *)loggingToken
-                                                            logger:(FBSDKLoginManagerLogger *)logger
-                                                        authMethod:(NSString *)authMethod
+- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                                                               loggingToken:(NSString *)loggingToken
+                                                                     logger:(FBSDKLoginManagerLogger *)logger
+                                                                 authMethod:(NSString *)authMethod
 {
   // Making sure configuration is not nil in case this method gets called
   // internally without specifying a cofiguration.
@@ -442,7 +442,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [self logIn];
 }
 
-- (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url
+- (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url
 {
   NSError *error = nil;
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];

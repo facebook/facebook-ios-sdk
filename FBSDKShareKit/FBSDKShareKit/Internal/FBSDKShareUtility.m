@@ -153,7 +153,7 @@
   return [parameters copy];
 }
 
-+ (NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag
++ (nullable NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag
 {
   if (!hashtag) {
     return nil;

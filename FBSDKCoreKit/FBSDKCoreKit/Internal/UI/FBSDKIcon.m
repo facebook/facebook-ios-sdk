@@ -37,7 +37,7 @@
   return [self imageWithSize:size scale:UIScreen.mainScreen.scale color:color];
 }
 
-- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
+- (nullable UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
 {
   if ((size.width == 0) || (size.height == 0)) {
     return nil;

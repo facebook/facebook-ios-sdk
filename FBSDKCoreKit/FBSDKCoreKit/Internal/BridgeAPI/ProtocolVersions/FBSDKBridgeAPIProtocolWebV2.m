@@ -87,12 +87,12 @@
   return requestURL;
 }
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary<NSString *, id> *)parameters
-                            error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
+                                    scheme:(NSString *)scheme
+                                methodName:(NSString *)methodName
+                             methodVersion:(NSString *)methodVersion
+                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                     error:(NSError *__autoreleasing *)errorRef
 {
   FBSDKServerConfiguration *serverConfiguration = [self.serverConfigurationProvider cachedServerConfiguration];
   FBSDKDialogConfiguration *dialogConfiguration = [serverConfiguration dialogConfigurationForDialogName:methodName];

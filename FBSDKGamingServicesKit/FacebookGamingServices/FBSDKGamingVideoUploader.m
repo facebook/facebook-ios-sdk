@@ -211,9 +211,9 @@
 
 #pragma mark - FBSDKVideoUploaderDelegate
 
-- (NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader
-                               startOffset:(NSUInteger)startOffset
-                                 endOffset:(NSUInteger)endOffset
+- (nullable NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader
+                                        startOffset:(NSUInteger)startOffset
+                                          endOffset:(NSUInteger)endOffset
 {
   NSUInteger chunkSize = endOffset - startOffset;
   [_fileHandle seekToFileOffset:startOffset];

@@ -240,7 +240,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   return [FBSDKCrashHandler.shared _getProcessedCrashLogs];
 }
 
-- (NSArray<NSDictionary<NSString *, id> *> *)_getProcessedCrashLogs
+- (nullable NSArray<NSDictionary<NSString *, id> *> *)_getProcessedCrashLogs
 {
   NSArray<NSDictionary<NSString *, id> *> *crashLogs = [self _loadCrashLogs];
   if (0 == crashLogs.count) {

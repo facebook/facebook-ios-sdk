@@ -72,7 +72,7 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
   }
 }
 
-+ (NSURL *)_requestURL
++ (nullable NSURL *)_requestURL
 {
   FBSDKAuthenticationToken *token = FBSDKAuthenticationToken.currentAuthenticationToken;
 

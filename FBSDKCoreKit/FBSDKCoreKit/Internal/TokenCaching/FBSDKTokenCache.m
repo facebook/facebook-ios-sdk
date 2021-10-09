@@ -56,7 +56,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-- (FBSDKAccessToken *)accessToken
+- (nullable FBSDKAccessToken *)accessToken
 {
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
@@ -125,7 +125,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
                       accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
-- (FBSDKAuthenticationToken *)authenticationToken
+- (nullable FBSDKAuthenticationToken *)authenticationToken
 {
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];

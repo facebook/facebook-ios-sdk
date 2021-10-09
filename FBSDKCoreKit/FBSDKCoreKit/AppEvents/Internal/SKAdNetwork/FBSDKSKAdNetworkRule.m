@@ -69,7 +69,7 @@
   return YES;
 }
 
-+ (NSArray<FBSDKSKAdNetworkEvent *> *)parseEvents:(nullable NSArray<NSDictionary<NSString *, id> *> *)events
++ (nullable NSArray<FBSDKSKAdNetworkEvent *> *)parseEvents:(NSArray<NSDictionary<NSString *, id> *> *)events
 {
   if (!events) {
     return nil;

@@ -191,7 +191,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                                   }];
 }
 
-- (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result
+- (nullable NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result
 {
   result = [self dictionaryValue:result];
   if (![result[FBSDK_GAMING_VIDEO_START_OFFSET] isKindOfClass:NSString.class]) {

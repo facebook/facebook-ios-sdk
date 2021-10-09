@@ -173,7 +173,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   }
 }
 
-- (NSArray<UIView *> *)getSiblingViewsOfView:(UIView *)view
+- (nullable NSArray<UIView *> *)getSiblingViewsOfView:(UIView *)view
 {
   NSObject *parent = [FBSDKViewHierarchy getParent:view];
   if (parent) {

@@ -38,7 +38,7 @@ NSString *const FBSDKUserAgeRangeMaxCodingKey = @"FBSDKUserAgeRangeMaxCodingKey"
   return self;
 }
 
-+ (instancetype)ageRangeFromDictionary:(NSDictionary<NSString *, id> *)dictionary
++ (nullable instancetype)ageRangeFromDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (![FBSDKTypeUtility dictionaryValue:dictionary]) {
     return nil;

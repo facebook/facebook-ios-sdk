@@ -60,11 +60,11 @@
                                       error:errorRef];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-                                 responseURL:(NSURL *)responseURL
-                           sourceApplication:(NSString *)sourceApplication
-                           osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
-                                       error:(NSError *__autoreleasing *)errorRef
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+                                          responseURL:(NSURL *)responseURL
+                                    sourceApplication:(NSString *)sourceApplication
+                                    osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
+                                                error:(NSError *__autoreleasing *)errorRef
 {
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
   NSOperatingSystemVersion iOS13Version = { .majorVersion = 13, .minorVersion = 0, .patchVersion = 0 };

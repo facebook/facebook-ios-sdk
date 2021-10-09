@@ -34,12 +34,12 @@
 
 #pragma mark - FBSDKBridgeAPIProtocol
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary<NSString *, id> *)parameters
-                            error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
+                                    scheme:(NSString *)scheme
+                                methodName:(NSString *)methodName
+                             methodVersion:(NSString *)methodVersion
+                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                     error:(NSError *__autoreleasing *)errorRef
 {
   if (![FBSDKTypeUtility coercedToStringValue:actionID] || ![FBSDKTypeUtility coercedToStringValue:methodName]) {
     return nil;
@@ -62,10 +62,10 @@
                                                                  error:NULL];
 }
 
-- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
-                                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                                                      cancelled:(BOOL *)cancelledRef
-                                                          error:(NSError *__autoreleasing *)errorRef
+- (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                               cancelled:(BOOL *)cancelledRef
+                                                                   error:(NSError *__autoreleasing *)errorRef
 {
   if (errorRef != NULL) {
     *errorRef = nil;

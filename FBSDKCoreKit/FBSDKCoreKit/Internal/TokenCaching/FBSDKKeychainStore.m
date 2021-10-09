@@ -45,7 +45,7 @@
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key
+- (nullable NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {
@@ -70,7 +70,7 @@
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSString *)stringForKey:(NSString *)key
+- (nullable NSString *)stringForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {

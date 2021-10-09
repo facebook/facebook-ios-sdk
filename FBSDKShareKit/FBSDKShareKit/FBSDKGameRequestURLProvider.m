@@ -45,7 +45,7 @@
   return components.URL;
 }
 
-+ (NSString *)filtersNameForFilters:(FBSDKGameRequestFilter)filters
++ (nullable NSString *)filtersNameForFilters:(FBSDKGameRequestFilter)filters
 {
   switch (filters) {
     case FBSDKGameRequestFilterNone: {
@@ -70,7 +70,7 @@
   }
 }
 
-+ (NSString *)actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType
++ (nullable NSString *)actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType
 {
   switch (actionType) {
     case FBSDKGameRequestActionTypeNone: {

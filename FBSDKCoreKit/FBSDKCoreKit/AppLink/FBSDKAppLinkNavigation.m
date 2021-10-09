@@ -84,7 +84,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   return [string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
 }
 
-- (NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error
+- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error
 {
   NSMutableDictionary<NSString *, id> *appLinkData =
   [NSMutableDictionary dictionaryWithDictionary:self.appLinkData ?: @{}];

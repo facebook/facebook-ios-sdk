@@ -573,7 +573,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return [ret copy];
 }
 
-- (NSURL *)_contentVideoURL:(FBSDKShareVideo *)video
+- (nullable NSURL *)_contentVideoURL:(FBSDKShareVideo *)video
 {
   if (video.videoAsset != nil) {
     return video.videoAsset.videoURL;
@@ -1294,7 +1294,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
                        accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
-- (NSString *)_calculateInitialText
+- (nullable NSString *)_calculateInitialText
 {
   NSString *initialText;
   NSString *const hashtag = [self.class.shareUtility hashtagStringFromHashtag:self.shareContent.hashtag];

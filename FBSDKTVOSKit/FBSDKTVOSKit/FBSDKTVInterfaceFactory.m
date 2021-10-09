@@ -46,8 +46,8 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 
 #pragma mark - TVInterfaceCreating
 
-- (UIView *)viewForElement:(TVViewElement *)element
-              existingView:(UIView *)existingView
+- (nullable UIView *)viewForElement:(TVViewElement *)element
+                       existingView:(UIView *)existingView
 {
   if ([element isKindOfClass:FBSDKTVLoginButtonElement.class]) {
     FBSDKDeviceLoginButton *button = [[FBSDKDeviceLoginButton alloc] initWithFrame:CGRectZero];
@@ -62,7 +62,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
   return nil;
 }
 
-- (UIViewController *)viewControllerForElement:(TVViewElement *)element existingViewController:(UIViewController *)existingViewController
+- (nullable UIViewController *)viewControllerForElement:(TVViewElement *)element existingViewController:(UIViewController *)existingViewController
 {
   if ([element isKindOfClass:FBSDKTVLoginViewControllerElement.class]) {
     FBSDKDeviceLoginViewController *vc = [FBSDKDeviceLoginViewController new];
@@ -77,7 +77,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
   return nil;
 }
 
-- (NSURL *)URLForResource:(NSString *)resourceName
+- (nullable NSURL *)URLForResource:(NSString *)resourceName
 {
   if ([_interfaceCreator respondsToSelector:@selector(URLForResource:)]) {
     return [_interfaceCreator URLForResource:resourceName];

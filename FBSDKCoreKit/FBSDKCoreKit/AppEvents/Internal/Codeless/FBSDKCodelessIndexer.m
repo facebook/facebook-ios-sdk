@@ -222,7 +222,7 @@ static id<FBSDKSettings> _settings;
 
 #pragma clang diagnostic pop
 
-+ (id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
++ (nullable id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
   NSString *advertiserID = self.advertiserIDProvider.advertiserID;
   if (!advertiserID) {
@@ -417,7 +417,7 @@ static id<FBSDKSettings> _settings;
   }];
 }
 
-+ (NSString *)currentViewTree
++ (nullable NSString *)currentViewTree
 {
   NSMutableArray *trees = [NSMutableArray array];
 
@@ -459,7 +459,7 @@ static id<FBSDKSettings> _settings;
   return tree;
 }
 
-+ (UIImage *)screenshot
++ (nullable UIImage *)screenshot
 {
   UIWindow *window = [FBSDKInternalUtility.sharedUtility findWindow];
   if (!window) {

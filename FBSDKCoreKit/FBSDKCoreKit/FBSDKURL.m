@@ -30,7 +30,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 
 @implementation FBSDKURL
 
-- (instancetype)initWithURL:(NSURL *)url forOpenInboundURL:(BOOL)forOpenURLEvent sourceApplication:(NSString *)sourceApplication forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
+- (nullable instancetype)initWithURL:(NSURL *)url forOpenInboundURL:(BOOL)forOpenURLEvent sourceApplication:(NSString *)sourceApplication forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
 {
   self = [super init];
   if (!self) {

@@ -330,7 +330,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-+ (NSString *)challengeFromParameters:(NSDictionary<NSString *, id> *)parameters
++ (nullable NSString *)challengeFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *stateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"state" ofType:NSString.class];
   if (stateString.length > 0) {

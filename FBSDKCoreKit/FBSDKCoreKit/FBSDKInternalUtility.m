@@ -319,11 +319,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   return operatingSystemVersion;
 }
 
-- (NSURL *)URLWithScheme:(NSString *)scheme
-                    host:(NSString *)host
-                    path:(NSString *)path
-         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                   error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)URLWithScheme:(NSString *)scheme
+                             host:(NSString *)host
+                             path:(NSString *)path
+                  queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                            error:(NSError *__autoreleasing *)errorRef
 {
   if (![path hasPrefix:@"/"]) {
     path = [@"/" stringByAppendingString:path ?: @""];
@@ -589,7 +589,7 @@ static NSMapTable *_transientObjects;
 
 #endif
 
-- (NSString *)hexadecimalStringFromData:(NSData *)data
+- (nullable NSString *)hexadecimalStringFromData:(NSData *)data
 {
   NSUInteger dataLength = data.length;
   if (dataLength == 0) {

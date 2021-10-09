@@ -54,9 +54,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 @implementation FBSDKBasicUtility
 
-+ (NSString *)JSONStringForObject:(id)object
-                            error:(NSError *__autoreleasing *)errorRef
-             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
++ (nullable NSString *)JSONStringForObject:(id)object
+                                     error:(NSError *__autoreleasing *)errorRef
+                      invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
   if (invalidObjectHandler || ![FBSDKTypeUtility isValidJSONObject:object]) {
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];

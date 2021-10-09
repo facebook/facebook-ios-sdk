@@ -38,7 +38,7 @@ NSString *const FBSDKLocationNameCodingKey = @"FBSDKLocationNameCodingKey";
   return self;
 }
 
-+ (instancetype)locationFromDictionary:(NSDictionary<NSString *, id> *)dictionary
++ (nullable instancetype)locationFromDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (![FBSDKTypeUtility dictionaryValue:dictionary]) {
     return nil;

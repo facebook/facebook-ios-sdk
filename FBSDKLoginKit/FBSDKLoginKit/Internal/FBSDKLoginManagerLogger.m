@@ -86,8 +86,8 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   return nil;
 }
 
-- (instancetype)initWithLoggingToken:(NSString *)loggingToken
-                            tracking:(FBSDKLoginTracking)tracking
+- (nullable instancetype)initWithLoggingToken:(NSString *)loggingToken
+                                     tracking:(FBSDKLoginTracking)tracking
 {
   switch (tracking) {
     case FBSDKLoginTrackingEnabled:

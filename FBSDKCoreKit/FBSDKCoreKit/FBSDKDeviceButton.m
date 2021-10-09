@@ -112,7 +112,7 @@ static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
 
 #pragma mark - Subclasses
 
-- (NSAttributedString *)attributedTitleStringFromString:(NSString *)string
+- (nullable NSAttributedString *)attributedTitleStringFromString:(NSString *)string
 {
   if (!string) {
     return nil;

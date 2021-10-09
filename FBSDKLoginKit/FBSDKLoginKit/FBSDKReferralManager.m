@@ -97,7 +97,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   }
 }
 
-- (NSURL *)referralURL
+- (nullable NSURL *)referralURL
 {
   NSError *error;
   NSURL *url;
