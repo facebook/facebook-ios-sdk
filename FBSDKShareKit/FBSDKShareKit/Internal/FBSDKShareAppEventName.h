@@ -18,15 +18,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-// MARK: - Like Actions
-
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlDidDisable;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlDidLike;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlDidPresentDialog;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlDidUnlike;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlError;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameLikeControlNetworkUnavailable;
-
 // MARK: - Message Dialog
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameMessengerShareDialogShow;

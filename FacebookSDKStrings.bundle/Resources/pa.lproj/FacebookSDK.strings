@@ -22,12 +22,6 @@
 /* The fallback message to display to retry transient errors */
 "ErrorRecovery.Transient.Suggestion" = "ਇਹ ਸਰਵਰ ਅਸਥਾਈ ਰੂਪ ਵਿੱਚ ਵਿਅਸਤ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।";
 
-/* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "ਪਸੰਦ ਕਰੋ";
-
-/* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "ਪਸੰਦ ਕੀਤਾ ਗਿਆ";
-
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "ਰੱਦ ਕਰੋ";
 

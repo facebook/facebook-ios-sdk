@@ -22,12 +22,6 @@
 /* The fallback message to display to retry transient errors */
 "ErrorRecovery.Transient.Suggestion" = "सर्व्हर तात्पुरता व्यस्त आहे, कृपया पुन्हा प्रयत्न करा.";
 
-/* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "आवडले";
-
-/* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "आवडलेले";
-
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "रद्द करा";
 

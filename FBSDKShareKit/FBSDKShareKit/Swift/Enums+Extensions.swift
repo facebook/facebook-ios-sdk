@@ -37,14 +37,3 @@ extension AppGroupPrivacy: CustomStringConvertible {
     __NSStringFromFBSDKAppGroupPrivacy(self)
   }
 }
-
-/**
- LikeObjectType CustomStringConvertible
- */
-@available(tvOS, unavailable)
-extension LikeObjectType: CustomStringConvertible {
-  /// The string description
-  public var description: String {
-    __NSStringFromFBSDKLikeObjectType(self)
-  }
-}

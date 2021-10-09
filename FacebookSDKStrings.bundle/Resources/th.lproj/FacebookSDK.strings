@@ -22,12 +22,6 @@
 /* The fallback message to display to retry transient errors */
 "ErrorRecovery.Transient.Suggestion" = "เซิร์ฟเวอร์ไม่พร้อมให้บริการชั่วคราว โปรดลองใหม่อีกครั้ง";
 
-/* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "ถูกใจ";
-
-/* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "ถูกใจแล้ว";
-
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "ยกเลิก";
 

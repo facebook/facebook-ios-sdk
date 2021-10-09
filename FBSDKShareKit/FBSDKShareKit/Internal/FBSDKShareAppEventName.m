@@ -18,15 +18,6 @@
 
 #import "FBSDKShareAppEventName.h"
 
-// MARK: - Like Actions
-
-FBSDKAppEventName const FBSDKAppEventNameLikeControlDidDisable = @"fb_like_control_did_disable";
-FBSDKAppEventName const FBSDKAppEventNameLikeControlDidLike = @"fb_like_control_did_like";
-FBSDKAppEventName const FBSDKAppEventNameLikeControlDidPresentDialog = @"fb_like_control_did_present_dialog";
-FBSDKAppEventName const FBSDKAppEventNameLikeControlDidUnlike = @"fb_like_control_did_unlike";
-FBSDKAppEventName const FBSDKAppEventNameLikeControlError = @"fb_like_control_error";
-FBSDKAppEventName const FBSDKAppEventNameLikeControlNetworkUnavailable = @"fb_like_control_network_unavailable";
-
 // MARK: - Message Dialog
 
 FBSDKAppEventName const FBSDKAppEventNameMessengerShareDialogShow = @"fb_messenger_dialog_share_show";

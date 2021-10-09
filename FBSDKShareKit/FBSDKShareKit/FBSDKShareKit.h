@@ -33,8 +33,6 @@
  #import <FBSDKShareKit/FBSDKGameRequestContent.h>
  #import <FBSDKShareKit/FBSDKGameRequestDialog.h>
  #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
- #import <FBSDKShareKit/FBSDKLikeObjectType.h>
- #import <FBSDKShareKit/FBSDKLiking.h>
  #import <FBSDKShareKit/FBSDKMessageDialog.h>
  #import <FBSDKShareKit/FBSDKSendButton.h>
  #import <FBSDKShareKit/FBSDKShareButton.h>

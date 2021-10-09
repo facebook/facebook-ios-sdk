@@ -61,7 +61,6 @@ NSString *const FBSDKDialogConfigurationNameSharing = @"sharing";
 NSString *const FBSDKDialogConfigurationNameAppInvite = @"app_invite";
 NSString *const FBSDKDialogConfigurationNameGameRequest = @"game_request";
 NSString *const FBSDKDialogConfigurationNameGroup = @"group";
-NSString *const FBSDKDialogConfigurationNameLike = @"like";
 NSString *const FBSDKDialogConfigurationNameMessage = @"message";
 NSString *const FBSDKDialogConfigurationNameShare = @"share";
 

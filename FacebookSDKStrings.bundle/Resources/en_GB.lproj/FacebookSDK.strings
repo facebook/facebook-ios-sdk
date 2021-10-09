@@ -22,12 +22,6 @@
 /* The fallback message to display to retry transient errors */
 "ErrorRecovery.Transient.Suggestion" = "The server is temporarily busy, please try again.";
 
-/* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "Like";
-
-/* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "Liked";
-
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "Cancel";
 

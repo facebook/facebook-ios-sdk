@@ -22,12 +22,6 @@
 /* The fallback message to display to retry transient errors */
 "ErrorRecovery.Transient.Suggestion" = "এই সার্ভারটি সাময়িকভাবে ব্যস্ত আছে, অনুগ্রহ করে পুনরায় চেষ্টা করুন৷";
 
-/* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "পছন্দ করুন";
-
-/* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "পছন্দ করা হয়েছে";
-
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "বাতিল করুন";
 
