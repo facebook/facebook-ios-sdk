@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKAppLink (Testing)
 
 + (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
-                             targets:(nullable NSArray<FBSDKAppLinkTarget *> *)targets
+                             targets:(NSArray<FBSDKAppLinkTarget *> *)targets
                               webURL:(nullable NSURL *)webURL
                     isBackToReferrer:(BOOL)isBackToReferrer;
 

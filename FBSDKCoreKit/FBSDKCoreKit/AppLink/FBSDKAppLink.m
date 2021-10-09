@@ -42,9 +42,9 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
 
 @implementation FBSDKAppLink
 
-+ (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
++ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                              webURL:(NSURL *)webURL
+                              webURL:(nullable NSURL *)webURL
                     isBackToReferrer:(BOOL)isBackToReferrer
 {
   FBSDKAppLink *link = [self new];
@@ -55,9 +55,9 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
   return link;
 }
 
-+ (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
++ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                              webURL:(NSURL *)webURL
+                              webURL:(nullable NSURL *)webURL
 {
   return [self appLinkWithSourceURL:sourceURL
                             targets:targets

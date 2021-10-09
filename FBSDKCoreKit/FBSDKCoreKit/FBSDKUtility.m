@@ -76,7 +76,7 @@
   }
 }
 
-+ (NSString *)SHA256Hash:(NSObject *)input
++ (nullable NSString *)SHA256Hash:(NSObject *)input
 {
   return [FBSDKBasicUtility SHA256Hash:input];
 }

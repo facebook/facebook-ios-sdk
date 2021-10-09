@@ -42,7 +42,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return self;
 }
 
-- (void)setImage:(UIImage *)image forKey:(NSString *)key
+- (void)setImage:(nullable UIImage *)image forKey:(NSString *)key
 {
   [self _setValue:image forKey:key];
 }

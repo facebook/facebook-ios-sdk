@@ -51,7 +51,8 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   }
 }
 
-+ (instancetype)dialogWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKGameRequestContent *)content
+                         delegate:(nullable id<FBSDKGameRequestDialogDelegate>)delegate
 {
   FBSDKGameRequestDialog *dialog = [self new];
   dialog.content = content;

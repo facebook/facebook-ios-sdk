@@ -158,7 +158,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [self presentInView:superview withArrowPosition:positionInSuperview direction:direction];
 }
 
-- (void)presentInView:(UIView *)view withArrowPosition:(CGPoint)arrowPosition direction:(FBSDKTooltipViewArrowDirection)arrowDirection
+- (void)presentInView:(UIView *)view
+    withArrowPosition:(CGPoint)arrowPosition
+            direction:(FBSDKTooltipViewArrowDirection)arrowDirection
 {
   _pointingUp = arrowDirection == FBSDKTooltipViewArrowDirectionUp;
   _positionInView = arrowPosition;

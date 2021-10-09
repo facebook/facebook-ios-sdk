@@ -42,7 +42,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return self;
 }
 
-- (void)setString:(NSString *)string forKey:(NSString *)key
+- (void)setString:(nullable NSString *)string forKey:(NSString *)key
 {
   [self _setValue:[string copy] forKey:key];
 }
@@ -52,7 +52,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return [self _valueOfClass:NSString.class forKey:key];
 }
 
-- (void)setArray:(NSArray<NSString *> *)array forKey:(NSString *)key
+- (void)setArray:(nullable NSArray<NSString *> *)array forKey:(NSString *)key
 {
   [self _setValue:[array copy] forKey:key];
 }

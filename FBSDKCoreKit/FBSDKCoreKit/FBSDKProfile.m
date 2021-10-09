@@ -326,7 +326,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   }
 }
 
-- (NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
+- (nullable NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 {
   return [FBSDKProfile imageURLForProfileID:_userID PictureMode:mode size:size];
 }

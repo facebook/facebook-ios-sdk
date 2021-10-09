@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
 
 + (void)reset;
-- (NSSet *)trackedImpressions;
+- (NSSet<NSDateFormatter *> *)trackedImpressions;
 - (void)_applicationDidEnterBackgroundNotification:(NSNotification *)notification;
 
 @end

@@ -46,7 +46,8 @@
 
 @implementation FBSDKChooseContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
+                         delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKChooseContextDialog *dialog = [FBSDKChooseContextDialog dialogWithContent:content
                                                                         delegate:delegate

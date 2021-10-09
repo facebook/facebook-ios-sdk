@@ -33,7 +33,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
 
 @interface FBSDKAppLink (Internal)
 
-+ (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
++ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
                               webURL:(nullable NSURL *)webURL
                     isBackToReferrer:(BOOL)isBackToReferrer;

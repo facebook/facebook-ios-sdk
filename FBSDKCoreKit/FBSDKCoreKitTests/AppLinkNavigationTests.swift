@@ -323,7 +323,7 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testPostingNavigationEventWithBackToReferrer() {
-    let appLink = AppLink(sourceURL: nil, targets: nil, webURL: nil, isBackToReferrer: true)
+    let appLink = AppLink(sourceURL: nil, targets: [], webURL: nil, isBackToReferrer: true)
     navigation = AppLinkNavigation(
       appLink: appLink, extras: [:], appLinkData: [:], settings: settings
     )

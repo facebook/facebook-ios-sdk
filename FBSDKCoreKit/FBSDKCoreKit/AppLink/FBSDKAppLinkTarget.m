@@ -30,8 +30,8 @@
 
 @implementation FBSDKAppLinkTarget
 
-+ (instancetype)appLinkTargetWithURL:(NSURL *)url
-                          appStoreId:(NSString *)appStoreId
++ (instancetype)appLinkTargetWithURL:(nullable NSURL *)url
+                          appStoreId:(nullable NSString *)appStoreId
                              appName:(NSString *)appName
 {
   FBSDKAppLinkTarget *target = [self new];

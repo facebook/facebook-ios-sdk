@@ -147,7 +147,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                      completion:handler];
 }
 
-- (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)reauthorizeDataAccess:(UIViewController *)fromViewController
+                      handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;

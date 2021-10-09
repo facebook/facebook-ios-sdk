@@ -82,6 +82,7 @@ def main():
             r"^([+-].*?);$", h_file_text, flags=re.MULTILINE | re.DOTALL
         ):
             method_declaration = match.group(1)
+            method_declaration = re.sub(r"\nNS_SWIFT_NAME.*", "", method_declaration)
             key_for_method = key_for_method_declaration(method_declaration)
 
             if method_declaration != key_for_method:
