@@ -34,6 +34,7 @@ Changes to `FBSDKLoginButton` when defined in a Storyboard or XIB file: There is
 - Formalized the shared instance of `AppEvents` (given the property name `shared`) to start moving away from a class-based interface.
 - `FacebookGamingServices` and `FBSDKGamingServicesKit` &mdash; There are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you don't need an Objective-C interface for these types,
 we recommend that you use only `FacebookGamingServices`.
+- Nullability annotations are added to some types. If you are using Swift (and in some cases Objective-C) and you use a newly annotated type, see the warnings in Xcode for more information.
 
 The following table contains changes to the iOS SDK in version 12.0.0.
 
