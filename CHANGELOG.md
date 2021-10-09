@@ -1,75 +1,68 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.0...HEAD)
 
+
 ## 12.0.0
 
-As of v12.0, CocoaPods and Swift Package Manager (SPM) will be vending pre-built XCFrameworks.
+Starting with version 12.0.0, CocoaPods and Swift Package Manager (SPM) are vending pre-built XCFrameworks. You no longer need to build the SDK when using CocoaPods or SPM, which should save you between a few seconds and a few minutes per build.
 
-What this means for you as a developer is that you no longer need to build the SDK when using CocoaPods or SPM. This should save anywhere from a few seconds to a few minutes per build depending on your particular setup.
+Because XCFrameworks do not allow embedded frameworks, note the following:
+- When you install the SDK by using CocoaPods, the generated Pods project includes the dependencies for you.
+- When you install the SDK by using SPM, you must add the dependencies yourself.
+  - You must include `FacebookAEM` and `FacebookBasics` even though you won't use them directly.
 
-Because XCFrameworks do not allow for embedded frameworks, they require their dependent frameworks to be included. When you install the SDK using CocoaPods, the generated Pods project will include the dependencies for you, however, when you install the SDK using SPM, you will be required to add the dependencies yourself.
+You can no longer build from source using Carthage. Instead use Carthage to obtain the pre-built XCFrameworks. For instructions, see: https://github.com/Carthage/Carthage#migrating-a-project-from-framework-bundles-to-xcframeworks.
 
-What this means for you as a developer is that you'll need to include `FacebookAEM` and `FacebookBasics` even though you won't use them directly. If you don't you'll experience a crash at runtime upon app launch when the dependencies cannot be resolved.
+For more details, see https://developers.facebook.com/docs/ios/getting-started.
 
-More detailed instructions can be found at: https://developers.facebook.com/docs/ios/getting-started
 
-🚨 NOTICE: Changes to FBSDKLoginButton when defined in a Storyboard or XIB file 🚨
+🚨 IMPORTANT 🚨
 
-There is a known issue with using XCFrameworks in conjunction with Storyboard or XIB files. If you do not follow the instructions on using Interface Builder at https://developers.facebook.com/docs/facebook-login/ios/advanced/, `FBSDKLoginButton` will not load or decorate correctly.
+Changes to `FBSDKLoginButton` when defined in a Storyboard or XIB file: There is a known issue with using XCFrameworks in conjunction with Storyboard or XIB files. If you do not follow the instructions for using Interface Builder at https://developers.facebook.com/docs/facebook-login/ios/advanced/, `FBSDKLoginButton` does not load or decorate correctly.  Add `[FBSDKLoginButton class]` to `application:didFinishLaunchingWithOptions:` so that the Storyboard can find it. If you don't, any methods that you call on it may result in a **runtime crash**.
 
-In summary you need to add `[FBSDKLoginButton class]` to `application:didFinishLaunchingWithOptions:` to "pre-load" the class so that the Storyboard can find it. If you don't, any methods that you call on it may result in a **runtime crash**.
 
-### Added
+### Changes in Version 12.0.0
 
-- Formalized the shared instance of AppEvents (given the property name `shared`) in order to start moving away from a class-based interface.
+- The minimum supported version of iOS is now 10.0.
+- Formalized the shared instance of `AppEvents` (given the property name `shared`) to start moving away from a class-based interface.
+- `FacebookGamingServices` and `FBSDKGamingServicesKit` &mdash; There are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you don't need an Objective-C interface for these types,
+we recommend that you use only `FacebookGamingServices`.
 
-### Changed
+The following table contains changes to the iOS SDK in version 12.0.0.
 
-- FacebookGamingServices vs FBSDKGamingServicesKit - You'll notice there are two libraries related to Gaming Services. `FBSDKGamingServicesKit` is a superset of `FacebookGamingServices` that includes Objective-C wrapper classes for `FBSDKContextDialogPresenter` and `FBSDKContextDialogPresenter`. If you do not require an Objective-C interface for these types,
-we recommend using only `FacebookGamingServices`.
+|Removed or Changed|Version 12.0.0 Replacement or Change|
+|-|-|
+|`AccessToken` convenience initializers that include `graphDomain`|&mdash;|
+|`AccessToken.graphDomain` class property.|`AccessToken.graphDomain` instance property.|
+|`AccessToken.refreshCurrentAccessToken(completionHandler:)`|`AccessToken.refreshCurrentAccessToken(completion:)`|
+|`AppEvents.activateApp` class method.|`AppEvents.activateApp` instance method that you access on the `AppEvents.shared` instance.|
+|`FBSDKGraphErrorRecoveryProcessor` - you can no longer create new instances without using designated initializers.|&mdash;|
+|`GamingContext.type`|&mdash;|
+|`GamingImageUploader.uploadImage(configuration:andResultCompletionHandler:)`|`GamingImageUploader.uploadImage(configuration:andResultCompletion:)`|
+|`GamingImageUploader.uploadImage(configuration:completionHandler:andProgressHandler:)`|`GamingImageUploader.uploadImage(configuration:completion:andProgressHandler:)`|
+|`GamingPayload.gameRequestID`|You can obtain the game request ID from `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`|
+|`GamingPayloadDelegate.updatedURLContaining(_:)`|`GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`|
+|`GamingPayloadObserver.shared`|You must now create instances of this object by using a delegate.|
+|`GamingServiceResultCompletionHandler`|`GamingServiceResultCompletion`|
+|`GamingVideoUploader.uploadVideo(configuration:andResultCompletionHandler:)`|`GamingVideoUploader.uploadVideo(configuration:andResultCompletion:)`|
+|`GamingVideoUploader.uploadVideo(configuration:completionHandler:andProgressHandler:)`|`GamingVideoUploader.uploadVideo(configuration:completion:andProgressHandler:)`|
+|`GraphRequest.start(completionHandler:)`|`GraphRequest.start(completion:)`|
+|`GraphRequestBlock`|`GraphRequestCompletion`|
+|`GraphRequestConnection.add(_:completionHandler:)`|`GraphRequestConnection.add(_:completion:)`|
+|`GraphRequestConnection.add(_:batchEntryName:completionHandler:)`|`GraphRequestConnection.add(_:name:completion:)`|
+|`GraphRequestConnection.add(_:batchParameters:completionHandler:)`|`GraphRequestConnection.add(_:parameters:completion:)`|
 
-The minimum supported iOS version is now 10.0
-
-### Removed
-
-Support for building from source using Carthage. Instead Carthage can be used to obtain the pre-built XCFrameworks. For update instructions, see: https://github.com/Carthage/Carthage#migrating-a-project-from-framework-bundles-to-xcframeworks
-
-- `AccessToken`
-  - `graphDomain` class property. Replacement - `graphDomain` instance property
-  - convenience initializers that include `graphDomain`
-  - `refreshCurrentAccessToken(completionHandler:)` Replacement - `refreshCurrentAccessToken(completion:)`
-- `AppEvents`
-  - `activateApp` class method. Replaced by an instance method of the same name that can be accessed on the `AppEvents.shared` instance.
-- Ability to create new instances of `FBSDKGraphErrorRecoveryProcessor` without using designated initializers.
-- `GraphRequest`
-  - `start(completionHandler:)` Replacement - `start(completion:)`
-- `GraphRequestBlock` Replacement -  `GraphRequestCompletion`
-- `GraphRequestConnection`
-  - `add(_:completionHandler:)` Replacement - `add(_:completion:)`
-  - `add(_:batchEntryName:completionHandler:)` Replacement - `add(_:name:completion:)`
-  - `add(_:batchParameters:completionHandler:)` Replacement - `add(_:parameters:completion:)`
-- `GamingContext.type`
-- `GamingImageUploader`
-  - `uploadImage(configuration:andResultCompletionHandler:)` Replacement - `uploadImage(configuration:andResultCompletion:)`
-  - `uploadImage(configuration:completionHandler:andProgressHandler:)` Replacement - `uploadImage(configuration:completion:andProgressHandler:)`
-- `GamingVideoUploader`
-  - `uploadVideo(configuration:andResultCompletionHandler:)` Replacement - `uploadVideo(configuration:andResultCompletion:)`
-  - `uploadVideo(configuration:completionHandler:andProgressHandler:)` Replacement - `uploadVideo(configuration:completion:andProgressHandler:)`
-- `GamingPayload.gameRequestID` You can obtain the game request idea from `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
-- `GamingPayloadDelegate.updatedURLContaining(_:)` Replacement - `GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:)`
-- `GamingPayloadObserver.shared`. Instances of this object now must be created with a delegate.
-- `GamingServiceResultCompletionHandler` Replacement - `GamingServiceResultCompletion`
 
 [2021-09-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.1...v12.0.0)
+
 
 ## 11.2.1
 
