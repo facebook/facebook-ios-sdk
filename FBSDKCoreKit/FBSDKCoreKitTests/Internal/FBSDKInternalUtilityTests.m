@@ -23,14 +23,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKInternalUtility+Internal.h"
 
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                        graphDomain:(NSString *)graphDomain;
-
-@end
-
 @interface FBSDKInternalUtilityTests : XCTestCase
 
 @property (nonatomic) TestBundle *bundle;

@@ -72,14 +72,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 @end
 
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
-@end
-
 @interface FBSDKLoginCompletionTests : XCTestCase
+
 @property (nonatomic) NSDictionary<NSString *, id> *parameters;
 
 @property (nonatomic) TestGraphRequestConnection *graphConnection;

@@ -18,7 +18,7 @@
 
 @import XCTest;
 
-#import <TestTools/FBSDKTestCoder.h>
+#import <TestTools/TestTools.h>
 
 #import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKContextWebDialog+Testing.h"

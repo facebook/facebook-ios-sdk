@@ -20,7 +20,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#import <TestTools/FBSDKTestCoder.h>
+#import <TestTools/TestTools.h>
 
 #import "XCTestCase+Extensions.h"
 

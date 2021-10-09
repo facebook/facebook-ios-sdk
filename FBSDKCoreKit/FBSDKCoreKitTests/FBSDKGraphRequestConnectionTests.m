@@ -54,14 +54,6 @@
 
 @end
 
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                        graphDomain:(NSString *)graphDomain;
-
-@end
-
 @implementation FBSDKGraphRequestConnectionTests
 
 - (void)setUp

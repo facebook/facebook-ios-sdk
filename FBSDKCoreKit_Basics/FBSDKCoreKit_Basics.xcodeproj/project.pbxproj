@@ -245,7 +245,6 @@
 		A62D3BCCF27A0F847E006868 /* FBSDKURLSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSession.h; sourceTree = "<group>"; };
 		A663B6D07E6176A89EC2FF52 /* FBSDKURLSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKURLSession.m; sourceTree = "<group>"; };
 		A66804798D3A91DAD2AE3F5E /* FBSDKInfoDictionaryProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKInfoDictionaryProviding.h; sourceTree = "<group>"; };
-		B3DA52CF984CE29229402E1A /* FBSDKCoreKit_BasicsTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCoreKit_BasicsTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		C497842E64A9B5C4C62A770E /* TestTools */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools; path = ../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		C4C36158EA664E66175EDA4C /* FBSDKBase64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBase64.h; sourceTree = "<group>"; };
 		C79ECB3BAF28CD5B274FCDFA /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
@@ -338,7 +337,6 @@
 		68D51098AB7AA76A73155F75 /* FBSDKCoreKit_BasicsTests */ = {
 			isa = PBXGroup;
 			children = (
-				B3DA52CF984CE29229402E1A /* FBSDKCoreKit_BasicsTests-Bridging-Header.h */,
 				88D14D1060B027EF3745B35F /* FBSDKSafeCastTests.m */,
 				D1485939D17BD267BCCEF40E /* FBSDKTypeUtilityTests.m */,
 				D96F2ECFFD4513F1AEDAECB2 /* Info.plist */,
