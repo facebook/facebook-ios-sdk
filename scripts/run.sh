@@ -292,7 +292,6 @@ tag_current_version() {
   fi
 }
 
-# Build
 build_sdk() {
   build_xcode_workspace() {
     xcodebuild build \
@@ -302,49 +301,16 @@ build_sdk() {
       -configuration Debug | xcpretty
   }
 
-  build_carthage() {
-    CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-
-    if [ "${1:-}" == "--archive" ]; then
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output Carthage/Release/
-    fi
-  }
-
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
-  "carthage") build_carthage "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
 }
 
-# Release
-# Builds and stores various build flavors under build/Release
-# where they can be found and uploaded by a travis job
 release_sdk() {
-  # Release github
-  release_github() {
-    mkdir -p build/Release
-    rm -rf build/Release/*
-
-    # Release frameworks in dynamic (mostly for Carthage)
-    release_dynamic() {
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/FacebookSDK_Dynamic.framework.zip
-    }
-
-    local release_type=${1:-}
-    if [ -n "$release_type" ]; then shift; fi
-
-    case "$release_type" in
-    "static") release_static "$@" ;;
-    "dynamic") release_dynamic "$@" ;;
-    *) release_dynamic && release_static ;;
-    esac
-  }
-
   release_docs() {
     for kit in "${DOCUMENTATION_KITS[@]}"; do
       rm -rf "$kit/build" || true
@@ -365,7 +331,6 @@ release_sdk() {
   if [ -n "$release_type" ]; then shift; fi
 
   case "$release_type" in
-  "github") release_github "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
