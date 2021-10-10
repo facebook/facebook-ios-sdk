@@ -335,44 +335,6 @@ release_sdk() {
       CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/FacebookSDK_Dynamic.framework.zip
     }
 
-    # Release frameworks in static
-    release_static() {
-      xcodebuild clean build \
-       -workspace FacebookSDK.xcworkspace \
-       -scheme BuildAllKits \
-       -configuration Release | xcpretty
-
-      xcodebuild clean build \
-       -workspace FacebookSDK.xcworkspace \
-       -scheme BuildAllKits_TV \
-       -configuration Release | xcpretty
-
-      cd build || exit
-      cp ../LICENSE ./ # LICENSE file
-      zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework LICENSE
-      mv FacebookSDK_Static.zip Release/
-      for kit in "${SDK_KITS[@]}"; do
-        if [ ! -d "$kit".framework ] \
-          && [ ! -d tv/"$kit".framework ]; then
-          continue
-        fi
-
-        mkdir -p Release/"$kit"
-        if [ -d "$kit".framework ]; then
-          mkdir -p Release/"$kit"/iOS
-          mv "$kit".framework Release/"$kit"/iOS
-        fi
-        if [ -d tv/"$kit".framework ]; then
-          mkdir -p Release/"$kit"/tvOS
-          mv tv/"$kit".framework Release/"$kit"/tvOS
-        fi
-        cd Release || exit
-        zip -r -m "$kit".zip "$kit"
-        cd ..
-      done
-      cd ..
-    }
-
     local release_type=${1:-}
     if [ -n "$release_type" ]; then shift; fi
 

@@ -19,11 +19,6 @@ tagFilters: &onlyRunOnTags
     tags:
       only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
-requiresProjectGeneration: &requiresProjectGeneration
-  requires:
-    - setup
-    - generate-projects
-
 commands:
   setup:
     description: Runs before each job and checks out the source code and installs dependencies
@@ -35,89 +30,13 @@ commands:
           paths:
             - .
 
-  install_xcodegen:
-    description: Installs xcodegen
-    steps:
-      - run:
-          name: Install Xcodegen
-          command: brew install xcodegen
-
-  generate_projects:
-    description: Generates xcode projects
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Generate Projects
-          command: ./generate-projects.sh
-
   install_gems:
     description: Installs ruby gems in the Gemfile
     steps:
       - run:
           name: Set Ruby Version
           command: echo 'chruby ruby-2.7' >> ~/.bash_profile
-      - restore_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
-      - run: bundle check || bundle install --path vendor/bundle
-      - save_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-      - run: bundle
-
-  build_carthage:
-    description: Builds all schemes using Carthage
-    steps:
-      - attach_workspace:
-          at: .
-      - run: CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-
-  build_for_release:
-    description: Builds libraries for release
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh release github
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build/Release
-
-  build_xcode:
-    description: Runs xcodebuild for the FacebookSDK workspace with a given scheme, and configuration
-    parameters:
-      scheme:
-        type: string
-      configuration:
-        default: Debug
-        type: string
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          xcodebuild clean build \
-            -workspace FacebookSDK.xcworkspace \
-            -scheme << parameters.scheme >> \
-            -configuration << parameters.configuration >>
-
-  build_xcode_debug:
-    description: Builds the Debug configuration for all schemes using xcodebuild
-    steps:
-      - build_xcode:
-          scheme: BuildAllKits
-      - build_xcode:
-          scheme: BuildAllKits_TV
-
-  build_xcode_release:
-    description: Builds the Release configuration for all schemes using xcodebuild
-    steps:
-      - build_xcode:
-          scheme: BuildAllKits
-          configuration: Release
-      - build_xcode:
-          scheme: BuildAllKits_TV
-          configuration: Release
+      - run: gem install cocoapods
 
   publish_cocoapods:
     description: Pushes all CocoaPods to trunk
@@ -143,49 +62,13 @@ commands:
             --name "Facebook SDK ${CIRCLE_TAG}" \
             --body "Consult [Changelog](https://github.com/facebook/facebook-ios-sdk/blob/main/CHANGELOG.md#${STRIPPED_VERSION_NUMBER})" \
             --draft \
-            ${CIRCLE_TAG} \
-            build/Release
-
-  verify_release:
-    description: Verifies that the release workflow published artifacts successfully
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh check-release-status
-
-  verify_xcode_integration:
-    description: Verifies that an xcode project that includes the SDK can build without error
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh verify-xcode-integration
+            ${CIRCLE_TAG}
 
 jobs:
   setup:
     <<: *useMacOS
     steps:
       - setup
-  generate-projects:
-    <<: *useMacOS
-    steps:
-      - install_xcodegen
-      - generate_projects
-  build-for-release:
-    <<: *useMacOS
-    steps:
-      - build_for_release
-  build-xcode-debug:
-    <<: *useMacOS
-    steps:
-      - build_xcode_debug
-  build-xcode-release:
-    <<: *useMacOS
-    steps:
-      - build_xcode_release
-  build-carthage:
-    <<: *useMacOS
-    steps:
-      - build_carthage
   publish-cocoapods:
     <<: *useMacOS
     steps:
@@ -195,38 +78,12 @@ jobs:
       - image: cibuilds/github:0.13
     steps:
       - publish_to_github
-  verify-release:
-    <<: *useMacOS
-    steps:
-      - verify_release
-  verify-xcode-integration:
-    <<: *useMacOS
-    steps:
-      - verify_xcode_integration
 
 workflows:
-  test:
-    jobs:
-      - setup
-      - generate-projects:
-          <<: *requiresSetup
-      - build-xcode-debug:
-          <<: *requiresProjectGeneration
-      - build-xcode-release:
-          <<: *requiresProjectGeneration
-      - build-carthage:
-          <<: *requiresProjectGeneration
-      - verify-xcode-integration:
-          <<: *requiresProjectGeneration
   release:
     jobs:
       - setup:
           <<: *onlyRunOnTags
-      - generate-projects:
-          <<: *requiresSetup
-      - build-for-release:
-          <<: *onlyRunOnTags
-          <<: *requiresProjectGeneration
       - publish-to-github:
           <<: *onlyRunOnTags
           requires:
