@@ -44,31 +44,30 @@ def main():
 
     output_lines = completed_process.stdout.decode().splitlines()
 
-    all_warning_lines = {
+    warning_lines = {
         line for line in output_lines if "warning: " in line or "error: " in line
     }
 
-    warnings_without_base_dir = [
-        line.replace(f"{base_dir}/", "") for line in all_warning_lines
-    ]
+    # Make the output prettier by removing the base_dir from the warning file paths
+    warning_lines = [line.replace(f"{base_dir}/", "") for line in warning_lines]
 
-    not_allowlisted_warnings_without_base_dir = []
+    non_allowlisted_warnings = []
 
-    for warning in warnings_without_base_dir:
+    for warning in warning_lines:
         can_ignore = any(
-            ignorable_text in warning
-            for ignorable_text in XCODEBUILD_WARNINGS_ALLOWLIST
+            allowed_warning_text in warning
+            for allowed_warning_text in XCODEBUILD_WARNINGS_ALLOWLIST
         )
         if not can_ignore:
-            not_allowlisted_warnings_without_base_dir.append(warning)
+            non_allowlisted_warnings.append(warning)
 
     # If there are warnings print an issue and exit
-    if not_allowlisted_warnings_without_base_dir:
+    if non_allowlisted_warnings:
         print("\nTHE FOLLOWING NON-ALLOWLISTED WARNINGS WERE ENCOUNTERED:")
-        for i, warning in enumerate(not_allowlisted_warnings_without_base_dir, start=1):
+        for i, warning in enumerate(non_allowlisted_warnings, start=1):
             print(f"{i}. {warning}")
 
-        warning_count = len(not_allowlisted_warnings_without_base_dir)
+        warning_count = len(non_allowlisted_warnings)
         print_to_stderr(f"FAILED DUE TO {warning_count} NON-ALLOWLISTED WARNINGS")
         print_to_stderr(
             "If any of these warnings should be ALLOWLISTED, add them to xcodebuild_warnings_allowlist.py and include a member of the Platform SDKs team on the diff review."

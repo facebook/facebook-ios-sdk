@@ -17,7 +17,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 XCODEBUILD_WARNINGS_ALLOWLIST = [
-    "warning: implicit import of bridging header 'TestTools-Bridging-Header.h' via module 'TestTools' is deprecated and will be removed in a later version of Swift",
     "warning: Input PNG is already optimized for iPhone OS.  Copying source file to destination...",
     # Pika Warnings:
     # "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-11-macos-noasserts.xctoolchain",
