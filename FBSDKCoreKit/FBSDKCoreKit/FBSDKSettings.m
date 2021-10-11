@@ -135,6 +135,15 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @synthesize loggingBehaviors = _loggingBehaviors;
 static dispatch_once_t sharedSettingsNonce;
 
+- (instancetype)init
+{
+  if ((self = [super init])) {
+    _isGraphErrorRecoveryEnabled = YES;
+  }
+
+  return self;
+}
+
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
 // Once that is complete then types that use `+[FBSDKSettings foo]` can take an
