@@ -313,7 +313,7 @@ class AppLinkNavigationTests: XCTestCase {
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["error"],
-      "The operation couldn’t be completed. (FBSDKCoreKitTests.SampleError error 1.)",
+      "The operation couldn’t be completed. (TestTools.SampleError error 1.)",
       "A navigation event notification should include information about any errors"
     )
     XCTAssertEqual(
