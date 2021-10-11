@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */; };
+		1E07A6040F99664A1D1CCD03 /* TestBridgeAPIRequestOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
 		2A7CA9317DCBCEACF959C50E /* TestSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFA80AADB26410AC60714D8 /* TestSettings.swift */; };
 		41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */; };
@@ -65,6 +66,7 @@
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
+		AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestOpener.swift; sourceTree = "<group>"; };
 		B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
 		BCFA80AADB26410AC60714D8 /* TestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSettings.swift; sourceTree = "<group>"; };
 		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */,
 				791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */,
 				134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */,
+				AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */,
 				571755F44AE658FF8F3716B4 /* TestBundle.swift */,
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
 				0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */,
@@ -263,6 +266,7 @@
 				A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */,
 				CDF18EF7B43D29D705F3FCDD /* TestAuthenticationTokenWallet.swift in Sources */,
 				F5C5088D9B790C47A9FB6DB5 /* TestBridgeAPIRequest.swift in Sources */,
+				1E07A6040F99664A1D1CCD03 /* TestBridgeAPIRequestOpener.swift in Sources */,
 				8D0D73617FA7679F8A827C99 /* TestBundle.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,

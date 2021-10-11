@@ -17,21 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+  public var capturedURL: URL?
+  public var capturedHandler: SuccessBlock?
+  public var capturedRequest: BridgeAPIRequestProtocol?
+  public var capturedUseSafariViewController: Bool? // swiftlint:disable:this discouraged_optional_boolean
+  public var capturedFromViewController: UIViewController?
+  public var capturedCompletionBlock: BridgeAPIResponseBlock?
+  public var openURLWithSFVCCount = 0
 
-  var capturedURL: URL?
-  var capturedHandler: SuccessBlock?
-  var capturedRequest: BridgeAPIRequestProtocol?
-  var capturedUseSafariViewController: Bool? // swiftlint:disable:this discouraged_optional_boolean
-  var capturedFromViewController: UIViewController?
-  var capturedCompletionBlock: BridgeAPIResponseBlock?
-
-  func open(_ url: URL, sender: URLOpening?, handler: @escaping SuccessBlock) {
-    capturedURL = url
-    capturedHandler = handler
-  }
-
-  func open(
+  public func open(
     _ request: BridgeAPIRequestProtocol,
     useSafariViewController: Bool,
     from fromViewController: UIViewController?,
@@ -43,10 +38,18 @@ final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
     capturedCompletionBlock = completionBlock
   }
 
-  func openURL(
+  public func openURL(
     withSafariViewController url: URL,
     sender: URLOpening,
     from fromViewController: UIViewController,
     handler: @escaping SuccessBlock
-  ) {}
+  ) {
+    openURLWithSFVCCount += 1
+    handler(true, nil)
+  }
+
+  public func open(_ url: URL, sender: URLOpening?, handler: @escaping SuccessBlock) {
+    capturedURL = url
+    capturedHandler = handler
+  }
 }
