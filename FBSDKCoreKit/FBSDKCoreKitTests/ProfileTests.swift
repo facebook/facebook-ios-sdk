@@ -24,6 +24,7 @@ class ProfileTests: XCTestCase {
 
   var store = UserDefaultsSpy()
   var notificationCenter = TestNotificationCenter()
+  let settings = TestSettings()
 
   override func setUp() {
     super.setUp()
@@ -31,7 +32,8 @@ class ProfileTests: XCTestCase {
     Profile.configure(
       store: store,
       accessTokenProvider: TestAccessTokenWallet.self,
-      notificationCenter: notificationCenter
+      notificationCenter: notificationCenter,
+      settings: settings
     )
   }
 
@@ -76,6 +78,21 @@ class ProfileTests: XCTestCase {
     XCTAssertTrue(
       Profile.accessTokenProvider is TestAccessTokenWallet.Type,
       "Should be able to set a token wallet"
+    )
+  }
+
+  func testDefaultSettings() {
+    Profile.reset()
+    XCTAssertNil(
+      Profile.settings,
+      "Should not have default settings"
+    )
+  }
+
+  func testConfiguringWithSettings() {
+    XCTAssertTrue(
+      Profile.settings === settings,
+      "Should be able to set settings"
     )
   }
 

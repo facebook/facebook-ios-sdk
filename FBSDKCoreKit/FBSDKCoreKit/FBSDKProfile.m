@@ -20,6 +20,7 @@
 
 #import "FBSDKProfile+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken.h"
@@ -28,7 +29,6 @@
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
 #import "FBSDKNotificationProtocols.h"
-#import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUserAgeRange.h"
 
@@ -63,17 +63,29 @@ static NSDateFormatter *_dateFormatter;
 @interface FBSDKProfile ()
 
 @property (nonatomic, assign) BOOL isLimited;
-
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 @end
 
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
+static id<FBSDKDataPersisting> _store;
+static id<FBSDKSettings> _settings;
 
 + (Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   return _accessTokenProvider;
+}
+
++ (id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(id<FBSDKSettings>)settings
+{
+  _settings = settings;
 }
 
 + (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
@@ -479,16 +491,16 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 
 @implementation FBSDKProfile (Internal)
 
-static id <FBSDKDataPersisting> _store;
-
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                  settings:(id<FBSDKSettings>)settings
 {
   if (self == FBSDKProfile.class) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
     _notificationCenter = notificationCenter;
+    self.settings = settings;
   }
 }
 
@@ -546,8 +558,8 @@ static id <FBSDKDataPersisting> _store;
   if ([self.accessTokenProvider currentAccessToken]) {
     [FBSDKTypeUtility dictionary:queryParameters setObject:[[self.accessTokenProvider currentAccessToken] tokenString]
                           forKey:accessTokenKey];
-  } else if (FBSDKSettings.sharedSettings.clientToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.sharedSettings.clientToken forKey:accessTokenKey];
+  } else if (self.settings.clientToken) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:self.settings.clientToken forKey:accessTokenKey];
   } else {
     NSLog(@"As of Graph API v8.0, profile images may not be retrieved without an access token. This can be the current access token from logging in with Facebook or it can be set via the plist or in code. Providing neither will cause this call to return a silhouette image.");
   }
@@ -748,6 +760,7 @@ static id <FBSDKDataPersisting> _store;
   _store = nil;
   _accessTokenProvider = nil;
   _notificationCenter = nil;
+  self.settings = nil;
 }
 
 #endif

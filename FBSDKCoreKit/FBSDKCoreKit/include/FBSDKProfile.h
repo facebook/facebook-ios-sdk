@@ -26,8 +26,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-
 /**
   Notification indicating that the `currentProfile` has changed.
 

@@ -677,7 +677,7 @@ static UIApplicationState _applicationState;
           currentAccessTokenStringProvider:FBSDKAccessToken.class
              graphRequestConnectionFactory:graphRequestConnectionFactory];
   [FBSDKGraphRequestConnection setCanMakeRequests];
-  [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.sharedSettings
+  [FBSDKGateKeeperManager configureWithSettings:sharedSettings
                             graphRequestFactory:graphRequestFactory
                   graphRequestConnectionFactory:graphRequestConnectionFactory
                                           store:store];
@@ -765,12 +765,13 @@ static UIApplicationState _applicationState;
   }
   if (@available(iOS 14.0, *)) {
     [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new]
-                                    appID:FBSDKSettings.sharedSettings.appID
+                                    appID:sharedSettings.appID
                                  reporter:self.skAdNetworkReporter];
   }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class
-                notificationCenter:NSNotificationCenter.defaultCenter];
+                notificationCenter:NSNotificationCenter.defaultCenter
+                          settings:sharedSettings];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared

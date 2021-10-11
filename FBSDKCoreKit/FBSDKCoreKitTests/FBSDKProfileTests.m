@@ -64,6 +64,11 @@ NSString *const heightKey = @"height";
              infoDictionaryProvider:[TestBundle new]
                         eventLogger:[TestAppEvents new]];
 
+  [FBSDKProfile configureWithStore:[UserDefaultsSpy new]
+               accessTokenProvider:TestAccessTokenWallet.class
+                notificationCenter:NSNotificationCenter.defaultCenter
+                          settings:FBSDKSettings.sharedSettings];
+
   _sdkVersion = @"100";
   _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";
@@ -72,7 +77,6 @@ NSString *const heightKey = @"height";
   _testGraphRequest = [TestGraphRequest new];
 
   FBSDKSettings.graphAPIVersion = _sdkVersion;
-  FBSDKProfile.accessTokenProvider = TestAccessTokenWallet.class;
 }
 
 - (void)tearDown
