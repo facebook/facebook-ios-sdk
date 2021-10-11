@@ -22,11 +22,7 @@ import pathlib
 import subprocess
 import sys
 
-ALLOWLISTED_WARNINGS = [
-    "warning: implicit import of bridging header 'TestTools-Bridging-Header.h' via module 'TestTools' is deprecated and will be removed in a later version of Swift",
-    "warning: Input PNG is already optimized for iPhone OS.  Copying source file to destination...",
-    "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-11-macos-noasserts.xctoolchain",
-]
+from xcodebuild_warnings_allowlist import XCODEBUILD_WARNINGS_ALLOWLIST
 
 
 def main():
@@ -60,7 +56,8 @@ def main():
 
     for warning in warnings_without_base_dir:
         can_ignore = any(
-            ignorable_text in warning for ignorable_text in ALLOWLISTED_WARNINGS
+            ignorable_text in warning
+            for ignorable_text in XCODEBUILD_WARNINGS_ALLOWLIST
         )
         if not can_ignore:
             not_allowlisted_warnings_without_base_dir.append(warning)
@@ -73,9 +70,8 @@ def main():
 
         warning_count = len(not_allowlisted_warnings_without_base_dir)
         print_to_stderr(f"FAILED DUE TO {warning_count} NON-ALLOWLISTED WARNINGS")
-        filename = sys.argv[0]
         print_to_stderr(
-            f"If any of these warnings should be ALLOWLISTED, add them to ALLOWLISTED_WARNINGS in {filename} and include a member of the Platform SDKs team on the diff review."
+            "If any of these warnings should be ALLOWLISTED, add them to xcodebuild_warnings_allowlist.py and include a member of the Platform SDKs team on the diff review."
         )
 
         sys.exit(1)
@@ -85,6 +81,7 @@ def main():
         print(f"STDERR: {completed_process.stderr.decode()}")
         sys.exit(completed_process.returncode)
 
+    print("Check complete. No unexpected warnings encountered.")
     sys.exit(0)
 
 
