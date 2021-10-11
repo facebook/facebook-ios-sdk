@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
+		2A7CA9317DCBCEACF959C50E /* TestSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFA80AADB26410AC60714D8 /* TestSettings.swift */; };
 		41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */; };
 		4463F7E77A22CF4A3B8596D0 /* TestKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */; };
 		5C15C252C08510B4B00930B1 /* TestURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */; };
@@ -65,6 +66,7 @@
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
+		BCFA80AADB26410AC60714D8 /* TestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSettings.swift; sourceTree = "<group>"; };
 		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
 		CC38C544BAC3F3485C5F699F /* TestTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTools.h; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				FEA859E1F31F30B29819BC2F /* TestKeychainStoreFactory.swift */,
 				4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
+				BCFA80AADB26410AC60714D8 /* TestSettings.swift */,
 				CC38C544BAC3F3485C5F699F /* TestTools.h */,
 				B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */,
 				E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */,
@@ -270,6 +273,7 @@
 				C975A94CFA4522D7A5194379 /* TestKeychainStoreFactory.swift in Sources */,
 				638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
+				2A7CA9317DCBCEACF959C50E /* TestSettings.swift in Sources */,
 				5C15C252C08510B4B00930B1 /* TestURLOpener.swift in Sources */,
 				99EFAC95A1FB2E0A37D88F38 /* TestWindowFinder.swift in Sources */,
 			);
