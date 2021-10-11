@@ -23,44 +23,44 @@ public enum TournamentDecodingError: Error {
   case invalidScoreType
 }
 
-public struct Tournament: Codable {
+struct Tournament: Codable {
 
   /**
    The unique ID that is associated with this tournament.
    */
-  public internal(set) var identifier: String
+  var identifier: String
 
   /**
    Timestamp when the tournament ends.
    If the expiration is in the past, then the tournament is already finished and has expired.
    */
-  public internal(set) var expiration: Date?
+  var expiration: Date?
 
   /**
    Title of the tournament provided upon the creation of the tournament.
    */
-  public internal(set) var title: String?
+  var title: String?
 
   /**
    The sort order of the score for the tournament provided upon the creation of the tournament.
    */
-  public internal(set) var sortOrder: TournamentSortOrder?
+  var sortOrder: TournamentSortOrder?
 
   /**
    Payload of the tournament provided upon the creation of the tournament.
    */
-  public internal(set) var payload: String?
+  var payload: String?
 
   /**
    The image associated with the tournament
    */
-  public internal(set) var image: UIImage?
+  var image: UIImage?
 
   /**
    The current score for the player for this  tournament.
    You can update the score by calling the `TournamentUpdater` and passing in the tournament and new score.
    */
-  public var score: Int? {
+  var score: Int? {
     if let numericScore = numericScore?.value {
       return numericScore
     } else if let time = timeScore?.value {
@@ -95,7 +95,7 @@ public struct Tournament: Codable {
   /// - Parameter payload: Optional data to attach to the update.All game sessions launched from the update will be able to access this blob. Must be less than or equal to 1000 characters when stringified.
   ///
   // swiftlint:enable line_length
-  public init(
+  init(
     title: String? = nil,
     expiration: Date? = nil,
     sortOrder: TournamentSortOrder? = nil,
@@ -116,7 +116,8 @@ public struct Tournament: Codable {
       throw TournamentDecodingError.invalidScoreType
     }
   }
-  public init(from decoder: Decoder) throws {
+
+  init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
     identifier = try container.decode(String.self, forKey: .identifier)

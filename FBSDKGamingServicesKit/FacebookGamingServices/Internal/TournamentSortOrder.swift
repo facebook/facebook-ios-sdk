@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /// The `TournamentSortOrder` is how the tournament `score` is ranked in the tournament.
-public enum TournamentSortOrder: String {
+enum TournamentSortOrder: String {
   case descending = "HIGHER_IS_BETTER"
   case ascending = "LOWER_IS_BETTER"
 }

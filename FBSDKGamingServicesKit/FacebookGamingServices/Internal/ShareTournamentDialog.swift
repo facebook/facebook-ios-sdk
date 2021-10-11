@@ -20,7 +20,7 @@ import Foundation
 
 import FBSDKCoreKit
 
-public enum ShareTournamentDialogError: Error {
+enum ShareTournamentDialogError: Error {
   case invalidAccessToken
   case tournamentMissingIdentifier
   case tournamentMissingScore
@@ -30,7 +30,7 @@ public enum ShareTournamentDialogError: Error {
   case bridgeError(Error)
 }
 
-public class ShareTournamentDialog: NSObject, URLOpening {
+class ShareTournamentDialog: NSObject, URLOpening {
 
   enum ShareType {
     case create
@@ -66,7 +66,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
    - Parameter tournament: The Tournament to share
    - Parameter delegate: The delegate for the dialog to be invoked in case of error, cancellation or completion
    */
-  public convenience init(
+  convenience init(
     tournament: Tournament,
     delegate: ShareTournamentDialogDelegate
   ) {
@@ -78,7 +78,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
    - Parameter score: A score to  share in the tournament. Try `NumericScore` or `TimeScore`
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  public func share<T: Score>(score: T) throws {
+  func share<T: Score>(score: T) throws {
     try self.tournament.update(score: score)
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
@@ -102,11 +102,11 @@ public class ShareTournamentDialog: NSObject, URLOpening {
 
   // MARK: URLOpening
 
-  public func isAuthenticationURL(_ url: URL) -> Bool {
+  func isAuthenticationURL(_ url: URL) -> Bool {
     false
   }
 
-  public func application(
+  func application(
     _ application: UIApplication?,
     open url: URL?,
     sourceApplication: String?,
@@ -115,7 +115,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     false
   }
 
-  public func canOpen(
+  func canOpen(
     _ url: URL,
     for application: UIApplication?,
     sourceApplication: String?,
@@ -124,6 +124,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     false
   }
 
-  public func applicationDidBecomeActive(_ application: UIApplication) {
+  func applicationDidBecomeActive(_ application: UIApplication) {
   }
 }

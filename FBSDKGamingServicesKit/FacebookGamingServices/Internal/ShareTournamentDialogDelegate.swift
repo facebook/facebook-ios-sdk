@@ -18,7 +18,7 @@
 
 import Foundation
 
-public protocol ShareTournamentDialogDelegate: AnyObject {
+protocol ShareTournamentDialogDelegate: AnyObject {
   func didComplete(dialog: ShareTournamentDialog, tournament: Tournament)
   func didFail(withError error: Error, dialog: ShareTournamentDialog)
   func didCancel(dialog: ShareTournamentDialog)

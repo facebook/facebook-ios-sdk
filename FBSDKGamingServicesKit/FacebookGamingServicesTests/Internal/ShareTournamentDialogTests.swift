@@ -81,7 +81,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     do {
       try dialog.share(score: TestScore(value: false))
     } catch TournamentDecodingError.invalidScoreType {
-      // should catch error TournamentDecodingError.invalidScoreType
+      // Should catch error TournamentDecodingError.invalidScoreType
     } catch {
       return XCTFail(
         "Should not throw an error other than invalid score type error, error received: \(error)"

@@ -19,7 +19,7 @@
 import Foundation
 
 /// A protocol used to create a new score type that can be used to update a tournament
-public protocol Score {
+protocol Score {
   associatedtype DataType
 
   var value: DataType { get }

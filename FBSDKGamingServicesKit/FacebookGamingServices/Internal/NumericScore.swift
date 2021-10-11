@@ -19,11 +19,11 @@
 import Foundation
 
 /// A  tournament `score` that represents a numeric integer value
-public struct NumericScore: Score {
-  public var value: Int
-  public var scoreType: ScoreType = .numeric
+struct NumericScore: Score {
+  var value: Int
+  var scoreType: ScoreType = .numeric
 
-  public init(value: Int) {
+  init(value: Int) {
     self.value = value
   }
 }
