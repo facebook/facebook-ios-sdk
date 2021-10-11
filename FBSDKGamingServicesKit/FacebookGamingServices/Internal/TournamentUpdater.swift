@@ -18,7 +18,7 @@
 
 import FBSDKCoreKit
 
-public enum TournamentUpdaterError: Error {
+enum TournamentUpdaterError: Error {
   case server(Error)
   case invalidScoreType
   case decoding
@@ -27,7 +27,7 @@ public enum TournamentUpdaterError: Error {
 /**
   A graph request wrapper to update a tournament
  */
-public class TournamentUpdater {
+class TournamentUpdater {
 
   enum GraphRequest {
     static let scoreParameterKey = "score"
@@ -42,7 +42,7 @@ public class TournamentUpdater {
   /**
    Creates the TournamentUpdater
    */
-  public convenience init() {
+  convenience init() {
     self.init(graphRequestFactory: GraphRequestFactory())
   }
 
@@ -58,7 +58,7 @@ public class TournamentUpdater {
    - Parameter completionHandler: The caller's completion handler to invoke once the graph request is complete
    */
 
-  public func update<T: Score>(
+  func update<T: Score>(
     tournament: Tournament,
     score: T,
     completionHandler: @escaping (Result<Tournament, TournamentUpdaterError>) -> Void

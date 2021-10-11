@@ -19,11 +19,11 @@
 import Foundation
 
 /// A  tournament `score` that represents a time
-public struct TimeScore: Score {
-  public var value: TimeInterval
-  public var scoreType = ScoreType.time
+struct TimeScore: Score {
+  var value: TimeInterval
+  var scoreType = ScoreType.time
 
-  public init(value: TimeInterval) {
+  init(value: TimeInterval) {
     self.value = value
   }
 }

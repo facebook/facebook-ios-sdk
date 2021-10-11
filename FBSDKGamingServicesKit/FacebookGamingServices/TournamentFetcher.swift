@@ -19,23 +19,23 @@
 import FBSDKCoreKit
 import Foundation
 
-public enum TournamentFetchError: Error {
+enum TournamentFetchError: Error {
   case server(Error)
   case decoding
   case invalidAuthToken
   case invalidAccessToken
 }
 
-public class TournamentFetcher {
+class TournamentFetcher {
 
   let graphRequestFactory: GraphRequestFactoryProtocol
   let gamingGraphDomain = "gaming"
 
-  public init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {
+  init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  public func fetchTournaments(completionHandler: @escaping (Result<[Tournament], TournamentFetchError>) -> Void) {
+  func fetchTournaments(completionHandler: @escaping (Result<[Tournament], TournamentFetchError>) -> Void) {
     guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
       return completionHandler(.failure(TournamentFetchError.invalidAuthToken))
     }

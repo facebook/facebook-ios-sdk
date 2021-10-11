@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /// The types of score a tournament can handle
-public enum ScoreType: String {
+enum ScoreType: String {
   case custom = "CUSTOM"
   case numeric = "NUMERIC"
   case time = "TIME"
