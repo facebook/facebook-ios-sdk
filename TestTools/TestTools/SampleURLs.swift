@@ -19,24 +19,24 @@
 import Foundation
 
 // swiftlint:disable force_unwrapping
-enum SampleURLs {
-  static let valid = URL(string: "https://www.example.com")!
-  static let validApp = URL(string: "fb://test.com")!
+public enum SampleURLs {
+  public static let valid = URL(string: "https://www.example.com")!
+  public static let validApp = URL(string: "fb://test.com")!
 
-  static func valid(path: String) -> URL {
+  public static func valid(path: String) -> URL {
     valid.appendingPathComponent(path)
   }
 
-  static func valid(queryItems: [URLQueryItem]) -> URL {
+  public static func valid(queryItems: [URLQueryItem]) -> URL {
     var components = URLComponents(url: valid, resolvingAgainstBaseURL: false)!
     components.queryItems = queryItems
     return components.url!
   }
 }
 
-enum SampleURLRequest {
+public enum SampleURLRequest {
 
-  static let valid: URLRequest = {
+  public static let valid: URLRequest = {
     URLRequest(url: SampleURLs.valid)
   }()
 }

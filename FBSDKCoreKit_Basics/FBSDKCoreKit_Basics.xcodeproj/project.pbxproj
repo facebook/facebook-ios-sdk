@@ -34,7 +34,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		02C980153FC8BDC1627ABC50 /* SampleURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31C6E5DC3BAE37688416814 /* SampleURLs.swift */; };
 		05FCF490B96D9D22CEA0C135 /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = 752C7E0BF4ED848E416116B6 /* FBSDKSafeCast.m */; };
 		07D7FFC3483CCE7DAEC5888C /* FBSDKCoreKit_Basics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C82569269F0990FC515167BC /* FBSDKCoreKit_Basics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		082D9B4F6F33A5BAE2325858 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 659881D5339547443558B0F0 /* FBSDKCrashObserving.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -257,7 +256,6 @@
 		E723F2F226EFAB93F0B62C6B /* FBSDKCoreKit_Basics-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		E8427E470792F88163240033 /* FBSDKURLSessionTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKURLSessionTask.m; sourceTree = "<group>"; };
 		ED78F6CB45A6A4DDB2E60EE0 /* FBSDKBasicUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKBasicUtility.m; sourceTree = "<group>"; };
-		F31C6E5DC3BAE37688416814 /* SampleURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleURLs.swift; sourceTree = "<group>"; };
 		F8069BE2166E922AD5ED73CF /* FBSDKFileDataExtracting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKFileDataExtracting.h; sourceTree = "<group>"; };
 		FF4E3D08670D7483B8DC6544 /* FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		FFB1B135B1C613F878D13E07 /* FBSDKCoreKit_Basics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit_Basics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -326,14 +324,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5C82557CABE14A91C19D0A12 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				F31C6E5DC3BAE37688416814 /* SampleURLs.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		68D51098AB7AA76A73155F75 /* FBSDKCoreKit_BasicsTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,7 +332,6 @@
 				D96F2ECFFD4513F1AEDAECB2 /* Info.plist */,
 				E1C2531DF93479A60D3B43E2 /* LibAnalyzerTests.swift */,
 				8D3F70EC5A2B98C58797B432 /* UrlSessionTaskTests.swift */,
-				5C82557CABE14A91C19D0A12 /* Helpers */,
 			);
 			path = FBSDKCoreKit_BasicsTests;
 			sourceTree = "<group>";
@@ -867,7 +856,6 @@
 				C3576B7E49D294491E31BB7B /* FBSDKSafeCastTests.m in Sources */,
 				71D0C8031FB3E6BAA509C32F /* FBSDKTypeUtilityTests.m in Sources */,
 				170D1663119FE2752806132E /* LibAnalyzerTests.swift in Sources */,
-				02C980153FC8BDC1627ABC50 /* SampleURLs.swift in Sources */,
 				D03B514A06D9E70EA069791C /* UrlSessionTaskTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
