@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
 
   s.source = {
     http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-    sha1: '0b127d1d1e67263110ce87a7afa5135f322e9a47'
+    sha1: 'cbd85d7ea93559dda36f91d8fa182b9ca72fde1b'
   }
   s.vendored_frameworks = "XCFrameworks/FBSDKGamingServicesKit.xcframework"
   s.dependency "FacebookGamingServices", "#{s.version}"

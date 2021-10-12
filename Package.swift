@@ -79,7 +79,7 @@ let package = Package(
         .binaryTarget(
             name: "FBSDKCoreKit_Basics",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKCoreKit_Basics-Static_XCFramework.zip",
-            checksum: "880a0b4b721d60e1211ab054aa981d4f4b607b86d4dd2a41119fd1d3cac0fc0a"
+            checksum: "39cb8b75aa6a8a9b9d51dbbcbe216d6d67c1d652b354874a1918c39937dba099"
         ),
 
         /*
@@ -89,7 +89,7 @@ let package = Package(
         .binaryTarget(
             name: "FBAEMKit",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBAEMKit-Static_XCFramework.zip",
-            checksum: "f510a98786e3c47a058652a4e0cfe78820a4ebda64a28466e24243d2e479ba33"
+            checksum: "c95e396a920288f81123ab0c99bf7475f357988003ea07ff28bce221d8ec8c6a"
         ),
 
         // The main AEM module
@@ -105,7 +105,7 @@ let package = Package(
         .binaryTarget(
             name: "FBSDKCoreKit",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKCoreKit-Static_XCFramework.zip",
-            checksum: "b5139bacf7cb2f819f9d1d7355968a20514b229e9ab2cdffb6fff3619554a934"
+            checksum: "185a8b872c76608cae5b81d89308659252396e9b5eaec22648e668a180d6bbac"
         ),
 
         // The main Core SDK module
@@ -126,7 +126,7 @@ let package = Package(
         .binaryTarget(
             name: "FBSDKLoginKit",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKLoginKit-Static_XCFramework.zip",
-            checksum: "254d6ca3a0d7721aa4584c32095842b6cbbb6174a857db95ea1ba16963638c64"
+            checksum: "23f867e5066a68ee5a51c689b779530d78c362305666e7cf5d36a55a2bb32213"
         ),
 
         // The main Login SDK module
@@ -142,7 +142,7 @@ let package = Package(
         .binaryTarget(
             name: "FBSDKShareKit",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FBSDKShareKit-Static_XCFramework.zip",
-            checksum: "81ae5ccd9b96044efa3cde62ae3dbd6fb94df71fb2d08bc98ddcb0a0cb2f8a1f"
+            checksum: "2b109e69969c09658178519369369b41b35ee04cbdce62c27fb0d82d53c605d7"
         ),
 
         // The main Share SDK module
@@ -155,7 +155,7 @@ let package = Package(
         .binaryTarget(
             name: "FacebookGamingServices",
             url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.0/FacebookGamingServices-Static_XCFramework.zip",
-            checksum: "ccf6720702c9b7b9262e14c18a4710f4f855b179bc113a11f2b96f09b8ed7d95"
+            checksum: "091e45ab140254d4e987fdaf25a36a530f3c0f8be515daa0973a27294cce8188"
         ),
 
         /*
