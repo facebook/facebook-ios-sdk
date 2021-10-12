@@ -139,14 +139,6 @@ aggregateTargets:
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
-  FBSDKCoreKit_Basics_TV-Universal:
-    targets: [FBSDKCoreKit_Basics_TV-Static]
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
   FBSDKCoreKit_Basics-Static:

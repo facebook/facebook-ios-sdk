@@ -6,21 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		9DEC559D1BBA63BC00C7DB4A /* FBSDKTVOSKit_TV-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 9DEC559E1BBA63BC00C7DB4A /* Build configuration list for PBXAggregateTarget "FBSDKTVOSKit_TV-Universal" */;
-			buildPhases = (
-				9DEC55A31BBA63D100C7DB4A /* ShellScript */,
-			);
-			dependencies = (
-				9DEC55A21BBA63C800C7DB4A /* PBXTargetDependency */,
-			);
-			name = "FBSDKTVOSKit_TV-Universal";
-			productName = "FBSDKTVOSKit-Universal";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		0A488BC926EF205200E6D81E /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8117C23C1D302F6900784D79 /* FBSDKCoreKit.framework */; };
 		0AC6DC542708CB55008B7276 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADAD2B62707C76900C08020 /* FBSDKCoreKit_Basics.framework */; };
@@ -235,13 +220,6 @@
 			remoteInfo = FBSDKShareKitTests;
 		};
 		9DEC558F1BBA636A00C7DB4A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9DEC557A1BBA636A00C7DB4A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9DEC55821BBA636A00C7DB4A;
-			remoteInfo = FBSDKTVOSKit;
-		};
-		9DEC55A11BBA63C800C7DB4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9DEC557A1BBA636A00C7DB4A /* Project object */;
 			proxyType = 1;
@@ -681,9 +659,6 @@
 					9DEC558C1BBA636A00C7DB4A = {
 						CreatedOnToolsVersion = 7.1;
 					};
-					9DEC559D1BBA63BC00C7DB4A = {
-						CreatedOnToolsVersion = 7.1;
-					};
 				};
 			};
 			buildConfigurationList = 9DEC557D1BBA636A00C7DB4A /* Build configuration list for PBXProject "FBSDKTVOSKit" */;
@@ -720,7 +695,6 @@
 				9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */,
 				8117C2711D30303D00784D79 /* FBSDKTVOSKit_TV-Dynamic */,
 				9DEC558C1BBA636A00C7DB4A /* FBSDKTVOSKitTests */,
-				9DEC559D1BBA63BC00C7DB4A /* FBSDKTVOSKit_TV-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -892,22 +866,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		9DEC55A31BBA63D100C7DB4A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		8117C2761D30303D00784D79 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -972,11 +930,6 @@
 			isa = PBXTargetDependency;
 			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */;
 			targetProxy = 9DEC558F1BBA636A00C7DB4A /* PBXContainerItemProxy */;
-		};
-		9DEC55A21BBA63C800C7DB4A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV-Static */;
-			targetProxy = 9DEC55A11BBA63C800C7DB4A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1057,20 +1010,6 @@
 			};
 			name = Release;
 		};
-		9DEC559F1BBA63BC00C7DB4A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		9DEC55A01BBA63BC00C7DB4A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0ABC215426ED4174006859EC /* FBSDKTVOSKit-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1106,15 +1045,6 @@
 			buildConfigurations = (
 				9DEC559B1BBA636A00C7DB4A /* Debug */,
 				9DEC559C1BBA636A00C7DB4A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9DEC559E1BBA63BC00C7DB4A /* Build configuration list for PBXAggregateTarget "FBSDKTVOSKit_TV-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9DEC559F1BBA63BC00C7DB4A /* Debug */,
-				9DEC55A01BBA63BC00C7DB4A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

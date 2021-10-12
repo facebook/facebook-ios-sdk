@@ -7,18 +7,6 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		547233CE2DF51E547A32CF7B /* FBSDKLoginKit_TV-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 58698D98AD7E80FF7004B896 /* Build configuration list for PBXAggregateTarget "FBSDKLoginKit_TV-Universal" */;
-			buildPhases = (
-				D518880239377FC3315EE9D1 /* ShellScript */,
-			);
-			dependencies = (
-				AC289B626ABE6A2EE909FC01 /* PBXTargetDependency */,
-			);
-			name = "FBSDKLoginKit_TV-Universal";
-			productName = "FBSDKLoginKit_TV-Universal";
-		};
 		70FC91559D454ECCC83AED2D /* FBSDKLoginKit-Universal */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 5B3D04CEC486B0B91EEBFA23 /* Build configuration list for PBXAggregateTarget "FBSDKLoginKit-Universal" */;
@@ -299,13 +287,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 8295F44EEB238FCCD30BEABA;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
-		};
-		67E96068D27DF5D7CB216E89 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C535C4C2B5A952183281BE8A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4F32F324235358EB2B4635AF;
-			remoteInfo = "FBSDKLoginKit_TV-Static";
 		};
 		68CCA82B588F766910D61882 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1120,7 +1101,6 @@
 				EA4533F3932D71F74932EC94 /* FBSDKLoginKitTests */,
 				E53936AD30027E37E10349FA /* FBSDKLoginKit_TV-Dynamic */,
 				4F32F324235358EB2B4635AF /* FBSDKLoginKit_TV-Static */,
-				547233CE2DF51E547A32CF7B /* FBSDKLoginKit_TV-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -1281,24 +1261,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ../scripts/build_phase_swiftlint.sh;
-		};
-		D518880239377FC3315EE9D1 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = ShellScript;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_TV_BUILD_FOLDER=../build/tv/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_TV_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvos \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvsimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_TV_BUILD_FOLDER}/\"\n\n# Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1479,11 +1441,6 @@
 			name = "FBSDKCoreKit_TV-Static";
 			targetProxy = C0A59A78E82B3DCA1162B485 /* PBXContainerItemProxy */;
 		};
-		AC289B626ABE6A2EE909FC01 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4F32F324235358EB2B4635AF /* FBSDKLoginKit_TV-Static */;
-			targetProxy = 67E96068D27DF5D7CB216E89 /* PBXContainerItemProxy */;
-		};
 		D7CED702F7506838F722F35B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = TestTools;
@@ -1507,13 +1464,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		4FCEEBEF62447CE27CA21EA8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52708B55457D90A5F78774BB /* FBSDKLoginKit-tvOS-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
 		65AFE89BEA79151852945B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A067F51765A099770B3F067 /* FBSDKLoginKit-Dynamic.xcconfig */;
@@ -1577,13 +1527,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
-		};
-		7EF54782067A37ED002EAC47 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52708B55457D90A5F78774BB /* FBSDKLoginKit-tvOS-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
 		};
 		829EE7927A35A9F181F88BBF /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1725,15 +1668,6 @@
 			buildConfigurations = (
 				6CD57CE642D117D79B95D32A /* Debug */,
 				829EE7927A35A9F181F88BBF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		58698D98AD7E80FF7004B896 /* Build configuration list for PBXAggregateTarget "FBSDKLoginKit_TV-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4FCEEBEF62447CE27CA21EA8 /* Debug */,
-				7EF54782067A37ED002EAC47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

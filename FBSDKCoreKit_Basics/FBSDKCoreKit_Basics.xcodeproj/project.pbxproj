@@ -7,18 +7,6 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		B916D6D8D267ED69FABFA398 /* FBSDKCoreKit_Basics_TV-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D06F0880076BFA3471A3A27D /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics_TV-Universal" */;
-			buildPhases = (
-				1F77E21A3700C2E1E58A47DA /* ShellScript */,
-			);
-			dependencies = (
-				93B581D036700151DC4590A3 /* PBXTargetDependency */,
-			);
-			name = "FBSDKCoreKit_Basics_TV-Universal";
-			productName = "FBSDKCoreKit_Basics_TV-Universal";
-		};
 		CBD330E3FC768333E8F93ED3 /* FBSDKCoreKit_Basics-Universal */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 592B05C49B2929D5BB544F63 /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics-Universal" */;
@@ -186,13 +174,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4F903DA9EDB249CBB8F19937;
 			remoteInfo = "FBSDKCoreKit_Basics-Static";
-		};
-		EEDB16329B3C4352BF4C5934 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 77D077E9E35532487FD50070 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DC890A963F9CD7A97E97D15B;
-			remoteInfo = "FBSDKCoreKit_Basics_TV-Static";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -658,7 +639,6 @@
 				9CB0B0DE34B638602F559C29 /* FBSDKCoreKit_BasicsTests */,
 				7C90AF26FC3DE92042D89299 /* FBSDKCoreKit_Basics_TV-Dynamic */,
 				DC890A963F9CD7A97E97D15B /* FBSDKCoreKit_Basics_TV-Static */,
-				B916D6D8D267ED69FABFA398 /* FBSDKCoreKit_Basics_TV-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -691,24 +671,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Simulator version\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n";
-		};
-		1F77E21A3700C2E1E58A47DA /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = ShellScript;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_TV_BUILD_FOLDER=../build/tv/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_TV_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvos \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvsimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_TV_BUILD_FOLDER}/\"\n\n# Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n";
 		};
 		3DD8A9DA71E732A5DE3089CF /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -878,11 +840,6 @@
 			name = TestTools;
 			targetProxy = D4CFD6AB2D2626C9E875B97D /* PBXContainerItemProxy */;
 		};
-		93B581D036700151DC4590A3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DC890A963F9CD7A97E97D15B /* FBSDKCoreKit_Basics_TV-Static */;
-			targetProxy = EEDB16329B3C4352BF4C5934 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -965,13 +922,6 @@
 			};
 			name = Release;
 		};
-		BA92475F51F76692435F134C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
 		C55E6720A91D313D15B62C1A /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E723F2F226EFAB93F0B62C6B /* FBSDKCoreKit_Basics-Dynamic.xcconfig */;
@@ -1037,13 +987,6 @@
 			};
 			name = Release;
 		};
-		E6E53B41620549D702ABBBCE /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 388F568B4D97513E9BF1076A /* FBSDKCoreKit_Basics-tvOS-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
 		F5CD0383A6346D0959F9EDF3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 763AA73855A17EF8A5F06A2A /* Release.xcconfig */;
@@ -1092,15 +1035,6 @@
 			buildConfigurations = (
 				38F3AE68DBDD3325778714E6 /* Debug */,
 				D6C0CD2946219FD2839EE49B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		D06F0880076BFA3471A3A27D /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics_TV-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BA92475F51F76692435F134C /* Debug */,
-				E6E53B41620549D702ABBBCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

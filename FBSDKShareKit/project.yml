@@ -258,14 +258,6 @@ aggregateTargets:
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
-  FBSDKShareKit_TV-Universal:
-    targets: [FBSDKShareKit_TV-Static]
-    configFiles:
-      Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
   FBSDKShareKit-Static:
@@ -291,9 +283,4 @@ schemes:
     build:
       targets:
         FBSDKShareKit-Universal: all
-      parallelizeBuild: false
-  FBSDKShareKit_TV-Universal:
-    build:
-      targets:
-        FBSDKShareKit_TV-Universal: all
       parallelizeBuild: false

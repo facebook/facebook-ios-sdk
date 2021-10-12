@@ -244,14 +244,6 @@ aggregateTargets:
     buildScripts:
       - name: ShellScript
         path: ../scripts/xcode/build-universal-framework.sh
-  FBSDKLoginKit_TV-Universal:
-    targets: [FBSDKLoginKit_TV-Static]
-    configFiles:
-      Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
   FBSDKLoginKit-Static:
@@ -279,9 +271,4 @@ schemes:
     build:
       targets:
         FBSDKLoginKit-Universal: all
-      parallelizeBuild: false
-  FBSDKLoginKit_TV-Universal:
-    build:
-      targets:
-        FBSDKLoginKit_TV-Universal: all
       parallelizeBuild: false
