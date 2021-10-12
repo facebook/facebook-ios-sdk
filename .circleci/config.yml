@@ -86,13 +86,6 @@ workflows:
           <<: *onlyRunOnTags
       - publish-to-github:
           <<: *onlyRunOnTags
-          requires:
-            - build-for-release
       - publish-cocoapods:
           <<: *onlyRunOnTags
           <<: *requiresSetup
-      - verify-release:
-          <<: *onlyRunOnTags
-          requires:
-            - publish-cocoapods
-            - publish-to-github
