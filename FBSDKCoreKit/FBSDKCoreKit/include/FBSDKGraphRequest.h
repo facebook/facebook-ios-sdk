@@ -22,6 +22,9 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
 
 @protocol FBSDKGraphRequestConnecting;
+@protocol FBSDKSettings;
+@protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKTokenStringProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -48,6 +51,17 @@ NS_SWIFT_NAME(GraphRequest)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
++ (void)    configureWithSettings:(id<FBSDKSettings>)settings
+ currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
+NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
 
 /**
  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.

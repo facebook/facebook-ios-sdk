@@ -22,9 +22,6 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactory.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
-@protocol FBSDKTokenStringProviding;
-@protocol FBSDKSettings;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Internal)
@@ -52,11 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
                     params:(nullable NSDictionary<NSString *, id> *)params
                 httpMethod:(nullable NSString *)httpMethod
                   forBatch:(BOOL)forBatch;
-
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
-graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
-NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
 
 @end
 
