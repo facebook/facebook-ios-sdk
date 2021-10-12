@@ -261,4 +261,13 @@ class SettingsTests: XCTestCase {
       "Should be able to set and retrieve logging behaviors"
     )
   }
+
+  // MARK: - Graph Error Recovery Enabled
+
+  func testDefaultGraphErrorRecoveryEnabled() {
+    XCTAssertTrue(
+      Settings.shared.isGraphErrorRecoveryEnabled,
+      "isGraphErrorRecoveryEnabled should be enabled by default"
+    )
+  }
 }
