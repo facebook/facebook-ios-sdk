@@ -34,16 +34,7 @@ rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework"
 # get target by removing '-Universal' from $TARGET_NAME and adding '-Static'
 TARGET=${TARGET_NAME%-Universal}-Static
 
-# Step 1. Build Device and Simulator versions
-xcodebuild -target "${TARGET}" \
-  ONLY_ACTIVE_ARCH=NO \
-  -configuration "${CONFIGURATION}" \
-  -sdk iphoneos \
-  BUILD_DIR="${BUILD_DIR}" \
-  BUILD_ROOT="${BUILD_ROOT}" \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO
-
+# Step 1. Build Simulator version
 xcodebuild -target "${TARGET}" \
   ONLY_ACTIVE_ARCH=NO \
   -configuration "${CONFIGURATION}" \
@@ -54,19 +45,4 @@ xcodebuild -target "${TARGET}" \
   SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO
 
 # Step 2. Copy the framework structure to the universal folder
-cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
-
-# Step 3. Copy the swiftmodule files created during the simulator build
-rsync -a "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule/" \
-  "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule" || true
-
-# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory
-lipo -create -output "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}"
-
-# Step 5. Copy strings bundle if exists
-STRINGS_INPUT_FOLDER="${PRODUCT_NAME}Strings.bundle"
-if [ -d "${STRINGS_INPUT_FOLDER}" ]; then
-  STRINGS_OUTPUT_FOLDER="${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}Strings.bundle"
-  rm -rf "${STRINGS_OUTPUT_FOLDER}"
-  cp -R "${STRINGS_INPUT_FOLDER}" "${STRINGS_OUTPUT_FOLDER}"
-fi
+cp -R "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
