@@ -194,7 +194,7 @@ static id<FBAEMAdvertiserRuleProviding> _ruleProvider;
   NSInteger validFrom = [decoder decodeIntegerForKey:VALID_FROM_KEY];
   NSString *configMode = [decoder decodeObjectOfClass:NSString.class forKey:CONFIG_MODE_KEY];
   NSString *businessID = [decoder decodeObjectOfClass:NSString.class forKey:BUSINESS_ID_KEY];
-  NSSet *matchingRuleClasses = [NSSet setWithArray:@[NSArray.class, FBAEMAdvertiserMultiEntryRule.class, FBAEMAdvertiserSingleEntryRule.class]];
+  NSSet<Class> *matchingRuleClasses = [NSSet setWithArray:@[NSArray.class, FBAEMAdvertiserMultiEntryRule.class, FBAEMAdvertiserSingleEntryRule.class]];
   id<FBAEMAdvertiserRuleMatching> matchingRule = [decoder decodeObjectOfClasses:matchingRuleClasses forKey:PARAM_RULE_KEY];
   NSArray<FBAEMRule *> *rules = [decoder decodeObjectOfClasses:[NSSet setWithArray:@[NSArray.class, FBAEMRule.class, FBAEMEvent.class]] forKey:CONVERSION_RULES_KEY];
   return [self initWithDefaultCurrency:defaultCurrency

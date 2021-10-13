@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL isStarted;
 @property (nullable, nonatomic) NSMutableDictionary<NSString *, id> *reactBindings;
-@property (nonatomic, readonly) NSSet *validClasses;
+@property (nonatomic, readonly) NSSet<Class> *validClasses;
 @property (nonatomic) BOOL hasReactNative;
 @property (nullable, nonatomic) NSArray<FBSDKEventBinding *> *eventBindings;
 @property (nullable, nonatomic, readonly) Class<FBSDKSwizzling> swizzler;

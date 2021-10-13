@@ -76,7 +76,7 @@ static NSString *const RULES_KEY = @"rules";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   FBAEMAdvertiserRuleOperator op = [decoder decodeIntegerForKey:OPERATOR_KEY];
-  NSSet *classes = [NSSet setWithArray:@[NSArray.class, FBAEMAdvertiserMultiEntryRule.class, FBAEMAdvertiserSingleEntryRule.class]];
+  NSSet<Class> *classes = [NSSet setWithArray:@[NSArray.class, FBAEMAdvertiserMultiEntryRule.class, FBAEMAdvertiserSingleEntryRule.class]];
   NSArray<id<FBAEMAdvertiserRuleMatching>> *rules = [decoder decodeObjectOfClasses:classes forKey:RULES_KEY];
   return [self initWithOperator:op rules:rules];
 }

@@ -189,7 +189,7 @@
     _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_MEDIA_CONTENT_CONTENT_URL_KEY];
     _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_MEDIA_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PEOPLE_IDS_KEY];
-    NSSet *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
+    NSSet<Class> *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
     _media = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_MEDIA_CONTENT_MEDIA_KEY];
     _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_REF_KEY];

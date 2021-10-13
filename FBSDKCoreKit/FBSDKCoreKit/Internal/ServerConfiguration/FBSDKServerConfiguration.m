@@ -242,17 +242,17 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY];
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   NSDate *timestamp = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY];
-  NSSet *dialogConfigurationsClasses = [[NSSet alloc] initWithObjects:
-                                        [NSDictionary<NSString *, id> class],
-                                        FBSDKDialogConfiguration.class,
-                                        nil];
+  NSSet<Class> *dialogConfigurationsClasses = [[NSSet alloc] initWithObjects:
+                                               [NSDictionary<NSString *, id> class],
+                                               FBSDKDialogConfiguration.class,
+                                               nil];
   NSDictionary<NSString *, id> *dialogConfigurations = [decoder decodeObjectOfClasses:dialogConfigurationsClasses
                                                                                forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
-  NSSet *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
-                               [NSDictionary<NSString *, id> class],
-                               NSString.class,
-                               NSNumber.class,
-                               nil];
+  NSSet<Class> *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
+                                      [NSDictionary<NSString *, id> class],
+                                      NSString.class,
+                                      NSNumber.class,
+                                      nil];
   NSDictionary<NSString *, id> *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
                                                                       forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
   FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:FBSDKErrorConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
@@ -262,13 +262,13 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
   NSString *updateMessage = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   NSArray *eventBindings = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
-  NSSet *dictionaryClasses = [NSSet setWithObjects:
-                              [NSDictionary<NSString *, id> class],
-                              NSArray.class,
-                              NSData.class,
-                              NSString.class,
-                              NSNumber.class,
-                              nil];
+  NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:
+                                     [NSDictionary<NSString *, id> class],
+                                     NSArray.class,
+                                     NSData.class,
+                                     NSString.class,
+                                     NSNumber.class,
+                                     nil];
   NSDictionary<NSString *, id> *restrictiveParams = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS]];
   NSDictionary<NSString *, id> *AAMRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES]];
   NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING]];

@@ -46,7 +46,7 @@
 @property (nonnull, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic) BOOL isStarted;
 @property (nullable, nonatomic) NSMutableDictionary<NSNumber *, id> *reactBindings;
-@property (nonnull, nonatomic) NSSet *validClasses;
+@property (nonnull, nonatomic) NSSet<Class> *validClasses;
 @property (nonatomic) BOOL hasReactNative;
 @property (nullable, nonatomic) NSArray *eventBindings;
 
@@ -472,7 +472,7 @@
   });
 }
 
-- (NSSet *)validClasses
+- (NSSet<Class> *)validClasses
 {
   return _validClasses;
 }

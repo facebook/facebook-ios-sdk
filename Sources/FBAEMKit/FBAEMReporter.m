@@ -371,7 +371,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   if (@available(iOS 11.0, *)) {
     NSData *cachedConfig = [NSData dataWithContentsOfFile:g_configFile options:NSDataReadingMappedIfSafe error:nil];
     if ([cachedConfig isKindOfClass:NSData.class]) {
-      NSSet *classes = [NSSet setWithArray:@[
+      NSSet<Class> *classes = [NSSet setWithArray:@[
         NSMutableDictionary.class,
         NSMutableArray.class,
         FBAEMConfiguration.class,

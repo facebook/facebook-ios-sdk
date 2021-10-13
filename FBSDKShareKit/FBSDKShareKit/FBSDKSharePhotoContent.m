@@ -193,7 +193,7 @@
     _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY];
     _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY];
-    NSSet *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
+    NSSet<Class> *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
     _photos = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
     _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_REF_KEY];

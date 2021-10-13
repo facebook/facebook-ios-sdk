@@ -185,7 +185,7 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSSet *classes = [[NSSet alloc] initWithObjects:[NSDictionary<NSString *, id> class], FBSDKErrorRecoveryConfiguration.class, nil];
+  NSSet<Class> *classes = [[NSSet alloc] initWithObjects:[NSDictionary<NSString *, id> class], FBSDKErrorRecoveryConfiguration.class, nil];
   NSDictionary<NSString *, id> *configurationDictionary = [decoder decodeObjectOfClasses:classes
                                                                                   forKey:FBSDKERRORCONFIGURATION_DICTIONARY_KEY];
   return [self initWithDictionary:configurationDictionary];
