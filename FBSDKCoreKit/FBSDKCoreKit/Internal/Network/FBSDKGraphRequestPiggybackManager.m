@@ -208,7 +208,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
-  BOOL isVersionSafe = [request.version isEqualToString:[self.settings graphAPIVersion]];
+  BOOL isVersionSafe = [request.version isEqualToString:self.settings.graphAPIVersion];
   BOOL hasAttachments = [(id<FBSDKGraphRequest>)request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }

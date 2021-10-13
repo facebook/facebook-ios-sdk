@@ -35,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
-@property (null_resettable, nonatomic, copy) NSString *graphAPIVersion;
 
 + (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store
   appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider

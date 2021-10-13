@@ -289,13 +289,23 @@ DEPRECATED_MSG_ATTRIBUTE("`Settings.loggingBehaviors` is deprecated and will be 
 @property (nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 /**
-  Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_DEFAULT_GRAPH_API_VERSION`.
+  Overrides the default Graph API version to use with `FBSDKGraphRequests`.
+ 
+ The string should be of the form `@"v2.7"`.
+
+ Defaults to `defaultGraphAPIVersion`.
+*/
+@property (class, null_resettable, nonatomic, copy) NSString *graphAPIVersion
+DEPRECATED_MSG_ATTRIBUTE("`Settings.graphAPIVersion` is deprecated and will be removed in the next major release, please use the `Settings.shared.graphAPIVersion` property instead");
+
+/**
+  Overrides the default Graph API version to use with `FBSDKGraphRequests`.
 
  The string should be of the form `@"v2.7"`.
 
- Defaults to `FBSDK_DEFAULT_GRAPH_API_VERSION`.
+ Defaults to `defaultGraphAPIVersion`.
 */
-@property (class, null_resettable, nonatomic, copy) NSString *graphAPIVersion;
+@property (nonatomic, copy) NSString *graphAPIVersion;
 
 /**
  Internal property exposed to facilitate transition to Swift.

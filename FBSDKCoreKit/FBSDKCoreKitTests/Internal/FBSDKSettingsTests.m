@@ -79,7 +79,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testDefaultGraphAPIVersion
 {
   XCTAssertEqualObjects(
-    FBSDKSettings.graphAPIVersion,
+    self.settings.graphAPIVersion,
     FBSDK_DEFAULT_GRAPH_API_VERSION,
     "Settings should provide a default graph api version"
   );
@@ -1601,11 +1601,14 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testSetGraphAPIVersion
 {
   NSString *mockGraphAPIVersion = @"mockGraphAPIVersion";
-  FBSDKSettings.graphAPIVersion = mockGraphAPIVersion;
-  XCTAssertEqualObjects(mockGraphAPIVersion, [FBSDKSettings graphAPIVersion]);
+  self.settings.graphAPIVersion = mockGraphAPIVersion;
+  XCTAssertEqualObjects(mockGraphAPIVersion, self.settings.graphAPIVersion);
+}
 
+- (void)testSetNilGraphAPIVersion
+{
   FBSDKSettings.graphAPIVersion = nil;
-  XCTAssertEqualObjects(FBSDK_DEFAULT_GRAPH_API_VERSION, [FBSDKSettings graphAPIVersion]);
+  XCTAssertEqualObjects(FBSDK_DEFAULT_GRAPH_API_VERSION, FBSDKSettings.graphAPIVersion);
 }
 
 - (void)testIsDataProcessingRestricted

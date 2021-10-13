@@ -32,7 +32,7 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var logIfSDKSettingsChangedCallCount = 0
   public var recordInstallCallCount = 0
   public var appURLSchemeSuffix: String?
-  public var stubbedGraphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
+  public var graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
   public var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
   public var stubbedIsDataProcessingRestricted = false
   public var stubbedIsAutoLogAppEventsEnabled = false
@@ -76,10 +76,6 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
   public var advertiserTrackingEnabledTimestamp: Date? {
     stubbedSetAdvertiserTrackingEnabledTimestamp
-  }
-
-  public var graphAPIVersion: String {
-    stubbedGraphAPIVersion
   }
 
   public func logWarnings() {

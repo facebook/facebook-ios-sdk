@@ -45,7 +45,7 @@ DEPRECATED_MSG_ATTRIBUTE("property class `loggingBehaviors` is deprecated and wi
 @property (nullable, nonatomic, readonly) NSDate *advertiserTrackingEnabledTimestamp;
 @property (nonatomic) BOOL isEventDataUsageLimited;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
-@property (nonatomic, readonly, copy) NSString *_Nonnull graphAPIVersion;
+@property (nonatomic, copy) NSString *graphAPIVersion;
 @property (nonatomic) BOOL isGraphErrorRecoveryEnabled;
 @property (nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic, getter = isAdvertiserTrackingEnabled) BOOL advertiserTrackingEnabled;

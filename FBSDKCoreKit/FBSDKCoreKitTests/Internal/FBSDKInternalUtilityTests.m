@@ -147,14 +147,14 @@
                                                                       error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v1/dialog/share");
   FBSDKSettings.sharedSettings.facebookDomainPart = tier;
-  FBSDKSettings.graphAPIVersion = @"v3.3";
+  FBSDKSettings.sharedSettings.graphAPIVersion = @"v3.3";
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"/v1/dialog/share"
                                                             queryParameters:@{}
                                                              defaultVersion:@""
                                                                       error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v3.3/v1/dialog/share");
-  FBSDKSettings.graphAPIVersion = nil;
+  FBSDKSettings.sharedSettings.graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION;
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"/dialog/share"
                                                             queryParameters:@{}

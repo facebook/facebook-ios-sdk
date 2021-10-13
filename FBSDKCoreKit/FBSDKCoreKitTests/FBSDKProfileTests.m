@@ -39,7 +39,6 @@
 
 @interface FBSDKProfileTests : XCTestCase
 @property (nonatomic) FBSDKProfile *profile;
-@property (nonatomic, copy) NSString *sdkVersion;
 @property (nonatomic, assign) CGSize validNonSquareSize;
 @property (nonatomic, assign) CGSize validSquareSize;
 @property (nonatomic, copy) NSString *validClientToken;
@@ -69,14 +68,13 @@ NSString *const heightKey = @"height";
                 notificationCenter:NSNotificationCenter.defaultCenter
                           settings:FBSDKSettings.sharedSettings];
 
-  _sdkVersion = @"100";
   _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";
   _validSquareSize = CGSizeMake(100, 100);
   _validNonSquareSize = CGSizeMake(10, 20);
   _testGraphRequest = [TestGraphRequest new];
 
-  FBSDKSettings.graphAPIVersion = _sdkVersion;
+  FBSDKSettings.sharedSettings.graphAPIVersion = @"100";
 }
 
 - (void)tearDown
@@ -101,7 +99,7 @@ NSString *const heightKey = @"height";
 {
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
 
-  NSString *expectedPath = [NSString stringWithFormat:@"/%@/%@/picture", _sdkVersion, _profile.userID];
+  NSString *expectedPath = [NSString stringWithFormat:@"/%@/%@/picture", FBSDKSettings.sharedSettings.graphAPIVersion, _profile.userID];
   XCTAssertEqualObjects(
     url.path,
     expectedPath,

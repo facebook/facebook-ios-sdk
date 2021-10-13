@@ -282,7 +282,7 @@ final class GraphRequestTests: XCTestCase {
 
   func testSetSettingsWithCertainVersion() {
     let testVersion = "v123"
-    settings.stubbedGraphAPIVersion = testVersion
+    settings.graphAPIVersion = testVersion
     let request = GraphRequest(graphPath: path)
     XCTAssertEqual(request.version, testVersion)
   }

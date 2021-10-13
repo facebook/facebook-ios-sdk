@@ -111,7 +111,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
 @property (nonatomic) BOOL isConfigured;
-@property (nonatomic) NSString *graphAPIVersion;
 
 @end
 
@@ -139,6 +138,7 @@ static dispatch_once_t sharedSettingsNonce;
 {
   if ((self = [super init])) {
     _isGraphErrorRecoveryEnabled = YES;
+    _graphAPIVersion = [self defaultGraphAPIVersion];
   }
 
   return self;
@@ -624,9 +624,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setGraphAPIVersion:(NSString *)version
 {
-  if (![self.sharedSettings.graphAPIVersion isEqualToString:version]) {
-    self.sharedSettings.graphAPIVersion = version;
-  }
+  self.sharedSettings.graphAPIVersion = version ?: self.sharedSettings.defaultGraphAPIVersion;
 }
 
 + (NSString *)defaultGraphAPIVersion
@@ -642,11 +640,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSString *)graphAPIVersion
 {
   return self.sharedSettings.graphAPIVersion;
-}
-
-- (NSString *)graphAPIVersion
-{
-  return _graphAPIVersion ?: self.defaultGraphAPIVersion;
 }
 
 + (NSNumber *)appEventSettingsForPlistKey:(NSString *)plistKey

@@ -34,7 +34,7 @@ class SampleGraphRequests: NSObject {
   static func create(
     path: String = "/me",
     parameters: [String: Any] = [:],
-    version: String = Settings.graphAPIVersion
+    version: String = Settings.shared.graphAPIVersion
   ) -> GraphRequest {
     GraphRequest(
       graphPath: path,

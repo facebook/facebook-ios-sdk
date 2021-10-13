@@ -206,7 +206,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
                       defaultVersion:(NSString *)defaultVersion
                                error:(NSError *__autoreleasing *)errorRef
 {
-  NSString *version = (defaultVersion.length > 0) ? defaultVersion : [FBSDKSettings graphAPIVersion];
+  NSString *version = (defaultVersion.length > 0) ? defaultVersion : FBSDKSettings.sharedSettings.graphAPIVersion;
   if (version.length) {
     version = [@"/" stringByAppendingString:version];
   }
@@ -261,7 +261,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
        singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
        logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
                  version,
-                 [FBSDKSettings graphAPIVersion]]];
+                 FBSDKSettings.sharedSettings.graphAPIVersion]];
       version = nil;
     }
     if (![path hasPrefix:@"/"]) {
