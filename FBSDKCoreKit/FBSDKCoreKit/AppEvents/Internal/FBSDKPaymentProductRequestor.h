@@ -44,7 +44,7 @@ NS_SWIFT_NAME(PaymentProductRequestor)
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               store:(id<FBSDKDataPersisting>)store
                       loggerFactory:(id<FBSDKLoggingCreating>)loggerFactory
-              productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
+             productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
             appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider;
 
 - (void)resolveProducts;

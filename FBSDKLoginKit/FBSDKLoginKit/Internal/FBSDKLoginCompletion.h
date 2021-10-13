@@ -86,7 +86,7 @@ NS_SWIFT_NAME(LoginCompleting)
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-    nonce:(nullable NSString *)nonce;
+                           nonce:(nullable NSString *)nonce;
 
 @end
 
@@ -108,7 +108,7 @@ NS_SWIFT_NAME(LoginURLCompleter)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
-                   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator;
 
 @end

@@ -215,7 +215,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
  completion or cancellation of the connection.
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
- completion:(FBSDKGraphRequestCompletion)completion;
+        completion:(FBSDKGraphRequestCompletion)completion;
 
 /**
  @method

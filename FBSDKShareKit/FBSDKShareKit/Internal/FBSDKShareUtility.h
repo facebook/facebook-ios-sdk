@@ -38,8 +38,8 @@ NS_SWIFT_NAME(ShareUtility)
 + (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs;
 + (nullable NSDictionary<NSString *, id> *)convertPhoto:(nullable FBSDKSharePhoto *)photo;
 + (nullable UIImage *)imageWithCircleColor:(nullable UIColor *)color
-                       canvasSize:(CGSize)canvasSize
-                       circleSize:(CGSize)circleSize;
+                                canvasSize:(CGSize)canvasSize
+                                circleSize:(CGSize)circleSize;
 + (BOOL)validateArgumentWithName:(NSString *)argumentName
                            value:(NSUInteger)value
                             isIn:(NSArray<NSNumber *> *)possibleValues

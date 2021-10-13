@@ -39,7 +39,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;

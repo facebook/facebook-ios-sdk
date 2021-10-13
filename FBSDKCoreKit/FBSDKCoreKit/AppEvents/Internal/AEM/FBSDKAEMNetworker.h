@@ -27,10 +27,10 @@ NS_SWIFT_NAME(SDKAEMNetworker)
 @interface FBSDKAEMNetworker : NSObject <FBAEMNetworking>
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
-                          parameters:(NSDictionary<NSString *, id> *)parameters
-                          tokenString:(nullable NSString *)tokenString
-                          HTTPMethod:(nullable NSString *)method
-                          completion:(FBGraphRequestCompletion)completion;
+                            parameters:(NSDictionary<NSString *, id> *)parameters
+                           tokenString:(nullable NSString *)tokenString
+                            HTTPMethod:(nullable NSString *)method
+                            completion:(FBGraphRequestCompletion)completion;
 
 @end
 
