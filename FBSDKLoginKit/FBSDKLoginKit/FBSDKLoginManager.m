@@ -194,7 +194,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params
                                                                                          appID:FBSDKSettings.sharedSettings.appID
                                                                  graphRequestConnectionFactory:self.graphRequestConnectionFactory
-                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
+                                                                    authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
       [self completeAuthentication:parameters expectChallenge:NO];
     }];
@@ -693,7 +693,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
                                                                                          appID:FBSDKSettings.sharedSettings.appID
                                                                  graphRequestConnectionFactory:self.graphRequestConnectionFactory
-                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
+                                                                    authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]];
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {

@@ -350,7 +350,8 @@ static NSDateFormatter *_dateFormatter;
 + (NSDateFormatter *)dateFormatter
 {
   if (!_dateFormatter) {
-    _dateFormatter = NSDateFormatter.new;
+    // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+    _dateFormatter = [NSDateFormatter new];
   }
   return _dateFormatter;
 }

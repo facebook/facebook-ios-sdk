@@ -386,7 +386,8 @@ NSString *const heightKey = @"height";
 
 - (void)testLoadingProfile
 {
-  NSDateFormatter *formatter = NSDateFormatter.new;
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+  NSDateFormatter *formatter = [NSDateFormatter new];
   formatter.dateFormat = @"MM/dd/yyyy";
 
   __block BOOL didInvokeCompletion = NO;

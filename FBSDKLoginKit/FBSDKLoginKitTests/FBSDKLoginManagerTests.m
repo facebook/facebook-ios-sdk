@@ -554,7 +554,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertFalse([manager isAuthenticationURL:[NSURL URLWithString:@"https://www.facebook.com/some/test/url"]]);
   XCTAssertTrue([manager isAuthenticationURL:[NSURL URLWithString:@"https://www.facebook.com/v9.0/dialog/oauth/?test=test"]]);
   XCTAssertFalse([manager isAuthenticationURL:nil]);
-  XCTAssertFalse([manager isAuthenticationURL:NSURL.new]);
+  XCTAssertFalse([manager isAuthenticationURL:[NSURL new]]);
   XCTAssertFalse([manager isAuthenticationURL:[NSURL URLWithString:@"123"]]);
 }
 
@@ -828,7 +828,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                    handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {}];
 
   XCTAssertEqual(manager.configuration.tracking, FBSDKLoginTrackingEnabled);
-  XCTAssertEqualObjects(manager.configuration.requestedPermissions, NSSet.new);
+  XCTAssertEqualObjects(manager.configuration.requestedPermissions, [NSSet new]);
   XCTAssertNotNil(manager.configuration.nonce);
 }
 
@@ -920,7 +920,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testValidateReauthenticationGraphRequestCreation
 {
   FBSDKLoginManager *manager = self.loginManager;
-  FBSDKLoginManagerLoginResult *result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+  FBSDKLoginManagerLoginResult *result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:[NSSet new] declinedPermissions:[NSSet new]];
 
   [manager validateReauthentication:result.token withResult:result];
 
@@ -947,7 +947,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   FBSDKLoginManager *manager = self.loginManager;
 
-  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:[NSSet new] declinedPermissions:[NSSet new]];
 
   __block BOOL completionWasInvoked = NO;
   [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
@@ -966,7 +966,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   FBSDKLoginManager *manager = self.loginManager;
 
-  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:[NSSet new] declinedPermissions:[NSSet new]];
 
   __block BOOL completionWasInvoked = NO;
   [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
@@ -984,7 +984,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testValidateReauthenticationCompletionWithMismatchedUserID
 {
   FBSDKLoginManager *manager = self.loginManager;
-  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:[NSSet new] declinedPermissions:[NSSet new]];
 
   __block BOOL completionWasInvoked = NO;
   [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
@@ -1067,7 +1067,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
   XCTAssertEqualObjects(profile.friendIDs, _claims[@"user_friends"], @"failed to parse user friends");
-  NSDateFormatter *formatter = NSDateFormatter.new;
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+  NSDateFormatter *formatter = [NSDateFormatter new];
   formatter.dateFormat = @"MM/dd/yyyy";
   XCTAssertEqualObjects(
     [formatter stringFromDate:profile.birthday],

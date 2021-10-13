@@ -109,8 +109,8 @@ static NSString *const _fakeChallence = @"some_challenge";
     @"error_message" : @"some_error_message",
   };
 
-  _graphConnection = TestGraphRequestConnection.new;
-  _authenticationTokenFactory = TestAuthenticationTokenFactory.new;
+  _graphConnection = [TestGraphRequestConnection new];
+  _authenticationTokenFactory = [TestAuthenticationTokenFactory new];
 }
 
 - (void)tearDown
@@ -607,7 +607,8 @@ static NSString *const _fakeChallence = @"some_challenge";
     claim.userFriends,
     "Should request a profile using the friend identifiers from the claims"
   );
-  NSDateFormatter *formatter = NSDateFormatter.new;
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+  NSDateFormatter *formatter = [NSDateFormatter new];
   formatter.dateFormat = @"MM/dd/yyyy";
   XCTAssertEqualObjects(
     [formatter stringFromDate:factory.capturedBirthday],

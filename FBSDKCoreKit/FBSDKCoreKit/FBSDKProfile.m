@@ -713,7 +713,7 @@ static id<FBSDKSettings> _settings;
 + (nullable NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
 {
   NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
-  NSMutableArray *friendIDs = NSMutableArray.new;
+  NSMutableArray *friendIDs = [NSMutableArray new];
 
   for (NSDictionary<NSString *, id> *rawFriend in rawFriends) {
     if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {
@@ -731,7 +731,8 @@ static id<FBSDKSettings> _settings;
 + (NSDateFormatter *)dateFormatter
 {
   if (!_dateFormatter) {
-    _dateFormatter = NSDateFormatter.new;
+    // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+    _dateFormatter = [NSDateFormatter new];
   }
   return _dateFormatter;
 }

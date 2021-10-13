@@ -974,7 +974,7 @@
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
   [self waitForExpectations:@[expectation] timeout:1];
@@ -1007,7 +1007,7 @@
   NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
   NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
   NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1040,7 +1040,7 @@
 
   NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
   NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1091,7 +1091,7 @@
                    }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
@@ -1124,7 +1124,7 @@
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
@@ -1154,7 +1154,7 @@
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
@@ -1210,7 +1210,7 @@
   [self.connection start];
 
   NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1363,7 +1363,7 @@
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   // The first captured completion will be invoked and cause the retry
   self.session.capturedCompletion(data, response, nil);
@@ -1400,7 +1400,7 @@
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   // The first captured completion will be invoked and cause the retry
   self.session.capturedCompletion(data, response, nil);

@@ -185,7 +185,7 @@ static _Nullable id<FBSDKSettings> _settings;
       NSMutableDictionary<NSString *, NSNumber *> *userAgeRange;
       NSDictionary<NSString *, id> *rawUserAgeRange = [FBSDKTypeUtility dictionaryValue:claimsDict[@"user_age_range"]];
       if (rawUserAgeRange.count > 0) {
-        userAgeRange = NSMutableDictionary.new;
+        userAgeRange = [NSMutableDictionary new];
         for (NSString *key in rawUserAgeRange) {
           NSNumber *value = [FBSDKTypeUtility dictionary:rawUserAgeRange objectForKey:key ofType:NSNumber.class];
           if (value == nil) {
@@ -244,7 +244,7 @@ static _Nullable id<FBSDKSettings> _settings;
   NSDictionary<NSString *, id> *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
   NSMutableDictionary<NSString *, NSString *> *location;
   if (rawLocationData.count > 0) {
-    location = NSMutableDictionary.new;
+    location = [NSMutableDictionary new];
     for (NSString *key in rawLocationData) {
       NSString *value = [FBSDKTypeUtility dictionary:rawLocationData
                                         objectForKey:key

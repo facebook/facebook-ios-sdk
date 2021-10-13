@@ -72,7 +72,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testCertificateEndpointURL
 {
-  NSURL *url = FBSDKAuthenticationTokenFactory.new._certificateEndpoint;
+  NSURL *url = [FBSDKAuthenticationTokenFactory new]._certificateEndpoint;
   XCTAssertEqualObjects(url.absoluteString, @"https://m.facebook.com/.well-known/oauth/openid/certs/");
 }
 

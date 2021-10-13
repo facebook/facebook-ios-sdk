@@ -434,7 +434,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   if (!_graphRequestFactory) {
-    _graphRequestFactory = FBSDKGraphRequestFactory.new;
+    _graphRequestFactory = [FBSDKGraphRequestFactory new];
   }
   return _graphRequestFactory;
 }

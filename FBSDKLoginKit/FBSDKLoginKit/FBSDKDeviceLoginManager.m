@@ -63,8 +63,8 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
 {
-  id<FBSDKGraphRequestFactory> factory = FBSDKGraphRequestFactory.new;
-  FBSDKDevicePoller *poller = FBSDKDevicePoller.new;
+  id<FBSDKGraphRequestFactory> factory = [FBSDKGraphRequestFactory new];
+  FBSDKDevicePoller *poller = [FBSDKDevicePoller new];
   if ((self = [super init])) {
     _permissions = [permissions copy];
     _isSmartLoginEnabled = enableSmartLogin;

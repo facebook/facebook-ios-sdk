@@ -42,7 +42,7 @@
 
 + (nullable NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions
 {
-  NSMutableSet *permissions = NSMutableSet.new;
+  NSMutableSet *permissions = [NSMutableSet new];
 
   for (NSString *rawPermission in rawPermissions) {
     FBSDKPermission *permission = [[FBSDKPermission alloc] initWithString:rawPermission];
@@ -57,7 +57,7 @@
 
 + (NSSet<NSString *> *)rawPermissionsFromPermissions:(NSSet<FBSDKPermission *> *)permissions
 {
-  NSMutableSet *rawPermissions = NSMutableSet.new;
+  NSMutableSet *rawPermissions = [NSMutableSet new];
 
   for (FBSDKPermission *permission in permissions) {
     [rawPermissions addObject:permission.value];
