@@ -36,6 +36,8 @@ NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
 NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKBridgeAPIRequest
 
 #pragma mark - Class dependencies
@@ -90,9 +92,9 @@ static _Nullable id<FBSDKSettings> _settings;
 
 #pragma mark - Class Configuration
 
-+ (void)configureWithInternalURLOpener:(nonnull id<FBSDKInternalURLOpener>)internalURLOpener
-                       internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
-                              settings:(nonnull id<FBSDKSettings>)settings
++ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings
 {
   self.internalURLOpener = internalURLOpener;
   self.internalUtility = internalUtility;
@@ -127,12 +129,12 @@ static _Nullable id<FBSDKSettings> _settings;
 
 #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                          scheme:(NSString *)scheme
-                                      methodName:(NSString *)methodName
-                                   methodVersion:(NSString *)methodVersion
-                                      parameters:(NSDictionary<NSString *, id> *)parameters
-                                        userInfo:(NSDictionary<NSString *, id> *)userInfo
++ (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                                   scheme:(NSString *)scheme
+                                               methodName:(nullable NSString *)methodName
+                                            methodVersion:(nullable NSString *)methodVersion
+                                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
   return [[self alloc] initWithProtocol:[self _protocolForType:protocolType scheme:scheme]
                            protocolType:protocolType
@@ -167,7 +169,7 @@ static _Nullable id<FBSDKSettings> _settings;
 
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                   scheme:(nonnull NSString *)scheme
+                                   scheme:(NSString *)scheme
                                methodName:(nullable NSString *)methodName
                             methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -224,7 +226,7 @@ static _Nullable id<FBSDKSettings> _settings;
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (id)copyWithZone:(nullable NSZone *)zone
 {
   return self;
 }
@@ -245,5 +247,7 @@ static _Nullable id<FBSDKSettings> _settings;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

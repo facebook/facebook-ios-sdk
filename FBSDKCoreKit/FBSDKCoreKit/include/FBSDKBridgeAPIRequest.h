@@ -37,12 +37,12 @@ NS_SWIFT_NAME(BridgeAPIRequest)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-+ (nullable instancetype)bridgeAPIRequestWithProtocolType:( FBSDKBridgeAPIProtocolType)protocolType
-                                          scheme:(NSString *)scheme
-                                      methodName:(nullable NSString *)methodName
-                                   methodVersion:(nullable NSString *)methodVersion
-                                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                        userInfo:(nullable NSDictionary<NSString *, id> *)userInfo;
++ (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                                   scheme:(NSString *)scheme
+                                               methodName:(nullable NSString *)methodName
+                                            methodVersion:(nullable NSString *)methodVersion
+                                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo;
 
 @property (nonatomic, copy, readonly) NSString *actionID;
 @property (nonatomic, nullable, copy, readonly) NSString *methodName;
