@@ -271,4 +271,3 @@ schemes:
     build:
       targets:
         FBSDKLoginKit-Universal: all
-      parallelizeBuild: false

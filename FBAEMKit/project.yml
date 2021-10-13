@@ -114,7 +114,6 @@ schemes:
     build:
       targets:
         FBAEMKit-Universal: [archive, run, profile, analyze]
-      parallelizeBuild: false
   FBAEMKit-Static:
     build:
       targets:

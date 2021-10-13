@@ -283,4 +283,3 @@ schemes:
     build:
       targets:
         FBSDKShareKit-Universal: all
-      parallelizeBuild: false

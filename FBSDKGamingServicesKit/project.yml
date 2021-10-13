@@ -96,4 +96,3 @@ schemes:
     build:
       targets:
         FBSDKGamingServicesKit-Universal: all
-      parallelizeBuild: false
