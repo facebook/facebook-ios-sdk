@@ -32,8 +32,8 @@
 - (instancetype)initWithToken:(FBSDKAccessToken *)token
           authenticationToken:(FBSDKAuthenticationToken *)authenticationToken
                   isCancelled:(BOOL)isCancelled
-           grantedPermissions:(NSSet *)grantedPermissions
-          declinedPermissions:(NSSet *)declinedPermissions
+           grantedPermissions:(NSSet<NSString *> *)grantedPermissions
+          declinedPermissions:(NSSet<NSString *> *)declinedPermissions
 {
   if ((self = [super init])) {
     _mutableLoggingExtras = [NSMutableDictionary dictionary];

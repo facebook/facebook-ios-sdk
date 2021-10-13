@@ -24,7 +24,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKGameRequestFrictionlessRecipientCache ()
-@property (nonatomic) NSSet *recipientIDs;
+@property (nonatomic) NSSet<NSString *> *recipientIDs;
 @end
 
 @implementation FBSDKGameRequestFrictionlessRecipientCache
@@ -55,8 +55,7 @@
     recipientIDArray = [recipients componentsSeparatedByString:@","];
   }
   if (recipientIDArray) {
-    NSSet *recipientIDs = [[NSSet alloc]
-                           initWithArray:recipientIDArray];
+    NSSet<NSString *> *recipientIDs = [[NSSet alloc] initWithArray:recipientIDArray];
     return [recipientIDs isSubsetOfSet:_recipientIDs];
   } else {
     return NO;

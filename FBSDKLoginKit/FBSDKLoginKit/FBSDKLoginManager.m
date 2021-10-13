@@ -379,7 +379,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [FBSDKTypeUtility dictionary:loginParams setObject:FBSDKSettings.sharedSettings.appURLSchemeSuffix forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 
-  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc]initWithString:@"openid"]];
+  NSSet<FBSDKPermission *> *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc] initWithString:@"openid"]];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   if (configuration.messengerPageId) {
@@ -428,7 +428,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return loginParams;
 }
 
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)logInWithPermissions:(NSSet<FBSDKPermission *> *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (_configuration) {
     FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
@@ -583,7 +583,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (FBSDKLoginManagerLoginResult *)cancelledResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
 {
-  NSSet *declinedPermissions = nil;
+  NSSet<NSString *> *declinedPermissions = [NSSet set];
   if ([self.tokenWallet currentAccessToken] != nil) {
     // Always include the list of declined permissions from this login request
     // if an access token is already cached by the SDK
@@ -593,7 +593,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
                                          authenticationToken:nil
                                                  isCancelled:YES
-                                          grantedPermissions:NSSet.set
+                                          grantedPermissions:[NSSet set]
                                          declinedPermissions:declinedPermissions];
 }
 
@@ -644,7 +644,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
   NSMutableSet *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
-  NSSet *previouslyGrantedPermissions = [[self.tokenWallet currentAccessToken] permissions];
+  NSSet<NSString *> *previouslyGrantedPermissions = [[self.tokenWallet currentAccessToken] permissions];
 
   // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
   // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.

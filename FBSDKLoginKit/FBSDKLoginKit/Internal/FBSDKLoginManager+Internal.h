@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 // for testing only
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;
 // for testing only
-- (void)setRequestedPermissions:(NSSet *)requestedPermissions;
+- (void)setRequestedPermissions:(NSSet<NSString *> *)requestedPermissions;
 
 // available to internal modules
 - (void)handleImplicitCancelOfLogIn;

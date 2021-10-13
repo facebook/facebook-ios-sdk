@@ -226,7 +226,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     XCTAssertTrue([tokenAfterAuth.userID isEqualToString:@"123"], @"failed to parse userID");
     XCTAssertTrue([tokenAfterAuth.permissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
     XCTAssertTrue([result.grantedPermissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
-    NSSet *expectedDeclined = [NSSet setWithObjects:@"email", @"user_friends", nil];
+    NSSet<NSString *> *expectedDeclined = [NSSet setWithObjects:@"email", @"user_friends", nil];
     XCTAssertEqualObjects(tokenAfterAuth.declinedPermissions, expectedDeclined, @"unexpected permissions");
     XCTAssertEqualObjects(result.declinedPermissions, expectedDeclined, @"unexpected permissions");
 
@@ -255,7 +255,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertTrue([self.loginManager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   FBSDKAccessToken *actualToken = TestAccessTokenWallet.currentAccessToken;
   XCTAssertTrue([actualToken.userID isEqualToString:@"user123"], @"failed to parse userID");
-  NSSet *expectedDeclined = [NSSet set];
+  NSSet<NSString *> *expectedDeclined = [NSSet set];
   XCTAssertEqualObjects(actualToken.declinedPermissions, expectedDeclined, @"unexpected permissions");
 }
 
@@ -851,7 +851,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
 
-  NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet<FBSDKPermission *> *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
   XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
 }
 
@@ -860,7 +860,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
   TestAccessTokenWallet.currentAccessToken = self.sampleAccessToken;
 
-  NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet<FBSDKPermission *> *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
   XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
 }
 
@@ -882,7 +882,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
   [self.loginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
 
-  NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet<FBSDKPermission *> *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
   XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
 }
 
@@ -892,8 +892,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   TestAccessTokenWallet.currentAccessToken = self.sampleAccessToken;
   [self.loginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
 
-  NSSet *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
-  NSSet *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+  NSSet<FBSDKPermission *> *recentlyGrantedPermissions = [self.loginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet<FBSDKPermission *> *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
   XCTAssertEqualObjects(recentlyGrantedPermissions, expectedPermisssions);
 }
 
@@ -901,7 +901,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
 
-  NSSet *recentlyDeclinedPermissions = [self.loginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
+  NSSet<FBSDKPermission *> *recentlyDeclinedPermissions = [self.loginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
   XCTAssertEqual(recentlyDeclinedPermissions.count, 0);
 }
 
@@ -910,8 +910,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
   [self.loginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
 
-  NSSet *recentlyDeclinedPermissions = [self.loginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
-  NSSet *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+  NSSet<FBSDKPermission *> *recentlyDeclinedPermissions = [self.loginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
+  NSSet<FBSDKPermission *> *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
   XCTAssertEqualObjects(recentlyDeclinedPermissions, expectedPermisssions);
 }
 

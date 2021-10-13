@@ -257,9 +257,9 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   NSString *appID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
-  NSSet *declinedPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
-  NSSet *expiredPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
-  NSSet *permissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
+  NSSet<NSString *> *declinedPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
+  NSSet<NSString *> *expiredPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
+  NSSet<NSString *> *permissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
   NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_TOKENSTRING_KEY];
   NSString *userID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_USERID_KEY];
   NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
