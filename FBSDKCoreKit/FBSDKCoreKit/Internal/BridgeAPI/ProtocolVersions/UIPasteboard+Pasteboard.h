@@ -30,16 +30,6 @@
   return UIPasteboardNameGeneral == self.name;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-// Should delete this when we drop support for iOS 10
-- (BOOL)_isFindPasteboard
-{
-  return UIPasteboardNameFind == self.name;
-}
-
-#pragma clang diagnostic pop
-
 NS_ASSUME_NONNULL_BEGIN
 
 @end

@@ -26,7 +26,6 @@ NS_SWIFT_NAME(Pasteboard)
 @property (nonatomic, readonly) NSString *name;
 
 @property (nonatomic, readonly) BOOL _isGeneralPasteboard;
-@property (nonatomic, readonly) BOOL _isFindPasteboard;
 
 - (nullable NSData *)dataForPasteboardType:(NSString *)pasteboardType;
 - (void)setData:(NSData *)data forPasteboardType:(NSString *)pasteboardType;

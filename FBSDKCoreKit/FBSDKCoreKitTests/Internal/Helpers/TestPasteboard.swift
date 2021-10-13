@@ -25,7 +25,6 @@ class TestPasteboard: NSObject, Pasteboard {
   var capturedData: Data?
   var capturedPasteboardType: String?
   var _isGeneralPasteboard = false // swiftlint:disable:this identifier_name
-  var _isFindPasteboard = false // swiftlint:disable:this identifier_name
 
   func data(forPasteboardType pasteboardType: String) -> Data? {
     stubbedData

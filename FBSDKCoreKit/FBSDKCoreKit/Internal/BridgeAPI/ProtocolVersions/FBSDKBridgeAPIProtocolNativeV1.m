@@ -306,7 +306,7 @@ static const struct {
         // if we are adding this to the general pasteboard, then we want to remove it when we are done with the share.
         // the Facebook app will not clear the value with this version of the protocol, so we should do it when the app
         // becomes active again
-        if (self->_pasteboard._isGeneralPasteboard || self->_pasteboard._isFindPasteboard) {
+        if (self->_pasteboard._isGeneralPasteboard) {
           [self.class clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
         }
       }
