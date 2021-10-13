@@ -63,14 +63,17 @@ def main():
 
     # If there are warnings print an issue and exit
     if non_allowlisted_warnings:
-        print("\nTHE FOLLOWING NON-ALLOWLISTED WARNINGS WERE ENCOUNTERED:")
-        for i, warning in enumerate(non_allowlisted_warnings, start=1):
-            print(f"{i}. {warning}")
-
         warning_count = len(non_allowlisted_warnings)
-        print_to_stderr(f"FAILED DUE TO {warning_count} NON-ALLOWLISTED WARNINGS")
+        warning_word = "WARNINGS" if warning_count > 1 else "WARNING"
+
         print_to_stderr(
-            "If any of these warnings should be ALLOWLISTED, add them to xcodebuild_warnings_allowlist.py and include a member of the Platform SDKs team on the diff review."
+            f"\nFAILED DUE TO THE FOLLOWING {warning_count} NON-ALLOWLISTED {warning_word}:"
+        )
+        for i, warning in enumerate(non_allowlisted_warnings, start=1):
+            print_to_stderr(f"{i}. {warning}")
+
+        print_to_stderr(
+            "If any of these warnings should be ALLOWLISTED, add them to xcodebuild_warnings_allowlist.py"
         )
 
         sys.exit(1)

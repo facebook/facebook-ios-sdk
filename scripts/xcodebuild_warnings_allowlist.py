@@ -22,4 +22,5 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     # "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-11-macos-noasserts.xctoolchain",
     # "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-13-macos-noasserts.xctoolchain",
     "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-",
+    "warning: Building targets in manual order is deprecated",
 ]
