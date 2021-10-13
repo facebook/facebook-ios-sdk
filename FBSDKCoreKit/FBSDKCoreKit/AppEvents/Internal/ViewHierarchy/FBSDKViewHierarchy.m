@@ -278,7 +278,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     // Get actions of UIControl
     UIControl *control = (UIControl *)obj;
     NSMutableSet *actions = [NSMutableSet set];
-    NSSet *targets = control.allTargets;
+    NSSet<NSObject *> *targets = control.allTargets;
     for (NSObject *target in targets) {
       NSArray *ary = [control actionsForTarget:target forControlEvent:0];
       if (ary.count > 0) {

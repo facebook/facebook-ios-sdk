@@ -112,11 +112,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"100"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -132,12 +132,12 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:accessTokenKey value:_validClientToken],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -152,12 +152,12 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:accessTokenKey value:SampleAccessTokens.validToken.tokenString],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -174,12 +174,12 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:accessTokenKey value:SampleAccessTokens.validToken.tokenString],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -193,11 +193,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeSmall size:_validNonSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"small"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"20"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -211,11 +211,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeAlbum size:_validNonSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"album"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"20"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -229,11 +229,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeLarge size:_validNonSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"large"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"20"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -247,11 +247,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:_validNonSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"square"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"20"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -265,11 +265,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:400 size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"100"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"100"],
-                               ]];
+                                                 ]];
 
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
@@ -285,11 +285,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:CGSizeZero];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"normal"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"0"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"0"],
-                               ]];
+                                                 ]];
 
   XCTAssertNotNil(url, "Should not create a url for fetching a profile picture with zero size but it will");
   XCTAssertEqualObjects(
@@ -304,11 +304,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:_validNonSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"square"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"20"],
-                               ]];
+                                                 ]];
 
   XCTAssertNotNil(url, "Should not create a url for a square image with non-square size but it will");
   XCTAssertEqualObjects(
@@ -323,11 +323,11 @@ NSString *const heightKey = @"height";
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:CGSizeMake(-10, -10)];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
-  NSSet *expectedQueryItems = [NSSet setWithArray:@[
+  NSSet<NSURLQueryItem *> *expectedQueryItems = [NSSet setWithArray:@[
     [[NSURLQueryItem alloc] initWithName:pictureModeKey value:@"square"],
     [[NSURLQueryItem alloc] initWithName:widthKey value:@"-10"],
     [[NSURLQueryItem alloc] initWithName:heightKey value:@"-10"],
-                               ]];
+                                                 ]];
 
   XCTAssertNotNil(url, "Should not create a url for a square image with a negative size but it will");
   XCTAssertEqualObjects(
