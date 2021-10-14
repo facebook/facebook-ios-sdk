@@ -56,6 +56,6 @@ NS_SWIFT_NAME(URLOpening)
 
 @end
 
-#endif
-
 NS_ASSUME_NONNULL_END
+
+#endif

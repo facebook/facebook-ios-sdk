@@ -51,6 +51,6 @@ NS_SWIFT_NAME(BridgeAPIProtocol)
 
 @end
 
-#endif
-
 NS_ASSUME_NONNULL_END
+
+#endif
