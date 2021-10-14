@@ -359,16 +359,6 @@ targets:
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
 
-aggregateTargets:
-  FBSDKCoreKit-Universal:
-    targets: [FBSDKCoreKit-Static]
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit-Static.xcconfig
-      Release: Configurations/FBSDKCoreKit-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
   FBSDKCoreKit-Static:
     build:
@@ -392,7 +382,3 @@ schemes:
     build:
       targets:
         FBSDKCoreKit_TV-Dynamic: all
-  FBSDKCoreKit-Universal:
-    build:
-      targets:
-        FBSDKCoreKit-Universal: all

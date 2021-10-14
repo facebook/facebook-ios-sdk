@@ -99,21 +99,7 @@ targets:
         link: false
         embed: false
 
-aggregateTargets:
-  FBAEMKit-Universal:
-    targets: [FBAEMKit-Static]
-    configFiles:
-      Debug: Configurations/FBAEMKit-Static.xcconfig
-      Release: Configurations/FBAEMKit-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
-  FBAEMKit-Universal:
-    build:
-      targets:
-        FBAEMKit-Universal: [archive, run, profile, analyze]
   FBAEMKit-Static:
     build:
       targets:

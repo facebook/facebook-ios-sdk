@@ -49,24 +49,6 @@ settings:
     SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
-aggregateTargets:
-  FacebookGamingServices-Universal:
-    targets: [FacebookGamingServices-Static]
-    configFiles:
-      Debug: Configurations/FacebookGamingServices-Static.xcconfig
-      Release: Configurations/FacebookGamingServices-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-  FBSDKGamingServicesKit-Universal:
-    targets: [FBSDKGamingServicesKit-Static]
-    configFiles:
-      Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
-      Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
   FacebookGamingServices-Static:
     build:
@@ -92,7 +74,3 @@ schemes:
       coverageTargets:
         - FacebookGamingServices-Dynamic
         - FBSDKGamingServicesKit-Dynamic
-  FBSDKGamingServicesKit-Universal:
-    build:
-      targets:
-        FBSDKGamingServicesKit-Universal: all

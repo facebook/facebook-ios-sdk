@@ -248,17 +248,6 @@ targets:
       ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
       GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
-
-aggregateTargets:
-  FBSDKShareKit-Universal:
-    targets: [FBSDKShareKit-Static]
-    configFiles:
-      Debug: Configurations/FBSDKShareKit-Static.xcconfig
-      Release: Configurations/FBSDKShareKit-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
   FBSDKShareKit-Static:
     build:
@@ -279,7 +268,3 @@ schemes:
     build:
       targets:
         FBSDKShareKit_TV-Dynamic: all
-  FBSDKShareKit-Universal:
-    build:
-      targets:
-        FBSDKShareKit-Universal: all

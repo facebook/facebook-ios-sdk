@@ -235,16 +235,6 @@ targets:
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
 
-aggregateTargets:
-  FBSDKLoginKit-Universal:
-    targets: [FBSDKLoginKit-Static]
-    configFiles:
-      Debug: Configurations/FBSDKLoginKit-Static.xcconfig
-      Release: Configurations/FBSDKLoginKit-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
   FBSDKLoginKit-Static:
     build:
@@ -267,7 +257,3 @@ schemes:
     build:
       targets:
         FBSDKLoginKit_TV-Dynamic: all
-  FBSDKLoginKit-Universal:
-    build:
-      targets:
-        FBSDKLoginKit-Universal: all

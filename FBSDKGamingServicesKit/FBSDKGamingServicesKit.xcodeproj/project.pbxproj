@@ -6,33 +6,6 @@
 	objectVersion = 51;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		18F0A70E3EECCDEAD656F2DF /* FBSDKGamingServicesKit-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 794F16652F85D36F2F8540E0 /* Build configuration list for PBXAggregateTarget "FBSDKGamingServicesKit-Universal" */;
-			buildPhases = (
-				C106F229692AA4825FEB8097 /* ShellScript */,
-			);
-			dependencies = (
-				734D24E8684C31BEF3609B42 /* PBXTargetDependency */,
-			);
-			name = "FBSDKGamingServicesKit-Universal";
-			productName = "FBSDKGamingServicesKit-Universal";
-		};
-		1DE0CAD4DD359F7382F52801 /* FacebookGamingServices-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 9B078A7B72AA164793325EE4 /* Build configuration list for PBXAggregateTarget "FacebookGamingServices-Universal" */;
-			buildPhases = (
-				22CC0BC6495535FE0BCCA1C5 /* ShellScript */,
-			);
-			dependencies = (
-				A48B0F89818E9DA9622A2A92 /* PBXTargetDependency */,
-			);
-			name = "FacebookGamingServices-Universal";
-			productName = "FacebookGamingServices-Universal";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		001676EB93B7AEBF28E6C824 /* FBSDKGamingContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF01C5577885752388CEAB0 /* FBSDKGamingContext.m */; };
 		017AD75577439EB428955487 /* FBSDKFileHandleCreating.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E99AEC005FF09FA320502BF /* FBSDKFileHandleCreating.h */; };
@@ -453,13 +426,6 @@
 			remoteGlobalIDString = C82569269F0990FC515167BC;
 			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
 		};
-		945BC553080F71C9FD98D110 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AD918022918A9CDD1DDC29D5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 40993C6D7DABEA0A5BDAD8A3;
-			remoteInfo = "FacebookGamingServices-Static";
-		};
 		98048814F86595C5A96B2532 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AD918022918A9CDD1DDC29D5 /* Project object */;
@@ -508,13 +474,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 563D03839E2E11C7E6A47941;
 			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
-		};
-		BFC0C31E8BBC4D713A9259AE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AD918022918A9CDD1DDC29D5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 34D553EBC357D82AEBA6A9C7;
-			remoteInfo = "FBSDKGamingServicesKit-Static";
 		};
 		C4C5810ED5B7F15BE97C137B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1535,11 +1494,9 @@
 			targets = (
 				E503762E6371E38D1BD77A42 /* FBSDKGamingServicesKit-Dynamic */,
 				34D553EBC357D82AEBA6A9C7 /* FBSDKGamingServicesKit-Static */,
-				18F0A70E3EECCDEAD656F2DF /* FBSDKGamingServicesKit-Universal */,
 				F3B470A001EAF28A5D3AC81C /* FBSDKGamingServicesKitTests */,
 				BAC146DEC49878F3206EDE53 /* FacebookGamingServices-Dynamic */,
 				40993C6D7DABEA0A5BDAD8A3 /* FacebookGamingServices-Static */,
-				1DE0CAD4DD359F7382F52801 /* FacebookGamingServices-Universal */,
 				8F6454CB8412AB078EEFD0FC /* FacebookGamingServicesTests */,
 			);
 		};
@@ -1672,24 +1629,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		22CC0BC6495535FE0BCCA1C5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = ShellScript;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Simulator version\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n";
-		};
 		48376ABDCE1A1CAAC2259D27 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1725,24 +1664,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../scripts/build_phase_swiftlint.sh FacebookGamingServices";
-		};
-		C106F229692AA4825FEB8097 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = ShellScript;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Simulator version\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n";
 		};
 		EF49F932813C4DF660D98B21 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2034,11 +1955,6 @@
 			name = "FBSDKShareKit-Dynamic";
 			targetProxy = 607D6B800378F583A28F1377 /* PBXContainerItemProxy */;
 		};
-		734D24E8684C31BEF3609B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 34D553EBC357D82AEBA6A9C7 /* FBSDKGamingServicesKit-Static */;
-			targetProxy = BFC0C31E8BBC4D713A9259AE /* PBXContainerItemProxy */;
-		};
 		737A8CBF4BFFE89A4EB49B4A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BAC146DEC49878F3206EDE53 /* FacebookGamingServices-Dynamic */;
@@ -2058,11 +1974,6 @@
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit_Basics-Dynamic";
 			targetProxy = 162D5B87AEF7FD5F2F91C77A /* PBXContainerItemProxy */;
-		};
-		A48B0F89818E9DA9622A2A92 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 40993C6D7DABEA0A5BDAD8A3 /* FacebookGamingServices-Static */;
-			targetProxy = 945BC553080F71C9FD98D110 /* PBXContainerItemProxy */;
 		};
 		ADF61238C259304064C98292 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2117,20 +2028,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		02A76A5864BF826DC4AE5465 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F48AF0C7EAA3405ED4A5271 /* FBSDKGamingServicesKit-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
-		28A75094BB089D76FE5D2614 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52D5D6742D96D6508C294974 /* FacebookGamingServices-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
 		30B65D2C082358B5BBBB0C0D /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9991BAF81C97906BA012F2C3 /* FBSDKGamingServicesKitTests.xcconfig */;
@@ -2219,13 +2116,6 @@
 			};
 			name = Debug;
 		};
-		B6837075F53218003FB5CA86 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52D5D6742D96D6508C294974 /* FacebookGamingServices-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
 		C1A6F85E70A3634E05904369 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 88F10C3D17FABA065933B239 /* FacebookGamingServicesTests.xcconfig */;
@@ -2298,13 +2188,6 @@
 			};
 			name = Debug;
 		};
-		F457489B2A07BA67CE0CE88D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F48AF0C7EAA3405ED4A5271 /* FBSDKGamingServicesKit-Static.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
 		FF64B69606733226AC65B74A /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 52D5D6742D96D6508C294974 /* FacebookGamingServices-Static.xcconfig */;
@@ -2340,15 +2223,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		794F16652F85D36F2F8540E0 /* Build configuration list for PBXAggregateTarget "FBSDKGamingServicesKit-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F457489B2A07BA67CE0CE88D /* Debug */,
-				02A76A5864BF826DC4AE5465 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		7DDAD1B90E2E5787D05D8DF3 /* Build configuration list for PBXNativeTarget "FBSDKGamingServicesKitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2372,15 +2246,6 @@
 			buildConfigurations = (
 				7ECDB57EB674F253026BA127 /* Debug */,
 				334C8F43AF1325F80B79EB8D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		9B078A7B72AA164793325EE4 /* Build configuration list for PBXAggregateTarget "FacebookGamingServices-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B6837075F53218003FB5CA86 /* Debug */,
-				28A75094BB089D76FE5D2614 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

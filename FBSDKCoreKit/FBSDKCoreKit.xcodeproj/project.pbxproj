@@ -6,21 +6,6 @@
 	objectVersion = 51;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		BA4D3C5299B8A0D66E526A41 /* FBSDKCoreKit-Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 0F2475C2DB5A045F31F4F265 /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit-Universal" */;
-			buildPhases = (
-				321EA6A22E20257316C8C965 /* ShellScript */,
-			);
-			dependencies = (
-				E23AA6A7F3D13ED51EA8B56A /* PBXTargetDependency */,
-			);
-			name = "FBSDKCoreKit-Universal";
-			productName = "FBSDKCoreKit-Universal";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		003A29FF65DA3C8AAB62C37A /* FBSDKGraphRequestProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F1163FCE65B9E70BC15C9273 /* FBSDKGraphRequestProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00899DD57C5B8203FB563A74 /* FBSDKCrashObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A5009265142AA779662010 /* FBSDKCrashObserver.m */; };
@@ -2087,13 +2072,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9B208B1410A6473B4080CC3E;
 			remoteInfo = "FBAEMKit-Static";
-		};
-		FC43786937372DC618B51AD4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BB9192689F73C9F1232A041D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7340536E1E4754D37433F5A5;
-			remoteInfo = "FBSDKCoreKit-Static";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -5624,7 +5602,6 @@
 			targets = (
 				95463755E22142396C3ADC06 /* FBSDKCoreKit-Dynamic */,
 				7340536E1E4754D37433F5A5 /* FBSDKCoreKit-Static */,
-				BA4D3C5299B8A0D66E526A41 /* FBSDKCoreKit-Universal */,
 				0AFAA4AA80A855D463672CB9 /* FBSDKCoreKitTests */,
 				9B3DC93C05C131CAD9C2148A /* FBSDKCoreKit_TV-Dynamic */,
 				113B181392691C46A56E3A7B /* FBSDKCoreKit_TV-Static */,
@@ -5732,24 +5709,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ../scripts/build_phase_swiftlint.sh;
-		};
-		321EA6A22E20257316C8C965 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = ShellScript;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_BUILD_FOLDER=../build/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME and adding '-Static'\nTARGET=${TARGET_NAME%-Universal}-Static\n\n# Step 1. Build Simulator version\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk iphonesimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework\" \"${UNIVERSAL_BUILD_FOLDER}/\"\n";
 		};
 		37DD05FCD6E0727BCFFD3CC7 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6590,11 +6549,6 @@
 			name = TestTools;
 			targetProxy = D72281D64AC5BB6CB458EA59 /* PBXContainerItemProxy */;
 		};
-		E23AA6A7F3D13ED51EA8B56A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7340536E1E4754D37433F5A5 /* FBSDKCoreKit-Static */;
-			targetProxy = FC43786937372DC618B51AD4 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -6610,13 +6564,6 @@
 				INFOPLIST_FILE = FBSDKCoreKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Debug;
-		};
-		427A0DAECFAB0C8C46351715 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 888EB0331DF92FC54043CDDA /* FBSDKCoreKit-Static.xcconfig */;
-			buildSettings = {
 			};
 			name = Debug;
 		};
@@ -6644,13 +6591,6 @@
 				INFOPLIST_FILE = FBSDKCoreKit/Info.plist;
 				PRODUCT_NAME = FBSDKCoreKit;
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Release;
-		};
-		678B4578E3EB0C5619BCF1E4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 888EB0331DF92FC54043CDDA /* FBSDKCoreKit-Static.xcconfig */;
-			buildSettings = {
 			};
 			name = Release;
 		};
@@ -6792,15 +6732,6 @@
 			buildConfigurations = (
 				ADE8F66444FA30A85A473B32 /* Debug */,
 				DE873546AF750701611640C3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		0F2475C2DB5A045F31F4F265 /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit-Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				427A0DAECFAB0C8C46351715 /* Debug */,
-				678B4578E3EB0C5619BCF1E4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

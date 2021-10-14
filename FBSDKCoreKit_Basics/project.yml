@@ -130,16 +130,6 @@ targets:
         link: false
         embed: false
 
-aggregateTargets:
-  FBSDKCoreKit_Basics-Universal:
-    targets: [FBSDKCoreKit_Basics-Static]
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
-      Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
-    buildScripts:
-      - name: ShellScript
-        path: ../scripts/xcode/build-universal-framework.sh
-
 schemes:
   FBSDKCoreKit_Basics-Static:
     build:
