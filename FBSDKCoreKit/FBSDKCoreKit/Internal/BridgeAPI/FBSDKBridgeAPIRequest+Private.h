@@ -32,16 +32,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 
-@property (nonnull, nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
+@property (nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
 
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                   scheme:(nonnull NSString *)scheme
+                                   scheme:(FBSDKURLScheme)scheme
                                methodName:(nullable NSString *)methodName
                             methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
-  NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER
+NS_SWIFT_NAME(init(protocol:protocolType:scheme:methodName:methodVersion:parameters:userInfo:));
 
 @end
 

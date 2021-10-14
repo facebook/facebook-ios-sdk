@@ -25,7 +25,9 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolType.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -36,6 +38,8 @@
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
 NSString *const FBSDKBridgeAPIVersionKey = @"version";
+
+typedef NSDictionary<NSNumber *, NSDictionary<FBSDKURLScheme, id<FBSDKBridgeAPIProtocol>> *> *FBSDKBridgeAPIProtocolMap;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -131,7 +135,7 @@ static _Nullable id<FBSDKSettings> _settings;
 #pragma mark - Class Methods
 
 + (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                                   scheme:(NSString *)scheme
+                                                   scheme:(FBSDKURLScheme)scheme
                                                methodName:(nullable NSString *)methodName
                                             methodVersion:(nullable NSString *)methodVersion
                                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -146,12 +150,11 @@ static _Nullable id<FBSDKSettings> _settings;
                                userInfo:userInfo];
 }
 
-+ (NSDictionary<NSNumber *, id> *)protocolMap
++ (FBSDKBridgeAPIProtocolMap)protocolMap
 {
-  static NSDictionary<NSNumber *, id> *_protocolMap;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _protocolMap = @{
+  static FBSDKBridgeAPIProtocolMap map;
+  if (!map) {
+    map = @{
       @(FBSDKBridgeAPIProtocolTypeNative) : @{
         FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
         FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
@@ -162,15 +165,16 @@ static _Nullable id<FBSDKSettings> _settings;
         FBSDKURLSchemeWeb : [FBSDKBridgeAPIProtocolWebV2 new]
       },
     };
-  });
-  return _protocolMap;
+  }
+
+  return map;
 }
 
 #pragma mark - Object Lifecycle
 
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                   scheme:(NSString *)scheme
+                                   scheme:(FBSDKURLScheme)scheme
                                methodName:(nullable NSString *)methodName
                             methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -232,7 +236,7 @@ static _Nullable id<FBSDKSettings> _settings;
   return self;
 }
 
-+ (nullable id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(NSString *)scheme
++ (nullable id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(FBSDKURLScheme)scheme
 {
   id<FBSDKBridgeAPIProtocol> protocol = [self protocolMap][@(type)][scheme];
   if (type == FBSDKBridgeAPIProtocolTypeWeb) {

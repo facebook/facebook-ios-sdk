@@ -23,6 +23,7 @@
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIRequestProtocol.h>
+#import <FBSDKCoreKit/FBSDKURLScheme.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,7 +39,7 @@ NS_SWIFT_NAME(BridgeAPIRequest)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 + (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                                   scheme:(NSString *)scheme
+                                                   scheme:(FBSDKURLScheme)scheme
                                                methodName:(nullable NSString *)methodName
                                             methodVersion:(nullable NSString *)methodVersion
                                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -49,7 +50,7 @@ NS_SWIFT_NAME(BridgeAPIRequest)
 @property (nonatomic, nullable, copy, readonly) NSString *methodVersion;
 @property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *parameters;
 @property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
-@property (nonatomic, copy, readonly) NSString *scheme;
+@property (nonatomic, copy, readonly) FBSDKURLScheme scheme;
 @property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *userInfo;
 
 - (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;

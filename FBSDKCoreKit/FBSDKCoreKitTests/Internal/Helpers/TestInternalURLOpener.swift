@@ -24,7 +24,7 @@ class TestInternalURLOpener: NSObject, InternalURLOpener {
   var capturedOpenUrl: URL?
   var capturedCanOpenUrl: URL?
   var openUrlStubs = [URL: Bool]()
-  let canOpenUrl: Bool
+  var canOpenUrl: Bool
   var capturedOpenUrlCompletion: ((Bool) -> Void)?
 
   init(canOpenUrl: Bool = false) {
