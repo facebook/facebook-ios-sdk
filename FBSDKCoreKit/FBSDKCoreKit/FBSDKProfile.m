@@ -29,6 +29,7 @@
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
 #import "FBSDKNotificationProtocols.h"
+#import "FBSDKProfileCodingKey.h"
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUserAgeRange.h"
 
@@ -39,23 +40,6 @@ NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
 static NSString *const FBSDKProfileUserDefaultsKey = @"com.facebook.sdk.FBSDKProfile.currentProfile";
 static FBSDKProfile *g_currentProfile;
 static NSDateFormatter *_dateFormatter;
-
-#define FBSDKPROFILE_USERID_KEY @"userID"
-#define FBSDKPROFILE_FIRSTNAME_KEY @"firstName"
-#define FBSDKPROFILE_MIDDLENAME_KEY @"middleName"
-#define FBSDKPROFILE_LASTNAME_KEY @"lastName"
-#define FBSDKPROFILE_NAME_KEY @"name"
-#define FBSDKPROFILE_LINKURL_KEY @"linkURL"
-#define FBSDKPROFILE_REFRESHDATE_KEY @"refreshDate"
-#define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
-#define FBSDKPROFILE_EMAIL_KEY @"email"
-#define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
-#define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
-#define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
-#define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
-#define FBSDKPROFILE_HOMETOWN_KEY @"hometown"
-#define FBSDKPROFILE_LOCATION_KEY @"location"
-#define FBSDKPROFILE_GENDER_KEY @"gender"
 
 // Once a day
 #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
@@ -433,22 +417,22 @@ static id<FBSDKSettings> _settings;
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  FBSDKUserIdentifier *userID = [decoder decodeObjectOfClass:[FBSDKUserIdentifier class] forKey:FBSDKPROFILE_USERID_KEY];
-  NSString *firstName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_FIRSTNAME_KEY];
-  NSString *middleName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_MIDDLENAME_KEY];
-  NSString *lastName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_LASTNAME_KEY];
-  NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_NAME_KEY];
-  NSURL *linkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKPROFILE_LINKURL_KEY];
-  NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKPROFILE_REFRESHDATE_KEY];
-  NSURL *imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKPROFILE_IMAGEURL_KEY];
-  NSString *email = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_EMAIL_KEY];
-  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDKPROFILE_FRIENDIDS_KEY];
-  BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
-  NSDate *birthday = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKPROFILE_BIRTHDAY_KEY];
-  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:FBSDKUserAgeRange.class forKey:FBSDKPROFILE_AGERANGE_KEY];
-  FBSDKLocation *hometown = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKPROFILE_HOMETOWN_KEY];
-  FBSDKLocation *location = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKPROFILE_LOCATION_KEY];
-  NSString *gender = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_GENDER_KEY];
+  FBSDKUserIdentifier *userID = [decoder decodeObjectOfClass:[FBSDKUserIdentifier class] forKey:FBSDKProfileCodingKeyUserID];
+  NSString *firstName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyFirstName];
+  NSString *middleName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyMiddleName];
+  NSString *lastName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyLastName];
+  NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyName];
+  NSURL *linkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKProfileCodingKeyLinkURL];
+  NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKProfileCodingKeyRefreshDate];
+  NSURL *imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKProfileCodingKeyImageURL];
+  NSString *email = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyEmail];
+  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDKProfileCodingKeyFriendIDs];
+  BOOL isLimited = [decoder decodeBoolForKey:FBSDKProfileCodingKeyIsLimited];
+  NSDate *birthday = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKProfileCodingKeyBirthday];
+  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:FBSDKUserAgeRange.class forKey:FBSDKProfileCodingKeyAgeRange];
+  FBSDKLocation *hometown = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKProfileCodingKeyHometown];
+  FBSDKLocation *location = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKProfileCodingKeyLocation];
+  NSString *gender = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyGender];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -469,22 +453,22 @@ static id<FBSDKSettings> _settings;
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [encoder encodeObject:self.userID forKey:FBSDKPROFILE_USERID_KEY];
-  [encoder encodeObject:self.firstName forKey:FBSDKPROFILE_FIRSTNAME_KEY];
-  [encoder encodeObject:self.middleName forKey:FBSDKPROFILE_MIDDLENAME_KEY];
-  [encoder encodeObject:self.lastName forKey:FBSDKPROFILE_LASTNAME_KEY];
-  [encoder encodeObject:self.name forKey:FBSDKPROFILE_NAME_KEY];
-  [encoder encodeObject:self.linkURL forKey:FBSDKPROFILE_LINKURL_KEY];
-  [encoder encodeObject:self.refreshDate forKey:FBSDKPROFILE_REFRESHDATE_KEY];
-  [encoder encodeObject:self.imageURL forKey:FBSDKPROFILE_IMAGEURL_KEY];
-  [encoder encodeObject:self.email forKey:FBSDKPROFILE_EMAIL_KEY];
-  [encoder encodeObject:self.friendIDs forKey:FBSDKPROFILE_FRIENDIDS_KEY];
-  [encoder encodeBool:self.isLimited forKey:FBSDKPROFILE_IS_LIMITED_KEY];
-  [encoder encodeObject:self.birthday forKey:FBSDKPROFILE_BIRTHDAY_KEY];
-  [encoder encodeObject:self.ageRange forKey:FBSDKPROFILE_AGERANGE_KEY];
-  [encoder encodeObject:self.hometown forKey:FBSDKPROFILE_HOMETOWN_KEY];
-  [encoder encodeObject:self.location forKey:FBSDKPROFILE_LOCATION_KEY];
-  [encoder encodeObject:self.gender forKey:FBSDKPROFILE_GENDER_KEY];
+  [encoder encodeObject:self.userID forKey:FBSDKProfileCodingKeyUserID];
+  [encoder encodeObject:self.firstName forKey:FBSDKProfileCodingKeyFirstName];
+  [encoder encodeObject:self.middleName forKey:FBSDKProfileCodingKeyMiddleName];
+  [encoder encodeObject:self.lastName forKey:FBSDKProfileCodingKeyLastName];
+  [encoder encodeObject:self.name forKey:FBSDKProfileCodingKeyName];
+  [encoder encodeObject:self.linkURL forKey:FBSDKProfileCodingKeyLinkURL];
+  [encoder encodeObject:self.refreshDate forKey:FBSDKProfileCodingKeyRefreshDate];
+  [encoder encodeObject:self.imageURL forKey:FBSDKProfileCodingKeyImageURL];
+  [encoder encodeObject:self.email forKey:FBSDKProfileCodingKeyEmail];
+  [encoder encodeObject:self.friendIDs forKey:FBSDKProfileCodingKeyFriendIDs];
+  [encoder encodeBool:self.isLimited forKey:FBSDKProfileCodingKeyIsLimited];
+  [encoder encodeObject:self.birthday forKey:FBSDKProfileCodingKeyBirthday];
+  [encoder encodeObject:self.ageRange forKey:FBSDKProfileCodingKeyAgeRange];
+  [encoder encodeObject:self.hometown forKey:FBSDKProfileCodingKeyHometown];
+  [encoder encodeObject:self.location forKey:FBSDKProfileCodingKeyLocation];
+  [encoder encodeObject:self.gender forKey:FBSDKProfileCodingKeyGender];
 }
 
 @end
