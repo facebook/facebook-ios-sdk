@@ -50,6 +50,7 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsConfiguring.h"
+#import "FBSDKAppEventsDeviceInfo+Testing.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsParameterProcessing.h"
@@ -207,7 +208,6 @@
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UIApplication+URLOpener.h"
 #import "WebViewAppLinkResolver+Testing.h"
-
 
 NS_ASSUME_NONNULL_BEGIN
 

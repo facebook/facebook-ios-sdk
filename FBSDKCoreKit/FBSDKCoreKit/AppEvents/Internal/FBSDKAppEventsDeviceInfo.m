@@ -71,6 +71,9 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 @property (nonatomic) long lastGroup1CheckTime;
 @property (nonatomic) BOOL isEncodingDirty;
 @property (nonatomic) NSString *encodedDeviceInfo;
+
+// Dependencies
+@property (nonnull, nonatomic, readonly) id<FBSDKSettings> settings;
 @end
 
 @implementation FBSDKAppEventsDeviceInfo
@@ -104,7 +107,13 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 - (instancetype)init
 {
+  return [self initWithSettings:FBSDKSettings.sharedSettings];
+}
+
+- (instancetype)initWithSettings:(id<FBSDKSettings>)settings
+{
   if ((self = [super init])) {
+    _settings = settings;
     _isEncodingDirty = YES;
   }
   return self;
@@ -183,7 +192,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 // This data is collected only once every GROUP1_RECHECK_DURATION.
 - (void)_collectGroup1Data
 {
-  const BOOL shouldUseCachedValues = FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata;
+  const BOOL shouldUseCachedValues = self.settings.shouldUseCachedValuesForExpensiveMetadata;
 
   if (!_carrierName || !shouldUseCachedValues) {
     NSString *newCarrierName = [FBSDKAppEventsDeviceInfo _getCarrier];
