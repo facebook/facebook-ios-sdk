@@ -20,6 +20,7 @@
 
 #import "FBSDKShareCameraEffectContent+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKCameraEffectArguments+Internal.h"
@@ -179,7 +180,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   if ((FBSDKShareDialogModeNative == mode) || (FBSDKShareDialogModeAutomatic == mode)) {
     if ([self.class.internalUtility isMSQRDPlayerAppInstalled]) {
       // If installed, launch MSQRD Player for testing effects.
-      return FBSDK_CANOPENURL_MSQRD_PLAYER;
+      return FBSDKURLSchemeMasqueradePlayer;
     }
   }
   return nil;

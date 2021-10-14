@@ -190,8 +190,9 @@ targets:
           - FBSDKMutableCopying*
           - FBSDKProfile*
           - FBSDKShareDialogConfiguration*
-          - FBSDKURL*
-          - FBSDKURLOpening*
+          - FBSDKURL.*
+          - FBSDKURLHosting*
+          - FBSDKURLOpen*
           - FBSDKWebDialog*
           - FBSDKCoreKit.modulemap
           - Info.plist
@@ -206,8 +207,9 @@ targets:
           - FBSDKMutableCopying*
           - FBSDKProfile*
           - FBSDKShareDialogConfiguration*
-          - FBSDKURL*
-          - FBSDKURLOpening*
+          - FBSDKURL.*
+          - FBSDKURLHosting*
+          - FBSDKURLOpen*
           - FBSDKWebDialog*
           - FBSDKWebViewAppLinkResolver*
           - FBSDKWindowFinding*
@@ -291,8 +293,9 @@ targets:
           - FBSDKMutableCopying*
           - FBSDKProfile*
           - FBSDKShareDialogConfiguration*
-          - FBSDKURL*
-          - FBSDKURLOpening*
+          - FBSDKURL.*
+          - FBSDKURLHosting*
+          - FBSDKURLOpen*
           - FBSDKWebDialog*
           - FBSDKWindowFinding*
           - Info.plist
@@ -307,8 +310,9 @@ targets:
           - FBSDKMutableCopying*
           - FBSDKProfile*
           - FBSDKShareDialogConfiguration*
-          - FBSDKURL*
-          - FBSDKURLOpening*
+          - FBSDKURL.*
+          - FBSDKURLHosting*
+          - FBSDKURLOpen*
           - FBSDKWebDialog*
           - FBSDKWebViewAppLinkResolver*
           - FBSDKWindowFinding*

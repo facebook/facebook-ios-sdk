@@ -80,6 +80,7 @@
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
 #import <FBSDKCoreKit/FBSDKTransformer.h>
+#import <FBSDKCoreKit/FBSDKURLScheme.h>
 #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
 #import <FBSDKCoreKit/FBSDKUtility.h>
 

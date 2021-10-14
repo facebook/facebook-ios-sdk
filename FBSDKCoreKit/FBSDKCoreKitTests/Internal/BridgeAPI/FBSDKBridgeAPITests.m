@@ -493,7 +493,7 @@
 
 - (void)testRequestCompletionBlockWithHttpRequestCalledWithoutSuccess
 {
-  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:@"https"];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:FBSDKURLSchemeHTTPS];
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
     XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
     XCTAssertEqual(

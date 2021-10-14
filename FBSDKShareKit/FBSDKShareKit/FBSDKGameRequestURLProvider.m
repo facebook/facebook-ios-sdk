@@ -18,9 +18,9 @@
 
 #import "FBSDKGameRequestURLProvider.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#define FBSDK_GAME_REQUEST_URL_SCHEME @"https"
 #define FBSDK_GAME_REQUEST_URL_HOST @"fb.gg"
 #define FBSDK_GAME_REQUEST_URL_PATH @"/game_requestui/%@/"
 
@@ -38,7 +38,7 @@
 + (nullable NSURL *)createDeepLinkURLWithQueryDictionary:(NSDictionary<NSString *, id> *)queryDictionary
 {
   NSURLComponents *components = [NSURLComponents new];
-  components.scheme = FBSDK_GAME_REQUEST_URL_SCHEME;
+  components.scheme = FBSDKURLSchemeHTTPS;
   components.host = FBSDK_GAME_REQUEST_URL_HOST;
   components.path = [NSString stringWithFormat:FBSDK_GAME_REQUEST_URL_PATH, FBSDKAccessToken.currentAccessToken.appID];
   components.queryItems = [FBSDKGameRequestURLProvider _getQueryArrayFromGameRequestDictionary:queryDictionary];

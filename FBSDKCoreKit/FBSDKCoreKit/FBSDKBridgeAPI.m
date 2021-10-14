@@ -33,6 +33,7 @@
 #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKURLScheme.h"
 #import "NSProcessInfo+Protocols.h"
 #import "UIApplication+URLOpener.h"
 
@@ -360,7 +361,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       self->_pendingRequest = nil;
       self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
-      if ([request.scheme hasPrefix:@"http"]) {
+      if ([request.scheme hasPrefix:FBSDKURLSchemeHTTP]) {
         openedURLError = [FBSDKError errorWithCode:FBSDKErrorBrowserUnavailable
                                            message:@"the app switch failed because the browser is unavailable"];
       } else {
@@ -380,7 +381,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                      fromViewController:(nullable UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 {
-  if (![url.scheme hasPrefix:@"http"]) {
+  if (![url.scheme hasPrefix:FBSDKURLSchemeHTTP]) {
     [self openURL:url sender:sender handler:handler];
     return;
   }

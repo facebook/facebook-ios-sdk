@@ -37,7 +37,6 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     static let methodName = "open"
     static let methodVersion = "v1"
     static let redirectURI = "fb://bridge/open?bridge_args=%7B%22action_id%22%3A%22123%22%7D"
-    static let scheme = "https"
     static let touch = "touch"
     static let unknownErrorCode = 12345
   }
@@ -73,7 +72,7 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
   func testCreatingURLWithAllFields() throws {
     let url = try bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       methodVersion: Values.methodVersion,
       parameters: QueryParameters.valid

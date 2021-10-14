@@ -25,7 +25,7 @@ final class BridgeAPIRequestFactoryTests: XCTestCase {
     XCTAssertNotNil(
       factory.bridgeAPIRequest(
         with: .web,
-        scheme: "https",
+        scheme: URLScheme.https.rawValue,
         methodName: nil,
         methodVersion: nil,
         parameters: nil,

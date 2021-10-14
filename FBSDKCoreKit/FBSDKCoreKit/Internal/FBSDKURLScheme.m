@@ -16,21 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import XCTest
+#import "FBSDKURLScheme.h"
 
-final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
-  let factory = ShareBridgeAPIRequestFactory()
+FBSDKURLScheme const FBSDKURLSchemeFacebookApp = @"fbauth2";
+FBSDKURLScheme const FBSDKURLSchemeFacebookAPI = @"fbapi";
+FBSDKURLScheme const FBSDKURLSchemeFacebookShareExtension = @"fbshareextension";
+FBSDKURLScheme const FBSDKURLSchemeMessengerApp = @"fb-messenger-share-api";
+FBSDKURLScheme const FBSDKURLSchemeMasqueradePlayer = @"msqrdplayer";
+FBSDKURLScheme const FBSDKURLSchemeHTTPS = @"https";
+FBSDKURLScheme const FBSDKURLSchemeHTTP = @"http";
+FBSDKURLScheme const FBSDKURLSchemeWeb = @"web";
 
-  func testFactoryMakesRequests() {
-    XCTAssertNotNil(
-      factory.bridgeAPIRequest(
-        with: .web,
-        scheme: URLScheme.https.rawValue,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil,
-        userInfo: nil
-      )
-    )
-  }
-}
+// Deprecated symbols previously declared via #define
+
+NSString *const FBSDK_CANOPENURL_FACEBOOK = @"fbauth2";
+NSString *const FBSDK_CANOPENURL_FBAPI = @"fbapi";
+NSString *const FBSDK_CANOPENURL_MESSENGER = @"fb-messenger-share-api";
+NSString *const FBSDK_CANOPENURL_MSQRD_PLAYER = @"msqrdplayer";
+NSString *const FBSDK_CANOPENURL_SHARE_EXTENSION = @"fbshareextension";

@@ -20,6 +20,7 @@
 
 #import "FBSDKLoginManagerLogger.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKLoginAppEventName.h"
@@ -197,8 +198,8 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
   BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:defaultUrlScheme];
 
-  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-  BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
+  BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
 
   [_extras addEntriesFromDictionary:@{
      @"isURLSchemeRegistered" : @(isURLSchemeRegistered),

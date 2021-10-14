@@ -526,7 +526,7 @@
   };
 
   if (canHandleBridgeApiResponse) {
-    self.appURLSchemeProvider.stubbedScheme = @"http";
+    self.appURLSchemeProvider.stubbedScheme = FBSDKURLSchemeHTTP;
     self.api.pendingRequestCompletionBlock = nil;
   } else {
     self.appURLSchemeProvider.stubbedScheme = @"foo";
@@ -636,7 +636,7 @@
 - (FBSDKBridgeAPIRequest *)sampleBridgeApiRequest
 {
   return [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                          scheme:@"https"
+                                                          scheme:FBSDKURLSchemeHTTPS
                                                       methodName:nil
                                                    methodVersion:nil
                                                       parameters:nil

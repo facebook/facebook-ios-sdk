@@ -103,7 +103,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
 + (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
 {
   _internalUtility = internalUtility;
-  [_internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+  [_internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
 }
 
 static _Nullable id<FBSDKSettings> _settings;
@@ -207,7 +207,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 + (void)validateAPIURLSchemeRegistered
 {
   dispatch_once(&validateAPIURLSchemeRegisteredToken, ^{
-    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FBAPI];
+    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
   });
 }
 
@@ -216,7 +216,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 + (void)validateShareExtensionURLSchemeRegistered
 {
   dispatch_once(&validateShareExtensionURLSchemeRegisteredToken, ^{
-    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_SHARE_EXTENSION];
+    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookShareExtension];
   });
 }
 
@@ -511,7 +511,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_canAttributeThroughShareSheet
 {
   [self.class validateAPIURLSchemeRegistered];
-  NSString *scheme = FBSDK_CANOPENURL_FBAPI;
+  NSString *scheme = FBSDKURLSchemeFacebookAPI;
   NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
@@ -524,7 +524,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   [self.class validateShareExtensionURLSchemeRegistered];
   NSURLComponents *components = [NSURLComponents new];
-  components.scheme = FBSDK_CANOPENURL_SHARE_EXTENSION;
+  components.scheme = FBSDKURLSchemeFacebookShareExtension;
   components.path = @"/";
   return [self.class.internalURLOpener canOpenURL:components.URL];
 }
@@ -542,7 +542,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_supportsShareSheetMinimumVersion:(NSString *)minimumVersion
 {
   [self.class validateAPIURLSchemeRegistered];
-  NSString *scheme = FBSDK_CANOPENURL_FBAPI;
+  NSString *scheme = FBSDKURLSchemeFacebookAPI;
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
@@ -681,7 +681,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
         };
         id<FBSDKBridgeAPIRequest> request;
         request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                                scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                                scheme:FBSDKURLSchemeHTTPS
                                                                             methodName:cMethodName
                                                                          methodVersion:nil
                                                                             parameters:cParameters
@@ -710,7 +710,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     };
     id<FBSDKBridgeAPIRequest> request;
     request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                            scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                            scheme:FBSDKURLSchemeHTTPS
                                                                         methodName:methodName
                                                                      methodVersion:nil
                                                                         parameters:parameters
@@ -736,7 +736,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   };
   id<FBSDKBridgeAPIRequest> request;
   request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                          scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                          scheme:FBSDKURLSchemeHTTPS
                                                                       methodName:FBSDK_SHARE_FEED_METHOD_NAME
                                                                    methodVersion:nil
                                                                       parameters:parameters
@@ -779,7 +779,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     scheme = [(id<FBSDKSharingScheme>)self.shareContent schemeForMode:FBSDKShareDialogModeNative];
   }
   if (!(scheme.length > 0)) {
-    scheme = FBSDK_CANOPENURL_FACEBOOK;
+    scheme = FBSDKURLSchemeFacebookApp;
   }
   NSString *methodName;
   NSString *methodVersion;

@@ -20,6 +20,7 @@
 
 #import "FBSDKMessageDialog.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKShareAppEventName.h"
@@ -46,7 +47,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 + (void)initialize
 {
   if (FBSDKMessageDialog.class == self) {
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
   }
 }
 

@@ -1211,7 +1211,7 @@
 {
   NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
 
-  [FBSDKInternalUtility.sharedUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@"a date" : NSDate.date} error:&error];
+  [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDKURLSchemeHTTPS host:@"example" path:@"/foo" queryParameters:@{@"a date" : NSDate.date} error:&error];
 
   XCTAssertEqualObjects(
     error.domain,
@@ -1234,7 +1234,7 @@
 {
   NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
 
-  [FBSDKInternalUtility.sharedUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:(id) @{@[] : @"foo"} error:&error];
+  [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDKURLSchemeHTTPS host:@"example" path:@"/foo" queryParameters:(id) @{@[] : @"foo"} error:&error];
 
   XCTAssertEqualObjects(
     error.domain,

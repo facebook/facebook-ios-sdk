@@ -119,7 +119,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let minSizeQuery  = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize] as? Int)
 
     XCTAssertNotNil(dialog)
-    XCTAssertEqual(util.scheme, URLConstants.scheme)
+    XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
     XCTAssertEqual(util.host, URLConstants.host)
     XCTAssertEqual(util.path, URLConstants.appSwitch(appID: defaultAppID).path)
     XCTAssertEqual(filterQuery, "NO_FILTER")
@@ -136,7 +136,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let paramsQuery = try XCTUnwrap(util.queryParameters?[URLConstants.mSiteQueryParameterParams] as? String)
 
     XCTAssertNotNil(dialog)
-    XCTAssertEqual(util.scheme, URLConstants.scheme)
+    XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
     XCTAssertEqual(util.host, URLConstants.host)
     XCTAssertEqual(util.path, URLConstants.mSite.path)
     XCTAssertEqual(pathQuery, "/path")

@@ -30,6 +30,7 @@
 #import "FBSDKLogging.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKURLScheme.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask) {
   FBSDKInternalUtilityMajorVersionMask = 0xFFFF0000,
@@ -270,7 +271,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   }
   path = [[NSString alloc] initWithFormat:@"%@%@", version ?: @"", path ?: @""];
 
-  return [self URLWithScheme:@"https"
+  return [self URLWithScheme:FBSDKURLSchemeHTTPS
                         host:host
                         path:path
              queryParameters:queryParameters
@@ -280,7 +281,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 - (BOOL)isBrowserURL:(NSURL *)URL
 {
   NSString *scheme = URL.scheme.lowercaseString;
-  return ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]);
+  return ([scheme isEqualToString:FBSDKURLSchemeHTTP] || [scheme isEqualToString:FBSDKURLSchemeHTTPS]);
 }
 
 - (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier
@@ -426,25 +427,25 @@ static NSMapTable *_transientObjects;
 - (BOOL)isFacebookAppInstalled
 {
   dispatch_once(&checkIfFacebookAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
   });
-  return [self _canOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+  return [self _canOpenURLScheme:FBSDKURLSchemeFacebookApp];
 }
 
 - (BOOL)isMessengerAppInstalled
 {
   dispatch_once(&checkIfMessengerAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
   });
-  return [self _canOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+  return [self _canOpenURLScheme:FBSDKURLSchemeMessengerApp];
 }
 
 - (BOOL)isMSQRDPlayerAppInstalled
 {
   dispatch_once(&checkIfMSQRDPlayerAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMasqueradePlayer];
   });
-  return [self _canOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
+  return [self _canOpenURLScheme:FBSDKURLSchemeMasqueradePlayer];
 }
 
 #pragma mark - Helper Methods
@@ -504,9 +505,16 @@ static NSMapTable *_transientObjects;
 
 - (void)validateFacebookReservedURLSchemes
 {
-  for (NSString *fbUrlScheme in @[FBSDK_CANOPENURL_FACEBOOK, FBSDK_CANOPENURL_MESSENGER, FBSDK_CANOPENURL_FBAPI, FBSDK_CANOPENURL_SHARE_EXTENSION]) {
-    if ([self isRegisteredURLScheme:fbUrlScheme]) {
-      NSString *reason = [NSString stringWithFormat:@"%@ is registered as a URL scheme. Please move the entry from CFBundleURLSchemes in your Info.plist to LSApplicationQueriesSchemes. If you are trying to resolve \"canOpenURL: failed\" warnings, those only indicate that the Facebook app is not installed on your device or simulator and can be ignored.", fbUrlScheme];
+  NSArray<FBSDKURLScheme> *schemes = @[
+    FBSDKURLSchemeFacebookApp,
+    FBSDKURLSchemeMessengerApp,
+    FBSDKURLSchemeFacebookAPI,
+    FBSDKURLSchemeFacebookShareExtension
+  ];
+
+  for (FBSDKURLScheme scheme in schemes) {
+    if ([self isRegisteredURLScheme:scheme]) {
+      NSString *reason = [NSString stringWithFormat:@"%@ is registered as a URL scheme. Please move the entry from CFBundleURLSchemes in your Info.plist to LSApplicationQueriesSchemes. If you are trying to resolve \"canOpenURL: failed\" warnings, those only indicate that the Facebook app is not installed on your device or simulator and can be ignored.", scheme];
       @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
     }
   }

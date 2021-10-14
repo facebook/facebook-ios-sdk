@@ -23,7 +23,6 @@ import FBSDKCoreKit
 enum ShareTournamentDialogURLBuilder {
 
   enum Constants {
-    static let scheme = "https"
     static let host = "fb.gg"
     static let path = "/me/instant_tournament/"
   }
@@ -88,7 +87,7 @@ enum ShareTournamentDialogURLBuilder {
 
   func url(withPathAppID appID: String) -> URL? {
     var components = URLComponents()
-    components.scheme = Constants.scheme
+    components.scheme = URLScheme.https.rawValue
     components.host = Constants.host
     components.path = "\(Constants.path)\(appID)"
     components.queryItems = queryItems

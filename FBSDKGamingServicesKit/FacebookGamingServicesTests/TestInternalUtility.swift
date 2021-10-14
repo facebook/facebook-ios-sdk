@@ -52,7 +52,6 @@ enum URLConstants {
   case mSite
   case appSwitch(appID: String)
 
-  static let scheme = "https"
   static let host = "fb.gg"
   var path: String {
     switch self {

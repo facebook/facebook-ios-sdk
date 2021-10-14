@@ -26,7 +26,6 @@
 #import "FBSDKGamingContext.h"
 
 // Deeplink url constants
-#define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
 #define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH @"/dialog/choosecontext/%@/"
 #define FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH @"/dialog/choosecontext/"
@@ -127,13 +126,13 @@
   NSMutableDictionary<NSString *, id> *parametersDictionary = [self queryParameters];
   NSError *error;
   if (_internalUtility.isFacebookAppInstalled) {
-    return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
+    return [_internalUtility URLWithScheme:FBSDKURLSchemeHTTPS
                                       host:FBSDK_CONTEXT_DIALOG_URL_HOST
                                       path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.sharedSettings.appID]
                            queryParameters:parametersDictionary
                                      error:&error];
   }
-  return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
+  return [_internalUtility URLWithScheme:FBSDKURLSchemeHTTPS
                                     host:FBSDK_CONTEXT_DIALOG_URL_HOST
                                     path:FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH
                          queryParameters:parametersDictionary

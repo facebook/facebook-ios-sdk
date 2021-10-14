@@ -16,21 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import XCTest
+#import <Foundation/Foundation.h>
 
-final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
-  let factory = ShareBridgeAPIRequestFactory()
+typedef NSString * FBSDKURLScheme NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(URLScheme);;
 
-  func testFactoryMakesRequests() {
-    XCTAssertNotNil(
-      factory.bridgeAPIRequest(
-        with: .web,
-        scheme: URLScheme.https.rawValue,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil,
-        userInfo: nil
-      )
-    )
-  }
-}
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeFacebookApp;
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeFacebookAPI;
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeFacebookShareExtension;
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeMessengerApp;
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeMasqueradePlayer;
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeHTTPS NS_SWIFT_NAME(https);
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeHTTP NS_SWIFT_NAME(http);
+FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeWeb;

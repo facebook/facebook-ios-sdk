@@ -564,7 +564,7 @@
 
   [self _showNativeDialog:dialog
        nonSupportedScheme:nil
-      expectRequestScheme:FBSDK_CANOPENURL_MSQRD_PLAYER
+      expectRequestScheme:FBSDKURLSchemeMasqueradePlayer
                methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
 }
 
@@ -575,8 +575,8 @@
   self.internalUtility.isFacebookAppInstalled = YES;
 
   [self _showNativeDialog:dialog
-       nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDK_CANOPENURL_MSQRD_PLAYER]
-      expectRequestScheme:FBSDK_CANOPENURL_FACEBOOK
+       nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDKURLSchemeMasqueradePlayer]
+      expectRequestScheme:FBSDKURLSchemeFacebookApp
                methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
 }
 

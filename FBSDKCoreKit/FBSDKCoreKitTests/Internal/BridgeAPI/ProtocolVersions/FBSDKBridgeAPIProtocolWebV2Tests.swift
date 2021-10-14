@@ -32,7 +32,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     static let actionID = "123"
     static let methodName = "open"
     static let methodVersion = "v1"
-    static let scheme = "https"
+    static let scheme = URLScheme.https
   }
 
   let validQueryParameters = ["Foo": "Bar"]
@@ -141,7 +141,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
     guard let url = try? bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       methodVersion: Values.methodVersion,
       parameters: validQueryParameters
@@ -168,7 +168,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     )
     guard let url = try? bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: Values.scheme.rawValue,
       methodName: Values.methodName,
       methodVersion: Values.methodVersion,
       parameters: validQueryParameters

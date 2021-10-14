@@ -29,7 +29,7 @@ class BridgeAPIRequestTests: XCTestCase {
   func testClassDependencies() {
     _ = BridgeAPIRequest(
       protocolType: .native,
-      scheme: "http",
+      scheme: URLScheme.http.rawValue,
       methodName: nil,
       methodVersion: nil,
       parameters: nil,

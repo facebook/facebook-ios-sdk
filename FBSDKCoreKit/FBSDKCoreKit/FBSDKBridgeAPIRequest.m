@@ -30,6 +30,7 @@
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings.h"
+#import "FBSDKURLScheme.h"
 #import "UIApplication+URLOpener.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
@@ -152,13 +153,13 @@ static _Nullable id<FBSDKSettings> _settings;
   dispatch_once(&onceToken, ^{
     _protocolMap = @{
       @(FBSDKBridgeAPIProtocolTypeNative) : @{
-        FBSDK_CANOPENURL_FACEBOOK : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
-        FBSDK_CANOPENURL_MESSENGER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
-        FBSDK_CANOPENURL_MSQRD_PLAYER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
+        FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
+        FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
+        FBSDKURLSchemeMasqueradePlayer : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
       },
       @(FBSDKBridgeAPIProtocolTypeWeb) : @{
-        @"https" : [FBSDKBridgeAPIProtocolWebV1 new],
-        @"web" : [FBSDKBridgeAPIProtocolWebV2 new]
+        FBSDKURLSchemeHTTPS : [FBSDKBridgeAPIProtocolWebV1 new],
+        FBSDKURLSchemeWeb : [FBSDKBridgeAPIProtocolWebV2 new]
       },
     };
   });

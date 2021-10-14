@@ -359,7 +359,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   FBSDKBridgeAPIRequest *request =
   [FBSDKBridgeAPIRequest
    bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-   scheme:@"https"
+   scheme:FBSDKURLSchemeHTTPS
    methodName:FBSDK_APP_REQUEST_METHOD_NAME
    methodVersion:nil
    parameters:parameters
