@@ -754,7 +754,7 @@
   if (block == NULL) {
     return;
   }
-  FBSDKAccessToken *oldToken = [FBSDKAccessToken currentAccessToken];
+  FBSDKAccessToken *oldToken = FBSDKAccessToken.currentAccessToken;
   FBSDKAccessToken.currentAccessToken = accessToken;
   block();
   FBSDKAccessToken.currentAccessToken = oldToken;

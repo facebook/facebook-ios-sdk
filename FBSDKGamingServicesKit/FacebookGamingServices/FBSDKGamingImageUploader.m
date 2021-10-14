@@ -102,7 +102,7 @@
                           completion:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
+  if (FBSDKAccessToken.currentAccessToken == nil) {
     completionHandler(
       false,
       nil,

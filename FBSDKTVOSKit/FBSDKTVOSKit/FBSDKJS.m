@@ -24,17 +24,17 @@
 
 + (NSString *)accessTokenString
 {
-  return [FBSDKAccessToken currentAccessToken].tokenString;
+  return FBSDKAccessToken.currentAccessToken.tokenString;
 }
 
 + (BOOL)hasGranted:(NSString *)permission
 {
-  return [[FBSDKAccessToken currentAccessToken] hasGranted:permission];
+  return [FBSDKAccessToken.currentAccessToken hasGranted:permission];
 }
 
 + (BOOL)isLoggedIn
 {
-  return ([FBSDKAccessToken currentAccessToken] != nil);
+  return (FBSDKAccessToken.currentAccessToken != nil);
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName

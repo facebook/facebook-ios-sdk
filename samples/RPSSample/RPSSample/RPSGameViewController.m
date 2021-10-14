@@ -383,7 +383,7 @@ typedef void (^RPSBlock)(void);
                                             otherButtonTitles:@"Share on Facebook",
                           @"Share on Messenger",
                           @"Friends' Activity",
-                          [FBSDKAccessToken currentAccessToken] ? @"Log out" : @"Log in",
+                          FBSDKAccessToken.currentAccessToken ? @"Log out" : @"Log in",
                           nil];
   // Show the sheet
   [sheet showInView:sender];
@@ -428,7 +428,7 @@ typedef void (^RPSBlock)(void);
       break;
     }
     case 3: { // Login and logout
-      if ([FBSDKAccessToken currentAccessToken]) {
+      if (FBSDKAccessToken.currentAccessToken) {
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         [login logOut];
       } else {
@@ -544,8 +544,8 @@ typedef void (^RPSBlock)(void);
                           return;
                         }
 
-                        if ([FBSDKAccessToken currentAccessToken]
-                            && [[FBSDKAccessToken currentAccessToken].permissions containsObject:@"publish_actions"]) {
+                        if (FBSDKAccessToken.currentAccessToken
+                            && [FBSDKAccessToken.currentAccessToken.permissions containsObject:@"publish_actions"]) {
                           if (successHandler) {
                             successHandler();
                           }
@@ -588,7 +588,7 @@ typedef void (^RPSBlock)(void);
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
                                                                  parameters:@{@"file" : _imagesToPublish[gesture]}
-                                                                tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                tokenString:FBSDKAccessToken.currentAccessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"POST"];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -605,8 +605,8 @@ typedef void (^RPSBlock)(void);
 - (void)publishResult
 {
   // Check if we have publish permissions and ask for them if we don't
-  if (![FBSDKAccessToken currentAccessToken]
-      || ![[FBSDKAccessToken currentAccessToken].permissions containsObject:@"publish_actions"]) {
+  if (!FBSDKAccessToken.currentAccessToken
+      || ![FBSDKAccessToken.currentAccessToken.permissions containsObject:@"publish_actions"]) {
     NSLog(@"Re-requesting permissions");
     _interestedInImplicitShare = NO;
     [self alertWithMessage:@"Share game activity with your friends?"

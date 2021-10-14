@@ -107,7 +107,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager
 {
-  BOOL isReauthorize = ([FBSDKAccessToken currentAccessToken] != nil);
+  BOOL isReauthorize = (FBSDKAccessToken.currentAccessToken != nil);
   BOOL willTryNative = NO;
   BOOL willTryBrowser = YES;
   NSString *behaviorString = @"FBSDKLoginBehaviorBrowser";

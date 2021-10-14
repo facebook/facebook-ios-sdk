@@ -1644,7 +1644,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 {
   [self.shared validateConfiguration];
 
-  accessToken = accessToken ?: [FBSDKAccessToken currentAccessToken];
+  accessToken = accessToken ?: FBSDKAccessToken.currentAccessToken;
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
   // 1) if the OS tells us that the user has Limited Ad Tracking, then just don't send, and return a nil in the token.
   // 2) if the app has set 'limitEventAndDataUsage', this effectively implies that app-initiated ad targeting shouldn't happen,

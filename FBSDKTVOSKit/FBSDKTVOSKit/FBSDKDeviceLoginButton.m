@@ -112,7 +112,7 @@
 - (void)_buttonPressed:(id)sender
 {
   UIViewController *parentViewController = [FBSDKInternalUtility.sharedUtility viewControllerForView:self];
-  if ([FBSDKAccessToken currentAccessToken]) {
+  if (FBSDKAccessToken.currentAccessToken) {
     NSString *title = nil;
 
     if (_userName) {
@@ -219,16 +219,16 @@
 
 - (void)_updateContent
 {
-  self.selected = ([FBSDKAccessToken currentAccessToken] != nil);
-  if ([FBSDKAccessToken currentAccessToken]) {
+  self.selected = (FBSDKAccessToken.currentAccessToken != nil);
+  if (FBSDKAccessToken.currentAccessToken) {
     [self setAttributedTitle:[self _logOutTitle] forState:UIControlStateFocused];
-    if (![[FBSDKAccessToken currentAccessToken].userID isEqualToString:_userID]) {
+    if (![FBSDKAccessToken.currentAccessToken.userID isEqualToString:_userID]) {
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
                                                                      parameters:nil
                                                                           flags:FBSDKGraphRequestFlagDisableErrorRecovery];
       [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
         NSString *userID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
-        if (!error && [[FBSDKAccessToken currentAccessToken].userID isEqualToString:userID]) {
+        if (!error && [FBSDKAccessToken.currentAccessToken.userID isEqualToString:userID]) {
           self->_userName = [FBSDKTypeUtility coercedToStringValue:result[@"name"]];
           self->_userID = userID;
         }

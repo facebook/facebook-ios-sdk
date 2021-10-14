@@ -52,7 +52,7 @@
 
   if (!_isPerformingLogin) {
     // Login with read permssions
-    FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+    FBSDKAccessToken *accessToken = FBSDKAccessToken.currentAccessToken;
     if (![accessToken.permissions containsObject:@"user_friends"]) {
       FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
       _isPerformingLogin = YES;
@@ -65,7 +65,7 @@
                                      return;
                                    }
 
-                                   FBSDKAccessToken *newToken = [FBSDKAccessToken currentAccessToken];
+                                   FBSDKAccessToken *newToken = FBSDKAccessToken.currentAccessToken;
                                    if (![newToken.permissions containsObject:@"user_friends"]) {
                                      // Show alert
                                      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"

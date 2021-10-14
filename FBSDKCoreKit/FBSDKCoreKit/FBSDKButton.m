@@ -168,7 +168,7 @@ static id _applicationActivationNotifier;
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters
                 isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+                       accessToken:FBSDKAccessToken.currentAccessToken];
 }
 
 - (void)checkImplicitlyDisabled

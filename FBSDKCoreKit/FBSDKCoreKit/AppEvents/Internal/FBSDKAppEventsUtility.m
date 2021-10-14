@@ -351,7 +351,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 + (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
 {
   if (!token) {
-    token = [FBSDKAccessToken currentAccessToken];
+    token = FBSDKAccessToken.currentAccessToken;
   }
 
   NSString *loggingOverrideAppID = [FBSDKAppEvents loggingOverrideAppID];

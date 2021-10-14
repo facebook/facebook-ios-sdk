@@ -254,7 +254,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   [FBSDKTypeUtility dictionary:parameters setObject:@"fbconnect://success" forKey:@"redirect_uri"];
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDKSettings.sharedSettings.appID forKey:@"app_id"];
   [FBSDKTypeUtility dictionary:parameters
-                     setObject:[FBSDKAccessToken currentAccessToken].tokenString
+                     setObject:FBSDKAccessToken.currentAccessToken.tokenString
                         forKey:@"access_token"];
   [parameters addEntriesFromDictionary:self.parameters];
   return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"

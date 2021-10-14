@@ -162,7 +162,7 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 
 + (void)refreshCurrentAccessTokenWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
 {
-  if ([FBSDKAccessToken currentAccessToken]) {
+  if (FBSDKAccessToken.currentAccessToken) {
     id<FBSDKGraphRequestConnecting> connection = [FBSDKAccessToken.graphRequestConnectionFactory createGraphRequestConnection];
     [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completion];
     [connection start];

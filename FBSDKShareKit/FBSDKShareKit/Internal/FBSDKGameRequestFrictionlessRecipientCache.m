@@ -82,7 +82,7 @@
 
 - (void)_updateCache
 {
-  if (![FBSDKAccessToken currentAccessToken]) {
+  if (!FBSDKAccessToken.currentAccessToken) {
     _recipientIDs = nil;
     return;
   }
