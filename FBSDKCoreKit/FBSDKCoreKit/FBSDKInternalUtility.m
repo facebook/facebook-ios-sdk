@@ -164,9 +164,9 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 }
 
 - (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
-                    grantedPermissions:(NSMutableSet *)grantedPermissions
-                   declinedPermissions:(NSMutableSet *)declinedPermissions
-                    expiredPermissions:(NSMutableSet *)expiredPermissions
+                    grantedPermissions:(NSMutableSet<NSString *> *)grantedPermissions
+                   declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
+                    expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions
 {
   NSArray *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
   if (resultData.count > 0) {
@@ -631,7 +631,7 @@ static NSMapTable *_transientObjects;
 
 - (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
-  static NSMutableSet *checkedSchemes = nil;
+  static NSMutableSet<NSString *> *checkedSchemes = nil;
   dispatch_once(&checkRegisteredCanOpenUrlSchemesToken, ^{
     checkedSchemes = [NSMutableSet set];
   });

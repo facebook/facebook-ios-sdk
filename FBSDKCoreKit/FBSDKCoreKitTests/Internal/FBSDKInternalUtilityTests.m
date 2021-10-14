@@ -191,9 +191,9 @@
 
 - (void)testParsingPermissionsWithFuzzyValues
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   // A lack of a runtime crash is considered a success here.
   for (int i = 0; i < 100; i++) {
@@ -206,9 +206,9 @@
 
 - (void)testExtractingPermissionsFromResponseWithInvalidTopLevelKey
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingTopLevelKey
                                                   grantedPermissions:grantedPermissions
@@ -221,9 +221,9 @@
 
 - (void)testExtractingPermissionsFromResponseWithMissingPermissions
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingPermissions
                                                   grantedPermissions:grantedPermissions
@@ -236,9 +236,9 @@
 
 - (void)testExtractingPermissionsFromResponseWithMissingStatus
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingStatus
                                                   grantedPermissions:grantedPermissions
@@ -251,9 +251,9 @@
 
 - (void)testExtractingPermissionsFromResponseWithValidPermissions
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.validAllStatuses
                                                   grantedPermissions:grantedPermissions

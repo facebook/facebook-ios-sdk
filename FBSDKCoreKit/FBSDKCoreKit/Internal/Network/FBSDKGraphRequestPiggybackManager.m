@@ -102,9 +102,9 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   if (!expectedToken) {
     return;
   }
-  __block NSMutableSet *permissions = nil;
-  __block NSMutableSet *declinedPermissions = nil;
-  __block NSMutableSet *expiredPermissions = nil;
+  __block NSMutableSet<NSString *> *permissions = nil;
+  __block NSMutableSet<NSString *> *declinedPermissions = nil;
+  __block NSMutableSet<NSString *> *expiredPermissions = nil;
   __block NSString *tokenString = nil;
   __block NSNumber *expirationDateNumber = nil;
   __block NSNumber *dataAccessExpirationDateNumber = nil;

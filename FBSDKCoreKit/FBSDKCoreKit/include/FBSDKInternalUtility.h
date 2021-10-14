@@ -108,9 +108,9 @@ NS_SWIFT_NAME(InternalUtility)
  @param declinedPermissions the set to add declined permissions to.
  */
 - (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
-                    grantedPermissions:(NSMutableSet *)grantedPermissions
-                   declinedPermissions:(NSMutableSet *)declinedPermissions
-                    expiredPermissions:(NSMutableSet *)expiredPermissions;
+                    grantedPermissions:(NSMutableSet<NSString *> *)grantedPermissions
+                   declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
+                    expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
 
 /**
   validates that the app ID is non-nil, throws an NSException if nil.

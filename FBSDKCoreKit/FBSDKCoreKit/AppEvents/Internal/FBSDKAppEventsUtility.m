@@ -310,7 +310,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static NSCharacterSet *firstCharacterSet;
   static NSCharacterSet *restOfStringCharacterSet;
   static dispatch_once_t onceToken;
-  static NSMutableSet *cachedIdentifiers;
+  static NSMutableSet<NSString *> *cachedIdentifiers;
   dispatch_once(&onceToken, ^{
     NSMutableCharacterSet *mutableSet = NSMutableCharacterSet.alphanumericCharacterSet;
     [mutableSet addCharactersInString:@"_"];

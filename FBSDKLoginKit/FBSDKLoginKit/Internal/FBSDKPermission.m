@@ -57,7 +57,7 @@
 
 + (NSSet<NSString *> *)rawPermissionsFromPermissions:(NSSet<FBSDKPermission *> *)permissions
 {
-  NSMutableSet *rawPermissions = [NSMutableSet new];
+  NSMutableSet<NSString *> *rawPermissions = [NSMutableSet new];
 
   for (FBSDKPermission *permission in permissions) {
     [rawPermissions addObject:permission.value];
