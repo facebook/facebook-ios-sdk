@@ -146,7 +146,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithAccessTokenWithIDToken
 {
-  NSMutableDictionary<NSString *, id> *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [self.parametersWithIDtoken mutableCopy];
   [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
@@ -210,7 +210,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithIDTokenAndNonce
 {
-  NSMutableDictionary<NSString *, id> *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [self.parametersWithIDtoken mutableCopy];
   [parameters addEntriesFromDictionary:self.parametersWithNonce];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
@@ -655,42 +655,42 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (NSDictionary<NSString *, id> *)rawParametersWithMissingNonce
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"nonce"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithNonce
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithAccessToken
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithIDtoken
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
   [parameters setValue:@"" forKey:@"access_token"];
   [parameters setValue:@"" forKey:@"id_token"];
@@ -700,7 +700,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (NSDictionary<NSString *, id> *)parametersWithStringExpirations
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
   [parameters setValue:[_parameters[@"expires"] stringValue] forKey:@"expires"];
   [parameters setValue:[_parameters[@"expires_at"] stringValue] forKey:@"expires_at"];
@@ -711,7 +711,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (NSDictionary<NSString *, id> *)parametersWithError
 {
-  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce"]];
   return parameters;
 }
