@@ -18,7 +18,7 @@
 
 import XCTest
 
-class FBSDKTimeSpentDataTests: XCTest {
+class TimeSpentDataTests: XCTestCase {
 
   let applicationName = "someApplication"
   let eventLogger = TestEventLogger()
@@ -37,10 +37,10 @@ class FBSDKTimeSpentDataTests: XCTest {
 
   func testSetSourceApplication() {
     timeSpentData.setSourceApplication(applicationName, isFromAppLink: true)
-    XCTAssertEqual(timeSpentData.sourceApplication, "AppLink(someApplication)")
+    XCTAssertEqual(timeSpentData.getSourceApplication(), "AppLink(someApplication)")
 
     timeSpentData.resetSourceApplication()
-    XCTAssertEqual(timeSpentData.sourceApplication, "Unclassified")
+    XCTAssertEqual(timeSpentData.getSourceApplication(), "Unclassified")
   }
 
   func testAppEventsParametersForDeactivate() {
