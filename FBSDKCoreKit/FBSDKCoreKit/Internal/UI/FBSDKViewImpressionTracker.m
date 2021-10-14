@@ -33,7 +33,7 @@
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
-@property (nonatomic) NSMutableSet *trackedImpressions;
+@property (nonatomic) NSMutableSet<NSDictionary<NSString *, id> *> *trackedImpressions;
 
 @end
 
@@ -132,7 +132,7 @@ static dispatch_once_t token;
   }
 }
 
-- (NSMutableSet *)trackedImpressions
+- (NSMutableSet<NSDictionary<NSString *, id> *> *)trackedImpressions
 {
   return _trackedImpressions;
 }

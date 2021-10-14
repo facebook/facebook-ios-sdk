@@ -64,7 +64,7 @@
     _isStarted = NO;
     _reactBindings = [NSMutableDictionary dictionary];
 
-    NSMutableSet *classes = [NSMutableSet set];
+    NSMutableSet<Class> *classes = [NSMutableSet set];
     [classes addObject:UIControl.class];
     [classes addObject:UITableView.class];
     [classes addObject:UICollectionView.class];
@@ -300,7 +300,7 @@
       } else if ([view isKindOfClass:UITableView.class]
                  && [delegate conformsToProtocol:@protocol(UITableViewDelegate)]) {
         void (^tableViewBlock)(void) = ^void () {
-          NSMutableSet *matchedBindings = [NSMutableSet set];
+          NSMutableSet<FBSDKEventBinding *> *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
               NSArray *shortPath = [binding.path
@@ -330,7 +330,7 @@
       } else if ([view isKindOfClass:UICollectionView.class]
                  && [delegate conformsToProtocol:@protocol(UICollectionViewDelegate)]) {
         void (^collectionViewBlock)(void) = ^void () {
-          NSMutableSet *matchedBindings = [NSMutableSet set];
+          NSMutableSet<FBSDKEventBinding *> *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
               NSArray *shortPath = [binding.path

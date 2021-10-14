@@ -509,7 +509,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (nullable NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode
                                                                     targetNode:(nullable NSObject *)targetNode
-                                                                 objAddressSet:(nullable NSMutableSet *)objAddressSet
+                                                                 objAddressSet:(nullable NSMutableSet<NSObject *> *)objAddressSet
                                                                           hash:(BOOL)hash
 {
   if (!currentNode) {

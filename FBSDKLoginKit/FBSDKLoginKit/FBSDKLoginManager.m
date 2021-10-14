@@ -643,7 +643,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
-  NSMutableSet *recentlyGrantedPermissions = [grantedPermissions mutableCopy];
+  NSMutableSet<FBSDKPermission *> *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
   NSSet<NSString *> *previouslyGrantedPermissions = [[self.tokenWallet currentAccessToken] permissions];
 
   // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
@@ -657,7 +657,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions
 {
-  NSMutableSet *recentlyDeclinedPermissions = [_requestedPermissions mutableCopy];
+  NSMutableSet<FBSDKPermission *> *recentlyDeclinedPermissions = _requestedPermissions.mutableCopy;
   [recentlyDeclinedPermissions intersectSet:declinedPermissions];
   return recentlyDeclinedPermissions;
 }
