@@ -130,7 +130,7 @@ static NSMutableArray *_pendingRequestors;
 - (void)resolveProducts
 {
   NSString *productId = self.transaction.payment.productIdentifier;
-  NSSet *productIdentifiers = [NSSet setWithObjects:productId, nil];
+  NSSet<NSString *> *productIdentifiers = [NSSet setWithObjects:productId, nil];
   self.productsRequest = [self.productRequestFactory createWithProductIdentifiers:productIdentifiers];
   self.productsRequest.delegate = self;
   @synchronized(self.class.pendingRequestors) {

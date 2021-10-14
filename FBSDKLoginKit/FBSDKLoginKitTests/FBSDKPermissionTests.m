@@ -63,10 +63,10 @@
 
 - (void)testRawPermissionsFromPermissions
 {
-  NSSet *permissions = [NSSet setWithArray:@[
+  NSSet<FBSDKPermission *> *permissions = [NSSet setWithArray:@[
     [[FBSDKPermission alloc] initWithString:@"email"],
     [[FBSDKPermission alloc] initWithString:@"public_profile"],
-                        ]];
+                                           ]];
 
   NSArray *rawPermissions = [FBSDKPermission rawPermissionsFromPermissions:permissions].allObjects;
   NSArray *expectedRawPermissions = @[@"email", @"public_profile"];
@@ -75,7 +75,7 @@
 
 - (void)testPermissionsFromValidRawPermissions
 {
-  NSSet *rawPermissions = [NSSet setWithArray:@[@"email", @"user_friends"]];
+  NSSet<NSString *> *rawPermissions = [NSSet setWithArray:@[@"email", @"user_friends"]];
 
   NSArray *permissions = [FBSDKPermission permissionsFromRawPermissions:rawPermissions].allObjects;
   NSArray *expectedPermissions = @[
@@ -87,7 +87,7 @@
 
 - (void)testPermissionsFromInvalidRawPermissions
 {
-  NSSet *rawPermissions = [NSSet setWithArray:@[@"email", @""]];
+  NSSet<NSString *> *rawPermissions = [NSSet setWithArray:@[@"email", @""]];
 
   NSArray *permissions = [FBSDKPermission permissionsFromRawPermissions:rawPermissions].allObjects;
   XCTAssertNil(permissions);
