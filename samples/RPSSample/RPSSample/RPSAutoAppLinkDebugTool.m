@@ -91,7 +91,7 @@ static const int frameHeight = 30;
     NSString *encodeData = [FBSDKUtility URLEncode:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
     NSString *encodeURL = [autoAppLink stringByAppendingString:encodeData];
     NSURL *url = [NSURL URLWithString:encodeURL];
-    if (![[UIApplication sharedApplication] openURL:url]) {
+    if (![UIApplication.sharedApplication openURL:url]) {
       [self showAlert:@"Cannot open the URL!"];
     }
   } else {

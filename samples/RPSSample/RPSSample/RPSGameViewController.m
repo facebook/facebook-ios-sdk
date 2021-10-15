@@ -76,7 +76,7 @@ typedef void (^RPSBlock)(void);
     self.title = NSLocalizedString(@"You Rock!", @"You Rock!");
     self.tabBarItem.image = [UIImage imageNamed:@"first"];
 
-    BOOL ipad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+    BOOL ipad = ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
     NSString *rockRight = ipad ? @"right-rock-128.png" : @"right-rock-88.png";
     NSString *paperRight = ipad ? @"right-paper-128.png" : @"right-paper-88.png";
@@ -220,7 +220,7 @@ typedef void (^RPSBlock)(void);
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
   // Return YES for supported orientations
-  if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+  if ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
   } else {
     return YES;
@@ -418,7 +418,7 @@ typedef void (^RPSBlock)(void);
     }
     case 2: { // See Friends
       UIViewController *friends;
-      if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      if ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         friends = [[RPSFriendsViewController alloc] initWithNibName:@"RPSFriendsViewController_iPhone" bundle:nil];
       } else {
         friends = [[RPSFriendsViewController alloc] initWithNibName:@"RPSFriendsViewController_iPad" bundle:nil];
@@ -495,7 +495,7 @@ typedef void (^RPSBlock)(void);
                       ok:@"Install or Upgrade Now"
                   cancel:@"Decide Later"
               completion:^{
-                [[UIApplication sharedApplication]
+                [UIApplication.sharedApplication
                  openURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.com/apps/%@", appName]]];
               }];
 }
