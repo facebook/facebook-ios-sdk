@@ -20,7 +20,7 @@
 
 /**
  @methodgroup Predefined event names for logging events common to many apps.  Logging occurs through the `logEvent` family of methods on `FBSDKAppEvents`.
- Common event parameters are provided in the `FBSDKAppEventsParameterNames*` constants.
+ Common event parameters are provided in the `FBSDKAppEventParameterName` constants.
  */
 
 /// typedef for FBSDKAppEventName

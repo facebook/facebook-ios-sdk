@@ -43,21 +43,6 @@ NS_SWIFT_NAME(AppEventsLoggingResult);
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
 
-/** Parameter key used to specify event name. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterEventName;
-
-/** Parameter key used to specify event log time. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLogTime;
-
-/** Parameter key used to specify the type of ad in an FBSDKAppEventNameAdImpression
- * or FBSDKAppEventNameAdClick event.
- * E.g. "banner", "interstitial", "rewarded_video", "native" */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType;
-
-/** Parameter key used to specify the unique ID for all events within a subscription
- * in an FBSDKAppEventNameSubscribe or FBSDKAppEventNameStartTrial event. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID;
-
 /**
 
 

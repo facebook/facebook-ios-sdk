@@ -23,7 +23,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
-#import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppEventParameterName+Internal.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKDataPersisting.h"
@@ -35,18 +35,6 @@
 
 static NSString *const FBSDKPaymentObserverOriginalTransactionKey = @"com.facebook.appevents.PaymentObserver.originalTransaction";
 static NSString *const FBSDKPaymentObserverDelimiter = @",";
-
-static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase = @"_implicitlyLogged";
-static NSString *const FBSDKAppEventParameterNameInAppPurchaseType = @"fb_iap_product_type";
-static NSString *const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
-static NSString *const FBSDKAppEventParameterNameOriginalTransactionID = @"fb_original_transaction_id";
-static NSString *const FBSDKAppEventParameterNameTransactionID = @"fb_transaction_id";
-static NSString *const FBSDKAppEventParameterNameTransactionDate = @"fb_transaction_date";
-static NSString *const FBSDKAppEventParameterNameSubscriptionPeriod = @"fb_iap_subs_period";
-static NSString *const FBSDKAppEventParameterNameIsStartTrial = @"fb_iap_is_start_trial";
-static NSString *const FBSDKAppEventParameterNameHasFreeTrial = @"fb_iap_has_free_trial";
-static NSString *const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_period";
-static NSString *const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
 
 static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_auto_log_subs";
 static int const FBSDKMaxParameterValueLength = 100;
@@ -427,7 +415,7 @@ static NSMutableArray *_pendingRequestors;
     }
   }
 
-  [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
+  [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterNameImplicitlyLoggedPurchase];
   [self.eventLogger logEvent:eventName
                   valueToSum:valueToSum
                   parameters:eventParameters];

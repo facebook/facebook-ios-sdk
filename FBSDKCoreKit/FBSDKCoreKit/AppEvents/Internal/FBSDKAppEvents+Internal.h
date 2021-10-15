@@ -25,18 +25,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** Use to log parameters for share tray use */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterShareTrayActivityName;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterShareTrayResult;
-
-/** Use to log parameters for live streaming*/
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingPrevStatus;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingStatus;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingError;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingVideoID;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingMicEnabled;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLiveStreamingCameraEnabled;
-
 // Internally known event parameter values
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;

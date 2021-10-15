@@ -21,7 +21,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
-#import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppEventParameterName+Internal.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -35,12 +35,6 @@ static NSString *const FBSDKTimeSpentPersistKeySessionSecondsSpent = @"secondsSp
 static NSString *const FBSDKTimeSpentPersistKeySessionNumInterruptions = @"numInterruptions";
 static NSString *const FBSDKTimeSpentPersistKeyLastSuspendTime = @"lastSuspendTime";
 static NSString *const FBSDKTimeSpentPersistKeySessionID = @"sessionID";
-
-static NSString *const FBSDKAppEventParameterNameSessionInterruptions = @"fb_mobile_app_interruptions";
-static NSString *const FBSDKAppEventParameterNameTimeBetweenSessions = @"fb_mobile_time_between_sessions";
-static NSString *const FBSDKAppEventParameterNameSessionID = @"_session_id";
-
-FBSDKAppEventParameterName FBSDKAppEventParameterLaunchSource = @"fb_mobile_launch_source";
 
 static const int SECS_PER_MIN = 60;
 static const int SECS_PER_HOUR = 60 * SECS_PER_MIN;
@@ -245,7 +239,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 - (NSDictionary<NSString *, id> *)appEventsParametersForActivate
 {
   return @{
-    FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
+    FBSDKAppEventParameterNameLaunchSource : [self getSourceApplication],
     FBSDKAppEventParameterNameSessionID : self.sessionID,
   };
 }
@@ -259,7 +253,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
   NSMutableDictionary<NSString *, id> *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
                                                     FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
-                                                    FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
+                                                    FBSDKAppEventParameterNameLaunchSource : [self getSourceApplication],
                                                     FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
   if (_lastSuspendTime) {
     [FBSDKTypeUtility dictionary:params setObject:@(_lastSuspendTime) forKey:@"_logTime"];

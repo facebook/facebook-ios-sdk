@@ -36,6 +36,7 @@
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "FBSDKAppEventName+Internal.h"
+#import "FBSDKAppEventParameterName+Internal.h"
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEvents+ApplicationActivating.h"
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"

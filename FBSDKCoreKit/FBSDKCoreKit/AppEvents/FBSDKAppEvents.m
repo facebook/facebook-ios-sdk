@@ -30,6 +30,7 @@
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventName+Internal.h"
+#import "FBSDKAppEventParameterName+Internal.h"
 #import "FBSDKAppEventParameterProduct.h"
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
@@ -77,42 +78,6 @@
 
 #endif
 
-//
-// Public event parameter names
-//
-
-FBSDKAppEventParameterName FBSDKAppEventParameterNameCurrency = @"fb_currency";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameRegistrationMethod = @"fb_registration_method";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameContentType = @"fb_content_type";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameContent = @"fb_content";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameContentID = @"fb_content_id";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameSearchString = @"fb_search_string";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameSuccess = @"fb_success";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameMaxRatingValue = @"fb_max_rating_value";
-FBSDKAppEventParameterName FBSDKAppEventParameterNamePaymentInfoAvailable = @"fb_payment_info_available";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameNumItems = @"fb_num_items";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameLevel = @"fb_level";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameDescription = @"fb_description";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType = @"ad_type";
-FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID = @"fb_order_id";
-
-// Public Event Parameters
-NSString *const FBSDKAppEventParameterEventName = @"_eventName";
-NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
-
-// Event Parameters internal to this file
-NSString *const FBSDKAppEventParameterShareTrayActivityName = @"fb_share_tray_activity";
-NSString *const FBSDKAppEventParameterShareTrayResult = @"fb_share_tray_result";
-NSString *const FBSDKAppEventParameterImplicitlyLogged = @"_implicitlyLogged";
-NSString *const FBSDKAppEventParameterInBackground = @"_inBackground";
-
-NSString *const FBSDKAppEventParameterLiveStreamingPrevStatus = @"live_streaming_prev_status";
-NSString *const FBSDKAppEventParameterLiveStreamingStatus = @"live_streaming_status";
-NSString *const FBSDKAppEventParameterLiveStreamingError = @"live_streaming_error";
-NSString *const FBSDKAppEventParameterLiveStreamingVideoID = @"live_streaming_video_id";
-NSString *const FBSDKAppEventParameterLiveStreamingMicEnabled = @"live_streaming_mic_enabled";
-NSString *const FBSDKAppEventParameterLiveStreamingCameraEnabled = @"live_streaming_camera_enabled";
-
 // Event parameter values internal to this file
 
 NSString *const FBSDKGateKeeperAppEventsKillSwitch = @"app_events_killswitch";
@@ -127,8 +92,6 @@ NSString *const FBSDKAppEventsOverrideAppIDBundleKey = @"FacebookLoggingOverride
 // Activities Endpoint Parameter
 static NSString *const FBSDKActivitesParameterPushDeviceToken = @"device_token";
 // Event Parameter
-static NSString *const FBSDKAppEventParameterPushCampaign = @"fb_push_campaign";
-static NSString *const FBSDKAppEventParameterPushAction = @"fb_push_action";
 // Payload Keys
 static NSString *const FBSDKAppEventsPushPayloadKey = @"fb_push_payload";
 static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
@@ -344,7 +307,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self instanceLogEvent:eventName
               valueToSum:valueToSum
               parameters:parameters
-      isImplicitlyLogged:[parameters[FBSDKAppEventParameterImplicitlyLogged] boolValue]
+      isImplicitlyLogged:[parameters[FBSDKAppEventParameterNameImplicitlyLogged] boolValue]
              accessToken:accessToken];
 }
 
@@ -419,9 +382,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     return;
   }
 
-  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
+  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterNamePushCampaign : campaign} mutableCopy];
   if (action && action.length > 0) {
-    [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterPushAction];
+    [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterNamePushAction];
   }
   [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
 }
@@ -1347,13 +1310,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                                                                   eventName:eventName];
 
   NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
-  [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterEventName];
-  if (!eventDictionary[FBSDKAppEventParameterLogTime]) {
-    [FBSDKTypeUtility dictionary:eventDictionary setObject:@([FBSDKAppEventsUtility unixTimeNow]) forKey:FBSDKAppEventParameterLogTime];
+  [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
+  if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:@([FBSDKAppEventsUtility unixTimeNow]) forKey:FBSDKAppEventParameterNameLogTime];
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:valueToSum forKey:@"_valueToSum"];
   if (isImplicitlyLogged) {
-    [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLogged];
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameImplicitlyLogged];
   }
 
   NSString *currentViewControllerName;
@@ -1377,7 +1340,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
   if (applicationState == UIApplicationStateBackground) {
-    [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterInBackground];
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameInBackground];
   }
 
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
