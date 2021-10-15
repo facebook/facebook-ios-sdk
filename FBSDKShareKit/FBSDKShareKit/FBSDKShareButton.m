@@ -78,7 +78,9 @@
          highlightedColor:nil];
 
   [self addTarget:self action:@selector(_share:) forControlEvents:UIControlEventTouchUpInside];
-  _dialog = [FBSDKShareDialog new];
+  _dialog = [[FBSDKShareDialog alloc] initWithViewController:nil
+                                                     content:nil
+                                                    delegate:nil];
 }
 
 - (BOOL)isImplicitlyDisabled

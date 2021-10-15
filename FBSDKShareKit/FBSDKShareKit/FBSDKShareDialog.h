@@ -47,6 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ShareDialog)
 @interface FBSDKShareDialog : NSObject <FBSDKSharingDialog>
 
+- (instancetype)init NS_UNAVAILABLE
+DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
++ (instancetype)new NS_UNAVAILABLE
+DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
+
 /**
   Convenience initializer to initialize an `FBSDKShareDialog` with a view controller, content and delegate.
  @param viewController A view controller from which to present the dialog, if appropriate.
