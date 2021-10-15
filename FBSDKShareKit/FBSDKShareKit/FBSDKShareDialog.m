@@ -267,7 +267,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
                                content:(nullable id<FBSDKSharingContent>)content
                               delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  if ((self = [super init])) {
+  if ((self = [self init])) {
     _fromViewController = viewController;
     _shareContent = content;
     _delegate = delegate;
