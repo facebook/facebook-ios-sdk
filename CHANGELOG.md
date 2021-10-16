@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 12.0.1
 
+**Note**: The Facebook SDK now requires Xcode 13. See #1911.
+
 - Fixed: Share Dialog not presenting for SDK 12.0.0 including for the FacebookShareSample app #1909
 
 [2021-10-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.0.1) |
