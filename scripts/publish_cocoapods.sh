@@ -30,14 +30,10 @@ push_specs_and_update() {
     # The "|| [[ $? == 1 ]]" prevents a non-zero exit from grep to cause the script to exit (due to "set -e")
     FOUND=$(pod trunk info "$spec" | grep "$CURRENT_VERSION" || [ $? = 1 ])
     if [ -z "$FOUND" ]; then
-      echo "Running: pod trunk push --allow-warnings $spec.podspec"
-      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
+      echo "Running: pod trunk push --allow-warnings --synchronous $spec.podspec"
+      pod trunk push --allow-warnings --synchronous "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
     fi
   done
-
-  rm -rf ~/Library/Caches/Cocoapods && \
-  rm -rf ~/.cocoapods/repos && \
-  pod repo update
 }
 
 # 1. FBSDKCoreKit_Basics
