@@ -287,9 +287,9 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
                                                  delegate:delegate];
 }
 
-+ (instancetype)showFromViewController:(UIViewController *)viewController
-                           withContent:(id<FBSDKSharingContent>)content
-                              delegate:(id<FBSDKSharingDelegate>)delegate
++ (instancetype)showFromViewController:(nullable UIViewController *)viewController
+                           withContent:(nullable id<FBSDKSharingContent>)content
+                              delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
   FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] initWithViewController:viewController
                                                                       content:content
