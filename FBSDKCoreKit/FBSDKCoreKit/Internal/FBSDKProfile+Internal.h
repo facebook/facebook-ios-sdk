@@ -48,8 +48,8 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
                            size:(CGSize)size;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;

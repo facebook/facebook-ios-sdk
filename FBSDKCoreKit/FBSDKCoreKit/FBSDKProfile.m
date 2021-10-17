@@ -600,12 +600,12 @@ static id<FBSDKSettings> _settings;
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [self.class loadProfileWithToken:token completion:completion graphRequest:request];
+  [self.class loadProfileWithToken:token graphRequest:request completion:completion];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
 {
   FBSDKParseProfileBlock parseBlock = ^void (id result, FBSDKProfile **profileRef) {
     if (profileRef == NULL
@@ -648,14 +648,14 @@ static id<FBSDKSettings> _settings;
     *profileRef = [profile copy];
   };
   [self.class loadProfileWithToken:token
-                        completion:completion
                       graphRequest:request
+                        completion:completion
                         parseBlock:parseBlock];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 {
   static id<FBSDKGraphRequestConnecting> executingRequestConnection = nil;
