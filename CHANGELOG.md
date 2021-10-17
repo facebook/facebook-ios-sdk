@@ -8,7 +8,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.1...HEAD)
 
+## 12.0.2
+
+- Updated release to be built with Xcode 12 for backwards compatibility with Xcode 12
+
+[2021-10-16](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.1...v12.0.2)
+
 ## 12.0.1
+
+**Note**: Binaries for v12.0.1 were built with Xcode 13 and will not work with Xcode 12. See #1911. Use release v12.0.2
+instead.
 
 - Fixed: Share Dialog not presenting for SDK 12.0.0 including for the FacebookShareSample app #1909
 
