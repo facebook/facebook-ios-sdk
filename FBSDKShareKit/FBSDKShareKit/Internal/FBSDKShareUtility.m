@@ -508,22 +508,4 @@
   return NO;
 }
 
-+ (BOOL)_validateAssetLibraryVideoURL:(NSURL *)videoURL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
-{
-  if (!videoURL || [videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
-    if (errorRef != NULL) {
-      *errorRef = nil;
-    }
-    return YES;
-  } else {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:videoURL
-                                                     message:nil];
-    }
-    return NO;
-  }
-}
-
 @end
