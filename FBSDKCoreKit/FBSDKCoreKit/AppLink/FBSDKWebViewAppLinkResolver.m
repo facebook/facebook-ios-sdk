@@ -20,12 +20,13 @@
 
 #import "FBSDKWebViewAppLinkResolver.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
 #import "FBSDKAppLink.h"
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import "FBSDKError+Internal.h"
+#import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 #import "NSURLSession+Protocols.h"
 
 /**
@@ -66,42 +67,6 @@ static NSString *const FBSDKWebViewAppLinkResolverIPhoneKey = @"iphone";
 static NSString *const FBSDKWebViewAppLinkResolverIPadKey = @"ipad";
 static NSString *const FBSDKWebViewAppLinkResolverWebURLKey = @"url";
 static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_fallback";
-
-@interface FBSDKWebViewAppLinkResolverWebViewDelegate : NSObject <WKNavigationDelegate>
-
-@property (nonatomic, copy) void (^didFinishLoad)(WKWebView *webView);
-@property (nonatomic, copy) void (^didFailLoadWithError)(WKWebView *webView, NSError *error);
-@property (nonatomic, assign) BOOL hasLoaded;
-
-@end
-
-@implementation FBSDKWebViewAppLinkResolverWebViewDelegate
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
-{
-  if (self.didFinishLoad) {
-    self.didFinishLoad(webView);
-  }
-}
-
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
-{
-  if (self.didFailLoadWithError) {
-    self.didFailLoadWithError(webView, error);
-  }
-}
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-{
-    if (self.hasLoaded) {
-        self.didFinishLoad(webView);
-        decisionHandler(WKNavigationActionPolicyCancel);
-    } else {
-        self.hasLoaded = YES;
-        decisionHandler(WKNavigationActionPolicyAllow);
-    }
-}
-
-@end
 
 @interface FBSDKWebViewAppLinkResolver ()
 
