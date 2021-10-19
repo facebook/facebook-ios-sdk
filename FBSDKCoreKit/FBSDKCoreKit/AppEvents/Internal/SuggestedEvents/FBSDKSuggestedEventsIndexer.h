@@ -29,6 +29,9 @@ NS_SWIFT_NAME(SuggestedEventsIndexer)
 
 @property (class, nonatomic, strong, readonly) FBSDKSuggestedEventsIndexer *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (void)enable;
 
 @end

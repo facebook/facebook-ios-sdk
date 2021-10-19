@@ -104,7 +104,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // MARK: - Dependencies
 
   func testDefaultDependencies() {
-    indexer = SuggestedEventsIndexer()
+    indexer = SuggestedEventsIndexer.shared
 
     XCTAssertTrue(
       indexer.graphRequestFactory is GraphRequestFactory,

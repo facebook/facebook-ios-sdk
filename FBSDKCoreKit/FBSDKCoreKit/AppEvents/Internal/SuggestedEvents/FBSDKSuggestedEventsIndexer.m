@@ -99,14 +99,14 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
+static FBSDKSuggestedEventsIndexer *sharedInstance;
+static dispatch_once_t sharedInstanceNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
-  static id instance;
-  dispatch_once(&nonce, ^{
-    instance = [self new];
+  dispatch_once(&sharedInstanceNonce, ^{
+    sharedInstance = [self new];
   });
-  return instance;
+  return sharedInstance;
 }
 
 - (void)enable
@@ -366,6 +366,11 @@ static dispatch_once_t setupNonce;
 {
   if (setupNonce) {
     setupNonce = 0;
+  }
+
+  // Reset the nonce so that a new instance will be created.
+  if (sharedInstanceNonce) {
+    sharedInstanceNonce = 0;
   }
 }
 
