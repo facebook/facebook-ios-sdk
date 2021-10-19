@@ -50,14 +50,14 @@
   _crashHandler = crashHandler;
 }
 
+static FBSDKInstrumentManager *sharedInstance;
+static dispatch_once_t sharedInstanceNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
-  static id instance;
-  dispatch_once(&nonce, ^{
-    instance = [self new];
+  dispatch_once(&sharedInstanceNonce, ^{
+    sharedInstance = [self new];
   });
-  return instance;
+  return sharedInstance;
 }
 
 - (void)enable
@@ -80,14 +80,12 @@
 
 #if DEBUG && FBTEST
 
-- (void)reset
++ (void)reset
 {
-  self.featureChecker = nil;
-  self.settings = nil;
-  self.crashObserver = nil;
-  self.errorReport = nil;
-  self.crashHandler = nil;
-  self.featureChecker = nil;
+  // Reset the shared instance nonce.
+  if (sharedInstanceNonce) {
+    sharedInstanceNonce = 0;
+  }
 }
 
 #endif

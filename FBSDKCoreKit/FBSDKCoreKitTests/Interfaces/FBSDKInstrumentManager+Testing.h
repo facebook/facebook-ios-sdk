@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) id<FBSDKErrorReporting> errorReport;
 @property (nullable, nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
-- (void)reset;
++ (void)reset;
 
 @end
 

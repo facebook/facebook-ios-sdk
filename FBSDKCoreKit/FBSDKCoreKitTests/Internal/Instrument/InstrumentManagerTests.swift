@@ -22,7 +22,7 @@ import XCTest
 
 class InstrumentManagerTests: XCTestCase {
 
-  var manager = InstrumentManager()
+  var manager = InstrumentManager.shared
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
   let errorReporter = TestErrorReport()
@@ -31,7 +31,7 @@ class InstrumentManagerTests: XCTestCase {
 
   override class func setUp() {
     super.setUp()
-    InstrumentManager.shared.reset()
+    InstrumentManager.reset()
   }
   override func setUp() {
     super.setUp()
@@ -46,7 +46,7 @@ class InstrumentManagerTests: XCTestCase {
   }
   override func tearDown() {
     super.tearDown()
-    InstrumentManager.shared.reset()
+    InstrumentManager.reset()
   }
 
   func testDefaultDependencies() {

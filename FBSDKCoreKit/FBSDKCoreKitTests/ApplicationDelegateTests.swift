@@ -371,7 +371,7 @@ class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingConfiguresInstrumentManager() throws {
-    InstrumentManager.shared.reset()
+    InstrumentManager.reset()
     delegate.initializeSDK(launchOptions: [:])
 
     let crashObserver = try XCTUnwrap(

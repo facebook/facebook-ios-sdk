@@ -32,6 +32,9 @@ NS_SWIFT_NAME(InstrumentManager)
 
 @property (class, nonatomic, readonly) FBSDKInstrumentManager *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                            settings:(id<FBSDKSettings>)settings
                       crashObserver:(id<FBSDKCrashObserving>)crashObserver
