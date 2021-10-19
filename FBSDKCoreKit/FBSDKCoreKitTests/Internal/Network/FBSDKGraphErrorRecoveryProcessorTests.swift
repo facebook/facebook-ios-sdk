@@ -19,42 +19,6 @@
 import TestTools
 import XCTest
 
-private class TestGraphErrorRecoveryProcessorDelegate: NSObject, GraphErrorRecoveryProcessorDelegate {
-
-  var wasRecoveryAttempted = false
-  var capturedProcessor: GraphErrorRecoveryProcessor?
-  var capturedDidRecover = false
-  var capturedError: NSError?
-
-  func processorDidAttemptRecovery(
-    _ processor: GraphErrorRecoveryProcessor,
-    didRecover: Bool,
-    error: Error?
-  ) {
-    wasRecoveryAttempted = true
-    capturedProcessor = processor
-    capturedDidRecover = didRecover
-    capturedError = error as NSError?
-  }
-}
-
-private class TestErrorRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
-
-  var capturedError: Error?
-  var capturedOptionIndex: UInt?
-  var capturedCompletion: ((Bool) -> Void)?
-
-  func attemptRecovery(
-    fromError error: Error,
-    optionIndex recoveryOptionIndex: UInt,
-    completionHandler: @escaping (Bool) -> Void
-  ) {
-    capturedError = error
-    capturedOptionIndex = recoveryOptionIndex
-    capturedCompletion = completionHandler
-  }
-}
-
 class FBSDKGraphErrorRecoveryProcessorTests: XCTestCase {
 
   private enum Keys {
