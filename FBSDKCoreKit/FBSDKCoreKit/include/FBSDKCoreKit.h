@@ -45,6 +45,7 @@
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
 #import <FBSDKCoreKit/FBSDKDynamicSocialFrameworkLoader.h>
 #import <FBSDKCoreKit/FBSDKError.h>
+#import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
 #import <FBSDKCoreKit/FBSDKFeatureChecking.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>

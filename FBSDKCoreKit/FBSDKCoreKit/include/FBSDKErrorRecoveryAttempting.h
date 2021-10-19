@@ -18,22 +18,25 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
-
-@class FBSDKErrorRecoveryConfiguration;
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ErrorRecoveryAttempter)
-@interface FBSDKErrorRecoveryAttempter : NSObject <FBSDKErrorRecoveryAttempting>
+/**
+ a formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
+ */
+NS_SWIFT_NAME(ErrorRecoveryAttempting)
+@protocol FBSDKErrorRecoveryAttempting<NSObject>
 
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
+/**
+ attempt the recovery
+ @param error the error
+ @param recoveryOptionIndex the selected option index
+ @param completionHandler the handler called upon completion of error recovery
 
-// can return nil if configuration is not supported.
-+ (nullable instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration;
-
+ Given that an error alert has been presented document-modally to the user, and the user has chosen one of the error's recovery options, attempt recovery from the error, and call the completion handler. The option index is an index into the error's array of localized recovery options. The value passed for didRecover must be YES if error recovery was completely successful, NO otherwise.
+ */
+- (void)attemptRecoveryFromError:(NSError *)error
+                     optionIndex:(NSUInteger)recoveryOptionIndex
+               completionHandler:(void (^)(BOOL didRecover))completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END
