@@ -22,7 +22,7 @@ import XCTest
 
 class FeatureManagerTests: XCTestCase {
 
-  var manager = FeatureManager()
+  var manager = FeatureManager.shared
   var store = UserDefaultsSpy()
   let settings = TestSettings()
   let userDefaultsPrefix = "com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature"

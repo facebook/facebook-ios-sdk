@@ -31,6 +31,9 @@ NS_SWIFT_NAME(FeatureManager)
 
 @property (class, nonatomic, strong, readonly) FBSDKFeatureManager *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               settings:(id<FBSDKSettings>)settings
                                  store:(id<FBSDKDataPersisting>)store

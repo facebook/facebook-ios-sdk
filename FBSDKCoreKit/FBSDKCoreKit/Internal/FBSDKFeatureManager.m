@@ -43,14 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 // from a type-based interface to an instance-based interface.
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
+static FBSDKFeatureManager *sharedInstance;
+static dispatch_once_t sharedInstanceNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
-  static id instance;
-  dispatch_once(&nonce, ^{
-    instance = [self new];
+  dispatch_once(&sharedInstanceNonce, ^{
+    sharedInstance = [self new];
   });
-  return instance;
+  return sharedInstance;
 }
 
 - (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
@@ -200,9 +200,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)reset
 {
-  self.shared.gateKeeperManager = nil;
-  self.shared.settings = nil;
-  self.shared.store = nil;
+  // Reset the nonce so that a new instance will be created.
+  if (sharedInstanceNonce) {
+    sharedInstanceNonce = 0;
+  }
 }
 
 #endif
