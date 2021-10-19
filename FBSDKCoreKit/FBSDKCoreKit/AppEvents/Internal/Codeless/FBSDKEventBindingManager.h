@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(EventBindingManager)
 @interface FBSDKEventBindingManager : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
                      eventLogger:(id<FBSDKEventLogging>)eventLogger;
 - (void)updateBindings:(NSArray *)bindings;

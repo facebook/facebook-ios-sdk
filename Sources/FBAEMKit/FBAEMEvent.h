@@ -27,8 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBAEMEvent : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly, copy) NSString *eventName;
-
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, NSNumber *> *values;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
 

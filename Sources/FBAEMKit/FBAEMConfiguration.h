@@ -35,20 +35,16 @@ NS_SWIFT_NAME(AEMConfiguration)
 
 /** The UNIX timestamp of config's valid date and works as a unqiue identifier of the config */
 @property (nonatomic, readonly, assign) NSInteger validFrom;
-
 @property (nonatomic, readonly, copy) NSString *defaultCurrency;
-
 @property (nonatomic, readonly, copy) NSString *configMode;
-
 @property (nullable, nonatomic, readonly, copy) NSString *businessID;
-
 @property (nullable, nonatomic, readonly, copy) id<FBAEMAdvertiserRuleMatching> matchingRule;
-
 @property (nonatomic, readonly) NSArray<FBAEMRule *> *conversionValueRules;
-
 @property (nonatomic, readonly) NSSet<NSString *> *eventSet;
-
 @property (nonatomic, readonly) NSSet<NSString *> *currencySet;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 + (void)configureWithRuleProvider:(id<FBAEMAdvertiserRuleProviding>)ruleProvider;
 

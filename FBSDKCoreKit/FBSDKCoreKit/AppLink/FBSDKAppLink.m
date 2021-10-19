@@ -18,7 +18,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLink_Internal.h"
+#import "FBSDKAppLink+Internal.h"
 
 NSString *const FBSDKAppLinkDataParameterName = @"al_applink_data";
 NSString *const FBSDKAppLinkTargetKeyName = @"target_url";

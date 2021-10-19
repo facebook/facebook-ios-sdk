@@ -33,6 +33,9 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 
 @property (class, nonatomic, readonly) FBSDKAppEventsConfigurationManager *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
                   settings:(id<FBSDKSettings>)settings
        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory

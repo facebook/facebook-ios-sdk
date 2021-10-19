@@ -34,6 +34,9 @@ NS_SWIFT_NAME(AEMAdvertiserMultiEntryRule)
 
 @property (nonatomic, readonly) NSArray<id<FBAEMAdvertiserRuleMatching>> *rules;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithOperator:(FBAEMAdvertiserRuleOperator)op
                            rules:(NSArray<id<FBAEMAdvertiserRuleMatching>> *)rules;
 

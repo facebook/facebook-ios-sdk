@@ -1136,11 +1136,16 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #if !TARGET_OS_TV
 - (void)enableCodelessEvents
 {
+  if (!self.swizzler) {
+    return;
+  }
+
   if (_serverConfiguration.isCodelessEventsEnabled) {
     [self.codelessIndexer enable];
 
     if (!_eventBindingManager) {
-      _eventBindingManager = [FBSDKEventBindingManager new];
+      _eventBindingManager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler
+                                                                    eventLogger:self];
     }
 
     if ([FBSDKInternalUtility.sharedUtility isUnity]) {

@@ -271,6 +271,16 @@
                ReferencedContainer = "container:FBAEMKit/FBAEMKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
+               BuildableName = "FacebookGamingServicesTests.xctest"
+               BlueprintName = "FacebookGamingServicesTests"
+               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -27,6 +27,7 @@ NS_SWIFT_NAME(RestrictiveDataFilterManager)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider NS_DESIGNATED_INITIALIZER;
 
 - (void)enable;

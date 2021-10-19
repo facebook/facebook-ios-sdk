@@ -30,6 +30,9 @@ NS_SWIFT_NAME(CodelessParameterComponent)
 @property (nonatomic, readonly) NSArray *path;
 @property (nonatomic, copy, readonly) NSString *pathType;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 - (BOOL)isEqualToParameter:(FBSDKCodelessParameterComponent *)parameter;
 

@@ -47,7 +47,7 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var graphAPIDebugParamValue: String?
   public var isAdvertiserTrackingEnabled = false
   public var loggingBehaviors = Set<LoggingBehavior>()
-  public var isCodelessDebugLogEnabled: Bool = false
+  public var isCodelessDebugLogEnabled = false
   public static var loggingBehaviors = Set<LoggingBehavior>()
 
   public var isDataProcessingRestricted: Bool {

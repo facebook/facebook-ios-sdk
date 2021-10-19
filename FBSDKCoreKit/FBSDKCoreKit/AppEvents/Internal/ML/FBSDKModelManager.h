@@ -38,6 +38,9 @@ NS_SWIFT_NAME(ModelManager)
 
 @property (class, nonnull, readonly) FBSDKModelManager *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (void)enable;
 - (nullable NSData *)getWeightsForKey:(NSString *)useCase;
 - (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;

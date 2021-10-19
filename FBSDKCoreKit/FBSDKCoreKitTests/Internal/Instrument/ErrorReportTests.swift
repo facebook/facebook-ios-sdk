@@ -49,7 +49,7 @@ class ErrorReportTests: XCTestCase {
   }
 
   func testCreatingWithDefaults() {
-    report = ErrorReport()
+    report = ErrorReport.shared
 
     XCTAssertTrue(
       report.graphRequestFactory is GraphRequestFactory,

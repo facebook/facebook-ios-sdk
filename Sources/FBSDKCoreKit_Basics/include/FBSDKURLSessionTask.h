@@ -37,9 +37,8 @@ NS_SWIFT_NAME(UrlSessionTask)
 @property (nonatomic, assign) uint64_t requestStartTime;
 @property (nonatomic, assign) NSUInteger loggerSerialNumber;
 
-+ (instancetype)new NS_UNAVAILABLE;
-
 - (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithRequest:(NSURLRequest *)request
                              fromSession:(id<FBSDKSessionProviding>)session

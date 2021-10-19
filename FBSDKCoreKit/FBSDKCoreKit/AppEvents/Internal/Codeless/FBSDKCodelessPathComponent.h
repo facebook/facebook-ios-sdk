@@ -44,6 +44,9 @@ NS_SWIFT_NAME(CodelessPathComponent)
 @property (nonatomic, readonly) int row;
 @property (nonatomic, readonly) int matchBitmask;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 - (BOOL)isEqualToPath:(FBSDKCodelessPathComponent *)path;
 

@@ -60,7 +60,7 @@
 
 - (void)setUp
 {
-  _metadataIndexer = [FBSDKMetadataIndexer new];
+  _metadataIndexer = FBSDKMetadataIndexer.shared;
   NSDictionary<NSString *, id> *rules = @{
     @"r1" : @{
       @"k" : @"email,e-mail,em,electronicmail",

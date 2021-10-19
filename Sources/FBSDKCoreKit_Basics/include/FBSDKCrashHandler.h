@@ -27,6 +27,9 @@ NS_SWIFT_NAME(CrashHandler)
 
 @property (class, nonatomic, readonly) FBSDKCrashHandler *shared;
 
+- (instancetype)init DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release.");
++ (instancetype)new DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release.");
+
 + (void)disable;
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer;

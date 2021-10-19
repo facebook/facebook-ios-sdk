@@ -22,7 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ObjectDecoder)
 @interface FBSDKObjectDecoder : NSObject <FBSDKObjectDecoding>
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWith:(NSKeyedUnarchiver *)unarchiver;
+
 @end
 
 NS_ASSUME_NONNULL_END

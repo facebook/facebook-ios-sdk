@@ -62,6 +62,15 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 @implementation FBSDKCrashHandler
 
+// Deprecating the method requires it to be implemented.
+// This should be removed in the next major release.
++ (instancetype)new
+{
+  return [[FBSDKCrashHandler alloc] init];
+}
+
+// Deprecating the method requires it to be implemented.
+// This should be removed in the next major release.
 - (instancetype)init
 {
   return [self initWithFileManager:NSFileManager.defaultManager
@@ -97,7 +106,10 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
   static dispatch_once_t nonce;
   static id instance;
   dispatch_once(&nonce, ^{
-    instance = [self new];
+    instance = [[self alloc] initWithFileManager:NSFileManager.defaultManager
+                                          bundle:NSBundle.mainBundle
+                               fileDataExtractor:NSData.class
+    ];
   });
   return instance;
 }

@@ -26,10 +26,11 @@ NS_SWIFT_NAME(AppEventsConfiguration)
 @interface FBSDKAppEventsConfiguration : NSObject<NSCopying, NSObject, NSSecureCoding>
 
 @property (nonatomic, readonly, assign) FBSDKAdvertisingTrackingStatus defaultATEStatus;
-
 @property (nonatomic, readonly, assign) BOOL advertiserIDCollectionEnabled;
-
 @property (nonatomic, readonly, assign) BOOL eventCollectionEnabled;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
 

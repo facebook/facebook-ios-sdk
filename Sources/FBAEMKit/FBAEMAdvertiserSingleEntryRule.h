@@ -31,14 +31,13 @@ NS_SWIFT_NAME(AEMAdvertiserSingleEntryRule)
 @interface FBAEMAdvertiserSingleEntryRule : NSObject<FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly, assign) FBAEMAdvertiserRuleOperator operator;
-
 @property (nonatomic, readonly) NSString *paramKey;
-
 @property (nullable, nonatomic, readonly) NSString *linguisticCondition;
-
 @property (nullable, nonatomic, readonly) NSNumber *numericalCondition;
-
 @property (nullable, nonatomic, readonly) NSArray *arrayCondition;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithOperator:(FBAEMAdvertiserRuleOperator)op
                         paramKey:(NSString *)paramKey

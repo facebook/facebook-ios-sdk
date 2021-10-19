@@ -43,7 +43,7 @@
   [super setUp];
 
   [FBSDKLoginManager resetTestEvidence];
-  self.logger = [TestLogger new];
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   self.frameworkLoader = [TestDylibResolver new];

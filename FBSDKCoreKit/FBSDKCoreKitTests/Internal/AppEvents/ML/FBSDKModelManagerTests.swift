@@ -21,7 +21,7 @@ import XCTest
 
 class FBSDKModelManagerTests: XCTestCase {
 
-  let manager = ModelManager()
+  let manager = ModelManager.shared
   let featureChecker = TestFeatureManager()
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"

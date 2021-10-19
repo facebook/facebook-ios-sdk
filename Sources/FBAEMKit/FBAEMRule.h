@@ -29,10 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBAEMRule : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic) NSInteger conversionValue;
-
 @property (nonatomic) NSInteger priority;
-
 @property (nonatomic, copy) NSArray<FBAEMEvent *> *events;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
 

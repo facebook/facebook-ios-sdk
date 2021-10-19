@@ -43,10 +43,6 @@ class TestLogger: Logger {
     super.init(loggingBehavior: loggingBehavior)
   }
 
-  override convenience init() {
-    self.init(loggingBehavior: .developerErrors)
-  }
-
   override class func singleShotLogEntry(_ loggingBehavior: LoggingBehavior, logEntry: String) {
     capturedLoggingBehavior = loggingBehavior
     capturedLogEntry = logEntry

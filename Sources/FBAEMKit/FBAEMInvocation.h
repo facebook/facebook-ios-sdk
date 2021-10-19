@@ -62,6 +62,9 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nonatomic, assign) BOOL isAggregated;
 
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+
 + (nullable instancetype)invocationWithAppLinkData:(nullable NSDictionary<id, id> *)applinkData;
 
 - (BOOL)attributeEvent:(NSString *)event

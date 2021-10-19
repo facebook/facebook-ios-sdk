@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(RestrictiveData)
 @interface FBSDKRestrictiveData : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithEventName:(FBSDKAppEventName)eventName params:(id)params;
 
 @property (nonatomic, readonly, copy) FBSDKAppEventName eventName;

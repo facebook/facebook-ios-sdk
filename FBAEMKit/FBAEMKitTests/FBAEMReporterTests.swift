@@ -54,7 +54,15 @@ class FBAEMReporterTests: XCTestCase {
     value: -2,
     to: Date()
   )! // swiftlint:disable:this force_unwrapping
-  var testInvocation = TestInvocation()
+  lazy var testInvocation = TestInvocation(
+    campaignID: name,
+    acsToken: name,
+    acsSharedSecret: nil,
+    acsConfigID: nil,
+    businessID: nil,
+    isTestMode: false,
+    hasSKAN: false
+  )
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this line_length force_unwrapping
 
@@ -471,17 +479,22 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
-  func testRecordAndUpdateEventsWithEmptyConfigs() {
+  func testRecordAndUpdateEventsWithEmptyConfigs() throws {
     AEMReporter.timestamp = date
-    AEMReporter.invocations = [testInvocation]
+    let unwrappedInvocation = try XCTUnwrap(testInvocation)
+    AEMReporter.invocations = [unwrappedInvocation]
 
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
-    guard
-      testInvocation.attributionCallCount == 0,
-      testInvocation.updateConversionCallCount == 0
-    else {
-      return XCTFail("Should update attribute and conversions")
-    }
+    XCTAssertEqual(
+      unwrappedInvocation.attributionCallCount,
+      0,
+      "Should not attribute events with empty configurations"
+    )
+    XCTAssertEqual(
+      unwrappedInvocation.updateConversionCallCount,
+      0,
+      "Should not update conversions with empty configurations"
+    )
   }
 
   func testLoadConfigurationWithBlock() {

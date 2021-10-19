@@ -24,7 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(MetadataIndexer)
 @interface FBSDKMetadataIndexer : NSObject
+
 @property (class, nonatomic, readonly) FBSDKMetadataIndexer *shared;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (void)enable;
 

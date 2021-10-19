@@ -33,6 +33,7 @@ NS_SWIFT_NAME(BackgroundEventLogger)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger NS_DESIGNATED_INITIALIZER;
 

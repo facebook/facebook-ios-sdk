@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAuthenticationToken (Internal)
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
                         graphDomain:(NSString *)graphDomain;

@@ -26,8 +26,10 @@ NS_SWIFT_NAME(SKAdNetworkEvent)
 @interface FBSDKSKAdNetworkEvent : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
-
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, NSNumber *> *values;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 

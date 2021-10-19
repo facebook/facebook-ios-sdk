@@ -38,13 +38,13 @@ private class TestGraphErrorRecoveryProcessorDelegate: NSObject, GraphErrorRecov
   }
 }
 
-private class TestErrorRecoveryAttempter: ErrorRecoveryAttempter {
+private class TestErrorRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
 
   var capturedError: Error?
   var capturedOptionIndex: UInt?
   var capturedCompletion: ((Bool) -> Void)?
 
-  override func attemptRecovery(
+  func attemptRecovery(
     fromError error: Error,
     optionIndex recoveryOptionIndex: UInt,
     completionHandler: @escaping (Bool) -> Void
@@ -71,7 +71,7 @@ class FBSDKGraphErrorRecoveryProcessorTests: XCTestCase {
       userInfo: [Keys.errorKey: transientCode]
     )
 
-    static func createRecoverable(attempter: ErrorRecoveryAttempter) -> NSError {
+    static func createRecoverable(attempter: ErrorRecoveryAttempting) -> NSError {
       NSError(
         domain: "test",
         code: recoverableCode,

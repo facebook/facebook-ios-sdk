@@ -28,8 +28,10 @@ NS_SWIFT_NAME(SKAdNetworkRule)
 @interface FBSDKSKAdNetworkRule : NSObject
 
 @property (nonatomic) NSInteger conversionValue;
-
 @property (nonatomic, copy) NSArray<FBSDKSKAdNetworkEvent *> *events;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 

@@ -32,20 +32,21 @@
 
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
 
-@property (nonatomic, strong) NSString *appID;
-@property (nonatomic, strong) TestURLSessionProxy *session;
-@property (nonatomic, strong) TestURLSessionProxyFactory *sessionFactory;
-@property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
-@property (nonatomic, strong) TestErrorConfigurationProvider *errorConfigurationProvider;
-@property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
-@property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
-@property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
-@property (nonatomic, strong) TestSettings *settings;
-@property (nonatomic, strong) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
-@property (nonatomic, strong) TestEventLogger *eventLogger;
-@property (nonatomic, strong) TestProcessInfo *processInfo;
-@property (nonatomic, strong) TestMacCatalystDeterminator *macCatalystDeterminator;
-@property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
+@property (nonatomic) NSString *appID;
+@property (nonatomic) TestURLSessionProxy *session;
+@property (nonatomic) TestURLSessionProxyFactory *sessionFactory;
+@property (nonatomic) TestErrorConfiguration *errorConfiguration;
+@property (nonatomic) TestErrorConfigurationProvider *errorConfigurationProvider;
+@property (nonatomic) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
+@property (nonatomic) TestGraphRequestPiggybackManager *piggybackManager;
+@property (nonatomic) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
+@property (nonatomic) TestEventLogger *eventLogger;
+@property (nonatomic) TestProcessInfo *processInfo;
+@property (nonatomic) TestMacCatalystDeterminator *macCatalystDeterminator;
+@property (nonatomic) TestLogger *logger;
+@property (nonatomic) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(id<FBSDKGraphRequestConnecting> connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(id<FBSDKGraphRequestConnecting> connection, NSError *error);
@@ -78,6 +79,7 @@
   self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                piggybackManagerProvider:self.piggybackManagerProvider
@@ -538,7 +540,7 @@
   [self.connection appendAttachments:@{ self.name : @"foo" }
                               toBody:body
                          addFormData:NO
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertNil(
     body.capturedKey,
     "Should not append strings if the attachment type is not form data"
@@ -555,7 +557,7 @@
   [self.connection appendAttachments:@{ self.name : @"foo" }
                               toBody:body
                          addFormData:YES
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedKey,
     self.name,
@@ -571,7 +573,7 @@
   [self.connection appendAttachments:@{ self.name : image }
                               toBody:body
                          addFormData:NO
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedImage,
     image,
@@ -582,7 +584,7 @@
   [self.connection appendAttachments:@{ self.name : image }
                               toBody:body
                          addFormData:YES
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedImage,
     image,
@@ -597,7 +599,7 @@
   [self.connection appendAttachments:@{ self.name : data }
                               toBody:body
                          addFormData:NO
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedData,
     data,
@@ -608,7 +610,7 @@
   [self.connection appendAttachments:@{ self.name : data }
                               toBody:body
                          addFormData:YES
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedData,
     data,
@@ -626,7 +628,7 @@
   [self.connection appendAttachments:@{ self.name : attachment }
                               toBody:body
                          addFormData:NO
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedAttachment,
     attachment,
@@ -637,7 +639,7 @@
   [self.connection appendAttachments:@{ self.name : attachment }
                               toBody:body
                          addFormData:YES
-                              logger:[FBSDKLogger new]];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedAttachment,
     attachment,

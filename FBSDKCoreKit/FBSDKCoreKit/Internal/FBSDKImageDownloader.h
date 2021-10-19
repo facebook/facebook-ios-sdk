@@ -37,6 +37,9 @@ NS_SWIFT_NAME(ImageDownloader)
 
 @property (class, nonatomic, strong, readonly) FBSDKImageDownloader *sharedInstance;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 /*
   download an image or retrieve it from cache
  @param url the url to download

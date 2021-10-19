@@ -32,6 +32,9 @@ NS_SWIFT_NAME(ErrorReport)
 
 @property (class, nonatomic, readonly) FBSDKErrorReport *shared;
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (void)saveError:(NSInteger)errorCode
       errorDomain:(NSErrorDomain)errorDomain
           message:(nullable NSString *)message;

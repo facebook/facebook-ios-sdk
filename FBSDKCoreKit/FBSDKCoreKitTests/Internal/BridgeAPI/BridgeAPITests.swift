@@ -22,7 +22,7 @@ import XCTest
 class BridgeAPITests: XCTestCase {
 
   let processInfo = TestProcessInfo()
-  let logger = TestLogger()
+  let logger = TestLogger(loggingBehavior: .developerErrors)
   let urlOpener = TestInternalURLOpener()
   let responseFactory = TestBridgeAPIResponseFactory()
   let frameworkLoader = TestDylibResolver()

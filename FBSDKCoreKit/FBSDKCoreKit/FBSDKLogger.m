@@ -40,6 +40,20 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 
 // Lifetime
 
+// Deprecating the method requires it to be implemented.
+// This should be removed in the next major release.
++ (instancetype)new
+{
+  return [super new];
+}
+
+// Deprecating the method requires it to be implemented.
+// This should be removed in the next major release.
+- (instancetype)init
+{
+  return [super init];
+}
+
 - (instancetype)initWithLoggingBehavior:(NSString *)loggingBehavior
 {
   if ((self = [super init])) {

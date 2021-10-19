@@ -33,6 +33,7 @@
 @property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestInternalUtility *appURLSchemeProvider;
+@property (nonatomic) TestLogger *logger;
 
 @end
 
@@ -46,8 +47,9 @@
   _bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   _frameworkLoader = [TestDylibResolver new];
   _appURLSchemeProvider = [TestInternalUtility new];
+  _logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
-                                              logger:[TestLogger new]
+                                              logger:self.logger
                                            urlOpener:self.urlOpener
                             bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                      frameworkLoader:self.frameworkLoader
