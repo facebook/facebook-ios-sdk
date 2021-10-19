@@ -82,3 +82,6 @@ buck-out/
 .buckd/
 
 infer-out
+
+# Swift Package Manager
+scripts/Runner/Package.resolved
