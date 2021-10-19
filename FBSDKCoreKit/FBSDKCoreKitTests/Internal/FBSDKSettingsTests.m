@@ -46,13 +46,6 @@
 static NSString *const emptyString = @"";
 static NSString *const whiteSpaceToken = @"   ";
 
-+ (void)setUp
-{
-  [super setUp];
-
-  [FBSDKSettings reset];
-}
-
 - (void)setUp
 {
   [super setUp];
@@ -73,7 +66,7 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [super tearDown];
 
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
 }
 
 - (void)testDefaultGraphAPIVersion
@@ -1354,15 +1347,15 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDataProcessingOptionDefaults
 {
-  FBSDKSettings.dataProcessingOptions = @[];
+  self.settings.dataProcessingOptions = @[];
 
   XCTAssertEqualObjects(
-    FBSDKSettings.dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY],
+    FBSDKSettings.sharedSettings.persistableDataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY],
     @0,
     "Country should default to zero when not provided"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE],
+    FBSDKSettings.sharedSettings.persistableDataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE],
     @0,
     "State should default to zero when not provided"
   );
@@ -1370,24 +1363,24 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingEmptyDataProcessingOptions
 {
-  FBSDKSettings.dataProcessingOptions = @[];
+  self.settings.dataProcessingOptions = @[];
 
   XCTAssertNotNil(
-    FBSDKSettings.dataProcessingOptions,
+    self.settings.persistableDataProcessingOptions,
     "Should not be able to set data processing options to an empty list of options but you can"
   );
 }
 
 - (void)testSettingInvalidDataProcessOptions
 {
-  FBSDKSettings.dataProcessingOptions = @[@"Foo", @"Bar"];
+  self.settings.dataProcessingOptions = @[@"Foo", @"Bar"];
 
   XCTAssertNotNil(
-    FBSDKSettings.dataProcessingOptions,
+    self.settings.persistableDataProcessingOptions,
     "Should not be able to set data processing options to invalid list of options but you can"
   );
 
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:FBSDKSettings.dataProcessingOptions];
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.settings.persistableDataProcessingOptions];
 
   XCTAssertEqualObjects(
     self.userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsDataProcessingOptions"],
@@ -1403,17 +1396,17 @@ static NSString *const whiteSpaceToken = @"   ";
   [FBSDKSettings setDataProcessingOptions:@[] country:countryCode state:stateCode];
 
   XCTAssertEqualObjects(
-    FBSDKSettings.dataProcessingOptions[DATA_PROCESSING_OPTIONS],
+    self.settings.persistableDataProcessingOptions[DATA_PROCESSING_OPTIONS],
     @[],
     "Should use the provided array of processing options"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY],
+    self.settings.persistableDataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY],
     @(countryCode),
     "Should use the provided country code"
   );
   XCTAssertEqualObjects(
-    FBSDKSettings.dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE],
+    self.settings.persistableDataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE],
     @(stateCode),
     "Should use the provided state code"
   );
@@ -1422,7 +1415,7 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testDataProcessingOptionsWithEmptyCache
 {
   XCTAssertNil(
-    FBSDKSettings.dataProcessingOptions,
+    self.settings.persistableDataProcessingOptions,
     "Should not be able to get data processing options if there is none cached"
   );
   XCTAssertEqualObjects(
@@ -1438,17 +1431,17 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDataProcessingOptionsWithNonEmptyCache
 {
-  FBSDKSettings.dataProcessingOptions = @[];
+  self.settings.dataProcessingOptions = @[];
 
   // Reset internal storage
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKSettings configureWithStore:self.userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:[TestBundle new]
                         eventLogger:[TestEventLogger new]];
 
   XCTAssertNotNil(
-    FBSDKSettings.dataProcessingOptions,
+    self.settings.persistableDataProcessingOptions,
     "Should be able to retrieve data processing options from the cache"
   );
   XCTAssertEqualObjects(
@@ -1464,9 +1457,9 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testDataProcessingOptionsInternalStorage
 {
-  FBSDKSettings.dataProcessingOptions = @[];
+  self.settings.dataProcessingOptions = @[];
 
-  XCTAssertNotNil(FBSDKSettings.dataProcessingOptions, "sanity check");
+  XCTAssertNotNil(self.settings.persistableDataProcessingOptions, "sanity check");
   XCTAssertNil(
     self.userDefaultsSpy.capturedObjectRetrievalKey,
     "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1613,13 +1606,13 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsDataProcessingRestricted
 {
-  FBSDKSettings.dataProcessingOptions = @[@"LDU"];
+  self.settings.dataProcessingOptions = @[@"LDU"];
   XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
-  FBSDKSettings.dataProcessingOptions = @[];
+  self.settings.dataProcessingOptions = @[];
   XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
-  FBSDKSettings.dataProcessingOptions = @[@"ldu"];
+  self.settings.dataProcessingOptions = @[@"ldu"];
   XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
-  FBSDKSettings.dataProcessingOptions = nil;
+  self.settings.dataProcessingOptions = nil;
   XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
 }
 

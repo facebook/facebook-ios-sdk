@@ -37,7 +37,7 @@
 
   self.bundle = [TestBundle new];
 
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:self.bundle
@@ -50,7 +50,7 @@
 
 - (void)tearDown
 {
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [TestLogger reset];
   FBSDKInternalUtility.loggerType = FBSDKLogger.class;
 

@@ -40,13 +40,13 @@ class SettingsTests: XCTestCase {
   override func tearDown() {
     super.tearDown()
 
-    Settings.reset()
+    Settings.shared.reset()
     TestAppEventsConfigurationProvider.reset()
     TestAppEventsConfiguration.reset()
   }
 
   func testDefaultStore() {
-    Settings.reset()
+    Settings.shared.reset()
     XCTAssertNil(
       Settings.store,
       "Settings should not have a default data store"
@@ -61,7 +61,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testDefaultAppEventsConfigurationProvider() {
-    Settings.reset()
+    Settings.shared.reset()
     XCTAssertNil(
       Settings.appEventsConfigurationProvider,
       "Settings should not have a default app events configuration provider"
@@ -76,7 +76,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testDefaultInfoDictionaryProvider() {
-    Settings.reset()
+    Settings.shared.reset()
     XCTAssertNil(
       Settings.infoDictionaryProvider,
       "Settings should not have a default info dictionary provider"
@@ -91,7 +91,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testDefaultEventLogger() {
-    Settings.reset()
+    Settings.shared.reset()
     XCTAssertNil(
       Settings.eventLogger,
       "Settings should not have a default event logger"

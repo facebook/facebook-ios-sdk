@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL isConfigured;
 
-+ (void)reset;
+- (void)reset;
 + (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled;
 
 @end

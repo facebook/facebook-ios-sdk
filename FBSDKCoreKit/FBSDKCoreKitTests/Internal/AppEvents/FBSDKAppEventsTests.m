@@ -191,7 +191,7 @@
 
 - (void)tearDown
 {
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestGateKeeperManager reset];

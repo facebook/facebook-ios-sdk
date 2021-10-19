@@ -40,14 +40,14 @@
 {
   [super setUp];
 
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
 }
 
 - (void)tearDown
 {
   [super tearDown];
 
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
 }
 
 - (void)testCreatingWithMissingParametersWithTrackingEnabled

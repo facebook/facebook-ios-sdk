@@ -33,7 +33,7 @@ appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)prov
                eventLogger:(id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 
-+ (void)reset;
+- (void)reset;
 
 @end
 

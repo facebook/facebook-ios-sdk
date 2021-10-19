@@ -542,7 +542,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 - (void)testInitializingSdkConfiguresSettings
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *store = (NSObject *) FBSDKSettings.store;

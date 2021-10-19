@@ -61,7 +61,7 @@ class DeviceLoginManagerTests: XCTestCase {
   }
 
   override func tearDown() {
-    Settings.reset()
+    Settings.shared.reset()
 
     super.tearDown()
   }

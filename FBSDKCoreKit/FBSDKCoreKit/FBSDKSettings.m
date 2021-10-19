@@ -85,8 +85,6 @@ static NSString *const FBSDKSettingsUseCachedValuesForExpensiveMetadata = @"com.
 static NSString *const FBSDKSettingsUseTokenOptimizations = @"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations";
 static NSString *const FacebookSKAdNetworkReportEnabled = @"FacebookSKAdNetworkReportEnabled";
 
-static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
-
 //
 // Warning messages for App Event Flags
 //
@@ -111,7 +109,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
 @property (nonatomic) BOOL isConfigured;
-
+@property (nullable, nonatomic) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
 @end
 
 @implementation FBSDKSettings
@@ -534,12 +532,24 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
 {
-  [FBSDKSettings setDataProcessingOptions:options country:0 state:0];
+  [self.sharedSettings setDataProcessingOptions:options];
+}
+
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+{
+  [self setDataProcessingOptions:options country:0 state:0];
+}
+
++ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state
+{
+  [self.sharedSettings setDataProcessingOptions:options country:country state:state];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state
 {
@@ -548,8 +558,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     DATA_PROCESSING_OPTIONS_COUNTRY : @(country),
     DATA_PROCESSING_OPTIONS_STATE : @(state),
   };
-  g_dataProcessingOptions = json;
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:g_dataProcessingOptions];
+  self.persistableDataProcessingOptions = json;
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json];
   if (data) {
     [self.store setObject:data
                    forKey:FBSDKSettingsDataProcessingOptions];
@@ -660,22 +670,22 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (NSDictionary<NSString *, id> *)dataProcessingOptions
+- (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
 {
-  if (!g_dataProcessingOptions) {
+  if (!_persistableDataProcessingOptions) {
     NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
-    if ([data isKindOfClass:NSData.class]) {
+    if (data && [data isKindOfClass:NSData.class]) {
       if (@available(iOS 11.0, tvOS 11.0, *)) {
-        g_dataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
+        _persistableDataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
       } else {
-        NSDictionary<NSString *, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary<NSString *, id> class]]) {
-          g_dataProcessingOptions = dataProcessingOptions;
+        NSDictionary<NSString *, id> *persistableDataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (persistableDataProcessingOptions && [persistableDataProcessingOptions isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+          _persistableDataProcessingOptions = persistableDataProcessingOptions;
         }
       }
     }
   }
-  return g_dataProcessingOptions;
+  return _persistableDataProcessingOptions;
 }
 
 #pragma clang diagnostic pop
@@ -687,7 +697,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isDataProcessingRestricted
 {
-  NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:[FBSDKSettings dataProcessingOptions]
+  NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:self.persistableDataProcessingOptions ?: @{}
                                                  objectForKey:DATA_PROCESSING_OPTIONS
                                                        ofType:NSArray.class];
   for (NSString *option in options) {
@@ -836,12 +846,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #if DEBUG && FBTEST
 
-+ (void)reset
-{
-  [self.sharedSettings reset];
-  g_dataProcessingOptions = nil;
-}
-
 - (void)reset
 {
   // Reset the nonce so that a new instance will be created.
@@ -849,6 +853,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     sharedSettingsNonce = 0;
   }
   _loggingBehaviors = nil;
+  self.persistableDataProcessingOptions = nil;
 }
 
 + (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider

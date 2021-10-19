@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
+@property (nonatomic, nullable) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
 
 + (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store
   appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
@@ -49,8 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus;
 
 + (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
-
-+ (nullable NSDictionary<NSString *, id> *)dataProcessingOptions;
 
 + (BOOL)isDataProcessingRestricted;
 

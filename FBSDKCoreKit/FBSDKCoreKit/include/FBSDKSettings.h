@@ -342,7 +342,15 @@ Set the data processing options.
 
 @param options list of options
 */
-+ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
++ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+DEPRECATED_MSG_ATTRIBUTE("`Settings.setDataProcessingOptions(_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.setDataProcessingOptions(_:)` method to set the data processing options instead");
+
+/**
+Set the data processing options.
+
+@param options list of options
+*/
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
 
 /**
 Set the data processing options.
@@ -352,6 +360,18 @@ Set the data processing options.
 @param state code of the state
 */
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state
+DEPRECATED_MSG_ATTRIBUTE("`Settings.setDataProcessingOptions(_:_:_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.setDataProcessingOptions(_:_:_:)` method to set the data processing options instead");
+
+/**
+Set the data processing options.
+
+@param options list of the options
+@param country code of the country
+@param state code of the state
+*/
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state;
 

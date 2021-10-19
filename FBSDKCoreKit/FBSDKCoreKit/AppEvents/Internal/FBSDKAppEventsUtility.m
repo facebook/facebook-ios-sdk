@@ -125,7 +125,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
 
-  NSDictionary<NSString *, id> *dataProcessingOptions = [FBSDKSettings dataProcessingOptions];
+  NSDictionary<NSString *, id> *dataProcessingOptions = FBSDKSettings.sharedSettings.persistableDataProcessingOptions;
   if (dataProcessingOptions) {
     NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
     if (options && [options isKindOfClass:NSArray.class]) {

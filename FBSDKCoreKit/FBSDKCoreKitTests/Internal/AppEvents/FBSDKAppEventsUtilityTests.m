@@ -120,9 +120,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [TestAppEventsConfigurationProvider reset];
   [TestGateKeeperManager reset];
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKAppEventsConfigurationManager reset];
-
   [super tearDown];
 }
 
@@ -205,7 +204,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents.shared clearUserData];
 */
   FBSDKSettings.sharedSettings.isEventDataUsageLimited = YES;
-  [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
+  [FBSDKSettings.sharedSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
                                            shouldAccessAdvertisingID:NO];
   XCTAssertEqualObjects(@"event2", dict[@"event"]);
@@ -216,7 +215,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:1]]);
 
   FBSDKSettings.sharedSettings.isEventDataUsageLimited = NO;
-  FBSDKSettings.dataProcessingOptions = @[];
+  FBSDKSettings.sharedSettings.dataProcessingOptions = @[];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                            shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -295,7 +294,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
     configuration.defaultATEStatus = defaultATEStatus.unsignedIntegerValue;
     for (NSNumber *status in statusList) {
       TestAppEventsConfigurationProvider.stubbedConfiguration = configuration;
-      [FBSDKSettings reset];
+      [FBSDKSettings.sharedSettings reset];
       [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
          appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
                  infoDictionaryProvider:[TestBundle new]

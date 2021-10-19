@@ -88,7 +88,7 @@ NSString *const heightKey = @"height";
 - (void)resetCaches
 {
   [FBSDKProfile resetCurrentProfileCache];
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKProfile reset];
   [TestAccessTokenWallet reset];
 }

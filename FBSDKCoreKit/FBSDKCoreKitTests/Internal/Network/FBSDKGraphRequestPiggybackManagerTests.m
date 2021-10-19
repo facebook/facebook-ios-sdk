@@ -70,7 +70,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [TestAccessTokenWallet reset];
   [FBSDKGraphRequestPiggybackManager reset];
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
 }
 
 // MARK: - Defaults
