@@ -23,6 +23,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKNetworkErrorChecker.h"
 
 @interface FBSDKError ()
 
@@ -209,25 +210,8 @@ static id<FBSDKErrorReporting> _errorReporter;
 
 + (BOOL)isNetworkError:(NSError *)error
 {
-  NSError *innerError = error.userInfo[NSUnderlyingErrorKey];
-  if (innerError && [self isNetworkError:innerError]) {
-    return YES;
-  }
-
-  switch (error.code) {
-    case NSURLErrorTimedOut:
-    case NSURLErrorCannotFindHost:
-    case NSURLErrorCannotConnectToHost:
-    case NSURLErrorNetworkConnectionLost:
-    case NSURLErrorDNSLookupFailed:
-    case NSURLErrorNotConnectedToInternet:
-    case NSURLErrorInternationalRoamingOff:
-    case NSURLErrorCallIsActive:
-    case NSURLErrorDataNotAllowed:
-      return YES;
-    default:
-      return NO;
-  }
+  FBSDKNetworkErrorChecker *checker = [FBSDKNetworkErrorChecker new];
+  return [checker isNetworkError:error];
 }
 
 #if DEBUG && FBTEST

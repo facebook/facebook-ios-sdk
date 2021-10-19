@@ -18,7 +18,7 @@
 
 import XCTest
 
-class FBSDKErrorTests: XCTestCase {
+class SDKErrorTests: XCTestCase {
 
   let errorReporter = TestErrorReport()
   let code = Int.random(in: 1...500)
