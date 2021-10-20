@@ -18,19 +18,44 @@
 
 #if !TARGET_OS_TV
 
+#import "FBSDKURL+Internal.h"
+
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkTarget.h"
 #import "FBSDKMeasurementEvent_Internal.h"
-#import "FBSDKSettings.h"
-#import "FBSDKURL_Internal.h"
+#import "FBSDKSettingsProtocol.h"
 
 NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 
 @implementation FBSDKURL
 
-- (nullable instancetype)initWithURL:(NSURL *)url forOpenInboundURL:(BOOL)forOpenURLEvent sourceApplication:(NSString *)sourceApplication forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
+// MARK: Dependencies
+
+static id<FBSDKSettings> _settings;
+
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+// MARK: Initializers
+
+- (nullable instancetype)initWithURL:(NSURL *)url
+                   forOpenInboundURL:(BOOL)forOpenURLEvent
+                   sourceApplication:(NSString *)sourceApplication
+          forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
 {
   self = [super init];
   if (!self) {
@@ -119,16 +144,6 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
   return self;
 }
 
-- (BOOL)isAutoAppLink
-{
-  NSString *host = self.targetURL.host;
-  NSString *scheme = self.targetURL.scheme;
-  NSString *expectedHost = @"applinks";
-  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
-  BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
-  return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
-}
-
 + (instancetype)URLWithURL:(NSURL *)url
 {
   return [[FBSDKURL alloc] initWithURL:url forOpenInboundURL:NO sourceApplication:nil forRenderBackToReferrerBar:NO];
@@ -142,6 +157,18 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 + (instancetype)URLForRenderBackToReferrerBarURL:(NSURL *)url
 {
   return [[FBSDKURL alloc] initWithURL:url forOpenInboundURL:NO sourceApplication:nil forRenderBackToReferrerBar:YES];
+}
+
+// MARK: Methods
+
+- (BOOL)isAutoAppLink
+{
+  NSString *host = self.targetURL.host;
+  NSString *scheme = self.targetURL.scheme;
+  NSString *expectedHost = @"applinks";
+  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKURL.settings.appID];
+  BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
+  return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
 }
 
 + (NSDictionary<NSString *, id> *)queryParametersForURL:(NSURL *)url
@@ -165,6 +192,15 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
   }
   return [NSDictionary<NSString *, id> dictionaryWithDictionary:parameters];
 }
+
+#if DEBUG && FBTEST
+
++ (void)reset
+{
+  self.settings = nil;
+}
+
+#endif
 
 @end
 

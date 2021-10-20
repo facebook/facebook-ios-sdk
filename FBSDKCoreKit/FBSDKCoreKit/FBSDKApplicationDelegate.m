@@ -99,6 +99,7 @@
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+AppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
+ #import "FBSDKURL+Internal.h"
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
  #import "FBSDKWebViewFactory.h"
@@ -731,6 +732,7 @@ static UIApplicationState _applicationState;
   FBSDKButton.applicationActivationNotifier = self;
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
+  [FBSDKURL configureWithSettings:sharedSettings];
   FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
                                     graphRequestFactory:graphRequestFactory

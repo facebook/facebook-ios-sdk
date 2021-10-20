@@ -463,6 +463,18 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
   }
 
+  func testInitializingConfiguresAppLinkURL() {
+    AppLinkURL.reset()
+    XCTAssertNil(AppLinkURL.settings)
+
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AppLinkURL.settings === Settings.shared,
+      "Should configure with the expected settings"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

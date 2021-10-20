@@ -16,16 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if !TARGET_OS_TV
+import TestTools
+import XCTest
 
-#import "FBSDKURL.h"
+class AppLinkURLTests: XCTestCase {
 
-NS_ASSUME_NONNULL_BEGIN
+  override class func setUp() {
+    super.setUp()
 
-@interface FBSDKURL (Internal)
-+ (FBSDKURL *)URLForRenderBackToReferrerBarURL:(NSURL *)url;
-@end
+    AppLinkURL.reset()
+  }
 
-NS_ASSUME_NONNULL_END
+  override func tearDown() {
+    AppLinkURL.reset()
 
-#endif
+    super.tearDown()
+  }
+
+  func testDefaultDependencies() {
+    XCTAssertNil(
+      AppLinkURL.settings,
+      "Should not have settings by default"
+    )
+  }
+
+  func testConfiguringDependencies() {
+    let settings = TestSettings()
+    AppLinkURL.configure(with: settings)
+
+    XCTAssertTrue(
+      AppLinkURL.settings === settings,
+      "Should be able to configure dependencies"
+    )
+  }
+}
