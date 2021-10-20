@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 // from a type-based interface to an instance-based interface.
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
-static FBSDKFeatureManager *sharedInstance;
+static FBSDKFeatureManager * sharedInstance;
 static dispatch_once_t sharedInstanceNonce;
 + (instancetype)shared
 {
