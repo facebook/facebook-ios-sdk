@@ -499,6 +499,8 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   NSObject *store = (NSObject *)[FBSDKProfile store];
   NSObject *tokenProvider = (NSObject *)[FBSDKProfile accessTokenProvider];
   NSObject *notificationCenter = (NSObject *)[FBSDKProfile notificationCenter];
+  NSObject *settings = (NSObject *)[FBSDKProfile settings];
+  NSObject *urlHoster = (NSObject *)[FBSDKProfile urlHoster];
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
@@ -513,6 +515,16 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     notificationCenter,
     NSNotificationCenter.defaultCenter,
     "Should be configured with the expected concrete Notification Center"
+  );
+  XCTAssertEqualObjects(
+    settings,
+    FBSDKSettings.sharedSettings,
+    "Should be configured with the expected concrete Settings"
+  );
+  XCTAssertEqualObjects(
+    urlHoster,
+    FBSDKInternalUtility.sharedUtility,
+    "Should be configured with the expected concrete Settings"
   );
 }
 

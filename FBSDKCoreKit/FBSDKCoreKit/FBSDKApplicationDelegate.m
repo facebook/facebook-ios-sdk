@@ -60,6 +60,7 @@
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKInternalUtility+URLHosting.h"
 #import "FBSDKKeychainStoreFactory.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogger+Logging.h"
@@ -771,7 +772,8 @@ static UIApplicationState _applicationState;
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class
                 notificationCenter:NSNotificationCenter.defaultCenter
-                          settings:sharedSettings];
+                          settings:sharedSettings
+                         urlHoster:FBSDKInternalUtility.sharedUtility];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared

@@ -25,11 +25,11 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKInternalUtility.h"
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
 #import "FBSDKNotificationProtocols.h"
 #import "FBSDKProfileCodingKey.h"
+#import "FBSDKURLHosting.h"
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUserAgeRange.h"
 
@@ -48,6 +48,7 @@ static NSDateFormatter *_dateFormatter;
 
 @property (nonatomic, assign) BOOL isLimited;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKURLHosting> urlHoster;
 @end
 
 @implementation FBSDKProfile
@@ -56,6 +57,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
 static id<FBSDKDataPersisting> _store;
 static id<FBSDKSettings> _settings;
+static id<FBSDKURLHosting> _urlHoster;
 
 + (Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
@@ -75,6 +77,16 @@ static id<FBSDKSettings> _settings;
 + (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
   return _notificationCenter;
+}
+
++ (id<FBSDKURLHosting>)urlHoster
+{
+  return _urlHoster;
+}
+
++ (void)setUrlHoster:(id<FBSDKURLHosting>)urlHoster
+{
+  _urlHoster = urlHoster;
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -479,11 +491,13 @@ static id<FBSDKSettings> _settings;
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                   settings:(id<FBSDKSettings>)settings
+                 urlHoster:(id<FBSDKURLHosting>)urlHoster
 {
   if (self == FBSDKProfile.class) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
     _notificationCenter = notificationCenter;
+    self.urlHoster = urlHoster;
     self.settings = settings;
   }
 }
@@ -550,10 +564,10 @@ static id<FBSDKSettings> _settings;
 
   NSString *path = [NSString stringWithFormat:@"%@/picture", profileId];
 
-  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"graph"
-                                                                  path:path
-                                                       queryParameters:queryParameters
-                                                                 error:NULL];
+  return [self.urlHoster facebookURLWithHostPrefix:@"graph"
+                                              path:path
+                                   queryParameters:queryParameters
+                                             error:NULL];
 }
 
 + (NSString *)graphPathForToken:(FBSDKAccessToken *)token
@@ -745,6 +759,7 @@ static id<FBSDKSettings> _settings;
   _store = nil;
   _accessTokenProvider = nil;
   _notificationCenter = nil;
+  self.urlHoster = nil;
   self.settings = nil;
 }
 

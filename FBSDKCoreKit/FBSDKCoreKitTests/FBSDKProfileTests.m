@@ -66,7 +66,8 @@ NSString *const heightKey = @"height";
   [FBSDKProfile configureWithStore:[UserDefaultsSpy new]
                accessTokenProvider:TestAccessTokenWallet.class
                 notificationCenter:NSNotificationCenter.defaultCenter
-                          settings:FBSDKSettings.sharedSettings];
+                          settings:FBSDKSettings.sharedSettings
+                         urlHoster:FBSDKInternalUtility.sharedUtility];
 
   _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";

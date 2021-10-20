@@ -25,6 +25,7 @@ class ProfileTests: XCTestCase {
   var store = UserDefaultsSpy()
   var notificationCenter = TestNotificationCenter()
   let settings = TestSettings()
+  let urlHoster = TestInternalUtility()
 
   override func setUp() {
     super.setUp()
@@ -33,7 +34,8 @@ class ProfileTests: XCTestCase {
       store: store,
       accessTokenProvider: TestAccessTokenWallet.self,
       notificationCenter: notificationCenter,
-      settings: settings
+      settings: settings,
+      urlHoster: urlHoster
     )
   }
 
