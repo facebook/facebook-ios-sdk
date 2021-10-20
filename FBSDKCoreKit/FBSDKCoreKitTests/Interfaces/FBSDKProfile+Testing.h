@@ -33,6 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)reset;
 
++ (void)resetCurrentProfileCache;
+
++ (NSString *)graphPathForToken:(FBSDKAccessToken *)token;
+
++ (void)loadProfileWithToken:(nullable FBSDKAccessToken *)token
+                graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(nullable FBSDKProfileBlock)completion
+NS_SWIFT_NAME(load(token:request:completion:));
+
 @end
 
 NS_ASSUME_NONNULL_END
