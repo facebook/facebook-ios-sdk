@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import FBSDKCoreKit_Basics
 
 @objcMembers
 public class TestInternalUtility: NSObject,

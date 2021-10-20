@@ -24,7 +24,8 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   var store = UserDefaultsSpy()
   var notificationCenter = TestNotificationCenter()
   let settings = TestSettings()
-  let urlHoster = InternalUtility.shared
+  let stubbedURL = URL(string: "testProfile.com")! // swiftlint:disable:this force_unwrapping
+  lazy var urlHoster = TestURLHoster(url: stubbedURL)
 
   let accessTokenKey = "access_token"
   let pictureModeKey = "type"
@@ -33,13 +34,11 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   let sdkVersion = "100"
   let profile = SampleUserProfiles.valid
   let validClientToken = "Foo"
-  let validSquareSize = CGSize(width: 100, height: 100)
-  let validNonSquareSize = CGSize(width: 10, height: 20)
   let testGraphRequest = TestGraphRequest()
-  lazy var normalImageURL = profile.imageURL(
-    forMode: .normal,
-    size: validSquareSize
-  )! // swiftlint:disable:this force_unwrapping
+  var imageURL: URL! // swiftlint:disable:this implicitly_unwrapped_optional
+
+  static let validSquareSize = CGSize(width: 100, height: 100)
+  static let validNonSquareSize = CGSize(width: 10, height: 20)
 
   override func setUp() {
     super.setUp()
@@ -63,231 +62,275 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     Profile.resetCurrentProfileCache()
   }
 
-  func testCreatingImageURL() {
-    let url = profile.imageURL(
-      forMode: .normal,
-      size: validSquareSize
+  private func makeImageURL(
+    mode: Profile.PictureMode = .normal,
+    size: CGSize = ProfileTests.validSquareSize
+  ) throws {
+    imageURL = try XCTUnwrap(
+      profile.imageURL(
+        forMode: mode,
+        size: size
+      )
     )
-    let expectedPath = "/\(sdkVersion)/\(profile.userID)/picture"
-    XCTAssertEqual(
-      url?.path,
-      expectedPath,
-      "Should add the graph api version and the identifier of the current \n"
-      + "user when creating a url for for fetching a profile image"
-    )
+  }
+
+  func testCreatingImageURL() throws {
+    try makeImageURL()
+    XCTAssertEqual(urlHoster.capturedHostPrefix, "graph")
+    XCTAssertEqual(urlHoster.capturedPath, "\(profile.userID)/picture")
+    XCTAssertNotNil(urlHoster.capturedQueryParameters)
+    XCTAssertEqual(imageURL, urlHoster.stubbedURL)
   }
 
   // MARK: - Creating Image URL
 
   func testCreatingImageURLWithNoAccessTokenNoClientToken() throws {
-    let components = try XCTUnwrap(URLComponents(url: normalImageURL, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "normal"),
-      URLQueryItem(name: widthKey, value: "100"),
-      URLQueryItem(name: heightKey, value: "100")
-    ]
-
+    try makeImageURL()
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
+      queryItems[pictureModeKey] as? String,
+      "normal",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      100,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingImageURLWithClientTokenNoAccessToken() throws {
     settings.clientToken = validClientToken
-    let components = try XCTUnwrap(URLComponents(url: normalImageURL, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "normal"),
-      URLQueryItem(name: widthKey, value: "100"),
-      URLQueryItem(name: heightKey, value: "100"),
-      URLQueryItem(name: accessTokenKey, value: validClientToken)
-    ]
+    try makeImageURL()
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
-      "Should use the current client token as the 'access token' when there is no true access token available"
+      queryItems[pictureModeKey] as? String,
+      "normal",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[accessTokenKey] as? String,
+      "Foo",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingImageURLWithAccessTokenNoClientToken() throws {
     TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
-    let components = try XCTUnwrap(URLComponents(url: normalImageURL, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "normal"),
-      URLQueryItem(name: widthKey, value: "100"),
-      URLQueryItem(name: heightKey, value: "100"),
-      URLQueryItem(name: accessTokenKey, value: SampleAccessTokens.validToken.tokenString)
-    ]
+    try makeImageURL()
 
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
-      "Should use the current 'access token' when creating a url query"
+      queryItems[pictureModeKey] as? String,
+      "normal",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[accessTokenKey] as? String,
+      SampleAccessTokens.validToken.tokenString,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingImageURLWithAccessTokenAndClientToken() throws {
     TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
     settings.clientToken = validClientToken
-    let components = try XCTUnwrap(URLComponents(url: normalImageURL, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "normal"),
-      URLQueryItem(name: widthKey, value: "100"),
-      URLQueryItem(name: heightKey, value: "100"),
-      URLQueryItem(name: accessTokenKey, value: SampleAccessTokens.validToken.tokenString)
-    ]
+    try makeImageURL()
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
-      "Should use the current access token as the 'access_token' parameter when available"
+      queryItems[pictureModeKey] as? String,
+      "normal",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      100,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[accessTokenKey] as? String,
+      SampleAccessTokens.validToken.tokenString,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingEnumWithSmallMode() throws {
-    let url = profile.imageURL(
-      forMode: .small,
-      size: validNonSquareSize
-    )! // swiftlint:disable:this force_unwrapping
-    let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "small"),
-      URLQueryItem(name: widthKey, value: "10"),
-      URLQueryItem(name: heightKey, value: "20")
-    ]
+    try makeImageURL(mode: .small, size: ProfileTests.validNonSquareSize)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
+      queryItems[pictureModeKey] as? String,
+      "small",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      20,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingEnumWithAlbumMode() throws {
-    let url = profile.imageURL(
-      forMode: .album,
-      size: validNonSquareSize
-    )! // swiftlint:disable:this force_unwrapping
-    let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "album"),
-      URLQueryItem(name: widthKey, value: "10"),
-      URLQueryItem(name: heightKey, value: "20")
-    ]
+    try makeImageURL(mode: .album, size: ProfileTests.validNonSquareSize)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
+      queryItems[pictureModeKey] as? String,
+      "album",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      20,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingEnumWithLargeMode() throws {
-    let url = profile.imageURL(
-      forMode: .large,
-      size: validNonSquareSize
-    )! // swiftlint:disable:this force_unwrapping
-    let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "large"),
-      URLQueryItem(name: widthKey, value: "10"),
-      URLQueryItem(name: heightKey, value: "20")
-    ]
+    try makeImageURL(mode: .large, size: ProfileTests.validNonSquareSize)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
+      queryItems[pictureModeKey] as? String,
+      "large",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      20,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   func testCreatingEnumWithSquareMode() throws {
-    let url = profile.imageURL(
-      forMode: .square,
-      size: validNonSquareSize
-    )! // swiftlint:disable:this force_unwrapping
-    let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
-    let queryItems = try XCTUnwrap(components.queryItems)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "square"),
-      URLQueryItem(name: widthKey, value: "10"),
-      URLQueryItem(name: heightKey, value: "20")
-    ]
+    try makeImageURL(mode: .square, size: ProfileTests.validNonSquareSize)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      Set(queryItems),
-      expectedQueryItems,
+      queryItems[pictureModeKey] as? String,
+      "square",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[widthKey] as? Int,
+      10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      20,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
   // MARK: - Size Validations
 
-  func testCreatingImageURLWithNoSize() {
-    let url = profile.imageURL(
-      forMode: .square,
-      size: .zero
-    )! // swiftlint:disable:this force_unwrapping
-    let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "square"),
-      URLQueryItem(name: widthKey, value: "0"),
-      URLQueryItem(name: heightKey, value: "0")
-    ]
-    XCTAssertNotNil(
-      url,
-      "Should not create a url for fetching a profile picture with zero size but it will"
+  func testCreatingImageURLWithNoSize() throws {
+    try makeImageURL(mode: .square, size: .zero)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
+    XCTAssertEqual(
+      queryItems[pictureModeKey] as? String,
+      "square",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      Set(components?.queryItems ?? []),
-      expectedQueryItems,
+      queryItems[widthKey] as? Int,
+      0,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      0,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
-  func testCreatingSquareImageURLWithNonSquareSize() {
-    let url = profile.imageURL(
-      forMode: .square,
-      size: validNonSquareSize
-    )! // swiftlint:disable:this force_unwrapping
-    let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "square"),
-      URLQueryItem(name: widthKey, value: "10"),
-      URLQueryItem(name: heightKey, value: "20")
-    ]
-    XCTAssertNotNil(
-      url,
-      "Should not create a url for fetching a profile picture with zero size but it will"
+  func testCreatingSquareImageURLWithNonSquareSize() throws {
+    try makeImageURL(mode: .square, size: ProfileTests.validNonSquareSize)
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
+    XCTAssertEqual(
+      queryItems[pictureModeKey] as? String,
+      "square",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      Set(components?.queryItems ?? []),
-      expectedQueryItems,
+      queryItems[widthKey] as? Int,
+      10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      20,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
 
-  func testCreatingSquareImageURLWithNegativeSize() {
-    let url = profile.imageURL(
-      forMode: .square,
-      size: CGSize(width: -10, height: -10)
-    )! // swiftlint:disable:this force_unwrapping
-    let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-    let expectedQueryItems: Set = [
-      URLQueryItem(name: pictureModeKey, value: "square"),
-      URLQueryItem(name: widthKey, value: "-10"),
-      URLQueryItem(name: heightKey, value: "-10")
-    ]
-    XCTAssertNotNil(
-      url,
-      "Should not create a url for fetching a profile picture with zero size but it will"
+  func testCreatingSquareImageURLWithNegativeSize() throws {
+    try makeImageURL(mode: .square, size: CGSize(width: -10, height: -10))
+
+    let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
+    XCTAssertEqual(
+      queryItems[pictureModeKey] as? String,
+      "square",
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      Set(components?.queryItems ?? []),
-      expectedQueryItems,
+      queryItems[widthKey] as? Int,
+      -10,
+      "Should add the expected query items to a url when creating a url for fetching a profile image"
+    )
+    XCTAssertEqual(
+      queryItems[heightKey] as? Int,
+      -10,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
