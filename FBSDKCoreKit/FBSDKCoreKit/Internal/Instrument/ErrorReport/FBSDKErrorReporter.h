@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKError+Internal.h"
+#import "FBSDKErrorReporting.h"
 
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKFileManaging;
@@ -27,10 +28,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ErrorReport)
-@interface FBSDKErrorReport : NSObject
+NS_SWIFT_NAME(ErrorReporter)
+@interface FBSDKErrorReporter : NSObject <FBSDKErrorReporting>
 
-@property (class, nonatomic, readonly) FBSDKErrorReport *shared;
+@property (class, nonatomic, readonly) FBSDKErrorReporter *shared;
+
+@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
+@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
+@property (nonatomic, readonly, strong) NSString *directoryPath;
+@property (nonatomic) BOOL isEnabled;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

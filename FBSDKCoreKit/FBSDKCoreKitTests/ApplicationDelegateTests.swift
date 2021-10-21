@@ -285,8 +285,8 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertEqual(
-      SDKError.errorReporter as? ErrorReport,
-      ErrorReport.shared
+      SDKError.errorReporter as? ErrorReporter,
+      ErrorReporter.shared
     )
   }
 
@@ -396,8 +396,8 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the shared settings instance"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.errorReport === ErrorReport.shared,
-      "Should configure with the shared error report instance"
+      InstrumentManager.shared.errorReporter === ErrorReporter.shared,
+      "Should configure with the shared error reporter instance"
     )
     XCTAssertTrue(
       InstrumentManager.shared.crashHandler === CrashHandler.shared,

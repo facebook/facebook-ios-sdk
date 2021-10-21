@@ -47,7 +47,7 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
-#import "FBSDKErrorReport+ErrorReporting.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureDisabling.h"
@@ -686,7 +686,7 @@ static UIApplicationState _applicationState;
   [FBSDKInstrumentManager.shared configureWithFeatureChecker:sharedFeatureChecker
                                                     settings:sharedSettings
                                                crashObserver:crashObserver
-                                                 errorReport:FBSDKErrorReport.shared
+                                               errorReporter:FBSDKErrorReporter.shared
                                                 crashHandler:sharedCrashHandler];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings
                                                      keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
@@ -730,7 +730,7 @@ static UIApplicationState _applicationState;
                                           serverConfiguration:serverConfigurationProvider
                                           graphRequestFactory:graphRequestFactory];
   FBSDKButton.applicationActivationNotifier = self;
-  [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
+  [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared];
 #if !TARGET_OS_TV
   [FBSDKURL configureWithSettings:sharedSettings];
   FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;

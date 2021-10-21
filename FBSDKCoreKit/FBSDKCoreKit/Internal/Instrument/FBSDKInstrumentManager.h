@@ -20,7 +20,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKSettings;
 @protocol FBSDKCrashObserving;
@@ -38,9 +37,9 @@ NS_SWIFT_NAME(InstrumentManager)
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                            settings:(id<FBSDKSettings>)settings
                       crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                        errorReport:(id<FBSDKErrorReporting>)errorReport
+                      errorReporter:(id<FBSDKErrorReporting>)errorReporter
                        crashHandler:(id<FBSDKCrashHandler>)crashHandler
-NS_SWIFT_NAME(configure(featureChecker:settings:crashObserver:errorReport:crashHandler:));
+NS_SWIFT_NAME(configure(featureChecker:settings:crashObserver:errorReporter:crashHandler:));
 
 - (void)enable;
 

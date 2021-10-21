@@ -16,24 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+#import <Foundation/Foundation.h>
+
+#import "FBSDKErrorReporter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKGraphRequestFactory;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
+@interface FBSDKErrorReporter (Testing)
 
-@interface FBSDKErrorReport (Testing)
-
-@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
-@property (nonatomic, readonly) BOOL isEnabled;
-
-- (void)enable;
 - (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
 - (void)uploadErrors;
 - (void)reset;

@@ -106,7 +106,7 @@
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorRecoveryAttempter.h"
-#import "FBSDKErrorReport.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKEventBinding+Testing.h"
 #import "FBSDKEventBindingManager+Testing.h"

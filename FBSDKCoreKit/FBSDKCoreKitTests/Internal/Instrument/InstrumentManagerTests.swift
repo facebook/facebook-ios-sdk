@@ -25,7 +25,7 @@ class InstrumentManagerTests: XCTestCase {
   var manager = InstrumentManager.shared
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
-  let errorReporter = TestErrorReport()
+  let errorReporter = TestErrorReporter()
   let crashHandler = TestCrashHandler()
   let featureManager = TestFeatureManager()
 
@@ -40,7 +40,7 @@ class InstrumentManagerTests: XCTestCase {
       featureChecker: featureManager,
       settings: settings,
       crashObserver: crashObserver,
-      errorReport: errorReporter,
+      errorReporter: errorReporter,
       crashHandler: crashHandler
     )
   }
@@ -65,8 +65,8 @@ class InstrumentManagerTests: XCTestCase {
       "Should not have a crash observer by default"
     )
     XCTAssertNil(
-      manager.errorReport,
-      "Should not have an error report by default"
+      manager.errorReporter,
+      "Should not have an error reporter by default"
     )
     XCTAssertNil(
       manager.crashHandler,

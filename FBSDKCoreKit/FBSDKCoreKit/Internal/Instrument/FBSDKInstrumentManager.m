@@ -30,7 +30,7 @@
 @property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
-@property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
+@property (nonatomic, strong) id<FBSDKErrorReporting> errorReporter;
 @property (nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
 @end
@@ -40,13 +40,13 @@
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                            settings:(id<FBSDKSettings>)settings
                       crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                        errorReport:(id<FBSDKErrorReporting>)errorReport
+                      errorReporter:(id<FBSDKErrorReporting>)errorReporter
                        crashHandler:(id<FBSDKCrashHandler>)crashHandler
 {
   _featureChecker = featureChecker;
   _settings = settings;
   _crashObserver = crashObserver;
-  _errorReport = errorReport;
+  _errorReporter = errorReporter;
   _crashHandler = crashHandler;
 }
 
@@ -73,7 +73,7 @@ static dispatch_once_t sharedInstanceNonce;
   }];
   [self.featureChecker checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [self.errorReport enable];
+      [self.errorReporter enable];
     }
   }];
 }

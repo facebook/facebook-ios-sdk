@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+#import "FBSDKErrorReporter.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
@@ -30,18 +30,7 @@
 
 #define FBSDK_MAX_ERROR_REPORT_LOGS 1000
 
-@interface FBSDKErrorReport ()
-
-@property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
-@property (nonatomic) BOOL isEnabled;
-
-@end
-
-@implementation FBSDKErrorReport
+@implementation FBSDKErrorReporter
 
 static NSString *ErrorReportStorageDirName = @"instrument/";
 
@@ -77,7 +66,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 + (instancetype)shared
 {
-  static FBSDKErrorReport *_sharedInstance;
+  static FBSDKErrorReporter *_sharedInstance;
   static dispatch_once_t nonce;
   dispatch_once(&nonce, ^{
     _sharedInstance = [self new];
@@ -98,9 +87,9 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
       errorDomain:(NSErrorDomain)errorDomain
           message:(nullable NSString *)message
 {
-  [[FBSDKErrorReport new] saveError:errorCode
-                        errorDomain:errorDomain
-                            message:message];
+  [[FBSDKErrorReporter new] saveError:errorCode
+                          errorDomain:errorDomain
+                              message:message];
 }
 
 - (void)saveError:(NSInteger)errorCode
@@ -188,9 +177,10 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 - (void)_clearErrorInfo
 {
   NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:self.directoryPath error:nil];
-  for (NSUInteger i = 0; i < files.count; i++) {
-    if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"error_report"]) {
-      [self.fileManager removeItemAtPath:[self.directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
+  for (NSString *file in files) {
+    if ([file hasPrefix:@"error_report"]) {
+      NSString *path = [self.directoryPath stringByAppendingPathComponent:file];
+      [self.fileManager removeItemAtPath:path error:nil];
     }
   }
 }
