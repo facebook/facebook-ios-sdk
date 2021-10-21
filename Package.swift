@@ -111,7 +111,7 @@ let package = Package(
         // The main Core SDK module
         .target(
             name: "FacebookCore",
-            dependencies: ["FBSDKCoreKit"],
+            dependencies: ["FBAEMKit", "FBSDKCoreKit_Basics", "FBSDKCoreKit"],
             linkerSettings: [
                 .linkedLibrary("c++"),
                 .linkedLibrary("z"),
@@ -159,13 +159,12 @@ let package = Package(
         ),
 
         /*
-          The legacy Objective-C implementation that will be converted to Swift.
-          This will not contain interfaces for new features written in Swift.
+          Wrappers for backwards compatibility ObjC interfaces.
         */
-        .target(
+        .binaryTarget(
             name: "FBSDKGamingServicesKit",
-            dependencies: ["FacebookGamingServices"],
-            exclude: ["Exported"]
+            url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.0.2/FBSDKGamingServicesKit-Static_XCFramework.zip",
+            checksum: "9078d869c616e201a65c015ac271882829ac499609bde59e35c971159eeccb93"
         ),
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11

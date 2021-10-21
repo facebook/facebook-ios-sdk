@@ -23,6 +23,6 @@
 // See: https://forums.swift.org/t/16648/2 for more details
 //
 
-#if !BUCK
+#if canImport(FBSDKCoreKit)
 @_exported import FBSDKCoreKit
 #endif
