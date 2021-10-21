@@ -22,8 +22,9 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppLink+Internal.h"
-#import "FBSDKAppLinkTarget.h"
+#import "FBSDKAppLinkCreating.h"
+#import "FBSDKAppLinkTargetCreating.h"
+#import "FBSDKAppLinkURLKeys.h"
 #import "FBSDKMeasurementEvent_Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -34,10 +35,16 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 // MARK: Dependencies
 
 static id<FBSDKSettings> _settings;
+static id<FBSDKAppLinkCreating> _appLinkFactory;
+static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
 
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
+               appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+         appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
 {
   _settings = settings;
+  _appLinkFactory = appLinkFactory;
+  _appLinkTargetFactory = appLinkTargetFactory;
 }
 
 + (nullable id<FBSDKSettings>)settings
@@ -48,6 +55,26 @@ static id<FBSDKSettings> _settings;
 + (void)setSettings:(nullable id<FBSDKSettings>)settings
 {
   _settings = settings;
+}
+
++ (nullable id<FBSDKAppLinkCreating>)appLinkFactory
+{
+  return _appLinkFactory;
+}
+
++ (void)setAppLinkFactory:(nullable id<FBSDKAppLinkCreating>)appLinkFactory
+{
+  _appLinkFactory = appLinkFactory;
+}
+
++ (nullable id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+{
+  return _appLinkTargetFactory;
+}
+
++ (void)setAppLinkTargetFactory:(nullable id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+{
+  _appLinkTargetFactory = appLinkTargetFactory;
 }
 
 // MARK: Initializers
@@ -99,13 +126,13 @@ static id<FBSDKSettings> _settings;
         NSString *refererAppName = refererAppLink[FBSDKAppLinkRefererAppName];
 
         if (refererURLString && refererAppName) {
-          FBSDKAppLinkTarget *appLinkTarget = [FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:refererURLString]
-                                                                            appStoreId:nil
-                                                                               appName:refererAppName];
-          _appLinkReferer = [FBSDKAppLink appLinkWithSourceURL:[NSURL URLWithString:refererURLString]
-                                                       targets:@[appLinkTarget]
-                                                        webURL:nil
-                                              isBackToReferrer:YES];
+          id<FBSDKAppLinkTarget> appLinkTarget = [self.class.appLinkTargetFactory createAppLinkTargetWithURL:[NSURL URLWithString:refererURLString]
+                                                                                                  appStoreId:nil
+                                                                                                     appName:refererAppName];
+          _appLinkReferer = [self.class.appLinkFactory createAppLinkWithSourceURL:[NSURL URLWithString:refererURLString]
+                                                                          targets:@[appLinkTarget]
+                                                                           webURL:nil
+                                                                 isBackToReferrer:YES];
         }
 
         // Raise Measurement Event
@@ -198,6 +225,8 @@ static id<FBSDKSettings> _settings;
 + (void)reset
 {
   self.settings = nil;
+  self.appLinkFactory = nil;
+  self.appLinkTargetFactory = nil;
 }
 
 #endif

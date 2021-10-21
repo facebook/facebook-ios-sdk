@@ -36,6 +36,8 @@
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAppLinkFactory.h"
+#import "FBSDKAppLinkTargetFactory.h"
 #import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
@@ -732,7 +734,9 @@ static UIApplicationState _applicationState;
   FBSDKButton.applicationActivationNotifier = self;
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared];
 #if !TARGET_OS_TV
-  [FBSDKURL configureWithSettings:sharedSettings];
+  [FBSDKURL configureWithSettings:sharedSettings
+                   appLinkFactory:[FBSDKAppLinkFactory new]
+             appLinkTargetFactory:[FBSDKAppLinkTargetFactory new]];
   FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
                                     graphRequestFactory:graphRequestFactory

@@ -19,27 +19,16 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKAppLink.h"
+#import "FBSDKAppLinkProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkUserAgentKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkExtrasKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersionKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
-
-@interface FBSDKAppLink (Internal)
+@interface FBSDKAppLink (Internal) <FBSDKAppLink>
 
 + (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
-                             targets:(NSArray<FBSDKAppLinkTarget *> *)targets
+                             targets:(NSArray<id<FBSDKAppLinkTarget>> *)targets
                               webURL:(nullable NSURL *)webURL
                     isBackToReferrer:(BOOL)isBackToReferrer;
-
-/** return if this AppLink is to go back to referrer. */
-@property (nonatomic, readonly, getter = isBackToReferrer, assign) BOOL backToReferrer;
 
 @end
 

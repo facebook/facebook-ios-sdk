@@ -94,6 +94,7 @@
  #import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
  #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
  #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
+ #import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
  #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPI.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPI+URLOpener.h>

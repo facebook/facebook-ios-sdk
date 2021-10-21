@@ -38,14 +38,37 @@ class AppLinkURLTests: XCTestCase {
       AppLinkURL.settings,
       "Should not have settings by default"
     )
+    XCTAssertNil(
+      AppLinkURL.appLinkFactory,
+      "Should not have an app link factory by default"
+    )
+    XCTAssertNil(
+      AppLinkURL.appLinkTargetFactory,
+      "Should not have an app link target factory by default"
+    )
   }
 
   func testConfiguringDependencies() {
     let settings = TestSettings()
-    AppLinkURL.configure(with: settings)
+    let appLinkFactory = TestAppLinkFactory()
+    let appLinkTargetFactory = TestAppLinkTargetFactory()
+
+    AppLinkURL.configure(
+      settings: settings,
+      appLinkFactory: appLinkFactory,
+      appLinkTargetFactory: appLinkTargetFactory
+    )
 
     XCTAssertTrue(
       AppLinkURL.settings === settings,
+      "Should be able to configure dependencies"
+    )
+    XCTAssertTrue(
+      AppLinkURL.appLinkFactory === appLinkFactory,
+      "Should be able to configure dependencies"
+    )
+    XCTAssertTrue(
+      AppLinkURL.appLinkTargetFactory === appLinkTargetFactory,
       "Should be able to configure dependencies"
     )
   }

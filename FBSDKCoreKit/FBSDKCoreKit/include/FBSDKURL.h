@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FBSDKAppLink;
+@protocol FBSDKAppLink;
 
 /**
  Provides a set of utilities for working with NSURLs, such as parsing of query parameters
@@ -78,7 +78,7 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
 /**
  The App Link indicating how to navigate back to the referer app, if any.
  */
-@property (nonatomic, strong, readonly, nullable) FBSDKAppLink *appLinkReferer;
+@property (nonatomic, strong, readonly, nullable) id<FBSDKAppLink> appLinkReferer;
 
 /**
  The URL that was used to create this FBSDKURL.

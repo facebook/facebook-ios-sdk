@@ -16,17 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLink.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKAppLink (Testing)
-
-+ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
-                             targets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                              webURL:(nullable NSURL *)webURL
-                    isBackToReferrer:(BOOL)isBackToReferrer;
-
-@end
-
-NS_ASSUME_NONNULL_END
+class TestAppLinkFactory: AppLinkCreating {
+  func createAppLink(
+    sourceURL: URL?,
+    targets: [AppLinkTargetProtocol],
+    webURL: URL?,
+    isBackToReferrer: Bool
+  ) -> AppLinkProtocol {
+    TestAppLink()
+  }
+}

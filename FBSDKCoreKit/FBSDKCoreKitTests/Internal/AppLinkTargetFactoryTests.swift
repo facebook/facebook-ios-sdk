@@ -16,41 +16,40 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if !TARGET_OS_TV
+import FBSDKCoreKit
+import TestTools
+import XCTest
 
-#import <Foundation/Foundation.h>
+class AppLinkTargetFactoryTests: XCTestCase {
 
-#import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
+  let url = SampleURLs.valid
+  let appStoreId = "123"
 
-NS_ASSUME_NONNULL_BEGIN
+  func testCreatingAppLinkTarget() throws {
+    let factory = AppLinkTargetFactory()
+    let target = try XCTUnwrap(
+      factory.createAppLinkTarget(
+        url: url,
+        appStoreId: appStoreId,
+        appName: name
+      ) as? AppLinkTarget,
+      "Should create an app link target of the expected concrete type"
+    )
 
-/**
- Represents a target defined in App Link metadata, consisting of at least
- a URL, and optionally an App Store ID and name.
- */
-NS_SWIFT_NAME(AppLinkTarget)
-@interface FBSDKAppLinkTarget : NSObject <FBSDKAppLinkTarget>
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-/** Creates a FBSDKAppLinkTarget with the given app site and target URL. */
-+ (instancetype)appLinkTargetWithURL:(nullable NSURL *)url
-                          appStoreId:(nullable NSString *)appStoreId
-                             appName:(NSString *)appName
-NS_SWIFT_NAME(init(url:appStoreId:appName:));
-
-/** The URL prefix for this app link target */
-@property (nonatomic, strong, readonly, nullable) NSURL *URL;
-
-/** The app ID for the app store */
-@property (nonatomic, copy, readonly, nullable) NSString *appStoreId;
-
-/** The name of the app */
-@property (nonatomic, copy, readonly) NSString *appName;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+    XCTAssertEqual(
+      target.url,
+      url,
+      "Should use the provided url to create the app link target"
+    )
+    XCTAssertEqual(
+      target.appStoreId,
+      appStoreId,
+      "Should use the provided app store identifier to create the app link target"
+    )
+    XCTAssertEqual(
+      target.appName,
+      name,
+      "Should use the provided name to create the app link target"
+    )
+  }
+}

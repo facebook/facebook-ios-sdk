@@ -20,39 +20,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
+@protocol FBSDKAppLinkTarget;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** The version of the App Link protocol that this library supports */
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersion
-NS_SWIFT_NAME(AppLinkVersion);
-
-/**
- Contains App Link metadata relevant for navigation on this device
- derived from the HTML at a given URL.
- */
-NS_SWIFT_NAME(AppLink)
-@interface FBSDKAppLink : NSObject
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-/**
- Creates a FBSDKAppLink with the given list of FBSDKAppLinkTargets and target URL.
-
- Generally, this will only be used by implementers of the FBSDKAppLinkResolving protocol,
- as these implementers will produce App Link metadata for a given URL.
-
- @param sourceURL the URL from which this App Link is derived
- @param targets an ordered list of FBSDKAppLinkTargets for this platform derived
- from App Link metadata.
- @param webURL the fallback web URL, if any, for the app link.
- */
-+ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
-                             targets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                              webURL:(nullable NSURL *)webURL
-NS_SWIFT_NAME(init(sourceURL:targets:webURL:));
+NS_SWIFT_NAME(AppLinkProtocol)
+@protocol FBSDKAppLink
 
 /** The URL from which this FBSDKAppLink was derived */
 @property (nonatomic, strong, readonly, nullable) NSURL *sourceURL;
@@ -65,6 +38,9 @@ NS_SWIFT_NAME(init(sourceURL:targets:webURL:));
 
 /** The fallback web URL to use if no targets are installed on this device. */
 @property (nonatomic, strong, readonly, nullable) NSURL *webURL;
+
+/** return if this AppLink is to go back to referrer. */
+@property (nonatomic, readonly, getter = isBackToReferrer, assign) BOOL backToReferrer;
 
 @end
 

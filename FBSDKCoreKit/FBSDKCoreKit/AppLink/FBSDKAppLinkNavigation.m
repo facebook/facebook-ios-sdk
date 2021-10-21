@@ -310,7 +310,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   return [self navigationTypeForTargets:self.appLink.targets urlOpener:UIApplication.sharedApplication];
 }
 
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(nonnull NSArray<FBSDKAppLinkTarget *> *)targets
+- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(nonnull NSArray<id<FBSDKAppLinkTarget>> *)targets
                                              urlOpener:(nonnull id<FBSDKInternalURLOpener>)urlOpener
 {
   FBSDKAppLinkTarget *eligibleTarget = nil;

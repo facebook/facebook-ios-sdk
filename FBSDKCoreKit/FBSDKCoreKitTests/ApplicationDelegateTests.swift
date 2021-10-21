@@ -473,6 +473,14 @@ class ApplicationDelegateTests: XCTestCase {
       AppLinkURL.settings === Settings.shared,
       "Should configure with the expected settings"
     )
+    XCTAssertTrue(
+      AppLinkURL.appLinkFactory is AppLinkFactory,
+      "Should configure with the expected app link factory"
+    )
+    XCTAssertTrue(
+      AppLinkURL.appLinkTargetFactory is AppLinkTargetFactory,
+      "Should configure with the expected app link target factory"
+    )
   }
 
   // MARK: - DidFinishLaunching
