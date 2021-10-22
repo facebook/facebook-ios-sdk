@@ -59,8 +59,12 @@ class ServerConfigurationFixtures: NSObject {
     }
 
     var defaults = defaultConfig.isDefaults
-    if dict["defaults"] != nil {
-      defaults = dict["defaults"] as? Int != 0
+    if let dictDefaults = dict["defaults"] {
+      if let intDefaults = dictDefaults as? Int {
+        defaults = intDefaults != 0
+      } else if let boolDefaults = dictDefaults as? Bool {
+        defaults = boolDefaults
+      }
     }
 
     let appID = dict["appID"] as? String ?? defaultConfig.appID
@@ -71,7 +75,14 @@ class ServerConfigurationFixtures: NSObject {
     let dialogFlows = dict["dialogFlows"] as? [String: Any] ?? defaultConfig.dialogFlows()
     let timestamp = dict["timestamp"] as? Date ?? defaultConfig.timestamp
     let errorConfiguration = dict["errorConfiguration"] as? ErrorConfiguration ?? defaultConfig.errorConfiguration
-    let sessionTimeoutInterval = TimeInterval(dict["sessionTimeoutInterval"] as? Double ?? defaultConfig.sessionTimoutInterval)
+
+    var sessionTimeoutInterval = defaultConfig.sessionTimoutInterval
+    if let intInterval = dict["sessionTimeoutInterval"] as? Int {
+      sessionTimeoutInterval = TimeInterval(Double(intInterval))
+    } else if let doubleInterval = dict["sessionTimeoutInterval"] as? Double {
+      sessionTimeoutInterval = TimeInterval(doubleInterval)
+    }
+
     let loggingToken = dict["loggingToken"] as? String ?? defaultConfig.loggingToken
     let smartLoginBookmarkIconURL = dict["smartLoginBookmarkIconURL"] as? URL ?? defaultConfig.smartLoginBookmarkIconURL
     let smartLoginMenuIconURL = dict["smartLoginMenuIconURL"] as? URL ?? defaultConfig.smartLoginMenuIconURL
