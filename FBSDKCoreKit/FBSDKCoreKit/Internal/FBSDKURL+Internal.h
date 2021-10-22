@@ -11,12 +11,13 @@
 #import "FBSDKURL.h"
 
 #import "FBSDKSettings.h"
+#import "FBSDKAppLinkURL.h"
 #import "FBSDKAppLinkCreating.h"
 #import "FBSDKAppLinkTargetCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKURL (Internal)
+@interface FBSDKURL (Internal) <FBSDKAppLinkURL>
 
 @property (class, nullable, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, readonly) id<FBSDKAppLinkCreating> appLinkFactory;

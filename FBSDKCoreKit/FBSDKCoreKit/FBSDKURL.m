@@ -69,95 +69,97 @@ static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
 
 // MARK: Initializers
 
-- (nullable instancetype)initWithURL:(NSURL *)url
-                   forOpenInboundURL:(BOOL)forOpenURLEvent
-                   sourceApplication:(NSString *)sourceApplication
-          forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
+- (instancetype) initWithURL:(NSURL *)url
+           forOpenInboundURL:(BOOL)forOpenURLEvent
+           sourceApplication:(NSString *)sourceApplication
+  forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
 {
-  self = [super init];
-  if (!self) {
-    return nil;
-  }
+  if ((self = [super init])) {
+    _inputURL = url;
+    _targetURL = url;
 
-  _inputURL = url;
-  _targetURL = url;
+    // Parse the query string parameters for the base URL
+    NSDictionary<NSString *, id> *baseQuery = [FBSDKURL queryParametersForURL:url];
+    _inputQueryParameters = baseQuery;
+    _targetQueryParameters = baseQuery;
 
-  // Parse the query string parameters for the base URL
-  NSDictionary<NSString *, id> *baseQuery = [FBSDKURL queryParametersForURL:url];
-  _inputQueryParameters = baseQuery;
-  _targetQueryParameters = baseQuery;
+    // Check for applink_data
+    NSString *appLinkDataString = baseQuery[FBSDKAppLinkDataParameterName];
+    if (appLinkDataString) {
+      // Try to parse the JSON
+      NSError *error = nil;
+      NSDictionary<NSString *, id> *applinkData =
+      [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
+                                   options:0
+                                     error:&error];
+      if (!error && [applinkData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+        // If the version is not specified, assume it is 1.
+        NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
+        NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
+        if ([version isKindOfClass:NSString.class]
+            && [version isEqual:FBSDKAppLinkVersion]) {
+          // There's applink data!  The target should actually be the applink target.
+          _appLinkData = applinkData;
+          id applinkExtras = applinkData[FBSDKAppLinkExtrasKeyName];
+          if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+            _appLinkExtras = applinkExtras;
+          }
+          // Use the url derived from FBSDKAppLinkTargetKeyName if possible
+          if ([target isKindOfClass:NSString.class]) {
+            NSURL *appLinkTargetURL = [NSURL URLWithString:target];
+            if (appLinkTargetURL) {
+              _targetURL = appLinkTargetURL;
+            }
+          }
+          _targetQueryParameters = [FBSDKURL queryParametersForURL:_targetURL];
 
-  // Check for applink_data
-  NSString *appLinkDataString = baseQuery[FBSDKAppLinkDataParameterName];
-  if (appLinkDataString) {
-    // Try to parse the JSON
-    NSError *error = nil;
-    NSDictionary<NSString *, id> *applinkData =
-    [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
-                                 options:0
-                                   error:&error];
-    if (!error && [applinkData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
-      // If the version is not specified, assume it is 1.
-      NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
-      NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
-      if ([version isKindOfClass:NSString.class]
-          && [version isEqual:FBSDKAppLinkVersion]) {
-        // There's applink data!  The target should actually be the applink target.
-        _appLinkData = applinkData;
-        id applinkExtras = applinkData[FBSDKAppLinkExtrasKeyName];
-        if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary<NSString *, id> class]]) {
-          _appLinkExtras = applinkExtras;
-        }
-        _targetURL = ([target isKindOfClass:NSString.class] ? [NSURL URLWithString:target] : url);
-        _targetQueryParameters = [FBSDKURL queryParametersForURL:_targetURL];
+          NSDictionary<NSString *, id> *refererAppLink = _appLinkData[FBSDKAppLinkRefererAppLink];
+          NSString *refererURLString = refererAppLink[FBSDKAppLinkRefererUrl];
+          NSString *refererAppName = refererAppLink[FBSDKAppLinkRefererAppName];
 
-        NSDictionary<NSString *, id> *refererAppLink = _appLinkData[FBSDKAppLinkRefererAppLink];
-        NSString *refererURLString = refererAppLink[FBSDKAppLinkRefererUrl];
-        NSString *refererAppName = refererAppLink[FBSDKAppLinkRefererAppName];
+          if (refererURLString && refererAppName) {
+            id<FBSDKAppLinkTarget> appLinkTarget = [self.class.appLinkTargetFactory createAppLinkTargetWithURL:[NSURL URLWithString:refererURLString]
+                                                                                                    appStoreId:nil
+                                                                                                       appName:refererAppName];
+            _appLinkReferer = [self.class.appLinkFactory createAppLinkWithSourceURL:[NSURL URLWithString:refererURLString]
+                                                                            targets:@[appLinkTarget]
+                                                                             webURL:nil
+                                                                   isBackToReferrer:YES];
+          }
 
-        if (refererURLString && refererAppName) {
-          id<FBSDKAppLinkTarget> appLinkTarget = [self.class.appLinkTargetFactory createAppLinkTargetWithURL:[NSURL URLWithString:refererURLString]
-                                                                                                  appStoreId:nil
-                                                                                                     appName:refererAppName];
-          _appLinkReferer = [self.class.appLinkFactory createAppLinkWithSourceURL:[NSURL URLWithString:refererURLString]
-                                                                          targets:@[appLinkTarget]
-                                                                           webURL:nil
-                                                                 isBackToReferrer:YES];
-        }
-
-        // Raise Measurement Event
-        NSString *const EVENT_YES_VAL = @"1";
-        NSString *const EVENT_NO_VAL = @"0";
-        NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
-        [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
-        if (refererURLString) {
-          [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];
-        }
-        if (refererAppName) {
-          [FBSDKTypeUtility dictionary:logData setObject:refererAppName forKey:@"refererAppName"];
-        }
-        if (sourceApplication) {
-          [FBSDKTypeUtility dictionary:logData setObject:sourceApplication forKey:@"sourceApplication"];
-        }
-        if (_targetURL.absoluteString) {
-          [FBSDKTypeUtility dictionary:logData setObject:_targetURL.absoluteString forKey:@"targetURL"];
-        }
-        if (_inputURL.absoluteString) {
-          [FBSDKTypeUtility dictionary:logData setObject:_inputURL.absoluteString forKey:@"inputURL"];
-        }
-        if (_inputURL.scheme) {
-          [FBSDKTypeUtility dictionary:logData setObject:_inputURL.scheme forKey:@"inputURLScheme"];
-        }
-        [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
-        [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
-        [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
-        if (forOpenURLEvent) {
-          [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
+          // Raise Measurement Event
+          NSString *const EVENT_YES_VAL = @"1";
+          NSString *const EVENT_NO_VAL = @"0";
+          NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
+          [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
+          if (refererURLString) {
+            [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];
+          }
+          if (refererAppName) {
+            [FBSDKTypeUtility dictionary:logData setObject:refererAppName forKey:@"refererAppName"];
+          }
+          if (sourceApplication) {
+            [FBSDKTypeUtility dictionary:logData setObject:sourceApplication forKey:@"sourceApplication"];
+          }
+          if (_targetURL.absoluteString) {
+            [FBSDKTypeUtility dictionary:logData setObject:_targetURL.absoluteString forKey:@"targetURL"];
+          }
+          if (_inputURL.absoluteString) {
+            [FBSDKTypeUtility dictionary:logData setObject:_inputURL.absoluteString forKey:@"inputURL"];
+          }
+          if (_inputURL.scheme) {
+            [FBSDKTypeUtility dictionary:logData setObject:_inputURL.scheme forKey:@"inputURLScheme"];
+          }
+          [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
+          [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
+          [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
+          if (forOpenURLEvent) {
+            [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
+          }
         }
       }
     }
   }
-
   return self;
 }
 

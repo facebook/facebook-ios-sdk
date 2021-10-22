@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKSettings;
 @protocol FBSDKAppEventsConfigurationProviding;
 @protocol FBSDKAdvertiserIDProviding;
+@protocol FBSDKAppLinkURLCreating;
 
 @interface FBSDKAppLinkUtility (Internal)
 
@@ -31,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (class, nullable, nonatomic) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (class, nullable, nonatomic) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
+@property (class, nullable, nonatomic) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
+
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                   infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
@@ -39,7 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                  appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
              appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
-NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:));
+                       appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:appLinkURLFactory:));
 
 @end
 

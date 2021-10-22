@@ -28,6 +28,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkFactory.h"
 #import "FBSDKAppLinkTargetFactory.h"
+#import "FBSDKAppLinkURLFactory.h"
 #import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
@@ -747,7 +748,8 @@ static UIApplicationState _applicationState;
                          appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.shared
                                    advertiserIDProvider:sharedAppEventsUtility
                                 appEventsDropDeterminer:sharedAppEventsUtility
-                            appEventParametersExtractor:sharedAppEventsUtility];
+                            appEventParametersExtractor:sharedAppEventsUtility
+                                      appLinkURLFactory:[FBSDKAppLinkURLFactory new]];
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
                                                    store:store

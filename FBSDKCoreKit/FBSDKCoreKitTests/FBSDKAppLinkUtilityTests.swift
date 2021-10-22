@@ -18,6 +18,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appEventsDropDeterminer = TestAppEventsDropDeterminer()
   let appEventParametersExtractor = TestAppEventParametersExtractor()
+  let appLinkURLFactory = TestAppLinkURLFactory()
 
   override func setUp() {
     super.setUp()
@@ -63,6 +64,10 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       AppLinkUtility.appEventParametersExtractor,
       "Should not have an app events parameters extractor by default"
     )
+    XCTAssertNil(
+      AppLinkUtility.appLinkURLFactory,
+      "Should not have an app link URL factory by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -94,6 +99,10 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       AppLinkUtility.appEventParametersExtractor is TestAppEventParametersExtractor,
       "Should use the provided app event parameters extractor"
     )
+    XCTAssertTrue(
+      AppLinkUtility.appLinkURLFactory is TestAppLinkURLFactory,
+      "Should use the provided app link URL factory"
+    )
   }
 
   func testWithNoPromoCode() {
@@ -102,10 +111,13 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     XCTAssertNil(promoCode)
   }
 
-  func testWithPromoCode() {
-    let url = URL(string: "myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22deeplink_context%22%3A%22%7B%5C%22promo_code%5C%22%3A%5C%22PROMOWORKS%5C%22%7D%22%7D%7D")! // swiftlint:disable:this line_length force_unwrapping
-    let promoCode = AppLinkUtility.appInvitePromotionCode(from: url)
-    XCTAssertNotNil(promoCode)
+  func testWithPromoCode() throws {
+    let deepLinkContext = try JSONSerialization.data(withJSONObject: ["promo_code": "PROMOWORKS"], options: [])
+    let encodedDeepLinkContext = try XCTUnwrap(String(data: deepLinkContext, encoding: .utf8))
+    appLinkURLFactory.stubbedAppLinkURL = TestAppLinkURL(
+      appLinkExtras: ["deeplink_context": encodedDeepLinkContext]
+    )
+    let promoCode = AppLinkUtility.appInvitePromotionCode(from: SampleURLs.valid)
     XCTAssertEqual(promoCode, "PROMOWORKS")
   }
 
@@ -153,7 +165,8 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       advertiserIDProvider: advertiserIDProvider,
       appEventsDropDeterminer: appEventsDropDeterminer,
-      appEventParametersExtractor: appEventParametersExtractor
+      appEventParametersExtractor: appEventParametersExtractor,
+      appLinkURLFactory: appLinkURLFactory
     )
   }
 }

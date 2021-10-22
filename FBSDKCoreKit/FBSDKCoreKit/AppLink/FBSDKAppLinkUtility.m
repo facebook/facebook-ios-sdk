@@ -20,7 +20,10 @@
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKURL.h"
+
+// #import "FBSDKURL.h"
+#import "FBSDKAppLinkURL.h"
+#import "FBSDKAppLinkURLCreating.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
@@ -40,6 +43,7 @@ static id<FBSDKAppEventsConfigurationProviding> _appEventsConfigurationProvider;
 static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 static id<FBSDKAppEventDropDetermining> _appEventsDropDeterminer;
 static id<FBSDKAppEventParametersExtracting> _appEventParametersExtractor;
+static id<FBSDKAppLinkURLCreating> _appLinkURLFactory;
 static BOOL _isConfigured;
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -49,6 +53,7 @@ static BOOL _isConfigured;
                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                  appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
              appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
+                       appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
 {
   if (self == FBSDKAppLinkUtility.class) {
     self.graphRequestFactory = graphRequestFactory;
@@ -58,6 +63,7 @@ static BOOL _isConfigured;
     self.advertiserIDProvider = advertiserIDProvider;
     self.appEventsDropDeterminer = appEventsDropDeterminer;
     self.appEventParametersExtractor = appEventParametersExtractor;
+    self.appLinkURLFactory = appLinkURLFactory;
     self.isConfigured = YES;
   }
 }
@@ -132,6 +138,16 @@ static BOOL _isConfigured;
 + (void)setAppEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
 {
   _appEventParametersExtractor = appEventParametersExtractor;
+}
+
++ (id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+{
+  return _appLinkURLFactory;
+}
+
++ (void)setAppLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+{
+  _appLinkURLFactory = appLinkURLFactory;
 }
 
 + (BOOL)isConfigured
@@ -216,13 +232,13 @@ static BOOL _isConfigured;
 + (nullable NSString *)appInvitePromotionCodeFromURL:(NSURL *)url
 {
   [self validateConfiguration];
-  FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
+  id<FBSDKAppLinkURL> parsedUrl = [self.appLinkURLFactory createAppLinkURLWithURL:url];
   NSDictionary<NSString *, id> *extras = parsedUrl.appLinkExtras;
   if (extras) {
     NSString *deeplinkContextString = extras[@"deeplink_context"];
 
     // Parse deeplinkContext and extract promo code
-    if (deeplinkContextString.length > 0) {
+    if ([deeplinkContextString isKindOfClass:NSString.class] && deeplinkContextString.length > 0) {
       NSError *error = nil;
       NSDictionary<id, id> *deeplinkContextData = [FBSDKBasicUtility objectForJSONString:deeplinkContextString error:&error];
       if (!error && [deeplinkContextData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
@@ -277,6 +293,7 @@ static BOOL _isConfigured;
   _advertiserIDProvider = nil;
   _appEventsDropDeterminer = nil;
   _appEventParametersExtractor = nil;
+  _appLinkURLFactory = nil;
 }
 
 #endif

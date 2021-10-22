@@ -427,6 +427,10 @@ class ApplicationDelegateTests: XCTestCase {
       AppLinkUtility.appEventParametersExtractor === AppEventsUtility.shared,
       "Should configure with the expected app events parameter extractor"
     )
+    XCTAssertTrue(
+      AppLinkUtility.appLinkURLFactory is AppLinkURLFactory,
+      "Should configure with the expected app link URL factory"
+    )
   }
 
   func testInitializingCreatesPaymentObserver() throws {
