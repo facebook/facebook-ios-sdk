@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import UIKit
 import XCTest
 
@@ -58,30 +59,9 @@ class BridgeAPIRequestTests: XCTestCase {
     BridgeAPIRequest.resetClassDependencies()
     _ = makeRequest()
 
-    let testInternalURLOpener = {
-      XCTAssertTrue(
-        BridgeAPIRequest.internalURLOpener === UIApplication.shared,
-        "BridgeAPIRequest should use the shared application for its default internal URL opener dependency"
-      )
-    }
-
-    #if BUCK
-    testInternalURLOpener()
-    #else
-    XCTExpectFailure(
-      "The following test should fail since the tests do not have a valid application singleton",
-      failingBlock: testInternalURLOpener
-    )
-    #endif
-
-    XCTAssertTrue(
-      BridgeAPIRequest.internalUtility === InternalUtility.shared,
-      "BridgeAPIRequest should use the shared utility for its default internal utility dependency"
-    )
-    XCTAssertTrue(
-      BridgeAPIRequest.settings === Settings.shared,
-      "BridgeAPIRequest should use the shared settings for its default settings dependency"
-    )
+    XCTAssertNil(BridgeAPIRequest.settings, "Should not have a default settings")
+    XCTAssertNil(BridgeAPIRequest.internalUtility, "Should not have a default internal utility")
+    XCTAssertNil(BridgeAPIRequest.internalURLOpener, "Should not have a default internal url opener")
   }
 
   func testRequestProtocolConformance() {

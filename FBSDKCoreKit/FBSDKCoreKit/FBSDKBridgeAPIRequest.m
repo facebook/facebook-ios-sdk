@@ -101,22 +101,15 @@ static _Nullable id<FBSDKSettings> _settings;
                        internalUtility:(id<FBSDKInternalUtility>)internalUtility
                               settings:(id<FBSDKSettings>)settings
 {
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
   self.internalURLOpener = internalURLOpener;
   self.internalUtility = internalUtility;
   self.settings = settings;
 
   self.hasBeenConfigured = YES;
-}
-
-+ (void)configureClassDependencies
-{
-  if (self.hasBeenConfigured) {
-    return;
-  }
-
-  [self configureWithInternalURLOpener:UIApplication.sharedApplication
-                       internalUtility:FBSDKInternalUtility.sharedUtility
-                              settings:FBSDKSettings.sharedSettings];
 }
 
 #if FBTEST
@@ -180,8 +173,6 @@ static _Nullable id<FBSDKSettings> _settings;
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
-  [self.class configureClassDependencies];
-
   if (!protocol) {
     return nil;
   }

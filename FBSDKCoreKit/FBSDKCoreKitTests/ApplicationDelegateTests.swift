@@ -483,6 +483,20 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingSDKConfiguresBridgeAPIRequest() {
+    BridgeAPIRequest.resetClassDependencies()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      BridgeAPIRequest.internalUtility === InternalUtility.shared,
+      "Should configure with the expected internal utility"
+    )
+    XCTAssertTrue(
+      BridgeAPIRequest.settings === Settings.shared,
+      "Should configure with the expected settings"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

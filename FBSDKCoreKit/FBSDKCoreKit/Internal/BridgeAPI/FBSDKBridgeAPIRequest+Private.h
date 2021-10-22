@@ -34,6 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
 
++ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings;
+
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                    scheme:(FBSDKURLScheme)scheme

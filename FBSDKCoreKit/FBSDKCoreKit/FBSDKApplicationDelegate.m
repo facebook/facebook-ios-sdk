@@ -44,6 +44,7 @@
 #import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
+#import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKButton+Subclass.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield+Internal.h"
@@ -734,6 +735,9 @@ static UIApplicationState _applicationState;
   FBSDKButton.applicationActivationNotifier = self;
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared];
 #if !TARGET_OS_TV
+  [FBSDKBridgeAPIRequest configureWithInternalURLOpener:UIApplication.sharedApplication
+                                        internalUtility:FBSDKInternalUtility.sharedUtility
+                                               settings:FBSDKSettings.sharedSettings];
   [FBSDKURL configureWithSettings:sharedSettings
                    appLinkFactory:[FBSDKAppLinkFactory new]
              appLinkTargetFactory:[FBSDKAppLinkTargetFactory new]];
