@@ -23,7 +23,17 @@ appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)prov
                eventLogger:(id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state;
+
 - (void)reset;
+
+- (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
+
+- (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
+
+- (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors;
 
 @end
 
