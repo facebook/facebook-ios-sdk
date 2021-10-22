@@ -1,4 +1,10 @@
 #!/bin/bash
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
 # carthage.sh
 # Xcode 12 workaround.
 # See: https://github.com/Carthage/Carthage/blob/master/Documentation/Xcode12Workaround.md
