@@ -27,6 +27,16 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   let testGraphRequest = TestGraphRequest()
   var imageURL: URL! // swiftlint:disable:this implicitly_unwrapped_optional
 
+  var result = [
+    "id": SampleUserProfiles.valid.userID,
+    "first_name": SampleUserProfiles.valid.firstName as Any,
+    "middle_name": SampleUserProfiles.valid.middleName as Any,
+    "last_name": SampleUserProfiles.valid.lastName as Any,
+    "name": SampleUserProfiles.valid.name as Any,
+    "link": SampleUserProfiles.valid.linkURL as Any,
+    "email": SampleUserProfiles.valid.email as Any
+  ]
+
   static let validSquareSize = CGSize(width: 100, height: 100)
   static let validNonSquareSize = CGSize(width: 10, height: 20)
 
@@ -427,15 +437,8 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidLink() throws {
-    let result = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName,
-      "middle_name": SampleUserProfiles.valid.middleName,
-      "last_name": SampleUserProfiles.valid.lastName,
-      "name": SampleUserProfiles.valid.name,
-      "link": "   ",
-      "email": SampleUserProfiles.valid.email
-    ]
+    result["link"] = "   "
+
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -475,17 +478,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithNoFriends() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "friends": ["data": []
-      ]
-    ]
+    result["friends"] = ["data": []]
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -505,16 +498,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidFriends() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "friends": "   "
-    ]
+    result["friends"] = "   "
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -534,16 +518,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidBirthday() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "birthday": 123
-    ]
+    result["birthday"] = 123
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -563,16 +538,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidAgeRange() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "age_range": "ageRange"
-    ]
+    result["ageRange"] = "ageRange"
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -592,16 +558,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidHometown() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "hometown": "hometown"
-    ]
+    result["hometown"] = "hometown"
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -621,16 +578,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidLocation() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "location": "location"
-    ]
+    result["location"] = "location"
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -650,16 +598,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadingProfileWithInvalidGender() throws {
-    let result: [String: Any] = [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
-      "gender": [:]
-    ]
+    result["gender"] = [:]
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -854,13 +793,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testProfileParseBlockReturnsNilIfResultHasEmptyId() throws {
-    let result = [
-      "id": "",
-      "first_name": "firstname",
-      "middle_name": "middlename",
-      "last_name": "lastname",
-      "name": "name"
-    ]
+    result["id"] = ""
     Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
@@ -978,65 +911,109 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     let coder = TestCoder()
     _ = Profile(coder: coder)
 
-    XCTAssertTrue(
-      coder.decodedObject["userID"].self as? Any.Type == NSString.self,
-      "Should decode a string for the userID key"
+    decodeObjectCheck(
+      decodedObject: "userID",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the userID key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["firstName"].self as? Any.Type == NSString.self,
-      "Should decode a string for the firstName key"
+
+    decodeObjectCheck(
+      decodedObject: "firstName",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the firstName key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["middleName"].self as? Any.Type == NSString.self,
-      "Should decode a string for the middleName key"
+
+    decodeObjectCheck(
+      decodedObject: "middleName",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the middleName key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["lastName"].self as? Any.Type == NSString.self,
-      "Should decode a string for the lastName key"
+
+    decodeObjectCheck(
+      decodedObject: "lastName",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the lastName key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["name"].self as? Any.Type == NSString.self,
-      "Should decode a string for the name key"
+
+    decodeObjectCheck(
+      decodedObject: "name",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the name key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["linkURL"].self as? Any.Type == NSURL.self,
-      "Should decode a url for the linkURL key"
+
+    decodeObjectCheck(
+      decodedObject: "linkURL",
+      objectType: NSURL.self,
+      failureMessage:
+        "Should decode a url for the linkURL key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["refreshDate"].self as? Any.Type == NSDate.self,
-      "Should decode a date for the refreshDate key"
+
+    decodeObjectCheck(
+      decodedObject: "refreshDate",
+      objectType: NSDate.self,
+      failureMessage:
+        "Should decode a date for the refreshDate key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["imageURL"].self as? Any.Type == NSURL.self,
-      "Should decode a url for the imageURL key"
+
+    decodeObjectCheck(
+      decodedObject: "imageURL",
+      objectType: NSURL.self,
+      failureMessage:
+        "Should decode a url for the imageURL key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["email"].self as? Any.Type == NSString.self,
-      "Should decode a string for the email key"
+
+    decodeObjectCheck(
+      decodedObject: "email",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the email key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["friendIDs"].self as? Any.Type == NSArray.self,
-      "Should decode an array for the friendIDs key"
+
+    decodeObjectCheck(
+      decodedObject: "friendIDs",
+      objectType: NSArray.self,
+      failureMessage:
+        "Should decode an array for the friendIDs key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["birthday"].self as? Any.Type == NSDate.self,
-      "Should decode a date for the birthday key"
+
+    decodeObjectCheck(
+      decodedObject: "birthday",
+      objectType: NSDate.self,
+      failureMessage:
+        "Should decode a date for the birthday key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["ageRange"].self as? Any.Type == UserAgeRange.self,
-      "Should decode a UserAgeRange object for the ageRange key"
+
+    decodeObjectCheck(
+      decodedObject: "ageRange",
+      objectType: UserAgeRange.self,
+      failureMessage:
+        "Should decode a UserAgeRange object for the ageRange key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["hometown"].self as? Any.Type == Location.self,
-      "Should decode a Location object for the hometown key"
+
+    decodeObjectCheck(
+      decodedObject: "hometown",
+      objectType: Location.self,
+      failureMessage:
+        "Should decode a Location object for the hometown key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["location"].self as? Any.Type == Location.self,
-      "Should decode a Location object for the location key"
+
+    decodeObjectCheck(
+      decodedObject: "location",
+      objectType: Location.self,
+      failureMessage:
+        "Should decode a Location object for the location key"
     )
-    XCTAssertTrue(
-      coder.decodedObject["gender"].self as? Any.Type == NSString.self,
-      "Should decode a string for the gender key"
+
+    decodeObjectCheck(
+      decodedObject: "gender",
+      objectType: NSString.self,
+      failureMessage:
+        "Should decode a string for the gender key"
     )
     XCTAssertEqual(
       coder.decodedObject["isLimited"] as? String,
@@ -1167,6 +1144,23 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     let token = SampleAccessTokens.create(withPermissions: permissions)
     let graphPath = Profile.graphPath(for: token)
     XCTAssertEqual(graphPath, expectedPath, file: file, line: line)
+  }
+
+  func decodeObjectCheck(
+    decodedObject: String,
+    objectType: Any,
+    failureMessage: String,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    let coder = TestCoder()
+    _ = Profile(coder: coder)
+    XCTAssertTrue(
+      coder.decodedObject[decodedObject].self as? Any.Type == objectType as? Any.Type,
+      failureMessage,
+      file: file,
+      line: line
+    )
   }
 }
 // swiftlint:disable:this file_length
