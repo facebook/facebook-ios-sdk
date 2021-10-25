@@ -797,11 +797,11 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testAutoLogAppEventsEnabledInternalStorage() {
-    Settings.isAutoLogAppEventsEnabled = true
+    settings.isAutoLogAppEventsEnabled = true
 
     resetLoggingSideEffects()
 
-    XCTAssertTrue(Settings.isAutoLogAppEventsEnabled, "sanity check")
+    XCTAssertTrue(settings.isAutoLogAppEventsEnabled, "sanity check")
     XCTAssertNil(
       userDefaultsSpy.capturedObjectRetrievalKey,
       "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1005,7 +1005,7 @@ class FBSDKSettingsTests: XCTestCase {
 
   func testOverridingCachedFacebookCodelessDebugLogEnabled() {
     Settings.isCodelessDebugLogEnabled = true
-    XCTAssertTrue(settings.isCodelessDebugLogEnabled)
+    XCTAssertTrue(Settings.isCodelessDebugLogEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookCodelessDebugLogEnabled": false])
     Settings.infoDictionaryProvider = bundle
@@ -1180,7 +1180,7 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testSetLimitEventAndDataUsageWithEmptyCache() {
-    Settings.shouldLimitEventAndDataUsage = true
+    settings.isEventDataUsageLimited = true
 
     XCTAssertTrue(
       userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"] as? Int != 0,
@@ -1193,10 +1193,10 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testSetLimitEventAndDataUsageWithNonEmptyCache() {
-    Settings.shouldLimitEventAndDataUsage = true
+    settings.isEventDataUsageLimited = true
     XCTAssertTrue(settings.isEventDataUsageLimited, "sanity check")
 
-    Settings.shouldLimitEventAndDataUsage = false
+    settings.isEventDataUsageLimited = false
     XCTAssertFalse(
       settings.isEventDataUsageLimited,
       "Should be able to override the existing value of should limit event data usage"
@@ -1306,7 +1306,7 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testDataProcessingOptionsWithNonEmptyCache() {
-    Settings.setDataProcessingOptions([])
+    settings.setDataProcessingOptions([])
 
     // Reset internal storage
     settings.reset()
@@ -1333,7 +1333,7 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testDataProcessingOptionsInternalStorage() {
-    Settings.setDataProcessingOptions([])
+    settings.setDataProcessingOptions([])
 
     XCTAssertNotNil(
       settings.persistableDataProcessingOptions,
