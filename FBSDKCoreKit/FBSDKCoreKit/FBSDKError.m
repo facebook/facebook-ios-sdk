@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKConstants.h"
+#import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKNetworkErrorChecker.h"
@@ -23,9 +24,9 @@
 
 @implementation FBSDKError
 
-static id<FBSDKErrorReporting> _errorReporter;
+// MARK: - Class Dependencies
 
-#pragma mark - Class Methods
+static id<FBSDKErrorReporting> _errorReporter;
 
 + (id<FBSDKErrorReporting>)errorReporter
 {
@@ -41,6 +42,17 @@ static id<FBSDKErrorReporting> _errorReporter;
 {
   self.errorReporter = errorReporter;
 }
+
+#if DEBUG && FBTEST
+
++ (void)reset
+{
+  _errorReporter = nil;
+}
+
+#endif
+
+// MARK: - General Errors
 
 + (NSError *)errorWithCode:(NSInteger)code message:(nullable NSString *)message
 {
@@ -85,13 +97,12 @@ static id<FBSDKErrorReporting> _errorReporter;
                      message:(nullable NSString *)message
              underlyingError:(nullable NSError *)underlyingError
 {
-  NSMutableDictionary<NSString *, id> *fullUserInfo = [[NSMutableDictionary alloc] initWithDictionary:userInfo];
-  [FBSDKTypeUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
-  [FBSDKTypeUtility dictionary:fullUserInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
-  userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
-  [self.errorReporter saveError:code errorDomain:domain message:message];
-
-  return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
+  return [factory errorWithDomain:domain
+                             code:code
+                         userInfo:userInfo
+                          message:message
+                  underlyingError:underlyingError];
 }
 
 + (NSError *)invalidArgumentErrorWithName:(NSString *)name
@@ -170,19 +181,12 @@ static id<FBSDKErrorReporting> _errorReporter;
   return [self errorWithCode:FBSDKErrorUnknown userInfo:@{} message:message underlyingError:nil];
 }
 
+// MARK: - Network Error Checking
+
 + (BOOL)isNetworkError:(NSError *)error
 {
   FBSDKNetworkErrorChecker *checker = [FBSDKNetworkErrorChecker new];
   return [checker isNetworkError:error];
 }
-
-#if DEBUG && FBTEST
-
-+ (void)reset
-{
-  _errorReporter = nil;
-}
-
-#endif
 
 @end

@@ -100,6 +100,8 @@
 #import "FBSDKErrorConfiguration.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorConfigurationProviding.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKErrorReport+Testing.h"
