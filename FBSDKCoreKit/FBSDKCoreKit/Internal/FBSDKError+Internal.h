@@ -28,17 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
                                   message:(nullable NSString *)message
                           underlyingError:(nullable NSError *)underlyingError;
 
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(nullable NSString *)message;
-
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(nullable NSString *)message
-                            underlyingError:(nullable NSError *)underlyingError;
-
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(nullable NSString *)message;
 
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name

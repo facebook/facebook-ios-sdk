@@ -140,34 +140,6 @@ static id<FBSDKErrorReporting> _errorReporter;
                underlyingError:underlyingError];
 }
 
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(NSString *)message
-{
-  return [self invalidCollectionErrorWithName:name collection:collection item:item message:message underlyingError:nil];
-}
-
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(NSString *)message
-                            underlyingError:(NSError *)underlyingError
-{
-  if (!message) {
-    message =
-    [[NSString alloc] initWithFormat:@"Invalid item (%@) found in collection for %@: %@", item, name, collection];
-  }
-  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
-  [FBSDKTypeUtility dictionary:userInfo setObject:item forKey:FBSDKErrorArgumentValueKey];
-  [FBSDKTypeUtility dictionary:userInfo setObject:collection forKey:FBSDKErrorArgumentCollectionKey];
-  return [self errorWithCode:FBSDKErrorInvalidArgument
-                    userInfo:userInfo
-                     message:message
-             underlyingError:underlyingError];
-}
-
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(NSString *)message
 {
   return [self requiredArgumentErrorWithName:name message:message underlyingError:nil];

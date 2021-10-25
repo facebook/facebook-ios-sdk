@@ -189,42 +189,6 @@ class SDKErrorTests: XCTestCase {
     )
   }
 
-  func testInvalidCollection() {
-    let collection: NSArray = [1, 2, 3]
-    let invalidItem = 4
-    let error = SDKError.invalidCollectionError(
-      withName: "foo",
-      collection: collection,
-      item: invalidItem,
-      message: name
-    ) as NSError
-
-    XCTAssertEqual(errorReporter.capturedErrorCode, invalidArgumentErrorCode, Assertions.code)
-    XCTAssertEqual(errorReporter.capturedErrorDomain, defaultDomain, Assertions.domain)
-    XCTAssertEqual(errorReporter.capturedMessage, name, Assertions.message)
-
-    XCTAssertEqual(
-      error.userInfo[ErrorDeveloperMessageKey] as? String,
-      name,
-      "The returned error should contain the message from the SDK error"
-    )
-    XCTAssertEqual(
-      error.userInfo[ErrorArgumentNameKey] as? String,
-      "foo",
-      "The returned error should contain the invalid argument name"
-    )
-    XCTAssertEqual(
-      error.userInfo[ErrorArgumentValueKey] as? Int,
-      invalidItem,
-      "The returned error should contain the invalid argument value"
-    )
-    XCTAssertEqual(
-      error.userInfo[ErrorArgumentCollectionKey] as? NSArray,
-      collection,
-      "The returned error should contain the invalid collection"
-    )
-  }
-
   func testRequiredArgumentErrorWithName() {
     let error = SDKError.requiredArgumentError(withName: "foo", message: name) as NSError
 
