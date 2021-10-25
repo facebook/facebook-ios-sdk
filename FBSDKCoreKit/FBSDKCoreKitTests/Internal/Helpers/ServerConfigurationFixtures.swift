@@ -17,7 +17,7 @@ class ServerConfigurationFixtures: NSObject {
 
   /// A default configuration with custom values passed by dictionary.
   /// To use: Include a dictionary with the keys and values you want to override on the default configuration
-  class func config(withDictionary dict: [String: Any]) -> ServerConfiguration {
+  class func config(withDictionary dict: [String: Any]) -> ServerConfiguration { // swiftlint:disable:this cyclomatic_complexity
     var loginTooltipEnabled = defaultConfig.isLoginTooltipEnabled
     if dict["loginTooltipEnabled"] != nil {
       loginTooltipEnabled = dict["loginTooltipEnabled"] as? Int != 0
