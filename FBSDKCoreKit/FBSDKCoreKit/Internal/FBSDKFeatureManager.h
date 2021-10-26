@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FeatureManager)
 @interface FBSDKFeatureManager : NSObject
 
-@property (class, nonatomic, strong, readonly) FBSDKFeatureManager *shared;
+@property (class, nonatomic, readonly, strong) FBSDKFeatureManager *shared;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

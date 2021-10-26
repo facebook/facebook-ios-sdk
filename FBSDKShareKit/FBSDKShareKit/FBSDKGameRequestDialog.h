@@ -23,7 +23,7 @@ NS_SWIFT_NAME(GameRequestDialog)
 @interface FBSDKGameRequestDialog : NSObject
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER
-NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
+  NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
@@ -42,12 +42,12 @@ NS_SWIFT_NAME(init(content:delegate:));
  */
 + (instancetype)showWithContent:(FBSDKGameRequestContent *)content
                        delegate:(nullable id<FBSDKGameRequestDialogDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
+  NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 
 /**
   The receiver's delegate or nil if it doesn't have a delegate.
  */
-@property (nonatomic, weak, nullable) id<FBSDKGameRequestDialogDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKGameRequestDialogDelegate> delegate;
 
 /**
   The content for game request.
@@ -57,7 +57,7 @@ NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 /**
   Specifies whether frictionless requests are enabled.
  */
-@property (nonatomic, assign, getter=isFrictionlessRequestsEnabled) BOOL frictionlessRequestsEnabled;
+@property (nonatomic, getter = isFrictionlessRequestsEnabled, assign) BOOL frictionlessRequestsEnabled;
 
 /**
   A Boolean value that indicates whether the receiver can initiate a game request.

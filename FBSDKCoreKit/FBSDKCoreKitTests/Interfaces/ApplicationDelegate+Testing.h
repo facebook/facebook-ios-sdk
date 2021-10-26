@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 
 + (void)resetHasInitializeBeenCalled
-  NS_SWIFT_NAME(reset());
+NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationObserving>)observer
                                tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet

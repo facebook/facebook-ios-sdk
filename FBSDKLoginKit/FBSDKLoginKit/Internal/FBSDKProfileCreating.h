@@ -32,7 +32,7 @@ NS_SWIFT_NAME(ProfileCreating)
                                  ageRange:(nullable FBSDKUserAgeRange *)ageRange
                                  hometown:(nullable FBSDKLocation *)hometown
                                  location:(nullable FBSDKLocation *)location
-                                 gender:(nullable NSString *)gender
+                                   gender:(nullable NSString *)gender
                                 isLimited:(BOOL)isLimited
 NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:isLimited:));
 

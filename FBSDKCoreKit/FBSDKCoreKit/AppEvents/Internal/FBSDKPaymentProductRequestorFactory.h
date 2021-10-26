@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Factory used to create `FBSDKPaymentProductRequestor` instances with dependencies.
 NS_SWIFT_NAME(PaymentProductRequestorFactory)
-@interface FBSDKPaymentProductRequestorFactory : NSObject<FBSDKPaymentProductRequestorCreating>
+@interface FBSDKPaymentProductRequestorFactory : NSObject <FBSDKPaymentProductRequestorCreating>
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
@@ -30,7 +30,7 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
                            store:(id<FBSDKDataPersisting>)store
                    loggerFactory:(id<FBSDKLoggingCreating>)logger
           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
-                   appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
+         appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:loggerFactory:productsRequestFactory:receiptProvider:));
 
 @end

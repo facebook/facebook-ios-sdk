@@ -46,7 +46,7 @@ NS_SWIFT_NAME(ProfileChangeNewKey);
  @param error the error during the request, if any
 
  */
-typedef void (^FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nullable error)
+typedef void (^ FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nullable error)
 NS_SWIFT_NAME(ProfileBlock);
 
 /**
@@ -68,7 +68,7 @@ NS_SWIFT_NAME(UserIdentifier);
  You can use this class to build your own `FBSDKProfilePictureView` or in place of typical requests to "/me".
  */
 NS_SWIFT_NAME(Profile)
-@interface FBSDKProfile : NSObject<NSCopying, NSSecureCoding>
+@interface FBSDKProfile : NSObject <NSCopying, NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -160,8 +160,8 @@ NS_SWIFT_NAME(Profile)
                       ageRange:(nullable FBSDKUserAgeRange *)ageRange
                       hometown:(nullable FBSDKLocation *)hometown
                       location:(nullable FBSDKLocation *)location
-                         gender:(nullable NSString *)gender
-NS_DESIGNATED_INITIALIZER;
+                        gender:(nullable NSString *)gender
+  NS_DESIGNATED_INITIALIZER;
 
 /**
  The current profile instance and posts the appropriate notification
@@ -171,29 +171,29 @@ NS_DESIGNATED_INITIALIZER;
  */
 
 /// The current profile
-@property (class, nonatomic, strong, nullable) FBSDKProfile *currentProfile
+@property (class, nullable, nonatomic, strong) FBSDKProfile *currentProfile
 NS_SWIFT_NAME(current);
 
 /**
   The user id
  */
-@property (nonatomic, copy, readonly) FBSDKUserIdentifier *userID;
+@property (nonatomic, readonly, copy) FBSDKUserIdentifier *userID;
 /**
   The user's first name
  */
-@property (nonatomic, copy, readonly, nullable) NSString *firstName;
+@property (nullable, nonatomic, readonly, copy) NSString *firstName;
 /**
   The user's middle name
  */
-@property (nonatomic, copy, readonly, nullable) NSString *middleName;
+@property (nullable, nonatomic, readonly, copy) NSString *middleName;
 /**
   The user's last name
  */
-@property (nonatomic, copy, readonly, nullable) NSString *lastName;
+@property (nullable, nonatomic, readonly, copy) NSString *lastName;
 /**
   The user's complete name
  */
-@property (nonatomic, copy, readonly, nullable) NSString *name;
+@property (nullable, nonatomic, readonly, copy) NSString *name;
 /**
   A URL to the user's profile.
 
@@ -202,7 +202,7 @@ NS_SWIFT_NAME(current);
  Consider using `FBSDKAppLinkResolver` to resolve this
  to an app link to link directly to the user's profile in the Facebook app.
  */
-@property (nonatomic, readonly, nullable) NSURL *linkURL;
+@property (nullable, nonatomic, readonly) NSURL *linkURL;
 
 /**
   The last time the profile data was fetched.
@@ -211,54 +211,54 @@ NS_SWIFT_NAME(current);
 /**
   A URL to use for fetching a user's profile image.
  */
-@property (nonatomic, readonly, nullable) NSURL *imageURL;
+@property (nullable, nonatomic, readonly) NSURL *imageURL;
 /**
   The user's email.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'email' permission.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *email;
+@property (nullable, nonatomic, readonly, copy) NSString *email;
 /**
   A list of identifiers of the user's friends.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
  */
-@property (nonatomic, copy, readonly, nullable) NSArray<FBSDKUserIdentifier *> *friendIDs;
+@property (nullable, nonatomic, readonly, copy) NSArray<FBSDKUserIdentifier *> *friendIDs;
 
 /**
   The user's birthday.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_birthday' permission.
  */
-@property (nonatomic, copy, readonly, nullable) NSDate *birthday;
+@property (nullable, nonatomic, readonly, copy) NSDate *birthday;
 
 /**
   The user's age range
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_age_range' permission.
  */
-@property (nonatomic, copy, readonly, nullable) FBSDKUserAgeRange *ageRange;
+@property (nullable, nonatomic, readonly, copy) FBSDKUserAgeRange *ageRange;
 
 /**
   The user's hometown
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_hometown' permission.
  */
-@property (nonatomic, copy, readonly, nullable) FBSDKLocation *hometown;
+@property (nullable, nonatomic, readonly, copy) FBSDKLocation *hometown;
 
 /**
   The user's location
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_location' permission.
  */
-@property (nonatomic, copy, readonly, nullable) FBSDKLocation *location;
+@property (nullable, nonatomic, readonly, copy) FBSDKLocation *location;
 
 /**
   The user's gender
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_gender' permission.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *gender;
+@property (nullable, nonatomic, readonly, copy) NSString *gender;
 
 /**
   Indicates if `currentProfile` will automatically observe `FBSDKAccessTokenDidChangeNotification` notifications

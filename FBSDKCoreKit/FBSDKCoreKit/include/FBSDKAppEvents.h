@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 
 #if !TARGET_OS_TV
-#import <WebKit/WebKit.h>
+ #import <WebKit/WebKit.h>
 #endif
 
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
 #import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
 
@@ -117,14 +117,14 @@ NS_SWIFT_NAME(AppEvents)
  This should be set before any other calls are made to `FBSDKAppEvents`.  Thus, you should set it in your application
  delegate's `application:didFinishLaunchingWithOptions:` delegate.
  */
-@property (class, nonatomic, copy, nullable) NSString *loggingOverrideAppID;
+@property (class, nullable, nonatomic, copy) NSString *loggingOverrideAppID;
 
 /*
  The custom user ID to associate with all app events.
 
  The userID is persisted until it is cleared by passing nil.
  */
-@property (class, nonatomic, copy, nullable) NSString *userID;
+@property (class, nullable, nonatomic, copy) NSString *userID;
 
 /*
   Returns generated anonymous id that persisted with current install of the app
@@ -157,7 +157,6 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum;
-
 
 /**
 
@@ -195,7 +194,6 @@ NS_SWIFT_NAME(AppEvents)
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
-
 
 /**
 
@@ -296,7 +294,6 @@ NS_SWIFT_NAME(AppEvents)
            currency:(NSString *)currency
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken;
-
 
 /*
  * Push Notifications Logging
@@ -502,7 +499,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
   Returns the set user data else nil
 */
 + (nullable NSString *)getUserData
-DEPRECATED_MSG_ATTRIBUTE("Class methods for getting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+    DEPRECATED_MSG_ATTRIBUTE("Class methods for getting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
   Returns the set user data else nil
@@ -513,7 +510,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for getting user information are depreca
   Clears the current user data
 */
 + (void)clearUserData
-DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+    DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
   Clears the current user data
@@ -531,7 +528,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
  */
 + (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type
-DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+    DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
  Sets custom user data to associate with all app events. All user data are hashed
@@ -549,7 +546,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
  Clears the current user data of certain type
  */
 + (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
-DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+    DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
  Clears the current user data of certain type

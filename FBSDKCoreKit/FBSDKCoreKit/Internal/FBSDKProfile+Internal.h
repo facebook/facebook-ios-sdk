@@ -13,11 +13,11 @@
 #import "FBSDKDataPersisting.h"
 
 #if FBSDK_SWIFT_PACKAGE
-#import "FBSDKProfile.h"
-#import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequest.h"
+ #import "FBSDKProfile.h"
 #else
-#import <FBSDKCoreKit/FBSDKProfile.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+ #import <FBSDKCoreKit/FBSDKProfile.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,7 +52,7 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                   settings:(id<FBSDKSettings>)settings
                  urlHoster:(id<FBSDKURLHosting>)urlHoster
-  NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:settings:urlHoster:));
+NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:settings:urlHoster:));
 
 @end
 

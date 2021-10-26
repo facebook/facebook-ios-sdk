@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,12 +23,12 @@ NS_SWIFT_NAME(JSExports)
 /*!
  @abstract Returns the current access token string, if available.
  */
-@property (class, nonatomic, copy, readonly, nullable) NSString *accessTokenString;
+@property (class, nullable, nonatomic, readonly, copy) NSString *accessTokenString;
 
 /*!
  @abstract returns true if there is a current access token.
  */
-@property (class, nonatomic, assign, readonly, getter=isLoggedIn) BOOL loggedIn;
+@property (class, nonatomic, readonly, getter = isLoggedIn, assign) BOOL loggedIn;
 
 /*!
  @abstract Returns true if there is a current access token and the permission has been granted.

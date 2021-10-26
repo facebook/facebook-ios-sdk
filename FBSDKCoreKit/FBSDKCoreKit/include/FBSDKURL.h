@@ -47,43 +47,43 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
  Gets the target URL.  If the link is an App Link, this is the target of the App Link.
  Otherwise, it is the url that created the target.
  */
-@property (nonatomic, strong, readonly) NSURL *targetURL;
+@property (nonatomic, readonly, strong) NSURL *targetURL;
 
 /**
  Gets the query parameters for the target, parsed into an NSDictionary.
  */
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *targetQueryParameters;
+@property (nonatomic, readonly, strong) NSDictionary<NSString *, id> *targetQueryParameters;
 
 /**
  If this link target is an App Link, this is the data found in al_applink_data.
  Otherwise, it is nil.
  */
-@property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, id> *appLinkData;
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, id> *appLinkData;
 
 /**
  If this link target is an App Link, this is the data found in extras.
  */
-@property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, id> *appLinkExtras;
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, id> *appLinkExtras;
 
 /**
  The App Link indicating how to navigate back to the referer app, if any.
  */
-@property (nonatomic, strong, readonly, nullable) id<FBSDKAppLink> appLinkReferer;
+@property (nullable, nonatomic, readonly, strong) id<FBSDKAppLink> appLinkReferer;
 
 /**
  The URL that was used to create this FBSDKURL.
  */
-@property (nonatomic, strong, readonly) NSURL *inputURL;
+@property (nonatomic, readonly, strong) NSURL *inputURL;
 
 /**
  The query parameters of the inputURL, parsed into an NSDictionary.
  */
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *inputQueryParameters;
+@property (nonatomic, readonly, strong) NSDictionary<NSString *, id> *inputQueryParameters;
 
 /**
  The flag indicating whether the URL comes from auto app link
 */
-@property (nonatomic, readonly, getter=isAutoAppLink) BOOL isAutoAppLink;
+@property (nonatomic, readonly, getter = isAutoAppLink) BOOL isAutoAppLink;
 
 @end
 

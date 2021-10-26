@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKAuthenticationTokenBlock)(FBSDKAuthenticationToken *_Nullable token)
+typedef void (^ FBSDKAuthenticationTokenBlock)(FBSDKAuthenticationToken *_Nullable token)
 NS_SWIFT_NAME(AuthenticationTokenBlock);
 
 NS_SWIFT_NAME(AuthenticationTokenCreating)

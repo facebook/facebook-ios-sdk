@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsStateProviding)
 @protocol FBSDKAppEventsStateProviding
 
-- (FBSDKAppEventsState*) createStateWithToken:(NSString *)tokenString appID:(NSString *)appID NS_SWIFT_NAME(createState(tokenString:appID:));
+- (FBSDKAppEventsState *)createStateWithToken:(NSString *)tokenString appID:(NSString *)appID
+NS_SWIFT_NAME(createState(tokenString:appID:));
 
 @end
 

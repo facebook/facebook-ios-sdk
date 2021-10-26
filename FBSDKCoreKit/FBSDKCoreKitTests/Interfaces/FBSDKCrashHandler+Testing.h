@@ -13,7 +13,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface FBSDKCrashHandler (Testing)
 
 @property (nonatomic) id<FBSDKFileManaging> fileManager;
@@ -22,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init;
 
-- (instancetype)initWithFileManager: (id<FBSDKFileManaging>)fileManager
-                           bundle: (id<FBSDKInfoDictionaryProviding>)bundle
+- (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
+                             bundle:(id<FBSDKInfoDictionaryProviding>)bundle
                   fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
 NS_SWIFT_NAME(init(fileManager:bundle:dataExtractor:));
 

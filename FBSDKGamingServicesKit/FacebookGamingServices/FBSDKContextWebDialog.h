@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "TargetConditionals.h"
-
 #import <Foundation/Foundation.h>
+
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
+
+#import "TargetConditionals.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +24,7 @@ NS_SWIFT_NAME(ContextWebDialog)
 /**
  The current web dialog that shows the web content
 */
-@property (nonatomic, strong, nullable) FBSDKWebDialog* currentWebDialog;
+@property (nullable, nonatomic, strong) FBSDKWebDialog *currentWebDialog;
 
 + (instancetype)new NS_UNAVAILABLE;
 

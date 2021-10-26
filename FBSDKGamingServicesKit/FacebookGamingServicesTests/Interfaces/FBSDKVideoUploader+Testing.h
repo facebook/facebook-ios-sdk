@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
                         videoSize:(NSUInteger)videoSize
                        parameters:(NSDictionary<NSString *, id> *)parameters
                          delegate:(id<FBSDKVideoUploaderDelegate>)delegate
-                  graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:graphRequestFactory:));
 
 - (void)_postFinishRequest;
@@ -35,7 +35,7 @@ NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:graphRequestFactory:)
 - (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result;
 
 - (void)_startTransferRequestWithNewOffset:(NSDictionary<NSString *, id> *)offsetDictionary
-                                                data:(NSData *)data;
+                                      data:(NSData *)data;
 
 @end
 

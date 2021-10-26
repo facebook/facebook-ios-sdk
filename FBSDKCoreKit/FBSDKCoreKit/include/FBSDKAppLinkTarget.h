@@ -31,13 +31,13 @@ NS_SWIFT_NAME(AppLinkTarget)
 NS_SWIFT_NAME(init(url:appStoreId:appName:));
 
 /** The URL prefix for this app link target */
-@property (nonatomic, strong, readonly, nullable) NSURL *URL;
+@property (nullable, nonatomic, readonly, strong) NSURL *URL;
 
 /** The app ID for the app store */
-@property (nonatomic, copy, readonly, nullable) NSString *appStoreId;
+@property (nullable, nonatomic, readonly, copy) NSString *appStoreId;
 
 /** The name of the app */
-@property (nonatomic, copy, readonly) NSString *appName;
+@property (nonatomic, readonly, copy) NSString *appName;
 
 @end
 

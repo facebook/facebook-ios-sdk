@@ -12,15 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKSettings (Testing)
 
-@property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
-@property (class, nonatomic, nullable, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
-@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-@property (class, nonatomic, nullable) id<FBSDKEventLogging> eventLogger;
+@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (class, nullable, nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (class, nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
-appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
-    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-               eventLogger:(id<FBSDKEventLogging>)eventLogger
++ (void)      configureWithStore:(id<FBSDKDataPersisting>)store
+  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options

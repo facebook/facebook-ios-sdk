@@ -29,12 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)reset;
 
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                    swizzler:(Class<FBSDKSwizzling>)swizzler
-                                    settings:(id<FBSDKSettings>)settings
-                                 eventLogger:(id<FBSDKEventLogging>)eventLogger
-                            featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
-                              eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                   swizzler:(Class<FBSDKSwizzling>)swizzler
+                                   settings:(id<FBSDKSettings>)settings
+                                eventLogger:(id<FBSDKEventLogging>)eventLogger
+                           featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
+                             eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
 NS_SWIFT_NAME(init(graphRequestFactory:serverConfigurationProvider:swizzler:settings:eventLogger:featureExtractor:eventProcessor:));
 
 - (void)logSuggestedEvent:(FBSDKAppEventName)event

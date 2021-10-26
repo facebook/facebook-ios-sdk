@@ -43,7 +43,7 @@ NS_SWIFT_NAME(init(_:));
    word characters.
  @return YES if the hashtag is valid, NO otherwise.
  */
-@property (nonatomic, readonly, assign, getter=isValid) BOOL valid;
+@property (nonatomic, readonly, getter = isValid, assign) BOOL valid;
 
 /**
   Compares the receiver to another hashtag.

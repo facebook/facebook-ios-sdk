@@ -8,9 +8,9 @@
 
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
- #import "FBSDKAppLinkUtility.h"
+#import "FBSDKAppLinkUtility.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (class, nullable, nonatomic) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (class, nullable, nonatomic) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
-
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                   infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider

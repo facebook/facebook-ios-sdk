@@ -10,7 +10,7 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,8 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
   Passed on construction to determine arrow orientation.
  */
-typedef NS_ENUM(NSUInteger, FBSDKTooltipViewArrowDirection)
-{
+typedef NS_ENUM(NSUInteger, FBSDKTooltipViewArrowDirection) {
   /** View is located above given point, arrow is pointing down. */
   FBSDKTooltipViewArrowDirectionDown = 0,
   /** View is located below given point, arrow is pointing up. */
@@ -32,8 +31,7 @@ typedef NS_ENUM(NSUInteger, FBSDKTooltipViewArrowDirection)
 
   Passed on construction to determine color styling.
  */
-typedef NS_ENUM(NSUInteger, FBSDKTooltipColorStyle)
-{
+typedef NS_ENUM(NSUInteger, FBSDKTooltipColorStyle) {
   /** Light blue background, white text, faded blue close button. */
   FBSDKTooltipColorStyleFriendlyBlue = 0,
   /** Dark gray background, white text, light gray close button. */
@@ -68,12 +66,12 @@ NS_SWIFT_NAME(FBTooltipView)
 /**
   Gets or sets the message.
  */
-@property (nonatomic, copy, nullable) NSString *message;
+@property (nullable, nonatomic, copy) NSString *message;
 
 /**
   Gets or sets the optional phrase that comprises the first part of the label (and is highlighted differently).
  */
-@property (nonatomic, copy, nullable) NSString *tagline;
+@property (nullable, nonatomic, copy) NSString *tagline;
 
 /**
   Designated initializer.

@@ -19,13 +19,13 @@ extern NSString *const kGamingPayloadContextTokenID;
 NS_SWIFT_NAME(GamingPayload)
 @interface FBSDKGamingPayload : NSObject
 
-@property (nonatomic, strong, nonnull) FBSDKURL *URL;
-@property (nonatomic, strong, readonly) NSString *payload;
+@property (nonnull, nonatomic, strong) FBSDKURL *URL;
+@property (nonatomic, readonly, strong) NSString *payload;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithURL:(FBSDKURL * _Nonnull)url
+- (instancetype)initWithURL:(FBSDKURL *_Nonnull)url
 NS_SWIFT_NAME(initWith(URL:));
 
 @end

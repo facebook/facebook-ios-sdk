@@ -13,21 +13,21 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKGateKeeperManager (Testing)
 
 @property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
-@property (class, nonatomic, nullable) FBSDKLogger *logger;
-@property (class, nonatomic, nullable) id<FBSDKSettings> settings;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
+@property (class, nullable, nonatomic) FBSDKLogger *logger;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
 
-@property (class, nonatomic, nullable) NSDictionary<NSString *, id> *gateKeepers;
+@property (class, nullable, nonatomic) NSDictionary<NSString *, id> *gateKeepers;
 @property (class, nonatomic) BOOL requeryFinishedForAppStart;
-@property (class, nonatomic, nullable) NSDate *timestamp;
+@property (class, nullable, nonatomic) NSDate *timestamp;
 @property (class, nonatomic) BOOL isLoadingGateKeepers;
 
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-                        store:(id<FBSDKDataPersisting>)store
++ (void)  configureWithSettings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                          store:(id<FBSDKDataPersisting>)store
 NS_SWIFT_NAME(configure(settings:graphRequestFactory:graphRequestConnectionFactory:store:));
 + (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
 + (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error

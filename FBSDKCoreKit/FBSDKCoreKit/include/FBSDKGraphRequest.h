@@ -48,9 +48,9 @@ NS_SWIFT_NAME(GraphRequest)
 
  @warning UNSAFE - DO NOT USE
  */
-+ (void)    configureWithSettings:(id<FBSDKSettings>)settings
- currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
-    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
++ (void)     configureWithSettings:(id<FBSDKSettings>)settings
+  currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
+     graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
 NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
 
 /**
@@ -161,7 +161,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
  This will override [FBSDKSettings setGraphErrorRecoveryDisabled:].
  */
 - (void)setGraphErrorRecoveryDisabled:(BOOL)disable
-  NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
+NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
 
 /**
   Starts a connection to the Graph API.

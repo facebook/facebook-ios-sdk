@@ -10,9 +10,9 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import <FacebookGamingServices/FBSDKDialogProtocol.h>
+ #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -28,7 +28,7 @@ NS_SWIFT_NAME(CreateContextContent)
   Builds a content object that will be use to display a create context dialog
  @param playerID The player ID of the user being challenged which will be used  to create a game context
  */
-- (instancetype)initDialogContentWithPlayerID:(NSString*)playerID
+- (instancetype)initDialogContentWithPlayerID:(NSString *)playerID
 NS_SWIFT_NAME(init(playerID:));
 
 /**

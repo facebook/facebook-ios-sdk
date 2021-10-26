@@ -34,7 +34,7 @@ NS_SWIFT_NAME(SharingContent)
   Hashtag for the content being shared.
  @return The hashtag for the content being shared.
  */
-@property (nonatomic, copy, nullable) FBSDKHashtag *hashtag;
+@property (nullable, nonatomic, copy) FBSDKHashtag *hashtag;
 
 /**
   List of IDs for taggable people to tag with this content.
@@ -48,25 +48,25 @@ NS_SWIFT_NAME(SharingContent)
   The ID for a place to tag with this content.
  @return The ID for the place to tag
  */
-@property (nonatomic, copy, nullable) NSString *placeID;
+@property (nullable, nonatomic, copy) NSString *placeID;
 
 /**
   A value to be added to the referrer URL when a person follows a link from this shared content on feed.
  @return The ref for the content.
  */
-@property (nonatomic, copy, nullable) NSString *ref;
+@property (nullable, nonatomic, copy) NSString *ref;
 
 /**
  For shares into Messenger, this pageID will be used to map the app to page and attach attribution to the share.
  @return The ID of the Facebook page this share is associated with.
  */
-@property (nonatomic, copy, nullable) NSString *pageID;
+@property (nullable, nonatomic, copy) NSString *pageID;
 
 /**
  A unique identifier for a share involving this content, useful for tracking purposes.
  @return A unique string identifying this share data.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *shareUUID;
+@property (nullable, nonatomic, readonly, copy) NSString *shareUUID;
 
 /**
  Adds content to an existing dictionary as key/value pairs and returns the

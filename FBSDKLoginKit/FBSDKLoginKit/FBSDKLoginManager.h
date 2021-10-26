@@ -26,26 +26,26 @@ NS_ASSUME_NONNULL_BEGIN
 @class LoginManagerLoginResult;
 @class FBSDKLoginConfiguration;
 
-typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser };
-typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends };
+typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser, };
+typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends, };
 
 typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable result,
                                              NSError *_Nullable error);
 
 @interface LoginManager : NSObject
 
-@property (assign, nonatomic) LoginBehavior loginBehavior;
-@property (assign, nonatomic) DefaultAudience defaultAudience;
+@property (nonatomic, assign) LoginBehavior loginBehavior;
+@property (nonatomic, assign) DefaultAudience defaultAudience;
 
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
-              fromViewController:(nullable UIViewController *)fromViewController
-                         handler:(nullable LoginManagerLoginResultBlock)handler
+          fromViewController:(nullable UIViewController *)fromViewController
+                     handler:(nullable LoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
 
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(LoginManagerLoginResultBlock)completion
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -58,10 +58,9 @@ NS_REFINED_FOR_SWIFT;
  @param result the result of the authorization
  @param error the authorization error, if any.
  */
-typedef void (^FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
-                                                  NSError *_Nullable error)
+typedef void (^ FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(LoginManagerLoginResultBlock);
-
 
 /**
  FBSDKDefaultAudience enum
@@ -73,8 +72,7 @@ NS_SWIFT_NAME(LoginManagerLoginResultBlock);
  publication ceiling for the application. This enumerated value allows the application to select which
  audience to ask the user to grant publish permission for.
  */
-typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
-{
+typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
   /** Indicates that the user's friends are able to see posts made by the application */
   FBSDKDefaultAudienceFriends = 0,
   /** Indicates that only the user is able to see posts made by the application */
@@ -104,7 +102,7 @@ NS_SWIFT_NAME(LoginManager)
 
  you should set this if you intend to ask for publish permissions.
  */
-@property (assign, nonatomic) FBSDKDefaultAudience defaultAudience;
+@property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
 
 /**
  Logs the user in or authorizes additional permissions.
@@ -152,7 +150,7 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(FBSDKLoginManagerLoginResultBlock)completion
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Logs the user in with the given deep link url. Will only log user in if the given url contains valid login data.

@@ -10,8 +10,9 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
-#import <FacebookGamingServices/FBSDKDialogProtocol.h>
+ #import <Foundation/Foundation.h>
+
+ #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  A model for an instant games switchAsync cross play request.
  */
 NS_SWIFT_NAME(SwitchContextContent)
-@interface FBSDKSwitchContextContent : NSObject <NSSecureCoding,FBSDKValidatable>
+@interface FBSDKSwitchContextContent : NSObject <NSSecureCoding, FBSDKValidatable>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -28,7 +29,7 @@ NS_SWIFT_NAME(SwitchContextContent)
   Builds a content object that will be use to display a switch context dialog
  @param contextID  The context ID of the context instance to switch and set as the current game context
  */
-- (instancetype)initDialogContentWithContextID:(NSString*)contextID
+- (instancetype)initDialogContentWithContextID:(NSString *)contextID
 NS_SWIFT_NAME(init(contextID:));
 
 /**

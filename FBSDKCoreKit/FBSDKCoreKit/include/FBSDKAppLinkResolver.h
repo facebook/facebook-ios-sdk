@@ -51,7 +51,7 @@ NS_SWIFT_NAME(AppLinkResolver)
   Allocates and initializes a new instance of FBSDKAppLinkResolver.
  */
 + (instancetype)resolver
-  NS_SWIFT_NAME(init());
+NS_SWIFT_NAME(init());
 
 @end
 

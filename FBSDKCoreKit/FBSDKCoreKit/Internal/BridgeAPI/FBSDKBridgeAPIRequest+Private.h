@@ -34,8 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
                                methodName:(nullable NSString *)methodName
                             methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
-NS_DESIGNATED_INITIALIZER
+                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo NS_DESIGNATED_INITIALIZER
 NS_SWIFT_NAME(init(protocol:protocolType:scheme:methodName:methodVersion:parameters:userInfo:));
 
 @end
