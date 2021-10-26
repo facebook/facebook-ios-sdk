@@ -28,6 +28,21 @@ NS_SWIFT_NAME(error(code:userInfo:message:underlyingError:));
              underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(error(domain:code:userInfo:message:underlyingError:));
 
+// MARK: - Invalid Argument Errors
+
+- (NSError *)invalidArgumentErrorWithName:(NSString *)name
+                                    value:(nullable id)value
+                                  message:(nullable NSString *)message
+                          underlyingError:(nullable NSError *)underlyingError
+NS_SWIFT_NAME(invalidArgumentError(name:value:message:underlyingError:));
+
+- (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
+                                       name:(NSString *)name
+                                      value:(nullable id)value
+                                    message:(nullable NSString *)message
+                            underlyingError:(nullable NSError *)underlyingError
+NS_SWIFT_NAME(invalidArgumentError(domain:name:value:message:underlyingError:));
+
 @end
 
 NS_ASSUME_NONNULL_END

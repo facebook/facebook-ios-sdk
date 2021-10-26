@@ -105,6 +105,8 @@ static id<FBSDKErrorReporting> _errorReporter;
                   underlyingError:underlyingError];
 }
 
+// MARK: - Invalid Argument Errors
+
 + (NSError *)invalidArgumentErrorWithName:(NSString *)name
                                     value:(nullable id)value
                                   message:(nullable NSString *)message
@@ -138,17 +140,12 @@ static id<FBSDKErrorReporting> _errorReporter;
                                     message:(nullable NSString *)message
                             underlyingError:(nullable NSError *)underlyingError
 {
-  if (!message) {
-    message = [[NSString alloc] initWithFormat:@"Invalid value for %@: %@", name, value];
-  }
-  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
-  [FBSDKTypeUtility dictionary:userInfo setObject:value forKey:FBSDKErrorArgumentValueKey];
-  return [self errorWithDomain:domain
-                          code:FBSDKErrorInvalidArgument
-                      userInfo:userInfo
-                       message:message
-               underlyingError:underlyingError];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
+  return [factory invalidArgumentErrorWithDomain:domain
+                                            name:name
+                                           value:value
+                                         message:message
+                                 underlyingError:underlyingError];
 }
 
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(NSString *)message

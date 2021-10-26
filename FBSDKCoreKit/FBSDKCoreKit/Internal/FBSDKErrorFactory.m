@@ -61,6 +61,41 @@ NS_ASSUME_NONNULL_BEGIN
   return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 }
 
+// MARK: - Invalid Argument Errors
+
+- (NSError *)invalidArgumentErrorWithName:(NSString *)name
+                                    value:(nullable id)value
+                                  message:(nullable NSString *)message
+                          underlyingError:(nullable NSError *)underlyingError
+{
+  return [self invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                         name:name
+                                        value:value
+                                      message:message
+                              underlyingError:underlyingError];
+}
+
+- (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
+                                       name:(NSString *)name
+                                      value:(nullable id)value
+                                    message:(nullable NSString *)optionalMessage
+                            underlyingError:(nullable NSError *)underlyingError
+{
+  NSString *message = optionalMessage ?: [NSString stringWithFormat:@"Invalid value for %@: %@", name, value];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
+  userInfo[FBSDKErrorArgumentNameKey] = name;
+
+  if (value) {
+    userInfo[FBSDKErrorArgumentValueKey] = value;
+  }
+
+  return [self errorWithDomain:domain
+                          code:FBSDKErrorInvalidArgument
+                      userInfo:userInfo
+                       message:message
+               underlyingError:underlyingError];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END
