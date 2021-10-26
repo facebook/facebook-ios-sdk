@@ -150,6 +150,10 @@ static dispatch_once_t sharedConfigurationManagerNonce;
     self.isLoadingConfiguration = NO;
     self.hasRequeryFinishedForAppStart = YES;
     if (error) {
+      for (FBSDKAppEventsConfigurationManagerBlock completionBlock in self.completionBlocks) {
+        completionBlock();
+      }
+      [self.completionBlocks removeAllObjects];
       return;
     }
     self.configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:response];
