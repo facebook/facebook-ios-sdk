@@ -639,10 +639,10 @@
   NSString *errorMessage = [[NSString alloc]
                             initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
                             url];
-  return [[NSError alloc]
-          initWithDomain:FBSDKErrorDomain
-          code:FBSDKErrorBridgeAPIInterruption
-          userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}];
+  return [self.errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                 userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}
+                                  message:errorMessage
+                          underlyingError:nil];
 }
 
 static inline NSString *StringFromBool(BOOL value)

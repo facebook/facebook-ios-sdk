@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestInternalUtility *appURLSchemeProvider;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;

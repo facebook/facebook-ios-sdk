@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKBridgeAPI.h"
+#import "FBSDKBridgeAPI+Internal.h"
 
 #import <SafariServices/SafariServices.h>
 
@@ -19,7 +19,9 @@
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
@@ -60,7 +62,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
-@property (nonatomic)  NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
+@property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+@property (nonatomic) NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
 @property (nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
 @property (nonatomic) id<FBSDKURLOpening> pendingURLOpen;
 @property (nonatomic) id<FBSDKAuthenticationSession> authenticationSession NS_AVAILABLE_IOS(11_0);
@@ -81,12 +84,14 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   static FBSDKBridgeAPI *_sharedInstance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
+    FBSDKErrorFactory *errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
                                               urlOpener:UIApplication.sharedApplication
                                bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]
                                         frameworkLoader:FBSDKDynamicFrameworkLoader.shared
-                                   appURLSchemeProvider:FBSDKInternalUtility.sharedUtility];
+                                   appURLSchemeProvider:FBSDKInternalUtility.sharedUtility
+                                           errorFactory:errorFactory];
   });
   return _sharedInstance;
 }
@@ -96,7 +101,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
                     frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
-               appURLSchemeProvider:(nonnull id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider;
+               appURLSchemeProvider:(nonnull id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider
+                       errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory;
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
@@ -105,6 +111,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     _bridgeAPIResponseFactory = bridgeAPIResponseFactory;
     _frameworkLoader = frameworkLoader;
     _appURLSchemeProvider = appURLSchemeProvider;
+    _errorFactory = errorFactory;
   }
   return self;
 }
@@ -129,7 +136,12 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       } else {
         errorDomain = @"com.apple.SafariServices.Authentication";
       }
-      NSError *error = [FBSDKError errorWithDomain:errorDomain code:1 message:nil];
+
+      NSError *error = [self.errorFactory errorWithDomain:errorDomain
+                                                     code:1
+                                                 userInfo:nil
+                                                  message:nil
+                                          underlyingError:nil];
       if (_authenticationSessionCompletionHandler) {
         _authenticationSessionCompletionHandler(nil, error);
       }
@@ -202,10 +214,10 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
           NSString *errorMessage = [[NSString alloc]
                                     initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
                                     url];
-          NSError *loginError = [[NSError alloc]
-                                 initWithDomain:FBSDKErrorDomain
-                                 code:FBSDKErrorBridgeAPIInterruption
-                                 userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}];
+          NSError *loginError = [self.errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                                        userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}
+                                                         message:errorMessage
+                                                 underlyingError:nil];
           if (_authenticationSessionCompletionHandler) {
             _authenticationSessionCompletionHandler(url, loginError);
             _authenticationSessionCompletionHandler = nil;
@@ -295,10 +307,10 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       } else {
       #if FBTEST
         // self.urlOpener should only be nil in test
-        NSDictionary *userInfo = @{FBSDKErrorLocalizedDescriptionKey : @"Cannot login due to urlOpener being nil"};
-        NSError *loginError = [[NSError alloc] initWithDomain:FBSDKErrorDomain
-                                                         code:FBSDKErrorUnknown
-                                                     userInfo:userInfo];
+        NSString *message = @"Cannot login due to urlOpener being nil";
+        NSDictionary *userInfo = @{FBSDKErrorLocalizedDescriptionKey : message};
+        NSError *loginError = [self.errorFactory unknownErrorWithMessage:message
+                                                                userInfo:userInfo];
         handler(false, loginError);
       #endif
       }
@@ -352,11 +364,15 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:FBSDKURLSchemeHTTP]) {
-        openedURLError = [FBSDKError errorWithCode:FBSDKErrorBrowserUnavailable
-                                           message:@"the app switch failed because the browser is unavailable"];
+        openedURLError = [self.errorFactory errorWithCode:FBSDKErrorBrowserUnavailable
+                                                 userInfo:nil
+                                                  message:@"the app switch failed because the browser is unavailable"
+                                          underlyingError:nil];
       } else {
-        openedURLError = [FBSDKError errorWithCode:FBSDKErrorAppVersionUnsupported
-                                           message:@"the app switch failed because the destination app is out of date"];
+        openedURLError = [self.errorFactory errorWithCode:FBSDKErrorAppVersionUnsupported
+                                                 userInfo:nil
+                                                  message:@"the app switch failed because the destination app is out of date"
+                                          underlyingError:nil];
       }
       FBSDKBridgeAPIResponse *response = [self.bridgeAPIResponseFactory createResponseWithRequest:request
                                                                                             error:openedURLError];

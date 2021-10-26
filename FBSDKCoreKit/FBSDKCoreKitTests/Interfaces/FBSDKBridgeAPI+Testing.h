@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <SafariServices/SafariServices.h>
+#import "FBSDKBridgeAPI+Internal.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <SafariServices/SafariServices.h>
 
-#import "FBSDKBridgeAPI.h"
 #import "FBSDKContainerViewController.h"
+#import "FBSDKErrorCreating.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "NSProcessInfo+Protocols.h"
 
@@ -60,7 +61,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
-@property (nullable, nonatomic)  NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
+@property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+@property (nullable, nonatomic) NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
 @property (nullable, nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
 @property (nullable, nonatomic) id<FBSDKURLOpening> pendingURLOpen;
 @property (nullable, nonatomic) id<FBSDKAuthenticationSession> authenticationSession;
@@ -90,7 +92,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
-- (void)openURLWithAuthenticationSession:(NSURL *)url;
 - (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
 
 @end

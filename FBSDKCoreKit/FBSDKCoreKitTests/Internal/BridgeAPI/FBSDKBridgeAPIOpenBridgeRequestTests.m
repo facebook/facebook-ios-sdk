@@ -24,6 +24,7 @@
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestInternalUtility *appURLSchemeProvider;
 @property (nonatomic) TestLogger *logger;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @end
 
@@ -38,12 +39,14 @@
   _frameworkLoader = [TestDylibResolver new];
   _appURLSchemeProvider = [TestInternalUtility new];
   _logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  _errorFactory = [TestErrorFactory new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:self.logger
                                            urlOpener:self.urlOpener
                             bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                      frameworkLoader:self.frameworkLoader
-                                appURLSchemeProvider:self.appURLSchemeProvider];
+                                appURLSchemeProvider:self.appURLSchemeProvider
+                                        errorFactory:self.errorFactory];
 }
 
 // MARK: - Url Opening

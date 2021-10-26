@@ -20,13 +20,6 @@
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKURLOpening.h>
 
-@class FBSDKLogger;
-@protocol FBSDKOperatingSystemVersionComparing;
-@protocol FBSDKInternalURLOpener;
-@protocol FBSDKBridgeAPIResponseCreating;
-@protocol FBSDKDynamicFrameworkResolving;
-@protocol FBSDKAppURLSchemeProviding;
-
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -53,24 +46,9 @@ NS_SWIFT_NAME(shared);
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
-                             logger:(FBSDKLogger *)logger
-                          urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-           bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
-                    frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
-               appURLSchemeProvider:(id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider
-  NS_DESIGNATED_INITIALIZER;
-
-- (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(nullable id<FBSDKURLOpening>)sender
-                     fromViewController:(nullable UIViewController *)fromViewController
-                                handler:(FBSDKSuccessBlock)handler;
-
 - (void)openURL:(NSURL *)url
          sender:(nullable id<FBSDKURLOpening>)sender
         handler:(FBSDKSuccessBlock)handler;
-
-- (FBSDKAuthenticationCompletionHandler)sessionCompletionHandler;
 
 @end
 

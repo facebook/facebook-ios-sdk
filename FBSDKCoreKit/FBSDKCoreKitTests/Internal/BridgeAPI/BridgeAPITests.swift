@@ -17,8 +17,9 @@ class BridgeAPITests: XCTestCase {
   let responseFactory = TestBridgeAPIResponseFactory()
   let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
+  let errorFactory = TestErrorFactory()
 
-  func testDefaults() {
+  func testDefaultDependencies() throws {
     XCTAssertTrue(
       BridgeAPI.shared.processInfo is ProcessInfo,
       "The shared bridge API should use the system provided process info by default"
@@ -46,16 +47,26 @@ class BridgeAPITests: XCTestCase {
       InternalUtility.shared,
       "Should use the expected instance of internal utility"
     )
+
+    let factory = try XCTUnwrap(
+      BridgeAPI.shared.errorFactory as? SDKErrorFactory,
+      "Should create an error factory"
+    )
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "Should use the shared error reporter by default"
+    )
   }
 
-  func testConfiguringWithDependencies() {
+  func testCreatingWithDependencies() {
     let api = BridgeAPI(
       processInfo: processInfo,
       logger: logger,
       urlOpener: urlOpener,
       bridgeAPIResponseFactory: responseFactory,
       frameworkLoader: frameworkLoader,
-      appURLSchemeProvider: appURLSchemeProvider
+      appURLSchemeProvider: appURLSchemeProvider,
+      errorFactory: errorFactory
     )
 
     XCTAssertEqual(
@@ -82,6 +93,10 @@ class BridgeAPITests: XCTestCase {
       api.frameworkLoader as? TestDylibResolver,
       frameworkLoader,
       "Should be able to create a bridge api with a specific framework loader"
+    )
+    XCTAssertTrue(
+      api.errorFactory === errorFactory,
+      "Should be able to create a bridge API instance with an error factory"
     )
   }
 }

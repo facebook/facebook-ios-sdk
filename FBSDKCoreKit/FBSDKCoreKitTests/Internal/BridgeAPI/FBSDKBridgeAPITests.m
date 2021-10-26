@@ -20,6 +20,7 @@
   self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
+  self.errorFactory = [TestErrorFactory new];
 
   [self configureSDK];
 
@@ -28,7 +29,8 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
 }
 
 - (void)tearDown
@@ -345,7 +347,8 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
 
   BOOL applicationOpensSuccessfully = YES;
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
@@ -376,7 +379,9 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
+
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
@@ -454,17 +459,28 @@
 - (void)testRequestCompletionBlockWithNonHttpRequestCalledWithoutSuccess
 {
   TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:@"file"];
+
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
-    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqualObjects(
+      response.request,
+      request,
+      @"The response should contain the original request"
+    );
+    TestSDKError *error = (TestSDKError *)response.error;
     XCTAssertEqual(
-      response.error.code,
+      error.type,
+      ErrorTypeGeneral,
+      @"The response should contain a general error"
+    );
+    XCTAssertEqual(
+      error.code,
       FBSDKErrorAppVersionUnsupported,
-      "The response should contain the expected error code"
+      @"The error should use an app version unsupported error code"
     );
     XCTAssertEqualObjects(
-      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      error.message,
       @"the app switch failed because the destination app is out of date",
-      "The response should contain the expected error message"
+      @"The error should use an appropriate error message"
     );
   };
   self.api.pendingRequest = request;
@@ -485,16 +501,26 @@
 {
   TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:FBSDKURLSchemeHTTPS];
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
-    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqualObjects(
+      response.request,
+      request,
+      @"The response should contain the original request"
+    );
+    TestSDKError *error = (TestSDKError *)response.error;
     XCTAssertEqual(
-      response.error.code,
+      error.type,
+      ErrorTypeGeneral,
+      @"The response should contain a general error"
+    );
+    XCTAssertEqual(
+      error.code,
       FBSDKErrorBrowserUnavailable,
-      "The response should contain the expected error code"
+      @"The error should use a browser unavailable error code"
     );
     XCTAssertEqualObjects(
-      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      error.message,
       @"the app switch failed because the browser is unavailable",
-      "The response should contain the expected error message"
+      @"The response should use an appropriate error message"
     );
   };
   self.api.pendingRequest = request;

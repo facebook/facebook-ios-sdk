@@ -23,6 +23,7 @@
 @property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestInternalUtility *appURLSchemeProvider;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @end
 
@@ -43,7 +44,8 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
   self.loginManager = [FBSDKLoginManager new];
 
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
