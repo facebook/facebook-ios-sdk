@@ -8,6 +8,7 @@
 
 @testable import FacebookGamingServices
 import TestTools
+import XCTest
 
 class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
@@ -28,13 +29,11 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   )
 
   lazy var updateShareDialog = ShareTournamentDialog(
-    tournament: validTournamentForUpdate,
     delegate: self,
     urlOpener: bridgeOpener
   )
 
   lazy var createShareDialog = ShareTournamentDialog(
-    tournament: validTournamentForCreate,
     delegate: self,
     urlOpener: bridgeOpener
   )
@@ -55,21 +54,18 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     super.tearDown()
   }
 
-  // MARK: - Share Dialog Creating Tournament
-
   func testShareDialogForTournamentCreation() throws {
-    let tournament = try XCTUnwrap(validTournamentForCreate)
-    let dialog = ShareTournamentDialog(tournament: tournament, delegate: self)
+    let dialog = ShareTournamentDialog(delegate: self)
 
     XCTAssertNotNil(dialog.delegate)
-    XCTAssertEqual(dialog.tournament, validTournamentForCreate)
-    XCTAssertEqual(dialog.shareType, .create)
   }
 
+  // MARK: - Share Dialog Creating Tournament
+
   func testShareDialogTournamentCreateWithInvalidScore() throws {
-    let dialog = ShareTournamentDialog(tournament: validTournamentForCreate, delegate: self, urlOpener: bridgeOpener)
+    let dialog = ShareTournamentDialog(delegate: self, urlOpener: bridgeOpener)
     do {
-      try dialog.share(score: TestScore(value: false))
+      try dialog.show(score: -90, tournament: validTournamentForCreate)
     } catch TournamentDecodingError.invalidScoreType {
       // Should catch error TournamentDecodingError.invalidScoreType
     } catch {
@@ -87,7 +83,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     AccessToken.current = nil
     let dialog = try XCTUnwrap(createShareDialog)
     do {
-      try dialog.share(score: NumericScore(value: 120))
+      try dialog.show(score: 120, tournament: validTournamentForCreate)
     } catch ShareTournamentDialogError.invalidAccessToken {
     } catch {
       return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
@@ -100,10 +96,11 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   func testShareDialogTournamentCreateBridgeFailure() throws {
     let dialog = try XCTUnwrap(createShareDialog)
-    _ = try dialog.share(score: NumericScore(value: 120))
-    guard let handler = bridgeOpener.capturedHandler else {
-      return XCTFail("The bridge should be called with a valid success block handler")
-    }
+    _ = try dialog.show(score: 120, tournament: validTournamentForCreate)
+    guard
+      let handler = bridgeOpener.capturedHandler else {
+        return XCTFail("The bridge should be called with a valid success block handler")
+      }
 
     handler(false, SampleError())
 
@@ -119,7 +116,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   func testShareDialogTournamentCreateURLIsValid() throws {
     let dialog = try XCTUnwrap(createShareDialog)
-    _ = try dialog.share(score: NumericScore(value: 120))
+    _ = try dialog.show(score: 120, tournament: validTournamentForCreate)
     guard let dialogURL = bridgeOpener.capturedURL else {
       return XCTFail("The bridge opener should be called with a valid url")
     }
@@ -133,18 +130,10 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   // MARK: - Share Dialog Updating Tournament
 
-  func testCreatingUpdateShareDialog() {
-    let dialog = ShareTournamentDialog(tournament: validTournamentForUpdate, delegate: self)
-    XCTAssertNotNil(dialog.delegate)
-    XCTAssertEqual(dialog.tournament, validTournamentForUpdate)
-    XCTAssertEqual(dialog.tournament.score, 120)
-    XCTAssertEqual(dialog.shareType, .update)
-  }
-
   func testUpdateShareDialogTournamentWithInvalidScore() throws {
-    let dialog = ShareTournamentDialog(tournament: validTournamentForUpdate, delegate: self, urlOpener: bridgeOpener)
+    let dialog = ShareTournamentDialog(delegate: self, urlOpener: bridgeOpener)
     do {
-      try dialog.share(score: TestScore(value: false))
+      try dialog.show(score: 1, tournament: validTournamentForUpdate)
     } catch TournamentDecodingError.invalidScoreType {
       // should catch error TournamentDecodingError.invalidScoreType
     } catch {
@@ -161,7 +150,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   func testShowingUpdateDialogWithInvalidAccessToken() throws {
     AccessToken.current = nil
     do {
-      try updateShareDialog.share(score: NumericScore(value: 120))
+      try updateShareDialog.show(score: 120, tournament: validTournamentForUpdate)
     } catch ShareTournamentDialogError.invalidAccessToken {
       // should catch error ShareTournamentDialogError.invalidAccessToken
     } catch {
@@ -174,7 +163,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   }
 
   func testUpdateDialogBridgeFailure() throws {
-    _ = try updateShareDialog.share(score: NumericScore(value: 120))
+    _ = try updateShareDialog.show(score: 120, tournament: validTournamentForUpdate)
     guard let handler = bridgeOpener.capturedHandler else {
       return XCTFail("The bridge should be called with a valid success block handler")
     }
@@ -189,7 +178,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   }
 
   func testUpdateDialogURLIsValid() throws {
-    _ = try updateShareDialog.share(score: NumericScore(value: 120))
+    _ = try updateShareDialog.show(score: 120, tournament: validTournamentForUpdate)
     guard let dialogURL = bridgeOpener.capturedURL else {
       return XCTFail("The bridge opener should be called with a valid url")
     }

@@ -21,96 +21,56 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
     payload: "Hello"
   )
 
-  override func setUp() {
-    super.setUp()
-
-    try? updateTournament.update(score: NumericScore(value: 1000))
-    try? createTournament.update(score: NumericScore(value: 1000))
-  }
-
-  func testUpdateQueryItemsWithoutScore() throws {
-    let tournamentWithoutScore = Tournament(
-      identifier: "1234",
-      payload: "Hello"
-    )
-    let queryItems = ShareTournamentDialogURLBuilder.update(tournamentWithoutScore).queryItems
-    XCTAssertEqual(queryItems, [])
-  }
-
-  func testUpdateQueryItems() throws {
-    try updateTournament.update(score: NumericScore(value: 1000))
-    let queryItems = ShareTournamentDialogURLBuilder.update(updateTournament).queryItems
-    let expectedQueryItems = [
-      "score": "1000",
-      "tournament_id": "1234",
-      "tournament_payload": "Hello"
-    ].map { key, value in
-      URLQueryItem(name: key, value: value)
-    }
-
-    for item in expectedQueryItems {
-      if !queryItems.contains(item) {
-        XCTFail("Missing query item \(item)")
-      }
-    }
-  }
-
   func testUpdateURL() throws {
-    try updateTournament.update(score: NumericScore(value: 1000))
-    let expectedURL = try XCTUnwrap(
-      URL(
-        string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&tournament_payload=Hello&score=1000"
+    let expectURLComponents = try XCTUnwrap(
+      URLComponents(
+        string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&score=1000"
       )
     )
-    let updateURL = try XCTUnwrap(ShareTournamentDialogURLBuilder.update(updateTournament).url(withPathAppID: "12345"))
-
-    XCTAssertEqual(updateURL.scheme, expectedURL.scheme)
-    XCTAssertEqual(updateURL.host, expectedURL.host)
-    XCTAssertEqual(updateURL.path, expectedURL.path)
-    XCTAssertNotNil(updateURL.query)
-  }
-
-  func testCreateQueryItemsWithoutScore() throws {
-    let tournamentWithoutScore = Tournament(
-      title: "Test",
-      expiration: expirationDate,
-      sortOrder: .descending,
-      payload: "Hello"
+    let updateURL = try XCTUnwrap(
+      ShareTournamentDialogURLBuilder
+        .update(updateTournament)
+        .url(withPathAppID: "12345", score: 1000)
+      )
+    let updateURLComponents = try XCTUnwrap(
+      URLComponents(
+        url: updateURL,
+        resolvingAgainstBaseURL: false
+      )
     )
-    let queryItems = ShareTournamentDialogURLBuilder.create(tournamentWithoutScore).queryItems
-    XCTAssertEqual(queryItems, [])
-  }
+    let updateURLQueryItems: [URLQueryItem] = try XCTUnwrap(updateURLComponents.queryItems)
+    let expectedQueryItems: [URLQueryItem] = try XCTUnwrap(expectURLComponents.queryItems)
 
-  func testCreateQueryItems() {
-    let queryItems = ShareTournamentDialogURLBuilder.create(createTournament).queryItems
-    let expectedQueryItems = [
-      "score": "1000",
-      "end_time": "1632506627",
-      "tournament_title": "Test",
-      "score_format": "NUMERIC",
-      "sort_order": "HIGHER_IS_BETTER",
-      "tournament_payload": "Hello"
-    ].map { key, value in
-      URLQueryItem(name: key, value: value)
-    }
-
-    for item in expectedQueryItems {
-      if !queryItems.contains(item) {
-        XCTFail("Missing query item \(item)")
-      }
-    }
+    XCTAssertEqual(updateURLComponents.scheme, expectURLComponents.scheme)
+    XCTAssertEqual(updateURLComponents.host, expectURLComponents.host)
+    XCTAssertEqual(updateURLComponents.path, expectURLComponents.path)
+    XCTAssertEqual(updateURLQueryItems.count, expectedQueryItems.count, "Should contain the same number of query items")
   }
 
   func testCreateURL() throws {
-    let expectedURL = try XCTUnwrap(URL(
-      string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627.0&tournament_title=Test&score_format=NUMERIC&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello" // swiftlint:disable:this line_length
-    ))
+    let expectURLComponents = try XCTUnwrap(
+      URLComponents(
+        string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627.0&tournament_title=Test&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello"// swiftlint:disable:this line_length
+      )
+    )
 
-    let updateURL = try XCTUnwrap(ShareTournamentDialogURLBuilder.create(createTournament).url(withPathAppID: "12345"))
+    let updateURL = try XCTUnwrap(
+      ShareTournamentDialogURLBuilder
+        .create(createTournament)
+        .url(withPathAppID: "12345", score: 1000)
+    )
+    let updateURLComponents = try XCTUnwrap(
+      URLComponents(
+        url: updateURL,
+        resolvingAgainstBaseURL: false
+      )
+    )
+    let updateURLQueryItems: [URLQueryItem] = try XCTUnwrap(updateURLComponents.queryItems)
+    let expectedQueryItems: [URLQueryItem] = try XCTUnwrap(expectURLComponents.queryItems)
 
-    XCTAssertEqual(updateURL.scheme, expectedURL.scheme)
-    XCTAssertEqual(updateURL.host, expectedURL.host)
-    XCTAssertEqual(updateURL.path, expectedURL.path)
-    XCTAssertNotNil(updateURL.query)
+    XCTAssertEqual(updateURLComponents.scheme, expectURLComponents.scheme)
+    XCTAssertEqual(updateURLComponents.host, expectURLComponents.host)
+    XCTAssertEqual(updateURLComponents.path, expectURLComponents.path)
+    XCTAssertEqual(updateURLQueryItems.count, expectedQueryItems.count, "Should contain the same number of query items")
   }
 }

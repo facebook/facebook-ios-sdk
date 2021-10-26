@@ -22,58 +22,45 @@ enum ShareTournamentDialogError: Error {
 
 class ShareTournamentDialog: NSObject, URLOpening {
 
-  enum ShareType {
-    case create
-    case update
-  }
-
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
-  var tournament: Tournament
-  var shareType: ShareType
   weak var delegate: ShareTournamentDialogDelegate?
-  var urlBuilder: ShareTournamentDialogURLBuilder {
-    if shareType == .update {
-      return ShareTournamentDialogURLBuilder.update(self.tournament)
-    } else {
-      return ShareTournamentDialogURLBuilder.create(self.tournament)
-    }
-  }
 
   init(
-    tournament: Tournament,
     delegate: ShareTournamentDialogDelegate,
     urlOpener: BridgeAPIRequestOpening
   ) {
-    self.tournament = tournament
     self.delegate = delegate
     self.bridgeURLOpener = urlOpener
-    shareType = tournament.identifier.isEmpty ? .create:.update
   }
 
   /**
    Creates a share a dialog that can be used to share a score in the given `Tournament`
 
-   - Parameter tournament: The Tournament to share
    - Parameter delegate: The delegate for the dialog to be invoked in case of error, cancellation or completion
    */
   convenience init(
-    tournament: Tournament,
     delegate: ShareTournamentDialogDelegate
   ) {
-    self.init(tournament: tournament, delegate: delegate, urlOpener: BridgeAPI.shared)
+    self.init(delegate: delegate, urlOpener: BridgeAPI.shared)
   }
 
+  // swiftlint:disable line_length
   /**
-   Attempts to share the given score by showing the share dialog
-   - Parameter score: A score to  share in the tournament. Try `NumericScore` or `TimeScore`
+   Attempts to show the share dialog to share an existing tournament
+   - Parameter score: A score to share in the tournament could be a numeric score or  time interval dependent on the given tournament score type
+   - Parameter tournament: The tournament to share and update with the given score
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  func share<T: Score>(score: T) throws {
-    try self.tournament.update(score: score)
+  // swiftlint:enable line_length
+  func show(score: Int, tournament: Tournament) throws {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
-    guard let url = urlBuilder.url(withPathAppID: accessToken.appID) else {
+    guard
+      let url = ShareTournamentDialogURLBuilder
+        .update(tournament)
+        .url(withPathAppID: accessToken.appID, score: score)
+    else {
       throw ShareTournamentDialogError.unableToCreateDialogUrl
     }
     bridgeURLOpener.open(url, sender: self) { [weak self] success, error in
