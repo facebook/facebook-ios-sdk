@@ -27,7 +27,7 @@ NS_SWIFT_NAME(SharingButton)
 /**
   The content to be shared.
  */
-@property (nonatomic, copy, nullable) id<FBSDKSharingContent> shareContent;
+@property (nullable, nonatomic, copy) id<FBSDKSharingContent> shareContent;
 
 @end
 

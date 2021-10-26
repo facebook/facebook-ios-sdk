@@ -24,12 +24,12 @@ NS_SWIFT_NAME(GamingContext)
 /**
 A shared object that holds data about the current user's  game instance which could be solo game or multiplayer game with other users.
 */
-@property (nullable, class, nonatomic) FBSDKGamingContext *currentContext;
+@property (class, nullable, nonatomic) FBSDKGamingContext *currentContext;
 
 /**
  A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
  */
-@property (readonly, nonatomic) NSString* identifier;
+@property (nonatomic, readonly) NSString *identifier;
 
 /**
   The number of players in the current user's  game instance

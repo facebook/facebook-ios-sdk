@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

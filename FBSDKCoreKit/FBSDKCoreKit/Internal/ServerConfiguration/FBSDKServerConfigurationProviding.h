@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ServerConfigurationBlock)
-typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration * _Nullable serverConfiguration, NSError * _Nullable error);
+typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration *_Nullable serverConfiguration, NSError *_Nullable error);
 
 NS_SWIFT_NAME(ServerConfigurationProviding)
 @protocol FBSDKServerConfigurationProviding

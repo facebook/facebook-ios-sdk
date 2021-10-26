@@ -12,22 +12,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField)
-{
+typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField) {
   FBSDKCodelessMatchBitmaskFieldID = 1,
   FBSDKCodelessMatchBitmaskFieldText = 1 << 1,
   FBSDKCodelessMatchBitmaskFieldTag = 1 << 2,
   FBSDKCodelessMatchBitmaskFieldDescription = 1 << 3,
-  FBSDKCodelessMatchBitmaskFieldHint = 1 << 4
+  FBSDKCodelessMatchBitmaskFieldHint = 1 << 4,
 };
 
 NS_SWIFT_NAME(CodelessPathComponent)
 @interface FBSDKCodelessPathComponent : NSObject
 
-@property (nonatomic, copy, readonly) NSString *className;
-@property (nonatomic, copy, readonly) NSString *text;
-@property (nonatomic, copy, readonly) NSString *hint;
-@property (nonatomic, copy, readonly) NSString *desc; // description
+@property (nonatomic, readonly, copy) NSString *className;
+@property (nonatomic, readonly, copy) NSString *text;
+@property (nonatomic, readonly, copy) NSString *hint;
+@property (nonatomic, readonly, copy) NSString *desc; // description
 @property (nonatomic, readonly) int index;
 @property (nonatomic, readonly) int tag;
 @property (nonatomic, readonly) int section;

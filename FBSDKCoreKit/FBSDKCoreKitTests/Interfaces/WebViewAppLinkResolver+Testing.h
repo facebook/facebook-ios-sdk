@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> * _Nullable result, NSError * _Nullable error)
+typedef void (^ FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> *_Nullable result, NSError *_Nullable error)
 NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
 @interface FBSDKWebViewAppLinkResolver (Testing)

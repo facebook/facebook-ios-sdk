@@ -24,7 +24,7 @@ NS_SWIFT_NAME(DeviceRequestsHelper)
 /**
   Get device info to include with the GraphRequest
  */
-@property (class, nonatomic, copy, readonly) NSString *getDeviceInfo;
+@property (class, nonatomic, readonly, copy) NSString *getDeviceInfo;
 
 /**
   Start the mDNS advertisement service for a device request

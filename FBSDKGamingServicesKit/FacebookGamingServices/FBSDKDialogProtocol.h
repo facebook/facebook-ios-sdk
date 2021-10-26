@@ -10,7 +10,7 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 @protocol FBSDKValidatable;
 @protocol FBSDKContextDialogDelegate;
 @class FBSDKContextWebDialog;
@@ -25,12 +25,12 @@ NS_SWIFT_NAME(DialogProtocol)
 /**
   The receiver's delegate or nil if it doesn't have a delegate.
  */
-@property (nonatomic, weak, nullable) id<FBSDKContextDialogDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKContextDialogDelegate> delegate;
 
 /**
   The content object used to create the specific dialog
  */
-@property (nonatomic, copy, nullable) id<FBSDKValidatable> dialogContent;
+@property (nullable, nonatomic, copy) id<FBSDKValidatable> dialogContent;
 
 /**
   Begins to show the specfic dialog
@@ -60,20 +60,20 @@ NS_SWIFT_NAME(ContextDialogDelegate)
   Sent to the delegate when the context dialog completes without error.
  @param contextDialog The FBSDKContextDialog that completed.
  */
-- (void)contextDialogDidComplete:(FBSDKContextWebDialog*)contextDialog;
+- (void)contextDialogDidComplete:(FBSDKContextWebDialog *)contextDialog;
 
 /**
   Sent to the delegate when the context dialog encounters an error.
  @param contextDialog The FBSDKContextDialog that completed.
  @param error The error.
  */
-- (void)contextDialog:(FBSDKContextWebDialog*)contextDialog didFailWithError:(NSError *)error;
+- (void)contextDialog:(FBSDKContextWebDialog *)contextDialog didFailWithError:(NSError *)error;
 
 /**
   Sent to the delegate when the cross play request dialog is cancelled.
  @param contextDialog The FBSDKContextDialog that completed.
  */
-- (void)contextDialogDidCancel:(FBSDKContextWebDialog*)contextDialog;
+- (void)contextDialogDidCancel:(FBSDKContextWebDialog *)contextDialog;
 
 @end
 

@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AccessTokenProviding)
 @protocol FBSDKAccessTokenProviding
 
-@property (class, nonatomic, copy, nullable, readonly) FBSDKAccessToken *currentAccessToken;
-@property (class, nonatomic, copy, nullable) id<FBSDKTokenCaching> tokenCache;
+@property (class, nullable, nonatomic, readonly, copy) FBSDKAccessToken *currentAccessToken;
+@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 
@@ -36,7 +36,7 @@ NS_SWIFT_NAME(AccessTokenProviding)
 NS_SWIFT_NAME(AccessTokenSetting)
 @protocol FBSDKAccessTokenSetting
 
-@property (class, nonatomic, copy, nullable) FBSDKAccessToken *currentAccessToken;
+@property (class, nullable, nonatomic, copy) FBSDKAccessToken *currentAccessToken;
 
 @end
 

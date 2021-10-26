@@ -66,25 +66,25 @@ NS_SWIFT_NAME(ShareVideo)
  The raw video data.
  - Returns: The video data.
  */
-@property (nonatomic, strong, nullable) NSData *data;
+@property (nullable, nonatomic, strong) NSData *data;
 
 /**
  The representation of the video in the Photos library.
  @return PHAsset that represents the video in the Photos library.
  */
-@property (nonatomic, copy, nullable) PHAsset *videoAsset;
+@property (nullable, nonatomic, copy) PHAsset *videoAsset;
 
 /**
   The file URL to the video.
  @return URL that points to the location of the video on disk
  */
-@property (nonatomic, copy, nullable) NSURL *videoURL;
+@property (nullable, nonatomic, copy) NSURL *videoURL;
 
 /**
   The photo that represents the video.
  @return The photo
  */
-@property (nonatomic, copy, nullable) FBSDKSharePhoto *previewPhoto;
+@property (nullable, nonatomic, copy) FBSDKSharePhoto *previewPhoto;
 
 /**
   Compares the receiver to another video.
@@ -97,7 +97,7 @@ NS_SWIFT_NAME(ShareVideo)
 
 @interface PHAsset (FBSDKShareVideo)
 
-@property (nonatomic, copy, readonly) NSURL *videoURL;
+@property (nonatomic, readonly, copy) NSURL *videoURL;
 
 @end
 

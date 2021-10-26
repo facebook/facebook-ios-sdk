@@ -42,7 +42,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                     graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                      graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store
                                    logger:(Class<FBSDKLogging>)logger
@@ -60,10 +60,10 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 
 #if !TARGET_OS_TV
 
--(void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
-                                          metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
-                                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
-                                          codelessIndexer:(Class<FBSDKEnableable>)codelessIndexer;
+- (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
+                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
+                                       skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
+                                           codelessIndexer:(Class<FBSDKEnableable>)codelessIndexer;
 
 #endif
 

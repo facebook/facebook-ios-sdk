@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  a formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
  */
 NS_SWIFT_NAME(ErrorRecoveryAttempting)
-@protocol FBSDKErrorRecoveryAttempting<NSObject>
+@protocol FBSDKErrorRecoveryAttempting <NSObject>
 
 /**
  attempt the recovery

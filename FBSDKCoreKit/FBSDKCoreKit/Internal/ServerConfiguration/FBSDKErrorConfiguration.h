@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKErrorRecoveryConfiguration.h"
 #import "FBSDKErrorConfigurationProtocol.h"
+#import "FBSDKErrorRecoveryConfiguration.h"
 
 @protocol FBSDKGraphRequest;
 
@@ -22,10 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ErrorConfiguration)
 @interface FBSDKErrorConfiguration : NSObject <
-NSSecureCoding,
-NSCopying,
-FBSDKErrorConfiguration,
-FBSDKDecodableErrorConfiguration
+  NSSecureCoding,
+  NSCopying,
+  FBSDKErrorConfiguration,
+  FBSDKDecodableErrorConfiguration
 >
 
 - (instancetype)init NS_UNAVAILABLE;

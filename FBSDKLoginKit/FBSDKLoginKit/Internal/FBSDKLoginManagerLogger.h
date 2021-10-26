@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginManager+Internal.h"
+ #import "FBSDKLoginManager+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +16,6 @@ FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Native;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
-
 
 NS_SWIFT_NAME(LoginManagerLogger)
 @interface FBSDKLoginManagerLogger : NSObject
@@ -28,7 +27,7 @@ NS_SWIFT_NAME(LoginManagerLogger)
 
 - (nullable instancetype)initWithLoggingToken:(nullable NSString *)loggingToken
                                      tracking:(FBSDKLoginTracking)tracking
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 // this must not retain loginManager - only used to conveniently grab various properties to log.
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager;

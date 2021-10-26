@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error);
+typedef void (^FBSDKGKManagerBlock)(NSError *_Nullable error);
 
 NS_SWIFT_NAME(GateKeeperManaging)
 @protocol FBSDKGateKeeperManaging

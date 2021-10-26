@@ -7,12 +7,13 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBSDKAppEventsStateProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsStateFactory)
-@interface FBSDKAppEventsStateFactory : NSObject<FBSDKAppEventsStateProviding>
+@interface FBSDKAppEventsStateFactory : NSObject <FBSDKAppEventsStateProviding>
 @end
 
 NS_ASSUME_NONNULL_END

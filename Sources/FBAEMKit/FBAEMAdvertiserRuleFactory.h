@@ -10,15 +10,15 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import "FBAEMAdvertiserRuleMatching.h"
-#import "FBAEMAdvertiserRuleProviding.h"
+ #import "FBAEMAdvertiserRuleMatching.h"
+ #import "FBAEMAdvertiserRuleProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AEMAdvertiserRuleFactory)
-@interface FBAEMAdvertiserRuleFactory : NSObject<FBAEMAdvertiserRuleProviding>
+@interface FBAEMAdvertiserRuleFactory : NSObject <FBAEMAdvertiserRuleProviding>
 
 @end
 

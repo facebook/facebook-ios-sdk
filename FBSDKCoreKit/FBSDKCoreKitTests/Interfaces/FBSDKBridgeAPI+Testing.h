@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <SafariServices/SafariServices.h>
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
@@ -52,7 +54,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @interface FBSDKBridgeAPI (Testing)
 
-@property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
+@property (nonatomic, readonly, assign) id<FBSDKOperatingSystemVersionComparing> processInfo;
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
@@ -67,7 +69,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic) BOOL expectingBackground;
 @property (nonatomic) SFSafariViewController *safariViewController;
 @property (nonatomic) BOOL isDismissingSafariViewController;
-
 
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationDidBecomeActive:(UIApplication *)application;
@@ -84,7 +85,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
 - (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-                                                                               completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
+                                                      completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
 - (void)_cancelBridgeRequest;
 
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;

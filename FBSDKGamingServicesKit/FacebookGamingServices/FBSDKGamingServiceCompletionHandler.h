@@ -7,6 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import <AvailabilityMacros.h>
 
 /**
@@ -15,7 +16,7 @@
  @param success whether the call to the service was considered a success.
  @param error the error that occured during the service call, if any.
  */
-typedef void (^FBSDKGamingServiceCompletionHandler)(BOOL success, NSError * _Nullable error)
+typedef void (^ FBSDKGamingServiceCompletionHandler)(BOOL success, NSError *_Nullable error)
 NS_SWIFT_NAME(GamingServiceCompletionHandler);
 
 /**
@@ -25,7 +26,7 @@ Main completion handling of any Gaming Service (Friend Finder, Image/Video Uploa
 @param result the result that was returned by the service, if any.
 @param error the error that occured during the service call, if any.
 */
-typedef void (^FBSDKGamingServiceResultCompletion)(BOOL success, NSDictionary<NSString *, id> *_Nullable result, NSError *_Nullable error)
+typedef void (^ FBSDKGamingServiceResultCompletion)(BOOL success, NSDictionary<NSString *, id> *_Nullable result, NSError *_Nullable error)
 NS_SWIFT_NAME(GamingServiceResultCompletion);
 
 /**
@@ -35,5 +36,5 @@ Main completion handling of any Gaming Service (Friend Finder, Image/Video Uploa
 @param totalBytesSent the total number of bytes sent
 @param totalBytesExpectedToSend the number of bytes that remain to be sent
 */
-typedef void (^FBSDKGamingServiceProgressHandler)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend)
+typedef void (^ FBSDKGamingServiceProgressHandler)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend)
 NS_SWIFT_NAME(GamingServiceProgressHandler);

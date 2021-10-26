@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GamingImageUploader)
 @interface FBSDKGamingImageUploader : NSObject
 
-- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
+- (instancetype _Nonnull)init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
 
 /**
 Runs an upload to a users Gaming Media Library with the given configuration
@@ -27,7 +27,7 @@ Runs an upload to a users Gaming Media Library with the given configuration
  Fired when the upload completes or when the users returns to the caller app
  after the media dialog is shown.
  */
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                  andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion;
 
 /**
@@ -40,7 +40,7 @@ Runs an upload to a users Gaming Media Library with the given configuration
 @param progressHandler an optional callback that is fired multiple times as
  bytes are transferred to Facebook.
 */
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                           completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 

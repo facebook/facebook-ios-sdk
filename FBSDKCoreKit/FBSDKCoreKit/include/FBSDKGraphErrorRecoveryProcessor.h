@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
   Defines a delegate for `FBSDKGraphErrorRecoveryProcessor`.
  */
 NS_SWIFT_NAME(GraphErrorRecoveryProcessorDelegate)
-@protocol FBSDKGraphErrorRecoveryProcessorDelegate<NSObject>
+@protocol FBSDKGraphErrorRecoveryProcessorDelegate <NSObject>
 
 /**
   Indicates the error recovery has been attempted.

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AdvertiserIDProviding)
 @protocol FBSDKAdvertiserIDProviding
 
-@property (nullable, nonatomic, copy, readonly) NSString *advertiserID;
+@property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
 
 @end
 

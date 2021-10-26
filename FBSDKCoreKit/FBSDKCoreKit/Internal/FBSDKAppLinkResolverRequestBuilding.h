@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppLinkResolverRequestBuilding)
 @protocol FBSDKAppLinkResolverRequestBuilding
 
-- (id<FBSDKGraphRequest> _Nonnull)requestForURLs:(NSArray<NSURL *> * _Nonnull)urls;
-- (NSString* _Nullable)getIdiomSpecificField;
+- (id<FBSDKGraphRequest> _Nonnull)requestForURLs:(NSArray<NSURL *> *_Nonnull)urls;
+- (NSString *_Nullable)getIdiomSpecificField;
 
 @end
 

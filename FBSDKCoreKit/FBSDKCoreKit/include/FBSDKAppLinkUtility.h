@@ -21,9 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
  The url may also have a fb_click_time_utc query parameter that
  represents when the click occurred that caused the deferred App Link to be created.
  */
-typedef void (^FBSDKURLBlock)(NSURL *_Nullable url, NSError *_Nullable error)
+typedef void (^ FBSDKURLBlock)(NSURL *_Nullable url, NSError *_Nullable error)
 NS_SWIFT_NAME(URLBlock);
-
 
 /**
   Class containing App Links related utility methods.

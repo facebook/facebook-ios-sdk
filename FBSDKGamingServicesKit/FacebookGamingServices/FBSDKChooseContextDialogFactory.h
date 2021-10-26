@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ChooseContextDialogFactory)
-@interface FBSDKChooseContextDialogFactory : NSObject<FBSDKChooseContextDialogMaking>
+@interface FBSDKChooseContextDialogFactory : NSObject <FBSDKChooseContextDialogMaking>
 @end
 
 NS_ASSUME_NONNULL_END

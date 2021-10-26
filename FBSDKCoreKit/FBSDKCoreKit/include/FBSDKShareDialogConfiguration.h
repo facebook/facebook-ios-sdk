@@ -15,7 +15,6 @@ FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameMessage;
 /// Constant used to describe the 'Share' dialog
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameShare;
 
-
 /**
  A lightweight interface to expose aspects of FBSDKServerConfiguration that are used by dialogs in ShareKit.
 
@@ -24,7 +23,7 @@ FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameShare;
 NS_SWIFT_NAME(ShareDialogConfiguration)
 @interface FBSDKShareDialogConfiguration : NSObject
 
-@property (nonatomic, copy, readonly) NSString *defaultShareMode;
+@property (nonatomic, readonly, copy) NSString *defaultShareMode;
 
 - (BOOL)shouldUseNativeDialogForDialogName:(NSString *)dialogName;
 - (BOOL)shouldUseSafariViewControllerForDialogName:(NSString *)dialogName;

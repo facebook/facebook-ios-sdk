@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(UserAgeRange)
-@interface FBSDKUserAgeRange : NSObject<NSCopying, NSObject, NSSecureCoding>
+@interface FBSDKUserAgeRange : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 /**
   The user's minimun age, nil if unspecified

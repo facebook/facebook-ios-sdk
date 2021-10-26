@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKTimeSpentRecording.h"
 #import "FBSDKSourceApplicationTracking.h"
+#import "FBSDKTimeSpentRecording.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

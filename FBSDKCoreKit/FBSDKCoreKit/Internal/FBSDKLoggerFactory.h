@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(LoggerFactory)
-@interface FBSDKLoggerFactory : NSObject<FBSDKLoggingCreating>
+@interface FBSDKLoggerFactory : NSObject <FBSDKLoggingCreating>
 @end
 
 NS_ASSUME_NONNULL_END

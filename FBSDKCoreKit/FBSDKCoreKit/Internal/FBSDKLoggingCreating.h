@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoggingBehavior.h"
 #import "FBSDKLogging.h"
+#import "FBSDKLoggingBehavior.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -19,14 +19,14 @@ NS_SWIFT_NAME(AppAvailabilityChecker)
 
  @warning UNSAFE - DO NOT USE
  */
-@property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
+@property (nonatomic, readonly, assign) BOOL isMessengerAppInstalled;
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
  @warning UNSAFE - DO NOT USE
  */
-@property (nonatomic, assign, readonly) BOOL isFacebookAppInstalled;
+@property (nonatomic, readonly, assign) BOOL isFacebookAppInstalled;
 
 @end
 

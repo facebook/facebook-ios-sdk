@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
+typedef void (^ FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
 NS_SWIFT_NAME(BridgeAPIResponseBlock);
 
 /**
@@ -43,10 +43,10 @@ NS_SWIFT_NAME(BridgeAPIResponse)
                                                 error:(NSError *__autoreleasing *)errorRef;
 + (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request;
 
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
-@property (nullable, nonatomic, copy, readonly) NSError *error;
-@property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequest> *request;
-@property (nullable, nonatomic, copy, readonly) NSDictionary<NSString *, id> *responseParameters;
+@property (nonatomic, readonly, getter = isCancelled, assign) BOOL cancelled;
+@property (nullable, nonatomic, readonly, copy) NSError *error;
+@property (nonatomic, readonly, copy) NSObject<FBSDKBridgeAPIRequest> *request;
+@property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *responseParameters;
 
 @end
 

@@ -32,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKApplicationDelegate (Testing)
 
 @property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
-@property (nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-@property (nonatomic, readonly, nonnull) id<FBSDKFeatureChecking> featureChecker;
+@property (nullable, nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+@property (nonnull, nonatomic, readonly) id<FBSDKFeatureChecking> featureChecker;
 @property (nonnull, nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 
 + (void)resetHasInitializeBeenCalled
-NS_SWIFT_NAME(reset());
+  NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationObserving>)observer
                                tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet

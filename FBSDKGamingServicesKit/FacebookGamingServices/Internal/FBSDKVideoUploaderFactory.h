@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(VideoUploaderFactory)
-@interface FBSDKVideoUploaderFactory : NSObject<FBSDKVideoUploaderCreating>
+@interface FBSDKVideoUploaderFactory : NSObject <FBSDKVideoUploaderCreating>
 @end
 
 NS_ASSUME_NONNULL_END

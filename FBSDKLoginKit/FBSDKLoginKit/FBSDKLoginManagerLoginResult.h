@@ -23,11 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LoginManagerLoginResult : NSObject
 
-@property (copy, nonatomic, nullable) FBSDKAccessToken *token;
-@property (copy, nonatomic, nullable) FBSDKAuthenticationToken *authenticationToken;
-@property (readonly, nonatomic) BOOL isCancelled;
-@property (copy, nonatomic) NSSet<NSString *> *grantedPermissions;
-@property (copy, nonatomic) NSSet<NSString *> *declinedPermissions;
+@property (nullable, nonatomic, copy) FBSDKAccessToken *token;
+@property (nullable, nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
+@property (nonatomic, readonly) BOOL isCancelled;
+@property (nonatomic, copy) NSSet<NSString *> *grantedPermissions;
+@property (nonatomic, copy) NSSet<NSString *> *declinedPermissions;
 
 @end
 
@@ -48,31 +48,31 @@ NS_SWIFT_NAME(LoginManagerLoginResult)
 /**
   the access token.
  */
-@property (copy, nonatomic, nullable) FBSDKAccessToken *token;
+@property (nullable, nonatomic, copy) FBSDKAccessToken *token;
 
 /**
   the authentication token.
  */
-@property (copy, nonatomic, nullable) FBSDKAuthenticationToken *authenticationToken;
+@property (nullable, nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
 
 /**
   whether the login was cancelled by the user.
  */
-@property (readonly, nonatomic) BOOL isCancelled;
+@property (nonatomic, readonly) BOOL isCancelled;
 
 /**
   the set of permissions granted by the user in the associated request.
 
  inspect the token's permissions set for a complete list.
  */
-@property (copy, nonatomic) NSSet<NSString *> *grantedPermissions;
+@property (nonatomic, copy) NSSet<NSString *> *grantedPermissions;
 
 /**
   the set of permissions declined by the user in the associated request.
 
  inspect the token's permissions set for a complete list.
  */
-@property (copy, nonatomic) NSSet<NSString *> *declinedPermissions;
+@property (nonatomic, copy) NSSet<NSString *> *declinedPermissions;
 
 /**
   Initializes a new instance.
@@ -87,7 +87,7 @@ NS_SWIFT_NAME(LoginManagerLoginResult)
                   isCancelled:(BOOL)isCancelled
            grantedPermissions:(NSSet<NSString *> *)grantedPermissions
           declinedPermissions:(NSSet<NSString *> *)declinedPermissions
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 @end
 
 #endif

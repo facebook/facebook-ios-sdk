@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Success Block
  */
-typedef void (^FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
+typedef void (^ FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
 NS_SWIFT_NAME(LoginCompletionParametersBlock);
 
 /**
@@ -40,25 +40,25 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 @property (nullable, nonatomic, readonly) FBSDKAuthenticationToken *authenticationToken;
 @property (nullable, nonatomic, readonly) FBSDKProfile *profile;
 
-@property (nullable, nonatomic, copy, readonly) NSString *accessTokenString;
-@property (nullable, nonatomic, copy, readonly) NSString *nonceString;
-@property (nullable, nonatomic, copy, readonly) NSString *authenticationTokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *accessTokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *nonceString;
+@property (nullable, nonatomic, readonly, copy) NSString *authenticationTokenString;
 
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *permissions;
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *declinedPermissions;
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *expiredPermissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *permissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *declinedPermissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *expiredPermissions;
 
-@property (nullable, nonatomic, copy, readonly) NSString *appID;
-@property (nullable, nonatomic, copy, readonly) NSString *userID;
+@property (nullable, nonatomic, readonly, copy) NSString *appID;
+@property (nullable, nonatomic, readonly, copy) NSString *userID;
 
-@property (nullable, nonatomic, copy, readonly) NSError *error;
+@property (nullable, nonatomic, readonly, copy) NSError *error;
 
-@property (nullable, nonatomic, copy, readonly) NSDate *expirationDate;
-@property (nullable, nonatomic, copy, readonly) NSDate *dataAccessExpirationDate;
+@property (nullable, nonatomic, readonly, copy) NSDate *expirationDate;
+@property (nullable, nonatomic, readonly, copy) NSDate *dataAccessExpirationDate;
 
-@property (nullable, nonatomic, copy, readonly) NSString *challenge;
+@property (nullable, nonatomic, readonly, copy) NSString *challenge;
 
-@property (nullable, nonatomic, copy, readonly) NSString *graphDomain;
+@property (nullable, nonatomic, readonly, copy) NSString *graphDomain;
 
 @end
 

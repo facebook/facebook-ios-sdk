@@ -9,8 +9,8 @@
 #if !TARGET_OS_TV
 
 #import <CoreGraphics/CGGeometry.h>
-#import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <Foundation/Foundation.h>
 @protocol FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN

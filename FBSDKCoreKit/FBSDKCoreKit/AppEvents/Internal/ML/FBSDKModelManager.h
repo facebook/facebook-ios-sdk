@@ -8,23 +8,23 @@
 
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
- #import "FBSDKEventProcessing.h"
+#import "FBSDKEventProcessing.h"
 
- @protocol FBSDKDataPersisting;
- @protocol FBSDKFeatureChecking;
- @protocol FBSDKFileManaging;
- @protocol FBSDKGraphRequestFactory;
- @protocol FBSDKSettings;
- @protocol FBSDKFileDataExtracting;
- @protocol FBSDKGateKeeperManaging;
- @protocol FBSDKSuggestedEventsIndexer;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKFeatureChecking;
+@protocol FBSDKFileManaging;
+@protocol FBSDKGraphRequestFactory;
+@protocol FBSDKSettings;
+@protocol FBSDKFileDataExtracting;
+@protocol FBSDKGateKeeperManaging;
+@protocol FBSDKSuggestedEventsIndexer;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ModelManager)
-@interface FBSDKModelManager : NSObject<FBSDKEventProcessing>
+@interface FBSDKModelManager : NSObject <FBSDKEventProcessing>
 
 @property (class, nonnull, readonly) FBSDKModelManager *shared;
 

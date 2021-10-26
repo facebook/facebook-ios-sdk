@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ProductsRequest)
 @protocol FBSDKProductsRequest
 
-@property(nonatomic, weak, nullable) id <SKProductsRequestDelegate> delegate;
+@property (nullable, nonatomic, weak) id<SKProductsRequestDelegate> delegate;
 
 - (void)cancel;
 - (void)start;

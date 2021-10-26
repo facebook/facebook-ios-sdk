@@ -24,7 +24,7 @@ NS_SWIFT_NAME(ShareLinkContent)
  If specified, the quote text will render with custom styling on top of the link.
  @return The quote text of a link
  */
-@property (nonatomic, copy, nullable) NSString *quote;
+@property (nullable, nonatomic, copy) NSString *quote;
 
 /**
   Compares the receiver to another link content.

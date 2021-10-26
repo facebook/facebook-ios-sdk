@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param appLinks the FBSDKAppLinks representing the deferred App Links
  @param error the error during the request, if any
  */
-typedef void (^FBSDKAppLinksBlock)(NSDictionary<NSURL *, FBSDKAppLink *> * appLinks,
-                                                 NSError * _Nullable error)
+typedef void (^ FBSDKAppLinksBlock)(NSDictionary<NSURL *, FBSDKAppLink *> *appLinks,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(AppLinksBlock);
 
 /**
@@ -33,7 +33,7 @@ NS_SWIFT_NAME(AppLinksBlock);
  */
 
 NS_SWIFT_NAME(AppLinkResolver)
-@interface FBSDKAppLinkResolver : NSObject<FBSDKAppLinkResolving>
+@interface FBSDKAppLinkResolver : NSObject <FBSDKAppLinkResolving>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -45,13 +45,13 @@ NS_SWIFT_NAME(AppLinkResolver)
  @param handler The completion block that will return an App Link for the given URL.
  */
 - (void)appLinksFromURLs:(NSArray<NSURL *> *)urls handler:(FBSDKAppLinksBlock)handler
-NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
+    NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 
 /**
   Allocates and initializes a new instance of FBSDKAppLinkResolver.
  */
 + (instancetype)resolver
-NS_SWIFT_NAME(init());
+  NS_SWIFT_NAME(init());
 
 @end
 

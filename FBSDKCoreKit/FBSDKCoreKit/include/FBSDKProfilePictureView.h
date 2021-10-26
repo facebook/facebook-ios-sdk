@@ -18,8 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  FBSDKProfilePictureMode enum
   Defines the aspect ratio mode for the source image of the profile picture.
  */
-typedef NS_ENUM(NSUInteger, FBSDKProfilePictureMode)
-{
+typedef NS_ENUM(NSUInteger, FBSDKProfilePictureMode) {
   /**
     A square cropped version of the image will be included in the view.
    */
@@ -55,14 +54,14 @@ NS_SWIFT_NAME(FBProfilePictureView)
  - Parameter profile: Optional profile to display a picture for.
  */
 - (instancetype)initWithFrame:(CGRect)frame
-                      profile:(FBSDKProfile * _Nullable)profile;
+                      profile:(FBSDKProfile *_Nullable)profile;
 
 /**
  Create a new instance of `FBSDKProfilePictureView`.
 
  - Parameter profile: Optional profile to display a picture for.
  */
-- (instancetype)initWithProfile:(FBSDKProfile * _Nullable)profile;
+- (instancetype)initWithProfile:(FBSDKProfile *_Nullable)profile;
 
 /**
   The mode for the receiver to determine the aspect ratio of the source image.

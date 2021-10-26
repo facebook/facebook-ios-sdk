@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 @class FBSDKAuthenticationTokenClaims;
 @protocol FBSDKTokenCaching;
 
@@ -18,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  Represent an AuthenticationToken used for a login attempt
 */
 NS_SWIFT_NAME(AuthenticationToken)
-@interface FBSDKAuthenticationToken : NSObject<NSCopying, NSObject, NSSecureCoding>
+@interface FBSDKAuthenticationToken : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -29,22 +28,22 @@ NS_SWIFT_NAME(AuthenticationToken)
  The `currentAuthenticationToken` represents the authentication token of the
  current user and can be used by a client to verify an authentication attempt.
  */
-@property (class, nonatomic, copy, nullable) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nullable, nonatomic, copy) FBSDKAuthenticationToken *currentAuthenticationToken;
 
 /**
  The raw token string from the authentication response
  */
-@property (nonatomic, copy, readonly) NSString *tokenString;
+@property (nonatomic, readonly, copy) NSString *tokenString;
 
 /**
  The nonce from the decoded authentication response
  */
-@property (nonatomic, copy, readonly) NSString *nonce;
+@property (nonatomic, readonly, copy) NSString *nonce;
 
 /**
   The graph domain where the user is authenticated.
  */
-@property (nonatomic, copy, readonly) NSString *graphDomain;
+@property (nonatomic, readonly, copy) NSString *graphDomain;
 
 /**
   Returns the claims encoded in the AuthenticationToken
@@ -57,7 +56,7 @@ NS_SWIFT_NAME(AuthenticationToken)
 
  @warning UNSAFE - DO NOT USE
  */
-@property (nullable, class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
+@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 

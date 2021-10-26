@@ -20,8 +20,8 @@ FOUNDATION_EXPORT int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count
 
 // These are local wrappers around Keychain API
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
-FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTypeRef _Nullable * _Nullable result);
-FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef * __nullable CF_RETURNS_RETAINED result);
+FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTypeRef _Nullable *_Nullable result);
+FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *__nullable CF_RETURNS_RETAINED result);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query);
 
 #pragma mark - QuartzCore Classes
@@ -31,9 +31,9 @@ FOUNDATION_EXPORT Class fbsdkdfl_CATransactionClass(void);
 #pragma mark - QuartzCore APIs
 
 // These are local wrappers around the corresponding transform methods from QuartzCore.framework/CATransform3D.h
-FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeScale (CGFloat sx, CGFloat sy, CGFloat sz);
-FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeTranslation (CGFloat tx, CGFloat ty, CGFloat tz);
-FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DConcat (CATransform3D a, CATransform3D b);
+FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz);
+FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeTranslation(CGFloat tx, CGFloat ty, CGFloat tz);
+FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DConcat(CATransform3D a, CATransform3D b);
 
 #pragma mark - AdSupport Classes
 
@@ -65,7 +65,7 @@ FOUNDATION_EXPORT Class fbsdkdfl_CTTelephonyNetworkInfoClass(void);
  As new types are needed, they should be added and strongly typed.
  */
 NS_SWIFT_NAME(DynamicFrameworkLoader)
-@interface FBSDKDynamicFrameworkLoader : NSObject<FBSDKDynamicFrameworkResolving>
+@interface FBSDKDynamicFrameworkLoader : NSObject <FBSDKDynamicFrameworkResolving>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

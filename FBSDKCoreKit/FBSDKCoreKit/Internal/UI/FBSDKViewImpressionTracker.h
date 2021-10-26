@@ -29,7 +29,7 @@ NS_SWIFT_NAME(ViewImpressionTracker)
                           notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
                                    tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet;
 
-@property (nonatomic, copy, readonly) FBSDKAppEventName eventName;
+@property (nonatomic, readonly, copy) FBSDKAppEventName eventName;
 
 - (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 

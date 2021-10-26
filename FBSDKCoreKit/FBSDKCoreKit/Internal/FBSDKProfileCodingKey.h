@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NSString * FBSDKProfileCodingKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ProfileCodingKey);
+typedef NSString *FBSDKProfileCodingKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(ProfileCodingKey);
 
 FOUNDATION_EXPORT FBSDKProfileCodingKey const FBSDKProfileCodingKeyUserID;
 FOUNDATION_EXPORT FBSDKProfileCodingKey const FBSDKProfileCodingKeyFirstName;

@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ProfileProviding)
 @protocol FBSDKProfileProviding
 
-@property (class, nonatomic, strong, nullable) FBSDKProfile *currentProfile
+@property (class, nullable, nonatomic, strong) FBSDKProfile *currentProfile
 NS_SWIFT_NAME(current);
 
 + (nullable FBSDKProfile *)fetchCachedProfile;

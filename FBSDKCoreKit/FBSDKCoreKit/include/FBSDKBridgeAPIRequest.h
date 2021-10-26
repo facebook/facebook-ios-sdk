@@ -35,13 +35,13 @@ NS_SWIFT_NAME(BridgeAPIRequest)
                                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo;
 
-@property (nonatomic, copy, readonly) NSString *actionID;
-@property (nonatomic, nullable, copy, readonly) NSString *methodName;
-@property (nonatomic, nullable, copy, readonly) NSString *methodVersion;
-@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *parameters;
-@property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
-@property (nonatomic, copy, readonly) FBSDKURLScheme scheme;
-@property (nonatomic, nullable, copy, readonly) NSDictionary<NSString *, id> *userInfo;
+@property (nonatomic, readonly, copy) NSString *actionID;
+@property (nullable, nonatomic, readonly, copy) NSString *methodName;
+@property (nullable, nonatomic, readonly, copy) NSString *methodVersion;
+@property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *parameters;
+@property (nonatomic, readonly, assign) FBSDKBridgeAPIProtocolType protocolType;
+@property (nonatomic, readonly, copy) FBSDKURLScheme scheme;
+@property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *userInfo;
 
 - (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;
 

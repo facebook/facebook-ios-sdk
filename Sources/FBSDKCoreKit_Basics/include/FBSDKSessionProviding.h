@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(SessionDataTask)
 @protocol FBSDKSessionDataTask <NSObject>
 
-@property(readonly) NSURLSessionTaskState state;
+@property (readonly) NSURLSessionTaskState state;
 
 - (void)resume;
 - (void)cancel;
@@ -26,7 +26,7 @@ NS_SWIFT_NAME(SessionProviding)
 @protocol FBSDKSessionProviding <NSObject>
 
 - (id<FBSDKSessionDataTask>)dataTaskWithRequest:(NSURLRequest *)request
-                              completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+                              completionHandler:(void (^)(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error))completionHandler;
 
 @end
 

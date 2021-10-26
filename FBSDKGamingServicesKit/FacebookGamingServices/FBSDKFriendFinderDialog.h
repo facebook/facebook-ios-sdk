@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FriendFinderDialog)
 @interface FBSDKFriendFinderDialog : NSObject
 
-- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
+- (instancetype _Nonnull)init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
 
 /**
  Opens the Friend Finder dialog inside the Facebook app if it's installed, otherwise

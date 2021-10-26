@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,27 +36,27 @@ NS_SWIFT_NAME(GraphRequestProtocol)
 /**
   The access token string used by the request.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *tokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *tokenString;
 
 /**
   The Graph API endpoint to use for the request, for example "me".
  */
-@property (nonatomic, copy, readonly) NSString *graphPath;
+@property (nonatomic, readonly, copy) NSString *graphPath;
 
 /**
   The HTTPMethod to use for the request, for example "GET" or "POST".
  */
-@property (nonatomic, copy, readonly) FBSDKHTTPMethod HTTPMethod;
+@property (nonatomic, readonly, copy) FBSDKHTTPMethod HTTPMethod;
 
 /**
   The Graph API version to use (e.g., "v2.0")
  */
-@property (nonatomic, copy, readonly) NSString *version;
+@property (nonatomic, readonly, copy) NSString *version;
 
 /**
    The graph request flags to use
  */
-@property (nonatomic, assign, readonly) FBSDKGraphRequestFlags flags;
+@property (nonatomic, readonly, assign) FBSDKGraphRequestFlags flags;
 
 /**
  Convenience property to determine if graph error recover is disabled

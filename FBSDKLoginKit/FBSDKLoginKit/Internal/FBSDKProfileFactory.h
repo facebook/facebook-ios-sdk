@@ -8,10 +8,9 @@
 
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
- #import "FBSDKProfileCreating.h"
-
+#import "FBSDKProfileCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

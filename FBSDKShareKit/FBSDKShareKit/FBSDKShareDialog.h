@@ -23,11 +23,11 @@ NS_SWIFT_NAME(ShareDialog)
 
 #else
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKShareDialogMode.h>
-#import <FBSDKShareKit/FBSDKSharing.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+ #import <FBSDKShareKit/FBSDKShareDialogMode.h>
+ #import <FBSDKShareKit/FBSDKSharing.h>
+ #import <FBSDKShareKit/FBSDKSharingContent.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,9 +38,9 @@ NS_SWIFT_NAME(ShareDialog)
 @interface FBSDKShareDialog : NSObject <FBSDKSharingDialog>
 
 - (instancetype)init NS_UNAVAILABLE
-DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
+  DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
 + (instancetype)new NS_UNAVAILABLE
-DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
+  DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
 
 /**
   Convenience initializer to initialize an `FBSDKShareDialog` with a view controller, content and delegate.
@@ -61,7 +61,7 @@ DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next ma
 + (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
                              withContent:(nullable id<FBSDKSharingContent>)content
                                 delegate:(nullable id<FBSDKSharingDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use `init(viewController:content:delegate:)");
+  NS_SWIFT_UNAVAILABLE("Use `init(viewController:content:delegate:)");
 
 /**
  Convenience method to show an `FBSDKShareDialog` with a view controller, content and delegate.
@@ -72,7 +72,7 @@ NS_SWIFT_UNAVAILABLE("Use `init(viewController:content:delegate:)");
 + (instancetype)showFromViewController:(nullable UIViewController *)viewController
                            withContent:(nullable id<FBSDKSharingContent>)content
                               delegate:(nullable id<FBSDKSharingDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(viewController:content:delegate:).show() instead");
+  NS_SWIFT_UNAVAILABLE("Use init(viewController:content:delegate:).show() instead");
 
 /**
   A UIViewController from which to present the dialog.

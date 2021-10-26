@@ -30,7 +30,7 @@ NS_SWIFT_NAME(GraphRequestMetadata)
 - (instancetype)initWithRequest:(id<FBSDKGraphRequest>)request
               completionHandler:(nullable FBSDKGraphRequestCompletion)handler
                 batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 - (void)invokeCompletionHandlerForConnection:(id<FBSDKGraphRequestConnecting>)connection
                                  withResults:(id)results

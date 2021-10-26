@@ -10,8 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-
 /**
  The error domain for all errors from FBSDKShareKit.
 
@@ -20,18 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSErrorDomain const FBSDKShareErrorDomain
 NS_SWIFT_NAME(ShareErrorDomain);
 
-
 #ifndef NS_ERROR_ENUM
-#define NS_ERROR_ENUM(_domain, _name) \
-enum _name: NSInteger _name; \
-enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+ #define NS_ERROR_ENUM(_domain, _name) \
+  enum _name : NSInteger _name; \
+  enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
 #endif
 
 /**
  FBSDKShareError
  Error codes for FBSDKShareErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKShareErrorDomain, FBSDKShareError)
+typedef NS_ERROR_ENUM (FBSDKShareErrorDomain, FBSDKShareError)
 {
   /**
    Reserved.

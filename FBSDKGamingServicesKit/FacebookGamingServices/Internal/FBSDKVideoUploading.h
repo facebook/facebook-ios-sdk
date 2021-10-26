@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(VideoUploading)
 @protocol FBSDKVideoUploading
 
-@property (weak, nonatomic) id<FBSDKVideoUploaderDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKVideoUploaderDelegate> delegate;
 
 - (void)start;
 

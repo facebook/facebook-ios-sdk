@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppLinkURLProtocol)
 @protocol FBSDKAppLinkURL
 
-@property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, id> *appLinkExtras;
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, id> *appLinkExtras;
 
 @end
 

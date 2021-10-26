@@ -25,11 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(BridgeAPIRequestProtocol)
 @protocol FBSDKBridgeAPIRequest <NSObject, NSCopying>
 
-@property (nonatomic, copy, readonly) NSString *scheme;
-@property (nonatomic, copy, readonly) NSString *actionID;
-@property (nonatomic, nullable, copy, readonly) NSString *methodName;
-@property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
-@property (nonatomic, nullable, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
+@property (nonatomic, readonly, copy) NSString *scheme;
+@property (nonatomic, readonly, copy) NSString *actionID;
+@property (nullable, nonatomic, readonly, copy) NSString *methodName;
+@property (nonatomic, readonly, assign) FBSDKBridgeAPIProtocolType protocolType;
+@property (nullable, nonatomic, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
 
 - (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;
 

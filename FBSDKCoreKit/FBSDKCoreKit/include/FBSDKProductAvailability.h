@@ -10,8 +10,7 @@
   NS_ENUM(NSUInteger, FBSDKProductAvailability)
     Specifies product availability for Product Catalog product item update
  */
-typedef NS_ENUM(NSUInteger, FBSDKProductAvailability)
-{
+typedef NS_ENUM(NSUInteger, FBSDKProductAvailability) {
   /**
    * Item ships immediately
    */

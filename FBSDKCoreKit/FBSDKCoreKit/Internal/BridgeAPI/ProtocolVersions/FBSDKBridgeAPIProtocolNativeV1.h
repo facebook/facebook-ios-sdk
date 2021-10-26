@@ -8,24 +8,22 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKBridgeAPIProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKPasteboard;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *bridgeArgs;
   __unsafe_unretained NSString *methodArgs;
   __unsafe_unretained NSString *methodVersion;
 } FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *actionID;
   __unsafe_unretained NSString *appIcon;
   __unsafe_unretained NSString *appName;
@@ -33,15 +31,13 @@ typedef struct
 } FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *bridgeArgs;
   __unsafe_unretained NSString *methodResults;
 } FBSDKBridgeAPIProtocolNativeV1InputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1InputKeysStruct FBSDKBridgeAPIProtocolNativeV1InputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *actionID;
   __unsafe_unretained NSString *error;
 } FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeysStruct;
@@ -58,12 +54,12 @@ NS_SWIFT_NAME(BridgeAPIProtocolNativeV1)
                        pasteboard:(nullable id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
-@property (nullable, nonatomic, copy, readonly) NSString *appScheme;
-@property (nonatomic, assign, readonly) NSUInteger dataLengthThreshold;
-@property (nonatomic, assign, readonly, getter=shouldIncludeAppIcon) BOOL includeAppIcon;
-@property (nullable, nonatomic, strong, readonly) id<FBSDKPasteboard> pasteboard;
+@property (nullable, nonatomic, readonly, copy) NSString *appScheme;
+@property (nonatomic, readonly, assign) NSUInteger dataLengthThreshold;
+@property (nonatomic, readonly, getter = shouldIncludeAppIcon, assign) BOOL includeAppIcon;
+@property (nullable, nonatomic, readonly, strong) id<FBSDKPasteboard> pasteboard;
 
 @end
 

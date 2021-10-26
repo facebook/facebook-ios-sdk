@@ -8,12 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason)
-{
+typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason) {
   FBSDKAppEventsFlushReasonExplicit,
   FBSDKAppEventsFlushReasonTimer,
   FBSDKAppEventsFlushReasonSessionChange,
   FBSDKAppEventsFlushReasonPersistedEvents,
   FBSDKAppEventsFlushReasonEventThreshold,
-  FBSDKAppEventsFlushReasonEagerlyFlushingEvent
+  FBSDKAppEventsFlushReasonEagerlyFlushingEvent,
 } NS_SWIFT_NAME(AppEventsUtility.FlushReason);

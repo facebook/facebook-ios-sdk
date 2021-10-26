@@ -16,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(WebView)
 @protocol FBSDKWebView
 
-@property (nullable, nonatomic, weak) id <WKNavigationDelegate> navigationDelegate;
-@property(nonatomic) CGRect frame;
-@property(nonatomic) CGRect bounds;
+@property (nullable, nonatomic, weak) id<WKNavigationDelegate> navigationDelegate;
+@property (nonatomic) CGRect frame;
+@property (nonatomic) CGRect bounds;
 
 - (nullable WKNavigation *)loadRequest:(NSURLRequest *)request;
 - (void)stopLoading;

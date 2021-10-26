@@ -11,9 +11,8 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKSharingValidation.h>
 #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
+#import <FBSDKShareKit/FBSDKSharingValidation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,7 +43,7 @@ NS_SWIFT_NAME(GameRequestContent)
   Additional freeform data you may pass for tracking. This will be stored as part of
  the request objects created. The maximum length is 255 characters.
  */
-@property (nonatomic, copy, nullable) NSString *data;
+@property (nullable, nonatomic, copy) NSString *data;
 
 /**
   This controls the set of friends someone sees if a multi-friend selector is shown.

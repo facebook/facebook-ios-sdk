@@ -24,7 +24,7 @@ NS_SWIFT_NAME(Crypto)
  * Generate numOfBytes random data, base64-encoded.
  * This calls the system-provided function SecRandomCopyBytes, based on /dev/random.
  */
-+ (nullable NSString*)randomString:(NSUInteger)numOfBytes;
++ (nullable NSString *)randomString:(NSUInteger)numOfBytes;
 
 @end
 

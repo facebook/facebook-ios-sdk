@@ -12,9 +12,9 @@
 
  #import <Foundation/Foundation.h>
 
- #import "FBAEMRule.h"
  #import "FBAEMAdvertiserRuleMatching.h"
  #import "FBAEMAdvertiserRuleProviding.h"
+ #import "FBAEMRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

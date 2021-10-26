@@ -39,7 +39,7 @@ NS_SWIFT_NAME(TVInterfaceFactory)
  @abstract The designated initializer which can chain a `<TVInterfaceCreating>` implementation.
  */
 - (instancetype)initWithInterfaceCreator:(nullable id<TVInterfaceCreating>)interfaceCreator
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 @end
 

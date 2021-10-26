@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  Describes the callback for downloadImageWithURL:ttl:completion:.
  @param image the optional image returned
  */
-typedef void (^FBSDKImageDownloadBlock)(UIImage *_Nullable image)
+typedef void (^ FBSDKImageDownloadBlock)(UIImage *_Nullable image)
 NS_SWIFT_NAME(ImageDownloadBlock);
 
 /*
@@ -25,7 +25,7 @@ NS_SWIFT_NAME(ImageDownloadBlock);
 NS_SWIFT_NAME(ImageDownloader)
 @interface FBSDKImageDownloader : NSObject
 
-@property (class, nonatomic, strong, readonly) FBSDKImageDownloader *sharedInstance;
+@property (class, nonatomic, readonly, strong) FBSDKImageDownloader *sharedInstance;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

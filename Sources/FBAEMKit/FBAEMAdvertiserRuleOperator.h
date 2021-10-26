@@ -10,7 +10,7 @@
 
 #if !TARGET_OS_TV
 
-typedef NS_CLOSED_ENUM(NSInteger, FBAEMAdvertiserRuleOperator)
+typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
 {
   Unknown = 0,
   // Multi Entry Rule Operator

@@ -17,15 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AuthenticationTokenProviding)
 @protocol FBSDKAuthenticationTokenProviding
 
-@property (class, nonatomic, copy, nullable, readonly) FBSDKAuthenticationToken *currentAuthenticationToken;
-@property (class, nonatomic, copy, nullable) id<FBSDKTokenCaching> tokenCache;
+@property (class, nullable, nonatomic, readonly, copy) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 
 NS_SWIFT_NAME(AuthenticationTokenSetting)
 @protocol FBSDKAuthenticationTokenSetting
 
-@property (class, nonatomic, copy, nullable) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nullable, nonatomic, copy) FBSDKAuthenticationToken *currentAuthenticationToken;
 
 @end
 

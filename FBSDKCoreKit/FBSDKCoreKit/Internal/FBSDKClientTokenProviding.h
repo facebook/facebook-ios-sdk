@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ClientTokenProviding)
 @protocol FBSDKClientTokenProviding
 
-@property (nonatomic, copy, nullable, readonly) NSString *clientToken;
+@property (nullable, nonatomic, readonly, copy) NSString *clientToken;
 
 @end
 

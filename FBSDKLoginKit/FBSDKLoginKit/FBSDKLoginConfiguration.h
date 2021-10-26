@@ -24,8 +24,7 @@ FOUNDATION_EXPORT FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize;
 
 /// The login tracking preference to use for a login attempt. For more information on the differences between
 /// `enabled` and `limited` see: https://developers.facebook.com/docs/facebook-login/ios/limited-login/
-typedef NS_ENUM(NSUInteger, FBSDKLoginTracking)
-{
+typedef NS_ENUM(NSUInteger, FBSDKLoginTracking) {
   FBSDKLoginTrackingEnabled,
   FBSDKLoginTrackingLimited,
 } NS_SWIFT_NAME(LoginTracking);
@@ -45,10 +44,10 @@ NS_SWIFT_NAME(LoginConfiguration)
 @property (nonatomic, readonly, copy) NSSet<FBSDKPermission *> *requestedPermissions;
 
 /// The Messenger Page Id associated with this login request.
-@property (nonatomic, readonly, copy, nullable) NSString *messengerPageId;
+@property (nullable, nonatomic, readonly, copy) NSString *messengerPageId;
 
 /// The auth type associated with this login request.
-@property (nonatomic, readonly, nullable) FBSDKLoginAuthType authType;
+@property (nullable, nonatomic, readonly) FBSDKLoginAuthType authType;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -66,7 +65,7 @@ NS_SWIFT_NAME(LoginConfiguration)
                                     tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
                              messengerPageId:(nullable NSString *)messengerPageId
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -83,7 +82,7 @@ NS_REFINED_FOR_SWIFT;
                                        nonce:(NSString *)nonce
                              messengerPageId:(nullable NSString *)messengerPageId
                                     authType:(nullable FBSDKLoginAuthType)authType
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -96,7 +95,7 @@ NS_REFINED_FOR_SWIFT;
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                                     tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -108,7 +107,7 @@ NS_REFINED_FOR_SWIFT;
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                                     tracking:(FBSDKLoginTracking)tracking
                              messengerPageId:(nullable NSString *)messengerPageId
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -122,7 +121,7 @@ NS_REFINED_FOR_SWIFT;
                                     tracking:(FBSDKLoginTracking)tracking
                              messengerPageId:(nullable NSString *)messengerPageId
                                     authType:(nullable FBSDKLoginAuthType)authType
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -132,7 +131,7 @@ NS_REFINED_FOR_SWIFT;
  */
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                                     tracking:(FBSDKLoginTracking)tracking
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
@@ -140,7 +139,7 @@ NS_REFINED_FOR_SWIFT;
  @param tracking the login tracking preference to use for a login attempt.
  */
 - (nullable instancetype)initWithTracking:(FBSDKLoginTracking)tracking
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Given a string, return the corresponding FBSDKLoginAuthType. Returns nil if the string cannot be mapped to a valid auth type

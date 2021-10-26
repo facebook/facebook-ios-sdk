@@ -22,7 +22,7 @@ NS_SWIFT_NAME(TokenStringProviding)
   @warning UNSAFE - DO NOT USE
 */
 
-@property (class, nonatomic, copy, nullable, readonly) NSString * tokenString;
+@property (class, nullable, nonatomic, readonly, copy) NSString *tokenString;
 
 @end
 

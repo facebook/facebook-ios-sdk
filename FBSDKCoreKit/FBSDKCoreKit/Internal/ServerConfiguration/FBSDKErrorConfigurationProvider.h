@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ErrorConfigurationProvider)
-@interface FBSDKErrorConfigurationProvider : NSObject<FBSDKErrorConfigurationProviding>
+@interface FBSDKErrorConfigurationProvider : NSObject <FBSDKErrorConfigurationProviding>
 @end
 
 NS_ASSUME_NONNULL_END

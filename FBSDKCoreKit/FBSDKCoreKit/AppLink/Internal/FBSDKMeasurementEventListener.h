@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(MeasurementEventListener)
 @interface FBSDKMeasurementEventListener : NSObject
 
-@property (class, nonatomic, strong, readonly) FBSDKMeasurementEventListener *defaultListener
+@property (class, nonatomic, readonly, strong) FBSDKMeasurementEventListener *defaultListener
 NS_SWIFT_NAME(default);
 
 - (instancetype)init NS_UNAVAILABLE;

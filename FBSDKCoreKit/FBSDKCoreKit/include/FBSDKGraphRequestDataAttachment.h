@@ -28,22 +28,22 @@ NS_SWIFT_NAME(GraphRequestDataAttachment)
 - (instancetype)initWithData:(NSData *)data
                     filename:(NSString *)filename
                  contentType:(NSString *)contentType
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 /**
   The content type for the attachment.
  */
-@property (nonatomic, copy, readonly) NSString *contentType;
+@property (nonatomic, readonly, copy) NSString *contentType;
 
 /**
   The attachment data.
  */
-@property (nonatomic, strong, readonly) NSData *data;
+@property (nonatomic, readonly, strong) NSData *data;
 
 /**
   The filename for the attachment.
  */
-@property (nonatomic, copy, readonly) NSString *filename;
+@property (nonatomic, readonly, copy) NSString *filename;
 
 @end
 

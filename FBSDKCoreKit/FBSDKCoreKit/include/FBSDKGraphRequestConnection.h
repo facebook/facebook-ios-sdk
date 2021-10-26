@@ -128,10 +128,10 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
  @param totalBytesWritten         The total number of bytes sent to the remote host
  @param totalBytesExpectedToWrite The total number of bytes expected to send to the remote host
  */
-- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection
-          didSendBodyData:(NSInteger)bytesWritten
-        totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+- (void)  requestConnection:(id<FBSDKGraphRequestConnecting>)connection
+            didSendBodyData:(NSInteger)bytesWritten
+          totalBytesWritten:(NSInteger)totalBytesWritten
+  totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 
 @end
 
@@ -157,7 +157,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
 /**
   The delegate object that receives updates.
  */
-@property (nonatomic, weak, nullable) id<FBSDKGraphRequestConnectionDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
 /**
   Gets or sets the timeout interval to wait for a response before giving up.
@@ -175,7 +175,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
  The property is nil until the request completes.  If there was a response
  then this property will be non-nil during the FBSDKGraphRequestBlock callback.
  */
-@property (nonatomic, retain, readonly, nullable) NSHTTPURLResponse *urlResponse;
+@property (nullable, nonatomic, readonly, retain) NSHTTPURLResponse *urlResponse;
 
 /**
  Determines the operation queue that is used to call methods on the connection's delegate.

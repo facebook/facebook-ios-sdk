@@ -12,9 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKURLSessionTaskBlock)(NSData*  _Nullable responseData,
-                                         NSURLResponse*  _Nullable response,
-                                         NSError* _Nullable error)
+typedef void (^ FBSDKURLSessionTaskBlock)(NSData *_Nullable responseData,
+  NSURLResponse *_Nullable response,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(UrlSessionTaskBlock);
 
 NS_SWIFT_NAME(UrlSessionTask)
@@ -22,7 +22,7 @@ NS_SWIFT_NAME(UrlSessionTask)
 
 @property (nonatomic, strong) id<FBSDKSessionDataTask> task;
 @property (atomic, readonly) NSURLSessionTaskState state;
-@property (nonatomic, strong, readonly) NSDate *requestStartDate;
+@property (nonatomic, readonly, strong) NSDate *requestStartDate;
 @property (nullable, nonatomic, copy) FBSDKURLSessionTaskBlock handler;
 @property (nonatomic, assign) uint64_t requestStartTime;
 @property (nonatomic, assign) NSUInteger loggerSerialNumber;

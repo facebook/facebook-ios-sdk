@@ -8,9 +8,9 @@
 
 #if TARGET_OS_TV
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
+#import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

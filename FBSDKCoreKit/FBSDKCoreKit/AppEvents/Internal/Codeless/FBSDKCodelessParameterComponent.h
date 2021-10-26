@@ -15,10 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CodelessParameterComponent)
 @interface FBSDKCodelessParameterComponent : NSObject
 
-@property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, copy, readonly) NSString *value;
+@property (nonatomic, readonly, copy) NSString *name;
+@property (nonatomic, readonly, copy) NSString *value;
 @property (nonatomic, readonly) NSArray *path;
-@property (nonatomic, copy, readonly) NSString *pathType;
+@property (nonatomic, readonly, copy) NSString *pathType;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(CreateContextDialogFactory)
-@interface FBSDKCreateContextDialogFactory : NSObject<FBSDKCreateContextDialogMaking>
+@interface FBSDKCreateContextDialogFactory : NSObject <FBSDKCreateContextDialogMaking>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;

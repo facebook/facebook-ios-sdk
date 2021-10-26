@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsStateManager)
 @interface FBSDKAppEventsStateManager : NSObject
-@property (class, readonly, nonatomic) FBSDKAppEventsStateManager* shared;
+@property (class, nonatomic, readonly) FBSDKAppEventsStateManager *shared;
 
 - (void)clearPersistedAppEventsStates;
 
@@ -22,7 +22,6 @@ NS_SWIFT_NAME(AppEventsStateManager)
 
 // returns the array of saved app event states and deletes them.
 - (NSArray *)retrievePersistedAppEventsStates;
-
 
 @end
 NS_ASSUME_NONNULL_END

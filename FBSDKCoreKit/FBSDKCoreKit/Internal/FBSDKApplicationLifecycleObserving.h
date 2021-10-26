@@ -14,7 +14,7 @@ NS_SWIFT_NAME(ApplicationLifecycleObserving)
 @protocol FBSDKApplicationLifecycleObserving
 
 - (void)startObservingApplicationLifecycleNotifications
-NS_SWIFT_NAME(startObservingApplicationLifecycleNotifications());
+  NS_SWIFT_NAME(startObservingApplicationLifecycleNotifications());
 
 @end
 

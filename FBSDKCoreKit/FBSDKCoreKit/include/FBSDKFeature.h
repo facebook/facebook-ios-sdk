@@ -32,8 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-typedef NS_ENUM(NSUInteger, FBSDKFeature)
-{
+typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureNone = 0x00000000,
   // Features in CoreKit
   /** Essential of CoreKit */
@@ -69,7 +68,6 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   // Features in GamingServicesKit
   /** Essential of GamingServicesKit */
   FBSDKFeatureGamingServices = 0x04000000,
-
 } NS_SWIFT_NAME(SDKFeature);
 
 /**

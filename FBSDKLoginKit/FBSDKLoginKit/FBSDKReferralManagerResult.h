@@ -10,9 +10,9 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import <FBSDKLoginKit/FBSDKReferralCode.h>
+ #import <FBSDKLoginKit/FBSDKReferralCode.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,20 +28,20 @@ NS_SWIFT_NAME(ReferralManagerResult)
 /**
   whether the referral was cancelled by the user.
  */
-@property (readonly, nonatomic) BOOL isCancelled;
+@property (nonatomic, readonly) BOOL isCancelled;
 
 /**
   An array of referral codes for each referral made by the user
  */
-@property (copy, nonatomic) NSArray<FBSDKReferralCode *> *referralCodes;
+@property (nonatomic, copy) NSArray<FBSDKReferralCode *> *referralCodes;
 
 /** Initializes a new instance.
  @param referralCodes the referral codes
  @param isCancelled whether the referral was cancelled by the user
  */
 - (instancetype)initWithReferralCodes:(nullable NSArray<FBSDKReferralCode *> *)referralCodes
-                  isCancelled:(BOOL)isCancelled
-NS_DESIGNATED_INITIALIZER;
+                          isCancelled:(BOOL)isCancelled
+  NS_DESIGNATED_INITIALIZER;
 @end
 
 NS_ASSUME_NONNULL_END

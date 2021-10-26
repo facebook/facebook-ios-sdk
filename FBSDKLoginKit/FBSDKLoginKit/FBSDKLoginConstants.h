@@ -10,8 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-
 /**
  The error domain for all errors from FBSDKLoginKit
 
@@ -20,18 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSErrorDomain const FBSDKLoginErrorDomain
 NS_SWIFT_NAME(LoginErrorDomain);
 
-
 #ifndef NS_ERROR_ENUM
-#define NS_ERROR_ENUM(_domain, _name) \
-enum _name: NSInteger _name; \
-enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+ #define NS_ERROR_ENUM(_domain, _name) \
+  enum _name : NSInteger _name; \
+  enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
 #endif
 
 /**
  FBSDKLoginError
   Error codes for FBSDKLoginErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginError)
+typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKLoginError)
 {
   /**
     Reserved.
@@ -95,7 +92,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginError)
  FBSDKDeviceLoginError
  Error codes for FBSDKDeviceLoginErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKDeviceLoginError) {
+typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKDeviceLoginError) {
   /**
    Your device is polling too frequently.
    */

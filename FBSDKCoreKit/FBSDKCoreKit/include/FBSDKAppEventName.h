@@ -14,7 +14,7 @@
  */
 
 /// typedef for FBSDKAppEventName
-typedef NSString * FBSDKAppEventName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.Name);
+typedef NSString *FBSDKAppEventName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.Name);
 
 // MARK: - General Purpose
 

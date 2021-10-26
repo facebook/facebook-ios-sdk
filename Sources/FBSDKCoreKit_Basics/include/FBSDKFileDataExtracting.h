@@ -16,7 +16,7 @@ NS_SWIFT_NAME(FileDataExtracting)
 
 + (nullable NSData *)dataWithContentsOfFile:(NSString *)path
                                     options:(NSDataReadingOptions)readOptionsMask
-                                      error:(NSError * _Nullable *)errorPtr;
+                                      error:(NSError *_Nullable *)errorPtr;
 
 @end
 

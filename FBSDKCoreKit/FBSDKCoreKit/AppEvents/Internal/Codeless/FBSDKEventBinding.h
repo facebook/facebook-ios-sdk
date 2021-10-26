@@ -8,11 +8,11 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import "FBSDKAppEventName.h"
-#import "FBSDKAppEventsNumberParser.h"
-#import "FBSDKCodelessParameterComponent.h"
+ #import "FBSDKAppEventName.h"
+ #import "FBSDKAppEventsNumberParser.h"
+ #import "FBSDKCodelessParameterComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,11 +22,11 @@ NS_SWIFT_NAME(EventBinding)
 @interface FBSDKEventBinding : NSObject
 
 @property (class, nonatomic, readonly) id<FBSDKNumberParsing> numberParser;
-@property (nullable, nonatomic, copy, readonly) FBSDKAppEventName eventName;
-@property (nullable, nonatomic, copy, readonly) NSString *eventType;
-@property (nullable, nonatomic, copy, readonly) NSString *appVersion;
+@property (nullable, nonatomic, readonly, copy) FBSDKAppEventName eventName;
+@property (nullable, nonatomic, readonly, copy) NSString *eventType;
+@property (nullable, nonatomic, readonly, copy) NSString *appVersion;
 @property (nullable, nonatomic, readonly) NSArray *path;
-@property (nullable, nonatomic, copy, readonly) NSString *pathType;
+@property (nullable, nonatomic, readonly, copy) NSString *pathType;
 @property (nullable, nonatomic, readonly) NSArray<FBSDKCodelessParameterComponent *> *parameters;
 
 + (instancetype)new NS_UNAVAILABLE;

@@ -10,7 +10,7 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,10 +20,10 @@ NS_SWIFT_NAME(AEMNetworking)
 @protocol FBAEMNetworking
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
-                          parameters:(NSDictionary<NSString *, id> *)parameters
-                          tokenString:(nullable NSString *)tokenString
-                          HTTPMethod:(nullable NSString *)method
-                          completion:(FBGraphRequestCompletion)completion;
+                            parameters:(NSDictionary<NSString *, id> *)parameters
+                           tokenString:(nullable NSString *)tokenString
+                            HTTPMethod:(nullable NSString *)method
+                            completion:(FBGraphRequestCompletion)completion;
 
 @end
 

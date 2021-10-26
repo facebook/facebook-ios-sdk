@@ -28,7 +28,7 @@ extern void fb_dispatch_on_default_thread(dispatch_block_t block);
  @param stop the error during the request, if any
 
  */
-typedef id _Nullable (^FBSDKInvalidObjectHandler)(id object, BOOL *stop)
+typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
 
 NS_SWIFT_NAME(BasicUtility)
@@ -53,10 +53,10 @@ NS_SWIFT_NAME(BasicUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return NO if an error occurred while serializing the object, otherwise YES.
  */
-+ (BOOL)dictionary:(NSMutableDictionary<id, id> *)dictionary
-setJSONStringForObject:(id)object
-            forKey:(id<NSCopying>)key
-             error:(NSError *__autoreleasing *)errorRef;
++ (BOOL)      dictionary:(NSMutableDictionary<id, id> *)dictionary
+  setJSONStringForObject:(id)object
+                  forKey:(id<NSCopying>)key
+                   error:(NSError *__autoreleasing *)errorRef;
 
 /**
  Converts a JSON string into an object

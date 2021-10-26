@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
+typedef void (^ FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
 NS_SWIFT_NAME(WebPhotoContentBlock);
 
 NS_SWIFT_NAME(ShareUtilityProtocol)
@@ -43,7 +43,7 @@ NS_SWIFT_NAME(ShareUtilityProtocol)
 
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent
                bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-                       error:(NSError *_Nullable*)errorRef;
+                       error:(NSError *_Nullable *)errorRef;
 
 @end
 

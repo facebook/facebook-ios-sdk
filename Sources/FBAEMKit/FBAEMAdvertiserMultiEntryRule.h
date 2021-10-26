@@ -10,17 +10,17 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import "FBAEMAdvertiserRuleMatching.h"
-#import "FBAEMAdvertiserRuleOperator.h"
+ #import "FBAEMAdvertiserRuleMatching.h"
+ #import "FBAEMAdvertiserRuleOperator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AEMAdvertiserMultiEntryRule)
-@interface FBAEMAdvertiserMultiEntryRule : NSObject<FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
+@interface FBAEMAdvertiserMultiEntryRule : NSObject <FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
 
-@property (nonatomic, readonly, assign) FBAEMAdvertiserRuleOperator operator;
+@property (nonatomic, readonly, assign)FBAEMAdvertiserRuleOperator operator;
 
 @property (nonatomic, readonly) NSArray<id<FBAEMAdvertiserRuleMatching>> *rules;
 

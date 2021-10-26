@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(TokenCaching)
-@protocol FBSDKTokenCaching<NSObject>
+@protocol FBSDKTokenCaching <NSObject>
 
 /**
  Internal Type exposed to facilitate transition to Swift.

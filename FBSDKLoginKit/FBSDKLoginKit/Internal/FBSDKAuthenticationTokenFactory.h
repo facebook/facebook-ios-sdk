@@ -7,6 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKAuthenticationTokenCreating.h"
@@ -18,20 +19,20 @@ NS_ASSUME_NONNULL_BEGIN
  An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
  */
 NS_SWIFT_NAME(AuthenticationTokenFactory)
-@interface FBSDKAuthenticationTokenFactory : NSObject<FBSDKAuthenticationTokenCreating>
+@interface FBSDKAuthenticationTokenFactory : NSObject <FBSDKAuthenticationTokenCreating>
 
- /**
-  Create an `AuthenticationToken` given a valid token string.
-  Returns nil to the completion handler if the token string is invalid
-  An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
-  @param tokenString the raw ID token string
-  @param nonce the nonce string used to associate a client session with the token
-  @param graphDomain the graph domain where user is authenticated
-  @param completion the completion handler
+/**
+ Create an `AuthenticationToken` given a valid token string.
+ Returns nil to the completion handler if the token string is invalid
+ An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
+ @param tokenString the raw ID token string
+ @param nonce the nonce string used to associate a client session with the token
+ @param graphDomain the graph domain where user is authenticated
+ @param completion the completion handler
 */
-- (void)createTokenFromTokenString:(NSString * _Nonnull)tokenString
-                             nonce:(NSString * _Nonnull)nonce
-                       graphDomain:(NSString * _Nonnull)graphDomain
+- (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
+                             nonce:(NSString *_Nonnull)nonce
+                       graphDomain:(NSString *_Nonnull)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion;
 
 /**

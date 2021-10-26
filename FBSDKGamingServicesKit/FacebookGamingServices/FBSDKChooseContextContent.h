@@ -10,8 +10,9 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
-#import <FacebookGamingServices/FBSDKDialogProtocol.h>
+ #import <Foundation/Foundation.h>
+
+ #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 
 typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
   FBSDKChooseContextFilterNone = 0,
@@ -19,7 +20,6 @@ typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
   FBSDKChooseContextFilterExistingChallenges,
   FBSDKChooseContextFilterNewPlayersOnly,
 }NS_SWIFT_NAME(ChooseContextFilter);
-
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,7 +43,6 @@ NS_SWIFT_NAME(ChooseContextContent)
   This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
  */
 @property (nonatomic) int minParticipants;
-
 
 + (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
 

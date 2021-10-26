@@ -10,7 +10,7 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param result the result of the referral
  @param error the referral error, if any.
  */
-typedef void (^FBSDKReferralManagerResultBlock)(FBSDKReferralManagerResult *_Nullable result,
-                                                NSError *_Nullable error)
+typedef void (^ FBSDKReferralManagerResultBlock)(FBSDKReferralManagerResult *_Nullable result,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(ReferralManagerResultBlock);
 
 /**
@@ -41,7 +41,7 @@ NS_SWIFT_NAME(ReferralManager)
  Open the referral dialog.
  @param handler the callback.
  */
--(void)startReferralWithCompletionHandler:(nullable FBSDKReferralManagerResultBlock)handler;
+- (void)startReferralWithCompletionHandler:(nullable FBSDKReferralManagerResultBlock)handler;
 
 @end
 

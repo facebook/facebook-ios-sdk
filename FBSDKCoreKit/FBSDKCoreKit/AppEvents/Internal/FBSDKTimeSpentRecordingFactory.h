@@ -16,7 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(TimeSpentRecordingFactory)
-@interface FBSDKTimeSpentRecordingFactory : NSObject<FBSDKTimeSpentRecordingCreating>
+@interface FBSDKTimeSpentRecordingFactory : NSObject <FBSDKTimeSpentRecordingCreating>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;

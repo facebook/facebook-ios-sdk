@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(InfoDictionaryProviding)
 @protocol FBSDKInfoDictionaryProviding
 
-@property(nullable, readonly, copy) NSDictionary<NSString *,id> *infoDictionary;
+@property (nullable, readonly, copy) NSDictionary<NSString *, id> *infoDictionary;
 
 - (nullable id)objectForInfoDictionaryKey:(NSString *)key;
 

@@ -8,14 +8,14 @@
 
 #if !TARGET_OS_TV
 
+#import "FBSDKAppLinkCreating.h"
 #import "FBSDKAppLinkProtocol.h"
 #import "FBSDKAppLinkTargetProtocol.h"
-#import "FBSDKAppLinkCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppLinkFactory)
-@interface FBSDKAppLinkFactory : NSObject<FBSDKAppLinkCreating>
+@interface FBSDKAppLinkFactory : NSObject <FBSDKAppLinkCreating>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppLinkURLFactory)
-@interface FBSDKAppLinkURLFactory : NSObject<FBSDKAppLinkURLCreating>
+@interface FBSDKAppLinkURLFactory : NSObject <FBSDKAppLinkURLCreating>
 @end
 
 NS_ASSUME_NONNULL_END

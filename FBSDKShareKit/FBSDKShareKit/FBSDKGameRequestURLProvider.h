@@ -7,16 +7,15 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 /**
  NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
   Additional context about the nature of the request.
  */
-typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
-{
+typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType) {
   /** No action type */
   FBSDKGameRequestActionTypeNone = 0,
   /** Send action type: The user is sending an object to the friends. */
@@ -33,8 +32,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
  NS_ENUM(NSUInteger, FBSDKGameRequestFilters)
   Filter for who can be displayed in the multi-friend selector.
  */
-typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
-{
+typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter) {
   /** No filter, all friends can be displayed. */
   FBSDKGameRequestFilterNone = 0,
   /** Friends using the app can be displayed. */
@@ -42,7 +40,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
   /** Friends not using the app can be displayed. */
   FBSDKGameRequestFilterAppNonUsers,
   /**All friends can be displayed if FB app is installed.*/
-  FBSDKGameRequestFilterEverybody
+  FBSDKGameRequestFilterEverybody,
 } NS_SWIFT_NAME(GameRequestFilter);
 
 NS_SWIFT_NAME(GameRequestURLProvider)

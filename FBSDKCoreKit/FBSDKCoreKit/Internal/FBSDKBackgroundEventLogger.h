@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(BackgroundEventLogger)
-@interface FBSDKBackgroundEventLogger : NSObject<FBSDKBackgroundEventLogging>
+@interface FBSDKBackgroundEventLogger : NSObject <FBSDKBackgroundEventLogging>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

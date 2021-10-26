@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(URLSessionProxyFactory)
-@interface FBSDKURLSessionProxyFactory : NSObject<FBSDKURLSessionProxyProviding>
+@interface FBSDKURLSessionProxyFactory : NSObject <FBSDKURLSessionProxyProviding>
 @end
 
 NS_ASSUME_NONNULL_END

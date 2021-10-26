@@ -10,11 +10,10 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKSharingValidation.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKShareKit/FBSDKSharingValidation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,8 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
   Specifies the privacy of a group.
  */
-typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
-{
+typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination) {
   /** Deliver to Facebook. */
   FBSDKAppInviteDestinationFacebook = 0,
   /** Deliver to Messenger. */
@@ -42,7 +40,7 @@ NS_SWIFT_NAME(AppInviteContent)
 
  This is optional.  If you don't include it a fallback image will be used.
 */
-@property (nonatomic, copy, nullable) NSURL *appInvitePreviewImageURL;
+@property (nullable, nonatomic, copy) NSURL *appInvitePreviewImageURL;
 
 /**
   An app link target that will be used as a target when the user accept the invite.
@@ -59,7 +57,7 @@ NS_SWIFT_NAME(AppInviteContent)
  This is optional. This can be between 0 and 10 characters long and can contain
  alphanumeric characters only. To set a promo code, you need to set promo text.
  */
-@property (nonatomic, copy, nullable) NSString *promotionCode;
+@property (nullable, nonatomic, copy) NSString *promotionCode;
 
 /**
   Promotional text to be displayed while sending and receiving the invite.
@@ -68,7 +66,7 @@ NS_SWIFT_NAME(AppInviteContent)
  This is optional. This can be between 0 and 80 characters long and can contain
  alphanumeric and spaces only.
  */
-@property (nonatomic, copy, nullable) NSString *promotionText;
+@property (nullable, nonatomic, copy) NSString *promotionText;
 
 /**
   Destination for the app invite.

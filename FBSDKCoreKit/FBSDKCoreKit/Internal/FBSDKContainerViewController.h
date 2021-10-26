@@ -24,7 +24,7 @@ NS_SWIFT_NAME(ContainerViewControllerDelegate)
 NS_SWIFT_NAME(FBContainerViewController)
 @interface FBSDKContainerViewController : UIViewController
 
-@property (nonatomic, weak, nullable) id<FBSDKContainerViewControllerDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKContainerViewControllerDelegate> delegate;
 
 - (void)displayChildController:(UIViewController *)childController;
 

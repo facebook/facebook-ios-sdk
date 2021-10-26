@@ -38,9 +38,9 @@ NS_SWIFT_NAME(ErrorReporter)
           message:(nullable NSString *)message;
 
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                                 fileManager:(id<FBSDKFileManaging>)fileManager
-                                    settings:(id<FBSDKSettings>)settings
-                           fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
+                                fileManager:(id<FBSDKFileManaging>)fileManager
+                                   settings:(id<FBSDKSettings>)settings
+                          fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
 - (void)enable;
 
 @end

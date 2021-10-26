@@ -19,11 +19,11 @@ NS_SWIFT_NAME(DialogConfiguration)
 - (instancetype)initWithName:(NSString *)name
                          URL:(NSURL *)URL
                  appVersions:(NSArray *)appVersions
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, copy, readonly) NSArray *appVersions;
-@property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, copy, readonly) NSURL *URL;
+@property (nonatomic, readonly, copy) NSArray *appVersions;
+@property (nonatomic, readonly, copy) NSString *name;
+@property (nonatomic, readonly, copy) NSURL *URL;
 
 @end
 

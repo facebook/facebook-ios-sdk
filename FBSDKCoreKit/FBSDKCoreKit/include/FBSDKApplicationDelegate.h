@@ -84,8 +84,8 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
 
  @return YES if the url was intended for the Facebook SDK, NO if not.
  */
-- (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+- (BOOL)            application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
 /**
  Initializes the SDK.

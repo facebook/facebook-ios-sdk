@@ -25,11 +25,11 @@ NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
 
  @param urls The URLs to build the requests for
  */
-- (FBSDKGraphRequest* _Nonnull)requestForURLs:(NSArray<NSURL *> * _Nonnull)urls
-NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
+- (FBSDKGraphRequest *_Nonnull)requestForURLs:(NSArray<NSURL *> *_Nonnull)urls
+    NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 
-- (NSString* _Nullable)getIdiomSpecificField
-NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
+- (NSString *_Nullable)getIdiomSpecificField
+    NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 @end
 
 NS_ASSUME_NONNULL_END

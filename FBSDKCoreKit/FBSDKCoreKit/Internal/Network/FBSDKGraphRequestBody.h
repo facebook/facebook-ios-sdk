@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GraphRequestBody)
 @interface FBSDKGraphRequestBody : NSObject
 
-@property (nonatomic, retain, readonly) NSData *data;
+@property (nonatomic, readonly, retain) NSData *data;
 
 /**
   Determines whether to use multipart/form-data or application/json as the Content-Type.

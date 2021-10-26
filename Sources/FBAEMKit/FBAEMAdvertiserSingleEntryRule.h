@@ -12,15 +12,15 @@
 
  #import <Foundation/Foundation.h>
 
-#import "FBAEMAdvertiserRuleMatching.h"
-#import "FBAEMAdvertiserRuleOperator.h"
+ #import "FBAEMAdvertiserRuleMatching.h"
+ #import "FBAEMAdvertiserRuleOperator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AEMAdvertiserSingleEntryRule)
-@interface FBAEMAdvertiserSingleEntryRule : NSObject<FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
+@interface FBAEMAdvertiserSingleEntryRule : NSObject <FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
 
-@property (nonatomic, readonly, assign) FBAEMAdvertiserRuleOperator operator;
+@property (nonatomic, readonly, assign)FBAEMAdvertiserRuleOperator operator;
 @property (nonatomic, readonly) NSString *paramKey;
 @property (nullable, nonatomic, readonly) NSString *linguisticCondition;
 @property (nullable, nonatomic, readonly) NSNumber *numericalCondition;

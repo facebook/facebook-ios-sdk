@@ -62,7 +62,7 @@ NS_SWIFT_NAME(TypeUtility)
             forKey:(nullable id<NSCopying>)key;
 
 /// Checks if an object is a valid dictionary type before enumerating its keys and objects
-+ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
++ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
 
 /// Returns an NSInteger if the provided object is an NSInteger, otherwise returns nil.
 + (NSInteger)integerValue:(id)object;
@@ -124,7 +124,6 @@ NS_SWIFT_NAME(TypeUtility)
  The most efficient encoding to use for parsing is UTF-8, so if you have a choice in encoding the data passed to this method, use UTF-8.
  */
 + (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error;
-
 
 @end
 

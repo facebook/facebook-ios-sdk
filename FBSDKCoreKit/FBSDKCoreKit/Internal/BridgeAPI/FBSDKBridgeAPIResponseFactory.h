@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(BridgeAPIResponseFactory)
-@interface FBSDKBridgeAPIResponseFactory : NSObject<FBSDKBridgeAPIResponseCreating>
+@interface FBSDKBridgeAPIResponseFactory : NSObject <FBSDKBridgeAPIResponseCreating>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsConfiguration)
-@interface FBSDKAppEventsConfiguration : NSObject<NSCopying, NSObject, NSSecureCoding>
+@interface FBSDKAppEventsConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 @property (nonatomic, readonly, assign) FBSDKAdvertisingTrackingStatus defaultATEStatus;
 @property (nonatomic, readonly, assign) BOOL advertiserIDCollectionEnabled;

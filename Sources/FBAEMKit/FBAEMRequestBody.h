@@ -10,14 +10,14 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(RequestBody)
 @interface FBAEMRequestBody : NSObject
 
-@property (nonatomic, retain, readonly) NSData *data;
+@property (nonatomic, readonly, retain) NSData *data;
 
 - (void)appendWithKey:(NSString *)key
             formValue:(NSString *)value;

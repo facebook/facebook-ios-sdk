@@ -10,8 +10,7 @@
  NS_ENUM(NSUInteger, FBSDKProductCondition)
  Specifies product condition for Product Catalog product item update
  */
-typedef NS_ENUM(NSUInteger, FBSDKProductCondition)
-{
+typedef NS_ENUM(NSUInteger, FBSDKProductCondition) {
   FBSDKProductConditionNew = 0,
   FBSDKProductConditionRefurbished,
   FBSDKProductConditionUsed,

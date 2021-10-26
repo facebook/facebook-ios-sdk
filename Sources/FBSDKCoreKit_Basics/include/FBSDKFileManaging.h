@@ -15,23 +15,23 @@ NS_SWIFT_NAME(FileManaging)
 @protocol FBSDKFileManaging
 
 - (nullable NSURL *)URLForDirectory:(NSSearchPathDirectory)directory
-                  inDomain:(NSSearchPathDomainMask)domain
-         appropriateForURL:(NSURL *)url
-                    create:(BOOL)shouldCreate
-                     error:(NSError * _Nullable *)error;
+                           inDomain:(NSSearchPathDomainMask)domain
+                  appropriateForURL:(NSURL *)url
+                             create:(BOOL)shouldCreate
+                              error:(NSError *_Nullable *)error;
 
 - (BOOL)createDirectoryAtPath:(NSString *)path
   withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(NSDictionary<NSFileAttributeKey, id> * _Nullable)attributes
-                        error:(NSError * _Nullable *)error;
+                   attributes:(NSDictionary<NSFileAttributeKey, id> *_Nullable)attributes
+                        error:(NSError *_Nullable *)error;
 
 - (BOOL)fileExistsAtPath:(NSString *)path;
 
 - (BOOL)removeItemAtPath:(NSString *)path
-                   error:(NSError * _Nullable *)error;
+                   error:(NSError *_Nullable *)error;
 
 - (NSArray<NSString *> *)contentsOfDirectoryAtPath:(NSString *)path
-                                             error:(NSError * _Nullable *)error;
+                                             error:(NSError *_Nullable *)error;
 
 @end
 

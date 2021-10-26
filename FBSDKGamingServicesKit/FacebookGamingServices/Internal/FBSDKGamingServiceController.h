@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServiceCompletionHandler.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKGamingServiceCompletionHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

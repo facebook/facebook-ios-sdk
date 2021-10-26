@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ProductRequestFactory)
-@interface FBSDKProductRequestFactory : NSObject<FBSDKProductsRequestCreating>
+@interface FBSDKProductRequestFactory : NSObject <FBSDKProductsRequestCreating>
 
 @end
 

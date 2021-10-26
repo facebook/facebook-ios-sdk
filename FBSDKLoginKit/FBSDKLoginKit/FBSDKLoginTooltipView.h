@@ -10,9 +10,9 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import <FBSDKLoginKit/FBSDKTooltipView.h>
+ #import <FBSDKLoginKit/FBSDKTooltipView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,7 +41,7 @@ NS_SWIFT_NAME(FBLoginTooltipView)
 
 /**  if set to YES, the view will always be displayed and the delegate's
   `loginTooltipView:shouldAppear:` will NOT be called. */
-@property (nonatomic, assign, getter=shouldForceDisplay) BOOL forceDisplay;
+@property (nonatomic, getter = shouldForceDisplay, assign) BOOL forceDisplay;
 
 @end
 
@@ -83,7 +83,6 @@ NS_SWIFT_NAME(LoginTooltipViewDelegate)
  @param view The tooltip view.
  */
 - (void)loginTooltipViewWillNotAppear:(FBSDKLoginTooltipView *)view;
-
 
 @end
 

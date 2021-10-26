@@ -7,6 +7,7 @@
  */
 
 #import <UIKit/UIKit.h>
+
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(LoginProviding)
 @protocol FBSDKLoginProviding
 
-@property (assign, nonatomic) FBSDKDefaultAudience defaultAudience;
+@property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
 
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration

@@ -12,9 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-//immutable
+// immutable
 NS_SWIFT_NAME(ErrorRecoveryConfiguration)
-@interface FBSDKErrorRecoveryConfiguration : NSObject<NSCopying, NSSecureCoding>
+@interface FBSDKErrorRecoveryConfiguration : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly) NSString *localizedRecoveryDescription;
 @property (nonatomic, readonly) NSArray *localizedRecoveryOptionDescriptions;

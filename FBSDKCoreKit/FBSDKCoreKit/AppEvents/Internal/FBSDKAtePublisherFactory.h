@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AtePublisherFactory)
-@interface FBSDKAtePublisherFactory : NSObject<FBSDKAtePublisherCreating>
+@interface FBSDKAtePublisherFactory : NSObject <FBSDKAtePublisherCreating>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;

@@ -10,15 +10,15 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
-#import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
-#import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
-#import <FBSDKCoreKit/FBSDKBridgeAPIRequestOpening.h>
-#import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKURLOpening.h>
+ #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
+ #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
+ #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
+ #import <FBSDKCoreKit/FBSDKBridgeAPIRequestOpening.h>
+ #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
+ #import <FBSDKCoreKit/FBSDKConstants.h>
+ #import <FBSDKCoreKit/FBSDKURLOpening.h>
 
 @class FBSDKLogger;
 @protocol FBSDKOperatingSystemVersionComparing;
@@ -48,7 +48,7 @@ NS_SWIFT_NAME(BridgeAPI)
 
 @property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
 NS_SWIFT_NAME(shared);
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+@property (nonatomic, readonly, getter = isActive) BOOL active;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -59,7 +59,7 @@ NS_SWIFT_NAME(shared);
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
                     frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
                appURLSchemeProvider:(id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 - (void)openURLWithSafariViewController:(NSURL *)url
                                  sender:(nullable id<FBSDKURLOpening>)sender

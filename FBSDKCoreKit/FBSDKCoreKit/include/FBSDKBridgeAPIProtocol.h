@@ -14,7 +14,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIAppIDKey;
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPISchemeSuffixKey;
 FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIVersionKey;
@@ -29,15 +28,15 @@ NS_SWIFT_NAME(BridgeAPIProtocol)
 @protocol FBSDKBridgeAPIProtocol <NSObject>
 
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary<NSString *, id> *)parameters
-                            error:( NSError * _Nullable *)errorRef;
+                                    scheme:(NSString *)scheme
+                                methodName:(NSString *)methodName
+                             methodVersion:(NSString *)methodVersion
+                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                     error:(NSError *_Nullable *)errorRef;
 - (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                                      cancelled:(nullable BOOL *)cancelledRef
-                                                          error:( NSError* _Nullable *)errorRef;
+                                                         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                               cancelled:(nullable BOOL *)cancelledRef
+                                                                   error:(NSError *_Nullable *)errorRef;
 
 @end
 

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param stop the error during the request, if any
 
  */
-typedef id _Nullable (^FBSDKInvalidObjectHandler)(id object, BOOL *stop)
+typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
 
 @interface FBSDKInternalUtility (Internal)
@@ -31,7 +31,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 /**
   Constructs the scheme for apps that come to the current app through the bridge.
  */
-@property (nonatomic, copy, readonly) NSString *appURLScheme;
+@property (nonatomic, readonly, copy) NSString *appURLScheme;
 
 /**
  Gets the milliseconds since the Unix Epoch.
@@ -39,17 +39,17 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  Changes in the system clock will affect this value.
  @return The number of milliseconds since the Unix Epoch.
  */
-@property (nonatomic, assign, readonly) uint64_t currentTimeInMilliseconds;
+@property (nonatomic, readonly, assign) uint64_t currentTimeInMilliseconds;
 
 /**
  The version of the operating system on which the process is executing.
  */
-@property (nonatomic, assign, readonly) NSOperatingSystemVersion operatingSystemVersion;
+@property (nonatomic, readonly, assign) NSOperatingSystemVersion operatingSystemVersion;
 
 /*
  Checks if the app is Unity.
  */
-@property (nonatomic, assign, readonly) BOOL isUnity;
+@property (nonatomic, readonly, assign) BOOL isUnity;
 
 /**
   Constructs a Facebook URL.
@@ -98,7 +98,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (void)deleteFacebookCookies;
 
-
 /**
   validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
  */
@@ -122,12 +121,12 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 - (BOOL)isPublishPermission:(NSString *)permission;
 
 #define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
-{ \
-  if (!(condition)) { \
-    NSString *msg = [NSString stringWithFormat:(desc), ##__VA_ARGS__]; \
-    [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:msg]; \
-  } \
-}
+  { \
+    if (!(condition)) { \
+      NSString *msg = [NSString stringWithFormat:(desc), ## __VA_ARGS__]; \
+      [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:msg]; \
+    } \
+  }
 
 #define FB_BASE_URL @"facebook.com"
 

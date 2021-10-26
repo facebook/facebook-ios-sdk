@@ -8,25 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
+#import "FBSDKAppEventsFlushReason.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
 NS_SWIFT_NAME(AppEventsUtility)
-@interface FBSDKAppEventsUtility : NSObject<FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting>
+@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 @property (class, nonatomic, readonly) FBSDKAppEventsUtility *shared;
-@property (nullable, nonatomic, copy, readonly) NSString *advertiserID;
-@property (class, nonatomic, assign, readonly) NSTimeInterval unixTimeNow;
-@property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
+@property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
+@property (class, nonatomic, readonly, assign) NSTimeInterval unixTimeNow;
+@property (class, nonatomic, readonly, assign) BOOL isDebugBuild;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;

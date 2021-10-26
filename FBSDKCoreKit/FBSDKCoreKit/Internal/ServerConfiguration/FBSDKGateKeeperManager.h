@@ -7,6 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBSDKGateKeeperManaging.h"
 
 #define FBSDK_GATEKEEPER_MANAGER_CACHE_TIMEOUT (60 * 60)
@@ -20,11 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
-typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error)
+typedef void (^ FBSDKGKManagerBlock)(NSError *_Nullable error)
 NS_SWIFT_NAME(GKManagerBlock);
 
 NS_SWIFT_NAME(GateKeeperManager)
-@interface FBSDKGateKeeperManager : NSObject<FBSDKGateKeeperManaging>
+@interface FBSDKGateKeeperManager : NSObject <FBSDKGateKeeperManaging>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -32,10 +33,10 @@ NS_SWIFT_NAME(GateKeeperManager)
 /**
  Configures the manager with various dependencies that are required to load the gate keepers
  */
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-                        store:(id<FBSDKDataPersisting>)store;
++ (void)  configureWithSettings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                          store:(id<FBSDKDataPersisting>)store;
 
 /**
  Returns the locally cached configuration.

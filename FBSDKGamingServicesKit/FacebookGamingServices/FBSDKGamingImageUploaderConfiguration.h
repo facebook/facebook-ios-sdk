@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GamingImageUploaderConfiguration)
 @interface FBSDKGamingImageUploaderConfiguration : NSObject
 
-@property (nonatomic, strong, readonly, nonnull) UIImage *image;
-@property (nonatomic, strong, readonly, nullable) NSString *caption;
-@property (nonatomic, assign, readonly) BOOL shouldLaunchMediaDialog;
+@property (nonnull, nonatomic, readonly, strong) UIImage *image;
+@property (nullable, nonatomic, readonly, strong) NSString *caption;
+@property (nonatomic, readonly, assign) BOOL shouldLaunchMediaDialog;
 
-- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
+- (instancetype _Nonnull)init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
 
 /**
  A model for Gaming image upload content to be shared.
@@ -28,8 +28,8 @@ NS_SWIFT_NAME(GamingImageUploaderConfiguration)
  @param shouldLaunchMediaDialog whether or not to open the media dialog on
   Facebook when the upload completes.
  */
-- (instancetype)initWithImage:(UIImage * _Nonnull)image
-                      caption:(NSString * _Nullable)caption
+- (instancetype)initWithImage:(UIImage *_Nonnull)image
+                      caption:(NSString *_Nullable)caption
       shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog;
 
 @end

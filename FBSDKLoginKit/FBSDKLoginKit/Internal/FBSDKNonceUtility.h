@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Nonce)
-@interface FBSDKNonceUtility: NSObject
+@interface FBSDKNonceUtility : NSObject
 
 /**
    Checks if a string represents a valid nonce.

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Location)
-@interface FBSDKLocation : NSObject<NSCopying, NSObject, NSSecureCoding>
+@interface FBSDKLocation : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 /**
   Location id

@@ -61,7 +61,7 @@ NS_SWIFT_NAME(DeviceLoginManager)
  */
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                    enableSmartLogin:(BOOL)enableSmartLogin
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -74,7 +74,7 @@ NS_DESIGNATED_INITIALIZER;
 /*!
  @abstract the requested permissions.
  */
-@property (nonatomic, copy, readonly) NSArray<NSString *> *permissions;
+@property (nonatomic, readonly, copy) NSArray<NSString *> *permissions;
 
 /*!
  @abstract the optional URL to redirect the user to after they complete the login.

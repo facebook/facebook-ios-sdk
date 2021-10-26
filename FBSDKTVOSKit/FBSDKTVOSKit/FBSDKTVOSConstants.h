@@ -10,8 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-
 /*!
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
@@ -23,7 +21,7 @@ NS_SWIFT_NAME(TVOSErrorDomain);
  FBSDKTVOSError
  @abstract Error codes for FBSDKTVOSErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKTVOSErrorDomain, FBSDKTVOSError)
+typedef NS_ERROR_ENUM (FBSDKTVOSErrorDomain, FBSDKTVOSError)
 {
   /*!
    @abstract Reserved.

@@ -10,14 +10,14 @@
 
 #if TARGET_OS_TV
 
-typedef NS_ENUM(NSUInteger, AppGroupPrivacy) { AppGroupPrivacyOpen };
+typedef NS_ENUM(NSUInteger, AppGroupPrivacy) { AppGroupPrivacyOpen, };
 
 FOUNDATION_EXPORT NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
 NS_REFINED_FOR_SWIFT;
 
 #else
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,8 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  NS_ENUM(NSUInteger, FBSDKAppGroupPrivacy)
   Specifies the privacy of a group.
  */
-typedef NS_ENUM(NSUInteger, FBSDKAppGroupPrivacy)
-{
+typedef NS_ENUM(NSUInteger, FBSDKAppGroupPrivacy) {
   /** Anyone can see the group, who's in it and what members post. */
   FBSDKAppGroupPrivacyOpen = 0,
   /** Anyone can see the group and who's in it, but only members can see posts. */

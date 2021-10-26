@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKKeychainStoreProviding;
 
 NS_SWIFT_NAME(TokenCache)
-@interface FBSDKTokenCache : NSObject<FBSDKTokenCaching>
+@interface FBSDKTokenCache : NSObject <FBSDKTokenCaching>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

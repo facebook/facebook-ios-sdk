@@ -48,7 +48,7 @@ NS_SWIFT_NAME(MessageDialog)
  */
 + (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
                          delegate:(nullable id<FBSDKSharingDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
+  NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
 
 /**
  Convenience method to show a Message Share Dialog with content and a delegate.
@@ -57,7 +57,7 @@ NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
  */
 + (instancetype)showWithContent:(nullable id<FBSDKSharingContent>)content
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
+  NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 
 @end
 

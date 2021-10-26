@@ -25,10 +25,10 @@ NS_SWIFT_NAME(GraphRequestFactoryProtocol)
 @protocol FBSDKGraphRequestFactory
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                                                      parameters:(NSDictionary<NSString *, id> *)parameters
-                                                     tokenString:(nullable NSString *)tokenString
-                                                      HTTPMethod:(nullable FBSDKHTTPMethod)method
-                                                           flags:(FBSDKGraphRequestFlags)flags;
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                              HTTPMethod:(nullable FBSDKHTTPMethod)method
+                                                   flags:(FBSDKGraphRequestFlags)flags;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters;
@@ -36,14 +36,14 @@ NS_SWIFT_NAME(GraphRequestFactoryProtocol)
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                           parameters:(NSDictionary<NSString *, id> *)parameters
-                           HTTPMethod:(FBSDKHTTPMethod)method;
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                              HTTPMethod:(FBSDKHTTPMethod)method;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                           parameters:(NSDictionary<NSString *, id> *)parameters
-                           tokenString:(nullable NSString *)tokenString
-                           version:(nullable NSString *)version
-                           HTTPMethod:(FBSDKHTTPMethod)method;
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                                 version:(nullable NSString *)version
+                                              HTTPMethod:(FBSDKHTTPMethod)method;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters

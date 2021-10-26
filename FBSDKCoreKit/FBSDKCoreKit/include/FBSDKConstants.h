@@ -106,19 +106,19 @@ NS_SWIFT_NAME(GraphRequestErrorParsedJSONResponseKey);
 /**
  Success Block
  */
-typedef void (^FBSDKCodeBlock)(void)
+typedef void (^ FBSDKCodeBlock)(void)
 NS_SWIFT_NAME(CodeBlock);
 
 /**
  Error Block
  */
-typedef void (^FBSDKErrorBlock)(NSError *_Nullable error)
+typedef void (^ FBSDKErrorBlock)(NSError *_Nullable error)
 NS_SWIFT_NAME(ErrorBlock);
 
 /**
  Success Block
  */
-typedef void (^FBSDKSuccessBlock)(BOOL success, NSError *_Nullable error)
+typedef void (^ FBSDKSuccessBlock)(BOOL success, NSError *_Nullable error)
 NS_SWIFT_NAME(SuccessBlock);
 
 /*
@@ -126,16 +126,16 @@ NS_SWIFT_NAME(SuccessBlock);
  */
 
 #ifndef NS_ERROR_ENUM
-#define NS_ERROR_ENUM(_domain, _name) \
-enum _name: NSInteger _name; \
-enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+ #define NS_ERROR_ENUM(_domain, _name) \
+  enum _name : NSInteger _name; \
+  enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
 #endif
 
 /**
  FBSDKCoreError
  Error codes for FBSDKErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKCoreError)
+typedef NS_ERROR_ENUM (FBSDKErrorDomain, FBSDKCoreError)
 {
   /**
    Reserved.
@@ -228,14 +228,13 @@ typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKCoreError)
  FBSDKGraphRequestError
  Describes the category of Facebook error. See `FBSDKGraphRequestErrorKey`.
  */
-typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
-{
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError) {
   /** The default error category that is not known to be recoverable. Check `FBSDKLocalizedErrorDescriptionKey` for a user facing message. */
   FBSDKGraphRequestErrorOther = 0,
   /** Indicates the error is temporary (such as server throttling). While a recoveryAttempter will be provided with the error instance, the attempt is guaranteed to succeed so you can simply retry the operation if you do not want to present an alert.  */
   FBSDKGraphRequestErrorTransient = 1,
   /** Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action. */
-  FBSDKGraphRequestErrorRecoverable = 2
+  FBSDKGraphRequestErrorRecoverable = 2,
 } NS_SWIFT_NAME(GraphRequestError);
 
 NS_ASSUME_NONNULL_END

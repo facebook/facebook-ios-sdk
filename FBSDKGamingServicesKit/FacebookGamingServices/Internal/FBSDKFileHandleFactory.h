@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(FileHandleFactory)
-@interface FBSDKFileHandleFactory : NSObject<FBSDKFileHandleCreating>
+@interface FBSDKFileHandleFactory : NSObject <FBSDKFileHandleCreating>
 
 @end
 

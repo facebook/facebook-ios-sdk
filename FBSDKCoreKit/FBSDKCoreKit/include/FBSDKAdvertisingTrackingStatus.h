@@ -16,11 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus)
-{
+typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus) {
   FBSDKAdvertisingTrackingAllowed,
   FBSDKAdvertisingTrackingDisallowed,
-  FBSDKAdvertisingTrackingUnspecified
+  FBSDKAdvertisingTrackingUnspecified,
 } NS_SWIFT_NAME(AdvertisingTrackingStatus);
 
 NS_ASSUME_NONNULL_END

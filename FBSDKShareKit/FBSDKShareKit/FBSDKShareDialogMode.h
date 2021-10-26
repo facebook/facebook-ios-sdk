@@ -17,8 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  The automatic mode will progressively check the availability of different modes and open the most
  appropriate mode for the dialog that is available.
  */
-typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode)
-{
+typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode) {
   /**
     Acts with the most appropriate mode that is available.
    */

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NSString * FBSDKURLScheme NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(URLScheme);;
+typedef NSString *FBSDKURLScheme NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(URLScheme);;
 
 FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeFacebookApp;
 FOUNDATION_EXPORT FBSDKURLScheme const FBSDKURLSchemeFacebookAPI;

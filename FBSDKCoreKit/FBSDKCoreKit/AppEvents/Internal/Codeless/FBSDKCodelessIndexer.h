@@ -12,12 +12,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSError *_Nullable error);
+typedef void (^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSError *_Nullable error);
 
 NS_SWIFT_NAME(CodelessIndexer)
 @interface FBSDKCodelessIndexer : NSObject
 
-@property (class, nonatomic, copy, readonly) NSString *extInfo;
+@property (class, nonatomic, readonly, copy) NSString *extInfo;
 
 + (void)enable;
 

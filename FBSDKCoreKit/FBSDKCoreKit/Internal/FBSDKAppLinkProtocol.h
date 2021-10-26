@@ -18,16 +18,16 @@ NS_SWIFT_NAME(AppLinkProtocol)
 @protocol FBSDKAppLink
 
 /** The URL from which this FBSDKAppLink was derived */
-@property (nonatomic, strong, readonly, nullable) NSURL *sourceURL;
+@property (nullable, nonatomic, readonly, strong) NSURL *sourceURL;
 
 /**
  The ordered list of targets applicable to this platform that will be used
  for navigation.
  */
-@property (nonatomic, copy, readonly) NSArray<id<FBSDKAppLinkTarget>> *targets;
+@property (nonatomic, readonly, copy) NSArray<id<FBSDKAppLinkTarget>> *targets;
 
 /** The fallback web URL to use if no targets are installed on this device. */
-@property (nonatomic, strong, readonly, nullable) NSURL *webURL;
+@property (nullable, nonatomic, readonly, strong) NSURL *webURL;
 
 /** return if this AppLink is to go back to referrer. */
 @property (nonatomic, readonly, getter = isBackToReferrer, assign) BOOL backToReferrer;

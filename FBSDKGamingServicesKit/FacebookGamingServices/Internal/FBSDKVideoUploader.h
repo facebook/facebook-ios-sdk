@@ -36,7 +36,7 @@ NS_SWIFT_NAME(VideoUploader)
 /**
   Optional parameters for video uploads. See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
  */
-@property (copy, nonatomic) NSDictionary<NSString *, id> *parameters;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
 
 /**
   The graph node to which video should be uploaded
@@ -46,16 +46,15 @@ NS_SWIFT_NAME(VideoUploader)
 /**
   Receiver's delegate
  */
-@property (weak, nonatomic) id<FBSDKVideoUploaderDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKVideoUploaderDelegate> delegate;
 
 /**
   Start upload process
  */
-//TODO #6229672 add cancel and/or pause
+// TODO #6229672 add cancel and/or pause
 - (void)start;
 
 @end
-
 
 /**
   A delegate for `FBSDKVideoUploader`.
@@ -71,15 +70,15 @@ NS_SWIFT_NAME(VideoUploaderDelegate)
  @param startOffset The start offset of video chunk to be uploaded
  @param endOffset The end offset of video chunk being to be uploaded
  */
-- (nullable NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader startOffset:(NSUInteger) startOffset endOffset:(NSUInteger) endOffset;
+- (nullable NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader startOffset:(NSUInteger)startOffset endOffset:(NSUInteger)endOffset;
 
 /**
   Notify the delegate that upload process success.
  @param videoUploader The `FBSDKVideoUploader` object which is performing the upload process
  @param results The result from successful upload
  */
-- (void)videoUploader:(FBSDKVideoUploader *)videoUploader
-didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
+- (void)   videoUploader:(FBSDKVideoUploader *)videoUploader
+  didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 
 /**
   Notify the delegate that upload process fails.

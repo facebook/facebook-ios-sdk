@@ -28,13 +28,13 @@ NS_SWIFT_NAME(DeviceLoginManagerResult)
 /*!
  @abstract The token.
  */
-@property (nullable, nonatomic, strong, readonly) FBSDKAccessToken *accessToken;
+@property (nullable, nonatomic, readonly, strong) FBSDKAccessToken *accessToken;
 
 /*!
  @abstract Indicates if the login was cancelled by the user, or if the device
   login code has expired.
  */
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
+@property (nonatomic, readonly, getter = isCancelled, assign) BOOL cancelled;
 
 @end
 

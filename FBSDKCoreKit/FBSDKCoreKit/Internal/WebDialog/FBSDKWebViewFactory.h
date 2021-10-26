@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(WebViewFactory)
-@interface FBSDKWebViewFactory : NSObject<FBSDKWebViewProviding>
+@interface FBSDKWebViewFactory : NSObject <FBSDKWebViewProviding>
 
 - (id<FBSDKWebView>)createWebViewWithFrame:(CGRect)frame;
 
