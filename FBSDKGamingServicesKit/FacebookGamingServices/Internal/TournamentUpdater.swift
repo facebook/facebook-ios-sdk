@@ -31,7 +31,7 @@ public class TournamentUpdater {
   /**
    Creates the TournamentUpdater
    */
-  convenience init() {
+  public convenience init() {
     self.init(graphRequestFactory: GraphRequestFactory())
   }
 
@@ -47,7 +47,7 @@ public class TournamentUpdater {
    - Parameter completionHandler: The caller's completion handler to invoke once the graph request is complete
    */
 
-  func update(
+  public func update(
     tournament: Tournament,
     score: Int,
     completionHandler: @escaping (Result<Bool, TournamentUpdaterError>) -> Void
