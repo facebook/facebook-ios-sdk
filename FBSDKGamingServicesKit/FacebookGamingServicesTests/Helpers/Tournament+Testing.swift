@@ -13,7 +13,7 @@ extension Tournament: Equatable {
     lhs.identifier == rhs.identifier
       && lhs.score == rhs.score
       && lhs.title == rhs.title
-      && lhs.expiration == rhs.expiration
+      && lhs.endTime == rhs.endTime
       && lhs.payload == rhs.payload
   }
 }

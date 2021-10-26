@@ -219,7 +219,7 @@ class TournamentFetcherTests: XCTestCase {
     let date = try XCTUnwrap(Values.date)
     let expectedTournament = Tournament(
       identifier: Values.tournamentID,
-      expiration: date,
+      endTime: date,
       title: Values.tournamentTitle,
       payload: Values.tournamentPayload
     )
@@ -233,7 +233,7 @@ class TournamentFetcherTests: XCTestCase {
         guard let tournament = tournaments.first else {
           return XCTFail("Tournaments array was empty")
         }
-        guard let expiration = tournament.expiration?.timeIntervalSince1970 else {
+        guard let expiration = tournament.endTime?.timeIntervalSince1970 else {
           return XCTFail("Tournament missing expiration")
         }
 

@@ -13,28 +13,28 @@ public enum TournamentDecodingError: Error {
   case invalidScoreType
 }
 
-struct Tournament: Codable {
+public struct Tournament: Codable {
 
   /**
    The unique ID that is associated with this tournament.
    */
-  var identifier: String
+  public internal(set) var identifier: String
 
   /**
    Timestamp when the tournament ends.
    If the expiration is in the past, then the tournament is already finished and has expired.
    */
-  var expiration: Date?
+  public internal(set) var endTime: Date?
 
   /**
    Title of the tournament provided upon the creation of the tournament.
    */
-  var title: String?
+  public internal(set) var title: String?
 
   /**
    Payload of the tournament provided upon the creation of the tournament.
    */
-  var payload: String?
+  public var payload: String?
 
   /**
    The current score for the player for this  tournament.
@@ -54,12 +54,12 @@ struct Tournament: Codable {
 
   init(
     identifier: String,
-    expiration: Date? = nil,
+    endTime: Date? = nil,
     title: String? = nil,
     payload: String? = nil
   ) {
     self.identifier = identifier
-    self.expiration = expiration
+    self.endTime = endTime
     self.title = title
     self.payload = payload
   }
@@ -73,14 +73,14 @@ struct Tournament: Codable {
     }
   }
 
-  init(from decoder: Decoder) throws {
+  public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
     identifier = try container.decode(String.self, forKey: .identifier)
-    let dateStamp = try container.decode(String.self, forKey: .expiration)
+    let dateStamp = try container.decode(String.self, forKey: .endTime)
 
     if let expirationDate = DateFormatter.format(ISODateString: dateStamp) {
-      expiration = expirationDate
+      endTime = expirationDate
     } else {
       throw TournamentDecodingError.invalidExpirationDate
     }
@@ -91,7 +91,7 @@ struct Tournament: Codable {
 
   enum CodingKeys: String, CodingKey {
     case identifier = "id"
-    case expiration = "tournament_end_time"
+    case endTime = "tournament_end_time"
     case title = "tournament_title"
     case payload = "tournament_payload"
   }

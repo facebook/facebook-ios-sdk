@@ -20,7 +20,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   let expirationDate = DateFormatter.format(ISODateString: "2021-09-24T18:03:47+0000")
   lazy var validTournamentForUpdate = Tournament(
     identifier: "1234",
-    expiration: expirationDate
+    endTime: expirationDate
   )
   lazy var tournamentConfig = TournamentConfig(
     title: "test",
@@ -57,7 +57,6 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   }
 
   // MARK: - Share Dialog Creating Tournament
-
 
   func testShareDialogTournamentCreateWithInvalidAccessToken() throws {
     AccessToken.current = nil

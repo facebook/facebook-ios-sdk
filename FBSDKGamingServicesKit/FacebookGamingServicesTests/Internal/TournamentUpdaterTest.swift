@@ -21,7 +21,7 @@ class TournamentUpdaterTest: XCTestCase {
   let factory = TestGraphRequestFactory()
   let score = 10
   lazy var updater = TournamentUpdater(graphRequestFactory: factory)
-  lazy var tournament = Tournament(identifier: "12345", expiration: Date(), title: "test", payload: nil)
+  lazy var tournament = Tournament(identifier: "12345", endTime: Date(), title: "test", payload: nil)
 
   func testDependencies() {
     XCTAssertTrue(
@@ -39,7 +39,7 @@ class TournamentUpdaterTest: XCTestCase {
   }
 
   func testUpdate() throws {
-    updater.update(tournament: tournament, score: NumericScore(value: score)) { _ in
+    updater.update(tournament: tournament, score: score) { _ in
       XCTFail("Should not reach here")
     }
 
@@ -64,7 +64,7 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateError() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
+    updater.update(tournament: tournament, score: score) { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -86,7 +86,7 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateInvalidResult() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
+    updater.update(tournament: tournament, score: score) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -106,7 +106,7 @@ class TournamentUpdaterTest: XCTestCase {
 
   func testHandlingUpdateSuccessFalse() throws {
     var completionWasInvoked = false
-    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
+    updater.update(tournament: tournament, score: score) { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -127,7 +127,7 @@ class TournamentUpdaterTest: XCTestCase {
   func testHandlingUpdateSuccess() throws {
     var completionWasInvoked = false
     var didSucceed = false
-    updater.update(tournament: tournament, score: NumericScore(value: score)) { result in
+    updater.update(tournament: tournament, score: score) { result in
       switch result {
       case .failure(let error):
         return XCTFail(

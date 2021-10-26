@@ -20,7 +20,7 @@ enum ShareTournamentDialogError: Error {
   case bridgeError(Error)
 }
 
-class ShareTournamentDialog: NSObject, URLOpening {
+public class ShareTournamentDialog: NSObject, URLOpening {
 
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
   weak var delegate: ShareTournamentDialogDelegate?
@@ -47,12 +47,12 @@ class ShareTournamentDialog: NSObject, URLOpening {
   // swiftlint:disable line_length
   /**
    Attempts to show the share dialog to share an existing tournament
-   - Parameter score: A score to share in the tournament could be a numeric score or  time interval dependent on the given tournament score type
+   - Parameter score: A score to share in the tournament could be a numeric score or time interval dependent on the given tournament score type
    - Parameter tournament: The tournament to share and update with the given score
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
   // swiftlint:enable line_length
-  func show(score: Int, tournament: Tournament) throws {
+  public func show(score: Int, tournament: Tournament) throws {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -77,14 +77,16 @@ class ShareTournamentDialog: NSObject, URLOpening {
     }
   }
 
+  // swiftlint:disable line_length
   /**
    Attempts to show the share dialog to share a newly created tournnament
 
-   - Parameter initialScore: An initial score to share, could be a numeric score or time score dependent on the tournament configuration
+   - Parameter initialScore: An initial score to share, could be a numeric score or time interval dependent on the tournament configuration
    - Parameter config: The tournament configuration used to create a new tournament
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  func show(initialScore: Int, config: TournamentConfig) throws {
+  // swiftlint:enable line_length
+  public func show(initialScore: Int, config: TournamentConfig) throws {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -111,11 +113,11 @@ class ShareTournamentDialog: NSObject, URLOpening {
 
   // MARK: URLOpening
 
-  func isAuthenticationURL(_ url: URL) -> Bool {
+  public func isAuthenticationURL(_ url: URL) -> Bool {
     false
   }
 
-  func application(
+  public func application(
     _ application: UIApplication?,
     open url: URL?,
     sourceApplication: String?,
@@ -124,7 +126,7 @@ class ShareTournamentDialog: NSObject, URLOpening {
     false
   }
 
-  func canOpen(
+  public func canOpen(
     _ url: URL,
     for application: UIApplication?,
     sourceApplication: String?,
@@ -133,6 +135,6 @@ class ShareTournamentDialog: NSObject, URLOpening {
     false
   }
 
-  func applicationDidBecomeActive(_ application: UIApplication) {
+  public func applicationDidBecomeActive(_ application: UIApplication) {
   }
 }
