@@ -6,7 +6,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.2...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.1.0...HEAD)
+
+## 12.1.0
+
+[2021-10-26](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.2...v12.1.0)
 
 ## 12.0.2
 

@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKCoreKit'
-  s.version      = '12.0.2'
+  s.version      = '12.1.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform core features'
 
   s.description  = <<-DESC
