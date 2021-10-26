@@ -6,26 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
-@protocol FBSDKErrorConfigurationProviding;
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
-@protocol FBSDKGraphRequestPiggybackManagerProviding;
-@protocol FBSDKSettings;
-@protocol FBSDKGraphRequestConnectionFactory;
-@protocol FBSDKEventLogging;
-@protocol FBSDKAccessTokenProviding;
-@protocol FBSDKAccessTokenSetting;
-@protocol FBSDKOperatingSystemVersionComparing;
-@protocol FBSDKMacCatalystDetermining;
-@class FBSDKGraphRequestBody;
-@class FBSDKGraphRequestMetadata;
-@class FBSDKLogger;
-
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
+#import "FBSDKErrorConfigurationProviding.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
+#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKMacCatalystDetermining.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKURLSessionProxyProviding.h"
+#import "FBSDKURLSessionProxying.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 // ----------------------------------------------------------------------------
@@ -41,21 +37,21 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @interface FBSDKGraphRequestConnection () <FBSDKGraphRequestConnecting>
 
-@property (nonatomic, retain) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
-@property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
-@property (nonatomic, strong) FBSDKLogger *logger;
-@property (nonatomic, assign) uint64_t requestStartTime;
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
-@property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
-@property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, strong) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
-@property (nonatomic, strong) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
-@property (nonatomic, strong) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-@property (nonatomic, strong) Class<FBSDKAccessTokenSetting> accessTokenSetter;
+@property (nonatomic) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
+@property (nonatomic) FBSDKGraphRequestConnectionState state;
+@property (nonatomic) FBSDKLogger *logger;
+@property (nonatomic) uint64_t requestStartTime;
+@property (nonatomic) id<FBSDKURLSessionProxying> session;
+@property (nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
+@property (nonatomic) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
+@property (nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
+@property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
+@property (nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
 
 + (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;

@@ -132,114 +132,113 @@
 
 - (void)testCreatingWithDefaults
 {
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *errorConfigurationProvider = (NSObject *)connection.errorConfigurationProvider;
-  NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
-  NSObject *piggybackManager = (NSObject *)connection.piggybackManagerProvider;
-  NSObject *settings = (NSObject *)connection.settings;
-  NSObject *factory = (NSObject *)connection.graphRequestConnectionFactory;
-  NSObject *logger = (NSObject *)connection.eventLogger;
-  NSObject *accessTokenProvider = (NSObject *)connection.accessTokenProvider;
-  NSObject *accessTokenSetter = (NSObject *)connection.accessTokenSetter;
+  self.connection = [FBSDKGraphRequestConnection new];
 
-  XCTAssertEqualObjects(
-    sessionProvider.class,
-    FBSDKURLSessionProxyFactory.class,
-    "A graph request connection should have the correct concrete session provider by default"
+  XCTAssertTrue(
+    [(NSObject *)self.connection.sessionProxyFactory isKindOfClass:FBSDKURLSessionProxyFactory.class],
+    @"A graph request connection should have the correct concrete session provider by default"
   );
-  XCTAssertEqualObjects(
-    errorConfigurationProvider.class,
-    FBSDKErrorConfigurationProvider.class,
-    "A graph request connection should have the correct error configuration provider by default"
+  XCTAssertTrue(
+    [(NSObject *)self.connection.errorConfigurationProvider isKindOfClass:FBSDKErrorConfigurationProvider.class],
+    @"A graph request connection should have the correct error configuration provider by default"
   );
-  XCTAssertEqualObjects(
-    piggybackManager.class,
+  XCTAssertEqual(
+    self.connection.piggybackManagerProvider,
     FBSDKGraphRequestPiggybackManagerProvider.class,
-    "A graph request connection should have the correct piggyback manager provider by default"
+    @"A graph request connection should have the correct piggyback manager provider by default"
   );
   XCTAssertEqualObjects(
-    settings.class,
-    FBSDKSettings.class,
-    "A graph request connection should have the correct settings type by default"
+    self.connection.settings,
+    FBSDKSettings.sharedSettings,
+    @"A graph request connection should have the correct settings type by default"
+  );
+  XCTAssertTrue(
+    [(NSObject *)self.connection.graphRequestConnectionFactory isKindOfClass:FBSDKGraphRequestConnectionFactory.class],
+    @"A graph request connection should have the correct connection factory by default"
   );
   XCTAssertEqualObjects(
-    factory.class,
-    FBSDKGraphRequestConnectionFactory.class,
-    "A graph request connection should have the correct connection factory by default"
-  );
-  XCTAssertEqualObjects(
-    logger,
+    self.connection.eventLogger,
     FBSDKAppEvents.shared,
-    "A graph request connection should have the correct events logger by default"
+    @"A graph request connection should have the correct events logger by default"
   );
   XCTAssertEqualObjects(
-    accessTokenProvider,
-    FBSDKAccessToken.class,
-    "A graph request connection should have the correct access token provider by default"
+    self.connection.operatingSystemVersionComparer,
+    NSProcessInfo.processInfo,
+    @"A graph request connection should have the correct operating system version comparer by default"
   );
   XCTAssertEqualObjects(
-    accessTokenSetter,
+    self.connection.macCatalystDeterminator,
+    NSProcessInfo.processInfo,
+    @"A graph request connection should have the correct Mac Catalyst determinator by default"
+  );
+  XCTAssertEqual(
+    self.connection.accessTokenProvider,
     FBSDKAccessToken.class,
-    "A graph request connection should have the correct access token setter by default"
+    @"A graph request connection should have the correct access token provider by default"
+  );
+  XCTAssertEqual(
+    self.connection.accessTokenSetter,
+    FBSDKAccessToken.class,
+    @"A graph request connection should have the correct access token setter by default"
   );
 }
 
 - (void)testCreatingWithCustomDependencies
 {
-  NSObject *sessionProvider = (NSObject *)self.connection.sessionProxyFactory;
-  NSObject *session = (NSObject *)self.connection.session;
-  NSObject *errorConfigurationProvider = (NSObject *)self.connection.errorConfigurationProvider;
-  NSObject *provider = (NSObject *)self.connection.piggybackManagerProvider;
-  NSObject *settings = (NSObject *)self.connection.settings;
-  NSObject *factory = (NSObject *)self.connection.graphRequestConnectionFactory;
-  NSObject *logger = (NSObject *)self.connection.eventLogger;
-  NSObject *accessTokenProvider = (NSObject *)self.connection.accessTokenProvider;
-  NSObject *accessTokenSetter = (NSObject *)self.connection.accessTokenSetter;
-
   XCTAssertEqualObjects(
-    sessionProvider.class,
-    TestURLSessionProxyFactory.class,
-    "A graph request connection should persist the session provider it was created with"
+    self.connection.sessionProxyFactory,
+    self.sessionFactory,
+    @"A graph request connection should persist the session provider it was created with"
   );
   XCTAssertEqualObjects(
-    session,
+    self.connection.session,
     self.session,
-    "A graph request connection should derive sessions from the session provider"
+    @"A graph request connection should derive sessions from the session provider"
   );
   XCTAssertEqualObjects(
-    errorConfigurationProvider.class,
-    TestErrorConfigurationProvider.class,
-    "A graph request connection should persist the error configuration provider it was created with"
+    self.connection.errorConfigurationProvider,
+    self.errorConfigurationProvider,
+    @"A graph request connection should persist the error configuration provider it was created with"
   );
   XCTAssertEqualObjects(
-    provider,
+    self.connection.piggybackManagerProvider,
     self.piggybackManagerProvider,
-    "A graph request connection should persist the piggyback manager provider it was created with"
+    @"A graph request connection should persist the piggyback manager provider it was created with"
   );
   XCTAssertEqualObjects(
-    settings,
+    self.connection.settings,
     self.settings,
-    "A graph request connection should persist the settings it was created with"
+    @"A graph request connection should persist the settings it was created with"
   );
   XCTAssertEqualObjects(
-    factory,
+    self.connection.graphRequestConnectionFactory,
     self.graphRequestConnectionFactory,
-    "A graph request connection should persist the connection factory it was created with"
+    @"A graph request connection should persist the connection factory it was created with"
   );
   XCTAssertEqualObjects(
-    logger,
+    self.connection.eventLogger,
     self.eventLogger,
-    "A graph request connection should persist the events logger it was created with"
+    @"A graph request connection should persist the events logger it was created with"
   );
   XCTAssertEqualObjects(
-    accessTokenProvider,
-    TestAccessTokenWallet.class,
-    "A graph request connection should persist the access token provider it was created with"
+    self.connection.operatingSystemVersionComparer,
+    self.processInfo,
+    @"A graph request connection should persist the operating system comparer it was created with"
   );
   XCTAssertEqualObjects(
-    accessTokenSetter,
-    TestAccessTokenWallet.class,
-    "A graph request connection should persist the access token setter it was created with"
+    self.connection.macCatalystDeterminator,
+    self.macCatalystDeterminator,
+    @"A graph request connection should persist the Mac Catalyst determinator it was created with"
+  );
+  XCTAssertEqual(
+    self.connection.accessTokenProvider,
+    TestAccessTokenWallet.self,
+    @"A graph request connection should persist the access token provider it was created with"
+  );
+  XCTAssertEqual(
+    self.connection.accessTokenSetter,
+    TestAccessTokenWallet.self,
+    @"A graph request connection should persist the access token setter it was created with"
   );
 }
 

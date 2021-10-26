@@ -8,6 +8,8 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
+
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAuthenticationToken.h"
@@ -85,12 +87,12 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 // ----------------------------------------------------------------------------
 // Private properties and methods
 
-@interface FBSDKGraphRequestConnection () <
-  NSURLSessionDataDelegate
-#if !TARGET_OS_TV
-  , FBSDKGraphErrorRecoveryProcessorDelegate
+@interface FBSDKGraphRequestConnection ()
+#if TARGET_OS_TV
+<NSURLSessionDataDelegate>
+#else
+<NSURLSessionDataDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
 #endif
->
 @end
 
 // ----------------------------------------------------------------------------

@@ -14,6 +14,23 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGraphRequestConnecting;
 @protocol FBSDKGraphRequestConnectionDelegate;
 
+/**
+ FBSDKGraphRequestCompletion
+
+ A block that is passed to addRequest to register for a callback with the results of that
+ request once the connection completes.
+
+ Pass a block of this type when calling addRequest.  This will be called once
+ the request completes.  The call occurs on the UI thread.
+
+ @param connection The connection that sent the request.
+
+ @param result The result of the request.  This is a translation of
+ JSON data to `NSDictionary` and `NSArray` objects.  This
+ is nil if there was an error.
+
+ @param error The `NSError` representing any error that occurred.
+ */
 NS_SWIFT_NAME(GraphRequestCompletion)
 typedef void (^FBSDKGraphRequestCompletion)(id<FBSDKGraphRequestConnecting> _Nullable connection,
                                             id _Nullable result,
