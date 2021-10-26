@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/// The `TournamentSortOrder` is how the tournament `score` is ranked in the tournament.
-enum TournamentSortOrder: String {
-  case descending = "HIGHER_IS_BETTER"
-  case ascending = "LOWER_IS_BETTER"
+/// The `TournamentSortOrder` is how the tournament score is ranked in the tournament.
+public enum TournamentSortOrder: String {
+  case higherIsBetter = "HIGHER_IS_BETTER"
+  case lowerIsBetter = "LOWER_IS_BETTER"
 }

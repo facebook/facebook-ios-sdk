@@ -10,7 +10,7 @@ import Foundation
 
 import FBSDKCoreKit
 
-enum ShareTournamentDialogURLBuilder {
+internal enum ShareTournamentDialogURLBuilder {
 
   enum Constants {
     static let host = "fb.gg"
@@ -27,27 +27,26 @@ enum ShareTournamentDialogURLBuilder {
     static let payload = "tournament_payload"
   }
 
-  case create(Tournament)
+  case create(TournamentConfig)
   case update(Tournament)
 
-  func queryItems(for tournament: Tournament) -> [URLQueryItem] {
+  func queryItems(for config: TournamentConfig, score: Int) -> [URLQueryItem] {
     var tournamentDictionary = [String: String]()
-    if let endTime = tournament.expiration?.timeIntervalSince1970 {
-      tournamentDictionary[QueryKeys.endTime] = "\(Int(endTime))"
-    }
-    if let title = tournament.title {
+    tournamentDictionary[QueryKeys.score] = "\(score)"
+
+    if let title = config.title {
       tournamentDictionary[QueryKeys.title] = title
     }
-    if let sortOrder = tournament.sortOrder?.rawValue {
+    if let endTime = config.endTime {
+      tournamentDictionary[QueryKeys.endTime] = "\(Int(endTime))"
+    }
+    if let scoreType = config.scoreType?.rawValue {
+      tournamentDictionary[QueryKeys.scoreFormat] = scoreType
+    }
+    if let sortOrder = config.sortOrder?.rawValue {
       tournamentDictionary[QueryKeys.sortOrder] = sortOrder
     }
-    if tournament.numericScore != nil {
-      tournamentDictionary[QueryKeys.scoreFormat] = ScoreType.numeric.rawValue
-    }
-    if tournament.timeScore != nil {
-      tournamentDictionary[QueryKeys.scoreFormat] = ScoreType.time.rawValue
-    }
-    if let payload = tournament.payload {
+    if let payload = config.payload {
       tournamentDictionary[QueryKeys.payload] = payload
     }
     return tournamentDictionary.map { queryName, value in
@@ -64,14 +63,14 @@ enum ShareTournamentDialogURLBuilder {
     if case .update(let tournament) = self {
       components.queryItems = [
         URLQueryItem(name: QueryKeys.tournamentID, value: tournament.identifier),
-        URLQueryItem(name: QueryKeys.score, value: "\(score)")
+        URLQueryItem(name: QueryKeys.score, value: "\(score)"),
+        URLQueryItem(name: QueryKeys.payload, value: tournament.payload)
       ]
     }
-    if case .create(let tournament) = self {
-      var queryItems = queryItems(for: tournament)
-      queryItems.append(URLQueryItem(name: QueryKeys.score, value: "\(score)"))
-      components.queryItems = queryItems
+    if case .create(let config) = self {
+      components.queryItems = queryItems(for: config, score: score)
     }
+
     return components.url
   }
 }

@@ -32,19 +32,9 @@ struct Tournament: Codable {
   var title: String?
 
   /**
-   The sort order of the score for the tournament provided upon the creation of the tournament.
-   */
-  var sortOrder: TournamentSortOrder?
-
-  /**
    Payload of the tournament provided upon the creation of the tournament.
    */
   var payload: String?
-
-  /**
-   The image associated with the tournament
-   */
-  var image: UIImage?
 
   /**
    The current score for the player for this  tournament.
@@ -73,30 +63,6 @@ struct Tournament: Codable {
     self.title = title
     self.payload = payload
   }
-
-  // swiftlint:disable line_length
-  /// Creates a new tournament with the given parameters. Passing the created tournament to the `ShareTournamentDialog.init(create:delegate:)` will share and create the tournament server side.
-  ///
-  /// - Parameter title: Optional text title for the tournament
-  /// - Parameter expiration: Optional input for setting a custom end time for the tournament. if not specified, the default is a week after creation date.
-  /// - Parameter scoreType: Optional input for the formatting of the scores in the tournament leaderboard. See enum `ScoreType`, if not specified, the default is `ScoreType.numeric`.
-  /// - Parameter sortOrder: Optional input for the ordering of which score is best in the tournament. See enum `TournamentSortOrder`, if not specified, the default is `TournamentSortOrder.descending`.
-  /// - Parameter image: Optional image that will be associated with the tournament and included in any posts.
-  /// - Parameter payload: Optional data to attach to the update.All game sessions launched from the update will be able to access this blob. Must be less than or equal to 1000 characters when stringified.
-  ///
-  // swiftlint:enable line_length
-  init(
-    title: String? = nil,
-    expiration: Date? = nil,
-    sortOrder: TournamentSortOrder? = nil,
-    image: UIImage? = nil,
-    payload: String? = nil
-  ) {
-    self.init(identifier: "", expiration: expiration, title: title, payload: payload)
-    self.sortOrder = sortOrder
-    self.image = image
-  }
-
   mutating func update<T: Score>(score: T) throws {
     if let numericScore = score as? NumericScore {
       self.numericScore = numericScore

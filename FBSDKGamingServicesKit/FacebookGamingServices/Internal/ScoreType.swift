@@ -7,7 +7,7 @@
  */
 
 /// The types of score a tournament can handle
-enum ScoreType: String {
+public enum ScoreType: String {
   case custom = "CUSTOM"
   case numeric = "NUMERIC"
   case time = "TIME"

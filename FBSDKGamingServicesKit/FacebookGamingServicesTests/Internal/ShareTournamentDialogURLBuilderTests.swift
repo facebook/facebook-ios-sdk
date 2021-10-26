@@ -14,17 +14,18 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
     identifier: "1234",
     payload: "Hello"
   )
-  lazy var createTournament = Tournament(
+  lazy var tournamentConfig = TournamentConfig(
     title: "Test",
-    expiration: expirationDate,
-    sortOrder: .descending,
+    endTime: expirationDate,
+    scoreType: .numeric,
+    sortOrder: .higherIsBetter,
     payload: "Hello"
   )
 
   func testUpdateURL() throws {
     let expectURLComponents = try XCTUnwrap(
       URLComponents(
-        string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&score=1000"
+        string: "https://fb.gg/me/instant_tournament/12345?tournament_id=1234&payload=Hello&score=1000"
       )
     )
     let updateURL = try XCTUnwrap(
@@ -50,13 +51,13 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
   func testCreateURL() throws {
     let expectURLComponents = try XCTUnwrap(
       URLComponents(
-        string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627.0&tournament_title=Test&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello"// swiftlint:disable:this line_length
+        string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627&tournament_title=Test&score_format=NUMERIC&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello"// swiftlint:disable:this line_length
       )
     )
 
     let updateURL = try XCTUnwrap(
       ShareTournamentDialogURLBuilder
-        .create(createTournament)
+        .create(tournamentConfig)
         .url(withPathAppID: "12345", score: 1000)
     )
     let updateURLComponents = try XCTUnwrap(

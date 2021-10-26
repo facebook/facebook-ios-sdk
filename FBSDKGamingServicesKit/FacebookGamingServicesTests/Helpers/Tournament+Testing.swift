@@ -15,6 +15,5 @@ extension Tournament: Equatable {
       && lhs.title == rhs.title
       && lhs.expiration == rhs.expiration
       && lhs.payload == rhs.payload
-      && lhs.sortOrder == rhs.sortOrder
   }
 }

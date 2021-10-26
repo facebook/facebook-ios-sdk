@@ -77,6 +77,38 @@ class ShareTournamentDialog: NSObject, URLOpening {
     }
   }
 
+  /**
+   Attempts to show the share dialog to share a newly created tournnament
+
+   - Parameter initialScore: An initial score to share, could be a numeric score or time score dependent on the tournament configuration
+   - Parameter config: The tournament configuration used to create a new tournament
+   - throws  Will throw if an error occurs when attempting to show the dialog
+   */
+  func show(initialScore: Int, config: TournamentConfig) throws {
+    guard let accessToken = AccessToken.current else {
+      throw ShareTournamentDialogError.invalidAccessToken
+    }
+    guard
+      let url = ShareTournamentDialogURLBuilder
+        .create(config)
+        .url(withPathAppID: accessToken.appID, score: initialScore)
+    else {
+      throw ShareTournamentDialogError.unableToCreateDialogUrl
+    }
+    bridgeURLOpener.open(url, sender: self) { [weak self] success, error in
+      guard let strongSelf = self else {
+        return
+      }
+      if let error = error {
+        strongSelf.delegate?.didFail(withError: ShareTournamentDialogError.bridgeError(error), dialog: strongSelf)
+        return
+      }
+      if !success {
+        strongSelf.delegate?.didFail(withError: ShareTournamentDialogError.unknownBridgeError, dialog: strongSelf)
+      }
+    }
+  }
+
   // MARK: URLOpening
 
   func isAuthenticationURL(_ url: URL) -> Bool {
