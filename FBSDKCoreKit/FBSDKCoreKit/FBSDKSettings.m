@@ -301,7 +301,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
 {
   [self _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
-
 }
 
 + (BOOL)isAutoLogAppEventsEnabled

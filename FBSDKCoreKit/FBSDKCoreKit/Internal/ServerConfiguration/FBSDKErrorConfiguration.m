@@ -179,7 +179,7 @@ static NSString *const kErrorCategoryLogin = @"login";
     NSDictionary.class,
     NSString.class,
     FBSDKErrorRecoveryConfiguration.class,
-  ]];
+                           ]];
 
   NSDictionary<NSString *, id> *configurationDictionary = [decoder decodeObjectOfClasses:classes
                                                                                   forKey:FBSDKERRORCONFIGURATION_DICTIONARY_KEY];
