@@ -295,7 +295,13 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
 {
-  [self.sharedSettings _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
+  [self.sharedSettings setCodelessDebugLogEnabled:codelessDebugLogEnabled];
+}
+
+- (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
+{
+  [self _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
+
 }
 
 + (BOOL)isAutoLogAppEventsEnabled
@@ -310,7 +316,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
 {
-  [self.sharedSettings _setAutoLogAppEventsEnabled:@(autoLogAppEventsEnabled)];
+  [self.sharedSettings setAutoLogAppEventsEnabled:autoLogAppEventsEnabled];
+}
+
+- (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
+{
+  [self _setAutoLogAppEventsEnabled:@(autoLogAppEventsEnabled)];
 }
 
 + (BOOL)isAdvertiserIDCollectionEnabled

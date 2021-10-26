@@ -772,14 +772,14 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testSettingAutoLogAppEventsEnabled() {
-    Settings.isAutoLogAppEventsEnabled = false
+    settings.isAutoLogAppEventsEnabled = false
 
     XCTAssertNotNil(
       userDefaultsSpy.capturedValues["FacebookAutoLogAppEventsEnabled"],
       "Should persist the value of a cachable property when setting it"
     )
     XCTAssertFalse(
-      Settings.isAutoLogAppEventsEnabled,
+      settings.isAutoLogAppEventsEnabled,
       "Should use the explicitly set property"
     )
   }
@@ -991,21 +991,21 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testSettingFacebookCodelessDebugLogEnabled() {
-    Settings.isCodelessDebugLogEnabled = false
+    settings.isCodelessDebugLogEnabled = false
 
     XCTAssertNotNil(
       userDefaultsSpy.capturedValues["FacebookCodelessDebugLogEnabled"],
       "Should persist the value of a cachable property when setting it"
     )
     XCTAssertFalse(
-      Settings.isCodelessDebugLogEnabled,
+      settings.isCodelessDebugLogEnabled,
       "Should use the explicitly set property"
     )
   }
 
   func testOverridingCachedFacebookCodelessDebugLogEnabled() {
-    Settings.isCodelessDebugLogEnabled = true
-    XCTAssertTrue(Settings.isCodelessDebugLogEnabled)
+    settings.isCodelessDebugLogEnabled = true
+    XCTAssertTrue(settings.isCodelessDebugLogEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookCodelessDebugLogEnabled": false])
     Settings.infoDictionaryProvider = bundle
@@ -1017,11 +1017,11 @@ class FBSDKSettingsTests: XCTestCase {
   }
 
   func testCachedFacebookCodelessDebugLogEnabledInternalStorage() {
-    Settings.isCodelessDebugLogEnabled = true
+    settings.isCodelessDebugLogEnabled = true
 
     resetLoggingSideEffects()
 
-    XCTAssertTrue(Settings.isCodelessDebugLogEnabled, "sanity check")
+    XCTAssertTrue(settings.isCodelessDebugLogEnabled, "sanity check")
     XCTAssertNil(
       userDefaultsSpy.capturedObjectRetrievalKey,
       "Should not attempt to access the cache to retrieve objects that have a current value"
@@ -1462,7 +1462,7 @@ class FBSDKSettingsTests: XCTestCase {
     Settings.graphAPIVersion = nil
     XCTAssertEqual(
       FBSDK_DEFAULT_GRAPH_API_VERSION,
-      settings.graphAPIVersion
+      Settings.shared.graphAPIVersion
     )
   }
 
