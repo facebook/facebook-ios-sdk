@@ -1,6 +1,6 @@
 name: Feature Request
 description: Tell us something you want to see in this project
-labels: enhancement
+labels: enhancement,needs-triage
 title: "Feature Request: "
 body:
 - type: checkboxes
