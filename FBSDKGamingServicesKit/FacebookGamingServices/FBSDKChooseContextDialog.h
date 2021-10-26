@@ -33,9 +33,12 @@ NS_SWIFT_NAME(ChooseContextDialog)
  @param content The content for the choose context dialog
  @param delegate The receiver's delegate.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
                          delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Convenience method to build up a choose context app switch with content , a delegate and a utility object.
@@ -43,10 +46,13 @@ NS_SWIFT_NAME(init(content:delegate:));
  @param delegate The receiver's delegate.
  @param internalUtility The dialog's utility used to build the url and decide how to display the dialog
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
                          delegate:(id<FBSDKContextDialogDelegate>)delegate
                   internalUtility:(id<FBSDKInternalUtility>)internalUtility
 NS_SWIFT_NAME(init(content:delegate:internalUtility:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 NS_ASSUME_NONNULL_END

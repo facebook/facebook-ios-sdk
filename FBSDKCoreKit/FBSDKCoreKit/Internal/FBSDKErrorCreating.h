@@ -15,18 +15,22 @@ NS_SWIFT_NAME(SDKErrorCreating)
 
 // MARK: - General Errors
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)errorWithCode:(NSInteger)code
                   userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
                    message:(nullable NSString *)message
            underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(error(code:userInfo:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)errorWithDomain:(NSErrorDomain)domain
                         code:(NSInteger)code
                     userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
                      message:(nullable NSString *)message
              underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(error(domain:code:userInfo:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
 // MARK: - Invalid Argument Errors
 

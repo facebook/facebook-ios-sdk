@@ -18,9 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) SKPaymentQueue *paymentQueue;
 @property (nonatomic, readonly) id<FBSDKPaymentProductRequestorCreating> requestorFactory;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithPaymentQueue:(SKPaymentQueue *)paymentQueue
       paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory
 NS_SWIFT_NAME(init(paymentQueue:paymentProductRequestorFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions;
 

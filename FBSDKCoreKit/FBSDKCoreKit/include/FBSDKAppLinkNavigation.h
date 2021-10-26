@@ -82,6 +82,7 @@ NS_SWIFT_NAME(default);
 @property (nonatomic, readonly) FBSDKAppLinkNavigationType navigationType;
 
 /** Creates an AppLinkNavigation with the given link, extras, and App Link data */
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
                                extras:(NSDictionary<NSString *, id> *)extras
                           appLinkData:(NSDictionary<NSString *, id> *)appLinkData
@@ -102,6 +103,7 @@ NS_SWIFT_NAME(init(appLink:extras:appLinkData:settings:));
 + (NSDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *)callbackAppLinkDataForAppWithName:(NSString *)appName
                                                                                                     url:(NSString *)url
 NS_SWIFT_NAME(callbackAppLinkData(forApp:url:));
+// UNCRUSTIFY_FORMAT_ON
 
 /** Performs the navigation */
 - (FBSDKAppLinkNavigationType)navigate:(NSError **)error

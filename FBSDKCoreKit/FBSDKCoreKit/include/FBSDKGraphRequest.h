@@ -48,10 +48,12 @@ NS_SWIFT_NAME(GraphRequest)
 
  @warning UNSAFE - DO NOT USE
  */
+// UNCRUSTIFY_FORMAT_OFF
 + (void)     configureWithSettings:(id<FBSDKSettings>)settings
   currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
      graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
 NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
@@ -160,8 +162,11 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
 
  This will override [FBSDKSettings setGraphErrorRecoveryDisabled:].
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setGraphErrorRecoveryDisabled:(BOOL)disable
 NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Starts a connection to the Graph API.

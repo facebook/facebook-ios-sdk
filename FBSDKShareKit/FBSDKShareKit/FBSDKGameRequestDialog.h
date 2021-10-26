@@ -31,9 +31,12 @@ NS_SWIFT_NAME(GameRequestDialog)
  @param content The content for the game request.
  @param delegate The receiver's delegate.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)dialogWithContent:(FBSDKGameRequestContent *)content
                          delegate:(nullable id<FBSDKGameRequestDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Convenience method to build up and show a game request with content and a delegate.

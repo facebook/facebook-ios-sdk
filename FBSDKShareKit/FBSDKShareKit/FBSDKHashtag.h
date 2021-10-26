@@ -23,8 +23,11 @@ NS_SWIFT_NAME(Hashtag)
    `stringRepresentation` property.
  @param hashtagString The hashtag string.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)hashtagWithString:(NSString *)hashtagString
 NS_SWIFT_NAME(init(_:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   The hashtag string.

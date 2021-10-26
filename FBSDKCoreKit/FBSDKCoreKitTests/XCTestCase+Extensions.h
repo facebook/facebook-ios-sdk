@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 // Hack to be able to test from Swift code that NSExceptions were raised.
 @interface XCTestCase (Testing)
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)assertRaisesExceptionWithMessage:(NSString *)message block:(void (^)(void))block
 NS_SWIFT_NAME(assertRaisesException(message:block:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

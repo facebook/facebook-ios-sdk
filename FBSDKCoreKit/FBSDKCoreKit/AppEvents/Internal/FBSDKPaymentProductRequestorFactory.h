@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(PaymentProductRequestorFactory)
 @interface FBSDKPaymentProductRequestorFactory : NSObject <FBSDKPaymentProductRequestorCreating>
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
                gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
@@ -32,6 +33,7 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
          appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:loggerFactory:productsRequestFactory:receiptProvider:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

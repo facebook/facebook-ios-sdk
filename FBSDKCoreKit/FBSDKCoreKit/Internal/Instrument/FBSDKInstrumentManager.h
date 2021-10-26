@@ -24,12 +24,14 @@ NS_SWIFT_NAME(InstrumentManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                            settings:(id<FBSDKSettings>)settings
                       crashObserver:(id<FBSDKCrashObserving>)crashObserver
                       errorReporter:(id<FBSDKErrorReporting>)errorReporter
                        crashHandler:(id<FBSDKCrashHandler>)crashHandler
 NS_SWIFT_NAME(configure(featureChecker:settings:crashObserver:errorReporter:crashHandler:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)enable;
 

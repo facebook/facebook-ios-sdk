@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (class, nullable, nonatomic) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                   infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                                 settings:(id<FBSDKSettings>)settings
@@ -43,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
              appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                        appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
 NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:appLinkURLFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

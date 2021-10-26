@@ -33,8 +33,11 @@ NS_SWIFT_NAME(JSExports)
 /*!
  @abstract Returns true if there is a current access token and the permission has been granted.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (BOOL)hasGranted:(NSString *)permission
 NS_SWIFT_NAME(hasGranted(permission:));
+// UNCRUSTIFY_FORMAT_ON
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.

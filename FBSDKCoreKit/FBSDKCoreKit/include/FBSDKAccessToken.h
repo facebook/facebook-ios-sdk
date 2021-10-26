@@ -186,8 +186,10 @@ NS_SWIFT_NAME(AccessToken)
   Convenience getter to determine if a permission has been granted
  @param permission  The permission to check.
  */
+// UNCRUSTIFY_FORMAT_OFF
 - (BOOL)hasGranted:(NSString *)permission
 NS_SWIFT_NAME(hasGranted(permission:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Compares the receiver to another FBSDKAccessToken

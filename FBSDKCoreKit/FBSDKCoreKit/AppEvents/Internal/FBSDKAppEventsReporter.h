@@ -14,11 +14,14 @@ NS_SWIFT_NAME(AppEventsReporter)
 @protocol FBSDKAppEventsReporter
 
 - (void)enable;
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
                   parameters:(nullable NSDictionary<NSString *, id> *)parameters
 NS_SWIFT_NAME(recordAndUpdate(event:currency:value:parameters:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

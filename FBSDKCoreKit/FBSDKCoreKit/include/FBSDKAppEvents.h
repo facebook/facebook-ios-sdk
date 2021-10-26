@@ -393,14 +393,14 @@ NS_SWIFT_NAME(AppEvents)
 /**
  Sets and sends device token string to register the current application for push notifications.
 
-
-
  Sets and sends a device token string
 
  @param deviceTokenString Device token string.
  */
+// UNCRUSTIFY_FORMAT_OFF
 + (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
 NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Explicitly kick off flushing of events to Facebook.  This is an asynchronous method, but it does initiate an immediate
@@ -453,6 +453,8 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
  @param zip user's zip
  @param country user's country
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (void)setUserEmail:(nullable NSString *)email
            firstName:(nullable NSString *)firstName
             lastName:(nullable NSString *)lastName
@@ -465,6 +467,7 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
              country:(nullable NSString *)country
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:))
 DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Sets custom user data to associate with all app events. All user data are hashed
@@ -483,6 +486,8 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
  @param zip user's zip
  @param country user's country
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setUserEmail:(nullable NSString *)email
            firstName:(nullable NSString *)firstName
             lastName:(nullable NSString *)lastName
@@ -494,6 +499,7 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Returns the set user data else nil

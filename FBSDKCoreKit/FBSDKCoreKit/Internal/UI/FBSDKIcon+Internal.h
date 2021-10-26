@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKIcon (Internal)
 
+// UNCRUSTIFY_FORMAT_OFF
 - (nullable UIImage *)imageWithSize:(CGSize)size
 NS_SWIFT_NAME(image(size:));
 
@@ -23,6 +24,7 @@ NS_SWIFT_NAME(image(size:color:));
 
 - (nullable UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
 NS_SWIFT_NAME(image(size:scale:color:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

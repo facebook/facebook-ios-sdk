@@ -22,11 +22,13 @@ NS_SWIFT_NAME(CrashObserver)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                    graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                               settings:(id<FBSDKSettings>)settings
                           crashHandler:(id<FBSDKCrashHandler>)crashHandler
 NS_SWIFT_NAME(init(featureChecker:graphRequestFactory:settings:crashHandler:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

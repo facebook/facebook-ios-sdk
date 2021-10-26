@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(PaymentProductRequestorCreating)
 @protocol FBSDKPaymentProductRequestorCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (nonnull FBSDKPaymentProductRequestor *)createRequestorWithTransaction:(SKPaymentTransaction *)transaction
 NS_SWIFT_NAME(createRequestor(transaction:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

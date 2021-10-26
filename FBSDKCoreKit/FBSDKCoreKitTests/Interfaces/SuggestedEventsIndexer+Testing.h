@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)reset;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                    swizzler:(Class<FBSDKSwizzling>)swizzler
@@ -36,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
                            featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
                              eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
 NS_SWIFT_NAME(init(graphRequestFactory:serverConfigurationProvider:swizzler:settings:eventLogger:featureExtractor:eventProcessor:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)logSuggestedEvent:(FBSDKAppEventName)event
                      text:(NSString *)text

@@ -14,10 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(NotificationPosting)
 @protocol FBSDKNotificationPosting
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)postNotificationName:(NSNotificationName)aName
                       object:(nullable id)anObject
                     userInfo:(nullable NSDictionary<NSString *, id> *)aUserInfo
 NS_SWIFT_NAME(post(name:object:userInfo:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

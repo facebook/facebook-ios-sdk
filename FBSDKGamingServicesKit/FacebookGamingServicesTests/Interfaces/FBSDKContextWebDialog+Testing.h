@@ -11,8 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKContextWebDialog (Testing)
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithDelegate:(id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 NS_ASSUME_NONNULL_END

@@ -16,11 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppLinkCreating)
 @protocol FBSDKAppLinkCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (id<FBSDKAppLink>)createAppLinkWithSourceURL:(nullable NSURL *)sourceURL
                                        targets:(NSArray<id<FBSDKAppLinkTarget>> *)targets
                                         webURL:(nullable NSURL *)webURL
                               isBackToReferrer:(BOOL)isBackToReferrer
 NS_SWIFT_NAME(createAppLink(sourceURL:targets:webURL:isBackToReferrer:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

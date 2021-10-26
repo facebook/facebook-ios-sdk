@@ -31,8 +31,11 @@ NS_SWIFT_NAME(AppLinkURL)
  to support better FBSDKMeasurementEvent notifications
  @param url The instance of `NSURL` to create FBSDKURL from.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)URLWithURL:(NSURL *)url
 NS_SWIFT_NAME(init(url:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Creates a link target from a raw URL received from an external application. This is typically called from the app delegate's
@@ -40,8 +43,11 @@ NS_SWIFT_NAME(init(url:));
  @param url The instance of `NSURL` to create FBSDKURL from.
  @param sourceApplication the bundle ID of the app that is requesting your app to open the URL. The same sourceApplication in application:openURL:sourceApplication:annotation:
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)URLWithInboundURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication
 NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Gets the target URL.  If the link is an App Link, this is the target of the App Link.

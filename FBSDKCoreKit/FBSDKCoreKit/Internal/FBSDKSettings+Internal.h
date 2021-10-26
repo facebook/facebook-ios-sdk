@@ -27,11 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
 @property (nullable, nonatomic) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store
   appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(nonnull id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
+// UNCRUSTIFY_FORMAT_ON
 
 + (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 

@@ -37,10 +37,12 @@ typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable 
 @property (nonatomic, assign) LoginBehavior loginBehavior;
 @property (nonatomic, assign) DefaultAudience defaultAudience;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(nullable UIViewController *)fromViewController
                      handler:(nullable LoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
@@ -123,10 +125,13 @@ NS_SWIFT_NAME(LoginManager)
  on a previous login attempt will result in an error.
  @warning This method will present a UI to the user and thus should be called on the main thread.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(nullable UIViewController *)fromViewController
                      handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Logs the user in or authorizes additional permissions.
@@ -162,9 +167,12 @@ This method should be called with the url from the openURL method.
 
  @warning This method will present a UI to the user and thus should be called on the main thread.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(url:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
@@ -182,9 +190,12 @@ user based on any declined permissions.
  @warning This method will reauthorize using a `LoginConfiguration` with `FBSDKLoginTracking` set to `.enabled`.
  @warning This method will present UI the user. You typically should call this if `AccessToken.isDataAccessExpired` is true.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController
                       handler:(FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Logs the user out

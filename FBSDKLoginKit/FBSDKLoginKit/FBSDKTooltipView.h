@@ -119,10 +119,13 @@ NS_SWIFT_NAME(FBTooltipView)
  @param arrowDirection whenever arrow should be pointing up (message bubble is below the arrow) or
  down (message bubble is above the arrow).
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)presentInView:(UIView *)view
     withArrowPosition:(CGPoint)arrowPosition
             direction:(FBSDKTooltipViewArrowDirection)arrowDirection
 NS_SWIFT_NAME(present(in:arrowPosition:direction:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Remove tooltip manually.

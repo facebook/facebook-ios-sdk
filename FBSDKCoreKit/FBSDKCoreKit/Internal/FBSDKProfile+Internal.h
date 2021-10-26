@@ -9,15 +9,14 @@
 #if !TARGET_OS_TV
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKProfile.h>
 
 #import "FBSDKDataPersisting.h"
 
 #if FBSDK_SWIFT_PACKAGE
  #import "FBSDKGraphRequest.h"
- #import "FBSDKProfile.h"
 #else
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
- #import <FBSDKCoreKit/FBSDKProfile.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,12 +46,14 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                   settings:(id<FBSDKSettings>)settings
                  urlHoster:(id<FBSDKURLHosting>)urlHoster
 NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:settings:urlHoster:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

@@ -31,8 +31,11 @@ NS_SWIFT_NAME(ContextWebDialog)
 /**
  Initializer to be used by subclasses.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithDelegate:(id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Depending on the content size within the browser, this method allows for the resizing of web dialog

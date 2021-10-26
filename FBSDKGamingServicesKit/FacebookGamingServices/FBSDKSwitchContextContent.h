@@ -29,8 +29,11 @@ NS_SWIFT_NAME(SwitchContextContent)
   Builds a content object that will be use to display a switch context dialog
  @param contextID  The context ID of the context instance to switch and set as the current game context
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initDialogContentWithContextID:(NSString *)contextID
 NS_SWIFT_NAME(init(contextID:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  The context token of the existing context for which this request is being made.

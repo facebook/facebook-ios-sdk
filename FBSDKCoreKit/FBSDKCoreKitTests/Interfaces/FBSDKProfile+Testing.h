@@ -27,10 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)graphPathForToken:(FBSDKAccessToken *)token;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)loadProfileWithToken:(nullable FBSDKAccessToken *)token
                 graphRequest:(id<FBSDKGraphRequest>)request
                   completion:(nullable FBSDKProfileBlock)completion
 NS_SWIFT_NAME(load(token:request:completion:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

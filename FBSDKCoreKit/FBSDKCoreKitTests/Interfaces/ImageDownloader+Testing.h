@@ -17,8 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
 @property (nonatomic, strong) NSURLCache *urlCache;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
 NS_SWIFT_NAME(init(sessionProvider:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

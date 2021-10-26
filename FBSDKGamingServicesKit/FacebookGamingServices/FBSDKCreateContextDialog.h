@@ -31,10 +31,13 @@ NS_SWIFT_NAME(CreateContextDialog)
  @param windowFinder The application window finder that provides the window to display the dialog
  @param delegate The receiver's delegate used to let the receiver know a context was created or failure
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)dialogWithContent:(FBSDKCreateContextContent *)content
                      windowFinder:(id<FBSDKWindowFinding>)windowFinder
                          delegate:(id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:windowFinder:delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 NS_ASSUME_NONNULL_END

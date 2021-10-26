@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(OperatingSystemVersionComparing)
 @protocol FBSDKOperatingSystemVersionComparing
 
+// UNCRUSTIFY_FORMAT_OFF
 - (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version
 NS_SWIFT_NAME(isOperatingSystemAtLeast(_:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

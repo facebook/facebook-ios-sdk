@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
 
@@ -59,6 +60,8 @@ NS_SWIFT_NAME(reset());
                            profileProvider:(Class<FBSDKProfileProviding>)profileProvider
                      backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver;
+// UNCRUSTIFY_FORMAT_ON
+
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;

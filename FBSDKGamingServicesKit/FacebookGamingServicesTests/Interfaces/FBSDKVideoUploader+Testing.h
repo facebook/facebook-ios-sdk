@@ -19,12 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)start;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
                        parameters:(NSDictionary<NSString *, id> *)parameters
                          delegate:(id<FBSDKVideoUploaderDelegate>)delegate
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:graphRequestFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)_postFinishRequest;
 

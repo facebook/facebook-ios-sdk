@@ -75,9 +75,12 @@ NS_SWIFT_NAME(SharingContent)
  @param bridgeOptions The options for bridging
  @return A new dictionary with the modified contents
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 NS_SWIFT_NAME(addParameters(_:options:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

@@ -14,11 +14,13 @@ NS_SWIFT_NAME(AuthenticationTokenBlock);
 NS_SWIFT_NAME(AuthenticationTokenCreating)
 @protocol FBSDKAuthenticationTokenCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)createTokenFromTokenString:(NSString *)tokenString
                              nonce:(NSString *)nonce
                        graphDomain:(NSString *)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion
 NS_SWIFT_NAME(createToken(tokenString:nonce:graphDomain:completion:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

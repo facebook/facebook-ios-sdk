@@ -25,10 +25,12 @@ NS_SWIFT_NAME(AppLinkTarget)
 + (instancetype)new NS_UNAVAILABLE;
 
 /** Creates a FBSDKAppLinkTarget with the given app site and target URL. */
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)appLinkTargetWithURL:(nullable NSURL *)url
                           appStoreId:(nullable NSString *)appStoreId
                              appName:(NSString *)appName
 NS_SWIFT_NAME(init(url:appStoreId:appName:));
+// UNCRUSTIFY_FORMAT_ON
 
 /** The URL prefix for this app link target */
 @property (nullable, nonatomic, readonly, strong) NSURL *URL;

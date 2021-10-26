@@ -23,10 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
                                               eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
 - (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
                                              urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
+
+// UNCRUSTIFY_FORMAT_OFF
 - (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKInternalURLOpener>)urlOpener
                                         eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
                                               error:(NSError **)error
 NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

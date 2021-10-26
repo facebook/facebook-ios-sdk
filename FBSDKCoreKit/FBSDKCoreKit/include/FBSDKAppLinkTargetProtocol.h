@@ -16,10 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppLinkTargetProtocol)
 @protocol FBSDKAppLinkTarget
 
+// UNCRUSTIFY_FORMAT_OFF
 + (instancetype)appLinkTargetWithURL:(nullable NSURL *)url
                           appStoreId:(nullable NSString *)appStoreId
                              appName:(NSString *)appName
 NS_SWIFT_NAME(init(url:appStoreId:appName:));
+// UNCRUSTIFY_FORMAT_ON
 
 /** The URL prefix for this app link target */
 @property (nullable, nonatomic, readonly) NSURL *URL;

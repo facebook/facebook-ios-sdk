@@ -67,8 +67,11 @@ NS_SWIFT_NAME(DeviceLoginButtonDelegate)
 /*!
  @abstract Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)deviceLoginButtonDidLogIn:(FBSDKDeviceLoginButton *)button
 NS_SWIFT_NAME(deviceLoginButtonDidLogIn(_:));
+// UNCRUSTIFY_FORMAT_ON
 
 /*!
  @abstract Indicates the logout finished. The `FBSDKAccessToken.currentAccessToken` will be nil.

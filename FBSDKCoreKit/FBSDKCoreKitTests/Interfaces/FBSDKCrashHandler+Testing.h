@@ -21,10 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
                              bundle:(id<FBSDKInfoDictionaryProviding>)bundle
                   fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
 NS_SWIFT_NAME(init(fileManager:bundle:dataExtractor:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files;
 - (NSString *)_getPathToCrashFile:(NSString *)timestamp;

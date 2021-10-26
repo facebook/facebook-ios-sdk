@@ -26,11 +26,13 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 NS_SWIFT_NAME(configure(store:settings:graphRequestFactory:graphRequestConnectionFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 + (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration;
 

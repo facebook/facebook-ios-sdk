@@ -14,10 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (FBSDKAppEventsConfiguration *)defaultConfiguration;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)defaultATEStatus
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
                   eventCollectionEnabled:(BOOL)eventCollectionEnabled
 NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

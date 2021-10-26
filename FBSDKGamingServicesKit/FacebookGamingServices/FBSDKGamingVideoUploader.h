@@ -26,9 +26,12 @@ Runs an upload to a users Gaming Media Library with the given configuration
 @param configuration model object contain the content that will be uploaded
 @param completion a callback that is fired when the upload completes.
 */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
                  andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
 NS_SWIFT_NAME(uploadeVideo(configuration:completion:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
 Runs an upload to a users Gaming Media Library with the given configuration
@@ -38,10 +41,13 @@ Runs an upload to a users Gaming Media Library with the given configuration
 @param progressHandler an optional callback that is fired multiple times as
  bytes are transferred to Facebook.
 */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
                           completion:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 NS_SWIFT_NAME(uploadVideo(configuration:completion:progressHandler:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

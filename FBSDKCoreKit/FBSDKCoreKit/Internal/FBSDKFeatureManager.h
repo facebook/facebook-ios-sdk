@@ -24,10 +24,12 @@ NS_SWIFT_NAME(FeatureManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               settings:(id<FBSDKSettings>)settings
                                  store:(id<FBSDKDataPersisting>)store
 NS_SWIFT_NAME(configure(gateKeeperManager:settings:store:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (BOOL)isEnabled:(FBSDKFeature)feature;
 - (void)checkFeature:(FBSDKFeature)feature

@@ -26,8 +26,11 @@ NS_SWIFT_NAME(CameraEffectArguments)
  @param string The argument
  @param key The key for the argument
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setString:(nullable NSString *)string forKey:(NSString *)key
 NS_SWIFT_NAME(set(_:forKey:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Gets a string argument from the container.
@@ -41,8 +44,11 @@ NS_SWIFT_NAME(set(_:forKey:));
  @param array The array argument
  @param key The key for the argument
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setArray:(nullable NSArray<NSString *> *)array forKey:(NSString *)key
 NS_SWIFT_NAME(set(_:forKey:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Gets an array argument from the container.

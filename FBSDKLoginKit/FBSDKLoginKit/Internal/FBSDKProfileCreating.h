@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ProfileCreating)
 @protocol FBSDKProfileCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (FBSDKProfile *)createProfileWithUserID:(FBSDKUserIdentifier *)userID
                                 firstName:(nullable NSString *)firstName
                                middleName:(nullable NSString *)middleName
@@ -35,6 +36,7 @@ NS_SWIFT_NAME(ProfileCreating)
                                    gender:(nullable NSString *)gender
                                 isLimited:(BOOL)isLimited
 NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:isLimited:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

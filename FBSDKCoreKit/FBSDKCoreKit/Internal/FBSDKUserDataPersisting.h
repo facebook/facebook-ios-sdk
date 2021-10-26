@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(UserDataPersisting)
 @protocol FBSDKUserDataPersisting
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setUserEmail:(nullable NSString *)email
            firstName:(nullable NSString *)firstName
             lastName:(nullable NSString *)lastName
@@ -30,6 +31,7 @@ NS_SWIFT_NAME(UserDataPersisting)
              country:(nullable NSString *)country
           externalId:(nullable NSString *)externalId
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:externalId:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (nullable NSString *)getUserData;
 

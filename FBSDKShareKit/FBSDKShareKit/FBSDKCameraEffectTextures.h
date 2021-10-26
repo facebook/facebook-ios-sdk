@@ -26,8 +26,11 @@ NS_SWIFT_NAME(CameraEffectTextures)
  @param image The UIImage for the texture
  @param key The key for the texture
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setImage:(nullable UIImage *)image forKey:(NSString *)key
 NS_SWIFT_NAME(set(_:forKey:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Gets the image for a texture key.

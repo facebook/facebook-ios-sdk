@@ -15,8 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsStateProviding)
 @protocol FBSDKAppEventsStateProviding
 
+// UNCRUSTIFY_FORMAT_OFF
 - (FBSDKAppEventsState *)createStateWithToken:(NSString *)tokenString appID:(NSString *)appID
 NS_SWIFT_NAME(createState(tokenString:appID:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

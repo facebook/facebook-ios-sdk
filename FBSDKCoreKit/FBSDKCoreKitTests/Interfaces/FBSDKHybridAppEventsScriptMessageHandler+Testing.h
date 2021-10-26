@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<FBSDKEventLogging> eventLogger;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(init(eventLogger:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

@@ -34,6 +34,7 @@ NS_SWIFT_NAME(UserDataStore)
  @param country user's country
  @param externalId user's external id
  */
+// UNCRUSTIFY_FORMAT_OFF
 - (void)setUserEmail:(nullable NSString *)email
            firstName:(nullable NSString *)firstName
             lastName:(nullable NSString *)lastName
@@ -46,6 +47,7 @@ NS_SWIFT_NAME(UserDataStore)
              country:(nullable NSString *)country
           externalId:(nullable NSString *)externalId
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:externalId:));
+// UNCRUSTIFY_FORMAT_ON
 
 /*
   Returns the set user data else nil

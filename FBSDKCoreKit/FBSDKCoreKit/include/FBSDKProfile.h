@@ -53,7 +53,7 @@ NS_SWIFT_NAME(ProfileBlock);
  Represents the unique identifier for an end user
  */
 typedef NSString FBSDKUserIdentifier
-NS_SWIFT_NAME(UserIdentifier);
+  NS_SWIFT_NAME(UserIdentifier);
 
 /**
   Represents an immutable Facebook profile
@@ -270,8 +270,10 @@ NS_SWIFT_NAME(current);
  Note that if `[FBSDKAccessToken currentAccessToken]` is unset, the `currentProfile` instance remains. It's also possible
  for `currentProfile` to return nil until the data is fetched.
  */
+// UNCRUSTIFY_FORMAT_OFF
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
 NS_SWIFT_NAME(enableUpdatesOnAccessTokenChange(_:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Loads the current profile and passes it to the completion block.
@@ -287,8 +289,10 @@ NS_SWIFT_NAME(enableUpdatesOnAccessTokenChange(_:));
  @param mode The picture mode
  @param size The height and width. This will be rounded to integer precision.
  */
+// UNCRUSTIFY_FORMAT_OFF
 - (nullable NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 NS_SWIFT_NAME(imageURL(forMode:size:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Returns YES if the profile is equivalent to the receiver.

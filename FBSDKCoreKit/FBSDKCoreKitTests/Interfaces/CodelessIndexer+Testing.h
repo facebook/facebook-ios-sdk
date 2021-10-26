@@ -23,8 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, readonly) BOOL isCheckingSession;
 @property (class, nullable, nonatomic, readonly) NSTimer *appIndexingTimer;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (nullable id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 NS_SWIFT_NAME(requestToLoadCodelessSetup(appID:));
+// UNCRUSTIFY_FORMAT_ON
 
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock;
 + (void)uploadIndexing:(nullable NSString *)tree;

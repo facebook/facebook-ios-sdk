@@ -28,8 +28,11 @@ NS_SWIFT_NAME(CreateContextContent)
   Builds a content object that will be use to display a create context dialog
  @param playerID The player ID of the user being challenged which will be used  to create a game context
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initDialogContentWithPlayerID:(NSString *)playerID
 NS_SWIFT_NAME(init(playerID:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  The ID of the player that is being challenged.

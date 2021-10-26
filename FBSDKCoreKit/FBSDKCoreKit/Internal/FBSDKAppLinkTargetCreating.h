@@ -15,10 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppLinkTargetCreating)
 @protocol FBSDKAppLinkTargetCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (id<FBSDKAppLinkTarget>)createAppLinkTargetWithURL:(nullable NSURL *)url
                                           appStoreId:(nullable NSString *)appStoreId
                                              appName:(NSString *)appName
 NS_SWIFT_NAME(createAppLinkTarget(url:appStoreId:appName:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

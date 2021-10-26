@@ -25,8 +25,10 @@ NS_SWIFT_NAME(GamingPayload)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithURL:(FBSDKURL *_Nonnull)url
 NS_SWIFT_NAME(initWith(URL:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

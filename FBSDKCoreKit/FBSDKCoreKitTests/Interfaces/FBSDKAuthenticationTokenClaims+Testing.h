@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithSettings:(nonnull id<FBSDKSettings>)settings
 NS_SWIFT_NAME(configure(settings:));
+// UNCRUSTIFY_FORMAT_ON
 
 + (void)configureClassDependencies;
 

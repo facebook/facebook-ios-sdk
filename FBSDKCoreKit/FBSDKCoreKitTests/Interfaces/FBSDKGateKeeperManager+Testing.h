@@ -24,14 +24,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) NSDate *timestamp;
 @property (class, nonatomic) BOOL isLoadingGateKeepers;
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)  configureWithSettings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
   graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                           store:(id<FBSDKDataPersisting>)store
 NS_SWIFT_NAME(configure(settings:graphRequestFactory:graphRequestConnectionFactory:store:));
+// UNCRUSTIFY_FORMAT_ON
+
 + (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
+
+// UNCRUSTIFY_FORMAT_OFF
 + (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error
 NS_SWIFT_NAME(parse(result:error:));
+// UNCRUSTIFY_FORMAT_ON
+
 + (BOOL)_gateKeeperIsValid;
 + (void)reset;
 + (id<FBSDKGraphRequestFactory>)graphRequestFactory;

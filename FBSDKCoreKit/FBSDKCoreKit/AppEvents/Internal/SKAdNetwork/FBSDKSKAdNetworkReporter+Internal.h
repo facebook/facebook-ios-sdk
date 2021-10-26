@@ -17,10 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKSKAdNetworkReporter (Internal)
 
+// UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                       store:(id<FBSDKDataPersisting>)store
                    conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
 NS_SWIFT_NAME(init(graphRequestFactory:store:conversionValueUpdateable:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

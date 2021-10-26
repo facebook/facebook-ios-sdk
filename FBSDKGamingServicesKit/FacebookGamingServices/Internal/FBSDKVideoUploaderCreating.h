@@ -17,11 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(VideoUploaderCreating)
 @protocol FBSDKVideoUploaderCreating
 
+// UNCRUSTIFY_FORMAT_OFF
 - (id<FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
                                      videoSize:(NSUInteger)videoSize
                                     parameters:(NSDictionary<NSString *, id> *)parameters
                                       delegate:(id<FBSDKVideoUploaderDelegate>)delegate
 NS_SWIFT_NAME(create(videoName:videoSize:parameters:delegate:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 
