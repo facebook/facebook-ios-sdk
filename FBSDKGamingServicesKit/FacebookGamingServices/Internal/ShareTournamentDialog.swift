@@ -10,7 +10,7 @@ import Foundation
 
 import FBSDKCoreKit
 
-enum ShareTournamentDialogError: Error {
+public enum ShareTournamentDialogError: Error {
   case invalidAccessToken
   case tournamentMissingIdentifier
   case tournamentMissingScore
@@ -34,24 +34,22 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   }
 
   /**
-   Creates a share a dialog that can be used to share a score in the given `Tournament`
+   Creates a share a dialog that can be used to share a score using a new tournament configuration or an existing tournament
 
    - Parameter delegate: The delegate for the dialog to be invoked in case of error, cancellation or completion
    */
-  convenience init(
+  public convenience init(
     delegate: ShareTournamentDialogDelegate
   ) {
     self.init(delegate: delegate, urlOpener: BridgeAPI.shared)
   }
 
-  // swiftlint:disable line_length
   /**
    Attempts to show the share dialog to share an existing tournament
    - Parameter score: A score to share in the tournament could be a numeric score or time interval dependent on the given tournament score type
    - Parameter tournament: The tournament to share and update with the given score
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  // swiftlint:enable line_length
   public func show(score: Int, tournament: Tournament) throws {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
@@ -77,7 +75,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     }
   }
 
-  // swiftlint:disable line_length
   /**
    Attempts to show the share dialog to share a newly created tournnament
 
@@ -85,7 +82,6 @@ public class ShareTournamentDialog: NSObject, URLOpening {
    - Parameter config: The tournament configuration used to create a new tournament
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  // swiftlint:enable line_length
   public func show(initialScore: Int, config: TournamentConfig) throws {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
