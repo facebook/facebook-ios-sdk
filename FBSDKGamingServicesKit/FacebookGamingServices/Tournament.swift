@@ -36,22 +36,6 @@ public struct Tournament: Codable {
    */
   public var payload: String?
 
-  /**
-   The current score for the player for this  tournament.
-   You can update the score by calling the `TournamentUpdater` and passing in the tournament and new score.
-   */
-  var score: Int? {
-    if let numericScore = numericScore?.value {
-      return numericScore
-    } else if let time = timeScore?.value {
-      return Int(time)
-    }
-    return nil
-  }
-
-  var numericScore: NumericScore?
-  var timeScore: TimeScore?
-
   init(
     identifier: String,
     endTime: Date? = nil,
@@ -62,15 +46,6 @@ public struct Tournament: Codable {
     self.endTime = endTime
     self.title = title
     self.payload = payload
-  }
-  mutating func update<T: Score>(score: T) throws {
-    if let numericScore = score as? NumericScore {
-      self.numericScore = numericScore
-    } else if let time = score.value as? TimeScore {
-      self.timeScore = time
-    } else {
-      throw TournamentDecodingError.invalidScoreType
-    }
   }
 
   public init(from decoder: Decoder) throws {

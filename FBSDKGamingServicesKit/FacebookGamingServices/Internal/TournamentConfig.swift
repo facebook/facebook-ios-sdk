@@ -24,7 +24,7 @@ public struct TournamentConfig {
   /**
    The type of score the tournament accepts and ranks. See enum `ScoreType`
    */
-  public var scoreType: ScoreType?
+  public var scoreType: TournamentScoreType?
 
   /**
    The sort order of the scores for the tournament
@@ -55,7 +55,7 @@ public struct TournamentConfig {
   public init(
     title: String? = nil,
     endTime: Date? = nil,
-    scoreType: ScoreType? = nil,
+    scoreType: TournamentScoreType? = nil,
     sortOrder: TournamentSortOrder? = nil,
     image: UIImage? = nil,
     payload: String? = nil

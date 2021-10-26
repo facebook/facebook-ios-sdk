@@ -42,7 +42,6 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     self.dialogDidCancel = false
     self.dialogError = nil
     AccessToken.current = SampleAccessTokens.validToken
-    try? validTournamentForUpdate.update(score: NumericScore(value: 120))
   }
 
   override func tearDown() {

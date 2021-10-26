@@ -6,12 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FacebookGamingServices
-
 extension Tournament: Equatable {
   public static func == (lhs: Tournament, rhs: Tournament) -> Bool {
     lhs.identifier == rhs.identifier
-      && lhs.score == rhs.score
       && lhs.title == rhs.title
       && lhs.endTime == rhs.endTime
       && lhs.payload == rhs.payload
