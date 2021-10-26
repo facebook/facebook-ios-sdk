@@ -17,7 +17,9 @@
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKConstants.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKPasteboard.h"
 #import "FBSDKSettings.h"
@@ -94,22 +96,26 @@ static const struct {
 
 - (instancetype)initWithAppScheme:(nullable NSString *)appScheme
 {
+  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
   return [self initWithAppScheme:appScheme
                       pasteboard:[UIPasteboard generalPasteboard]
              dataLengthThreshold:FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold
-                  includeAppIcon:YES];
+                  includeAppIcon:YES
+                    errorFactory:errorFactory];
 }
 
 - (instancetype)initWithAppScheme:(nullable NSString *)appScheme
                        pasteboard:(nullable id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
+                     errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   if ((self = [super init])) {
     _appScheme = [appScheme copy];
     _pasteboard = pasteboard;
     _dataLengthThreshold = dataLengthThreshold;
     _includeAppIcon = includeAppIcon;
+    _errorFactory = errorFactory;
   }
   return self;
 }
@@ -183,10 +189,10 @@ static const struct {
   bridgeParameters = [FBSDKTypeUtility dictionaryValue:bridgeParameters];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
-                                                     value:bridgeParametersJSON
-                                                   message:@"Invalid bridge_args."
-                                           underlyingError:error];
+      *errorRef = [self.errorFactory invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
+                                                            value:bridgeParametersJSON
+                                                          message:@"Invalid bridge_args."
+                                                  underlyingError:error];
     }
     return nil;
   }
@@ -208,10 +214,10 @@ static const struct {
   NSDictionary<id, id> *resultParameters = [FBSDKBasicUtility objectForJSONString:resultParametersJSON error:&error];
   if (!resultParameters) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
-                                                     value:resultParametersJSON
-                                                   message:@"Invalid method_results."
-                                           underlyingError:error];
+      *errorRef = [self.errorFactory invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
+                                                            value:resultParametersJSON
+                                                          message:@"Invalid method_results."
+                                                  underlyingError:error];
     }
     return nil;
   }
@@ -262,7 +268,11 @@ static const struct {
   NSInteger code = [FBSDKTypeUtility integerValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.code]]
   ?: FBSDKErrorUnknown;
   NSDictionary<NSString *, id> *userInfo = [FBSDKTypeUtility dictionaryValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.userInfo]];
-  return [NSError errorWithDomain:domain code:code userInfo:userInfo];
+  return [self.errorFactory errorWithDomain:domain
+                                       code:code
+                                   userInfo:userInfo
+                                    message:nil
+                            underlyingError:nil];
 }
 
 - (NSString *)_JSONStringForObject:(id)object enablePasteboard:(BOOL)enablePasteboard error:(NSError **)errorRef

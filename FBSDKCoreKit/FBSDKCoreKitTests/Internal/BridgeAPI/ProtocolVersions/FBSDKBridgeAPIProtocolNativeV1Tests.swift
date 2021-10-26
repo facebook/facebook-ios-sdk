@@ -15,9 +15,13 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
   let scheme = UUID().uuidString
   let methodName = UUID().uuidString
   let methodVersion = UUID().uuidString
-  lazy var protocolNativeV1 = BridgeAPIProtocolNativeV1(appScheme: scheme)
-  // swiftlint:enable force_unwrapping
   let pasteboard = TestPasteboard()
+  let errorFactory = TestErrorFactory()
+  lazy var protocolNativeV1: BridgeAPIProtocolNativeV1 = {
+    let bridgeProtocol = BridgeAPIProtocolNativeV1(appScheme: scheme)
+    bridgeProtocol.errorFactory = errorFactory
+    return bridgeProtocol
+  }()
 
   func testRequestURL() {
     let parameters = [
@@ -165,7 +169,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     XCTAssertFalse(cancelled.boolValue)
   }
 
-  func testInvalidBridgeArgs() {
+  func testInvalidBridgeArgs() throws {
     var cancelled: ObjCBool = true
 
     let bridgeArgs = "this is an invalid bridge_args value"
@@ -185,19 +189,19 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
       XCTAssertNil(response)
     } catch {
-      guard let error = error as NSError? else { XCTFail("Error is not an NSError") }
-      XCTAssertNotNil(error)
-      XCTAssertEqual(error.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(error.domain, ErrorDomain)
-      XCTAssertEqual(error.userInfo[ErrorArgumentNameKey] as? String, "bridge_args")
-      XCTAssertEqual(error.userInfo[ErrorArgumentValueKey] as? String, bridgeArgs)
-      XCTAssertNotNil(error.userInfo[ErrorDeveloperMessageKey])
-      XCTAssertNotNil(error.userInfo[NSUnderlyingErrorKey])
+      let error = try XCTUnwrap(error as? TestSDKError)
+      XCTAssertEqual(error.type, .invalidArgument)
+      XCTAssertEqual(error.code, TestSDKError.testErrorCode)
+      XCTAssertEqual(error.domain, TestSDKError.testErrorDomain)
+      XCTAssertEqual(error.name, "bridge_args")
+      XCTAssertEqual(error.value as? String, bridgeArgs)
+      XCTAssertNotNil(error.message)
+      XCTAssertNotNil(error.underlyingError)
     }
     XCTAssertFalse(cancelled.boolValue)
   }
 
-  func testInvalidMethodResults() {
+  func testInvalidMethodResults() throws {
     var cancelled: ObjCBool = true
 
     let methodResults = "this is an invalid method_results value"
@@ -216,19 +220,19 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
       XCTAssertNil(response)
     } catch {
-      guard let error = error as NSError? else { XCTFail("Error is not an NSError") }
-      XCTAssertNotNil(error)
-      XCTAssertEqual(error.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(error.domain, ErrorDomain)
-      XCTAssertEqual(error.userInfo[ErrorArgumentNameKey] as? String, "method_results")
-      XCTAssertEqual(error.userInfo[ErrorArgumentValueKey] as? String, methodResults)
-      XCTAssertNotNil(error.userInfo[ErrorDeveloperMessageKey])
-      XCTAssertNotNil(error.userInfo[NSUnderlyingErrorKey])
+      let error = try XCTUnwrap(error as? TestSDKError)
+      XCTAssertEqual(error.type, .invalidArgument)
+      XCTAssertEqual(error.code, TestSDKError.testErrorCode)
+      XCTAssertEqual(error.domain, TestSDKError.testErrorDomain)
+      XCTAssertEqual(error.name, "method_results")
+      XCTAssertEqual(error.value as? String, methodResults)
+      XCTAssertNotNil(error.message)
+      XCTAssertNotNil(error.underlyingError)
     }
     XCTAssertFalse(cancelled.boolValue)
   }
 
-  func testResultError() {
+  func testResultError() throws {
     var cancelled: ObjCBool = true
 
     let code = 42
@@ -260,11 +264,11 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
       XCTAssertNil(response)
     } catch {
-      guard let error = error as NSError? else { XCTFail("Error is not an NSError") }
-      XCTAssertNotNil(error)
+      let error = try XCTUnwrap(error as? TestSDKError)
       XCTAssertEqual(error.code, code)
       XCTAssertEqual(error.domain, domain)
-      XCTAssertEqual(error.userInfo as NSObject?, userInfo as NSObject)
+      XCTAssertEqual(error.userInfo["key_1"] as? Int, 1)
+      XCTAssertEqual(error.userInfo["key_2"] as? String, "two")
     }
     XCTAssertFalse(cancelled.boolValue)
   }
@@ -299,7 +303,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       appScheme: scheme,
       pasteboard: nil,
       dataLengthThreshold: UInt.max,
-      includeAppIcon: false
+      includeAppIcon: false,
+      errorFactory: errorFactory
     )
 
     let parameters: [String: Any] = [
@@ -351,7 +356,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       appScheme: scheme,
       pasteboard: nil,
       dataLengthThreshold: UInt.max,
-      includeAppIcon: false
+      includeAppIcon: false,
+      errorFactory: errorFactory
     )
 
     let parameters: [String: Any] = [
@@ -408,7 +414,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       appScheme: scheme,
       pasteboard: pasteboard,
       dataLengthThreshold: 0,
-      includeAppIcon: false
+      includeAppIcon: false,
+      errorFactory: errorFactory
     )
 
     let parameters: [String: Any] = [
@@ -460,7 +467,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       appScheme: scheme,
       pasteboard: pasteboard,
       dataLengthThreshold: 0,
-      includeAppIcon: false
+      includeAppIcon: false,
+      errorFactory: errorFactory
     )
 
     let parameters: [String: Any] = [

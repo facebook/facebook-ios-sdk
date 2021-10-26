@@ -15,6 +15,8 @@
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKError+Internal.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -32,11 +34,14 @@
 
 - (instancetype)init
 {
+  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  id<FBSDKBridgeAPIProtocol> nativeBridge = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
+                                                                                           pasteboard:nil
+                                                                                  dataLengthThreshold:0
+                                                                                       includeAppIcon:NO
+                                                                                         errorFactory:errorFactory];
   return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared
-                                      nativeBridge:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
-                                                                                                  pasteboard:nil
-                                                                                         dataLengthThreshold:0
-                                                                                              includeAppIcon:NO]];
+                                      nativeBridge:nativeBridge];
 }
 
 - (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
