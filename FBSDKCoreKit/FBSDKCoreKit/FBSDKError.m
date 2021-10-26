@@ -176,9 +176,13 @@ static id<FBSDKErrorReporting> _errorReporter;
                                 underlyingError:underlyingError];
 }
 
+// MARK: - Unknown Errors
+
 + (NSError *)unknownErrorWithMessage:(NSString *)message
 {
-  return [self errorWithCode:FBSDKErrorUnknown userInfo:@{} message:message underlyingError:nil];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
+  return [factory unknownErrorWithMessage:message
+                                 userInfo:nil];
 }
 
 // MARK: - Network Error Checking

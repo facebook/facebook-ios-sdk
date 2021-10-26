@@ -122,6 +122,17 @@ NS_ASSUME_NONNULL_BEGIN
                               underlyingError:underlyingError];
 }
 
+// MARK: - Unknown Errors
+
+- (NSError *)unknownErrorWithMessage:(nullable NSString *)message
+                            userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
+{
+  return [self errorWithCode:FBSDKErrorUnknown
+                    userInfo:userInfo
+                     message:message
+             underlyingError:nil];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

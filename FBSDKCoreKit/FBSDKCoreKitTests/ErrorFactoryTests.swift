@@ -34,6 +34,7 @@ final class ErrorFactoryTests: XCTestCase {
     static let invalidArgumentCode = """
       An error should be created with an invalid argument code
       """
+    static let unknownCode = "An error should be created with an unknown code"
 
     static let nilMessage = """
       An error should be created without a message if one is not provided
@@ -364,6 +365,69 @@ final class ErrorFactoryTests: XCTestCase {
     try checkReporting(
       domain: Values.domain,
       code: CoreError.errorInvalidArgument.rawValue,
+      message: Values.message
+    )
+  }
+
+  // MARK: - Unknown Errors
+
+  func testUnknownErrorWithoutParameters() throws {
+    error = factory.unknownError(message: nil, userInfo: nil)
+
+    XCTAssertEqual(nsError.domain, ErrorDomain, Assumptions.facebookDomain)
+    XCTAssertEqual(
+      nsError.code,
+      CoreError.errorUnknown.rawValue,
+      Assumptions.unknownCode
+    )
+    XCTAssertFalse(
+      nsError.userInfo.keys.contains(Values.userInfoKey),
+      Assumptions.noAdditionalUserInfo
+    )
+    XCTAssertNil(
+      nsError.userInfo[ErrorDeveloperMessageKey] as? String,
+      Assumptions.nilMessage
+    )
+    XCTAssertNil(
+      nsError.userInfo[NSUnderlyingErrorKey],
+      Assumptions.nilUnderlyingError
+    )
+    try checkReporting(
+      domain: ErrorDomain,
+      code: CoreError.errorUnknown.rawValue,
+      message: nil
+    )
+  }
+
+  func testUnknownErrorWithAllParameters() throws {
+    error = factory.unknownError(
+      message: Values.message,
+      userInfo: Values.userInfo
+    )
+
+    XCTAssertEqual(nsError.domain, ErrorDomain, Assumptions.facebookDomain)
+    XCTAssertEqual(
+      nsError.code,
+      CoreError.errorUnknown.rawValue,
+      Assumptions.unknownCode
+    )
+    XCTAssertEqual(
+      nsError.userInfo[Values.userInfoKey] as? String,
+      Values.userInfoValue,
+      Assumptions.additionalUserInfo
+    )
+    XCTAssertEqual(
+      nsError.userInfo[ErrorDeveloperMessageKey] as? String,
+      Values.message,
+      Assumptions.providedMessage
+    )
+    XCTAssertNil(
+      nsError.userInfo[NSUnderlyingErrorKey],
+      Assumptions.nilUnderlyingError
+    )
+    try checkReporting(
+      domain: ErrorDomain,
+      code: CoreError.errorUnknown.rawValue,
       message: Values.message
     )
   }

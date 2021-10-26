@@ -56,6 +56,12 @@ NS_SWIFT_NAME(requiredArgumentError(name:message:underlyingError:));
                              underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(requiredArgumentError(domain:name:message:underlyingError:));
 
+// MARK: - Unknown Errors
+
+- (NSError *)unknownErrorWithMessage:(nullable NSString *)message
+                            userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
+NS_SWIFT_NAME(unknownError(message:userInfo:));
+
 @end
 
 NS_ASSUME_NONNULL_END
