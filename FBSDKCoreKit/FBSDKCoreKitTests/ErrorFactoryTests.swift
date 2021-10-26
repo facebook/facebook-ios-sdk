@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// swiftlint:disable file_length
+
 import FBSDKCoreKit
 import XCTest
 
@@ -42,6 +44,10 @@ final class ErrorFactoryTests: XCTestCase {
     static let invalidArgumentMessage = """
       An error should be created with a default invalid argument message
       """
+    static let requiredArgumentMessage = """
+      Value for \(requiredArgumentName) is required.
+      """
+
     static let invalidArgumentName = """
       Invalid argument errors should be created with a name
       """
@@ -50,6 +56,9 @@ final class ErrorFactoryTests: XCTestCase {
       """
     static let invalidArgumentWithValue = """
       Invalid argument errors should be created with a value
+      """
+    static let requiredArgumentName = """
+      Required argument errors should be created with a name
       """
 
     static let nilUnderlyingError = """
@@ -281,6 +290,84 @@ final class ErrorFactoryTests: XCTestCase {
     )
   }
 
+  // MARK: - Required Argument Errors
+
+  func testRequiredArgumentErrorWithOnlyName() throws {
+    let argument = Argument.required(name: Values.argumentName)
+    error = factory.requiredArgumentError(
+      name: argument.name,
+      message: nil,
+      underlyingError: nil
+    )
+
+    XCTAssertEqual(nsError.domain, ErrorDomain, Assumptions.facebookDomain)
+    XCTAssertEqual(
+      nsError.code,
+      CoreError.errorInvalidArgument.rawValue,
+      Assumptions.providedCode
+    )
+    XCTAssertFalse(
+      nsError.userInfo.keys.contains(Values.userInfoKey),
+      Assumptions.noAdditionalUserInfo
+    )
+    XCTAssertEqual(
+      nsError.userInfo[ErrorArgumentNameKey] as? String,
+      argument.name,
+      Assumptions.requiredArgumentName
+    )
+    XCTAssertEqual(
+      nsError.userInfo[ErrorDeveloperMessageKey] as? String,
+      argument.expectedMessage,
+      Assumptions.requiredArgumentMessage
+    )
+    XCTAssertNil(
+      nsError.userInfo[NSUnderlyingErrorKey],
+      Assumptions.nilUnderlyingError
+    )
+    try checkReporting(
+      domain: ErrorDomain,
+      code: CoreError.errorInvalidArgument.rawValue,
+      message: argument.expectedMessage
+    )
+  }
+
+  func testRequiredArgumentErrorWithAllParameters() throws {
+    let argument = Argument.required(name: Values.argumentName)
+    error = factory.requiredArgumentError(
+      domain: Values.domain,
+      name: argument.name,
+      message: Values.message,
+      underlyingError: Values.underlyingError
+    )
+
+    XCTAssertEqual(nsError.domain, Values.domain, Assumptions.providedDomain)
+    XCTAssertEqual(
+      nsError.code,
+      CoreError.errorInvalidArgument.rawValue,
+      Assumptions.invalidArgumentCode
+    )
+    XCTAssertEqual(
+      nsError.userInfo[ErrorArgumentNameKey] as? String,
+      argument.name,
+      Assumptions.requiredArgumentName
+    )
+    XCTAssertEqual(
+      nsError.userInfo[ErrorDeveloperMessageKey] as? String,
+      Values.message,
+      Assumptions.providedMessage
+    )
+    XCTAssertEqual(
+      nsError.userInfo[NSUnderlyingErrorKey] as? UnderlyingError,
+      Values.underlyingError,
+      Assumptions.providedUnderlyingError
+    )
+    try checkReporting(
+      domain: Values.domain,
+      code: CoreError.errorInvalidArgument.rawValue,
+      message: Values.message
+    )
+  }
+
   // MARK: - Provided and Expected Values
 
   private enum Values {
@@ -302,10 +389,12 @@ final class ErrorFactoryTests: XCTestCase {
 
   enum Argument {
     case invalid(name: String, value: String?)
+    case required(name: String)
 
     var name: String {
       switch self {
-      case .invalid(name: let name, _):
+      case .invalid(name: let name, _),
+        .required(name: let name):
         return name
       }
     }
@@ -314,6 +403,8 @@ final class ErrorFactoryTests: XCTestCase {
       switch self {
       case .invalid(_, value: let value):
         return value
+      case .required:
+        return nil
       }
     }
 
@@ -321,6 +412,8 @@ final class ErrorFactoryTests: XCTestCase {
       switch self {
       case .invalid:
         return "Invalid value for \(name): \(value ?? "(null)")"
+      case .required:
+        return "Value for \(name) is required."
       }
     }
   }

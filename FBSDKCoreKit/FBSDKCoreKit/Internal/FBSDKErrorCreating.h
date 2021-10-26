@@ -43,6 +43,19 @@ NS_SWIFT_NAME(invalidArgumentError(name:value:message:underlyingError:));
                             underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(invalidArgumentError(domain:name:value:message:underlyingError:));
 
+// MARK: - Required Argument Errors
+
+- (NSError *)requiredArgumentErrorWithName:(NSString *)name
+                                   message:(nullable NSString *)message
+                           underlyingError:(nullable NSError *)underlyingError
+NS_SWIFT_NAME(requiredArgumentError(name:message:underlyingError:));
+
+- (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
+                                        name:(NSString *)name
+                                     message:(nullable NSString *)message
+                             underlyingError:(nullable NSError *)underlyingError
+NS_SWIFT_NAME(requiredArgumentError(domain:name:message:underlyingError:));
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -148,6 +148,8 @@ static id<FBSDKErrorReporting> _errorReporter;
                                  underlyingError:underlyingError];
 }
 
+// MARK: - Required Argument Errors
+
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(NSString *)message
 {
   return [self requiredArgumentErrorWithName:name message:message underlyingError:nil];
@@ -157,20 +159,21 @@ static id<FBSDKErrorReporting> _errorReporter;
                                         name:(NSString *)name
                                      message:(nullable NSString *)message
 {
-  if (!message) {
-    message = [[NSString alloc] initWithFormat:@"Value for %@ is required.", name];
-  }
-  return [self invalidArgumentErrorWithDomain:domain name:name value:nil message:message underlyingError:nil];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
+  return [factory requiredArgumentErrorWithDomain:domain
+                                             name:name
+                                          message:message
+                                  underlyingError:nil];
 }
 
 + (NSError *)requiredArgumentErrorWithName:(NSString *)name
                                    message:(NSString *)message
                            underlyingError:(NSError *)underlyingError
 {
-  if (!message) {
-    message = [[NSString alloc] initWithFormat:@"Value for %@ is required.", name];
-  }
-  return [self invalidArgumentErrorWithName:name value:nil message:message underlyingError:underlyingError];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
+  return [factory requiredArgumentErrorWithName:name
+                                        message:message
+                                underlyingError:underlyingError];
 }
 
 + (NSError *)unknownErrorWithMessage:(NSString *)message

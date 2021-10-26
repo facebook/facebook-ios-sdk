@@ -96,6 +96,32 @@ NS_ASSUME_NONNULL_BEGIN
                underlyingError:underlyingError];
 }
 
+// MARK: - Required Argument Errors
+
+- (nonnull NSError *)requiredArgumentErrorWithName:(NSString *)name
+                                           message:(nullable NSString *)message
+                                   underlyingError:(nullable NSError *)underlyingError
+{
+  return [self requiredArgumentErrorWithDomain:FBSDKErrorDomain
+                                          name:name
+                                       message:message
+                               underlyingError:underlyingError];
+}
+
+- (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
+                                        name:(NSString *)name
+                                     message:(nullable NSString *)optionalMessage
+                             underlyingError:(nullable NSError *)underlyingError
+{
+  NSString *message = optionalMessage ?: [NSString stringWithFormat:@"Value for %@ is required.", name];
+
+  return [self invalidArgumentErrorWithDomain:domain
+                                         name:name
+                                        value:nil
+                                      message:message
+                              underlyingError:underlyingError];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END
