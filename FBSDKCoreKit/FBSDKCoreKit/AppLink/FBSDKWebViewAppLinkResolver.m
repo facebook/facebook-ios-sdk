@@ -16,7 +16,9 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLink.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 #import "NSURLSession+Protocols.h"
 
@@ -62,6 +64,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 @interface FBSDKWebViewAppLinkResolver ()
 
 @property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic, strong) id<FBSDKErrorCreating> errorFactory;
 
 @end
 
@@ -69,13 +72,17 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 - (instancetype)init
 {
-  return [self initWithSessionProvider:NSURLSession.sharedSession];
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  return [self initWithSessionProvider:NSURLSession.sharedSession
+                          errorFactory:factory];
 }
 
 - (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+                           errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   if ((self = [super init])) {
     _sessionProvider = sessionProvider;
+    _errorFactory = errorFactory;
   }
   return self;
 }
@@ -116,7 +123,10 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     if (data) {
       handler(@{ @"response" : response, @"data" : data }, nil);
     } else {
-      handler(nil, [FBSDKError unknownErrorWithMessage:@"Invalid network response - missing data"]);
+      NSString *message = @"Invalid network response - missing data";
+      NSError *sdkError = [self.errorFactory unknownErrorWithMessage:message
+                                                            userInfo:nil];
+      handler(nil, sdkError);
     }
   };
 

@@ -16,24 +16,40 @@ class WebViewAppLinkResolverTests: XCTestCase {
   var result: [String: Any]?
   var error: Error?
   let data = "foo".data(using: .utf8)!
-  let provider = TestSessionProvider()
-  lazy var resolver = WebViewAppLinkResolver(sessionProvider: provider)
+  let sessionProvider = TestSessionProvider()
+  let errorFactory = TestErrorFactory()
+  lazy var resolver = WebViewAppLinkResolver(
+    sessionProvider: sessionProvider,
+    errorFactory: errorFactory
+  )
 
   // MARK: - Dependencies
 
-  func testCreatingWithDefaults() {
-    XCTAssertEqual(
-      ObjectIdentifier(WebViewAppLinkResolver.shared.sessionProvider),
-      ObjectIdentifier(URLSession.shared),
+  func testDefaultDependencies() throws {
+    resolver = WebViewAppLinkResolver.shared
+    XCTAssertTrue(
+      resolver.sessionProvider === URLSession.shared,
       "Should use the shared system session by default"
+    )
+
+    let factory = try XCTUnwrap(
+      resolver.errorFactory as? SDKErrorFactory,
+      "Should create an error factory"
+    )
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "Should use the shared error reporter by default"
     )
   }
 
-  func testCreatingWithSession() {
-    XCTAssertEqual(
-      ObjectIdentifier(resolver.sessionProvider),
-      ObjectIdentifier(provider),
+  func testConfiguringDependencies() {
+    XCTAssertTrue(
+      resolver.sessionProvider === sessionProvider,
       "Should be able to create with a session provider"
+    )
+    XCTAssertTrue(
+      resolver.errorFactory === errorFactory,
+      "Should be able to create with an error factory"
     )
   }
 
@@ -41,16 +57,16 @@ class WebViewAppLinkResolverTests: XCTestCase {
 
   func testFollowRedirectsURL() {
     let task = TestSessionDataTask()
-    provider.stubbedDataTask = task
+    sessionProvider.stubbedDataTask = task
     resolver.followRedirects(SampleURLs.valid) { _, _ in }
 
     XCTAssertEqual(
-      provider.capturedRequest?.url,
+      sessionProvider.capturedRequest?.url,
       SampleURLs.valid,
       "Should create a url request with the provided url"
     )
     XCTAssertEqual(
-      provider.capturedRequest?.allHTTPHeaderFields?.contains { key, value in
+      sessionProvider.capturedRequest?.allHTTPHeaderFields?.contains { key, value in
         key == "Prefer-Html-Meta-Tags" && value == "al"
       },
       true,
@@ -69,7 +85,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(nil, nil, SampleError())
+    sessionProvider.capturedCompletion?(nil, nil, SampleError())
 
     XCTAssertNil(
       result,
@@ -81,13 +97,13 @@ class WebViewAppLinkResolverTests: XCTestCase {
     )
   }
 
-  func testFollowRedirectWithHTTPResponseOnly() {
+  func testFollowRedirectWithHTTPResponseOnly() throws {
     resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       nil,
       SampleHTTPURLResponses.validStatusCode,
       nil
@@ -97,12 +113,14 @@ class WebViewAppLinkResolverTests: XCTestCase {
       result,
       "Should not have a result if there is no response data"
     )
+
+    let assertionMessage = "Should call the completion with an error indicating the missing data"
+    let testError = try XCTUnwrap(error as? TestSDKError, assertionMessage)
+    XCTAssertEqual(testError.type, .unknown, assertionMessage)
     XCTAssertEqual(
-      error as NSError?,
-      SDKError.unknownError(
-        withMessage: "Invalid network response - missing data"
-      ) as NSError,
-      "Should call the completion with an error indicating the missing data"
+      testError.message,
+      "Invalid network response - missing data",
+      assertionMessage
     )
   }
 
@@ -112,7 +130,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       data,
       SampleHTTPURLResponses.validStatusCode,
       nil
@@ -129,20 +147,20 @@ class WebViewAppLinkResolverTests: XCTestCase {
   func testFollowRedirectsWithRedirectingHTTPResponseMissingLocationURL() {
     // Just testing the upper and lower bounds
     [300, 399].forEach { code in
-      provider.dataTaskCallCount = 0
+      sessionProvider.dataTaskCallCount = 0
       resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
         self.result = potentialResult
         self.error = potentialError
       }
 
-      provider.capturedCompletion?(
+      sessionProvider.capturedCompletion?(
         data,
         SampleHTTPURLResponses.valid(statusCode: code),
         nil
       )
 
       XCTAssertEqual(
-        provider.dataTaskCallCount,
+        sessionProvider.dataTaskCallCount,
         2,
         "Should create a second data task for the url redirect"
       )
@@ -156,7 +174,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       data,
       SampleHTTPURLResponses.valid(
         statusCode: 300,
@@ -166,12 +184,12 @@ class WebViewAppLinkResolverTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      provider.dataTaskCallCount,
+      sessionProvider.dataTaskCallCount,
       2,
       "Should create a second data task for the url redirect"
     )
     XCTAssertEqual(
-      provider.capturedRequest?.url,
+      sessionProvider.capturedRequest?.url,
       redirectURL,
       "The second request should be to the redirect url"
     )

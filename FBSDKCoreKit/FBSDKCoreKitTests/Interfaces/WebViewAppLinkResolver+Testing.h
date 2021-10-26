@@ -8,6 +8,8 @@
 
 #import "FBSDKWebViewAppLinkResolver.h"
 
+#import "FBSDKErrorCreating.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^ FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> *_Nullable result, NSError *_Nullable error)
@@ -15,9 +17,11 @@ NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
 @interface FBSDKWebViewAppLinkResolver (Testing)
 
-@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic) id<FBSDKErrorCreating> errorFactory;
 
-- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider;
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+                           errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 - (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsBlock)handler;
 - (FBSDKAppLink *)appLinkFromALData:(NSDictionary<NSString *, id> *)appLinkDict
                         destination:(NSURL *)destination;
