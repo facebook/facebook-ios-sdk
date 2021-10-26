@@ -38,6 +38,16 @@ public struct Tournament: Codable {
 
   init(
     identifier: String,
+    config: TournamentConfig
+  ) {
+    self.init(identifier: identifier, title: config.title, payload: config.payload)
+    if let expirationTimeStamp = config.endTime {
+      self.endTime = Date(timeIntervalSince1970: expirationTimeStamp)
+    }
+  }
+
+  init(
+    identifier: String,
     endTime: Date? = nil,
     title: String? = nil,
     payload: String? = nil

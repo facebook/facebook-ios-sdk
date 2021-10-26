@@ -17,6 +17,7 @@ public enum ShareTournamentDialogError: Error {
   case missingUpdateScore
   case unableToCreateDialogUrl
   case unknownBridgeError
+  case errorMessage(String)
   case bridgeError(Error)
 }
 
@@ -24,6 +25,8 @@ public class ShareTournamentDialog: NSObject, URLOpening {
 
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
   weak var delegate: ShareTournamentDialogDelegate?
+  var currentConfig: TournamentConfig?
+  var tournamentToUpdate: Tournament?
 
   init(
     delegate: ShareTournamentDialogDelegate,
@@ -51,6 +54,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
   public func show(score: Int, tournament: Tournament) throws {
+    tournamentToUpdate = tournament
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -83,6 +87,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
   public func show(initialScore: Int, config: TournamentConfig) throws {
+    currentConfig = config
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -107,6 +112,44 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     }
   }
 
+  func isTournamentURL(url: URL) -> Bool {
+    if let scheme = url.scheme, let host = url.host, let appID = Settings.shared.appID {
+      return scheme.hasPrefix("fb\(appID)") && host.elementsEqual("instant_tournament")
+    }
+    return false
+  }
+
+  func parseTournamentURL(url: URL) -> Bool {
+    let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+    guard let queryItems = components?.queryItems else {
+      delegate?.didCancel(dialog: self)
+      return false
+    }
+    let tournamentIDQueryItem = queryItems.filter { item in
+      item.name.elementsEqual("tournament_id")
+    }
+    let errorMessageQueryItem = queryItems.filter { item in
+      item.name.elementsEqual("error_message")
+    }
+    if errorMessageQueryItem.count == 1, let errorMessage = errorMessageQueryItem.first?.value {
+      delegate?.didFail(withError: ShareTournamentDialogError.errorMessage(errorMessage), dialog: self)
+    }
+    guard
+      tournamentIDQueryItem.count == 1,
+      let tournamentID = tournamentIDQueryItem.first?.value
+    else {
+      return false
+    }
+    if let currentConfig = self.currentConfig {
+      let createdTournament = Tournament(identifier: tournamentID, config: currentConfig)
+      delegate?.didComplete(dialog: self, tournament: createdTournament)
+    }
+    if let tournamentToUpdate = tournamentToUpdate, tournamentToUpdate.identifier == tournamentID {
+      delegate?.didComplete(dialog: self, tournament: tournamentToUpdate)
+    }
+    return false
+  }
+
   // MARK: URLOpening
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
@@ -119,7 +162,10 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     sourceApplication: String?,
     annotation: Any?
   ) -> Bool {
-    false
+    guard let url = url else {
+      return false
+    }
+    return parseTournamentURL(url: url)
   }
 
   public func canOpen(
@@ -128,7 +174,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     sourceApplication: String?,
     annotation: Any?
   ) -> Bool {
-    false
+    isTournamentURL(url: url)
   }
 
   public func applicationDidBecomeActive(_ application: UIApplication) {
