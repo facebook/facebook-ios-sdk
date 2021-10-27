@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  Represent a referral code used in the referral process
 */
 NS_SWIFT_NAME(ReferralCode)
+DEPRECATED_MSG_ATTRIBUTE("`FBSDKReferralCode` is deprecated and will be removed in the next major release")
 @interface FBSDKReferralCode : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;

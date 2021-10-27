@@ -10,6 +10,8 @@
 
 #import "FBSDKReferralManagerResult.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKReferralManagerResult
 
 - (instancetype)initWithReferralCodes:(nullable NSArray<FBSDKReferralCode *> *)referralCodes
@@ -24,5 +26,6 @@
 }
 
 @end
+#pragma clang diagnostic pop
 
 #endif

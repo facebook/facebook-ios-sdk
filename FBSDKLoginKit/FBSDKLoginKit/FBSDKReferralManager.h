@@ -29,6 +29,7 @@ NS_SWIFT_NAME(ReferralManagerResultBlock);
  `FBSDKReferralManager` provides methods for starting the referral process.
 */
 NS_SWIFT_NAME(ReferralManager)
+DEPRECATED_MSG_ATTRIBUTE("`FBSDKReferralManager` is deprecated and will be removed in the next major release")
 @interface FBSDKReferralManager : NSObject
 
 /**

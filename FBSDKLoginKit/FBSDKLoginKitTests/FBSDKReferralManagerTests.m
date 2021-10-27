@@ -28,6 +28,9 @@
 static NSString *const _mockAppID = @"mockAppID";
 static NSString *const _mockChallenge = @"mockChallenge";
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSDKReferralManager (Testing)
 
 @property (nonatomic) NSString *expectedChallenge;
@@ -315,3 +318,5 @@ static NSString *const _mockChallenge = @"mockChallenge";
 }
 
 @end
+
+#pragma clange diagnostic pop

@@ -31,6 +31,8 @@ static int const FBClientStateChallengeLength = 20;
 @property (nonatomic) BOOL isPerformingReferral;
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKReferralManager
 
 static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
@@ -237,5 +239,6 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
 }
 
 @end
+#pragma clang diagnostic pop
 
 #endif

@@ -29,6 +29,9 @@ static NSString *const _emptyReferralCode = @"";
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation FBSDKReferralCodeTests
 
 - (void)testCreateValidReferralCodeShouldSucceed
@@ -53,6 +56,7 @@ static NSString *const _emptyReferralCode = @"";
 - (void)assertCreationFailWithString:(NSString *)string
 {
   FBSDKReferralCode *referralCode = [FBSDKReferralCode initWithString:string];
+
   XCTAssertNil(referralCode);
 }
 
@@ -64,3 +68,5 @@ static NSString *const _emptyReferralCode = @"";
 }
 
 @end
+
+#pragma clange diagnostic pop

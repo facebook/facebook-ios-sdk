@@ -56,6 +56,8 @@ static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
   [self logEvent:FBSDKAppEventNameFBReferralStart params:[self _parametersForNewEvent]];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)logReferralEnd:(nullable FBSDKReferralManagerResult *)result error:(nullable NSError *)error
 {
   NSString *resultString = FBSDKReferralManagerLoggerValueEmpty;
@@ -105,6 +107,8 @@ static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
 
   [self logEvent:FBSDKAppEventNameFBReferralEnd params:params];
 }
+
+#pragma clange diagnostic pop
 
 - (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
