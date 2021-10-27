@@ -37,6 +37,7 @@
 @property (nonatomic) TestMacCatalystDeterminator *macCatalystDeterminator;
 @property (nonatomic) TestLogger *logger;
 @property (nonatomic) FBSDKGraphRequestConnection *connection;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(id<FBSDKGraphRequestConnecting> connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(id<FBSDKGraphRequestConnecting> connection, NSError *error);
@@ -70,6 +71,7 @@
   self.eventLogger = [TestEventLogger new];
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
   self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  self.errorFactory = [TestErrorFactory new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                piggybackManagerProvider:self.piggybackManagerProvider
@@ -79,7 +81,8 @@
                                                          operatingSystemVersionComparer:self.processInfo
                                                                 macCatalystDeterminator:self.macCatalystDeterminator
                                                                     accessTokenProvider:TestAccessTokenWallet.class
-                                                                      accessTokenSetter:TestAccessTokenWallet.class];
+                                                                      accessTokenSetter:TestAccessTokenWallet.class
+                                                                           errorFactory:self.errorFactory];
   self.graphRequestConnectionFactory.stubbedConnection = self.connection;
 }
 
@@ -181,6 +184,10 @@
     FBSDKAccessToken.class,
     @"A graph request connection should have the correct access token setter by default"
   );
+  XCTAssertTrue(
+    [(NSObject *)self.connection.errorFactory isKindOfClass:FBSDKErrorFactory.class],
+    @"A graph request connection should have an error factory by default"
+  );
 }
 
 - (void)testCreatingWithCustomDependencies
@@ -239,6 +246,11 @@
     self.connection.accessTokenSetter,
     TestAccessTokenWallet.self,
     @"A graph request connection should persist the access token setter it was created with"
+  );
+  XCTAssertEqualObjects(
+    self.connection.errorFactory,
+    self.errorFactory,
+    @"A graph request connection should persist the error factory it was created with"
   );
 }
 
@@ -687,23 +699,28 @@
 - (void)testStartingConnectionWithUninitializedSDK
 {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
-  NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
-  NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
   self.connection.logger = [self createLogger];
 
+  NSString *expectedMessage = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
   [self.connection addRequest:self.sampleRequest
                    completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                     TestSDKError *testError = (TestSDKError *)error;
+                     XCTAssertEqual(
+                       testError.type,
+                       ErrorTypeUnknown,
+                       @"Starting a graph request before the SDK is initialized should return an unknown-type error"
+                     );
                      XCTAssertEqualObjects(
-                       error,
-                       expectedError,
-                       "Starting a graph request before the SDK is initialized should return an error"
+                       testError.message,
+                       expectedMessage,
+                       @"Starting a graph request before the SDK is initialized should return an error with the appropriate mesage"
                      );
                      XCTAssertEqual(
                        weakSelf.connection.state,
                        kStateCancelled,
-                       "Starting a graph request before the SDK is initialized should update the connection state"
+                       @"Starting a graph request before the SDK is initialized should update the connection state"
                      );
                      completionWasCalled = YES;
                    }];
@@ -711,7 +728,7 @@
 
   XCTAssertEqualObjects(
     TestLogger.capturedLogEntry,
-    msg,
+    expectedMessage,
     "Starting a graph request before the SDK is initialized should log a warning"
   );
   XCTAssertEqual(
@@ -893,9 +910,9 @@
       @"error" : @{ @"error_msg" : @"error_msg" }
     }
   };
-  NSError *error = [self.connection errorFromResult:response request:self.sampleRequest];
+  TestSDKError *error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"error_msg",
     "Should use the 'error_msg' if it's the only message available"
   );
@@ -907,9 +924,9 @@
       }
     }
   };
-  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"error_reason",
     "Should prefer the 'error_reason' to the 'error_msg'"
   );
@@ -923,9 +940,9 @@
       }
     }
   };
-  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"message",
     "Should prefer the 'message' key to other error message keys"
   );
@@ -946,7 +963,7 @@
                    }];
   [self.connection start];
 
-  NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *data = [@"{\"error\": {\"message\": \"Token is broken\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
@@ -1073,7 +1090,8 @@
   [self.connection addRequest:[self requestWithTokenString:accessToken.tokenString]
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
                      XCTAssertNil(result);
-                     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+                     TestSDKError *testError = (TestSDKError *)error;
+                     XCTAssertEqualObjects(@"Token is broken", testError.message);
                      XCTAssertNil(
                        TestAccessTokenWallet.currentAccessToken,
                        "Should clear the current stored access token"
@@ -1109,7 +1127,8 @@
                                                                   tokenString:@"notCurrentToken"];
   [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
-    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    TestSDKError *testError = (TestSDKError *)error;
+    XCTAssertEqualObjects(@"Token is broken", testError.message);
     XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken);
     [expectation fulfill];
   }];
@@ -1139,7 +1158,8 @@
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
   [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
-    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    TestSDKError *testError = (TestSDKError *)error;
+    XCTAssertEqualObjects(@"Token is broken", testError.message);
     XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken);
     [expectation fulfill];
   }];
@@ -1336,7 +1356,8 @@
                                                                                          operatingSystemVersionComparer:self.processInfo
                                                                                                 macCatalystDeterminator:self.macCatalystDeterminator
                                                                                                     accessTokenProvider:TestAccessTokenWallet.class
-                                                                                                      accessTokenSetter:TestAccessTokenWallet.class];
+                                                                                                      accessTokenSetter:TestAccessTokenWallet.class
+                                                                                                           errorFactory:self.errorFactory];
   self.graphRequestConnectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
@@ -1562,7 +1583,7 @@
 
 - (NSData *)missingTokenData
 {
-  return [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  return [@"{\"error\": {\"message\": \"Token is broken\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (NSDictionary<NSString *, id> *)sampleErrorDictionary

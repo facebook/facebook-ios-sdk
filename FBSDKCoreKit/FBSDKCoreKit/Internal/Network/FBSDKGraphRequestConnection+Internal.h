@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
 #import "FBSDKErrorConfigurationProviding.h"
+#import "FBSDKErrorCreating.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
@@ -52,6 +53,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 @property (nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
+@property (nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 + (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;
@@ -65,7 +67,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                 operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                        macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
                            accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                             accessTokenSetter:(Class<FBSDKAccessTokenSetting>)accessTokenSetter;
+                             accessTokenSetter:(Class<FBSDKAccessTokenSetting>)accessTokenSetter
+                                  errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout;
