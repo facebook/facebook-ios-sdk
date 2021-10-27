@@ -8,9 +8,29 @@
 
 #import "FBSDKRandom.h"
 
-#import "FBSDKCrypto.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKDynamicFrameworkLoader.h"
 
 NSString *fb_randomString(NSUInteger numberOfBytes)
 {
-  return [FBSDKCrypto randomString:numberOfBytes];
+  uint8_t *buffer = malloc(numberOfBytes);
+  int result = fbsdkdfl_SecRandomCopyBytes([FBSDKDynamicFrameworkLoader loadkSecRandomDefault], numberOfBytes, buffer);
+  if (result != 0) {
+    free(buffer);
+    return nil;
+  }
+  NSData *randomStringData = [NSData dataWithBytesNoCopy:buffer
+                                                  length:numberOfBytes];
+  if (!randomStringData) {
+    return nil;
+  }
+  NSString *randomString = [FBSDKBase64 encodeData:randomStringData];
+  // FBSDKCryptoBlankData(randomStringData);
+  if (!randomStringData) {
+    return nil;
+  }
+  bzero((void *) [randomStringData bytes], [randomStringData length]);
+
+  return randomString;
 }

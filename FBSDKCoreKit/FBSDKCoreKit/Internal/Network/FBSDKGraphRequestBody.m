@@ -11,10 +11,10 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKConstants.h"
-#import "FBSDKCrypto.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogger+Internal.h"
+#import "FBSDKRandom.h"
 #import "FBSDKSettings.h"
 
 #define kNewline @"\r\n"
@@ -32,7 +32,7 @@
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _stringBoundary = [FBSDKCrypto randomString:32];
+    _stringBoundary = fb_randomString(32);
     _data = [NSMutableData new];
     _json = [NSMutableDictionary dictionary];
     _requiresMultipartDataFormat = NO;
