@@ -36,7 +36,8 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   }
 
   /**
-   Creates a share a dialog that can be used to share a score using a new tournament configuration or an existing tournament
+   Creates a share a dialog that can be used to share a score using a new tournament configuration
+   or an existing tournament
 
    - Parameter delegate: The delegate for the dialog to be invoked in case of error, cancellation or completion
    */
@@ -48,7 +49,8 @@ public class ShareTournamentDialog: NSObject, URLOpening {
 
   /**
    Attempts to show the share dialog to share an existing tournament
-   - Parameter score: A score to share in the tournament could be a numeric score or time interval dependent on the given tournament score type
+   - Parameter score: A score to share in the tournament could be a numeric score or time interval
+      dependent on the given tournament score type
    - Parameter tournament: The tournament to share and update with the given score
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
@@ -85,7 +87,8 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   /**
    Attempts to show the share dialog to share a newly created tournnament
 
-   - Parameter initialScore: An initial score to share, could be a numeric score or time interval dependent on the tournament configuration
+   - Parameter initialScore: An initial score to share, could be a numeric score or time interval
+      dependent on the tournament configuration
    - Parameter config: The tournament configuration used to create a new tournament
    - throws  Will throw if an error occurs when attempting to show the dialog
    */

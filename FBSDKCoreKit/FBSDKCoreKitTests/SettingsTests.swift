@@ -1687,14 +1687,6 @@ class SettingsTests: XCTestCase {
     XCTAssertEqual(mockGraphAPIVersion, settings.graphAPIVersion)
   }
 
-  func testSetNilGraphAPIVersion() {
-    Settings.graphAPIVersion = nil
-    XCTAssertEqual(
-      FBSDK_DEFAULT_GRAPH_API_VERSION,
-      Settings.shared.graphAPIVersion
-    )
-  }
-
   func testIsDataProcessingRestricted() {
     settings.setDataProcessingOptions(["LDU"])
     XCTAssertTrue(settings.isDataProcessingRestricted)
