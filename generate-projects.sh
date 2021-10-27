@@ -29,11 +29,6 @@ if [ "$VERSION" != "Version: $EXPECTED_XCODEGEN_VERSION" ]; then
     exit
 fi
 
-cd TestTools || exit
-xcodegen generate
-
-cd ..
-
 cd FBSDKCoreKit_Basics || exit
 xcodegen generate
 
@@ -45,6 +40,11 @@ xcodegen generate
 cd ..
 
 cd FBSDKCoreKit || exit
+xcodegen generate
+
+cd ..
+
+cd TestTools || exit
 xcodegen generate
 
 cd ..
