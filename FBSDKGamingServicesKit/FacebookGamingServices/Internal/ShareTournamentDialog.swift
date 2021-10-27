@@ -12,9 +12,7 @@ import FBSDKCoreKit
 
 public enum ShareTournamentDialogError: Error {
   case invalidAccessToken
-  case tournamentMissingIdentifier
-  case tournamentMissingScore
-  case missingUpdateScore
+  case invalidAuthToken
   case unableToCreateDialogUrl
   case unknownBridgeError
   case errorMessage(String)
@@ -23,6 +21,7 @@ public enum ShareTournamentDialogError: Error {
 
 public class ShareTournamentDialog: NSObject, URLOpening {
 
+  let gamingGraphDomain = "gaming"
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
   weak var delegate: ShareTournamentDialogDelegate?
   var currentConfig: TournamentConfig?
@@ -58,6 +57,9 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain else {
+      throw ShareTournamentDialogError.invalidAuthToken
+    }
     guard
       let url = ShareTournamentDialogURLBuilder
         .update(tournament)
@@ -65,6 +67,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     else {
       throw ShareTournamentDialogError.unableToCreateDialogUrl
     }
+
     bridgeURLOpener.open(url, sender: self) { [weak self] success, error in
       guard let strongSelf = self else {
         return
@@ -91,6 +94,9 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain else {
+      throw ShareTournamentDialogError.invalidAuthToken
+    }
     guard
       let url = ShareTournamentDialogURLBuilder
         .create(config)
@@ -98,6 +104,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     else {
       throw ShareTournamentDialogError.unableToCreateDialogUrl
     }
+
     bridgeURLOpener.open(url, sender: self) { [weak self] success, error in
       guard let strongSelf = self else {
         return

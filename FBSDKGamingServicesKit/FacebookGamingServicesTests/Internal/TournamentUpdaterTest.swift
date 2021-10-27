@@ -23,6 +23,20 @@ class TournamentUpdaterTest: XCTestCase {
   lazy var updater = TournamentUpdater(graphRequestFactory: factory)
   lazy var tournament = Tournament(identifier: "12345", endTime: Date(), title: "test", payload: nil)
 
+  override func setUp() {
+    super.setUp()
+
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
+    AccessToken.current = SampleAccessTokens.validToken
+  }
+
+  override func tearDown() {
+    AuthenticationToken.current = nil
+    AccessToken.current = nil
+
+    super.tearDown()
+  }
+
   func testDependencies() {
     XCTAssertTrue(
       TournamentUpdater().graphRequestFactory is GraphRequestFactory,
@@ -60,6 +74,24 @@ class TournamentUpdaterTest: XCTestCase {
       ["score": score],
       "Should create a request with the expected parameters"
     )
+  }
+
+  func testUpdateWithoutGamingDomainAuthToken() throws {
+    var completionWasInvoked = false
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
+    updater.update(tournament: tournament, score: score) { result in
+      switch result {
+      case .failure(let error):
+        guard case .invalidAuthToken = error else {
+          return XCTFail("Should fail with invalid auth token error but instead failed with: \(error)")
+        }
+      case .success:
+        XCTFail("Should not succeed")
+      }
+      completionWasInvoked = true
+    }
+
+    XCTAssert(completionWasInvoked)
   }
 
   func testHandlingUpdateError() throws {

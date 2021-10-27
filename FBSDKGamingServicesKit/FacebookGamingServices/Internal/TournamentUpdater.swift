@@ -11,6 +11,8 @@ import FBSDKCoreKit
 public enum TournamentUpdaterError: Error {
   case server(Error)
   case decoding
+  case invalidAuthToken
+  case invalidAccessToken
 }
 
 /**
@@ -19,6 +21,7 @@ public enum TournamentUpdaterError: Error {
 public class TournamentUpdater {
 
   enum GraphRequest {
+    static let gamingGraphDomain = "gaming"
     static let scoreParameterKey = "score"
 
     static func path(identifier: String) -> String {
@@ -52,6 +55,10 @@ public class TournamentUpdater {
     score: Int,
     completionHandler: @escaping (Result<Bool, TournamentUpdaterError>) -> Void
   ) {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == GraphRequest.gamingGraphDomain else {
+      return completionHandler(.failure(TournamentUpdaterError.invalidAuthToken))
+    }
+
     let parameters = [GraphRequest.scoreParameterKey: score]
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: GraphRequest.path(identifier: tournament.identifier),

@@ -42,10 +42,12 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     self.dialogDidCancel = false
     self.dialogError = nil
     AccessToken.current = SampleAccessTokens.validToken
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
   }
 
   override func tearDown() {
     AccessToken.current = nil
+    AuthenticationToken.current = nil
 
     super.tearDown()
   }
@@ -60,13 +62,34 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   func testShareDialogTournamentCreateWithInvalidAccessToken() throws {
     AccessToken.current = nil
     let dialog = try XCTUnwrap(shareDialog)
+    var caughtInvalidAccessToken = false
     do {
       try dialog.show(initialScore: 120, config: tournamentConfig)
     } catch ShareTournamentDialogError.invalidAccessToken {
+      caughtInvalidAccessToken = true
     } catch {
       return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
     }
 
+    XCTAssertTrue(caughtInvalidAccessToken, "Should catch error ShareTournamentDialogError.invalidAccessToken")
+    XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
+    XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
+    XCTAssertNil(dialogError, "Dialog should not call delegate with error")
+  }
+
+  func testShareDialogTournamentCreateWithInvalidAuthToken() throws {
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
+    var caughtInvalidAuthToken = false
+    let dialog = try XCTUnwrap(shareDialog)
+    do {
+      try dialog.show(initialScore: 120, config: tournamentConfig)
+    } catch ShareTournamentDialogError.invalidAuthToken {
+      caughtInvalidAuthToken = true
+    } catch {
+      return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
+    }
+
+    XCTAssertTrue(caughtInvalidAuthToken, "Should catch error ShareTournamentDialogError.invalidAuthToken")
     XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
     XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
     XCTAssertNil(dialogError, "Dialog should not call delegate with error")
@@ -107,18 +130,18 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   // MARK: - Share Dialog Updating Tournament
 
-  func testUpdateShareDialogTournamentWithInvalidScore() throws {
-    let dialog = ShareTournamentDialog(delegate: self, urlOpener: bridgeOpener)
+  func testUpdateShareDialogTournamentWithInvalidAuthToken() throws {
+    AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
+    var caughtInvalidAuthToken = false
     do {
-      try dialog.show(score: 1, tournament: validTournamentForUpdate)
-    } catch TournamentDecodingError.invalidScoreType {
-      // should catch error TournamentDecodingError.invalidScoreType
+      try shareDialog.show(score: 120, tournament: validTournamentForUpdate)
+    } catch ShareTournamentDialogError.invalidAuthToken {
+      caughtInvalidAuthToken = true
     } catch {
-      return XCTFail(
-        "Should not throw an error other than invalid score type error, error received: \(error)"
-      )
+      return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
     }
 
+    XCTAssertTrue(caughtInvalidAuthToken, "Should catch error ShareTournamentDialogError.invalidAuthToken")
     XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
     XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
     XCTAssertNil(dialogError, "Dialog should not call delegate with error")
@@ -126,14 +149,16 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   func testShowingUpdateDialogWithInvalidAccessToken() throws {
     AccessToken.current = nil
+    var caughtInvalidAccessToken = false
     do {
       try shareDialog.show(score: 120, tournament: validTournamentForUpdate)
     } catch ShareTournamentDialogError.invalidAccessToken {
-      // should catch error ShareTournamentDialogError.invalidAccessToken
+      caughtInvalidAccessToken = true
     } catch {
       return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
     }
 
+    XCTAssertTrue(caughtInvalidAccessToken, "Should catch error ShareTournamentDialogError.invalidAccessToken")
     XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
     XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
     XCTAssertNil(dialogError, "Dialog should not call delegate with error")
