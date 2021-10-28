@@ -7,7 +7,9 @@ excluded:
 
 cyclomatic_complexity: 11
 file_header:
-  required_string: "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
+  required_string:
+    "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is
+    licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
 
 identifier_name:
   excluded:
@@ -16,7 +18,10 @@ indentation_width:
   indentation_width: 2
   include_comments: false
 large_tuple: 3
-line_length: 120
+line_length:
+  warning: 120
+  ignores_comments: true
+  ignores_urls: true
 nesting:
   type_level: 2
 private_outlet:

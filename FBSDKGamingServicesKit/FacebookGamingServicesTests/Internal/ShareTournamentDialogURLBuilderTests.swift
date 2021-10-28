@@ -51,7 +51,7 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
   func testCreateURL() throws {
     let expectURLComponents = try XCTUnwrap(
       URLComponents(
-        string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627&tournament_title=Test&score_format=NUMERIC&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello"// swiftlint:disable:this line_length
+        string: "https://fb.gg/me/instant_tournament/12345?score=1000&end_time=1632506627&tournament_title=Test&score_format=NUMERIC&sort_order=HIGHER_IS_BETTER&tournament_payload=Hello"
       )
     )
 

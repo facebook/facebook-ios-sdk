@@ -35,7 +35,6 @@ public class ContextDialogPresenter {
     self.switchContextDialogFactory = switchContextDialogFactory
     self.chooseContextDialogFactory = chooseContextDialogFactory
   }
-  // swiftlint:enable line_length
 
   /**
    Convenience method to build up and show an instant games create context dialog with content and delegate.

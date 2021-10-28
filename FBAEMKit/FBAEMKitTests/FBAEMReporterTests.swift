@@ -54,7 +54,7 @@ class FBAEMReporterTests: XCTestCase {
     hasSKAN: false
   )
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
-  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this line_length force_unwrapping
+  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
 
   override class func setUp() {
     super.setUp()
@@ -108,7 +108,7 @@ class FBAEMReporterTests: XCTestCase {
     url = URL(string: "fb123://test.com")
     XCTAssertNil(AEMReporter.parseURL(url))
 
-    url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D") // swiftlint:disable:this line_length
+    url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D")
     var invocation = AEMReporter.parseURL(url)
     XCTAssertEqual(invocation?.acsToken, "test_token_1234567")
     XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
@@ -227,7 +227,7 @@ class FBAEMReporterTests: XCTestCase {
 
   func testHandleURL() throws {
     let url = try XCTUnwrap(
-      URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D"), // swiftlint:disable:this line_length
+      URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D"),
       "Should be able to create URL with valid deeplink"
     )
     AEMReporter.handle(url)
@@ -239,7 +239,7 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testHandleDebuggingURL() {
-    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22debugging_token%22%2C+%22campaign_ids%22%3A+%2210%22%2C+%22test_deeplink%22%3A+1%7D") // swiftlint:disable:this line_length
+    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22debugging_token%22%2C+%22campaign_ids%22%3A+%2210%22%2C+%22test_deeplink%22%3A+1%7D")
     else { return XCTFail("Unwrapping Error") }
     AEMReporter.invocations = []
     AEMReporter.handle(url)

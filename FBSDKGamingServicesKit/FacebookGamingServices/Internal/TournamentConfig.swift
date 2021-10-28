@@ -41,17 +41,15 @@ public struct TournamentConfig {
    */
   public var image: UIImage?
 
-  // swiftlint:disable line_length
   /// Creates a new tournament configuration with the given parameters. Passing the created tournament to the `ShareTournamentDialog.show(score:tournamentConfig:)` will share and create the tournament server side.
   ///
   /// - Parameter title: Text title for the tournament
-  /// - Parameter endTime:  A date representing the end time for the tournament. if not specified, the default is a week after creation date.
-  /// - Parameter scoreType:  A score tyoe for the formatting of the scores in the tournament leaderboard. See enum `TournamentScoreType`, if not specified, the default is `TournamentScoreType.numeric`.
+  /// - Parameter endTime: A date representing the end time for the tournament. if not specified, the default is a week after creation date.
+  /// - Parameter scoreType: A score tyoe for the formatting of the scores in the tournament leaderboard. See enum `TournamentScoreType`, if not specified, the default is `TournamentScoreType.numeric`.
   /// - Parameter sortOrder: A sort order for the ordering of which score is best in the tournament. See enum `TournamentSortOrder`, if not specified, the default is `TournamentSortOrder.descending`.
   /// - Parameter image: An image that will be associated with the tournament and included in any posts.
   /// - Parameter payload: Optional data to attach to the update. All game sessions launched from the update will be able to access this blob. Must be less than or equal to 1000 characters when stringified.
   ///
-  // swiftlint:enable line_length
   public init(
     title: String? = nil,
     endTime: Date? = nil,
