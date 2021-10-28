@@ -70,7 +70,6 @@
       if (request.tokenString && [request.tokenString isEqualToString:self.accessToken]) {
         self.recoveryAttempter = error.recoveryAttempter;
         [self.recoveryAttempter attemptRecoveryFromError:error
-                                             optionIndex:0
                                        completionHandler:^(BOOL didRecover) {
                                          [delegate processorDidAttemptRecovery:self didRecover:didRecover error:error];
                                          self->_delegate = nil;
