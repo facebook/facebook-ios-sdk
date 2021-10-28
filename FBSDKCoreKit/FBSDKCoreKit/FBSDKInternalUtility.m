@@ -8,13 +8,14 @@
 
 #import "FBSDKInternalUtility.h"
 
+#import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <mach-o/dyld.h>
 #import <sys/time.h>
 
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKAuthenticationToken.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKInternalUtilityProtocol.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
@@ -331,10 +332,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     }
     if (!queryString) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"queryParameters"
-                                                       value:queryParameters
-                                                     message:nil
-                                             underlyingError:queryStringError];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                                          name:@"queryParameters"
+                                                         value:queryParameters
+                                                       message:nil
+                                               underlyingError:queryStringError];
       }
       return nil;
     }

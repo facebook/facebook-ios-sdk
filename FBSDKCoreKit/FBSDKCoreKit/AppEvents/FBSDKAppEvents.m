@@ -39,7 +39,6 @@
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKEnableable.h"
-#import "FBSDKError+Internal.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"

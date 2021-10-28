@@ -13,7 +13,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKConstants.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestPiggybackManager.h"

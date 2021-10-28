@@ -14,7 +14,7 @@
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKDialogConfiguration.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"

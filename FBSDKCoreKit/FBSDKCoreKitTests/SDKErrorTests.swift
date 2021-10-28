@@ -141,30 +141,6 @@ class SDKErrorTests: XCTestCase {
     )
   }
 
-  func testErrorWithCodeUserInfoMessageAndUnderlyingError() {
-    let error = SDKError.error(
-      withCode: code,
-      userInfo: userInfo,
-      message: name,
-      underlyingError: underlyingErrorUsingProvidedUserInfo
-    ) as NSError
-
-    XCTAssertEqual(errorReporter.capturedErrorCode, code, Assertions.code)
-    XCTAssertEqual(errorReporter.capturedErrorDomain, defaultDomain, Assertions.domain)
-    XCTAssertEqual(errorReporter.capturedMessage, name, Assertions.message)
-
-    XCTAssertEqual(
-      error.userInfo[ErrorDeveloperMessageKey] as? String,
-      name,
-      "The returned error should contain the message from the SDK error"
-    )
-    XCTAssertEqual(
-      error.userInfo["NSUnderlyingError"] as? NSError,
-      underlyingErrorUsingProvidedUserInfo,
-      "The returned error should include the underlying error in its user info"
-    )
-  }
-
   func testInvalidArgumentErrorWithNameValueMessage() {
     let error = SDKError.invalidArgumentError(withName: "foo", value: "bar", message: name) as NSError
 
@@ -186,25 +162,6 @@ class SDKErrorTests: XCTestCase {
       error.userInfo[ErrorArgumentValueKey] as? String,
       "bar",
       "The returned error should contain the invalid argument value"
-    )
-  }
-
-  func testRequiredArgumentErrorWithName() {
-    let error = SDKError.requiredArgumentError(withName: "foo", message: name) as NSError
-
-    XCTAssertEqual(errorReporter.capturedErrorCode, invalidArgumentErrorCode, Assertions.code)
-    XCTAssertEqual(errorReporter.capturedErrorDomain, defaultDomain, Assertions.domain)
-    XCTAssertEqual(errorReporter.capturedMessage, name, Assertions.message)
-
-    XCTAssertEqual(
-      error.userInfo[ErrorDeveloperMessageKey] as? String,
-      name,
-      "The returned error should contain the message from the SDK error"
-    )
-    XCTAssertEqual(
-      error.userInfo[ErrorArgumentNameKey] as? String,
-      "foo",
-      "The returned error should contain the invalid argument name"
     )
   }
 

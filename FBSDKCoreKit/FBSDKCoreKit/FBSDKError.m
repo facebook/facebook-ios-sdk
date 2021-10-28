@@ -68,7 +68,10 @@ static id<FBSDKErrorReporting> _errorReporter;
                    message:(nullable NSString *)message
            underlyingError:(nullable NSError *)underlyingError
 {
-  return [self errorWithCode:code userInfo:@{} message:message underlyingError:underlyingError];
+  return [self errorWithDomain:FBSDKErrorDomain
+                          code:code
+                       message:message
+               underlyingError:underlyingError];
 }
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain
@@ -77,18 +80,6 @@ static id<FBSDKErrorReporting> _errorReporter;
              underlyingError:(nullable NSError *)underlyingError
 {
   return [self errorWithDomain:domain code:code userInfo:@{} message:message underlyingError:underlyingError];
-}
-
-+ (NSError *)errorWithCode:(NSInteger)code
-                  userInfo:(NSDictionary<NSErrorUserInfoKey, id> *)userInfo
-                   message:(NSString *)message
-           underlyingError:(NSError *)underlyingError
-{
-  return [self errorWithDomain:FBSDKErrorDomain
-                          code:code
-                      userInfo:userInfo
-                       message:message
-               underlyingError:underlyingError];
 }
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain
@@ -111,7 +102,10 @@ static id<FBSDKErrorReporting> _errorReporter;
                                     value:(nullable id)value
                                   message:(nullable NSString *)message
 {
-  return [self invalidArgumentErrorWithName:name value:value message:message underlyingError:nil];
+  return [self invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                         name:name
+                                        value:value
+                                      message:message];
 }
 
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
@@ -120,18 +114,6 @@ static id<FBSDKErrorReporting> _errorReporter;
                                     message:(nullable NSString *)message
 {
   return [self invalidArgumentErrorWithDomain:domain name:name value:value message:message underlyingError:nil];
-}
-
-+ (NSError *)invalidArgumentErrorWithName:(NSString *)name
-                                    value:(id)value
-                                  message:(NSString *)message
-                          underlyingError:(NSError *)underlyingError
-{
-  return [self invalidArgumentErrorWithDomain:FBSDKErrorDomain
-                                         name:name
-                                        value:value
-                                      message:message
-                              underlyingError:underlyingError];
 }
 
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
@@ -150,11 +132,6 @@ static id<FBSDKErrorReporting> _errorReporter;
 
 // MARK: - Required Argument Errors
 
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(NSString *)message
-{
-  return [self requiredArgumentErrorWithName:name message:message underlyingError:nil];
-}
-
 + (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
                                         name:(NSString *)name
                                      message:(nullable NSString *)message
@@ -164,16 +141,6 @@ static id<FBSDKErrorReporting> _errorReporter;
                                              name:name
                                           message:message
                                   underlyingError:nil];
-}
-
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name
-                                   message:(NSString *)message
-                           underlyingError:(NSError *)underlyingError
-{
-  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:self.errorReporter];
-  return [factory requiredArgumentErrorWithName:name
-                                        message:message
-                                underlyingError:underlyingError];
 }
 
 // MARK: - Unknown Errors

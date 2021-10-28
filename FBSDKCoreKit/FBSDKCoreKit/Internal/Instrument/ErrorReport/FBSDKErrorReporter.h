@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKError+Internal.h"
 #import "FBSDKErrorReporting.h"
 
 @protocol FBSDKGraphRequestFactory;

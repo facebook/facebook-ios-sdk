@@ -12,9 +12,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKError+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKInternalUtility+Internal.h"
 
 #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY @"action_id"
@@ -85,10 +86,11 @@
   NSDictionary<id, id> *bridgeParameters = [FBSDKBasicUtility objectForJSONString:bridgeParametersJSON error:&error];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
-                                                     value:bridgeParametersJSON
-                                                   message:nil
-                                           underlyingError:error];
+      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                                        name:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
+                                                       value:bridgeParametersJSON
+                                                     message:nil
+                                             underlyingError:error];
     }
     return nil;
   }

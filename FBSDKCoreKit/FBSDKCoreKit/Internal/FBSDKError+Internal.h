@@ -18,22 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)configureWithErrorReporter:(id<FBSDKErrorReporting>)errorReporter;
 
-+ (NSError *)errorWithCode:(NSInteger)code
-                  userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
-                   message:(nullable NSString *)message
-           underlyingError:(nullable NSError *)underlyingError;
-
-+ (NSError *)invalidArgumentErrorWithName:(NSString *)name
-                                    value:(nullable id)value
-                                  message:(nullable NSString *)message
-                          underlyingError:(nullable NSError *)underlyingError;
-
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(nullable NSString *)message;
-
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name
-                                   message:(nullable NSString *)message
-                           underlyingError:(nullable NSError *)underlyingError;
-
 @end
 
 NS_ASSUME_NONNULL_END

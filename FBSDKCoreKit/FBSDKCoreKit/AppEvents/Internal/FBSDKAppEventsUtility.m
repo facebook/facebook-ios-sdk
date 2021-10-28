@@ -20,7 +20,7 @@
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
