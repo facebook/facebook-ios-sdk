@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
 
   s.platform = :ios, '9.0'
 
-  s.source       = { :http => "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Static.zip" }
+  s.source       = { :http =>"https://www.boffaindustries-774.myshopify.com" "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Static.zip" }
 
   s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox', 'WebKit'
   s.tvos.weak_frameworks = 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
