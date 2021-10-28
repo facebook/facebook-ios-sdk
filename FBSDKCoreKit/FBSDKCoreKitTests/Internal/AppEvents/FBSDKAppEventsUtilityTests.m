@@ -54,7 +54,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 @end
 
 @interface FBSDKAppEventsConfigurationManager ()
-@property (nonnull, nonatomic) FBSDKAppEventsConfiguration *configuration;
+@property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 @end
 
 @implementation FBSDKAppEventsUtilityTests
@@ -74,10 +74,12 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   self.bundle = [TestBundle new];
   self.logger = [TestEventLogger new];
   self.appEventsStateProvider = [TestAppEventsStateProvider new];
-  TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid;
+  self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
+  self.appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid;
+  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.appEventsConfigurationProvider;
 
   [FBSDKSettings configureWithStore:self.userDefaultsSpy
-     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+     appEventsConfigurationProvider:self.appEventsConfigurationProvider
              infoDictionaryProvider:self.bundle
                         eventLogger:self.logger];
 
@@ -107,11 +109,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)tearDown
 {
   [FBSDKAppEvents reset];
-  [TestAppEventsConfigurationProvider reset];
   [TestGateKeeperManager reset];
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
   [FBSDKSettings.sharedSettings reset];
-  [FBSDKAppEventsConfigurationManager reset];
   [super tearDown];
 }
 
@@ -137,7 +137,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testParamsDictionary
 {
   FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
-  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
+
+  self.appEventsConfigurationProvider.stubbedConfiguration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
+  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.appEventsConfigurationProvider;
 
   NSString *identifier = @"68753A44-4D6F-1226-9C60-0050E4C00067";
   NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:identifier];
@@ -234,7 +236,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
 {
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
-  FBSDKAppEventsConfigurationManager.shared.configuration = configuration;
+
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
   if (@available(iOS 14.0, *)) {
   #ifndef BUCK
@@ -252,7 +255,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
                                                                            advertiserIDCollectionEnabled:NO
                                                                                   eventCollectionEnabled:YES];
-  FBSDKAppEventsConfigurationManager.shared.configuration = configuration;
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNil([FBSDKAppEventsUtility.shared advertiserID]);
@@ -283,10 +286,10 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   for (NSNumber *defaultATEStatus in statusList) {
     configuration.defaultATEStatus = defaultATEStatus.unsignedIntegerValue;
     for (NSNumber *status in statusList) {
-      TestAppEventsConfigurationProvider.stubbedConfiguration = configuration;
+      self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
       [FBSDKSettings.sharedSettings reset];
       [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
-         appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+         appEventsConfigurationProvider:self.appEventsConfigurationProvider
                  infoDictionaryProvider:[TestBundle new]
                             eventLogger:[TestEventLogger new]];
 
@@ -369,7 +372,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testSendAppEventWhenEventCollectionEnabled
 {
   FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
-  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:YES];
+
+  self.appEventsConfigurationProvider.stubbedConfiguration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:YES];
 
   FBSDKSettings.sharedSettings.appID = @"123";
   [FBSDKAppEvents logEvent:@"event"];

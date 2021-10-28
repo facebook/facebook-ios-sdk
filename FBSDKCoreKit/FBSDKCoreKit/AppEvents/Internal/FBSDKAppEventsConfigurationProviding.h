@@ -18,9 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsConfigurationProviding)
 @protocol FBSDKAppEventsConfigurationProviding
 
-+ (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration;
+@property (nonatomic, readonly) id<FBSDKAppEventsConfiguration> cachedAppEventsConfiguration;
 
-+ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationProvidingBlock)block;
 - (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationProvidingBlock)block;
 
 @end

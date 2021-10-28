@@ -10,10 +10,12 @@
 
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
 
+#import "FBSDKAppEventsConfigurationProtocol.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsConfiguration)
-@interface FBSDKAppEventsConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface FBSDKAppEventsConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding, FBSDKAppEventsConfiguration>
 
 @property (nonatomic, readonly, assign) FBSDKAdvertisingTrackingStatus defaultATEStatus;
 @property (nonatomic, readonly, assign) BOOL advertiserIDCollectionEnabled;

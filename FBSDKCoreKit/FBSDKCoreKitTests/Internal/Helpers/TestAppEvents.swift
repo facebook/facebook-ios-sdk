@@ -39,7 +39,7 @@ class TestAppEvents: TestEventLogger,
   }
 
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
-  var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
+  var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding?
   var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
   var capturedConfigureGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedConfigureFeatureChecker: FeatureChecking?
@@ -63,7 +63,7 @@ class TestAppEvents: TestEventLogger,
   // swiftlint:disable:next function_parameter_count
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
-    appEventsConfigurationProvider: AppEventsConfigurationProviding.Type,
+    appEventsConfigurationProvider: AppEventsConfigurationProviding,
     serverConfigurationProvider: ServerConfigurationProviding,
     graphRequestFactory: GraphRequestFactoryProtocol,
     featureChecker: FeatureChecking,

@@ -107,14 +107,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testParsingResponses() {
     for _ in 0..<100 {
-      AppEventsConfigurationManager._processResponse(RawAppEventsConfigurationResponseFixtures.random, error: nil)
+      AppEventsConfigurationManager.shared._processResponse(
+        RawAppEventsConfigurationResponseFixtures.random,
+        error: nil
+      )
     }
   }
 
   // MARK: - Loading Configuration
 
   func testLoadConfigurationRequest() {
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       graphRequestFactory.capturedGraphPath,
@@ -144,7 +147,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   func testLoadingConfigurationWithoutAppID() {
     settings.appID = nil
     var didInvokeCompletion = false
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       didInvokeCompletion = true
     }
 
@@ -160,17 +163,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testEarlyExitFromLoadingInvokesAndClearsPendingCompletions() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
     settings.appID = nil
     var thirdCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       thirdCompletionCallCount += 1
     }
 
@@ -185,11 +188,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompletingFetchInvokesPendingCompletionHandlers() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
@@ -201,11 +204,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompletingFetchClearsPendingCompletionHandlers() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
@@ -213,15 +216,15 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
     // Fetch without app id to early exit and invoke any pending completions
     settings.appID = nil
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
   }
 
   func testLoadingWhileLoadingInProgress() {
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -235,7 +238,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     // isLoading lock is reset.
     AppEventsConfigurationManager.shared.hasRequeryFinishedForAppStart = false
 
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -245,11 +248,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   }
 
   func testLoadingWithFinishedRequeryAndValidTimestamp() {
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
     connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
 
     var completionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       completionCallCount += 1
     }
 
@@ -264,7 +267,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.shared.hasRequeryFinishedForAppStart = true
     AppEventsConfigurationManager.shared.timestamp = .distantPast
 
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -275,7 +278,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompleteLoadingWithError() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     connection.capturedCompletion?(nil, nil, SampleError())
@@ -297,17 +300,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompleteLoadingWithoutAppIDClearsExistingCompletions() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.loadAppEventsConfiguration {
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
     // Fetch without app id to early exit and invoke any pending completions
     settings.appID = nil
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
@@ -315,11 +318,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testUnarchivesStoredCaptureEvents() {
     // Validates unarchival from store
-    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
 
     // Confirm default state
-    XCTAssertTrue(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled)
-    XCTAssertFalse(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled)
+    XCTAssertTrue(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
+    XCTAssertFalse(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.eventCollectionEnabled)
     // Capture inverted configurations
     connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
     // Copy store state to avoid meaningless test
@@ -341,7 +344,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       graphRequestConnectionFactory: graphRequestConnectionFactory
     )
     // Confirm configuration is unarchived from store instead of set again from defaults
-    XCTAssertFalse(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled)
-    XCTAssertTrue(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled)
+    XCTAssertFalse(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
+    XCTAssertTrue(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.eventCollectionEnabled)
   }
 }

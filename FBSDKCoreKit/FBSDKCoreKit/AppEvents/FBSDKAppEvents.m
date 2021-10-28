@@ -105,7 +105,7 @@ static FBSDKAppEvents *_shared = nil;
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
-static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
+static id<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
 static id<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestFactory> g_graphRequestFactory;
 static id<FBSDKFeatureChecking> g_featureChecker;
@@ -761,7 +761,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #pragma mark - Internal Methods
 
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-           appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+           appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)provider
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
@@ -818,7 +818,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 }
 
-+ (void)setAppEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
++ (void)setAppEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
 {
   if (g_appEventsConfigurationProvider != provider) {
     g_appEventsConfigurationProvider = provider;
@@ -1676,7 +1676,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   return g_serverConfigurationProvider;
 }
 
-+ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
++ (id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
 {
   return g_appEventsConfigurationProvider;
 }

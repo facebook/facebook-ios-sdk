@@ -10,6 +10,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
@@ -26,7 +27,7 @@ static const NSTimeInterval kTimeout = 4.0;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonnull, nonatomic) FBSDKAppEventsConfiguration *configuration;
+@property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
@@ -90,19 +91,9 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 #pragma clang diagnostic pop
 
-+ (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration
-{
-  return self.shared.cachedAppEventsConfiguration;
-}
-
-- (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration
+- (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration
 {
   return self.configuration;
-}
-
-+ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block
-{
-  [self.shared loadAppEventsConfigurationWithBlock:block];
 }
 
 - (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block
@@ -136,12 +127,6 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)_processResponse:(id)response
-                   error:(NSError *)error
-{
-  [self.shared _processResponse:response error:error];
-}
-
 - (void)_processResponse:(id)response
                    error:(NSError *)error
 {
@@ -178,11 +163,6 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 #if DEBUG && FBTEST
 
 + (void)reset
-{
-  [self.shared reset];
-}
-
-- (void)reset
 {
   // Reset the nonce so that a new instance will be created.
   if (sharedConfigurationManagerNonce) {

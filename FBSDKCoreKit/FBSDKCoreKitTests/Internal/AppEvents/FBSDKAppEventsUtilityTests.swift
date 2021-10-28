@@ -10,6 +10,24 @@ import Foundation
 
 extension FBSDKAppEventsUtilityTests {
 
+  func testDefaultDependencies() {
+    AppEventsUtility.reset()
+    XCTAssertNil(
+      AppEventsUtility.shared.appEventsConfigurationProvider,
+      "Should not have an app events configuration provider by default"
+    )
+  }
+
+  func testCustomDependencies() {
+    let provider = TestAppEventsConfigurationProvider()
+    AppEventsUtility.shared.appEventsConfigurationProvider = provider
+
+    XCTAssertTrue(
+      AppEventsUtility.shared.appEventsConfigurationProvider === provider,
+      "Should be able to set a custom app events configuration provider"
+    )
+  }
+
   func testIsSensitiveUserData() {
     var text = "test@sample.com"
     XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))

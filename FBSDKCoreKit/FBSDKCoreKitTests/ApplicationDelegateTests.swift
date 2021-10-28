@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ApplicationDelegateTests: XCTestCase {
+class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   var center = TestNotificationCenter()
   var featureChecker = TestFeatureManager()
@@ -488,6 +488,16 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       BridgeAPIRequest.settings === Settings.shared,
       "Should configure with the expected settings"
+    )
+  }
+
+  func testInitializingSDKConfiguresAppEventsUtility() {
+    AppEventsUtility.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AppEventsUtility.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+      "Should configure with the expected app events configuration provider"
     )
   }
 

@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class TestAppEventsStateProvider;
+@class TestAppEventsConfigurationProvider;
 @class TestBundle;
 @class TestEventLogger;
 @class UserDefaultsSpy;
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) TestBundle *bundle;
 @property (nonatomic) TestEventLogger *logger;
 @property (nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
+@property (nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
 
 @end
 

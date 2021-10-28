@@ -11,6 +11,7 @@
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,6 +28,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
 @property (class, nonatomic, readonly, assign) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, readonly, assign) BOOL isDebugBuild;
+@property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
@@ -40,6 +42,10 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (BOOL)isSensitiveUserData:(NSString *)text;
 + (BOOL)isStandardEvent:(nullable NSString *)event;
 + (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
+
+#if DEBUG && FBTEST
++ (void)reset;
+#endif
 
 @end
 

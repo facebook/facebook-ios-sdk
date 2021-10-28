@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
 
-+ (void)_processResponse:(id)response error:(nullable NSError *)error;
+- (void)_processResponse:(id)response error:(nullable NSError *)error;
 + (void)reset;
 
 @end

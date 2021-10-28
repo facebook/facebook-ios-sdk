@@ -94,7 +94,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @interface FBSDKSettings ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) Class<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
@@ -150,7 +150,7 @@ static dispatch_once_t sharedSettingsNonce;
 }
 
 - (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
@@ -163,7 +163,7 @@ static dispatch_once_t sharedSettingsNonce;
 }
 
 + (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
@@ -176,11 +176,6 @@ static dispatch_once_t sharedSettingsNonce;
 + (id<FBSDKDataPersisting>)store
 {
   return self.sharedSettings.store;
-}
-
-+ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-{
-  return self.sharedSettings.appEventsConfigurationProvider;
 }
 
 + (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider

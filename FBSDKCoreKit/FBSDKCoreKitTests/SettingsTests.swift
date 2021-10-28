@@ -12,6 +12,7 @@ import XCTest
 // swiftlint:disable:next type_body_length
 class SettingsTests: XCTestCase {
   let logger = TestEventLogger()
+  let appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
 
   var userDefaultsSpy = UserDefaultsSpy()
   var settings = Settings.shared
@@ -28,7 +29,7 @@ class SettingsTests: XCTestCase {
 
     Settings.configure(
       store: userDefaultsSpy,
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
+      appEventsConfigurationProvider: appEventsConfigurationProvider,
       infoDictionaryProvider: bundle,
       eventLogger: logger
     )
@@ -37,8 +38,6 @@ class SettingsTests: XCTestCase {
   override func tearDown() {
     super.tearDown()
 
-    TestAppEventsConfigurationProvider.reset()
-    TestAppEventsConfiguration.reset()
     Settings.shared.reset()
   }
 
@@ -60,14 +59,14 @@ class SettingsTests: XCTestCase {
   func testDefaultAppEventsConfigurationProvider() {
     Settings.shared.reset()
     XCTAssertNil(
-      Settings.appEventsConfigurationProvider,
+      Settings.shared.appEventsConfigurationProvider,
       "Settings should not have a default app events configuration provider"
     )
   }
 
   func testConfiguringWithAppEventsConfigurationProvider() {
     XCTAssertTrue(
-      Settings.appEventsConfigurationProvider === TestAppEventsConfigurationProvider.self,
+      Settings.shared.appEventsConfigurationProvider === appEventsConfigurationProvider,
       "Should be able to set an app events configuration provider"
     )
   }
@@ -106,7 +105,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookAdvertiserTrackingStatusDefaultValue() {
     let configuration = TestAppEventsConfiguration(defaultAteStatus: .disallowed)
-    TestAppEventsConfigurationProvider.stubbedConfiguration = configuration
+    appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertEqual(
       Settings.advertisingTrackingStatus(),
@@ -125,7 +124,7 @@ class SettingsTests: XCTestCase {
       """
     )
     XCTAssertTrue(
-      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      appEventsConfigurationProvider.didRetrieveCachedConfiguration,
       "Should attempt to retrieve the tracking status from a cached configuration"
     )
   }
@@ -142,7 +141,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to retrieve the tracking status from the data userDefaultsSpy"
     )
     XCTAssertFalse(
-      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      appEventsConfigurationProvider.didRetrieveCachedConfiguration,
       "Should not attempt to retrieve the tracking status from a cached configuration"
     )
   }
@@ -164,7 +163,7 @@ class SettingsTests: XCTestCase {
       "Should retrieve the tracking status from the data userDefaultsSpy"
     )
     XCTAssertFalse(
-      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      appEventsConfigurationProvider.didRetrieveCachedConfiguration,
       "Should not attempt to retrieve the tracking status from a cached configuration"
     )
   }
@@ -186,7 +185,7 @@ class SettingsTests: XCTestCase {
       "Should retrieve the tracking status from the data userDefaultsSpy"
     )
     XCTAssertFalse(
-      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      appEventsConfigurationProvider.didRetrieveCachedConfiguration,
       "Should not attempt to retrieve the tracking status from a cached configuration"
     )
   }
@@ -1558,7 +1557,7 @@ class SettingsTests: XCTestCase {
     settings.reset()
     Settings.configure(
       store: userDefaultsSpy,
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
+      appEventsConfigurationProvider: appEventsConfigurationProvider,
       infoDictionaryProvider: bundle,
       eventLogger: logger
     )

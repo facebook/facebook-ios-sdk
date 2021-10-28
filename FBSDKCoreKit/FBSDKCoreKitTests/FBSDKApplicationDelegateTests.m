@@ -76,7 +76,7 @@
 @property (nonatomic, readonly) id<FBSDKAtePublishing> atePublisher;
 
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
-+ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
++ (id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 + (id<FBSDKGraphRequestFactory>)graphRequestFactory;
 + (id<FBSDKFeatureChecking>)featureChecker;
@@ -193,7 +193,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     self.appEvents.capturedConfigureAppEventsConfigurationProvider,
-    FBSDKAppEventsConfigurationManager.class,
+    FBSDKAppEventsConfigurationManager.shared,
     "Initializing the SDK should set AppEvents configuration provider for event logging"
   );
   XCTAssertEqualObjects(
@@ -548,7 +548,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *store = (NSObject *) FBSDKSettings.store;
-  NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.appEventsConfigurationProvider;
+  NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.sharedSettings.appEventsConfigurationProvider;
   NSObject *infoDictionaryProvider = (NSObject *) FBSDKSettings.infoDictionaryProvider;
   NSObject *eventLogger = (NSObject *) FBSDKSettings.eventLogger;
   XCTAssertEqualObjects(
@@ -558,7 +558,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     appEventsConfigProvider,
-    FBSDKAppEventsConfigurationManager.class,
+    FBSDKAppEventsConfigurationManager.shared,
     "Should be configured with the expected concrete app events configuration provider"
   );
   XCTAssertEqualObjects(

@@ -660,10 +660,11 @@ static UIApplicationState _applicationState;
                                                                          graphRequestFactory:graphRequestFactory
                                                                                     settings:sharedSettings
                                                                                 crashHandler:sharedCrashHandler];
+  id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider = FBSDKAppEventsConfigurationManager.shared;
 
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory];
   [FBSDKSettings configureWithStore:store
-     appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
+     appEventsConfigurationProvider:appEventsConfigurationProvider
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:FBSDKAppEvents.shared];
   [FBSDKFeatureManager.shared configureWithGateKeeperManager:FBSDKGateKeeperManager.class
@@ -695,9 +696,10 @@ static UIApplicationState _applicationState;
                                       serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
+  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider;
   [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
-                  appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
+                  appEventsConfigurationProvider:appEventsConfigurationProvider
                      serverConfigurationProvider:serverConfigurationProvider
                              graphRequestFactory:graphRequestFactory
                                   featureChecker:self.featureChecker

@@ -16,6 +16,7 @@
 @interface FBSDKInternalUtilityTests : XCTestCase
 
 @property (nonatomic) TestBundle *bundle;
+@property (nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
 
 @end
 
@@ -26,10 +27,11 @@
   [super setUp];
 
   self.bundle = [TestBundle new];
+  self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
 
   [FBSDKSettings.sharedSettings reset];
   [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
-     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+     appEventsConfigurationProvider:self.appEventsConfigurationProvider
              infoDictionaryProvider:self.bundle
                         eventLogger:[TestAppEvents new]];
 

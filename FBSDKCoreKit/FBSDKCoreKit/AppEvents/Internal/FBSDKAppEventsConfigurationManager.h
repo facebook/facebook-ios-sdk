@@ -8,13 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventsConfiguration.h"
-
 typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
 @protocol FBSDKDataPersisting;
 @protocol FBSDKSettings;
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKAppEventsConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +21,8 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 @interface FBSDKAppEventsConfigurationManager : NSObject
 
 @property (class, nonatomic, readonly) FBSDKAppEventsConfigurationManager *shared;
+
+@property (nonatomic, readonly) id<FBSDKAppEventsConfiguration> cachedAppEventsConfiguration;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -34,9 +35,6 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 NS_SWIFT_NAME(configure(store:settings:graphRequestFactory:graphRequestConnectionFactory:));
 // UNCRUSTIFY_FORMAT_ON
 
-+ (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration;
-
-+ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
 - (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
 
 @end

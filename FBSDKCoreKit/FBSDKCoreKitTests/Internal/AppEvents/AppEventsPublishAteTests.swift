@@ -52,7 +52,7 @@ class AppEventsPublishAteTests: XCTestCase {
 
     appEvents.configure(
       withGateKeeperManager: TestGateKeeperManager.self,
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
+      appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
       graphRequestFactory: TestGraphRequestFactory(),
       featureChecker: TestFeatureManager(),

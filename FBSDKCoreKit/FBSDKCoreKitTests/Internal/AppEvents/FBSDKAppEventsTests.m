@@ -110,6 +110,7 @@
 @property (nonnull, nonatomic) TestPaymentObserver *paymentObserver;
 @property (nonnull, nonatomic) TestAppEventsStateStore *appEventsStateStore;
 @property (nonnull, nonatomic) TestMetadataIndexer *metadataIndexer;
+@property (nonnull, nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *eventDeactivationParameterProcessor;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *restrictiveDataFilterParameterProcessor;
 @property (nonnull, nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
@@ -160,6 +161,7 @@
   self.appEventsStateStore = [TestAppEventsStateStore new];
   self.eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
   self.restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
+  self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
   self.appEventsStateProvider = [TestAppEventsStateProvider new];
   self.atePublisherFactory = [TestAtePublisherFactory new];
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
@@ -183,7 +185,6 @@
 {
   [FBSDKSettings.sharedSettings reset];
   [FBSDKAppEvents reset];
-  [TestAppEventsConfigurationProvider reset];
   [TestGateKeeperManager reset];
   [self resetTestHelpers];
 
@@ -200,7 +201,7 @@
 - (void)configureAppEventsSingleton
 {
   [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.class
-                         appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+                         appEventsConfigurationProvider:self.appEventsConfigurationProvider
                             serverConfigurationProvider:self.serverConfigurationProvider
                                     graphRequestFactory:self.graphRequestFactory
                                          featureChecker:self.featureManager
@@ -270,7 +271,7 @@
   [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
 
   // Verifying flush
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedRequests.firstObject.graphPath,
@@ -311,7 +312,7 @@
 {
   NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL (id _Nullable evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
     // A not-the-best proxy to determine if a flush occurred.
-    return TestAppEventsConfigurationProvider.capturedBlock != nil;
+    return self.appEventsConfigurationProvider.firstCapturedBlock != nil;
   }];
   XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
 
@@ -509,8 +510,8 @@
   );
 
   // The publish call happens after both configs are fetched
-  TestAppEventsConfigurationProvider.capturedBlock();
-  TestAppEventsConfigurationProvider.lastCapturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
+  self.appEventsConfigurationProvider.lastCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   self.serverConfigurationProvider.secondCapturedCompletionBlock(nil, nil);
 
@@ -869,7 +870,7 @@
   [FBSDKAppEvents.shared publishInstall];
 
   XCTAssertNotNil(
-    TestAppEventsConfigurationProvider.capturedBlock,
+    self.appEventsConfigurationProvider.firstCapturedBlock,
     "Should fetch a configuration before publishing installs"
   );
 }
@@ -1021,17 +1022,17 @@
 - (void)testFetchServerConfiguration
 {
   FBSDKAppEventsConfiguration *configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:@{}];
-  TestAppEventsConfigurationProvider.stubbedConfiguration = configuration;
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
   __block BOOL didRunCallback = NO;
   [[FBSDKAppEvents shared] fetchServerConfiguration:^void (void) {
     didRunCallback = YES;
   }];
   XCTAssertNotNil(
-    TestAppEventsConfigurationProvider.capturedBlock,
+    self.appEventsConfigurationProvider.firstCapturedBlock,
     "The expected block should be captured by the AppEventsConfiguration provider"
   );
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   XCTAssertNotNil(
     self.serverConfigurationProvider.capturedCompletionBlock,
     "The expected block should be captured by the ServerConfiguration provider"
@@ -1046,7 +1047,7 @@
 - (void)testFetchingConfigurationIncludingCertainFeatures
 {
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
 
   XCTAssertTrue(
@@ -1062,7 +1063,7 @@
 - (void)testEnablingCodelessEvents
 {
   [FBSDKAppEvents.shared fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   TestServerConfiguration *configuration = [[TestServerConfiguration alloc] initWithAppID:self.name];
   configuration.stubbedIsCodelessEventsEnabled = YES;
 
@@ -1077,7 +1078,7 @@
 - (void)testFetchingConfigurationIncludingEventDeactivation
 {
   [FBSDKAppEvents.shared fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
@@ -1088,7 +1089,7 @@
 - (void)testFetchingConfigurationEnablingEventDeactivationParameterProcessorIfEventDeactivationEnabled
 {
   [FBSDKAppEvents.shared fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureEventDeactivation with:YES];
   XCTAssertTrue(
@@ -1100,7 +1101,7 @@
 - (void)testFetchingConfigurationIncludingRestrictiveDataFiltering
 {
   [FBSDKAppEvents.shared fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
@@ -1111,7 +1112,7 @@
 - (void)testFetchingConfigurationEnablingRestrictiveDataFilterParameterProcessorIfRestrictiveDataFilteringEnabled
 {
   [FBSDKAppEvents.shared fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureRestrictiveDataFiltering with:YES];
   XCTAssertTrue(
@@ -1123,7 +1124,7 @@
 - (void)testFetchingConfigurationIncludingAAM
 {
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureAAM],
@@ -1134,7 +1135,7 @@
 - (void)testFetchingConfigurationEnablingMetadataIndexigIfAAMEnabled
 {
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureAAM with:YES];
   XCTAssertTrue(
@@ -1148,7 +1149,7 @@
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertTrue(
     self.paymentObserver.didStartObservingTransactions,
@@ -1165,7 +1166,7 @@
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
     self.paymentObserver.didStartObservingTransactions,
@@ -1182,7 +1183,7 @@
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
     self.paymentObserver.didStartObservingTransactions,
@@ -1198,7 +1199,7 @@
 {
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
@@ -1210,7 +1211,7 @@
 {
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
     [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
@@ -1228,7 +1229,7 @@
 {
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
     [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
@@ -1246,7 +1247,7 @@
 {
   self.settings.stubbedIsSKAdNetworkReportEnabled = NO;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertFalse(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
@@ -1258,7 +1259,7 @@
 {
   if (@available(iOS 14.0, *)) {
     [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-    TestAppEventsConfigurationProvider.capturedBlock();
+    self.appEventsConfigurationProvider.firstCapturedBlock();
     self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
     XCTAssertTrue(
       [self.featureManager capturedFeaturesContains:FBSDKFeatureAEM],
@@ -1270,7 +1271,7 @@
 - (void)testFetchingConfigurationIncludingPrivacyProtection
 {
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
-  TestAppEventsConfigurationProvider.capturedBlock();
+  self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],

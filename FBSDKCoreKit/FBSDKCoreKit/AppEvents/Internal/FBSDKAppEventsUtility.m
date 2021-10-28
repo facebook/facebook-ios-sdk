@@ -16,7 +16,6 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -68,11 +67,11 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 // from a type-based interface to an instance-based interface.
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
+static dispatch_once_t singletonNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
   static id instance;
-  dispatch_once(&nonce, ^{
+  dispatch_once(&singletonNonce, ^{
     instance = [self new];
   });
   return instance;
@@ -171,7 +170,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   }
 
   if (@available(iOS 14.0, *)) {
-    if (![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].advertiserIDCollectionEnabled) {
+    if (!self.appEventsConfigurationProvider.cachedAppEventsConfiguration.advertiserIDCollectionEnabled) {
       return nil;
     }
   }
@@ -412,7 +411,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 - (BOOL)shouldDropAppEvents
 {
   if (@available(iOS 14.0, *)) {
-    if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && ![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].eventCollectionEnabled) {
+    if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
       return YES;
     }
   }
@@ -473,6 +472,14 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 }
 
 #if DEBUG && FBTEST
+
+// Reset the nonce so that a new instance will be created.
++ (void)reset
+{
+  if (singletonNonce) {
+    singletonNonce = 0;
+  }
+}
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager
 {

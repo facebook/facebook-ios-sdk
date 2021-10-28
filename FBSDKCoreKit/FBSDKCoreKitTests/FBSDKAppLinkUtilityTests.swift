@@ -23,7 +23,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
+    appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
     configureUtility(infoDictionaryProvider: bundle)
   }
 
@@ -140,7 +140,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   func testGraphRequestFactoryAfterGraphRequest() {
     AppLinkUtility.fetchDeferredAppLink()
 
-    appEventsConfigurationProvider.capturedBlock?()
+    appEventsConfigurationProvider.firstCapturedBlock?()
 
     XCTAssertEqual(graphRequestFactory.capturedGraphPath, "(null)/activities")
     XCTAssertEqual(graphRequestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))

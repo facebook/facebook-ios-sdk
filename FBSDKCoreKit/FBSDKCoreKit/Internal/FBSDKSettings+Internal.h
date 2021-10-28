@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // UNCRUSTIFY_FORMAT_OFF
 + (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
+  appEventsConfigurationProvider:(nonnull id<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(nonnull id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
