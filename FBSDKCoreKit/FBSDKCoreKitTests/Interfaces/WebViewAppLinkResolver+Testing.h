@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKWebViewAppLinkResolver.h"
-
 #import "FBSDKErrorCreating.h"
+#import "FBSDKWebViewAppLinkResolver.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

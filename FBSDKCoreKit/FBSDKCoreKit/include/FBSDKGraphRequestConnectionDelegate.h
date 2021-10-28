@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKGraphRequestConnecting.h"
-
 #import <Foundation/Foundation.h>
+
+#import "FBSDKGraphRequestConnecting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -83,10 +83,10 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
  @param totalBytesWritten         The total number of bytes sent to the remote host
  @param totalBytesExpectedToWrite The total number of bytes expected to send to the remote host
  */
-- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection
-          didSendBodyData:(NSInteger)bytesWritten
-        totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+- (void)  requestConnection:(id<FBSDKGraphRequestConnecting>)connection
+            didSendBodyData:(NSInteger)bytesWritten
+          totalBytesWritten:(NSInteger)totalBytesWritten
+  totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 
 @end
 

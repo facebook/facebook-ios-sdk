@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <Foundation/Foundation.h>
+
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
-#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

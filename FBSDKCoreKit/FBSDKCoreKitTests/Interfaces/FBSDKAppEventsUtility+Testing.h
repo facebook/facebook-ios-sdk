@@ -7,14 +7,13 @@
  */
 
 #import "FBSDKAppEventsUtility.h"
-
 #import "FBSDKDynamicFrameworkResolving.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppEventsUtility (Testing)
 
-@property (nullable, class, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+@property (class, nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
 
 // UNCRUSTIFY_FORMAT_OFF
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable

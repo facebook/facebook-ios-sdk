@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKBridgeAPI+Internal.h"
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <SafariServices/SafariServices.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKErrorCreating.h"
 #import "FBSDKOperatingSystemVersionComparing.h"

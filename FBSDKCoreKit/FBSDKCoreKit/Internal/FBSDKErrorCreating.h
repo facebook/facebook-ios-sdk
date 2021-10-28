@@ -34,37 +34,47 @@ NS_SWIFT_NAME(error(domain:code:userInfo:message:underlyingError:));
 
 // MARK: - Invalid Argument Errors
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)invalidArgumentErrorWithName:(NSString *)name
                                     value:(nullable id)value
                                   message:(nullable NSString *)message
                           underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(invalidArgumentError(name:value:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
                                        name:(NSString *)name
                                       value:(nullable id)value
                                     message:(nullable NSString *)message
                             underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(invalidArgumentError(domain:name:value:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
 // MARK: - Required Argument Errors
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)requiredArgumentErrorWithName:(NSString *)name
                                    message:(nullable NSString *)message
                            underlyingError:(nullable NSError *)underlyingError
 NS_SWIFT_NAME(requiredArgumentError(name:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
                                         name:(NSString *)name
                                      message:(nullable NSString *)message
                              underlyingError:(nullable NSError *)underlyingError
-NS_SWIFT_NAME(requiredArgumentError(domain:name:message:underlyingError:));
+  NS_SWIFT_NAME(requiredArgumentError(domain:name:message:underlyingError:));
+// UNCRUSTIFY_FORMAT_ON
 
 // MARK: - Unknown Errors
 
+// UNCRUSTIFY_FORMAT_OFF
 - (NSError *)unknownErrorWithMessage:(nullable NSString *)message
                             userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
 NS_SWIFT_NAME(unknownError(message:userInfo:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 
