@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-/**
+/*
  @methodgroup Predefined values to assign to event parameters that accompany events logged through the `logEvent` family
  of methods on `FBSDKAppEvents`.  Common event parameters are provided in the `FBSDKAppEventParameterName*` constants.
  */
@@ -16,8 +16,8 @@
 /// typedef for FBSDKAppEventParameterValue
 typedef NSString *const FBSDKAppEventParameterValue NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.ParameterValue);
 
-/*** Yes-valued parameter value to be used with parameter keys that need a Yes/No value */
+/** Yes-valued parameter value to be used with parameter keys that need a Yes/No value */
 FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes;
 
-/*** No-valued parameter value to be used with parameter keys that need a Yes/No value */
+/** No-valued parameter value to be used with parameter keys that need a Yes/No value */
 FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo;

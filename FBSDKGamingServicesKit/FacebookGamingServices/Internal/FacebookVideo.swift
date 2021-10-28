@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -11,7 +11,7 @@ import Foundation
 public struct FacebookVideo: Codable, Equatable, URLMedia {
   var url: URL
 
-  /***
+  /**
    Initializer for a video url media
 
    - Parameters:

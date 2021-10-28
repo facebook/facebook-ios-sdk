@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/***
+/**
   A base class for common SDK buttons.
  */
 NS_SWIFT_NAME(FBButton)
@@ -27,7 +27,7 @@ NS_SWIFT_NAME(FBButton)
           backgroundColor:(nullable UIColor *)backgroundColor
          highlightedColor:(nullable UIColor *)highlightedColor;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(FBButton)
              selectedColor:(nullable UIColor *)selectedColor
   selectedHighlightedColor:(nullable UIColor *)selectedHighlightedColor;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(FBButton)
  */
 - (UIColor *)defaultBackgroundColor;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -58,7 +58,7 @@ NS_SWIFT_NAME(FBButton)
  */
 - (CGSize)sizeThatFits:(CGSize)size title:(NSString *)title;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -66,7 +66,7 @@ NS_SWIFT_NAME(FBButton)
  */
 - (CGSize)textSizeForText:(NSString *)text font:(UIFont *)font constrainedSize:(CGSize)constrainedSize lineBreakMode:(NSLineBreakMode)lineBreakMode;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 

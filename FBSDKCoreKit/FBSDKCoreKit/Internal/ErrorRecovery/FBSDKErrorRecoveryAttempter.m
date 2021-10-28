@@ -15,7 +15,7 @@
 
 @implementation FBSDKTemporaryErrorRecoveryAttempter
 
-- (void)attemptRecoveryFromError:(NSError *)error completionHandler:(void (^)(BOOL didRecover))completionHandler
+- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   @try {
     completionHandler(YES);
@@ -44,7 +44,7 @@
   return nil;
 }
 
-- (void)attemptRecoveryFromError:(NSError *)error completionHandler:(void (^)(BOOL didRecover))completionHandler
+- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   // should be implemented by subclasses.
 }

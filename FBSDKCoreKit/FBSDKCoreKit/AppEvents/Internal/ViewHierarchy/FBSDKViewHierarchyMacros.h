@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -85,4 +85,4 @@
 #define VIEW_HIERARCHY_TEXT_KEY                 @"text"
 #define VIEW_HIERARCHY_VIEW_KEY                 @"view"
 
-#endif /** FBSDKCodelessMacros_h */
+#endif /* FBSDKCodelessMacros_h */

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
 
 import Foundation
 
-/***
+/**
  Errors to describe what went wrong with a GamingServicesDialog
  */
 public enum GamingServicesDialogError: Error {

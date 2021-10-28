@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/***
+/**
  Internal block type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(LoginTooltipBlock)
 typedef void (^FBSDKLoginTooltipBlock)(FBSDKLoginTooltip *_Nullable loginTooltip, NSError *_Nullable error);
 
-/***
+/**
 Internal Type exposed to facilitate transition to Swift.
 API Subject to change or removal without warning. Do not use.
 
@@ -30,7 +30,7 @@ API Subject to change or removal without warning. Do not use.
 NS_SWIFT_NAME(ServerConfigurationProvider)
 @interface FBSDKServerConfigurationProvider : NSObject
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -38,7 +38,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  */
 @property (nonatomic, readonly) NSString *loggingToken;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -46,7 +46,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  */
 - (NSUInteger)cachedSmartLoginOptions;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  */
 - (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
 
-/***
+/**
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 

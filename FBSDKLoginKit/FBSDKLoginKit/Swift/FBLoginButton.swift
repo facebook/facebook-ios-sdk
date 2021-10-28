@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@ import FBSDKCoreKit
 
 import UIKit
 
-/***
+/**
  A button that initiates a log in or log out flow upon tapping.
 
  `LoginButton` works with `AccessToken.current` to determine what to display,
@@ -26,7 +26,7 @@ import UIKit
  */
 @available(tvOS, unavailable)
 public extension FBLoginButton {
-  /***
+  /**
    Create a new `LoginButton` with a given optional frame and read permissions.
 
    - Parameter frame: Optional frame to initialize with. Default: `nil`, which uses a default size for the button.

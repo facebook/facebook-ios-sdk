@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -13,7 +13,7 @@ struct ServerResult: Codable {
   var success: Bool
 }
 
-/***
+/**
  Errors representing a failure to send a custom update graph request
  */
 public enum CustomUpdateGraphRequestError: Error {
@@ -38,7 +38,7 @@ public class CustomUpdateGraphRequest {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  /***
+  /**
     This will attempt to send a custom update graph request with the given content
 
    - Parameters:
@@ -64,7 +64,7 @@ public class CustomUpdateGraphRequest {
     try start(request: request, completion: completionHandler)
   }
 
-  /***
+  /**
     This will attempt to send a custom update graph request with the given content
 
    - Parameters:

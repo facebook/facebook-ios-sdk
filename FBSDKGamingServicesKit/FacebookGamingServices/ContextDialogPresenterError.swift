@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
 
 import Foundation
 
-/***
+/**
  Errors representing a failure to present a context dialog
  */
 public enum ContextDialogPresenterError: Error {

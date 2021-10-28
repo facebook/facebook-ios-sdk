@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -13,17 +13,17 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ShareKitTestUtility)
 @interface FBSDKShareKitTestUtility : NSObject
 
-/**!
+/*!
  * @abstract Returns a UIImage for sharing.
  */
 + (UIImage *)testImage;
 
-/**!
+/*!
  * @abstract Returns an NSURL to JPEG image data in the bundle.
  */
 + (NSURL *)testImageURL;
 
-/**!
+/*!
  * @abstract Returns an NSURL to PNG image data in the bundle.
  */
 + (NSURL *)testPNGImageURL;

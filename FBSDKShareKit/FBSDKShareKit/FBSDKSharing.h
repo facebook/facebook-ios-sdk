@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSharingDelegate;
 
-/***
+/**
   The common interface for components that initiate sharing.
 
  @see FBSDKShareDialog
@@ -24,17 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Sharing)
 @protocol FBSDKSharing <NSObject>
 
-/***
+/**
   The receiver's delegate or nil if it doesn't have a delegate.
  */
 @property (nonatomic, weak) id<FBSDKSharingDelegate> delegate;
 
-/***
+/**
   The content to be shared.
  */
 @property (nullable, nonatomic, copy) id<FBSDKSharingContent> shareContent;
 
-/***
+/**
   A Boolean value that indicates whether the receiver should fail if it finds an error with the share content.
 
  If NO, the sharer will still be displayed without the data that was mis-configured.  For example, an
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(Sharing)
  */
 @property (nonatomic, assign) BOOL shouldFailOnDataError;
 
-/***
+/**
   Validates the content on the receiver.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return YES if the content is valid, otherwise NO.
@@ -51,13 +51,13 @@ NS_SWIFT_NAME(Sharing)
 
 @end
 
-/***
+/**
   The common interface for dialogs that initiate sharing.
  */
 NS_SWIFT_NAME(SharingDialog)
 @protocol FBSDKSharingDialog <FBSDKSharing>
 
-/***
+/**
   A Boolean value that indicates whether the receiver can initiate a share.
 
  May return NO if the appropriate Facebook app is not installed and is required or an access token is
@@ -69,7 +69,7 @@ NS_SWIFT_NAME(SharingDialog)
  */
 @property (nonatomic, readonly) BOOL canShow;
 
-/***
+/**
   Shows the dialog.
  @return YES if the receiver was able to begin sharing, otherwise NO.
  */
@@ -77,7 +77,7 @@ NS_SWIFT_NAME(SharingDialog)
 
 @end
 
-/***
+/**
   A delegate for FBSDKSharing.
 
  The delegate is notified with the results of the sharer as long as the application has permissions to
@@ -87,21 +87,21 @@ NS_SWIFT_NAME(SharingDialog)
 NS_SWIFT_NAME(SharingDelegate)
 @protocol FBSDKSharingDelegate <NSObject>
 
-/***
+/**
   Sent to the delegate when the share completes without error or cancellation.
  @param sharer The FBSDKSharing that completed.
  @param results The results from the sharer.  This may be nil or empty.
  */
 - (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 
-/***
+/**
   Sent to the delegate when the sharer encounters an error.
  @param sharer The FBSDKSharing that completed.
  @param error The error.
  */
 - (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error;
 
-/***
+/**
   Sent to the delegate when the sharer is cancelled.
  @param sharer The FBSDKSharing that completed.
  */

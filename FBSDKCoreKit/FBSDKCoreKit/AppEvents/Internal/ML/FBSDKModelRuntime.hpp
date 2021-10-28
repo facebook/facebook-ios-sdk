@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -113,7 +113,7 @@ namespace fbsdk {
     return y;
   }
 
-  /**
+  /*
    x shape: n_examples, in_vector_size
    w shape: in_vector_size, out_vector_size
    b shape: out_vector_size
@@ -134,7 +134,7 @@ namespace fbsdk {
     return y;
   }
 
-  /**
+  /*
    x shape: n_examples, seq_len, input_size
    w shape: kernel_size, input_size, output_size
    return shape: n_examples, seq_len - kernel_size + 1, output_size
@@ -172,7 +172,7 @@ namespace fbsdk {
     return y;
   }
 
-  /**
+  /*
    input shape: n_examples, len, n_channel
    return shape: n_examples, len - pool_size + 1, n_channel
    */
@@ -199,7 +199,7 @@ namespace fbsdk {
     return y;
   }
 
-  /**
+  /*
    input shape: m, n
    return shape: n, m
    */
@@ -218,7 +218,7 @@ namespace fbsdk {
     return y;
   }
 
-  /**
+  /*
    input shape: m, n, p
    return shape: p, n, m
    */

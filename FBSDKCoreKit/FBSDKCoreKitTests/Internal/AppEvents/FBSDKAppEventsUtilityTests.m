@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -156,7 +156,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   );
 
   // TODO: Re-enable this section when the dependency on AppEvents can be injected
-  /** XCTAssertEqualObjects(@"{}", dict[@"ud"]);
+  /* XCTAssertEqualObjects(@"{}", dict[@"ud"]);
 
   NSString *testEmail = @"apptest@fb.com";
   NSString *testFirstName = @"test_fn";

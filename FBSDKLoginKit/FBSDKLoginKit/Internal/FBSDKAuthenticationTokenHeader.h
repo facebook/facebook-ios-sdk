@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -22,7 +22,7 @@ NS_SWIFT_NAME(AuthenticationTokenHeader)
 /// Key identifier used in identifying the key to be used to verify the signature.
 @property (nonatomic, readonly, strong) NSString *kid;
 
-/***
+/**
  Returns a new instance, when one can be created from the parameters given, otherwise `nil`.
  @param encodedHeader Base64-encoded string of the header.
  */

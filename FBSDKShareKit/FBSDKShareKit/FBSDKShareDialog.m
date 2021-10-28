@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -930,7 +930,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     *errorRef = nil;
   }
 
-  /** UNCRUSTIFY_FORMAT_OFF */
+  /* UNCRUSTIFY_FORMAT_OFF */
   if (self.shareContent) {
     if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]
         || [self.shareContent isKindOfClass:FBSDKShareLinkContent.class]
@@ -948,7 +948,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       return NO;
     }
   }
-  /** UNCRUSTIFY_FORMAT_ON */
+  /* UNCRUSTIFY_FORMAT_ON */
 
   if (![self.class.shareUtility validateShareContent:self.shareContent
                                        bridgeOptions:FBSDKShareBridgeOptionsDefault
@@ -990,7 +990,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return NO;
 }
 
-/***
+/**
  `validateWithError:` can be used by clients of this API to discover if certain features are
  available for a specific `mode`. However, these features could be optional for said `mode`, in which
  case `validateWithError:` should return NO but when calling `show`, the dialog must still show.

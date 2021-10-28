@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FBSDKLoginManagerLogger;
 @class FBSDKPermission;
 
-/***
+/**
  Success Block
  */
 typedef void (^ FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)

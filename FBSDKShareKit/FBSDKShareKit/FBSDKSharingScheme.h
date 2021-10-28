@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,13 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/***
+/**
  A base interface for indicating a custom URL scheme
  */
 NS_SWIFT_NAME(SharingScheme)
 @protocol FBSDKSharingScheme
 
-/***
+/**
  Asks the receiver to provide a custom scheme.
  @param mode The intended dialog mode for sharing the content.
  @return A custom URL scheme to use for the specified mode, or nil.

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -16,7 +16,7 @@
 
 static const NSTimeInterval kAnimationDurationTimeInterval = .5;
 
-/**
+/*
 Subclasses should generally:
 - override viewDidDisappear to handle cancellations
 - assign `deviceDialogView.confirmationCode` to set the code

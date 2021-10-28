@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -9,7 +9,7 @@
 import FacebookGamingServices
 import FBSDKCoreKit
 
-/***
+/**
   A dialog to switch the current context through a web view
  */
 @objcMembers
@@ -21,7 +21,7 @@ open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol
     self.dialog = dialog
   }
 
-  /***
+  /**
    Builds a switch context web dialog with content and a delegate.
 
    - Parameters:

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ import Foundation
 
 import FBSDKCoreKit
 
-/***
+/**
   A dialog to switch the current gaming context through a web view
  */
 public class SwitchContextDialog: ContextWebDialog, Showable {
@@ -33,7 +33,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
     )
   }
 
-  /***
+  /**
    Creates a switch context web dialog with content and a delegate.
 
    - Parameter content: The content for the switch context dialog

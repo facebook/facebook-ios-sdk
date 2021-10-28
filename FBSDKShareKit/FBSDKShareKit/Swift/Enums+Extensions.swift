@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/***
+/**
  ShareDialog.Mode CustomStringConvertible
  */
 @available(tvOS, unavailable)
@@ -17,7 +17,7 @@ extension ShareDialog.Mode: CustomStringConvertible {
   }
 }
 
-/***
+/**
  AppGroupPrivacy CustomStringConvertible
  */
 @available(tvOS, unavailable)

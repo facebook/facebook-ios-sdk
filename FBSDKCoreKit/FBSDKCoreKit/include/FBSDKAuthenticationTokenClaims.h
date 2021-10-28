@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -46,7 +46,7 @@ NS_SWIFT_NAME(AuthenticationTokenClaims)
 /// End-User's family name in displayable form
 @property (nullable, nonatomic, readonly, strong) NSString *familyName;
 
-/***
+/**
  End-User's preferred e-mail address.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'email' permission.
@@ -56,7 +56,7 @@ NS_SWIFT_NAME(AuthenticationTokenClaims)
 /// URL of the End-User's profile picture.
 @property (nullable, nonatomic, readonly, strong) NSString *picture;
 
-/***
+/**
  End-User's friends.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.

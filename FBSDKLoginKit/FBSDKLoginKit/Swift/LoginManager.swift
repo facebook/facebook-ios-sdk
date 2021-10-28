@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -16,7 +16,7 @@ import UIKit
 @available(tvOS, unavailable)
 public typealias LoginResultBlock = (LoginResult) -> Void
 
-/***
+/**
  Describes the result of a login attempt.
  */
 @available(tvOS, unavailable)
@@ -45,7 +45,7 @@ public enum LoginResult {
   }
 }
 
-/***
+/**
  This class provides methods for logging the user in and out.
  It works directly with `AccessToken.current` and
  sets the "current" token upon successful authorizations (or sets `nil` in case of `logOut`).
@@ -58,7 +58,7 @@ public enum LoginResult {
  */
 @available(tvOS, unavailable)
 public extension LoginManager {
-  /***
+  /**
    Initialize an instance of `LoginManager.`
 
    - parameter defaultAudience: Optional default audience to use. Default: `.Friends`.
@@ -68,7 +68,7 @@ public extension LoginManager {
     self.defaultAudience = defaultAudience
   }
 
-  /***
+  /**
    Logs the user in or authorizes additional permissions.
 
    Use this method when asking for permissions. You should only ask for permissions when they
@@ -94,7 +94,7 @@ public extension LoginManager {
     self.logIn(permissions: permissions.map { $0.name }, from: viewController, handler: sdkCompletion(completion))
   }
 
-  /***
+  /**
    Logs the user in or authorizes additional permissions.
 
    Use this method when asking for permissions. You should only ask for permissions when they
@@ -124,7 +124,7 @@ public extension LoginManager {
     self.__logIn(from: viewController, configuration: configuration, completion: legacyCompletion)
   }
 
-  /***
+  /**
    Logs the user in or authorizes additional permissions.
 
    Use this method when asking for permissions. You should only ask for permissions when they

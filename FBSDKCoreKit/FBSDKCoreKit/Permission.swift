@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
 
 import Foundation
 
-/***
+/**
  Represents a Graph API permission.
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
@@ -93,7 +93,7 @@ public enum Permission: Hashable, ExpressibleByStringLiteral {
   case pagesManageInstantArticles
   /// Provides the access to Ads Insights API to pull ads report information for ad accounts you have access to.
   case adsRead
-  /***
+  /**
    Permission with a custom string value.
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/***
+/**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 NS_SWIFT_NAME(DynamicFrameworkLoaderProxy)
 @interface FBSDKDynamicFrameworkLoaderProxy : NSObject
-/***
+/**
   Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
 
  @return The kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value or nil.
