@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKGraphRequestFactory;
 
-/**
+/***
  Internal type not intended for use outside of the SDKs.
 
  A factory for providing objects that conform to `GraphRequest`

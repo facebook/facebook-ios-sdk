@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -67,7 +67,7 @@
   [FBSDKTypeUtility dictionary:updatedParameters setObject:_contentURL forKey:@"link"];
   [FBSDKTypeUtility dictionary:updatedParameters setObject:_quote forKey:@"quote"];
 
-  /**
+  /***
    Pass link parameter as "messenger_link" due to versioning requirements for message dialog flow.
    We will only use the new share flow we developed if messenger_link is present, not link.
    */

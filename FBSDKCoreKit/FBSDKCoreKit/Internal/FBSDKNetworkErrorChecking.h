@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -11,7 +11,7 @@
 NS_SWIFT_NAME(NetworkErrorChecking)
 @protocol FBSDKNetworkErrorChecking
 
-/**
+/***
  Checks whether an error is a network error.
 
  @param error An error that may or may not represent a network error.

@@ -16,11 +16,10 @@
 @implementation FBSDKLoginRecoveryAttempter
 
 - (void)attemptRecoveryFromError:(NSError *)error
-                     optionIndex:(NSUInteger)recoveryOptionIndex
                completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   NSSet<NSString *> *currentPermissions = FBSDKAccessToken.currentAccessToken.permissions;
-  if (recoveryOptionIndex == 0 && currentPermissions.count > 0) {
+  if (currentPermissions.count > 0) {
     FBSDKLoginManager *login = [FBSDKLoginManager new];
     [login logInWithPermissions:currentPermissions.allObjects fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *loginError) {
       // we can only consider a recovery successful if there are no declines

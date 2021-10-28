@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -348,7 +348,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 }
 
-/*
+/**
  * Push Notifications Logging
  */
 
@@ -379,7 +379,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
 }
 
-/*
+/**
  *  Uploads product catalog product item as an app event
  */
 + (void)logProductItem:(NSString *)itemID

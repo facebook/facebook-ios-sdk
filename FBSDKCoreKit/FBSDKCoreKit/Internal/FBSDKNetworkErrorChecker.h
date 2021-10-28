@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
+/***
  Concrete type providing functionality that checks whether an error represents a
  network error.
  */

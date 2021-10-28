@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -16,12 +16,12 @@ NS_SWIFT_NAME(FBPermission)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
+/***
  The raw string representation of the permission
 */
 @property (nonatomic, readonly, copy) NSString *value;
 
-/**
+/***
  Attempts to initialize a new permission with the given string.
  Creation will fail and return nil if the string is invalid.
 
@@ -29,13 +29,13 @@ NS_SWIFT_NAME(FBPermission)
 */
 - (nullable instancetype)initWithString:(NSString *)string;
 
-/**
+/***
  Returns a set of FBSDKPermission from a set of raw permissions strings.
  Will return nil if any of the input permissions is invalid.
 */
 + (nullable NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions;
 
-/**
+/***
  Returns a set of string permissions from a set of FBSDKPermission by
  extracting the "value" property for each element.
 */

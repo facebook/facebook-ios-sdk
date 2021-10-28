@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ import FBSDKCoreKit
 
 public extension LoginConfiguration {
 
-  /**
+  /***
    Attempts to allocate and initialize a new configuration with the expected parameters.
 
    - parameter permissions: The requested permissions for the login attempt.

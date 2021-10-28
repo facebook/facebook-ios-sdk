@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -17,7 +17,7 @@ public class CustomUpdateContentMedia {
   var messageLocalization: [String: String]
   var ctaLocalization: [String: String]
 
-  /**
+  /***
    initializer method for a custom update content with media
 
    - Parameters:

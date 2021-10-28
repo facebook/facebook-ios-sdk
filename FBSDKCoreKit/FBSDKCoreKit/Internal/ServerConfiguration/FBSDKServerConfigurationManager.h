@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -25,7 +25,7 @@ NS_SWIFT_NAME(ServerConfigurationManager)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
+/***
   Returns the locally cached configuration.
 
  The result will be valid for the appID from FBSDKSettings, but may be expired. A network request will be
@@ -33,7 +33,7 @@ NS_SWIFT_NAME(ServerConfigurationManager)
  */
 - (FBSDKServerConfiguration *)cachedServerConfiguration;
 
-/**
+/***
   Executes the completionBlock with a valid and current configuration when it is available.
 
  This method will use a cached configuration if it is valid and not expired.

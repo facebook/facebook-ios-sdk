@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*
+/**
  An internal base class for device related flows.
 
  This is an internal API that should not be used directly and is subject to change.

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -31,4 +31,4 @@
 #define DENSE_FEATURE_KEY                       @"DENSE_FEATURE"
 #define SUGGESTED_EVENT_OTHER                   @"other"
 
-#endif /* FBSDKMLMacros_h */
+#endif /** FBSDKMLMacros_h */

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
+/***
  Used for requesting information about purchase events from StoreKit to use when
  logging AppEvents
  */

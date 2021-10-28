@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern CATransform3D const FBSDKCATransform3DIdentity;
 
-/**
+/***
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 

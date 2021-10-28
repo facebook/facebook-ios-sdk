@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@
 
 typedef double FBSDKMonotonicTimeSeconds;
 
-/**
+/***
  * return current monotonic time in Seconds
  * Nanosecond precision, double value.
  * Should be preferred over FBSDKMonotonicTimeGetCurrentMilliseconds in case

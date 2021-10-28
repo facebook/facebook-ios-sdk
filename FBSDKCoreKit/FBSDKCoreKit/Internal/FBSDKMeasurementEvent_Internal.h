@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
+/***
  Provides methods for posting notifications from App Links
  */
 @interface FBSDKMeasurementEvent (Internal)

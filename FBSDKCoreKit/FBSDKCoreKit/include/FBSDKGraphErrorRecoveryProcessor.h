@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  1. If the error is temporary as indicated by FBSDKGraphRequestErrorKey, assume the recovery succeeded and
  notify the delegate.
  2. If a FBSDKErrorRecoveryAttempting instance is available, display an alert (dispatched to main thread)
- with the recovery options and call the instance's [ attemptRecoveryFromError:optionIndex:...].
+ with the recovery options and call the instance's attemptRecoveryFromError method.
  3. If a FBSDKErrorRecoveryAttempting is not available, check the userInfo for FBSDKLocalizedErrorDescriptionKey
  and present that in an alert (dispatched to main thread).
 

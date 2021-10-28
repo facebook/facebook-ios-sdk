@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -12,7 +12,7 @@ import FBSDKCoreKit
 @objcMembers
 open class FBSDKContextDialogPresenter: NSObject {
 
-  /**
+  /***
    Convenience method to build up an instant games create context dialog with content and delegate.
 
       - Parameters:
@@ -34,7 +34,7 @@ open class FBSDKContextDialogPresenter: NSObject {
     )
   }
 
-  /**
+  /***
    Convenience method to build up and show an instant games create context dialog with content and delegate.
 
    - Parameters:
@@ -59,7 +59,7 @@ open class FBSDKContextDialogPresenter: NSObject {
     }
   }
 
-  /**
+  /***
    Convenience method to build up an instant games switch context dialog with content and delegate.
 
    - Parameters:
@@ -84,7 +84,7 @@ open class FBSDKContextDialogPresenter: NSObject {
     )
   }
 
-  /**
+  /***
    Convenience method to build up and show an instant games switch context dialog with content and delegate.
 
    - Parameters:
@@ -116,7 +116,7 @@ open class FBSDKContextDialogPresenter: NSObject {
     }
   }
 
-  /**
+  /***
    Convenience method to build up and show an instant games choose context dialog with content and a delegate.
 
    - Parameters:

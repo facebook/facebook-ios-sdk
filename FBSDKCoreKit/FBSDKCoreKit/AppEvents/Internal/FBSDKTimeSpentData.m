@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -73,7 +73,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
 @end
 
-/**
+/***
  * This class encapsulates the notion of an app 'session' - the length of time that the user has
  * spent in the app that can be considered a single usage of the app.  Apps may be frequently interrupted
  * do to other device activity, like a text message, so this class allows those interruptions to be smoothed

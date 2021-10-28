@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -9,19 +9,19 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-/**
+/***
  The purpose of this class is to serve as thin, type-safe wrapper
  around FBSDKTypeUtility
  */
 @interface FBSDKJSONField : NSObject
 
-/**
+/***
  This can only be created by FBSDKJSONValue.
  */
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
+/***
 A safe method to unpack the values in the top-level JSON object.
  https://developer.apple.com/documentation/foundation/nsjsonserialization
 */
@@ -31,7 +31,7 @@ A safe method to unpack the values in the top-level JSON object.
             number:(void (^_Nullable)(NSNumber *_Nonnull))numberMatcher
               null:(void (^_Nullable)(void))nullMatcher;
 
-/**
+/***
  The underlying JSON object. The only guarantee we provide with this
  is that it passes [FBSDKTypeUtility isValidJSONObject:]
  */
@@ -45,12 +45,12 @@ A safe method to unpack the values in the top-level JSON object.
 
 @end
 
-/**
+/***
  Represents Top-level JSON objects.
  */
 @interface FBSDKJSONValue : NSObject
 
-/**
+/***
  If the object does not pass [FBSDKTypeUtility isValidJSONObject:]
  this will return nil.
  */
@@ -59,13 +59,13 @@ A safe method to unpack the values in the top-level JSON object.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
+/***
  The underlying JSON object. The only guarantee we provide with this
  is that it passes [FBSDKTypeUtility isValidJSONObject:]
  */
 @property (nonatomic, readonly, strong) id rawObject;
 
-/**
+/***
  A safe method to unpack the values in the top-level JSON object.
 
  The specs are per Apple's documentation: https://developer.apple.com/documentation/foundation/nsjsonserialization
@@ -73,12 +73,12 @@ A safe method to unpack the values in the top-level JSON object.
 - (void)matchArray:(void (^_Nullable)(NSArray<FBSDKJSONField *> *))arrayMatcher
         dictionary:(void (^_Nullable)(NSDictionary<NSString *, FBSDKJSONField *> *))dictMatcher;
 
-/**
+/***
  Returns the dictionary if that's truly what it is, otherwise, nil.
  */
 - (NSDictionary<NSString *, FBSDKJSONField *> *_Nullable)matchDictionaryOrNil;
 
-/**
+/***
  The unsafe variant which drops all the type-safety for this class.
  If this object is nonnull, you at least have guarantees from Apple that this is NSNull, NSString, NSNumber, NSArray, or NSDictionary.
  */
@@ -89,7 +89,7 @@ A safe method to unpack the values in the top-level JSON object.
 
 @end
 
-/**
+/***
 FBSDKTypeUtility returns id, which is problematic in our codebase.
 
 You can wrap resulting objects in this to force users of your JSON to use

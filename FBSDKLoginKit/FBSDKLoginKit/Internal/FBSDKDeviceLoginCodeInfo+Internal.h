@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKDeviceLoginCodeInfo ()
 
-/*!
+/**!
  @abstract Initializes a new instance
  @param identifier the unique id for this login flow instance.
  @param loginCode the short "user_code".

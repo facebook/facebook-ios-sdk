@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Facebook, Inc. and its affiliates.
  * All rights reserved.
  *
@@ -13,7 +13,7 @@
  #ifdef __cplusplus
 extern "C" {
  #endif
-/** Use the type-safe FBSDK_CAST_TO_CLASS_OR_NIL instead. */
+/*** Use the type-safe FBSDK_CAST_TO_CLASS_OR_NIL instead. */
 id _FBSDKCastToClassOrNilUnsafeInternal(id object, Class klass);
  #ifdef __cplusplus
 }
@@ -29,7 +29,7 @@ id _FBSDKCastToClassOrNilUnsafeInternal(id object, Class klass);
  #ifdef __cplusplus
 extern "C" {
  #endif
-/** Use the type-safe FBSDK_CAST_TO_PROTOCOL_OR_NIL instead. */
+/*** Use the type-safe FBSDK_CAST_TO_PROTOCOL_OR_NIL instead. */
 id _FBSDKCastToProtocolOrNilUnsafeInternal(id object, Protocol *protocol);
  #ifdef __cplusplus
 }
