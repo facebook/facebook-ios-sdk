@@ -109,6 +109,7 @@
  #import <FBSDKCoreKit/FBSDKURLOpener.h>
  #import <FBSDKCoreKit/FBSDKURLOpening.h>
  #import <FBSDKCoreKit/FBSDKWebDialog.h>
+ #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
  #import <FBSDKCoreKit/FBSDKWebDialogView.h>
  #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
  #import <FBSDKCoreKit/FBSDKWindowFinding.h>

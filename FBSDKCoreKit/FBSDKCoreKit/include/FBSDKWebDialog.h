@@ -11,11 +11,12 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <Foundation/Foundation.h>
+
+#import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
+
 @protocol FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
-
-@protocol FBSDKWebDialogDelegate;
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -75,41 +76,6 @@ NS_SWIFT_NAME(WebDialog)
                         frame:(CGRect)frame
                      delegate:(id<FBSDKWebDialogDelegate>)delegate
                  windowFinder:(id<FBSDKWindowFinding>)windowFinder;
-
-@end
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-NS_SWIFT_NAME(WebDialogDelegate)
-@protocol FBSDKWebDialogDelegate
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error;
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog;
 
 @end
 
