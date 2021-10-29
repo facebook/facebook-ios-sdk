@@ -34,8 +34,8 @@ NS_SWIFT_NAME(BridgeAPIRequestOpening)
              completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock;
 
 - (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
+                                 sender:(nullable id<FBSDKURLOpening>)sender
+                     fromViewController:(nullable UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler;
 
 - (void)openURL:(NSURL *)url

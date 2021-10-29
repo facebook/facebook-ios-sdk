@@ -30,8 +30,8 @@ public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
 
   public func openURL(
     withSafariViewController url: URL,
-    sender: URLOpening,
-    from fromViewController: UIViewController,
+    sender: URLOpening?,
+    from fromViewController: UIViewController?,
     handler: @escaping SuccessBlock
   ) {
     openURLWithSFVCCount += 1
