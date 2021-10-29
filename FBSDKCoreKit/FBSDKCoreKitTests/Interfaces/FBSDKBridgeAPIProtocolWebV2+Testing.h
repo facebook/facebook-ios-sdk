@@ -8,19 +8,11 @@
 
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 
-@protocol FBSDKServerConfigurationProviding;
-@protocol FBSDKBridgeAPIProtocol;
 @class FBSDKDialogConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPIProtocolWebV2 (Testing)
-
-@property (nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
-
-- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                       nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge;
 
 - (nullable NSURL *)_redirectURLWithActionID:(nullable NSString *)actionID
                                   methodName:(nullable NSString *)methodName

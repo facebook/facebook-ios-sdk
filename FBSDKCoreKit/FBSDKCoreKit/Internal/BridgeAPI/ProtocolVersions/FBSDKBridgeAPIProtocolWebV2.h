@@ -11,11 +11,22 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKBridgeAPIProtocol.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKServerConfigurationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(BridgeAPIProtocolWebV2)
 @interface FBSDKBridgeAPIProtocolWebV2 : NSObject <FBSDKBridgeAPIProtocol>
+
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
+@property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                       nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
+                                       errorFactory:(id<FBSDKErrorCreating>)errorFactory;
+
 @end
 
 NS_ASSUME_NONNULL_END

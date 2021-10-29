@@ -14,19 +14,12 @@
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKDialogConfiguration.h"
-#import "FBSDKError.h"
+#import "FBSDKErrorCreating.h"
 #import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKServerConfigurationProviding.h"
-
-@interface FBSDKBridgeAPIProtocolWebV2 ()
-
-@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
-
-@end
 
 @implementation FBSDKBridgeAPIProtocolWebV2
 
@@ -41,16 +34,20 @@
                                                                                        includeAppIcon:NO
                                                                                          errorFactory:errorFactory];
   return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared
-                                      nativeBridge:nativeBridge];
+                                      nativeBridge:nativeBridge
+                                      errorFactory:errorFactory];
 }
 
 - (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
+                                       errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   if ((self = [super init])) {
     _serverConfigurationProvider = serverConfigurationProvider;
     _nativeBridge = nativeBridge;
+    _errorFactory = errorFactory;
   }
+
   return self;
 }
 
@@ -93,7 +90,10 @@
   FBSDKDialogConfiguration *dialogConfiguration = [serverConfiguration dialogConfigurationForDialogName:methodName];
   if (!dialogConfiguration) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError errorWithCode:FBSDKErrorDialogUnavailable message:nil];
+      *errorRef = [self.errorFactory errorWithCode:FBSDKErrorDialogUnavailable
+                                          userInfo:nil
+                                           message:nil
+                                   underlyingError:nil];
     }
     return nil;
   }

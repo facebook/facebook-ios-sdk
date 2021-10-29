@@ -26,14 +26,52 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   let validQueryParameters = ["Foo": "Bar"]
-  var serverConfigurationProvider = TestServerConfigurationProvider()
-  let nativeBridge = TestBridgeAPIProtocol()
-  lazy var bridge = BridgeAPIProtocolWebV2(
-    serverConfigurationProvider: serverConfigurationProvider,
-    nativeBridge: nativeBridge
-  )
 
-  func testDefaultDependencies() {
+  // swiftlint:disable implicitly_unwrapped_optional
+  var serverConfigurationProvider: ServerConfigurationProviding!
+  var nativeBridge: TestBridgeAPIProtocol!
+  var errorFactory: SDKErrorCreating!
+  var bridge: BridgeAPIProtocolWebV2!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    serverConfigurationProvider = TestServerConfigurationProvider()
+    nativeBridge = TestBridgeAPIProtocol()
+    errorFactory = TestErrorFactory()
+    bridge = BridgeAPIProtocolWebV2(
+      serverConfigurationProvider: serverConfigurationProvider,
+      nativeBridge: nativeBridge,
+      errorFactory: errorFactory
+    )
+  }
+
+  override func tearDown() {
+    serverConfigurationProvider = nil
+    nativeBridge = nil
+    errorFactory = nil
+    bridge = nil
+
+    super.tearDown()
+  }
+
+  func testInitializing() {
+    XCTAssertTrue(
+      bridge.serverConfigurationProvider is TestServerConfigurationProvider,
+      "Should be able to create with a custom server configuration provider"
+    )
+    XCTAssertTrue(
+      bridge.nativeBridge === nativeBridge,
+      "Should be able to create with a custom native bridge"
+    )
+    XCTAssertTrue(
+      bridge.errorFactory === errorFactory,
+      "Should be able to create with a custom error factory"
+    )
+  }
+
+  func testDefaultDependencies() throws {
     bridge = BridgeAPIProtocolWebV2()
 
     XCTAssertTrue(
@@ -44,17 +82,13 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       bridge.nativeBridge is BridgeAPIProtocolNativeV1,
       "Should use the expected default native bridge"
     )
-  }
-
-  func testCreatingWithCustomDependencies() {
-    XCTAssertTrue(
-      bridge.serverConfigurationProvider is TestServerConfigurationProvider,
-      "Should be able to create with a custom server configuration provider"
+    let factory = try XCTUnwrap(
+      bridge.errorFactory as? SDKErrorFactory,
+      "Should use the expected type of error factory by default"
     )
-    XCTAssertEqual(
-      bridge.nativeBridge as? TestBridgeAPIProtocol,
-      nativeBridge,
-      "Should be able to create with a custom native bridge"
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "The error factory should use the shared error reporter"
     )
   }
 
@@ -346,7 +380,8 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     serverConfigurationProvider = TestServerConfigurationProvider(configuration: configuration)
     bridge = BridgeAPIProtocolWebV2(
       serverConfigurationProvider: serverConfigurationProvider,
-      nativeBridge: nativeBridge
+      nativeBridge: nativeBridge,
+      errorFactory: errorFactory
     )
   }
 
