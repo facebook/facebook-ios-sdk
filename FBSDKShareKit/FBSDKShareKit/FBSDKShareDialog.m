@@ -55,6 +55,9 @@
 
 @end
 
+@interface FBSDKInternalUtility (ShareWindowFinding) <FBSDKWindowFinding>
+@end
+
 @implementation FBSDKShareDialog
 
 #pragma mark - Class Properties
@@ -156,6 +159,18 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
   _socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 }
 
+static _Nullable id<FBSDKWindowFinding> _windowFinder;
+
++ (nullable id<FBSDKWindowFinding>)windowFinder
+{
+  return _windowFinder;
+}
+
++ (void)setWindowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
+{
+  _windowFinder = windowFinder;
+}
+
 #pragma mark - Class Configuration
 
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
@@ -165,6 +180,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
                bridgeAPIRequestFactory:(nonnull id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
+                          windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
 {
   self.internalURLOpener = internalURLOpener;
   self.internalUtility = internalUtility;
@@ -173,6 +189,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
   self.bridgeAPIRequestFactory = bridgeAPIRequestFactory;
   self.bridgeAPIRequestOpener = bridgeAPIRequestOpener;
   self.socialComposeViewControllerFactory = socialComposeViewControllerFactory;
+  self.windowFinder = windowFinder;
 
   self.hasBeenConfigured = YES;
 }
@@ -189,7 +206,8 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
                           shareUtility:FBSDKShareUtility.self
                bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
-    socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]];
+    socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]
+                          windowFinder:FBSDKInternalUtility.sharedUtility];
 }
 
 static dispatch_once_t validateAPIURLSchemeRegisteredToken;

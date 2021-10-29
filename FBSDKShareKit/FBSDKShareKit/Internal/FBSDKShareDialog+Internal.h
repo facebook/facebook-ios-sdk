@@ -13,6 +13,7 @@
 
 @protocol FBSDKShareUtility;
 @protocol FBSDKSocialComposeViewControllerFactory;
+@protocol FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestCreating> bridgeAPIRequestFactory;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
 @property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
+@property (class, nullable, nonatomic) id<FBSDKWindowFinding> windowFinder;
 
 @end
 

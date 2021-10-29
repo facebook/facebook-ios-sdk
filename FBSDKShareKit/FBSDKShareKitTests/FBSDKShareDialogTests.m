@@ -37,6 +37,7 @@
 @property (nonnull, nonatomic) TestBridgeAPIRequestFactory *bridgeAPIRequestFactory;
 @property (nonnull, nonatomic) TestBridgeAPIRequestOpener *bridgeAPIRequestOpener;
 @property (nonnull, nonatomic) TestSocialComposeViewControllerFactory *socialComposeViewControllerFactory;
+@property (nonnull, nonatomic) TestWindowFinder *windowFinder;
 
 @end
 
@@ -55,6 +56,7 @@
   self.bridgeAPIRequestFactory = [TestBridgeAPIRequestFactory new];
   self.bridgeAPIRequestOpener = [TestBridgeAPIRequestOpener new];
   self.socialComposeViewControllerFactory = [TestSocialComposeViewControllerFactory new];
+  self.windowFinder = [TestWindowFinder new];
 
   [FBSDKShareDialog configureWithInternalURLOpener:self.internalURLOpener
                                    internalUtility:self.internalUtility
@@ -62,7 +64,8 @@
                                       shareUtility:TestShareUtility.class
                            bridgeAPIRequestFactory:self.bridgeAPIRequestFactory
                             bridgeAPIRequestOpener:self.bridgeAPIRequestOpener
-                socialComposeViewControllerFactory:self.socialComposeViewControllerFactory];
+                socialComposeViewControllerFactory:self.socialComposeViewControllerFactory
+                                      windowFinder:self.windowFinder];
 
   [FBSDKShareCameraEffectContent configureWithInternalUtility:self.internalUtility];
 }
@@ -78,7 +81,7 @@
 
 #pragma mark - Native
 
-- (void)testClassDependencies
+- (void)testDefaultClassDependencies
 {
   [FBSDKShareDialog resetClassDependencies];
   [self createEmptyDialog];
@@ -115,6 +118,11 @@
   XCTAssertTrue(
     [(NSObject *)FBSDKShareDialog.socialComposeViewControllerFactory isMemberOfClass:FBSDKSocialComposeViewControllerFactory.class],
     @"FBSDKShareDialog should create a new factory for its social compose view controller factory dependency by default"
+  );
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.windowFinder,
+    FBSDKInternalUtility.sharedUtility,
+    @"FBSDKShareDialog should use the shared internal utility for its default window finding dependency"
   );
 }
 

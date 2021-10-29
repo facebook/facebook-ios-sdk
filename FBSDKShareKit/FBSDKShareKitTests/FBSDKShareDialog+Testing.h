@@ -8,6 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKShareDialog+Internal.h"
 
 @protocol FBSDKShareUtility;
@@ -23,9 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
                           shareUtility:(Class<FBSDKShareUtility>)shareUtility
                bridgeAPIRequestFactory:(id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
-    socialComposeViewControllerFactory:(id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory;
-
-+ (void)configureClassDependencies;
+    socialComposeViewControllerFactory:(id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
+                          windowFinder:(id<FBSDKWindowFinding>)windowFinder;
 
 + (void)resetClassDependencies;
 
