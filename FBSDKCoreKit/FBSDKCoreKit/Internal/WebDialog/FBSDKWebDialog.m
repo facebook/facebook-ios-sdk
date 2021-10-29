@@ -32,44 +32,53 @@ static FBSDKWebDialog *g_currentDialog = nil;
 @end
 
 @interface FBSDKWebDialog ()
-@property (nonatomic) UIView *backgroundView;
-@property (nonatomic) FBSDKWebDialogView *dialogView;
+@property (nullable, nonatomic) UIView *backgroundView;
+@property (nullable, nonatomic) FBSDKWebDialogView *dialogView;
 @end
 
 @implementation FBSDKWebDialog
 
 #pragma mark - Class Methods
 
+- (instancetype)initWithName:(NSString *)name
+                  parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                       frame:(CGRect)frame
+                    delegate:(id<FBSDKWebDialogDelegate>)delegate
+                windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
+{
+  if ((self = [super init])) {
+    _shouldDeferVisibility = NO;
+    _name = [name copy];
+    _parameters = [parameters copy];
+    _webViewFrame = frame;
+    _delegate = delegate;
+    _windowFinder = windowFinder;
+  }
+
+  return self;
+}
+
 + (instancetype)dialogWithName:(NSString *)name
                       delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
-  FBSDKWebDialog *dialog = [self new];
-  dialog.name = name;
-  dialog.delegate = delegate;
-  return dialog;
+  return [[self alloc] initWithName:name
+                         parameters:nil
+                              frame:CGRectZero
+                           delegate:delegate
+                       windowFinder:nil];
 }
 
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary<NSString *, id> *)parameters
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate
++ (instancetype)createAndShowWithName:(NSString *)name
+                           parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                frame:(CGRect)frame
+                             delegate:(id<FBSDKWebDialogDelegate>)delegate
+                         windowFinder:(id<FBSDKWindowFinding>)windowFinder
 {
-  return [self createAndShow:name
-                  parameters:parameters
-                       frame:CGRectZero
-                    delegate:delegate
-                windowFinder:FBSDKInternalUtility.sharedUtility];
-}
-
-+ (instancetype)createAndShow:(NSString *)name
-                   parameters:(NSDictionary<NSString *, id> *)parameters
-                        frame:(CGRect)frame
-                     delegate:(id<FBSDKWebDialogDelegate>)delegate
-                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
-{
-  FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
-  dialog.parameters = parameters;
-  dialog.webViewFrame = frame;
-  dialog.windowFinder = windowFinder;
+  FBSDKWebDialog *dialog = [[self alloc] initWithName:name
+                                           parameters:parameters
+                                                frame:CGRectZero
+                                             delegate:delegate
+                                         windowFinder:windowFinder];
   [dialog show];
   return dialog;
 }

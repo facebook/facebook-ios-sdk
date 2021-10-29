@@ -10,18 +10,34 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
+// swiftlint:disable implicitly_unwrapped_optional
+
 class WebDialogTests: XCTestCase, WebDialogDelegate {
 
-  let windowFinder = TestWindowFinder()
-  let dialogView = FBWebDialogView()
+  var windowFinder: WindowFinding!
+  var dialogView: FBWebDialogView!
   var webDialogDidCancelWasCalled = false
   var webDialogDidFailWasCalled = false
   var capturedDidCompleteResults: [String: String]?
   var capturedError: Error?
   var parameters = ["foo": "bar"]
 
+  override func setUp() {
+    windowFinder = TestWindowFinder()
+    dialogView = FBWebDialogView()
+
+    super.setUp()
+  }
+
+  override func tearDown() {
+    windowFinder = nil
+    dialogView = nil
+
+    super.tearDown()
+  }
+
   func testShowWithInvalidUrlFromParameters() {
-    let dialog = createAndShowDialog(name: name, windowFinder: windowFinder)
+    let dialog = createAndShowDialog(name: name)
 
     XCTAssertEqual(
       dialog.name,
@@ -44,7 +60,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   }
 
   func testShowWithValidUrlFromParametersWithoutWindow() {
-    createAndShowDialog(windowFinder: windowFinder)
+    createAndShowDialog()
 
     XCTAssertTrue(
       self.webDialogDidFailWasCalled,
@@ -101,13 +117,14 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   func createAndShowDialog(
     name: String = "example",
     parameters: [String: String]? = nil,
-    windowFinder: TestWindowFinder = TestWindowFinder(window: UIWindow()),
     delegate: WebDialogDelegate? = nil
   ) -> WebDialog {
-    WebDialog.show(
-      withName: name,
+    WebDialog.createAndShow(
+      name: name,
       parameters: parameters ?? self.parameters,
-      delegate: delegate ?? self
+      frame: .zero,
+      delegate: delegate ?? self,
+      windowFinder: windowFinder
     )
   }
 

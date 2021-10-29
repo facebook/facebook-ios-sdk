@@ -763,9 +763,11 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSDictionary<NSString *, id> *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
-  _webDialog = [FBSDKWebDialog showWithName:FBSDK_SHARE_FEED_METHOD_NAME
-                                 parameters:parameters
-                                   delegate:self];
+  _webDialog = [FBSDKWebDialog createAndShowWithName:FBSDK_SHARE_FEED_METHOD_NAME
+                                          parameters:parameters
+                                               frame:CGRectZero
+                                            delegate:self
+                                        windowFinder:self.class.windowFinder];
   return YES;
 }
 
@@ -920,9 +922,11 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
                                                error:errorRef]) {
     return NO;
   }
-  _webDialog = [FBSDKWebDialog showWithName:methodName
-                                 parameters:parameters
-                                   delegate:self];
+  _webDialog = [FBSDKWebDialog createAndShowWithName:methodName
+                                          parameters:parameters
+                                               frame:CGRectZero
+                                            delegate:self
+                                        windowFinder:self.class.windowFinder];
   return YES;
 }
 

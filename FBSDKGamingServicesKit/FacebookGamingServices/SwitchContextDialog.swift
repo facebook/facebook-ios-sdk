@@ -68,7 +68,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
     }
 
     currentWebDialog = WebDialog.createAndShow(
-      "context",
+      name: "context",
       parameters: [Keys.contextID: content.contextTokenID],
       frame: frame,
       delegate: self,
