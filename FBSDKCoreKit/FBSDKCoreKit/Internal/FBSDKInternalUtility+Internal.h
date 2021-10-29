@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKInternalUtility.h"
+#import "FBSDKWindowFinding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,9 @@ typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
 
 @interface FBSDKInternalUtility (Internal)
+#if !TARGET_OS_TV
+<FBSDKWindowFinding>
+#endif
 
 + (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 

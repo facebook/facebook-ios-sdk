@@ -16,7 +16,6 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKInternalUtility+WindowFinding.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKWebDialogView.h"
