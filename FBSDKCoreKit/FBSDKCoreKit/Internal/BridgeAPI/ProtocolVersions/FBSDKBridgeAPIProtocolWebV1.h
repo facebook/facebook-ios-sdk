@@ -11,11 +11,17 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKBridgeAPIProtocol.h"
+#import "FBSDKErrorCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(BridgeAPIProtocolWebV1)
 @interface FBSDKBridgeAPIProtocolWebV1 : NSObject <FBSDKBridgeAPIProtocol>
+
+@property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+
+- (instancetype)initWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory;
+
 @end
 
 NS_ASSUME_NONNULL_END

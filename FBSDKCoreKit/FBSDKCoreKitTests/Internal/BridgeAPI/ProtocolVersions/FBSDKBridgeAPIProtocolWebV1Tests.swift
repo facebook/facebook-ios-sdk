@@ -57,7 +57,43 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     }
   }
 
-  let bridge = BridgeAPIProtocolWebV1()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var errorFactory: SDKErrorCreating!
+  var bridge: BridgeAPIProtocolWebV1!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    errorFactory = TestErrorFactory()
+    bridge = BridgeAPIProtocolWebV1(errorFactory: errorFactory)
+  }
+
+  override func tearDown() {
+    errorFactory = nil
+    bridge = nil
+
+    super.tearDown()
+  }
+
+  func testInitialization() {
+    XCTAssertTrue(
+      bridge.errorFactory === errorFactory,
+      "Should be able to create an instance with an error factory"
+    )
+  }
+
+  func testDefaultDependencies() throws {
+    bridge = BridgeAPIProtocolWebV1()
+    let factory = try XCTUnwrap(
+      bridge.errorFactory as? SDKErrorFactory,
+      "The class should have an error factory by default"
+    )
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "The default factory should use the shared error reporter"
+    )
+  }
 
   func testCreatingURLWithAllFields() throws {
     let url = try bridge.requestURL(

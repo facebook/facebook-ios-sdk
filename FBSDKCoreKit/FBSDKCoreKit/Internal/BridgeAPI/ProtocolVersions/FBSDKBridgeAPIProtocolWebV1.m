@@ -15,7 +15,9 @@
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKError.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 
 #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY @"action_id"
@@ -23,7 +25,24 @@
 
 @implementation FBSDKBridgeAPIProtocolWebV1
 
-#pragma mark - FBSDKBridgeAPIProtocol
+// MARK: - Object Lifecycle
+
+- (instancetype)init
+{
+  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  return [self initWithErrorFactory:factory];
+}
+
+- (instancetype)initWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+{
+  if ((self = [super init])) {
+    _errorFactory = errorFactory;
+  }
+
+  return self;
+}
+
+// MARK: - FBSDKBridgeAPIProtocol
 
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                                     scheme:(NSString *)scheme
@@ -74,8 +93,11 @@
     }
     default: {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError errorWithCode:errorCode
-                                      message:[FBSDKTypeUtility coercedToStringValue:queryParameters[@"error_message"]]];
+        NSString *message = [FBSDKTypeUtility coercedToStringValue:queryParameters[@"error_message"]];
+        *errorRef = [self.errorFactory errorWithCode:errorCode
+                                            userInfo:nil
+                                             message:message
+                                     underlyingError:nil];
       }
       return nil;
     }
@@ -86,11 +108,10 @@
   NSDictionary<id, id> *bridgeParameters = [FBSDKBasicUtility objectForJSONString:bridgeParametersJSON error:&error];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
-                                                        name:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
-                                                       value:bridgeParametersJSON
-                                                     message:nil
-                                             underlyingError:error];
+      *errorRef = [self.errorFactory invalidArgumentErrorWithName:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
+                                                            value:bridgeParametersJSON
+                                                          message:nil
+                                                  underlyingError:error];
     }
     return nil;
   }
