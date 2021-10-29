@@ -23,7 +23,7 @@
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
-#import "FBSDKGraphRequestConnectionFactory.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
@@ -95,23 +95,13 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 #else
 <NSURLSessionDataDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
 #endif
+
 @end
 
 // ----------------------------------------------------------------------------
 // FBSDKGraphRequestConnection
 
 @implementation FBSDKGraphRequestConnection
-{
-  NSString *_overrideVersionPart;
-  NSUInteger _expectingResults;
-  NSOperationQueue *_delegateQueue;
-  id<FBSDKURLSessionProxying> _session;
-  id<FBSDKURLSessionProxyProviding> _sessionProxyFactory;
-#if !TARGET_OS_TV
-  FBSDKGraphRequestMetadata *_recoveringRequestMetadata;
-  FBSDKGraphErrorRecoveryProcessor *_errorRecoveryProcessor;
-#endif
-}
 
 static BOOL _canMakeRequests = NO;
 
@@ -221,9 +211,7 @@ static BOOL _canMakeRequests = NO;
 
 - (void)overrideGraphAPIVersion:(NSString *)version
 {
-  if (![_overrideVersionPart isEqualToString:version]) {
-    _overrideVersionPart = [version copy];
-  }
+  self.overriddenVersionPart = [version copy];
 }
 
 - (void)start
@@ -252,7 +240,7 @@ static BOOL _canMakeRequests = NO;
   self.state = kStateStarted;
 
   [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
-  _requestStartTime = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds];
+  self.requestStartTime = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds];
 
   FBSDKURLSessionTaskBlock completionHandler = ^(NSData *responseDataV1, NSURLResponse *responseV1, NSError *errorV1) {
     FBSDKURLSessionTaskBlock handler = ^(NSData *responseDataV2,
@@ -273,8 +261,8 @@ static BOOL _canMakeRequests = NO;
 
   id<FBSDKGraphRequestConnectionDelegate> delegate = self.delegate;
   if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:)]) {
-    if (_delegateQueue) {
-      [_delegateQueue addOperationWithBlock:^{
+    if (self.delegateQueue) {
+      [self.delegateQueue addOperationWithBlock:^{
         [delegate requestConnectionWillBeginLoading:self];
       }];
     } else {
@@ -283,14 +271,9 @@ static BOOL _canMakeRequests = NO;
   }
 }
 
-- (NSOperationQueue *)delegateQueue
-{
-  return _delegateQueue;
-}
-
 - (void)setDelegateQueue:(NSOperationQueue *)queue
 {
-  _session.delegateQueue = queue;
+  self.session.delegateQueue = queue;
   _delegateQueue = queue;
 }
 
@@ -304,16 +287,6 @@ static BOOL _canMakeRequests = NO;
 + (BOOL)canMakeRequests
 {
   return _canMakeRequests;
-}
-
-- (id<FBSDKURLSessionProxying>)session
-{
-  return _session;
-}
-
-- (id<FBSDKURLSessionProxyProviding>)sessionProxyFactory
-{
-  return _sessionProxyFactory;
 }
 
 #pragma mark - Private methods (request generation)
@@ -467,8 +440,8 @@ static BOOL _canMakeRequests = NO;
                                   timeout:(NSTimeInterval)timeout
 {
   FBSDKGraphRequestBody *body = [FBSDKGraphRequestBody new];
-  FBSDKLogger *bodyLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];
-  FBSDKLogger *attachmentLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];
+  FBSDKLogger *bodyLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:self.logger.loggingBehavior];
+  FBSDKLogger *attachmentLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:self.logger.loggingBehavior];
 
   NSMutableURLRequest *request;
 
@@ -498,7 +471,7 @@ static BOOL _canMakeRequests = NO;
   } else {
     // Find the session with an app ID and use that as the batch_app_id. If we can't
     // find one, try to load it from the plist. As a last resort, pass 0.
-    NSString *batchAppID = _settings.appID;
+    NSString *batchAppID = self.settings.appID;
     if (!batchAppID || batchAppID.length == 0) {
       // The Graph API batch method requires either an access token or batch_app_id.
       // If we can't determine an App ID to use for the batch, we can't issue it.
@@ -526,7 +499,7 @@ static BOOL _canMakeRequests = NO;
                   facebookURLWithHostPrefix:kGraphURLPrefix
                   path:@""
                   queryParameters:@{}
-                  defaultVersion:_overrideVersionPart
+                  defaultVersion:self.overriddenVersionPart
                   error:NULL];
 
     request = [NSMutableURLRequest requestWithURL:url
@@ -642,7 +615,7 @@ static BOOL _canMakeRequests = NO;
       response
     );
 
-    NSInteger statusCode = _urlResponse.statusCode;
+    NSInteger statusCode = self.urlResponse.statusCode;
 
     if (!error && [response.MIMEType hasPrefix:@"image"]) {
       NSString *message = @"Response is a non-text MIME type; endpoints that return images and other binary data should be fetched using NSURLRequest and NSURLSession";
@@ -667,21 +640,21 @@ static BOOL _canMakeRequests = NO;
                                        message:message
                                underlyingError:nil];
     } else {
-      [_logger appendFormat:@"Response <#%lu>\nDuration: %llu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
-       (unsigned long)_logger.loggerSerialNumber,
-       [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds] - _requestStartTime,
+      [self.logger appendFormat:@"Response <#%lu>\nDuration: %llu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
+       (unsigned long)self.logger.loggerSerialNumber,
+       [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds] - self.requestStartTime,
        (unsigned long)data.length,
        results];
     }
   }
 
   if (error) {
-    [_logger appendFormat:@"Response <#%lu> <Error>:\n%@\n%@\n",
-     (unsigned long)_logger.loggerSerialNumber,
+    [self.logger appendFormat:@"Response <#%lu> <Error>:\n%@\n%@\n",
+     (unsigned long)self.logger.loggerSerialNumber,
      error.localizedDescription,
      error.userInfo];
   }
-  [_logger emitToNSLog];
+  [self.logger emitToNSLog];
 
   [self _completeWithResults:results networkError:error];
 
@@ -817,7 +790,7 @@ static BOOL _canMakeRequests = NO;
                 networkError:(NSError *)networkError
 {
   NSUInteger count = self.requests.count;
-  _expectingResults = count;
+  self.expectingResults = count;
   NSUInteger disabledRecoveryCount = 0;
   for (FBSDKGraphRequestMetadata *metadata in self.requests) {
     if ([metadata.request isGraphErrorRecoveryDisabled]) {
@@ -854,8 +827,8 @@ static BOOL _canMakeRequests = NO;
   }];
 
   if (networkError) {
-    if ([_delegate respondsToSelector:@selector(requestConnection:didFailWithError:)]) {
-      [_delegate requestConnection:self didFailWithError:networkError];
+    if ([self.delegate respondsToSelector:@selector(requestConnection:didFailWithError:)]) {
+      [self.delegate requestConnection:self didFailWithError:networkError];
     }
   }
 }
@@ -1103,28 +1076,34 @@ static BOOL _canMakeRequests = NO;
         bodyLogger:(FBSDKLogger *)bodyLogger
   attachmentLogger:(FBSDKLogger *)attachmentLogger
 {
-  if (_logger.isActive) {
-    [_logger appendFormat:@"Request <#%lu>:\n", (unsigned long)_logger.loggerSerialNumber];
-    [_logger appendKey:@"URL" value:request.URL.absoluteString];
-    [_logger appendKey:@"Method" value:request.HTTPMethod];
-    [_logger appendKey:@"UserAgent" value:[request valueForHTTPHeaderField:@"User-Agent"]];
-    [_logger appendKey:@"MIME" value:[request valueForHTTPHeaderField:@"Content-Type"]];
+  if (self.logger.isActive) {
+    [self.logger appendFormat:@"Request <#%lu>:\n", (unsigned long)self.logger.loggerSerialNumber];
+    [self.logger appendKey:@"URL" value:request.URL.absoluteString];
+    [self.logger appendKey:@"Method" value:request.HTTPMethod];
+    NSString *userAgent = [request valueForHTTPHeaderField:@"User-Agent"];
+    if (userAgent) {
+      [self.logger appendKey:@"UserAgent" value:userAgent];
+    }
+    NSString *mimeType = [request valueForHTTPHeaderField:@"Content-Type"];
+    if (mimeType) {
+      [self.logger appendKey:@"MIME" value:mimeType];
+    }
 
     if (bodyLength != 0) {
-      [_logger appendKey:@"Body Size" value:[NSString stringWithFormat:@"%lu kB", (unsigned long)bodyLength / 1024]];
+      [self.logger appendKey:@"Body Size" value:[NSString stringWithFormat:@"%lu kB", (unsigned long)bodyLength / 1024]];
     }
 
     if (bodyLogger != nil) {
-      [_logger appendKey:@"Body (w/o attachments)" value:bodyLogger.contents];
+      [self.logger appendKey:@"Body (w/o attachments)" value:bodyLogger.contents];
     }
 
     if (attachmentLogger != nil) {
-      [_logger appendKey:@"Attachments" value:attachmentLogger.contents];
+      [self.logger appendKey:@"Attachments" value:attachmentLogger.contents];
     }
 
-    [_logger appendString:@"\n"];
+    [self.logger appendString:@"\n"];
 
-    [_logger emitToNSLog];
+    [self.logger emitToNSLog];
   }
 }
 
@@ -1134,7 +1113,7 @@ static BOOL _canMakeRequests = NO;
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
   FBSDKGraphRequestFlags flags = [request flags];
   if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.settings.clientToken length] > 0) {
-    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", _settings.appID, self.settings.clientToken];
+    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.settings.appID, self.settings.clientToken];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
     } else {
@@ -1206,7 +1185,7 @@ static BOOL _canMakeRequests = NO;
 {
   @try {
     if (didRecover) {
-      id<FBSDKGraphRequest> originalRequest = _recoveringRequestMetadata.request;
+      id<FBSDKGraphRequest> originalRequest = self.recoveringRequestMetadata.request;
       id<FBSDKGraphRequest> retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
                                                                              parameters:originalRequest.parameters
                                                                             tokenString:[[self.accessTokenProvider currentAccessToken] tokenString]
@@ -1214,16 +1193,16 @@ static BOOL _canMakeRequests = NO;
                                                                                 version:originalRequest.version
                                                                                   flags:FBSDKGraphRequestFlagDisableErrorRecovery
                                                           graphRequestConnectionFactory:self.graphRequestConnectionFactory];
-      FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
+      FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:self.recoveringRequestMetadata.completionHandler batchParameters:self.recoveringRequestMetadata.batchParameters];
       [retryRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
         self->_errorRecoveryProcessor = nil;
         self->_recoveringRequestMetadata = nil;
       }];
     } else {
-      [self processResultBody:nil error:error metadata:_recoveringRequestMetadata canNotifyDelegate:YES];
-      _errorRecoveryProcessor = nil;
-      _recoveringRequestMetadata = nil;
+      [self processResultBody:nil error:error metadata:self.recoveringRequestMetadata canNotifyDelegate:YES];
+      self.errorRecoveryProcessor = nil;
+      self.recoveringRequestMetadata = nil;
     }
   } @catch (NSException *exception) {}
 }
@@ -1259,11 +1238,6 @@ static BOOL _canMakeRequests = NO;
 + (void)resetDefaultConnectionTimeout
 {
   g_defaultTimeout = 60;
-}
-
-- (NSString *)_overrideVersionPart
-{
-  return _overrideVersionPart;
 }
 
 + (void)resetCanMakeRequests

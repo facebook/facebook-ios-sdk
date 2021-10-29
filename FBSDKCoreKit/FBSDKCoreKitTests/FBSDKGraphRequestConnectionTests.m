@@ -288,7 +288,7 @@
 - (void)testDefaultOverriddenVersionPart
 {
   XCTAssertNil(
-    [self.connection _overrideVersionPart],
+    self.connection.overriddenVersionPart,
     "There should not be an overridden version part by default"
   );
 }
@@ -299,7 +299,7 @@
   for (NSString *string in strings) {
     [self.connection overrideGraphAPIVersion:string];
     XCTAssertEqualObjects(
-      [self.connection _overrideVersionPart],
+      self.connection.overriddenVersionPart,
       string,
       "Should not be able to override the graph api version with %@ but you can",
       string
@@ -313,7 +313,7 @@
   for (NSString *string in strings) {
     [self.connection overrideGraphAPIVersion:string];
     XCTAssertEqualObjects(
-      [self.connection _overrideVersionPart],
+      self.connection.overriddenVersionPart,
       string,
       "Should be able to override the graph api version with a valid version string"
     );
@@ -328,7 +328,7 @@
 
   XCTAssertNotEqual(
     version,
-    [self.connection _overrideVersionPart],
+    self.connection.overriddenVersionPart,
     "Should copy the version so that changes to the original string do not affect the stored value"
   );
 }
@@ -1479,6 +1479,8 @@
 - (void)testLogRequestWithActiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
+  [request addValue:@"user agent" forHTTPHeaderField:@"User-Agent"];
+  [request addValue:@"content type" forHTTPHeaderField:@"Content-Type"];
   TestLogger *logger = [self createLogger];
   TestLogger *bodyLogger = [self createLogger];
   TestLogger *attachmentLogger = [self createLogger];
@@ -1504,8 +1506,8 @@
   NSArray *expectedValues = @[
     @"https://example.com",
     @"GET",
-    @"",
-    @"",
+    @"user agent",
+    @"content type",
     @"1 kB",
     @"bodyContents",
     @"attachmentLoggerContents"

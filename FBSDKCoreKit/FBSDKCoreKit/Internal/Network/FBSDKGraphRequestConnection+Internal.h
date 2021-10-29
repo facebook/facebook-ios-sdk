@@ -15,6 +15,7 @@
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorCreating.h"
 #import "FBSDKEventLogging.h"
+#import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
@@ -54,6 +55,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 @property (nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
 @property (nonatomic) id<FBSDKErrorCreating> errorFactory;
+@property (nullable, nonatomic) NSString *overriddenVersionPart;
+@property (nonatomic) NSUInteger expectingResults;
+#if !TARGET_OS_TV
+@property (nullable, nonatomic) FBSDKGraphRequestMetadata *recoveringRequestMetadata;
+@property (nullable, nonatomic) FBSDKGraphErrorRecoveryProcessor *errorRecoveryProcessor;
+#endif
 
 + (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;
