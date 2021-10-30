@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(SDKErrorCreating)
+NS_SWIFT_NAME(ErrorCreating)
 @protocol FBSDKErrorCreating
 
 // MARK: - General Errors

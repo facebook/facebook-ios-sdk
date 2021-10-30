@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(SDKErrorFactory)
+NS_SWIFT_NAME(ErrorFactory)
 @interface FBSDKErrorFactory : NSObject <FBSDKErrorCreating>
 
 @property (nonatomic, strong) id<FBSDKErrorReporting> reporter;

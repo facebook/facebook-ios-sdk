@@ -33,7 +33,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
     )
 
     let factory = try XCTUnwrap(
-      resolver.errorFactory as? SDKErrorFactory,
+      resolver.errorFactory as? ErrorFactory,
       "Should create an error factory"
     )
     XCTAssertTrue(

@@ -86,7 +86,7 @@ final class ErrorFactoryTests: XCTestCase {
 
   // MARK: - Test Fixture
 
-  lazy var factory = SDKErrorFactory(reporter: reporter)
+  lazy var factory = ErrorFactory(reporter: reporter)
   let reporter = TestErrorReporter()
   var error: Error! // swiftlint:disable:this implicitly_unwrapped_optional
   var nsError: NSError { error as NSError }

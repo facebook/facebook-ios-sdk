@@ -7,7 +7,7 @@
  */
 
 @objcMembers
-final class TestErrorFactory: NSObject, SDKErrorCreating {
+final class TestErrorFactory: NSObject, ErrorCreating {
   func error(
     code: Int,
     userInfo: [String: Any]? = nil,

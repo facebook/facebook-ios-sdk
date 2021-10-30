@@ -58,7 +58,7 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
   }
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var errorFactory: SDKErrorCreating!
+  var errorFactory: ErrorCreating!
   var bridge: BridgeAPIProtocolWebV1!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -86,7 +86,7 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
   func testDefaultDependencies() throws {
     bridge = BridgeAPIProtocolWebV1()
     let factory = try XCTUnwrap(
-      bridge.errorFactory as? SDKErrorFactory,
+      bridge.errorFactory as? ErrorFactory,
       "The class should have an error factory by default"
     )
     XCTAssertTrue(

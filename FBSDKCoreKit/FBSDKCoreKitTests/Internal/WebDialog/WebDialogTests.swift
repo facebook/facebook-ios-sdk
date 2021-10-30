@@ -16,7 +16,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
 
   var windowFinder: WindowFinding!
   var dialogView: FBWebDialogView!
-  var errorFactory: SDKErrorCreating!
+  var errorFactory: ErrorCreating!
   var webDialogDidCancelWasCalled = false
   var webDialogDidFailWasCalled = false
   var capturedDidCompleteResults: [String: String]?
@@ -54,7 +54,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     _ = WebDialog(name: "test", delegate: self)
 
     let errorFactory = try XCTUnwrap(
-      WebDialog.errorFactory as? SDKErrorFactory,
+      WebDialog.errorFactory as? ErrorFactory,
       "The web dialog class should use a standard error factory by default"
     )
     XCTAssertTrue(

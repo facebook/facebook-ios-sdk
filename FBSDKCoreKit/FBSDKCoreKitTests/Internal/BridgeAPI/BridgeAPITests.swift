@@ -49,7 +49,7 @@ class BridgeAPITests: XCTestCase {
     )
 
     let factory = try XCTUnwrap(
-      BridgeAPI.shared.errorFactory as? SDKErrorFactory,
+      BridgeAPI.shared.errorFactory as? ErrorFactory,
       "Should create an error factory"
     )
     XCTAssertTrue(
