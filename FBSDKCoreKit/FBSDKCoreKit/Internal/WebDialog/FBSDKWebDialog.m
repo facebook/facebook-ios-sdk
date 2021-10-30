@@ -14,7 +14,8 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
@@ -32,13 +33,68 @@ static FBSDKWebDialog *g_currentDialog = nil;
 @end
 
 @interface FBSDKWebDialog ()
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
 @property (nullable, nonatomic) UIView *backgroundView;
 @property (nullable, nonatomic) FBSDKWebDialogView *dialogView;
+
 @end
 
 @implementation FBSDKWebDialog
 
-#pragma mark - Class Methods
+// MARK: - Class Dependencies
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static id<FBSDKErrorCreating> _errorFactory;
+
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return _errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  _errorFactory = errorFactory;
+}
+
++ (void)configureWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+{
+  self.errorFactory = errorFactory;
+  self.hasBeenConfigured = YES;
+}
+
++ (void)configureDefaultClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithErrorFactory:[[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared]];
+}
+
+#if FBTEST && DEBUG
+
++ (void)resetClassDependencies
+{
+  self.errorFactory = nil;
+  self.hasBeenConfigured = NO;
+}
+
+#endif
+
+// MARK: - Object Lifecycle
 
 - (instancetype)initWithName:(NSString *)name
                   parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -46,6 +102,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
                 windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
 {
+  [self.class configureDefaultClassDependencies];
+
   if ((self = [super init])) {
     _shouldDeferVisibility = NO;
     _name = [name copy];
@@ -57,6 +115,15 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
   return self;
 }
+
+- (void)dealloc
+{
+  _dialogView.delegate = nil;
+  [_dialogView removeFromSuperview];
+  [_backgroundView removeFromSuperview];
+}
+
+// MARK: - Factory Methods
 
 + (instancetype)dialogWithName:(NSString *)name
                       delegate:(id<FBSDKWebDialogDelegate>)delegate
@@ -83,15 +150,6 @@ static FBSDKWebDialog *g_currentDialog = nil;
   return dialog;
 }
 
-#pragma mark - Object Lifecycle
-
-- (void)dealloc
-{
-  _dialogView.delegate = nil;
-  [_dialogView removeFromSuperview];
-  [_backgroundView removeFromSuperview];
-}
-
 #pragma mark - Public Methods
 
 - (BOOL)show
@@ -113,8 +171,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+                           logEntry:@"There are no valid windows in which to present this web dialog"];
+    error = [self.class.errorFactory unknownErrorWithMessage:@"There are no valid windows in which to present this web dialog"
+                                                    userInfo:nil];
     [self _failWithError:error];
     return NO;
   }
@@ -266,8 +325,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    NSError *error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+                           logEntry:@"There are no valid windows in which to present this web dialog"];
+    NSError *error = [self.class.errorFactory unknownErrorWithMessage:@"There are no valid windows in which to present this web dialog"
+                                                             userInfo:nil];
     [self _failWithError:error];
     return NO;
   }

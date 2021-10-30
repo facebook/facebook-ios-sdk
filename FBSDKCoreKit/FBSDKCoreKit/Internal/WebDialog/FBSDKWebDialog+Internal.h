@@ -13,11 +13,15 @@
 
 #import <FBSDKCoreKit/FBSDKWebDialog.h>
 
+#import "FBSDKErrorCreating.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKWebDialogDelegate;
 
 @interface FBSDKWebDialog ()
+
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 @property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
 @property (nonatomic, copy) NSString *name;
@@ -25,6 +29,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGRect webViewFrame;
 
 - (BOOL)show;
+
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(errorFactory:));
+// UNCRUSTIFY_FORMAT_ON
+
+#if FBTEST && DEBUG
+
++ (void)resetClassDependencies;
+
+#endif
 
 @end
 

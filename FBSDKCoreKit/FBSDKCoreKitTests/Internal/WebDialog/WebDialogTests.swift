@@ -16,6 +16,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
 
   var windowFinder: WindowFinding!
   var dialogView: FBWebDialogView!
+  var errorFactory: SDKErrorCreating!
   var webDialogDidCancelWasCalled = false
   var webDialogDidFailWasCalled = false
   var capturedDidCompleteResults: [String: String]?
@@ -23,6 +24,9 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   var parameters = ["foo": "bar"]
 
   override func setUp() {
+    errorFactory = TestErrorFactory()
+    WebDialog.configure(errorFactory: errorFactory)
+
     windowFinder = TestWindowFinder()
     dialogView = FBWebDialogView()
 
@@ -32,8 +36,31 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   override func tearDown() {
     windowFinder = nil
     dialogView = nil
+    errorFactory = nil
+
+    WebDialog.resetClassDependencies()
 
     super.tearDown()
+  }
+
+  func testClassDependencies() {
+    XCTAssertTrue(
+      WebDialog.errorFactory === errorFactory,
+      "Should be able to configure the web dialog class with an error factory"
+    )
+  }
+  func testDefaultClassDependencies() throws {
+    WebDialog.resetClassDependencies()
+    _ = WebDialog(name: "test", delegate: self)
+
+    let errorFactory = try XCTUnwrap(
+      WebDialog.errorFactory as? SDKErrorFactory,
+      "The web dialog class should use a standard error factory by default"
+    )
+    XCTAssertTrue(
+      errorFactory.reporter === ErrorReporter.shared,
+      "The error factory should use the shared error reporter"
+    )
   }
 
   func testShowWithInvalidUrlFromParameters() {
