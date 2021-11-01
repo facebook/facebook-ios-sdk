@@ -24,11 +24,11 @@ enum BinarySource {
     case local, remote
 
     static var current: Self {
-       if getenv("USE_LOCAL_FB_BINARIES") != nil {
+        if getenv("USE_LOCAL_FB_BINARIES") != nil {
             return .local
-       } else {
-           return .remote
-       }
+        } else {
+            return .remote
+        }
     }
 }
 
