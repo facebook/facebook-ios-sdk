@@ -42,7 +42,3 @@ push_specs_and_update FBSDKTVOSKit FacebookGamingServices
 
 # 6. FBSDKGamingServicesKit (dependencies: FacebookGamingServices)
 push_specs_and_update FBSDKGamingServicesKit
-
-# NOTE: The release might need to be published before publishing FacebookSDK will work since it tries to access a FacebookSDK_Static.zip from a release that hasn't been published
-# 7. FacebookSDK
-push_specs_and_update FacebookSDK
