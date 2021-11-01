@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
     s.author       = 'Facebook'
 
     s.platform     = :ios
-    s.ios.deployment_target = '9.0'
+    s.ios.deployment_target = '10.0'
 
     s.source = {
       http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
