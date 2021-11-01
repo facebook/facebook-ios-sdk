@@ -10,6 +10,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 12.1.0
 
+### Changed
+- When using SPM, FacebookAEM and FacebookBasics no longer have to be explicitly included
+
+### Fixed
+- FBSDKShareDialog show does nothing the first time (Issue #1919)
+- Unable to archive app for distribution using Xcode 12.5.1 and Swift Package Manager (Issue #1917)
+- iOS 15: NSKeyedUnarchiver warning (Issued #1887)
+
+### Deprecated
+- The aggregate FacebookSDK pod is deprecated. Please use one of the individual pods instead (i.e. FBSDKCoreKit,
+  FBSDKShareKit, FBSDKLoginKit, etc.)
+
 [2021-10-26](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.1.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.2...v12.1.0)
 
