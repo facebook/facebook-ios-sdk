@@ -16,6 +16,8 @@
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareDefines.h"
+#import "FBSDKShareDialogConfiguration+ShareDialogConfiguration.h"
+#import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
 
@@ -24,6 +26,7 @@
 @interface FBSDKMessageDialog ()
 
 @property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+@property (nonatomic) id<FBSDKShareDialogConfiguration> shareDialogConfiguration;
 
 @end
 
@@ -50,18 +53,21 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
   return [self initWithContent:content
-                        delegate:delegate
-          appAvailabilityChecker:FBSDKInternalUtility.sharedUtility];
+                          delegate:delegate
+            appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
+          shareDialogConfiguration:[FBSDKShareDialogConfiguration new]];
 }
 
 - (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
          appAvailabilityChecker:(nonnull id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+       shareDialogConfiguration:(nonnull id<FBSDKShareDialogConfiguration>)shareDialogConfiguration
 {
   if ((self = [super init])) {
     _shareContent = content;
     _delegate = delegate;
     _appAvailabilityChecker = appAvailabilityChecker;
+    _shareDialogConfiguration = shareDialogConfiguration;
   }
 
   return self;
@@ -164,7 +170,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (BOOL)_canShowNative
 {
-  BOOL useNativeDialog = [[FBSDKShareDialogConfiguration new]
+  BOOL useNativeDialog = [self.shareDialogConfiguration
                           shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
 
   return (useNativeDialog && [self.appAvailabilityChecker isMessengerAppInstalled]);

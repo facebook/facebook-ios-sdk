@@ -41,6 +41,8 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
+#import "FBSDKErrorConfigurationProvider.h"
+#import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
@@ -52,6 +54,7 @@
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
+#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKInternalUtility+URLHosting.h"
@@ -73,8 +76,10 @@
 #import "FBSDKSwizzler+Swizzling.h"
 #import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
+#import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKUserDataStore.h"
 #import "NSNotificationCenter+Extensions.h"
+#import "NSProcessInfo+Protocols.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
@@ -661,7 +666,20 @@ static UIApplicationState _applicationState;
                                                                                     settings:sharedSettings
                                                                                 crashHandler:sharedCrashHandler];
   id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider = FBSDKAppEventsConfigurationManager.shared;
+  FBSDKErrorFactory *errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
 
+  [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
+                                        errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
+                                          piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
+                                                          settings:sharedSettings
+                                     graphRequestConnectionFactory:graphRequestConnectionFactory
+                                                       eventLogger:FBSDKAppEvents.shared
+                                    operatingSystemVersionComparer:NSProcessInfo.processInfo
+                                           macCatalystDeterminator:NSProcessInfo.processInfo
+                                               accessTokenProvider:FBSDKAccessToken.class
+                                                 accessTokenSetter:FBSDKAccessToken.class
+                                                      errorFactory:errorFactory
+                                       authenticationTokenProvider:FBSDKAuthenticationToken.class];
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:appEventsConfigurationProvider

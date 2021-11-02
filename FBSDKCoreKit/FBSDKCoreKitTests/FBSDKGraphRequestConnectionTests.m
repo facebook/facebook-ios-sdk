@@ -24,12 +24,12 @@
 
 @property (nonatomic) NSString *appID;
 @property (nonatomic) TestURLSessionProxy *session;
+@property (nonatomic) TestURLSessionProxy *secondSession;
 @property (nonatomic) TestURLSessionProxyFactory *sessionFactory;
 @property (nonatomic) TestErrorConfiguration *errorConfiguration;
 @property (nonatomic) TestErrorConfigurationProvider *errorConfigurationProvider;
 @property (nonatomic) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
 @property (nonatomic) TestGraphRequestPiggybackManager *piggybackManager;
-@property (nonatomic) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
 @property (nonatomic) TestSettings *settings;
 @property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic) TestEventLogger *eventLogger;
@@ -58,13 +58,13 @@
 
   self.appID = @"appid";
   self.session = [TestURLSessionProxy new];
-  self.sessionFactory = [TestURLSessionProxyFactory createWith:self.session];
+  self.secondSession = [TestURLSessionProxy new];
+  self.sessionFactory = [TestURLSessionProxyFactory createWithSessions:@[self.session, self.secondSession]];
   self.errorRecoveryConfiguration = self.nonTransientErrorRecoveryConfiguration;
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
   self.piggybackManager = [TestGraphRequestPiggybackManager new];
-  self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
   self.settings = [TestSettings new];
   self.settings.appID = self.appID;
   self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
@@ -72,22 +72,25 @@
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
   self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   self.errorFactory = [TestErrorFactory new];
-  self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                             errorConfigurationProvider:self.errorConfigurationProvider
-                                                               piggybackManagerProvider:self.piggybackManagerProvider
-                                                                               settings:self.settings
-                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory
-                                                                            eventLogger:self.eventLogger
-                                                         operatingSystemVersionComparer:self.processInfo
-                                                                macCatalystDeterminator:self.macCatalystDeterminator
-                                                                    accessTokenProvider:TestAccessTokenWallet.class
-                                                                      accessTokenSetter:TestAccessTokenWallet.class
-                                                                           errorFactory:self.errorFactory];
+  [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.sessionFactory
+                                        errorConfigurationProvider:self.errorConfigurationProvider
+                                          piggybackManagerProvider:TestGraphRequestPiggybackManagerProvider.class
+                                                          settings:self.settings
+                                     graphRequestConnectionFactory:self.graphRequestConnectionFactory
+                                                       eventLogger:self.eventLogger
+                                    operatingSystemVersionComparer:self.processInfo
+                                           macCatalystDeterminator:self.macCatalystDeterminator
+                                               accessTokenProvider:TestAccessTokenWallet.class
+                                                 accessTokenSetter:TestAccessTokenWallet.class
+                                                      errorFactory:self.errorFactory
+                                       authenticationTokenProvider:TestAuthenticationTokenWallet.class];
+  self.connection = [FBSDKGraphRequestConnection new];
   self.graphRequestConnectionFactory.stubbedConnection = self.connection;
 }
 
 - (void)tearDown
 {
+  [FBSDKGraphRequestConnection resetClassDependencies];
   [FBSDKGraphRequestConnection resetDefaultConnectionTimeout];
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   [TestGraphRequestPiggybackManager reset];
@@ -133,67 +136,64 @@
 
 // MARK: - Dependencies
 
-- (void)testCreatingWithDefaults
+- (void)testDefaultDependencies
 {
-  self.connection = [FBSDKGraphRequestConnection new];
+  [FBSDKGraphRequestConnection resetClassDependencies];
 
-  XCTAssertTrue(
-    [(NSObject *)self.connection.sessionProxyFactory isKindOfClass:FBSDKURLSessionProxyFactory.class],
-    @"A graph request connection should have the correct concrete session provider by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.sessionProxyFactory,
+    @"A graph request connection should not have a session provider by default"
   );
-  XCTAssertTrue(
-    [(NSObject *)self.connection.errorConfigurationProvider isKindOfClass:FBSDKErrorConfigurationProvider.class],
-    @"A graph request connection should have the correct error configuration provider by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.errorConfigurationProvider,
+    @"A graph request connection should not have a error configuration provider by default"
   );
-  XCTAssertEqual(
-    self.connection.piggybackManagerProvider,
-    FBSDKGraphRequestPiggybackManagerProvider.class,
-    @"A graph request connection should have the correct piggyback manager provider by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.piggybackManagerProvider,
+    @"A graph request connection should not have a piggyback manager provider by default"
   );
-  XCTAssertEqualObjects(
-    self.connection.settings,
-    FBSDKSettings.sharedSettings,
-    @"A graph request connection should have the correct settings type by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.settings,
+    @"A graph request connection should not have a settings type by default"
   );
-  XCTAssertTrue(
-    [(NSObject *)self.connection.graphRequestConnectionFactory isKindOfClass:FBSDKGraphRequestConnectionFactory.class],
-    @"A graph request connection should have the correct connection factory by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.graphRequestConnectionFactory,
+    @"A graph request connection should not have a connection factory by default"
   );
-  XCTAssertEqualObjects(
-    self.connection.eventLogger,
-    FBSDKAppEvents.shared,
-    @"A graph request connection should have the correct events logger by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.eventLogger,
+    @"A graph request connection should not have an events logger by default"
   );
-  XCTAssertEqualObjects(
-    self.connection.operatingSystemVersionComparer,
-    NSProcessInfo.processInfo,
-    @"A graph request connection should have the correct operating system version comparer by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.operatingSystemVersionComparer,
+    @"A graph request connection should not have an operating system version comparer by default"
   );
-  XCTAssertEqualObjects(
-    self.connection.macCatalystDeterminator,
-    NSProcessInfo.processInfo,
-    @"A graph request connection should have the correct Mac Catalyst determinator by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.macCatalystDeterminator,
+    @"A graph request connection should not have a Mac Catalyst determinator by default"
   );
-  XCTAssertEqual(
-    self.connection.accessTokenProvider,
-    FBSDKAccessToken.class,
-    @"A graph request connection should have the correct access token provider by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.accessTokenProvider,
+    @"A graph request connection should not an access token provider by default"
   );
-  XCTAssertEqual(
-    self.connection.accessTokenSetter,
-    FBSDKAccessToken.class,
-    @"A graph request connection should have the correct access token setter by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.accessTokenSetter,
+    @"A graph request connection should not have an access token setter by default"
   );
-  XCTAssertTrue(
-    [(NSObject *)self.connection.errorFactory isKindOfClass:FBSDKErrorFactory.class],
-    @"A graph request connection should have an error factory by default"
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.errorFactory,
+    @"A graph request connection should not have an error factory by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.authenticationTokenProvider,
+    @"A graph request connection should not have an authentication token provider by default"
   );
 }
 
 - (void)testCreatingWithCustomDependencies
 {
   XCTAssertEqualObjects(
-    self.connection.sessionProxyFactory,
+    FBSDKGraphRequestConnection.sessionProxyFactory,
     self.sessionFactory,
     @"A graph request connection should persist the session provider it was created with"
   );
@@ -203,54 +203,59 @@
     @"A graph request connection should derive sessions from the session provider"
   );
   XCTAssertEqualObjects(
-    self.connection.errorConfigurationProvider,
+    FBSDKGraphRequestConnection.errorConfigurationProvider,
     self.errorConfigurationProvider,
     @"A graph request connection should persist the error configuration provider it was created with"
   );
-  XCTAssertEqualObjects(
-    self.connection.piggybackManagerProvider,
-    self.piggybackManagerProvider,
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.piggybackManagerProvider,
+    TestGraphRequestPiggybackManagerProvider.class,
     @"A graph request connection should persist the piggyback manager provider it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.settings,
+    FBSDKGraphRequestConnection.settings,
     self.settings,
     @"A graph request connection should persist the settings it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.graphRequestConnectionFactory,
+    FBSDKGraphRequestConnection.graphRequestConnectionFactory,
     self.graphRequestConnectionFactory,
     @"A graph request connection should persist the connection factory it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.eventLogger,
+    FBSDKGraphRequestConnection.eventLogger,
     self.eventLogger,
     @"A graph request connection should persist the events logger it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.operatingSystemVersionComparer,
+    FBSDKGraphRequestConnection.operatingSystemVersionComparer,
     self.processInfo,
     @"A graph request connection should persist the operating system comparer it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.macCatalystDeterminator,
+    FBSDKGraphRequestConnection.macCatalystDeterminator,
     self.macCatalystDeterminator,
     @"A graph request connection should persist the Mac Catalyst determinator it was created with"
   );
   XCTAssertEqual(
-    self.connection.accessTokenProvider,
-    TestAccessTokenWallet.self,
+    FBSDKGraphRequestConnection.accessTokenProvider,
+    TestAccessTokenWallet.class,
     @"A graph request connection should persist the access token provider it was created with"
   );
   XCTAssertEqual(
-    self.connection.accessTokenSetter,
-    TestAccessTokenWallet.self,
+    FBSDKGraphRequestConnection.accessTokenSetter,
+    TestAccessTokenWallet.class,
     @"A graph request connection should persist the access token setter it was created with"
   );
   XCTAssertEqualObjects(
-    self.connection.errorFactory,
+    FBSDKGraphRequestConnection.errorFactory,
     self.errorFactory,
     @"A graph request connection should persist the error factory it was created with"
+  );
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.authenticationTokenProvider,
+    TestAuthenticationTokenWallet.class,
+    @"A graph request connection should persist the authentication token provider it was created with"
   );
 }
 
@@ -1324,7 +1329,7 @@
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
-  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
+  TestAuthenticationTokenWallet.currentAuthenticationToken = authToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
@@ -1341,24 +1346,12 @@
 
   FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = YES;
 
-  TestURLSessionProxy *fakeSession = [TestURLSessionProxy new];
-  TestURLSessionProxyFactory *fakeProxyFactory = [TestURLSessionProxyFactory createWithSessions:@[fakeSession]];
-
   self.errorRecoveryConfiguration = self.transientErrorRecoveryConfiguration;
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider.configuration = self.errorConfiguration;
-  id<FBSDKGraphRequestConnecting> retryConnection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory
-                                                                                             errorConfigurationProvider:self.errorConfigurationProvider
-                                                                                               piggybackManagerProvider:self.piggybackManagerProvider
-                                                                                                               settings:self.settings
-                                                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory
-                                                                                                            eventLogger:self.eventLogger
-                                                                                         operatingSystemVersionComparer:self.processInfo
-                                                                                                macCatalystDeterminator:self.macCatalystDeterminator
-                                                                                                    accessTokenProvider:TestAccessTokenWallet.class
-                                                                                                      accessTokenSetter:TestAccessTokenWallet.class
-                                                                                                           errorFactory:self.errorFactory];
+  id<FBSDKGraphRequestConnecting> retryConnection = [FBSDKGraphRequestConnection new];
   self.graphRequestConnectionFactory.stubbedConnection = retryConnection;
+
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
@@ -1383,7 +1376,7 @@
   // It's necessary to dispatch async to avoid the completion from being invoked before it is captured
   dispatch_async(dispatch_get_main_queue(), ^{
     NSData *secondData = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-    fakeSession.capturedCompletion(secondData, response, nil);
+    self.secondSession.capturedCompletion(secondData, response, nil);
   });
 
   [self waitForExpectations:@[expectation] timeout:1];

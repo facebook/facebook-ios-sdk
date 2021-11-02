@@ -8,6 +8,8 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
+#import "FBSDKShareDialogConfigurationProtocol.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKMessageDialog (Testing)
@@ -16,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
-         appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker;
+         appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+       shareDialogConfiguration:(nonnull id<FBSDKShareDialogConfiguration>)shareDialogConfiguration;
 
 @end
 

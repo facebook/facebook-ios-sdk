@@ -144,12 +144,15 @@ targets:
         excludes:
           - FBSDKCameraEffectArguments+Internal*
           - FBSDKCameraEffectTextures+Internal*
-          - FBSDKCheckmarkIcon*
-          - FBSDKGameRequestFrictionlessRecipientCache*
-          - FBSDKMessengerIcon*
+          - FBSDKGameRequest*
+          - FBSDKMessenger*
+          - FBSDKShareBridge*
           - FBSDKShareAppEventNames*
+          - FBSDKShareCamera*
+          - FBSDKShareDialog*
           - FBSDKShareExtension*
           - FBSDKShareKit+Internal*
+          - FBSDKSocialCompose*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
@@ -196,14 +199,18 @@ targets:
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         excludes:
+        excludes:
           - FBSDKCameraEffectArguments+Internal*
           - FBSDKCameraEffectTextures+Internal*
-          - FBSDKCheckmarkIcon*
-          - FBSDKGameRequestFrictionlessRecipientCache*
-          - FBSDKMessengerIcon*
+          - FBSDKGameRequest*
+          - FBSDKMessenger*
+          - FBSDKShareBridge*
           - FBSDKShareAppEventNames*
+          - FBSDKShareCamera*
+          - FBSDKShareDialog*
           - FBSDKShareExtension*
           - FBSDKShareKit+Internal*
+          - FBSDKSocialCompose*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig

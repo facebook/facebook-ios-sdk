@@ -7,6 +7,7 @@
  */
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKLogger.h>
@@ -39,22 +40,23 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @interface FBSDKGraphRequestConnection () <FBSDKGraphRequestConnecting>
 
+@property (class, nullable, nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (class, nullable, nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
+@property (class, nullable, nonatomic) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (class, nullable, nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
+@property (class, nullable, nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
+@property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
+@property (class, nullable, nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
+@property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenProvider;
+@property (nonatomic) FBSDKLogger *logger;
 @property (nonatomic) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 @property (nonatomic) FBSDKGraphRequestConnectionState state;
-@property (nonatomic) FBSDKLogger *logger;
 @property (nonatomic) uint64_t requestStartTime;
 @property (nonatomic) id<FBSDKURLSessionProxying> session;
-@property (nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
-@property (nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
-@property (nonatomic) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic) id<FBSDKSettings> settings;
-@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonatomic) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
-@property (nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
-@property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-@property (nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
-@property (nonatomic) id<FBSDKErrorCreating> errorFactory;
 @property (nullable, nonatomic) NSString *overriddenVersionPart;
 @property (nonatomic) NSUInteger expectingResults;
 #if !TARGET_OS_TV
@@ -65,17 +67,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 + (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;
 
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                      piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-                                      settings:(id<FBSDKSettings>)settings
-                 graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory
-                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
-                operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                       macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                           accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                             accessTokenSetter:(Class<FBSDKAccessTokenSetting>)accessTokenSetter
-                                  errorFactory:(id<FBSDKErrorCreating>)errorFactory;
++ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
+                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                   piggybackManagerProvider:(nonnull Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                   settings:(nonnull id<FBSDKSettings>)settings
+              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
+                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
+                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -127,6 +130,10 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
  @param request The NSURLRequest to attach the body to.
  */
 - (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
+
+#if DEBUG && FBTEST
++ (void)resetClassDependencies;
+#endif
 
 @end
 

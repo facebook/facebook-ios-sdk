@@ -10,32 +10,23 @@
 
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
 
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
-#import "FBSDKAppEvents+EventLogging.h"
+#import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
-#import "FBSDKConstants.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorCreating.h"
-#import "FBSDKErrorFactory.h"
 #import "FBSDKErrorRecoveryAttempter.h"
-#import "FBSDKErrorReporter.h"
-#import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestDataAttachment.h"
-#import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
-#import "FBSDKSettings.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSession+URLSessionProxying.h"
-#import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKURLSessionProxying.h"
-#import "NSProcessInfo+Protocols.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
@@ -96,6 +87,8 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 <NSURLSessionDataDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
 #endif
 
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
 @end
 
 // ----------------------------------------------------------------------------
@@ -105,51 +98,214 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 
 static BOOL _canMakeRequests = NO;
 
-- (instancetype)init
+// MARK: Dependency Management
+
+static BOOL _hasBeenConfigured = NO;
+static id<FBSDKURLSessionProxyProviding> _sessionProxyFactory;
+static id<FBSDKErrorConfigurationProviding> _errorConfigurationProvider;
+static Class<FBSDKGraphRequestPiggybackManagerProviding> _piggybackManagerProvider;
+static id<FBSDKSettings> _settings;
+static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
+static id<FBSDKEventLogging> _eventLogger;
+static id<FBSDKOperatingSystemVersionComparing> _operatingSystemVersionComparer;
+static id<FBSDKMacCatalystDetermining> _macCatalystDeterminator;
+static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
+static Class<FBSDKAccessTokenSetting> _accessTokenSetter;
+static id<FBSDKErrorCreating> _errorFactory;
+static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
+
++ (BOOL)hasBeenConfigured
 {
-  FBSDKErrorFactory *errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
-  return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
-                   errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
-                     piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
-                                     settings:FBSDKSettings.sharedSettings
-                graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
-                                  eventLogger:FBSDKAppEvents.shared
-               operatingSystemVersionComparer:NSProcessInfo.processInfo
-                      macCatalystDeterminator:NSProcessInfo.processInfo
-                          accessTokenProvider:FBSDKAccessToken.class
-                            accessTokenSetter:FBSDKAccessToken.class
-                                 errorFactory:errorFactory];
+  return _hasBeenConfigured;
 }
 
-- (nonnull instancetype)initWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
-                            errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                              piggybackManagerProvider:(nonnull Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-                                              settings:(nonnull id<FBSDKSettings>)settings
-                         graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
-                                           eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
-                        operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                               macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                                   accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                                     accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
-                                          errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
++ (nullable id<FBSDKURLSessionProxyProviding>)sessionProxyFactory
+{
+  return _sessionProxyFactory;
+}
+
++ (void)setSessionProxyFactory:(nullable id<FBSDKURLSessionProxyProviding>)sessionProxyFactory
+{
+  _sessionProxyFactory = sessionProxyFactory;
+}
+
++ (nullable id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+{
+  return _errorConfigurationProvider;
+}
+
++ (void)setErrorConfigurationProvider:(nullable id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+{
+  _errorConfigurationProvider = errorConfigurationProvider;
+}
+
++ (nullable Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+{
+  return _piggybackManagerProvider;
+}
+
++ (void)setPiggybackManagerProvider:(nullable Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+{
+  _piggybackManagerProvider = piggybackManagerProvider;
+}
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
++ (nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  return _graphRequestConnectionFactory;
+}
+
++ (void)setGraphRequestConnectionFactory:(nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  _graphRequestConnectionFactory = graphRequestConnectionFactory;
+}
+
++ (nullable id<FBSDKEventLogging>)eventLogger
+{
+  return _eventLogger;
+}
+
++ (void)setEventLogger:(nullable id<FBSDKEventLogging>)eventLogger
+{
+  _eventLogger = eventLogger;
+}
+
++ (nullable id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+{
+  return _operatingSystemVersionComparer;
+}
+
++ (void)setOperatingSystemVersionComparer:(nullable id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+{
+  _operatingSystemVersionComparer = operatingSystemVersionComparer;
+}
+
++ (nullable id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+{
+  return _macCatalystDeterminator;
+}
+
++ (void)setMacCatalystDeterminator:(nullable id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+{
+  _macCatalystDeterminator = macCatalystDeterminator;
+}
+
++ (nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  return _accessTokenProvider;
+}
+
++ (void)setAccessTokenProvider:(nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
++ (nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
+{
+  return _accessTokenSetter;
+}
+
++ (void)setAccessTokenSetter:(nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
+{
+  _accessTokenSetter = accessTokenSetter;
+}
+
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return _errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  _errorFactory = errorFactory;
+}
+
++ (nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
+{
+  return _authenticationTokenProvider;
+}
+
++ (void)setAuthenticationTokenProvider:(nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
+{
+  _authenticationTokenProvider = authenticationTokenProvider;
+}
+
++ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
+                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                   piggybackManagerProvider:(nonnull Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                   settings:(nonnull id<FBSDKSettings>)settings
+              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
+                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
+                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  self.sessionProxyFactory = proxyFactory;
+  self.errorConfigurationProvider = errorConfigurationProvider;
+  self.piggybackManagerProvider = piggybackManagerProvider;
+  self.settings = settings;
+  self.graphRequestConnectionFactory = factory;
+  self.eventLogger = eventLogger;
+  self.operatingSystemVersionComparer = operatingSystemVersionComparer;
+  self.macCatalystDeterminator = macCatalystDeterminator;
+  self.accessTokenProvider = accessTokenProvider;
+  self.accessTokenSetter = accessTokenSetter;
+  self.errorFactory = errorFactory;
+  self.authenticationTokenProvider = authenticationTokenProvider;
+
+  self.hasBeenConfigured = YES;
+}
+
+#if DEBUG && FBTEST
+
++ (void)resetClassDependencies
+{
+  self.hasBeenConfigured = NO;
+  self.sessionProxyFactory = nil;
+  self.errorConfigurationProvider = nil;
+  self.piggybackManagerProvider = nil;
+  self.settings = nil;
+  self.graphRequestConnectionFactory = nil;
+  self.eventLogger = nil;
+  self.operatingSystemVersionComparer = nil;
+  self.macCatalystDeterminator = nil;
+  self.accessTokenProvider = nil;
+  self.accessTokenSetter = nil;
+  self.errorFactory = nil;
+  self.authenticationTokenProvider = nil;
+}
+
+#endif
+
+- (instancetype)init
 {
   if ((self = [super init])) {
-    _requests = [NSMutableArray new];
     _timeout = g_defaultTimeout;
+    _session = [self.class.sessionProxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
     _state = kStateCreated;
+    _requests = [NSMutableArray new];
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
-    _sessionProxyFactory = proxyFactory;
-    _session = [proxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
-    _errorConfigurationProvider = errorConfigurationProvider;
-    _piggybackManagerProvider = piggybackManagerProvider;
-    _settings = settings;
-    _graphRequestConnectionFactory = factory;
-    _eventLogger = eventLogger;
-    _operatingSystemVersionComparer = operatingSystemVersionComparer;
-    _macCatalystDeterminator = macCatalystDeterminator;
-    _accessTokenProvider = accessTokenProvider;
-    _accessTokenSetter = accessTokenSetter;
-    _errorFactory = errorFactory;
   }
   return self;
 }
@@ -218,7 +374,7 @@ static BOOL _canMakeRequests = NO;
 {
   if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
-    NSError *error = [self.errorFactory unknownErrorWithMessage:msg userInfo:nil];
+    NSError *error = [self.class.errorFactory unknownErrorWithMessage:msg userInfo:nil];
     // TODO: Use a logger provider for this.
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:msg];
@@ -233,9 +389,9 @@ static BOOL _canMakeRequests = NO;
                                  logEntry:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
-  Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.piggybackManagerProvider.class piggybackManager];
+  Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.class.piggybackManagerProvider piggybackManager];
   [piggybackManager.class addPiggybackRequests:self];
-  NSMutableURLRequest *request = [self requestWithBatch:self.requests timeout:_timeout];
+  NSMutableURLRequest *request = [self requestWithBatch:self.requests timeout:self.timeout];
 
   self.state = kStateStarted;
 
@@ -379,7 +535,7 @@ static BOOL _canMakeRequests = NO;
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
-    BOOL isClientToken = self.settings.clientToken && [individualToken hasSuffix:self.settings.clientToken];
+    BOOL isClientToken = self.class.settings.clientToken && [individualToken hasSuffix:self.class.settings.clientToken];
     if (!batchToken
         && !isClientToken) {
       batchToken = individualToken;
@@ -471,7 +627,7 @@ static BOOL _canMakeRequests = NO;
   } else {
     // Find the session with an app ID and use that as the batch_app_id. If we can't
     // find one, try to load it from the plist. As a last resort, pass 0.
-    NSString *batchAppID = self.settings.appID;
+    NSString *batchAppID = self.class.settings.appID;
     if (!batchAppID || batchAppID.length == 0) {
       // The Graph API batch method requires either an access token or batch_app_id.
       // If we can't determine an App ID to use for the batch, we can't issue it.
@@ -619,26 +775,26 @@ static BOOL _canMakeRequests = NO;
 
     if (!error && [response.MIMEType hasPrefix:@"image"]) {
       NSString *message = @"Response is a non-text MIME type; endpoints that return images and other binary data should be fetched using NSURLRequest and NSURLSession";
-      error = [self.errorFactory errorWithCode:FBSDKErrorGraphRequestNonTextMimeTypeReturned
-                                      userInfo:nil
-                                       message:message
-                               underlyingError:nil];
+      error = [self.class.errorFactory errorWithCode:FBSDKErrorGraphRequestNonTextMimeTypeReturned
+                                            userInfo:nil
+                                             message:message
+                                     underlyingError:nil];
     } else {
       results = [self parseJSONResponse:data
                                   error:&error
                              statusCode:statusCode];
     }
   } else if (!error) {
-    error = [self.errorFactory unknownErrorWithMessage:@"Missing NSURLResponse" userInfo:nil];
+    error = [self.class.errorFactory unknownErrorWithMessage:@"Missing NSURLResponse" userInfo:nil];
   }
 
   if (!error) {
     if (self.requests.count != results.count) {
       NSString *message = @"Unexpected number of results returned from server.";
-      error = [self.errorFactory errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
-                                      userInfo:nil
-                                       message:message
-                               underlyingError:nil];
+      error = [self.class.errorFactory errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
+                                            userInfo:nil
+                                             message:message
+                                     underlyingError:nil];
     } else {
       [self.logger appendFormat:@"Response <#%lu>\nDuration: %llu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
        (unsigned long)self.logger.loggerSerialNumber,
@@ -687,7 +843,7 @@ static BOOL _canMakeRequests = NO;
   if (responseUTF8 == nil) {
     NSString *base64Data = data.length != 0 ? [data base64EncodedStringWithOptions:0] : @"";
     if (base64Data != nil) {
-      [self.eventLogger logInternalEvent:@"fb_response_invalid_utf8" isImplicitlyLogged:YES];
+      [self.class.eventLogger logInternalEvent:@"fb_response_invalid_utf8" isImplicitlyLogged:YES];
     }
   }
 
@@ -698,7 +854,7 @@ static BOOL _canMakeRequests = NO;
       NSDictionary<NSErrorUserInfoKey, id> *userInfo = @{
         FBSDKGraphRequestErrorHTTPStatusCodeKey : @(statusCode)
       };
-      *error = [self.errorFactory unknownErrorWithMessage:message userInfo:userInfo];
+      *error = [self.class.errorFactory unknownErrorWithMessage:message userInfo:userInfo];
     }
   } else if (self.requests.count == 1) {
     // response is the entry, so put it in a dictionary under "body" and add
@@ -745,10 +901,10 @@ static BOOL _canMakeRequests = NO;
       FBSDKGraphRequestErrorHTTPStatusCodeKey : @(statusCode),
       FBSDKGraphRequestErrorParsedJSONResponseKey : results
     };
-    *error = [self.errorFactory errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
-                                     userInfo:userInfo
-                                      message:nil
-                              underlyingError:nil];
+    *error = [self.class.errorFactory errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
+                                           userInfo:userInfo
+                                            message:nil
+                                    underlyingError:nil];
   }
 
   return results;
@@ -816,7 +972,7 @@ static BOOL _canMakeRequests = NO;
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc]
-                                       initWithAccessTokenString:[[self.accessTokenProvider currentAccessToken] tokenString]];
+                                       initWithAccessTokenString:[[self.class.accessTokenProvider currentAccessToken] tokenString]];
       if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
         return;
       }
@@ -856,14 +1012,14 @@ static BOOL _canMakeRequests = NO;
       return;
     }
     if (errorSubcode == 493) {
-      [self.accessTokenSetter setCurrentAccessToken:_CreateExpiredAccessToken([self.accessTokenProvider currentAccessToken])];
+      [self.class.accessTokenSetter setCurrentAccessToken:_CreateExpiredAccessToken([self.class.accessTokenProvider currentAccessToken])];
     } else {
-      [self.accessTokenSetter setCurrentAccessToken:nil];
+      [self.class.accessTokenSetter setCurrentAccessToken:nil];
     }
   };
 
   NSString *metadataTokenString = metadata.request.tokenString;
-  NSString *currentTokenString = [[self.accessTokenProvider currentAccessToken] tokenString];
+  NSString *currentTokenString = [[self.class.accessTokenProvider currentAccessToken] tokenString];
 
   if ([metadataTokenString isEqualToString:currentTokenString]) {
     NSInteger errorCode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue];
@@ -952,7 +1108,7 @@ static BOOL _canMakeRequests = NO;
                      setObject:result
                         forKey:FBSDKGraphRequestErrorParsedJSONResponseKey];
 
-  id<FBSDKErrorConfiguration> errorConfiguration = self.errorConfigurationProvider.errorConfiguration;
+  id<FBSDKErrorConfiguration> errorConfiguration = self.class.errorConfigurationProvider.errorConfiguration;
   FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [errorConfiguration recoveryConfigurationForCode:errorCodeString
                                                                                                     subcode:errorSubcodeString
                                                                                                     request:request];
@@ -979,10 +1135,10 @@ static BOOL _canMakeRequests = NO;
   ?: FBSDK_CAST_TO_CLASS_OR_NIL(errorDictionary[@"error_reason"], NSString)
     ?: FBSDK_CAST_TO_CLASS_OR_NIL(errorDictionary[@"error_msg"], NSString);
 
-  return [self.errorFactory errorWithCode:FBSDKErrorGraphRequestGraphAPI
-                                 userInfo:userInfo
-                                  message:message
-                          underlyingError:nil];
+  return [self.class.errorFactory errorWithCode:FBSDKErrorGraphRequestGraphAPI
+                                       userInfo:userInfo
+                                        message:message
+                                underlyingError:nil];
 }
 
 #pragma mark - Private methods (logging and completion)
@@ -1112,9 +1268,9 @@ static BOOL _canMakeRequests = NO;
   [self warnIfMissingClientToken];
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
   FBSDKGraphRequestFlags flags = [request flags];
-  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.settings.clientToken length] > 0) {
-    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.settings.appID, self.settings.clientToken];
-    if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {
+  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.class.settings.clientToken length] > 0) {
+    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.class.settings.appID, self.class.settings.clientToken];
+    if ([[[self.class.authenticationTokenProvider currentAuthenticationToken] graphDomain] isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
     } else {
       return baseTokenString;
@@ -1125,14 +1281,14 @@ static BOOL _canMakeRequests = NO;
 
 - (void)registerTokenToOmitFromLog:(NSString *)token
 {
-  if (![self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
+  if (![self.class.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
     [FBSDKLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
   }
 }
 
 - (void)warnIfMissingClientToken
 {
-  if (!self.settings.clientToken) {
+  if (!self.class.settings.clientToken) {
     NSString *const message = @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
     "Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.";
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -1148,11 +1304,11 @@ static BOOL _canMakeRequests = NO;
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBSDK_VERSION_STRING];
   });
   NSString *agentWithSuffix = nil;
-  if (self.settings.userAgentSuffix) {
-    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.settings.userAgentSuffix];
+  if (self.class.settings.userAgentSuffix) {
+    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.class.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
-    if (self.macCatalystDeterminator.isMacCatalystApp) {
+    if (self.class.macCatalystDeterminator.isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }
@@ -1188,11 +1344,11 @@ static BOOL _canMakeRequests = NO;
       id<FBSDKGraphRequest> originalRequest = self.recoveringRequestMetadata.request;
       id<FBSDKGraphRequest> retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
                                                                              parameters:originalRequest.parameters
-                                                                            tokenString:[[self.accessTokenProvider currentAccessToken] tokenString]
+                                                                            tokenString:[[self.class.accessTokenProvider currentAccessToken] tokenString]
                                                                              HTTPMethod:originalRequest.HTTPMethod
                                                                                 version:originalRequest.version
                                                                                   flags:FBSDKGraphRequestFlagDisableErrorRecovery
-                                                          graphRequestConnectionFactory:self.graphRequestConnectionFactory];
+                                                          graphRequestConnectionFactory:self.class.graphRequestConnectionFactory];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:self.recoveringRequestMetadata.completionHandler batchParameters:self.recoveringRequestMetadata.batchParameters];
       [retryRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];

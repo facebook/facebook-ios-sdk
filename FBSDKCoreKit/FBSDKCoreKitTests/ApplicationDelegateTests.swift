@@ -501,6 +501,60 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSDKConfiguresGraphRequestConnection() {
+    GraphRequestConnection.resetClassDependencies()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      GraphRequestConnection.sessionProxyFactory is URLSessionProxyFactory,
+      "A graph request connection should have the correct concrete session provider by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.errorConfigurationProvider is ErrorConfigurationProvider,
+      "A graph request connection should have the correct error configuration provider by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.piggybackManagerProvider === GraphRequestPiggybackManagerProvider.self,
+      "A graph request connection should have the correct piggyback manager provider by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.settings === Settings.shared,
+      "A graph request connection should have the correct settings type by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "A graph request connection should have the correct connection factory by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.eventLogger === AppEvents.shared,
+      "A graph request connection should have the correct events logger by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.operatingSystemVersionComparer === ProcessInfo.processInfo,
+      "A graph request connection should have the correct operating system version comparer by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.macCatalystDeterminator === ProcessInfo.processInfo,
+      "A graph request connection should have the correct Mac Catalyst determinator by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.accessTokenProvider === AccessToken.self,
+      "A graph request connection should have the correct access token provider by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.accessTokenSetter === AccessToken.self,
+      "A graph request connection should have the correct access token setter by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.errorFactory is ErrorFactory,
+      "A graph request connection should have an error factory by default"
+    )
+    XCTAssertTrue(
+      GraphRequestConnection.authenticationTokenProvider === AuthenticationToken.self,
+      "A graph request connection should have the correct authentication token provider by default"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
