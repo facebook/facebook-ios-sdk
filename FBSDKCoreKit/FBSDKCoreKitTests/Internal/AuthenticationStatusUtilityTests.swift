@@ -12,23 +12,101 @@ import XCTest
 
 class AuthenticationStatusUtilityTests: XCTestCase {
 
-  // swiftlint:disable:next force_unwrapping
+  // swiftlint:disable force_unwrapping implicitly_unwrapped_optional
   let url = URL(string: "m.facebook.com/platform/oidc/status/")!
+  var sessionDataTask: TestSessionDataTask!
+  var sessionDataTaskProvider: TestSessionProvider!
+  // swiftlint:enable force_unwrapping implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    AuthenticationToken.current = SampleAuthenticationToken.validToken
-    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    AuthenticationStatusUtility.resetClassDependencies()
+
+    TestAccessTokenWallet.stubbedCurrentAccessToken = SampleAccessTokens.validToken
+    TestAuthenticationTokenWallet.currentAuthenticationToken = SampleAuthenticationToken.validToken
+    TestProfileProvider.current = SampleUserProfiles.valid
+
+    sessionDataTask = TestSessionDataTask()
+    sessionDataTaskProvider = TestSessionProvider()
+    sessionDataTaskProvider.stubbedDataTask = sessionDataTask
+
+    AuthenticationStatusUtility.configure(
+      withProfileSetter: TestProfileProvider.self,
+      sessionDataTaskProvider: sessionDataTaskProvider,
+      accessTokenWallet: TestAccessTokenWallet.self,
+      authenticationTokenWallet: TestAuthenticationTokenWallet.self
+    )
+  }
+
+  override func tearDown() {
+    AuthenticationStatusUtility.resetClassDependencies()
+    TestAccessTokenWallet.reset()
+    TestAuthenticationTokenWallet.reset()
+    TestProfileProvider.reset()
+    sessionDataTask = nil
+    sessionDataTaskProvider = nil
+
+    super.tearDown()
+  }
+
+  func testDefaultClassDependencies() {
+    AuthenticationStatusUtility.resetClassDependencies()
+
+    XCTAssertNil(
+      AuthenticationStatusUtility.profileSetter,
+      "Should not have a profile setter by default"
+    )
+    XCTAssertNil(
+      AuthenticationStatusUtility.sessionDataTaskProvider,
+      "Should not have a session data task provider by default"
+    )
+    XCTAssertNil(
+      AuthenticationStatusUtility.accessTokenWallet,
+      "Should not have an access token default"
+    )
+    XCTAssertNil(
+      AuthenticationStatusUtility.authenticationTokenWallet,
+      "Should not have an authentication token by default"
+    )
+  }
+
+  func testConfiguringWithCustomClassDependencies() {
+    XCTAssertTrue(
+      AuthenticationStatusUtility.profileSetter === TestProfileProvider.self,
+      "Should be able to set a custom profile setter"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.sessionDataTaskProvider === sessionDataTaskProvider,
+      "Should be able to set a custom session data task provider"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.accessTokenWallet === TestAccessTokenWallet.self,
+      "Should be able to set a custom access token"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.authenticationTokenWallet === TestAuthenticationTokenWallet.self,
+      "Should be able to set a custom authentication token"
+    )
   }
 
   func testCheckAuthenticationStatusWithNoToken() {
-    AuthenticationToken.current = nil
+    TestAuthenticationTokenWallet.currentAuthenticationToken = nil
     AuthenticationStatusUtility.checkAuthenticationStatus()
 
-    XCTAssertNotNil(AccessToken.current)
-    XCTAssertNotNil(Profile.current)
+    XCTAssertNil(
+      sessionDataTaskProvider.capturedRequest,
+      "Should not create a request if there is no authentication token"
+    )
+
+    XCTAssertNotNil(
+      TestAccessTokenWallet.currentAccessToken,
+      "Should not reset the current access token on failure to check the status of an authentication token"
+    )
+    XCTAssertNotNil(
+      TestProfileProvider.current,
+      "Should not reset the current profile on failure to check the status of an authentication token"
+    )
   }
 
   func testRequestURL() {
@@ -56,15 +134,15 @@ class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNil(
-      AuthenticationToken.current,
+      TestAuthenticationTokenWallet.currentAuthenticationToken,
       "Authentication token should be cleared when not authorized"
     )
     XCTAssertNil(
-      AccessToken.current,
+      TestAccessTokenWallet.currentAccessToken,
       "Access token should be cleared when not authorized"
     )
     XCTAssertNil(
-      Profile.current,
+      TestProfileProvider.current,
       "Profile should be cleared when not authorized"
     )
   }
@@ -81,15 +159,15 @@ class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
-      AuthenticationToken.current,
+      TestAuthenticationTokenWallet.currentAuthenticationToken,
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      AccessToken.current,
+      TestAccessTokenWallet.currentAccessToken,
       "Access token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      Profile.current,
+      TestProfileProvider.current,
       "Profile should not be cleared when connected"
     )
   }
@@ -105,15 +183,15 @@ class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
-      AuthenticationToken.current,
+      TestAuthenticationTokenWallet.currentAuthenticationToken,
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      AccessToken.current,
+      TestAccessTokenWallet.currentAccessToken,
       "Access token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      Profile.current,
+      TestProfileProvider.current,
       "Profile should not be cleared when connected"
     )
   }

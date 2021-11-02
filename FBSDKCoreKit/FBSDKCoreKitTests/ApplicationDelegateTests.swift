@@ -555,6 +555,28 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSDKConfiguresAuthenticationStatusUtility() {
+    AuthenticationStatusUtility.resetClassDependencies()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AuthenticationStatusUtility.profileSetter === Profile.self,
+      "Should configure with the expected profile setter"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.sessionDataTaskProvider === URLSession.shared,
+      "Should configure with the expected session data task provider"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.accessTokenWallet === AccessToken.self,
+      "Should configure with the expected access token"
+    )
+    XCTAssertTrue(
+      AuthenticationStatusUtility.authenticationTokenWallet === AuthenticationToken.self,
+      "Should configure with the expected authentication token"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

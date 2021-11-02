@@ -80,6 +80,7 @@
 #import "FBSDKUserDataStore.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSProcessInfo+Protocols.h"
+#import "NSURLSession+Protocols.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
@@ -802,6 +803,10 @@ static UIApplicationState _applicationState;
                                                      metadataIndexer:FBSDKMetadataIndexer.shared
                                                  skAdNetworkReporter:self.skAdNetworkReporter
                                                      codelessIndexer:FBSDKCodelessIndexer.class];
+  [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class
+                                       sessionDataTaskProvider:NSURLSession.sharedSession
+                                             accessTokenWallet:FBSDKAccessToken.class
+                                     authenticationTokenWallet:FBSDKAuthenticationToken.class];
 #endif
 }
 

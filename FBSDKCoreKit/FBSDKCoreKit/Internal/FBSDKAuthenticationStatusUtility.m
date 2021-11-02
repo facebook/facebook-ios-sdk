@@ -10,17 +10,80 @@
 
 #import "FBSDKAuthenticationStatusUtility.h"
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKAccessToken.h"
-#import "FBSDKAuthenticationToken.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
-#import "FBSDKProfile.h"
 
 static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
 @implementation FBSDKAuthenticationStatusUtility
+
+static Class<FBSDKProfileProviding> _profileSetter;
+static id<FBSDKSessionProviding> _sessionDataTaskProvider;
+static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _accessTokenWallet;
+static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> _authenticationTokenWallet;
+
++ (nullable id<FBSDKSessionProviding>)sessionDataTaskProvider
+{
+  return _sessionDataTaskProvider;
+}
+
++ (void)setSessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+{
+  _sessionDataTaskProvider = sessionDataTaskProvider;
+}
+
++ (nullable Class<FBSDKProfileProviding>)profileSetter
+{
+  return _profileSetter;
+}
+
++ (void)setProfileSetter:(nullable Class<FBSDKProfileProviding>)profileSetter
+{
+  _profileSetter = profileSetter;
+}
+
++ (nullable Class<FBSDKAccessTokenSetting, FBSDKAccessTokenSetting>)accessTokenWallet
+{
+  return _accessTokenWallet;
+}
+
++ (void)setAccessTokenWallet:(nullable Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+{
+  _accessTokenWallet = accessTokenWallet;
+}
+
++ (nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+{
+  return _authenticationTokenWallet;
+}
+
++ (void)setAuthenticationTokenWallet:(nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+{
+  _authenticationTokenWallet = authenticationTokenWallet;
+}
+
++ (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
+           sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+                 accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet;
+{
+  self.profileSetter = profileSetter;
+  self.sessionDataTaskProvider = sessionDataTaskProvider;
+  self.accessTokenWallet = accessTokenWallet;
+  self.authenticationTokenWallet = authenticationTokenWallet;
+}
+
+#if FBTEST && DEBUG
+
++ (void)resetClassDependencies
+{
+  self.profileSetter = nil;
+  self.sessionDataTaskProvider = nil;
+  self.accessTokenWallet = nil;
+  self.authenticationTokenWallet = nil;
+}
+
+#endif
 
 + (void)checkAuthenticationStatus
 {
@@ -31,17 +94,17 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
   NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
   if (request) {
-    [[NSURLSession.sharedSession dataTaskWithRequest:request
-                                   completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
-                                     if (!error) {
-                                       fb_dispatch_on_main_thread(^{
-                                         [self _handleResponse:response];
-                                       });
-                                     } else {
-                                       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests
-                                                              logEntry:error.localizedDescription];
-                                     }
-                                   }] resume];
+    [[self.sessionDataTaskProvider dataTaskWithRequest:request
+                                     completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                                       if (!error) {
+                                         fb_dispatch_on_main_thread(^{
+                                           [self _handleResponse:response];
+                                         });
+                                       } else {
+                                         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests
+                                                                logEntry:error.localizedDescription];
+                                       }
+                                     }] resume];
   }
 }
 
@@ -64,7 +127,7 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
 + (nullable NSURL *)_requestURL
 {
-  FBSDKAuthenticationToken *token = FBSDKAuthenticationToken.currentAuthenticationToken;
+  FBSDKAuthenticationToken *token = [self.authenticationTokenWallet currentAuthenticationToken];
 
   if (!token.tokenString) {
     return nil;
@@ -82,9 +145,9 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
 + (void)_invalidateCurrentSession
 {
-  FBSDKAccessToken.currentAccessToken = nil;
-  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
-  FBSDKProfile.currentProfile = nil;
+  [self.accessTokenWallet setCurrentAccessToken:nil];
+  [self.authenticationTokenWallet setCurrentAuthenticationToken:nil];
+  [self.profileSetter setCurrentProfile:nil];
 }
 
 @end

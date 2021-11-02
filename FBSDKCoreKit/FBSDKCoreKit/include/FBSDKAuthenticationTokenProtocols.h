@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKAuthenticationToken;
-
+#import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKTokenCaching.h>
 
 NS_ASSUME_NONNULL_BEGIN
