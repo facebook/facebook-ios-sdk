@@ -58,12 +58,11 @@ class ShareViewController: UITableViewController {
 
     func dialog(withContent content: SharingContent) -> ShareDialog {
         return ShareDialog(
-            fromViewController: self,
+            viewController: self,
             content: content,
             delegate: self
         )
     }
-
 }
 
 extension ShareViewController: SharingDelegate {
