@@ -37,6 +37,11 @@
 #import "FBSDKSocialComposeViewControllerFactory.h"
 #import "UIApplication+ShareInternalURLOpening.h"
 
+/*
+ NOTE: version checking with custom URL schemes is not scalable for Facebook, Inc (Meta, Inc) apps.
+ Internal apps will need to use a different solution going forward (Nov 1, 2021).
+ Third party apps can continue to use these URL schemes as a version check.
+ */
 #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
 #define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
 #define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
