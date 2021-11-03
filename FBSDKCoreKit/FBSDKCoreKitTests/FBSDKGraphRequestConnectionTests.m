@@ -30,6 +30,7 @@
 @property (nonatomic) TestErrorConfigurationProvider *errorConfigurationProvider;
 @property (nonatomic) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
 @property (nonatomic) TestGraphRequestPiggybackManager *piggybackManager;
+@property (nonatomic) TestGraphRequestPiggybackManagerProvider *graphRequestPiggybackManagerProvider;
 @property (nonatomic) TestSettings *settings;
 @property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic) TestEventLogger *eventLogger;
@@ -65,6 +66,7 @@
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
   self.piggybackManager = [TestGraphRequestPiggybackManager new];
+  self.graphRequestPiggybackManagerProvider = [TestGraphRequestPiggybackManagerProvider new];
   self.settings = [TestSettings new];
   self.settings.appID = self.appID;
   self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
@@ -74,7 +76,7 @@
   self.errorFactory = [TestErrorFactory new];
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.sessionFactory
                                         errorConfigurationProvider:self.errorConfigurationProvider
-                                          piggybackManagerProvider:TestGraphRequestPiggybackManagerProvider.class
+                                          piggybackManagerProvider:self.graphRequestPiggybackManagerProvider
                                                           settings:self.settings
                                      graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                        eventLogger:self.eventLogger
@@ -207,9 +209,9 @@
     self.errorConfigurationProvider,
     @"A graph request connection should persist the error configuration provider it was created with"
   );
-  XCTAssertEqual(
+  XCTAssertEqualObjects(
     FBSDKGraphRequestConnection.piggybackManagerProvider,
-    TestGraphRequestPiggybackManagerProvider.class,
+    self.graphRequestPiggybackManagerProvider,
     @"A graph request connection should persist the piggyback manager provider it was created with"
   );
   XCTAssertEqualObjects(

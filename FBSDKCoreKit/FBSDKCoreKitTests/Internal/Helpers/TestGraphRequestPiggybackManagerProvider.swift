@@ -10,7 +10,7 @@
 class TestGraphRequestPiggybackManagerProvider: NSObject, GraphRequestPiggybackManagerProviding {
 
   /// Returns the class TestGraphRequestPiggybackManager. This will need to be reset between tests.
-  static func piggybackManager() -> GraphRequestPiggybackManaging.Type {
+  var piggybackManager: GraphRequestPiggybackManaging.Type {
     TestGraphRequestPiggybackManager.self
   }
 }

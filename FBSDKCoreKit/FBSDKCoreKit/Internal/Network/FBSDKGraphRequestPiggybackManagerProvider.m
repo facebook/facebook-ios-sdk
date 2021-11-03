@@ -12,7 +12,7 @@
 
 @implementation FBSDKGraphRequestPiggybackManagerProvider
 
-+ (Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+- (Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
 {
   return FBSDKGraphRequestPiggybackManager.class;
 }

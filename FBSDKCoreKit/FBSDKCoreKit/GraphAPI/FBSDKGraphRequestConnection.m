@@ -103,7 +103,7 @@ static BOOL _canMakeRequests = NO;
 static BOOL _hasBeenConfigured = NO;
 static id<FBSDKURLSessionProxyProviding> _sessionProxyFactory;
 static id<FBSDKErrorConfigurationProviding> _errorConfigurationProvider;
-static Class<FBSDKGraphRequestPiggybackManagerProviding> _piggybackManagerProvider;
+static id<FBSDKGraphRequestPiggybackManagerProviding> _piggybackManagerProvider;
 static id<FBSDKSettings> _settings;
 static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static id<FBSDKEventLogging> _eventLogger;
@@ -144,12 +144,12 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   _errorConfigurationProvider = errorConfigurationProvider;
 }
 
-+ (nullable Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
++ (nullable id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
 {
   return _piggybackManagerProvider;
 }
 
-+ (void)setPiggybackManagerProvider:(nullable Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
++ (void)setPiggybackManagerProvider:(nullable id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
 {
   _piggybackManagerProvider = piggybackManagerProvider;
 }
@@ -246,7 +246,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 + (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
                  errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                   piggybackManagerProvider:(nonnull Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                   piggybackManagerProvider:(nonnull id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                    settings:(nonnull id<FBSDKSettings>)settings
               graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
                                 eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger

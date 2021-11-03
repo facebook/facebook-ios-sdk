@@ -514,7 +514,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "A graph request connection should have the correct error configuration provider by default"
     )
     XCTAssertTrue(
-      GraphRequestConnection.piggybackManagerProvider === GraphRequestPiggybackManagerProvider.self,
+      GraphRequestConnection.piggybackManagerProvider is GraphRequestPiggybackManagerProvider,
       "A graph request connection should have the correct piggyback manager provider by default"
     )
     XCTAssertTrue(

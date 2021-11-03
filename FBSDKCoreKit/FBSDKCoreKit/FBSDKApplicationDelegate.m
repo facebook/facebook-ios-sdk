@@ -671,7 +671,7 @@ static UIApplicationState _applicationState;
 
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
                                         errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
-                                          piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
+                                          piggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]
                                                           settings:sharedSettings
                                      graphRequestConnectionFactory:graphRequestConnectionFactory
                                                        eventLogger:FBSDKAppEvents.shared

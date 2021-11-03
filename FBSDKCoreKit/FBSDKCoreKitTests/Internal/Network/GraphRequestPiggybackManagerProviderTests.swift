@@ -12,7 +12,7 @@ class GraphRequestPiggybackManagerProviderTests: XCTestCase {
 
   func testDefaultPiggybackManager() {
     XCTAssertTrue(
-      GraphRequestPiggybackManagerProvider.piggybackManager() is GraphRequestPiggybackManager.Type,
+      GraphRequestPiggybackManagerProvider().piggybackManager is GraphRequestPiggybackManager.Type,
       "Should provide the expected concrete piggyback manager"
     )
   }

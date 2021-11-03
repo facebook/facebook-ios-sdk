@@ -14,7 +14,7 @@ NS_SWIFT_NAME(GraphRequestPiggybackManagerProviding)
 @protocol FBSDKGraphRequestPiggybackManagerProviding
 
 /// Returns a type that conforms to `GraphRequestPiggybackManaging`
-+ (Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager;
+@property (nonnull, nonatomic, readonly) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 
 @end
 
