@@ -615,7 +615,7 @@
   [self.api viewControllerDidDisappear:container animated:NO];
 
   XCTAssertNotNil(self.api.pendingRequest, "Should not cancel the request");
-  XCTAssertEqualObjects(_logger.capturedContents, @"", @"Expected nothing to be logged");
+  XCTAssertNil(_logger.capturedContents, @"Expected nothing to be logged");
 }
 
 // MARK: - Bridge Response Url Handling

@@ -38,7 +38,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @interface FBSDKInternalUtility (Testing)
 
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
 + (void)reset;
 
 @end
@@ -1118,7 +1119,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                         }];
 
   [FBSDKInternalUtility reset];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:bundle
+                                                            loggerFactory:[TestLoggerFactory new]];
 }
 
 - (void)validateAuthenticationToken:(FBSDKAuthenticationToken *)authToken

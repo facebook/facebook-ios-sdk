@@ -217,13 +217,13 @@ static dispatch_once_t singletonNonce;
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
-  FBSDKConditionalLog(
-    NSThread.isMainThread,
-    FBSDKLoggingBehaviorDeveloperErrors,
-    @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
-    methodName,
-    className
-  );
+  if (!NSThread.isMainThread) {
+    NSString *message = [NSString stringWithFormat:@"*** <%@, %@> is not called on the main thread. This can lead to errors.",
+                         methodName,
+                         className];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:message];
+  }
 }
 
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason

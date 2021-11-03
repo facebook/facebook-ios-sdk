@@ -10,6 +10,7 @@
 
 #import <StoreKit/StoreKit.h>
 
+#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
@@ -19,7 +20,6 @@
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKLoggingCreating.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -40,7 +40,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (nonatomic, readonly) id<FBSDKLoggingCreating> loggerFactory;
+@property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic) NSMutableSet<NSString *> *originalTransactionSet;
 @property (nonatomic) NSSet<NSString *> *eventsWithReceipt;
 @property (nonatomic, readonly) NSDateFormatter *formatter;
@@ -63,7 +63,7 @@ static NSMutableArray *_pendingRequestors;
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               store:(id<FBSDKDataPersisting>)store
-                      loggerFactory:(id<FBSDKLoggingCreating>)loggerFactory
+                      loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
              productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
             appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 {

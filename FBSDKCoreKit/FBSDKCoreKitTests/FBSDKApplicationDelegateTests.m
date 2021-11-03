@@ -573,18 +573,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
-- (void)testInitializingSdkConfiguresInternalUtility
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility.sharedUtility infoDictionaryProvider];
-  XCTAssertEqualObjects(
-    infoDictionaryProvider,
-    NSBundle.mainBundle,
-    "Should be configured with the expected concrete info dictionary provider"
-  );
-}
-
 - (void)testInitializingSdkConfiguresGraphRequestPiggybackManager
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];

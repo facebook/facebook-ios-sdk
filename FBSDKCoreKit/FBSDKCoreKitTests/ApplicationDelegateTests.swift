@@ -577,6 +577,20 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSdkConfiguresInternalUtility() {
+    InternalUtility.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      InternalUtility.shared.infoDictionaryProvider === Bundle.main,
+      "Should be configured with the expected concrete info dictionary provider"
+    )
+    XCTAssertTrue(
+      InternalUtility.shared.loggerFactory is LoggerFactory,
+      "Should be configured with the expected concrete logger factory"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

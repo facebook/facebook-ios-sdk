@@ -14,7 +14,7 @@
 @protocol FBSDKEventLogging;
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKDataPersisting;
-@protocol FBSDKLoggingCreating;
+@protocol __FBSDKLoggerCreating;
 @protocol FBSDKProductsRequestCreating;
 @protocol FBSDKAppStoreReceiptProviding;
 
@@ -29,7 +29,7 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
                gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                            store:(id<FBSDKDataPersisting>)store
-                   loggerFactory:(id<FBSDKLoggingCreating>)logger
+                   loggerFactory:(id<__FBSDKLoggerCreating>)logger
           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
          appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:loggerFactory:productsRequestFactory:receiptProvider:));

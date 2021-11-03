@@ -61,6 +61,7 @@
 #import "FBSDKKeychainStoreFactory.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogger+Logging.h"
+#import "FBSDKLoggerFactory.h"
 #import "FBSDKLogging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
@@ -735,7 +736,8 @@ static UIApplicationState _applicationState;
                                         swizzler:FBSDKSwizzler.class
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
                                    userDataStore:self.userDataStore];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
+                                                            loggerFactory:[FBSDKLoggerFactory new]];
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings
                                      graphRequestFactory:graphRequestFactory

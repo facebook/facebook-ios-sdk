@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
+
 #import "FBSDKInternalUtility.h"
 #import "FBSDKWindowFinding.h"
 
@@ -29,8 +31,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 #if !TARGET_OS_TV
 <FBSDKWindowFinding>
 #endif
-
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 
 /**
   Constructs the scheme for apps that come to the current app through the bridge.
@@ -54,6 +54,9 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  Checks if the app is Unity.
  */
 @property (nonatomic, readonly, assign) BOOL isUnity;
+
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
 
 /**
   Constructs a Facebook URL.
@@ -123,14 +126,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
   Checks if the permission is a publish permission.
  */
 - (BOOL)isPublishPermission:(NSString *)permission;
-
-#define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
-  { \
-    if (!(condition)) { \
-      NSString *msg = [NSString stringWithFormat:(desc), ## __VA_ARGS__]; \
-      [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:msg]; \
-    } \
-  }
 
 #define FB_BASE_URL @"facebook.com"
 

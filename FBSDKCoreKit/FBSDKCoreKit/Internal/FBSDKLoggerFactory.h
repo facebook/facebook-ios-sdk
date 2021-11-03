@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoggingCreating.h"
+#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(LoggerFactory)
-@interface FBSDKLoggerFactory : NSObject <FBSDKLoggingCreating>
+@interface FBSDKLoggerFactory : NSObject <__FBSDKLoggerCreating>
 @end
 
 NS_ASSUME_NONNULL_END

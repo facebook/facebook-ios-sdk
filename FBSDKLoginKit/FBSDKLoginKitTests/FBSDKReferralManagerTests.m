@@ -51,7 +51,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
 @end
 
 @interface FBSDKInternalUtility (Testing)
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
 + (void)reset;
 @end
 
@@ -81,7 +82,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
                         }];
 
   [FBSDKInternalUtility reset]; // need to reset fetchUrlSchemesToken nonce
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:bundle
+                                                            loggerFactory:[TestLoggerFactory new]];
 }
 
 - (void)testReferralURL

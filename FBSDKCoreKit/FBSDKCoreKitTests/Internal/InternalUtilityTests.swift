@@ -18,20 +18,32 @@ class InternalUtilityTests: XCTestCase {
     InternalUtility.reset()
   }
 
-  func testDefaultInfoDictionaryProvider() {
+  func testDefaultDependencies() {
     XCTAssertNil(
       InternalUtility.shared.infoDictionaryProvider,
       "Should not have an info dictionary provider by default"
     )
+    XCTAssertNil(
+      InternalUtility.shared.loggerFactory,
+      "Should not have a logger factory by default"
+    )
   }
 
-  func testConfiguringWithInfoDictionaryProvider() {
+  func testConfiguringWithDependencies() {
     let bundle = TestBundle()
-    InternalUtility.configure(withInfoDictionaryProvider: bundle)
+    let loggerFactory = TestLoggerFactory()
+    InternalUtility.shared.configure(
+      withInfoDictionaryProvider: bundle,
+      loggerFactory: loggerFactory
+    )
 
     XCTAssertTrue(
       InternalUtility.shared.infoDictionaryProvider === bundle,
       "Should be able to provide an info dictionary provider"
+    )
+    XCTAssertTrue(
+      InternalUtility.shared.loggerFactory === loggerFactory,
+      "The shared instance should use the provided logger factory"
     )
   }
 }

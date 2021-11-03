@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
+
 @objcMembers
 class TestLoggerFactory: NSObject, LoggerCreating {
-  var capturedLoggingBehavior: LoggingBehavior?
-  var logger = TestLogger(loggingBehavior: .developerErrors)
 
   func createLogger(withLoggingBehavior loggingBehavior: LoggingBehavior) -> Logging {
-    capturedLoggingBehavior = loggingBehavior
-    return logger
+    TestLogger(loggingBehavior: .developerErrors)
   }
 }

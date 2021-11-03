@@ -559,11 +559,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self.shared validateConfiguration];
 
   if (![g_overrideAppID isEqualToString:appID]) {
-    FBSDKConditionalLog(
-      !g_explicitEventsLoggedYet,
-      FBSDKLoggingBehaviorDeveloperErrors,
-      @"[FBSDKAppEvents setLoggingOverrideAppID:] should only be called prior to any events being logged."
-    );
+    if (g_explicitEventsLoggedYet) {
+      [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                          logEntry:@"[FBSDKAppEvents setLoggingOverrideAppID:] should only be called prior to any events being logged."];
+    }
     g_overrideAppID = appID;
   }
 }

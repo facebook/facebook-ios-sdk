@@ -107,7 +107,6 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 - (void)suspendTimeSpentData
 {
   if (!self.isCurrentlyLoaded) {
-    FBSDKConditionalLog(YES, FBSDKLoggingBehaviorInformational, @"[FBSDKTimeSpentData suspend] invoked without corresponding restore");
     return;
   }
 

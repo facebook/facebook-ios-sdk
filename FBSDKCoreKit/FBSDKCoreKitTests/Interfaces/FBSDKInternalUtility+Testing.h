@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKInternalUtility (Testing)
 
-@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+@property (nullable, nonatomic) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nonatomic) BOOL isConfigured;
 

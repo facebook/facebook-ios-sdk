@@ -144,7 +144,6 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKLogging.h"
-#import "FBSDKLoggingCreating.h"
 #import "FBSDKLogo.h"
 #import "FBSDKMath.h"
 #import "FBSDKMetadataIndexer.h"

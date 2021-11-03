@@ -17,13 +17,14 @@ class TestLogger: Logger {
   let stubbedLoggingBehavior: LoggingBehavior
 
   override var contents: String {
-    capturedContents
+    capturedContents ?? ""
   }
 
   var capturedAppendedKeys = [String]()
   var capturedAppendedValues = [String]()
   var stubbedIsActive = false
-  var capturedContents = ""
+  var capturedContents: String?
+  var logEntryCallCount = 0
 
   var capturedLoggingBehavior: LoggingBehavior?
 
@@ -41,6 +42,7 @@ class TestLogger: Logger {
 
   override func logEntry(_ logEntry: String) {
     capturedContents = logEntry
+    logEntryCallCount += 1
   }
 
   var isActive: Bool {

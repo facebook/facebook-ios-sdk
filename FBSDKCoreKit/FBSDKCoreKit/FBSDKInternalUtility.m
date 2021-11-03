@@ -6,21 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKConstants.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <mach-o/dyld.h>
 #import <sys/time.h>
 
-#import "FBSDKAuthenticationToken.h"
-#import "FBSDKError.h"
-#import "FBSDKInternalUtilityProtocol.h"
-#import "FBSDKLogger.h"
-#import "FBSDKLogging.h"
-#import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKURLScheme.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask) {
   FBSDKInternalUtilityMajorVersionMask = 0xFFFF0000,
@@ -36,16 +29,13 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 
 @interface FBSDKInternalUtility ()
 
-// TODO: Replace this with an instance variable i.e.: @property (nonnull, nonatomic) id<FBSDKLogging> logger;
-@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+@property (nullable, nonatomic) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic) BOOL isConfigured;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 
 @end
 
 @implementation FBSDKInternalUtility
-
-static Class<FBSDKLogging> _loggerType;
 
 // These are stored at the class level so that they can be reset in unit tests
 static dispatch_once_t fetchApplicationQuerySchemesToken;
@@ -77,26 +67,12 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 #pragma mark - Class Methods
 
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
 {
-  if (self == FBSDKInternalUtility.class) {
-    self.sharedUtility.infoDictionaryProvider = infoDictionaryProvider;
-
-    self.sharedUtility.isConfigured = YES;
-  }
-}
-
-+ (void)setLoggerType:(Class<FBSDKLogging>)loggerType
-{
-  _loggerType = loggerType;
-}
-
-+ (Class<FBSDKLogging>)loggerType
-{
-  if (_loggerType == nil) {
-    _loggerType = FBSDKLogger.class;
-  }
-  return _loggerType;
+  self.infoDictionaryProvider = infoDictionaryProvider;
+  self.loggerFactory = loggerFactory;
+  self.isConfigured = YES;
 }
 
 - (NSString *)appURLScheme
@@ -248,11 +224,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
         && [versionScanner scanInteger:NULL]
         && [versionScanner scanString:@"." intoString:NULL]
         && [versionScanner scanInteger:NULL]) {
-      [[self.class loggerType]
-       singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-       logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
-                 version,
-                 FBSDKSettings.sharedSettings.graphAPIVersion]];
+      id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+      [logger logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
+                        version,
+                        FBSDKSettings.sharedSettings.graphAPIVersion]];
       version = nil;
     }
     if (![path hasPrefix:@"/"]) {
@@ -396,8 +371,8 @@ static NSMapTable *_transientObjects;
   } else {
     NSString *msg = [NSString stringWithFormat:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
                      " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
-    [[self.class loggerType] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                       logEntry:msg];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    [logger logEntry:msg];
   }
 }
 
@@ -453,8 +428,8 @@ static NSMapTable *_transientObjects;
     components.scheme = scheme;
   } @catch (NSException *exception) {
     NSString *msg = [NSString stringWithFormat:@"Invalid URL scheme provided: %@", scheme];
-    [[self.class loggerType] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                       logEntry:msg];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    [logger logEntry:msg];
     return NO;
   }
 
@@ -552,8 +527,8 @@ static NSMapTable *_transientObjects;
   }
 
   if (topWindow == nil) {
-    [self.class.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                     logEntry:@"Unable to find a valid UIWindow"];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    [logger logEntry:@"Unable to find a valid UIWindow"];
   }
   return topWindow;
 }
@@ -564,8 +539,8 @@ static NSMapTable *_transientObjects;
   // SDK expects a key window at this point, if it is not, make it one
   if (keyWindow != nil && !keyWindow.isKeyWindow) {
     NSString *msg = [NSString stringWithFormat:@"Unable to obtain a key window, marking %@ as keyWindow", keyWindow.description];
-    [[self.class loggerType] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                       logEntry:msg];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    [logger logEntry:msg];
     [keyWindow makeKeyWindow];
   }
 
@@ -637,7 +612,8 @@ static NSMapTable *_transientObjects;
 
   if (![self isRegisteredCanOpenURLScheme:urlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required.", urlScheme];
-    [[self.class loggerType] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    [logger logEntry:reason];
   }
 }
 

@@ -42,10 +42,9 @@ class BridgeAPITests: XCTestCase {
       DynamicFrameworkLoader.shared(),
       "Should use the expected instance of dynamic framework loader"
     )
-    XCTAssertEqual(
-      BridgeAPI.shared.appURLSchemeProvider as? InternalUtility,
-      InternalUtility.shared,
-      "Should use the expected instance of internal utility"
+    XCTAssertTrue(
+      BridgeAPI.shared.appURLSchemeProvider is InternalUtility,
+      "Should use the expected internal utility type by default"
     )
 
     let factory = try XCTUnwrap(
