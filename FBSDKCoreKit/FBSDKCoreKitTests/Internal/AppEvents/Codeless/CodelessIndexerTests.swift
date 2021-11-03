@@ -473,14 +473,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should create a request with the expected http method"
     )
 
-    // Temporary override for Xcode 13 Beta / iOS 15 Beta
-    let appVersion: String
-    if #available(iOS 15.0, *) {
-      // Not sure why this returns 13.0. Investigate further if it doesn't change by Xcode 13 GM release
-      appVersion = "13.0"
-    } else {
-      appVersion = ""
-    }
+    let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 
     XCTAssertEqual(
       graphRequestFactory.capturedParameters as? [String: String],
