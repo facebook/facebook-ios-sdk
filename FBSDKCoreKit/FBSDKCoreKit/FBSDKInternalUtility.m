@@ -13,7 +13,6 @@
 #import <mach-o/dyld.h>
 #import <sys/time.h>
 
-#import "FBSDKApplicationDelegate.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKError.h"
 #import "FBSDKInternalUtilityProtocol.h"
@@ -139,7 +138,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   static NSBundle *bundle;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSString *stringsBundlePath = [[NSBundle bundleForClass:FBSDKApplicationDelegate.class]
+    NSString *stringsBundlePath = [[NSBundle bundleForClass:self.class]
                                    pathForResource:@"FacebookSDKStrings"
                                    ofType:@"bundle"];
     bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: NSBundle.mainBundle;
