@@ -35,10 +35,10 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublishing.h"
+#import "FBSDKCodelessIndexing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKEnableable.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
@@ -138,7 +138,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
 @property (nonatomic) FBSDKEventBindingManager *eventBindingManager;
-@property (nonatomic) Class<FBSDKEnableable> codelessIndexer;
+@property (nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 #endif
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
@@ -837,7 +837,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
-                                           codelessIndexer:(Class<FBSDKEnableable>)codelessIndexer;
+                                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer;
 {
   self.onDeviceMLModelManager = modelManager;
   self.metadataIndexer = metadataIndexer;

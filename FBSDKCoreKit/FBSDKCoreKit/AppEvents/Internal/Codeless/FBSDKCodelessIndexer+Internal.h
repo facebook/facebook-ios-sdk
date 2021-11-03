@@ -14,8 +14,8 @@
 
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKCodelessIndexer.h"
+#import "FBSDKCodelessIndexing.h"
 #import "FBSDKDataPersisting.h"
-#import "FBSDKEnableable.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -24,7 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKCodelessIndexer (Internal) <FBSDKEnableable>
+@interface FBSDKCodelessIndexer (Internal) <FBSDKCodelessIndexing>
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider

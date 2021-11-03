@@ -24,7 +24,7 @@ class TestAppEvents: TestEventLogger,
   var wasRegisterAutoResetSourceApplicationCalled = false
   var capturedSetSourceApplication: String?
   var capturedSetSourceApplicationURL: URL?
-  var capturedCodelessIndexer: Enableable.Type?
+  var capturedCodelessIndexer: CodelessIndexing.Type?
 
   func activateApp() {
     wasActivateAppCalled = true
@@ -105,7 +105,7 @@ class TestAppEvents: TestEventLogger,
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
     skAdNetworkReporter: AppEventsReporter?,
-    codelessIndexer: Enableable.Type
+    codelessIndexer: CodelessIndexing.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer

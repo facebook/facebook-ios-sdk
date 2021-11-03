@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(Enableable)
-@protocol FBSDKEnableable
+NS_SWIFT_NAME(CodelessIndexing)
+@protocol FBSDKCodelessIndexing
 
 + (void)enable;
 

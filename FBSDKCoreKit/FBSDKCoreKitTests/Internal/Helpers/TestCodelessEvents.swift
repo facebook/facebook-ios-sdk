@@ -7,7 +7,7 @@
  */
 
 @objcMembers
-class TestCodelessEvents: NSObject, Enableable {
+class TestCodelessEvents: NSObject, CodelessIndexing {
 
   static var wasEnabledCalled = false
 
