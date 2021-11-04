@@ -16,6 +16,7 @@
 #import "FBAEMConfiguration.h"
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
+#import "FBAEMSettings.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
@@ -114,9 +115,13 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
         _networker = [FBAEMNetworker new];
       }
       // If developers forget to call configureWithNetworker:appID:,
-      // we throw warning here
+      // we will look up app id in plist file, key is FacebookAppID
       if (!_appId) {
-        NSLog(@"App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB app ID");
+        _appId = [FBAEMSettings appID];
+      }
+      // If appId is still nil, we don't enable AEM and throw warning here
+      if (!_appId) {
+        NSLog(@"App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB app ID OR add FacebookAppID in the info.plist file");
         return;
       }
       g_isAEMReportEnabled = YES;
