@@ -36,7 +36,8 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;
 + (void)logAndNotify:(NSString *)msg;
-+ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token;
++ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
+                      loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
 + (BOOL)validateIdentifier:(nullable NSString *)identifier;
 + (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;

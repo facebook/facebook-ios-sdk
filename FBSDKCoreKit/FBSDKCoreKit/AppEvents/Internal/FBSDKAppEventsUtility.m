@@ -339,12 +339,11 @@ static dispatch_once_t singletonNonce;
 // Given a candidate token (which may be nil), find the real token to string to use.
 // Precedence: 1) provided token, 2) current token, 3) app | client token, 4) fully anonymous session.
 + (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
+                      loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID
 {
   if (!token) {
     token = FBSDKAccessToken.currentAccessToken;
   }
-
-  NSString *loggingOverrideAppID = [FBSDKAppEvents loggingOverrideAppID];
 
   NSString *appID = loggingOverrideAppID ?: token.appID ?: FBSDKSettings.sharedSettings.appID;
   NSString *tokenString = token.tokenString;

@@ -1334,7 +1334,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameInBackground];
   }
 
-  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken
+                                                loggingOverrideAppID:self.class.loggingOverrideAppID];
   NSString *appID = [self appID];
 
   @synchronized(self) {
@@ -1609,7 +1610,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     return nil;
   }
 
-  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken
+                                                loggingOverrideAppID:self.loggingOverrideAppID];
   NSString *udid = nil;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
