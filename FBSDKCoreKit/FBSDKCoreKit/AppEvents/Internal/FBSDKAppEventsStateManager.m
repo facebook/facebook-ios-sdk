@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsState.h"
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
 
