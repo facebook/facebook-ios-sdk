@@ -88,9 +88,7 @@ main() {
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
 
-    SDK_FRAMEWORK_NAME="FacebookSDK"
-
-    SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
+    SDK_POD_SPECS=("${SDK_KITS[@]}")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
 
     SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
@@ -349,13 +347,6 @@ check_release_status() {
   for spec in "${SDK_POD_SPECS[@]}"; do
     if [ ! -f "$spec" ]; then
       echo "*** ERROR: unable to release $spec"
-      continue
-    fi
-
-    # Exclude aggregate pod FacebookSDK.
-    # We release it separately from the CI process
-    # because it contains proprietary MarketingKit source code
-    if [ "$spec"  == "$SDK_FRAMEWORK_NAME.podspec" ]; then
       continue
     fi
 
