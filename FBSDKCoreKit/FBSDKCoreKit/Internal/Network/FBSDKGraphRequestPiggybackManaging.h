@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@protocol FBSDKGraphRequestConnecting;
-
-#import "FBSDKGraphRequestPiggybackManaging.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +15,8 @@ NS_SWIFT_NAME(GraphRequestPiggybackManaging)
 @protocol FBSDKGraphRequestPiggybackManaging
 
 + (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection;
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection
+          permissionHandler:(nullable FBSDKGraphRequestCompletion)permissionHandler;
 
 @end
 

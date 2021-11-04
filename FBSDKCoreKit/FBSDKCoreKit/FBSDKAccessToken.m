@@ -16,7 +16,6 @@
 #import "FBSDKError.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMath.h"
 
@@ -30,6 +29,7 @@ NSString *const FBSDKAccessTokenDidExpireKey = @"FBSDKAccessTokenDidExpireKey";
 static FBSDKAccessToken *g_currentAccessToken;
 static id<FBSDKTokenCaching> g_tokenCache;
 static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
+static id<FBSDKGraphRequestPiggybackManagerProviding> g_graphRequestPiggybackManagerProvider;
 
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
@@ -154,8 +154,18 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 {
   if (FBSDKAccessToken.currentAccessToken) {
     id<FBSDKGraphRequestConnecting> connection = [FBSDKAccessToken.graphRequestConnectionFactory createGraphRequestConnection];
-    [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completion];
-    [connection start];
+    if (connection) {
+      [self.graphRequestPiggybackManagerProvider.piggybackManager addRefreshPiggyback:connection permissionHandler:completion];
+      [connection start];
+    } else {
+    #if DEBUG
+      static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+      "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
+      "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+      "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
+      @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+    #endif
+    }
   } else if (completion) {
     completion(
       nil,
@@ -167,16 +177,35 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
   }
 }
 
-+ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
++ (nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   return g_graphRequestConnectionFactory;
 }
 
-+ (void)setGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
++ (void)setGraphRequestConnectionFactory:(nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   if (g_graphRequestConnectionFactory != graphRequestConnectionFactory) {
     g_graphRequestConnectionFactory = graphRequestConnectionFactory;
   }
+}
+
++ (nullable id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
+{
+  return g_graphRequestPiggybackManagerProvider;
+}
+
++ (void)setGraphRequestPiggybackManagerProvider:(nullable id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
+{
+  g_graphRequestPiggybackManagerProvider = graphRequestPiggybackManagerProvider;
+}
+
++ (void)       configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
+         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+  graphRequestPiggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
+{
+  self.tokenCache = tokenCache;
+  self.graphRequestConnectionFactory = graphRequestConnectionFactory;
+  self.graphRequestPiggybackManagerProvider = graphRequestPiggybackManagerProvider;
 }
 
 #pragma mark - Equality
@@ -285,6 +314,13 @@ static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 #pragma mark - Testability
 
 #if DEBUG && FBTEST
+
++ (void)resetClassDependencies
+{
+  self.tokenCache = nil;
+  self.graphRequestConnectionFactory = nil;
+  self.graphRequestPiggybackManagerProvider = nil;
+}
 
 + (void)resetCurrentAccessTokenCache
 {

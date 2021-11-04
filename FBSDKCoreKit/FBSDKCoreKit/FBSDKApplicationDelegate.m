@@ -706,8 +706,9 @@ static UIApplicationState _applicationState;
                                                 crashHandler:sharedCrashHandler];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings
                                                      keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
-  FBSDKAccessToken.tokenCache = tokenCache;
-  FBSDKAccessToken.graphRequestConnectionFactory = graphRequestConnectionFactory;
+  [FBSDKAccessToken configureWithTokenCache:tokenCache
+              graphRequestConnectionFactory:graphRequestConnectionFactory
+       graphRequestPiggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]];
   FBSDKAuthenticationToken.tokenCache = tokenCache;
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestFactory
