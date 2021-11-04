@@ -62,6 +62,10 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
   }
 
   func testCompleteFetchingServerConfigurationWithoutConnectionResponseOrError() throws {
+    // This test needs more work before it can be included in the regular test suite
+    // See T105037698
+    try XCTSkipIf(true)
+
     var didInvokeCompletion = false
     var configuration: ServerConfiguration?
     var error: Error?
