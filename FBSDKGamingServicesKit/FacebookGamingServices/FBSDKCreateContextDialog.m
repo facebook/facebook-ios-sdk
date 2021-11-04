@@ -18,7 +18,7 @@
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300
- #define FBSDKWEBDIALOGFRAMEHEIGHT 170
+ #define FBSDKWEBDIALOGFRAMEHEIGHT 185
 
 @interface FBSDKCreateContextDialog ()
 @property (nonatomic) id<FBSDKWindowFinding> windowFinder;

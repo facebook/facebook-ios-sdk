@@ -21,7 +21,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
 
   enum DialogFrame {
     static let width: CGFloat = 300.0
-    static let height: CGFloat = 170.0
+    static let height: CGFloat = 185.0
   }
 
   let windowFinder: WindowFinding
