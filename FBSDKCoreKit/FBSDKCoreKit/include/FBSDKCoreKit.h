@@ -18,6 +18,7 @@
 #import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
 #import <FBSDKCoreKit/FBSDKApplicationObserving.h>

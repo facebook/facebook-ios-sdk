@@ -10,6 +10,7 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 

@@ -71,8 +71,6 @@
 
 NSString *const FBSDKGateKeeperAppEventsKillSwitch = @"app_events_killswitch";
 
-NSNotificationName const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";
-
 NSString *const FBSDKAppEventsOverrideAppIDBundleKey = @"FacebookLoggingOverrideAppID";
 
 //
