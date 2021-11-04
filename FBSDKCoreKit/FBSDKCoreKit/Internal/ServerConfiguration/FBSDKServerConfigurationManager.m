@@ -8,19 +8,17 @@
 
 #import "FBSDKServerConfigurationManager+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
+#import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
-#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKLogger.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKServerConfiguration+Internal.h"
-#import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY @"com.facebook.sdk:serverConfiguration%@"
@@ -93,8 +91,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 }
 
 - (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   self.graphRequestFactory = graphRequestFactory;
+  self.graphRequestConnectionFactory = graphRequestConnectionFactory;
 }
 
 #pragma mark - Public
@@ -175,7 +175,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
           id<FBSDKGraphRequest> request = [self requestToLoadServerConfiguration:appID];
 
           // start request with specified timeout instead of the default 180s
-          id<FBSDKGraphRequestConnecting> requestConnection = [FBSDKGraphRequestConnection new];
+          id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
           requestConnection.timeout = kTimeout;
           [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
             self.requeryFinishedForAppStart = YES;
@@ -431,7 +431,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
 - (void)reset
 {
+  [self clearCache];
   self.graphRequestFactory = nil;
+  self.graphRequestConnectionFactory = nil;
 }
 
 #endif

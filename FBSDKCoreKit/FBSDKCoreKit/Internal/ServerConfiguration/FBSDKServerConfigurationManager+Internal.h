@@ -10,13 +10,12 @@
 
 #import "FBSDKServerConfigurationManager.h"
 
-@protocol FBSDKGraphRequestFactory;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKServerConfigurationManager ()
 
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
 - (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error appID:(NSString *)appID;
 

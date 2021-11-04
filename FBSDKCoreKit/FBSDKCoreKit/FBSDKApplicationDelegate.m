@@ -682,7 +682,8 @@ static UIApplicationState _applicationState;
                                                  accessTokenSetter:FBSDKAccessToken.class
                                                       errorFactory:errorFactory
                                        authenticationTokenProvider:FBSDKAuthenticationToken.class];
-  [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory];
+  [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory
+                                             graphRequestConnectionFactory:graphRequestConnectionFactory];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:appEventsConfigurationProvider
              infoDictionaryProvider:NSBundle.mainBundle

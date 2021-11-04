@@ -455,6 +455,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     delegate.initializeSDK()
 
     XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
+    XCTAssertTrue(manager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
   }
 
   func testInitializingConfiguresAppLinkURL() {

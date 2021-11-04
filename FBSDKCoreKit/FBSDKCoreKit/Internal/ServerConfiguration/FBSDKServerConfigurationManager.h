@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
+
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 
@@ -40,7 +43,9 @@ NS_SWIFT_NAME(ServerConfigurationManager)
  */
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
 
-- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory;
+- (void)configureWithGraphRequestFactory     :(id<FBSDKGraphRequestFactory>)graphRequestFactory
+           graphRequestConnectionFactory     :(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+  NS_SWIFT_NAME(configure(graphRequestFactory:graphRequestConnectionFactory:));
 
 @end
 
