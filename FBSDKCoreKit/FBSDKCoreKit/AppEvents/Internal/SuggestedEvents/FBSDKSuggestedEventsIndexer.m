@@ -299,8 +299,6 @@ static dispatch_once_t setupNonce;
   });
 }
 
-#pragma mark - Helper Methods
-
 - (NSString *)getDenseFeaure:(float *)denseData
 {
   // Get dense feature string

@@ -277,8 +277,6 @@
   return containsVideos && containsPhotos;
 }
 
-#pragma mark - Helper Methods
-
 + (id)_convertObject:(id)object
 {
   if ([object isKindOfClass:FBSDKSharePhoto.class]) {

@@ -296,7 +296,6 @@ static id _applicationActivationNotifier;
   return CGSizeMake(ceilf(size.width), ceilf(size.height));
 }
 
-#pragma mark - Helper Methods
 - (void)_applicationDidBecomeActiveNotification:(NSNotification *)notification
 {
   [self checkImplicitlyDisabled];

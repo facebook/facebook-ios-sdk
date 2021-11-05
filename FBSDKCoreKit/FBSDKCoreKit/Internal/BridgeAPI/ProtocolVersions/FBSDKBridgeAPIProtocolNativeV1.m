@@ -228,8 +228,6 @@ static const struct {
   return resultParameters;
 }
 
-#pragma mark - Helper Methods
-
 - (nullable UIImage *)_appIcon
 {
   if (!_includeAppIcon) {

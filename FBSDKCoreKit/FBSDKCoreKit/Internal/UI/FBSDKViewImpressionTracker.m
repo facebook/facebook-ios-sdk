@@ -104,8 +104,6 @@ static dispatch_once_t token;
                          accessToken:[self.tokenWallet currentAccessToken]];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_applicationDidEnterBackgroundNotification:(NSNotification *)notification
 {
   // reset all tracked impressions when the app backgrounds so we will start tracking them again the next time they

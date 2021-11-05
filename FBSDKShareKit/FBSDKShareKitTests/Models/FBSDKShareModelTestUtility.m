@@ -270,8 +270,6 @@
   return content;
 }
 
-#pragma mark - Helper Methods
-
 + (UIImage *)_generateImage
 {
   UIGraphicsBeginImageContext(CGSizeMake(10.0, 10.0));

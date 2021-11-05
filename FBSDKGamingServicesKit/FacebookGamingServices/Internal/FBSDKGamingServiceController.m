@@ -167,8 +167,6 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   return false;
 }
 
-#pragma mark - Helpers
-
 - (BOOL)isValidCallbackURL:(NSURL *)url forService:(NSString *)service
 {
   // verify the URL is intended as a callback for the SDK's friend finder

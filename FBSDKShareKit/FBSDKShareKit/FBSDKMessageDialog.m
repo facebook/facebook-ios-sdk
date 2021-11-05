@@ -166,8 +166,6 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                            error:errorRef];
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_canShowNative
 {
   BOOL useNativeDialog = [self.shareDialogConfiguration

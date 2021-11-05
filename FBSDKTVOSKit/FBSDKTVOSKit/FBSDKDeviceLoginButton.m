@@ -90,8 +90,6 @@
                                            object:nil];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
   if (notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {

@@ -165,8 +165,6 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   }
 }
 
-#pragma mark - Helpers
-
 - (BOOL)isValidCallbackURL:(NSURL *)url
 {
   return
@@ -437,8 +435,6 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   [_delegate gameRequestDialogDidCancel:self];
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
-
-#pragma mark - Helper Methods
 
 - (void)_cleanUp
 {

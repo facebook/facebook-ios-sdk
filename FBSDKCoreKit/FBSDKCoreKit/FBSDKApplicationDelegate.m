@@ -566,8 +566,6 @@ static UIApplicationState _applicationState;
   [self.appEvents setApplicationState:state];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_logIfAppLinkEvent:(NSURL *)url
 {
   if (!url) {

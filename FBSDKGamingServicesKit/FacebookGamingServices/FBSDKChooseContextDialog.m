@@ -104,8 +104,6 @@
   return [self.dialogContent validateWithError:errorRef];
 }
 
-#pragma mark - Helpers
-
 - (void)_handleDialogError:(NSError *)dialogError
 {
   [self.delegate contextDialog:self didFailWithError:dialogError];

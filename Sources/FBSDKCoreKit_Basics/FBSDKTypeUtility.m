@@ -209,8 +209,6 @@
   return object;
 }
 
-#pragma mark - Helper Methods
-
 + (id)_objectValue:(id)object ofClass:(Class)expectedClass
 {
   return ([object isKindOfClass:expectedClass] ? object : nil);

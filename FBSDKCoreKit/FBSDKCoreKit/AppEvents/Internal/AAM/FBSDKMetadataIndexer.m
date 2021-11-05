@@ -258,8 +258,6 @@ static NSString *const FIELD_K_DELIMITER = @",";
   }
 }
 
-#pragma mark - Helper Methods
-
 - (void)checkAndAppendData:(NSString *)data
                     forKey:(NSString *)key
 {

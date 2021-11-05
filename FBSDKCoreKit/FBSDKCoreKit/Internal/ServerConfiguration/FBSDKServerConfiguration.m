@@ -192,8 +192,6 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   return [self _useFeatureWithKey:FBSDKDialogConfigurationFeatureUseSafariViewController dialogName:dialogName];
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_useFeatureWithKey:(NSString *)key dialogName:(NSString *)dialogName
 {
   if ([dialogName isEqualToString:FBSDKDialogConfigurationNameLogin]) {

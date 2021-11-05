@@ -145,8 +145,6 @@
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionCode");
 }
 
-#pragma mark - Helper Methods
-
 + (FBSDKAppInviteContent *)_content
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];

@@ -633,8 +633,6 @@
                nonSupportedScheme:nil];
 }
 
-#pragma mark - Helpers
-
 - (void)_testValidateShareContent:(id<FBSDKSharingContent>)shareContent
                       expectValid:(BOOL)expectValid
                        expectShow:(BOOL)expectShow

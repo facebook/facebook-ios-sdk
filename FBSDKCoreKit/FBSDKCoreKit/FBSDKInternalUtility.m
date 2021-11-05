@@ -414,8 +414,6 @@ static NSMapTable *_transientObjects;
   return [self _canOpenURLScheme:FBSDKURLSchemeMasqueradePlayer];
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_canOpenURLScheme:(NSString *)scheme
 {
   scheme = [FBSDKTypeUtility coercedToStringValue:scheme];

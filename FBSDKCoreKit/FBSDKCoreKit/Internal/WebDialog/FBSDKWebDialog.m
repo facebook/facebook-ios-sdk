@@ -249,8 +249,6 @@ static id<FBSDKErrorCreating> _errorFactory;
   [nc removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_cancel
 {
   FBSDKWebDialog *dialog = self;

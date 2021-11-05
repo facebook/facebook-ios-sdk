@@ -110,8 +110,6 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return copy;
 }
 
-#pragma mark - Helper Methods
-
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
   [FBSDKCameraEffectArguments assertKey:key];

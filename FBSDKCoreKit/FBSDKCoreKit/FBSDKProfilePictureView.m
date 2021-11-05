@@ -327,8 +327,6 @@
   }
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_imageShouldFit
 {
   switch (self.contentMode) {

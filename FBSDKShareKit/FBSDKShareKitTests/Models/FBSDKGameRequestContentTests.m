@@ -174,8 +174,6 @@
   [self _testValidationWithContent:content errorArgumentName:@"data"];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_testValidationWithContent:(FBSDKGameRequestContent *)content
 {
   NSError *error;

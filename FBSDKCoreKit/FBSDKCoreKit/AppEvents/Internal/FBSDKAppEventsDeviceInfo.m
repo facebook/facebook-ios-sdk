@@ -240,8 +240,6 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
   return [FBSDKBasicUtility JSONStringForObject:arr error:NULL invalidObjectHandler:NULL];
 }
 
-#pragma mark - Helper Methods
-
 - (NSTimeInterval)unixTimeNow
 {
   return round([NSDate date].timeIntervalSince1970);

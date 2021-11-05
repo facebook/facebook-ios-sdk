@@ -155,8 +155,6 @@ static id<FBSDKDataPersisting> _store;
                                                              flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
-#pragma mark - Helper Class Methods
-
 + (void)processLoadRequestResponse:(id)result error:(NSError *)error
 {
   @synchronized(self) {

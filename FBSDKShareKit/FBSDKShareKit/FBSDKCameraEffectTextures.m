@@ -100,8 +100,6 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return copy;
 }
 
-#pragma mark - Helper Methods
-
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
   if (value) {

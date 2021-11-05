@@ -164,8 +164,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   [self _updateNotificationObservers];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_updateNotificationObservers
 {
   [NSNotificationCenter.defaultCenter addObserver:self

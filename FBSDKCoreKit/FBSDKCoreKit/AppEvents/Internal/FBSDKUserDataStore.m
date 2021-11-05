@@ -177,8 +177,6 @@ static dispatch_queue_t serialQueue;
   return hashedData;
 }
 
-#pragma mark - Helper Methods
-
 + (NSMutableDictionary<NSString *, NSString *> *)initializeUserData:(NSString *)userDataKey
 {
   NSString *userData = [NSUserDefaults.standardUserDefaults stringForKey:userDataKey];

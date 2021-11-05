@@ -80,8 +80,6 @@
   return !_dialog.canShow || ![_dialog validateWithError:NULL];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_share:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameSendButtonDidTap parameters:self.analyticsParameters];

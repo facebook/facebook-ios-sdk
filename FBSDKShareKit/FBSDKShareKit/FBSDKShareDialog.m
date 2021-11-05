@@ -440,8 +440,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   [self.class.internalUtility unregisterTransientObject:self];
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_isDefaultToShareSheet
 {
   if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {

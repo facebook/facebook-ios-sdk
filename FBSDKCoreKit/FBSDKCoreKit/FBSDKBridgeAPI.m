@@ -527,8 +527,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   }
 }
 
-#pragma mark - Helper Methods
-
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
 {
   NSObject<FBSDKBridgeAPIRequest> *request = _pendingRequest;

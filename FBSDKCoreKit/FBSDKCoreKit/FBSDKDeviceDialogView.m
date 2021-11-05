@@ -54,8 +54,6 @@
   }
 }
 
-#pragma mark - Helpers
-
 - (UIColor *)logoColor
 {
   return [UIColor colorWithRed:66.0 / 255.0 green:103.0 / 255.0 blue:178.0 / 255.0 alpha:1];

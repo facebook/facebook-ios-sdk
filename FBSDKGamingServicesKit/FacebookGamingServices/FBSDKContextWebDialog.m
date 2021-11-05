@@ -71,8 +71,6 @@
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
-#pragma mark - Helper Methods
-
 - (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
 {
   if (!self.delegate) {
