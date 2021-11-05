@@ -10,11 +10,7 @@
 class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   private var stubbedSessions: [TestURLSessionProxy]
 
-  init(session: TestURLSessionProxy) {
-    self.stubbedSessions = [session]
-  }
-
-  init(sessions: [TestURLSessionProxy]) {
+  init(sessions: [TestURLSessionProxy] = []) {
     self.stubbedSessions = sessions
   }
 
@@ -23,7 +19,7 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   /// If you provide a single session, all calls to `createSessionProxy` will return the same
   /// session instance
   static func create(with session: TestURLSessionProxy) -> TestURLSessionProxyFactory {
-    TestURLSessionProxyFactory(session: session)
+    TestURLSessionProxyFactory(sessions: [session])
   }
 
   /// Creates a new provider stubbed with the `FakeURLSessionProxy`

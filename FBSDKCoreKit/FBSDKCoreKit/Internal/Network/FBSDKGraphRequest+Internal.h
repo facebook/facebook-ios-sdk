@@ -9,12 +9,15 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactory.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Internal)
+
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) Class<FBSDKTokenStringProviding> accessTokenProvider;
 
 @property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
 @property (nonatomic, readonly) BOOL hasAttachments;

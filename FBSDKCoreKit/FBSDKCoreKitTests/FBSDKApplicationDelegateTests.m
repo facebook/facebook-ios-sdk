@@ -687,7 +687,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertEqualObjects(
-    [FBSDKGraphRequest currentAccessTokenStringProvider],
+    [FBSDKGraphRequest accessTokenProvider],
     FBSDKAccessToken.class,
     "Should be configered with expected access token class."
   );

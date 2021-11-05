@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBAEMKit
+
 public class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
 
   public var cutOff = false

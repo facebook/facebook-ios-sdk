@@ -13,9 +13,17 @@ public final class TestURLHoster: URLHosting {
   public var capturedHostPrefix: String?
   public var capturedPath: String?
   public var capturedQueryParameters: [String: Any]?
-  public var stubbedURL: URL
+  public var stubbedURL: URL?
 
-  public init(url: URL) {
+  private var url: URL {
+    guard let url = stubbedURL else {
+      preconditionFailure("Missing stubbed URL")
+    }
+
+    return url
+  }
+
+  public init(url: URL? = nil) {
     stubbedURL = url
   }
 
@@ -28,7 +36,7 @@ public final class TestURLHoster: URLHosting {
     capturedHost = host
     capturedPath = path
     capturedQueryParameters = queryParameters
-    return stubbedURL
+    return url
   }
 
   public func facebookURL(
@@ -40,6 +48,6 @@ public final class TestURLHoster: URLHosting {
     capturedHostPrefix = hostPrefix
     capturedPath = path
     capturedQueryParameters = queryParameters
-    return stubbedURL
+    return url
   }
 }

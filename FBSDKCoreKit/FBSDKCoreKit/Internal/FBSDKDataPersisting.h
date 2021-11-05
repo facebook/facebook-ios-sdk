@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// An internal protocol used to describe a session data task
+/// An internal protocol used to describe a simple data store
 NS_SWIFT_NAME(DataPersisting)
 @protocol FBSDKDataPersisting
 

@@ -8,13 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
-
-@protocol FBSDKGraphRequestConnecting;
-@protocol FBSDKSettings;
-@protocol FBSDKGraphRequestConnectionFactory;
-@protocol FBSDKTokenStringProviding;
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+#import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -50,7 +49,7 @@ NS_SWIFT_NAME(GraphRequest)
  */
 // UNCRUSTIFY_FORMAT_OFF
 + (void)     configureWithSettings:(id<FBSDKSettings>)settings
-  currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
+  currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)accessTokenProvider
      graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)_graphRequestConnectionFactory
 NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestConnectionFactory:));
 // UNCRUSTIFY_FORMAT_ON

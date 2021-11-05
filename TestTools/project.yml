@@ -8,6 +8,8 @@ include:
 projectReferences:
   FBSDKCoreKit:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  FBAEMKit:
+    path: ../FBAEMKit/FBAEMKit.xcodeproj
 
 settings:
   base:
@@ -24,6 +26,8 @@ targets:
           - Info.plist
     dependencies:
       - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+        link: false
+      - target: FBAEMKit/FBAEMKit-Dynamic
         link: false
     preBuildScripts:
       - name: Run Swiftlint

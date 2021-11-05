@@ -21,9 +21,9 @@ class TestFileManager: FileManaging {
   var stubbedFileExists = true
   var stubbedCreateDirectoryShouldSucceed = true
 
-  let tempDirectoryURL: URL
+  var tempDirectoryURL: URL?
 
-  init(tempDirectoryURL: URL) {
+  init(tempDirectoryURL: URL? = nil) {
     self.tempDirectoryURL = tempDirectoryURL
   }
 
@@ -33,7 +33,11 @@ class TestFileManager: FileManaging {
     appropriateFor url: URL,
     create shouldCreate: Bool
   ) throws -> URL {
-    tempDirectoryURL
+    guard let url = tempDirectoryURL else {
+      throw SampleError()
+    }
+
+    return url
   }
 
   func createDirectory(

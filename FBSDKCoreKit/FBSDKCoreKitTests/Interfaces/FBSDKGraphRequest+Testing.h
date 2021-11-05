@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import "FBSDKGraphRequest+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Testing)
 
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nullable, nonatomic, strong) id<FBSDKSettings> settings;
-@property (class, nullable, nonatomic, readonly) Class<FBSDKTokenStringProviding> currentAccessTokenStringProvider;
 
-+ (void)reset;
++ (void)resetClassDependencies;
 
 @end
 

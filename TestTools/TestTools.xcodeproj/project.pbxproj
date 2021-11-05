@@ -17,8 +17,10 @@
 		638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */; };
 		6862A29817FB5EAC40985AF8 /* SampleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDC22C4008A0E09368CF757 /* SampleError.swift */; };
 		8A9CD67D8743BA9F8E44BAC5 /* SampleURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53246B76E3184C42F412D14 /* SampleURLs.swift */; };
+		8AFCBC7353B0BF34CF008C30 /* TestSKAdNetworkReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EADCEC319126E782252276B /* TestSKAdNetworkReporter.swift */; };
 		8D0D73617FA7679F8A827C99 /* TestBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571755F44AE658FF8F3716B4 /* TestBundle.swift */; };
 		8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44853480B9144B4E2A10493 /* TestInternalUtility.swift */; };
+		99059344C6095D5E6AF2C327 /* TestAEMNetworker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE9262A768F837E5F021673 /* TestAEMNetworker.swift */; };
 		99EFAC95A1FB2E0A37D88F38 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */; };
 		9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */; };
 		A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */; };
@@ -46,6 +48,20 @@
 			remoteGlobalIDString = 95463755E22142396C3ADC06;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
+		2A0F8EA33E42339B9CE40FFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 373AC4291587EE6AC6185981 /* FBAEMKit */;
+			proxyType = 2;
+			remoteGlobalIDString = 9552CA6943B9F2D75DABB322;
+			remoteInfo = "FBAEMKit-Dynamic";
+		};
+		C8F2E8C11E6BC4A85567F0C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 373AC4291587EE6AC6185981 /* FBAEMKit */;
+			proxyType = 1;
+			remoteGlobalIDString = E6BC29DBCBDBCD6E9C7B5EA2;
+			remoteInfo = "FBAEMKit-Dynamic";
+		};
 		CBB8303DD684E0F36CCA0373 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
@@ -61,10 +77,12 @@
 		134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequest.swift; sourceTree = "<group>"; };
 		155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeychainStore.swift; sourceTree = "<group>"; };
 		339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
+		373AC4291587EE6AC6185981 /* FBAEMKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBAEMKit; path = ../FBAEMKit/FBAEMKit.xcodeproj; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProfileProvider.swift; sourceTree = "<group>"; };
 		508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenProvider.swift; sourceTree = "<group>"; };
 		571755F44AE658FF8F3716B4 /* TestBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBundle.swift; sourceTree = "<group>"; };
+		5EADCEC319126E782252276B /* TestSKAdNetworkReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSKAdNetworkReporter.swift; sourceTree = "<group>"; };
 		791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthenticationTokenWallet.swift; sourceTree = "<group>"; };
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
@@ -73,6 +91,7 @@
 		AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestOpener.swift; sourceTree = "<group>"; };
 		B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLHoster.swift; sourceTree = "<group>"; };
 		B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
+		BCE9262A768F837E5F021673 /* TestAEMNetworker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAEMNetworker.swift; sourceTree = "<group>"; };
 		BCFA80AADB26410AC60714D8 /* TestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSettings.swift; sourceTree = "<group>"; };
 		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
@@ -120,6 +139,7 @@
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
 				508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */,
 				C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */,
+				BCE9262A768F837E5F021673 /* TestAEMNetworker.swift */,
 				791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */,
 				134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */,
 				AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */,
@@ -134,6 +154,7 @@
 				4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
 				BCFA80AADB26410AC60714D8 /* TestSettings.swift */,
+				5EADCEC319126E782252276B /* TestSKAdNetworkReporter.swift */,
 				CC38C544BAC3F3485C5F699F /* TestTools.h */,
 				B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */,
 				B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */,
@@ -142,9 +163,18 @@
 			path = TestTools;
 			sourceTree = "<group>";
 		};
+		8D2C5E23FA2E700EF075D7FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EA0521AF5296F7150A9E0014 /* FBAEMKit-Dynamic.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D7BA8431C3AD0E9057049133 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
+				373AC4291587EE6AC6185981 /* FBAEMKit */,
 				FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */,
 			);
 			name = Projects;
@@ -190,6 +220,7 @@
 			);
 			dependencies = (
 				1E1B720C031C079B8B14FFC7 /* PBXTargetDependency */,
+				FD3CCE214BEC78408C88DB58 /* PBXTargetDependency */,
 			);
 			name = TestTools;
 			productName = TestTools;
@@ -219,6 +250,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 8D2C5E23FA2E700EF075D7FA /* Products */;
+					ProjectRef = 373AC4291587EE6AC6185981 /* FBAEMKit */;
+				},
+				{
 					ProductGroup = 5ED934C23270354BC542BB8F /* Products */;
 					ProjectRef = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
 				},
@@ -236,6 +271,13 @@
 			fileType = wrapper.framework;
 			path = "FBSDKCoreKit-Dynamic.framework";
 			remoteRef = CBB8303DD684E0F36CCA0373 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EA0521AF5296F7150A9E0014 /* FBAEMKit-Dynamic.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = "FBAEMKit-Dynamic.framework";
+			remoteRef = 2A0F8EA33E42339B9CE40FFA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -273,6 +315,7 @@
 				6862A29817FB5EAC40985AF8 /* SampleError.swift in Sources */,
 				8A9CD67D8743BA9F8E44BAC5 /* SampleURLs.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
+				99059344C6095D5E6AF2C327 /* TestAEMNetworker.swift in Sources */,
 				FB7D50EB7B42C13CF153050F /* TestAccessTokenProvider.swift in Sources */,
 				A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */,
 				CDF18EF7B43D29D705F3FCDD /* TestAuthenticationTokenWallet.swift in Sources */,
@@ -287,6 +330,7 @@
 				4463F7E77A22CF4A3B8596D0 /* TestKeychainStore.swift in Sources */,
 				C975A94CFA4522D7A5194379 /* TestKeychainStoreFactory.swift in Sources */,
 				638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */,
+				8AFCBC7353B0BF34CF008C30 /* TestSKAdNetworkReporter.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
 				2A7CA9317DCBCEACF959C50E /* TestSettings.swift in Sources */,
 				D8D8E4F13BCAEEF3BFEB564F /* TestURLHoster.swift in Sources */,
@@ -302,6 +346,11 @@
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = 24BD640E97C02C4534E1C1E6 /* PBXContainerItemProxy */;
+		};
+		FD3CCE214BEC78408C88DB58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBAEMKit-Dynamic";
+			targetProxy = C8F2E8C11E6BC4A85567F0C2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

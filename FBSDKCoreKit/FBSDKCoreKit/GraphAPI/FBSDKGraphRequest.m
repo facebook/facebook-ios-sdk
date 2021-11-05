@@ -25,9 +25,9 @@ FBSDKHTTPMethod FBSDKHTTPMethodGET = @"GET";
 FBSDKHTTPMethod FBSDKHTTPMethodPOST = @"POST";
 FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 
-static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
+static Class<FBSDKTokenStringProviding> _accessTokenProvider;
 static id<FBSDKSettings> _settings;
-static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
+static id<FBSDKGraphRequestConnectionFactory> class_graphRequestConnectionFactory;
 
 @interface FBSDKGraphRequest ()
 @property (nonatomic, readwrite, assign) FBSDKGraphRequestFlags flags;
@@ -69,7 +69,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
 {
   return [self initWithGraphPath:graphPath
                       parameters:parameters
-                     tokenString:[_currentAccessTokenStringProvider tokenString]
+                     tokenString:[self.class.accessTokenProvider tokenString]
                          version:nil
                       HTTPMethod:method];
 }
@@ -80,7 +80,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
 {
   return [self initWithGraphPath:graphPath
                       parameters:parameters
-                     tokenString:[_currentAccessTokenStringProvider tokenString]
+                     tokenString:[self.class.accessTokenProvider tokenString]
                       HTTPMethod:FBSDKHTTPMethodGET
                            flags:requestFlags];
 }
@@ -94,7 +94,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   if ((self = [self initWithGraphPath:graphPath
                            parameters:parameters
                           tokenString:tokenString
-                              version:_settings.graphAPIVersion
+                              version:self.class.settings.graphAPIVersion
                            HTTPMethod:method])) {
     self.flags |= requestFlags;
   }
@@ -112,7 +112,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
                              parameters:parameters
                             tokenString:tokenString
                              HTTPMethod:method
-                                version:_settings.graphAPIVersion
+                                version:self.class.settings.graphAPIVersion
                                   flags:requestFlags
           graphRequestConnectionFactory:factory];
 }
@@ -144,16 +144,18 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
 {
   if ((self = [super init])) {
     _tokenString = tokenString ? [tokenString copy] : nil;
-    _version = version ? [version copy] : _settings.graphAPIVersion;
+    _version = version ? [version copy] : self.class.settings.graphAPIVersion;
     _graphPath = [graphPath copy];
     self.HTTPMethod = method.length > 0 ? [method copy] : FBSDKHTTPMethodGET;
     _parameters = parameters ?: @{};
-    if (!_settings.isGraphErrorRecoveryEnabled) {
+
+    if (!self.class.settings.isGraphErrorRecoveryEnabled) {
       self.flags = FBSDKGraphRequestFlagDisableErrorRecovery;
     }
     // Uses the graph request connection factory set in the `configure` method as a default
-    _graphRequestConnectionFactory = _connectionFactory;
+    _graphRequestConnectionFactory = self.class.graphRequestConnectionFactory;
   }
+
   return self;
 }
 
@@ -181,6 +183,15 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
     }
   }];
   return hasAttachments;
+}
+
+- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
+{
+  id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
+  id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
+  [connection addRequest:request completion:completion];
+  [connection start];
+  return connection;
 }
 
 + (BOOL)isAttachment:(id)item
@@ -235,7 +246,7 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
 
 + (NSDictionary<NSString *, id> *)preprocessParams:(NSDictionary<NSString *, id> *)params
 {
-  NSString *debugValue = _settings.graphAPIDebugParamValue;
+  NSString *debugValue = self.settings.graphAPIDebugParamValue;
   if (debugValue) {
     NSMutableDictionary<NSString *, id> *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
     [FBSDKTypeUtility dictionary:mutableParams setObject:debugValue forKey:@"debug"];
@@ -245,23 +256,55 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   return params;
 }
 
-+ (void)     configureWithSettings:(id<FBSDKSettings>)settings
-  currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)provider
-     graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
++ (nullable id<FBSDKSettings>)settings
 {
-  _currentAccessTokenStringProvider = provider;
-  _connectionFactory = graphRequestConnectionFactory;
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
   _settings = settings;
 }
 
-- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion
++ (nullable Class<FBSDKTokenStringProviding>)accessTokenProvider
 {
-  id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
-  id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
-  [connection addRequest:request completion:completion];
-  [connection start];
-  return connection;
+  return _accessTokenProvider;
 }
+
++ (void)setAccessTokenProvider:(nullable Class<FBSDKTokenStringProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
++ (nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  return class_graphRequestConnectionFactory;
+}
+
++ (void)setGraphRequestConnectionFactory:(nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  class_graphRequestConnectionFactory = graphRequestConnectionFactory;
+}
+
++ (void)     configureWithSettings:(id<FBSDKSettings>)settings
+  currentAccessTokenStringProvider:(Class<FBSDKTokenStringProviding>)accessTokenProvider
+     graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  self.settings = settings;
+  self.accessTokenProvider = accessTokenProvider;
+  self.graphRequestConnectionFactory = graphRequestConnectionFactory;
+}
+
+#if DEBUG && FBTEST
+
++ (void)resetClassDependencies
+{
+  self.settings = nil;
+  self.accessTokenProvider = nil;
+  self.graphRequestConnectionFactory = nil;
+}
+
+#endif
 
 #pragma mark - Debugging helpers
 
@@ -284,26 +327,5 @@ static id<FBSDKGraphRequestConnectionFactory> _connectionFactory;
   [result appendFormat:@", parameters: %@>", self.parameters.description];
   return result;
 }
-
-#if DEBUG && FBTEST
-
-+ (void)reset
-{
-  _currentAccessTokenStringProvider = nil;
-  _connectionFactory = nil;
-  _settings = nil;
-}
-
-+ (Class<FBSDKTokenStringProviding>)currentAccessTokenStringProvider
-{
-  return _currentAccessTokenStringProvider;
-}
-
-+ (id<FBSDKSettings>)settings
-{
-  return _settings;
-}
-
-#endif
 
 @end

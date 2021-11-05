@@ -23,7 +23,7 @@ final class GraphRequestTests: XCTestCase {
     super.setUp()
 
     AuthenticationToken.current = nil
-    GraphRequest.reset()
+    GraphRequest.resetClassDependencies()
     AccessToken.resetCurrentAccessTokenCache()
     TestAccessTokenWallet.reset()
 
@@ -35,7 +35,7 @@ final class GraphRequestTests: XCTestCase {
   }
 
   override func tearDown() {
-    GraphRequest.reset()
+    GraphRequest.resetClassDependencies()
     TestAccessTokenWallet.reset()
 
     super.tearDown()
@@ -44,7 +44,7 @@ final class GraphRequestTests: XCTestCase {
   // MARK: - Tests
 
   func testDefaultDependencies() {
-    GraphRequest.reset()
+    GraphRequest.resetClassDependencies()
     let request = GraphRequest(graphPath: path)
 
     XCTAssertNil(

@@ -328,7 +328,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testInitializingConfiguresGraphRequest() {
-    GraphRequest.reset()
+    GraphRequest.resetClassDependencies()
     delegate.initializeSDK(launchOptions: [:])
 
     let request = GraphRequest(graphPath: name)
@@ -337,7 +337,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should configure the graph request with a connection provider to use in creating new instances"
     )
     XCTAssertTrue(
-      GraphRequest.currentAccessTokenStringProvider === AccessToken.self,
+      GraphRequest.accessTokenProvider === AccessToken.self,
       "Should configure the graph request type with the expected concrete token string provider"
     )
   }
