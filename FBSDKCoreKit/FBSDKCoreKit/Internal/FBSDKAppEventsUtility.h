@@ -31,7 +31,10 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData;
+
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;

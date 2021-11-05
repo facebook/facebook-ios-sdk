@@ -9,10 +9,11 @@
 import FBSDKCoreKit
 
 class TestAppEventParametersExtractor: AppEventParametersExtracting {
-
   func activityParametersDictionary(
     forEvent eventCategory: String,
-    shouldAccessAdvertisingID: Bool
+    shouldAccessAdvertisingID: Bool,
+    userID: String?,
+    userData: String?
   ) -> NSMutableDictionary {
     [:]
   }

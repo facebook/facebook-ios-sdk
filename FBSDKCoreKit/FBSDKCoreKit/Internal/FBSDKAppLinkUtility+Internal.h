@@ -11,6 +11,8 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKAppLinkUtility.h"
+#import "FBSDKUserDataPersisting.h"
+#import "FBSDKUserIDProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (class, nullable, nonatomic) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (class, nullable, nonatomic) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
+@property (class, nullable, nonatomic) id<FBSDKUserIDProviding> userIDProvider;
+@property (class, nullable, nonatomic) id<FBSDKUserDataPersisting> userDataStore;
 
 // UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -43,7 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
                  appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
              appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                        appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
-NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:appLinkURLFactory:));
+                          userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
+                           userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:appLinkURLFactory:userIDProvider:userDataStore:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end

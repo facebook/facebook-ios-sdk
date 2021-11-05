@@ -12,6 +12,7 @@
 
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKUserIDProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +31,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingl
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingleCustomKey;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
-@interface FBSDKAppEvents (Internal)
+@interface FBSDKAppEvents (Internal) <FBSDKUserIDProviding>
 
 @property (nonatomic) UIApplicationState applicationState;
 

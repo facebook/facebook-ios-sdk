@@ -121,7 +121,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic, strong) dispatch_source_t flushTimer;
-@property (nonatomic, copy) NSString *userID;
+@property (nullable, nonatomic, copy) NSString *userID;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
@@ -1069,7 +1069,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       return;
     }
     NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
-                                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
+                                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled
+                                                                                                       userID:self.userID
+                                                                                                     userData:[self getUserData]];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     id<FBSDKGraphRequest> request = [g_graphRequestFactory createGraphRequestWithGraphPath:path
@@ -1437,7 +1439,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     }
     NSMutableDictionary<NSString *, id> *postParameters = [FBSDKAppEventsUtility
                                                            activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
-                                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
+                                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled
+                                                           userID:self.userID
+                                                           userData:[self getUserData]];
     NSInteger length = receipt_data.length;
     if (length > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:receipt_data forKey:@"receipt_data"];

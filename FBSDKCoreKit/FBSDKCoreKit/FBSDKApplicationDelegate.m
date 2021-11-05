@@ -774,7 +774,9 @@ static UIApplicationState _applicationState;
                                    advertiserIDProvider:sharedAppEventsUtility
                                 appEventsDropDeterminer:sharedAppEventsUtility
                             appEventParametersExtractor:sharedAppEventsUtility
-                                      appLinkURLFactory:[FBSDKAppLinkURLFactory new]];
+                                      appLinkURLFactory:[FBSDKAppLinkURLFactory new]
+                                         userIDProvider:FBSDKAppEvents.shared
+                                          userDataStore:self.userDataStore];
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
                                                    store:store

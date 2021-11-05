@@ -431,6 +431,14 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       AppLinkUtility.appLinkURLFactory is AppLinkURLFactory,
       "Should configure with the expected app link URL factory"
     )
+    XCTAssertTrue(
+      AppLinkUtility.userIDProvider === AppEvents.shared,
+      "Should configure with the expected user id provider"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.userDataStore is UserDataStore,
+      "Should configure with the expected user data store"
+    )
   }
 
   func testInitializingCreatesPaymentObserver() throws {

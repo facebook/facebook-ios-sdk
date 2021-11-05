@@ -134,7 +134,146 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertFalse([FBSDKAppEventsUtility validateIdentifier:@"-4simple id_-3"]);
 }
 
-- (void)testParamsDictionary
+- (void)testActivityParametersWithoutUserID
+{
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertNil(
+    parameters[@"app_user_id"],
+    "Parameters should use not have a default user id"
+  );
+}
+
+- (void)testActivityParametersWithUserID
+{
+  NSString *userID = NSUUID.UUID.UUIDString;
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:userID
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(
+    userID,
+    parameters[@"app_user_id"],
+    "Parameters should use the provided user id"
+  );
+}
+
+- (void)testActivityParametersWithoutUserData
+{
+  NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                         shouldAccessAdvertisingID:YES
+                                                                                            userID:nil
+                                                                                          userData:nil];
+  XCTAssertEqualObjects(
+    @"{}",
+    dict[@"ud"],
+    "Should represent missing user data as an empty dictionary"
+  );
+}
+
+- (void)testActivityParametersWithUserData
+{
+  NSString *testEmail = @"apptest@fb.com";
+  NSString *testFirstName = @"test_fn";
+  NSString *testLastName = @"test_ln";
+  NSString *testPhone = @"123";
+  NSString *testGender = @"m";
+  NSString *testCity = @"menlopark";
+  NSString *testState = @"test_s";
+  NSString *testExternalId = @"facebook123";
+  FBSDKUserDataStore *store = [FBSDKUserDataStore new];
+
+  [store setUserData:testEmail forType:FBSDKAppEventEmail];
+  [store setUserData:testFirstName forType:FBSDKAppEventFirstName];
+  [store setUserData:testLastName forType:FBSDKAppEventLastName];
+  [store setUserData:testPhone forType:FBSDKAppEventPhone];
+  [store setUserData:testGender forType:FBSDKAppEventGender];
+  [store setUserData:testCity forType:FBSDKAppEventCity];
+  [store setUserData:testState forType:FBSDKAppEventState];
+  [store setUserData:testExternalId forType:FBSDKAppEventExternalId];
+  NSString *hashedUserData = [store getUserData];
+
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:hashedUserData];
+
+  // TODO: These should be moved to the UserDataStoreTests since this is really just checking that we
+  // store various user data fields as hashed strings
+  NSDictionary<NSString *, NSString *> *expectedUserDataDict = @{@"em" : [FBSDKUtility SHA256Hash:testEmail],
+                                                                 @"fn" : [FBSDKUtility SHA256Hash:testFirstName],
+                                                                 @"ln" : [FBSDKUtility SHA256Hash:testLastName],
+                                                                 @"ph" : [FBSDKUtility SHA256Hash:testPhone],
+                                                                 @"ge" : [FBSDKUtility SHA256Hash:testGender],
+                                                                 @"ct" : [FBSDKUtility SHA256Hash:testCity],
+                                                                 @"st" : [FBSDKUtility SHA256Hash:testState],
+                                                                 @"external_id" : [FBSDKUtility SHA256Hash:testExternalId]};
+  NSDictionary<NSString *, NSString *> *actualUserDataDict = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[parameters[@"ud"] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                                    options: NSJSONReadingMutableContainers
+                                                                                                    error: nil];
+  XCTAssertEqualObjects(actualUserDataDict, expectedUserDataDict);
+}
+
+- (void)testParametersDictionaryWithApplicationTrackingEnabled
+{
+  FBSDKSettings.sharedSettings.isEventDataUsageLimited = NO;
+
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(
+    @"1",
+    parameters[@"application_tracking_enabled"],
+    "Application tracking is considered enabled when event data usage is not limited"
+  );
+}
+
+- (void)testParametersDictionaryWithApplicationTrackingDisabled
+{
+  FBSDKSettings.sharedSettings.isEventDataUsageLimited = YES;
+
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(
+    @"0",
+    parameters[@"application_tracking_enabled"],
+    "Application tracking is considered disabled when event data usage is limited"
+  );
+}
+
+- (void)testParametersDictionaryWithAccessibleAdvertiserID
+{
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(@"event", parameters[@"event"]);
+  XCTAssertEqualObjects(
+    parameters[@"advertiser_id"],
+    @"00000000-0000-0000-0000-000000000000",
+    "Should attempt to return an advertiser ID when allowed"
+  );
+}
+
+- (void)testParametersDictionaryWithInaccessibleAdvertiserID
+{
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:NO
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(@"event", parameters[@"event"]);
+  XCTAssertNil(
+    parameters[@"advertiser_id"],
+    "Should not access the advertising ID when disallowed"
+  );
+}
+
+- (void)testParametersDictionaryWithCachedAdvertiserIDManager
 {
   FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
 
@@ -146,84 +285,46 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   TestASIdentifierManager *identifierManager = [TestASIdentifierManager new];
   identifierManager.stubbedAdvertisingIdentifier = uuid;
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager;
-  NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                         shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNotNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(@"event", parameters[@"event"]);
   XCTAssertEqualObjects(
-    @"com.facebook.sdk.appevents.userid",
-    dict[@"app_user_id"],
-    "Parameters should use the user id set on the AppEvents singleton instance"
+    parameters[@"advertiser_id"],
+    @"68753A44-4D6F-1226-9C60-0050E4C00067",
+    "Should use the advertiser ID from the cached advertiser identifier manager"
   );
+}
 
-  // TODO: Re-enable this section when the dependency on AppEvents can be injected
-  /* XCTAssertEqualObjects(@"{}", dict[@"ud"]);
-
-  NSString *testEmail = @"apptest@fb.com";
-  NSString *testFirstName = @"test_fn";
-  NSString *testLastName = @"test_ln";
-  NSString *testPhone = @"123";
-  NSString *testGender = @"m";
-  NSString *testCity = @"menlopark";
-  NSString *testState = @"test_s";
-  NSString *testExternalId = @"facebook123";
-  [FBSDKAppEvents.shared setUserData:testEmail forType:FBSDKAppEventEmail];
-  [FBSDKAppEvents.shared setUserData:testFirstName forType:FBSDKAppEventFirstName];
-  [FBSDKAppEvents.shared setUserData:testLastName forType:FBSDKAppEventLastName];
-  [FBSDKAppEvents.shared setUserData:testPhone forType:FBSDKAppEventPhone];
-  [FBSDKAppEvents.shared setUserData:testGender forType:FBSDKAppEventGender];
-  [FBSDKAppEvents.shared setUserData:testCity forType:FBSDKAppEventCity];
-  [FBSDKAppEvents.shared setUserData:testState forType:FBSDKAppEventState];
-  [FBSDKAppEvents.shared setUserData:testExternalId forType:FBSDKAppEventExternalId];
-  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                           shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNotNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-  NSDictionary<NSString *, NSString *> *expectedUserDataDict = @{@"em" : [FBSDKUtility SHA256Hash:testEmail],
-                                                                 @"fn" : [FBSDKUtility SHA256Hash:testFirstName],
-                                                                 @"ln" : [FBSDKUtility SHA256Hash:testLastName],
-                                                                 @"ph" : [FBSDKUtility SHA256Hash:testPhone],
-                                                                 @"ge" : [FBSDKUtility SHA256Hash:testGender],
-                                                                 @"ct" : [FBSDKUtility SHA256Hash:testCity],
-                                                                 @"st" : [FBSDKUtility SHA256Hash:testState],
-                                                                 @"external_id" : [FBSDKUtility SHA256Hash:testExternalId]};
-  NSDictionary<NSString *, NSString *> *actualUserDataDict = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[dict[@"ud"] dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                                    options: NSJSONReadingMutableContainers
-                                                                                                    error: nil];
-  XCTAssertEqualObjects(actualUserDataDict, expectedUserDataDict);
-  [FBSDKAppEvents.shared clearUserData];
-*/
-  FBSDKSettings.sharedSettings.isEventDataUsageLimited = YES;
+- (void)testActivityParametersWithNonEmptyLimitedDataProcessingOptions
+{
   [FBSDKSettings.sharedSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
-  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
-                                           shouldAccessAdvertisingID:NO];
-  XCTAssertEqualObjects(@"event2", dict[@"event"]);
-  XCTAssertNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"0", dict[@"application_tracking_enabled"]);
-  XCTAssertEqualObjects(@"[\"LDU\"]", dict[@"data_processing_options"]);
-  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:100]]);
-  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:1]]);
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:NO
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(@"[\"LDU\"]", parameters[@"data_processing_options"]);
+  XCTAssertTrue(
+    [(NSNumber *)parameters[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:100]],
+    "Should use the data processing options from the settings"
+  );
+  XCTAssertTrue(
+    [(NSNumber *)parameters[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:1]],
+    "Should use the data processing options from the settings"
+  );
+}
 
-  FBSDKSettings.sharedSettings.isEventDataUsageLimited = NO;
+- (void)testActivityParametersWithEmptyLimitedDataProcessingOptions
+{
   FBSDKSettings.sharedSettings.dataProcessingOptions = @[];
-  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                           shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNotNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-  XCTAssertEqualObjects(@"[]", dict[@"data_processing_options"]);
-  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:0]]);
-  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:0]]);
-
-  [FBSDKAppEvents clearUserID];
-  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                           shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNotNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-  XCTAssertNil(dict[@"app_user_id"]);
+  NSDictionary<NSString *, id> *parameters = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                               shouldAccessAdvertisingID:YES
+                                                                                                  userID:nil
+                                                                                                userData:nil];
+  XCTAssertEqualObjects(@"[]", parameters[@"data_processing_options"]);
+  XCTAssertTrue([(NSNumber *)parameters[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:0]]);
+  XCTAssertTrue([(NSNumber *)parameters[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:0]]);
 }
 
 - (void)testLogImplicitEventsExists
@@ -233,49 +334,130 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
 }
 
-- (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
+- (void)testGetAdvertiserIDWithCollectionEnabled
 {
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
-
   self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
-  if (@available(iOS 14.0, *)) {
-  #ifndef BUCK
-    // This test fails in buck but passes in Xcode. Even if -FBSDKAppEventsUtility.advertiserID is set directly to ASIdentifierManager.sharedManager.advertisingIdentifier.UUIDString
-    XCTAssertNotNil(
-      [FBSDKAppEventsUtility.shared advertiserID],
-      "Advertiser id should not be nil when collection is enabled"
-    );
-  #endif
-  }
+  XCTAssertNotNil(
+    [FBSDKAppEventsUtility.shared advertiserID],
+    "Advertiser id should not be nil when collection is enabled"
+  );
 }
 
-- (void)testGetAdvertiserIDOniOS14WithCollectionDisabled
+- (void)testGetAdvertiserIDWithCollectionDisabled
 {
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
                                                                            advertiserIDCollectionEnabled:NO
                                                                                   eventCollectionEnabled:YES];
   self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
-  if (@available(iOS 14.0, *)) {
-    XCTAssertNil([FBSDKAppEventsUtility.shared advertiserID]);
-  }
+  XCTAssertNil(
+    [FBSDKAppEventsUtility.shared advertiserID],
+    "Should not be able to get an advertiser ID when collection is explicitly disabled"
+  );
 }
 
-- (void)testShouldDropAppEvent
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Allowed             | N/A                | N/A                 | YES                    | NO       |
+- (void)testShouldDropAppEventWithSettingsATEAllowedEventCollectionEnabled
+{
+  FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingAllowed;
+
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:YES];
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
+
+  XCTAssertFalse(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should not drop events"
+  );
+}
+
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Allowed             | N/A                | N/A                 | NO                     | NO       |
+- (void)testShouldDropAppEventWithSettingsATEAllowedEventCollectionDisabled
+{
+  FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingAllowed;
+
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:NO];
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
+
+  XCTAssertFalse(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should not drop events"
+  );
+}
+
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Unspecified         | N/A                | N/A                 | YES                    | NO       |
+- (void)testShouldDropAppEventWithSettingsATEUnspecifiedEventCollectionEnabled
+{
+  FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingUnspecified;
+
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:YES];
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
+
+  XCTAssertFalse(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should not drop events"
+  );
+}
+
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Unspecified         | N/A                | N/A                 | NO                     | NO       |
+- (void)testShouldDropAppEventWithSettingsATEUnspecifiedEventCollectionDisabled
+{
+  FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingAllowed;
+
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:NO];
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
+
+  XCTAssertFalse(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should not drop events"
+  );
+}
+
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Disallowed          | N/A                | N/A                 | YES                    | NO       |
+- (void)testShouldDropAppEventWithSettingsATEDisallowedEventCollectionEnabled
+{
+  FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
+
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:YES];
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
+
+  XCTAssertFalse(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should not drop events"
+  );
+}
+
+// | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
+// | Disallowed          | N/A                | N/A                 | NO                     | YES      |
+- (void)testShouldDropAppEventWithSettingsATEDisallowedEventCollectionDisabled
 {
   FBSDKSettings.advertiserTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
 
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
                                                                            advertiserIDCollectionEnabled:YES
                                                                                   eventCollectionEnabled:NO];
-  FBSDKAppEventsConfigurationManager.shared.configuration = configuration;
+  self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
-  if (@available(iOS 14.0, *)) {
-    XCTAssertTrue([FBSDKAppEventsUtility shouldDropAppEvent]);
-  } else {
-    XCTAssertFalse([FBSDKAppEventsUtility shouldDropAppEvent]);
-  }
+  XCTAssertTrue(
+    [FBSDKAppEventsUtility shouldDropAppEvent],
+    "Should drop events when tracking is disallowed and event collection is disabled"
+  );
 }
 
 - (void)testAdvertiserTrackingEnabledInAppEventPayload
@@ -297,22 +479,20 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
         [FBSDKSettings setAdvertiserTrackingStatus:[status unsignedIntegerValue]];
       }
       NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                             shouldAccessAdvertisingID:YES];
-      if (@available(iOS 14.0, *)) {
-        // If status is unspecified, ATE will be defaultATEStatus
-        if ([status unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
-          if ([defaultATEStatus unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
-            XCTAssertNil(dict[@"advertiser_tracking_enabled"], @"advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified");
-          } else {
-            BOOL advertiserTrackingEnabled = defaultATEStatus.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
-            XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be default value when ATE is not set");
-          }
+                                                                             shouldAccessAdvertisingID:YES
+                                                                                                userID:nil
+                                                                                              userData:nil];
+      // If status is unspecified, ATE will be defaultATEStatus
+      if ([status unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
+        if ([defaultATEStatus unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
+          XCTAssertNil(dict[@"advertiser_tracking_enabled"], @"advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified");
         } else {
-          BOOL advertiserTrackingEnabled = status.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
-          XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be equal to ATE explicitly setted via setAdvertiserTrackingStatus");
+          BOOL advertiserTrackingEnabled = defaultATEStatus.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
+          XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be default value when ATE is not set");
         }
       } else {
-        XCTAssertNotNil(dict[@"advertiser_tracking_enabled"]);
+        BOOL advertiserTrackingEnabled = status.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
+        XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be equal to ATE explicitly setted via setAdvertiserTrackingStatus");
       }
     }
   }

@@ -15,7 +15,9 @@ NS_SWIFT_NAME(AppEventParametersExtracting)
 @protocol FBSDKAppEventParametersExtracting
 
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData;
 
 @end
 

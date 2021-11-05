@@ -16,14 +16,13 @@
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
+#import "FBSDKAppLinkURL.h"
+#import "FBSDKAppLinkURLCreating.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSettingsProtocol.h"
-
-// #import "FBSDKURL.h"
-#import "FBSDKAppLinkURL.h"
-#import "FBSDKAppLinkURLCreating.h"
+#import "FBSDKUserDataPersisting.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
@@ -44,6 +43,9 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 static id<FBSDKAppEventDropDetermining> _appEventsDropDeterminer;
 static id<FBSDKAppEventParametersExtracting> _appEventParametersExtractor;
 static id<FBSDKAppLinkURLCreating> _appLinkURLFactory;
+static id<FBSDKUserIDProviding> _userIDProvider;
+static id<FBSDKUserDataPersisting> _userDataStore;
+
 static BOOL _isConfigured;
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -54,6 +56,8 @@ static BOOL _isConfigured;
                  appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
              appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                        appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+                          userIDProvider:(nonnull id<FBSDKUserIDProviding>)userIDProvider
+                           userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 {
   if (self == FBSDKAppLinkUtility.class) {
     self.graphRequestFactory = graphRequestFactory;
@@ -64,6 +68,8 @@ static BOOL _isConfigured;
     self.appEventsDropDeterminer = appEventsDropDeterminer;
     self.appEventParametersExtractor = appEventParametersExtractor;
     self.appLinkURLFactory = appLinkURLFactory;
+    self.userIDProvider = userIDProvider;
+    self.userDataStore = userDataStore;
     self.isConfigured = YES;
   }
 }
@@ -150,6 +156,26 @@ static BOOL _isConfigured;
   _appLinkURLFactory = appLinkURLFactory;
 }
 
++ (nullable id<FBSDKUserIDProviding>)userIDProvider
+{
+  return _userIDProvider;
+}
+
++ (void)setUserIDProvider:(nullable id<FBSDKUserIDProviding>)userIDProvider
+{
+  _userIDProvider = userIDProvider;
+}
+
++ (nullable id<FBSDKUserDataPersisting>)userDataStore
+{
+  return _userDataStore;
+}
+
++ (void)setUserDataStore:(nullable id<FBSDKUserDataPersisting>)userDataStore
+{
+  _userDataStore = userDataStore;
+}
+
 + (BOOL)isConfigured
 {
   return _isConfigured;
@@ -193,7 +219,10 @@ static BOOL _isConfigured;
     // before we make this call.
     NSMutableDictionary<NSString *, id> *deferredAppLinkParameters =
     [self.appEventParametersExtractor activityParametersDictionaryForEvent:FBSDKDeferredAppLinkEvent
-                                                 shouldAccessAdvertisingID:YES];
+                                                 shouldAccessAdvertisingID:YES
+                                                                    userID:self.userIDProvider.userID
+                                                                  userData:[self.userDataStore getUserData]];
+
     id<FBSDKGraphRequest> deferredAppLinkRequest = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", self.settings.appID, nil]
                                                                                                   parameters:deferredAppLinkParameters
                                                                                                  tokenString:nil
@@ -294,6 +323,8 @@ static BOOL _isConfigured;
   _appEventsDropDeterminer = nil;
   _appEventParametersExtractor = nil;
   _appLinkURLFactory = nil;
+  _userIDProvider = nil;
+  _userDataStore = nil;
 }
 
 #endif

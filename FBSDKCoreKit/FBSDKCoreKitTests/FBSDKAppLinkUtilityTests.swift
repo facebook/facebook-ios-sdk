@@ -18,6 +18,8 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appEventsDropDeterminer = TestAppEventsDropDeterminer()
   let appEventParametersExtractor = TestAppEventParametersExtractor()
+  let userIdProvider = TestUserIDProvider()
+  let userDataStore = TestUserDataStore()
   let appLinkURLFactory = TestAppLinkURLFactory()
 
   override func setUp() {
@@ -68,6 +70,14 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       AppLinkUtility.appLinkURLFactory,
       "Should not have an app link URL factory by default"
     )
+    XCTAssertNil(
+      AppLinkUtility.userIDProvider,
+      "Should not have a user ID provider by default"
+    )
+    XCTAssertNil(
+      AppLinkUtility.userDataStore,
+      "Should not have a user data store by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -102,6 +112,14 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     XCTAssertTrue(
       AppLinkUtility.appLinkURLFactory is TestAppLinkURLFactory,
       "Should use the provided app link URL factory"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.userIDProvider is TestUserIDProvider,
+      "Should use the provided user ID provider"
+    )
+    XCTAssertTrue(
+      AppLinkUtility.userDataStore is TestUserDataStore,
+      "Should use the provided user data store"
     )
   }
 
@@ -166,7 +184,9 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       advertiserIDProvider: advertiserIDProvider,
       appEventsDropDeterminer: appEventsDropDeterminer,
       appEventParametersExtractor: appEventParametersExtractor,
-      appLinkURLFactory: appLinkURLFactory
+      appLinkURLFactory: appLinkURLFactory,
+      userIDProvider: userIdProvider,
+      userDataStore: userDataStore
     )
   }
 }

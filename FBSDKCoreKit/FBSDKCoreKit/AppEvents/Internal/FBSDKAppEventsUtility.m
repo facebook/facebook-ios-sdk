@@ -10,20 +10,21 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
+#import <FBSDKCoreKit/FBSDKConstants.h>
+#import <FBSDKCoreKit/FBSDKError.h>
+#import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAppEvents.h"
+#import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKConstants.h"
+#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME @"com-facebook-sdk-PersistedAnonymousID.json"
@@ -80,13 +81,19 @@ static dispatch_once_t singletonNonce;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData
 {
   return [self.shared activityParametersDictionaryForEvent:eventCategory
-                                 shouldAccessAdvertisingID:shouldAccessAdvertisingID];
+                                 shouldAccessAdvertisingID:shouldAccessAdvertisingID
+                                                    userID:userID
+                                                  userData:userData];
 }
 
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData
 {
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
@@ -102,15 +109,18 @@ static dispatch_once_t singletonNonce;
     [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
-  NSString *userData = [FBSDKAppEvents.shared getUserData];
   if (userData) {
     [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
+  } else {
+    // Preserving existing behavior which was to pass a hashed version of an empty
+    // dictionary. This is just in case anyone is relying on that parameter to be a string
+    // and not nil.
+    [FBSDKTypeUtility dictionary:parameters setObject:@"{}" forKey:@"ud"];
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.sharedSettings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
   [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
-  NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
