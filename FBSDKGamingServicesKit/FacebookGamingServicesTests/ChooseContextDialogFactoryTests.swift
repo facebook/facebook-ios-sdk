@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import XCTest
 
-class FBSDKChooseContextDialogFactoryTests: XCTestCase {
+class ChooseContextDialogFactoryTests: XCTestCase {
 
   var content: ChooseContextContent {
     let content = ChooseContextContent()
