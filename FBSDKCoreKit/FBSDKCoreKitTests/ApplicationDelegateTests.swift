@@ -266,6 +266,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // MARK: - Configuring Dependencies
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresError() {
     SDKError.reset()
     XCTAssertNil(
@@ -280,6 +281,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresModelManager() {
     ModelManager.reset()
     XCTAssertNil(ModelManager.shared.featureChecker, "Should not have a feature checker by default")
@@ -327,6 +329,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresGraphRequest() {
     GraphRequest.resetClassDependencies()
     delegate.initializeSDK(launchOptions: [:])
@@ -342,6 +345,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresFeatureManager() {
     FeatureManager.reset()
     delegate.initializeSDK(launchOptions: [:])
@@ -360,6 +364,8 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests -- need to check same feature checker
+  // and settings for crash observer
   func testInitializingConfiguresInstrumentManager() throws {
     InstrumentManager.reset()
     delegate.initializeSDK(launchOptions: [:])
@@ -395,6 +401,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresAppLinkUtility() {
     AppLinkUtility.reset()
     delegate.initializeSDK()
@@ -457,6 +464,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresServerConfigurationManager() {
     let manager = ServerConfigurationManager.shared
     manager.reset()
@@ -466,6 +474,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(manager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
   }
 
+  // TEMP: added to configurator tests
   func testInitializingConfiguresAppLinkURL() {
     AppLinkURL.reset()
     XCTAssertNil(AppLinkURL.settings)
@@ -486,6 +495,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSDKConfiguresBridgeAPIRequest() {
     BridgeAPIRequest.resetClassDependencies()
     delegate.initializeSDK()
@@ -500,6 +510,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAppEventsUtility() {
     AppEventsUtility.reset()
     delegate.initializeSDK()
@@ -510,6 +521,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSDKConfiguresGraphRequestConnection() {
     GraphRequestConnection.resetClassDependencies()
     delegate.initializeSDK()
@@ -564,6 +576,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAuthenticationStatusUtility() {
     AuthenticationStatusUtility.resetClassDependencies()
     delegate.initializeSDK()

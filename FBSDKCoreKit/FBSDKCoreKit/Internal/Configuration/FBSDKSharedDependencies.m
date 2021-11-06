@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
                 timeSpentRecordingFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecordingFactory
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
+                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
@@ -62,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
+                           userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
                           webViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
 #endif
 {
@@ -93,6 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
     _timeSpentRecordingFactory = timeSpentRecordingFactory;
     _tokenCache = tokenCache;
     _urlSessionProxyFactory = urlSessionProxyFactory;
+    _userDataStore = userDataStore;
 
   #if !TARGET_OS_TV
     _advertiserIDProvider = advertiserIDProvider;
@@ -117,6 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
     _suggestedEventsIndexer = suggestedEventsIndexer;
     _swizzler = swizzler;
     _urlHoster = urlHoster;
+    _userIDProvider = userIDProvider;
     _webViewProvider = webViewProvider;
   #endif
   }

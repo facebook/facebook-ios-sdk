@@ -89,6 +89,7 @@
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCloseIcon+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
+#import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKCrashHandler+Testing.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashObserver+Internal.h"

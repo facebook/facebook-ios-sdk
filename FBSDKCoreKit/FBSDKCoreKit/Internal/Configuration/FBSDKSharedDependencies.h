@@ -47,6 +47,8 @@
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentRecordingCreating.h"
 #import "FBSDKURLSessionProxyProviding.h"
+#import "FBSDKUserDataPersisting.h"
+#import "FBSDKUserIDProviding.h"
 #import "FBSDKWebViewProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -81,6 +83,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKTimeSpentRecordingCreating> timeSpentRecordingFactory;
 @property (nonatomic, readonly) id<FBSDKTokenCaching> tokenCache;
 @property (nonatomic, readonly) id<FBSDKURLSessionProxyProviding> urlSessionProxyFactory;
+@property (nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
 
 #if !TARGET_OS_TV
 
@@ -106,6 +109,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKURLHosting> urlHoster;
+@property (nonatomic, readonly) id<FBSDKUserIDProviding> userIDProvider;
 @property (nonatomic, readonly) id<FBSDKWebViewProviding> webViewProvider;
 
 #endif
@@ -137,6 +141,7 @@ NS_SWIFT_NAME(SharedDependencies)
                 timeSpentRecordingFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecordingFactory
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
+                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
@@ -160,6 +165,7 @@ NS_SWIFT_NAME(SharedDependencies)
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
+                           userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
                           webViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
 #endif
 ;

@@ -8,7 +8,7 @@
 
 enum TestSharedDependencies {
   // swiftlint:disable:next function_body_length
-  func makeDependencies() -> SharedDependencies {
+  static func makeDependencies() -> SharedDependencies {
     SharedDependencies(
       accessTokenWallet: TestAccessTokenWallet.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
@@ -37,6 +37,7 @@ enum TestSharedDependencies {
       timeSpentRecordingFactory: TestTimeSpentRecorderFactory(),
       tokenCache: TestTokenCache(),
       urlSessionProxyFactory: TestURLSessionProxyFactory(),
+      userDataStore: TestUserDataStore(),
 
       // Non-tvOS
       advertiserIDProvider: TestAdvertiserIDProvider(),
@@ -61,6 +62,7 @@ enum TestSharedDependencies {
       suggestedEventsIndexer: TestSuggestedEventsIndexer(),
       swizzler: TestSwizzler.self,
       urlHoster: TestURLHoster(),
+      userIDProvider: TestUserIDProvider(),
       webViewProvider: TestWebViewFactory()
     )
   }
