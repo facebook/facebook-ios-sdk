@@ -179,6 +179,7 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKShareDialogConfiguration+Testing.h"
+#import "FBSDKSharedDependencies.h"
 #import "FBSDKSwizzler.h"
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentData+Testing.h"
