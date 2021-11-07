@@ -25,7 +25,7 @@ class ChooseContextDialogFactoryTests: XCTestCase {
   func testCreatingDialog() throws {
     let dialog = try XCTUnwrap(
       ChooseContextDialogFactory().makeChooseContextDialog(
-        with: content,
+        content: content,
         delegate: delegate
       ) as? ChooseContextDialog,
       "Should create a context dialog of the expected concrete type"

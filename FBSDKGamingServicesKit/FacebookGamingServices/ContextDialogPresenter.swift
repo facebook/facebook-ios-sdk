@@ -129,7 +129,7 @@ public class ContextDialogPresenter {
     delegate: ContextDialogDelegate
   ) -> Showable {
     chooseContextDialogFactory.makeChooseContextDialog(
-      with: content,
+      content: content,
       delegate: delegate
     )
   }

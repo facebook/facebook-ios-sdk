@@ -31,14 +31,6 @@ NS_SWIFT_NAME(CreateContextDialogMaking)
 
 @end
 
-NS_SWIFT_NAME(ChooseContextDialogMaking)
-@protocol FBSDKChooseContextDialogMaking
-
-- (id<FBSDKShowable>)makeChooseContextDialogWithContent:(FBSDKChooseContextContent *)content
-                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
-
-@end
-
 NS_ASSUME_NONNULL_END
 
 #endif

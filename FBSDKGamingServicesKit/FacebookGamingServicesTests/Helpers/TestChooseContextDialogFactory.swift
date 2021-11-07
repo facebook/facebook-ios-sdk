@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 
 class TestChooseContextDialogFactory: ChooseContextDialogMaking {
   let dialog = TestShowable()
@@ -14,7 +14,7 @@ class TestChooseContextDialogFactory: ChooseContextDialogMaking {
   var capturedDelegate: ContextDialogDelegate?
 
   func makeChooseContextDialog(
-    with content: ChooseContextContent,
+    content: ChooseContextContent,
     delegate: ContextDialogDelegate
   ) -> Showable {
     wasMakeChooseContextDialogCalled = true

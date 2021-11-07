@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class ChooseContextDialogFactory: NSObject, ChooseContextDialogMaking {
+struct ChooseContextDialogFactory: ChooseContextDialogMaking {
   func makeChooseContextDialog(
-    with content: ChooseContextContent,
+    content: ChooseContextContent,
     delegate: ContextDialogDelegate
   ) -> Showable {
     ChooseContextDialog(content: content, delegate: delegate)
