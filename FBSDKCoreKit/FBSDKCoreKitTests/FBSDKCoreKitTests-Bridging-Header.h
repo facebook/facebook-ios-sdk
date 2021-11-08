@@ -94,6 +94,7 @@
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashObserver+Internal.h"
 #import "FBSDKCrashShield.h"
+#import "FBSDKCrashShield+Testing.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKDynamicFrameworkResolving.h"
@@ -167,6 +168,7 @@
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveData.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKRestrictiveDataFilterManager+Testing.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkReporter.h"
@@ -175,6 +177,7 @@
 #import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationManager+Internal.h"
+#import "FBSDKServerConfigurationManager+Testing.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings+Testing.h"
 #import "FBSDKSettingsLogging.h"
@@ -245,25 +248,6 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 @end
 
 @interface FBSDKSKAdNetworkConversionConfigurationTests : XCTestCase
-@end
-
-@interface FBSDKRestrictiveDataFilterManager (Testing)
-- (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
-                                              paramKey:(NSString *)paramKey;
-@end
-
-@interface FBSDKCrashShield (Testing)
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-              featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
-+ (nullable NSString *)_getFeature:(id)callstack; // Using id instead of NSArray<NSString *> * for testing in Swift
-+ (nullable NSString *)_getClassName:(id)entry; // Using id instead of NSString for testing in Swift
-+ (void)reset;
-+ (FBSDKFeature)featureForString:(NSString *)featureName;
-@end
-
-@interface FBSDKServerConfigurationManager (Testing)
-- (void)reset;
 @end
 
 NS_ASSUME_NONNULL_END
