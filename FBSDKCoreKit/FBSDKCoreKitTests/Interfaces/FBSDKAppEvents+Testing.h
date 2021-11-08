@@ -8,12 +8,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKAtePublishing;
+
 @interface FBSDKAppEvents (Testing)
 
 @property (nullable, nonatomic) id<FBSDKAtePublishing> atePublisher;
+
 - (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
                  flushPeriodInSeconds:(int)flushPeriodInSeconds;
 - (void)publishATE;
++ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
 + (void)setSettings:(id<FBSDKSettings>)settings;
 + (void)reset;
 

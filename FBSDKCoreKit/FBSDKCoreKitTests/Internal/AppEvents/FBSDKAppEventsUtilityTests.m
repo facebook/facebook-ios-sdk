@@ -16,6 +16,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEvents+Testing.h"
 #import "FBSDKCoreKitTests-Swift.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
@@ -33,14 +34,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   return self.stubbedAdvertisingIdentifier;
 }
-
-@end
-
-@interface FBSDKAppEvents (Testing)
-
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
-- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
 
 @end
 
