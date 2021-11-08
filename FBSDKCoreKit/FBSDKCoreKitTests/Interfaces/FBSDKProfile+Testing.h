@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)reset;
 
++ (id<FBSDKDataPersisting>)store;
+
 + (void)resetCurrentProfileCache;
 
 + (NSString *)graphPathForToken:(FBSDKAccessToken *)token;

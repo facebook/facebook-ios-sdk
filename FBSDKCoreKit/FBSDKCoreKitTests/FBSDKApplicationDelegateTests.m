@@ -11,19 +11,26 @@
 @import TestTools;
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsState+Testing.h"
 #import "FBSDKAppEventsStateFactory.h"
+#import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"
+#import "FBSDKCodelessIndexer+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield+Internal.h"
+#import "FBSDKCrashShield+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureExtractor+Internal.h"
 #import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
+#import "FBSDKProfile+Testing.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKRestrictiveDataFilterManager+Testing.h"
+#import "FBSDKSKAdNetworkReporter+Testing.h"
 #import "FBSDKTimeSpentData.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)
@@ -31,44 +38,7 @@
 + (void)resetCanMakeRequests;
 @end
 
-@interface FBSDKApplicationDelegate (Testing)
-
-- (BOOL)isAppLaunched;
-- (void)setIsAppLaunched:(BOOL)isLaunched;
-- (void)resetApplicationObserverCache;
-- (void)applicationDidBecomeActive:(NSNotification *)notification;
-- (void)applicationWillResignActive:(NSNotification *)notification;
-- (void)setApplicationState:(UIApplicationState)state;
-- (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
-- (FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
-
-@end
-
 @interface FBSDKBridgeAPI (ApplicationObserving) <FBSDKApplicationObserving>
-@end
-
-@interface FBSDKCodelessIndexer (Testing)
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-@end
-
-@interface FBSDKSKAdNetworkReporter (Testing)
-- (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-- (id<FBSDKDataPersisting>)store;
-- (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
-@end
-
-@interface FBSDKProfile (Testing)
-+ (id<FBSDKDataPersisting>)store;
-@end
-
-@interface FBSDKCrashShield (Testing)
-+ (id<FBSDKSettings>)settings;
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-+ (id<FBSDKFeatureChecking>)featureChecking;
-@end
-
-@interface FBSDKRestrictiveDataFilterManager (Testing)
-- (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 @end
 
 @interface FBSDKAppEvents (ApplicationDelegateTesting)
@@ -88,12 +58,6 @@
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
 + (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
-@end
-
-@interface FBSDKAppEventsState (Testing)
-
-@property (class, nullable, nonatomic) NSArray<id<FBSDKEventsProcessing>> *eventProcessors;
-
 @end
 
 @interface FBSDKApplicationDelegateTests : XCTestCase

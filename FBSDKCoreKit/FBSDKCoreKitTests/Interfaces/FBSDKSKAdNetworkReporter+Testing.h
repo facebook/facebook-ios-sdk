@@ -45,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                       store:(id<FBSDKDataPersisting>)store
                    conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
+- (id<FBSDKGraphRequestFactory>)graphRequestFactory;
+- (id<FBSDKDataPersisting>)store;
+- (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 
 @end
 

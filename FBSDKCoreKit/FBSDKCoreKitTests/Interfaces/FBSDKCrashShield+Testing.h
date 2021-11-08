@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)_getClassName:(id)entry; // Using id instead of NSString for testing in Swift
 + (void)reset;
 + (FBSDKFeature)featureForString:(NSString *)featureName;
++ (id<FBSDKSettings>)settings;
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
++ (id<FBSDKFeatureChecking>)featureChecking;
 @end
 
 NS_ASSUME_NONNULL_END

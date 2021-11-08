@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKRestrictiveDataFilterManager (Testing)
+- (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 - (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                               paramKey:(NSString *)paramKey;
 @end
