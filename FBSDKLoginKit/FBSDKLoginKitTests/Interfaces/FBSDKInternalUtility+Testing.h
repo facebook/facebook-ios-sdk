@@ -10,9 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKInfoDictionaryProviding;
+
 @interface FBSDKInternalUtility (Testing)
 
 @property (nonatomic) BOOL isConfigured;
+
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
++ (void)reset;
 
 @end
 

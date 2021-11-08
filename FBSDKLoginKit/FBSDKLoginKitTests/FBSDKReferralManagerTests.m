@@ -20,8 +20,10 @@
  #import <FBSDKLoginKit+Internal/FBSDKReferralManager+Internal.h>
  #import <FBSDKLoginKit/FBSDKReferralManagerResult.h>
 #else
+ #import "FBSDKInternalUtility+Testing.h"
  #import "FBSDKLoginUtility.h"
  #import "FBSDKReferralManager+Internal.h"
+ #import "FBSDKReferralManager+Testing.h"
  #import "FBSDKReferralManagerResult.h"
 #endif
 
@@ -31,29 +33,10 @@ static NSString *const _mockChallenge = @"mockChallenge";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-@interface FBSDKReferralManager (Testing)
-
-@property (nonatomic) NSString *expectedChallenge;
-
-- (NSURL *)referralURL;
-
-- (void)handleOpenURLComplete:(BOOL)didOpen error:(NSError *)error;
-
-- (BOOL)validateChallenge:(NSString *)challenge;
-+ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener;
-
-@end
-
 @interface FBSDKReferralManagerTests : XCTestCase
 
 @property (nonatomic) FBSDKReferralManager *manager;
 
-@end
-
-@interface FBSDKInternalUtility (Testing)
-- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
-+ (void)reset;
 @end
 
 @implementation FBSDKReferralManagerTests
