@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKSwizzler.h"
+#import "FBSDKSwizzler+Testing.h"
 
 @interface FBSDKSwizzlerTestObject : NSObject
 
@@ -133,16 +134,6 @@
   self.methodToSwizzleInSuperAndSubclassCallCount++;
   [super methodToSwizzleInSuperAndSubclass];
 }
-
-@end
-
-@interface FBSDKSwizzler (Testing)
-
-+ (void)swizzleSelector:(SEL)aSelector
-                onClass:(Class)aClass
-              withBlock:(swizzleBlock)aBlock
-                  named:(NSString *)aName
-                  async:(BOOL)async;
 
 @end
 
