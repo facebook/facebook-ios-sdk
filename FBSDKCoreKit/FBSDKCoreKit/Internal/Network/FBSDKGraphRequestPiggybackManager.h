@@ -8,10 +8,12 @@
 
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
+#import "FBSDKGraphRequestPiggybackManaging.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
-@interface FBSDKGraphRequestPiggybackManager : NSObject
+@interface FBSDKGraphRequestPiggybackManager : NSObject <FBSDKGraphRequestPiggybackManaging>
 
 + (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection;
 

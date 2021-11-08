@@ -132,8 +132,6 @@
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManager+Testing.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
-#import "FBSDKGraphRequestPiggybackManagerProviding.h"
-#import "FBSDKGraphRequestPiggybackManaging.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKInstrumentManager+Testing.h"

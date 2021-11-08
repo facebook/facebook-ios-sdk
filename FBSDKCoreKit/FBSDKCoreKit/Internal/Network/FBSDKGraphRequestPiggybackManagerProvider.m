@@ -8,7 +8,7 @@
 
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 
-#import "FBSDKGraphRequestPiggybackManager+GraphRequestPiggybackManaging.h"
+#import "FBSDKGraphRequestPiggybackManager.h"
 
 @implementation FBSDKGraphRequestPiggybackManagerProvider
 
