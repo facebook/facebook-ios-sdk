@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKAppEventsState;
+#import "FBSDKAppEventsState.h"
+#import "FBSDKAppEventsStatePersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(AppEventsStateManager)
-@interface FBSDKAppEventsStateManager : NSObject
+@interface FBSDKAppEventsStateManager : NSObject <FBSDKAppEventsStatePersisting>
+
 @property (class, nonatomic, readonly) FBSDKAppEventsStateManager *shared;
 
 - (void)clearPersistedAppEventsStates;

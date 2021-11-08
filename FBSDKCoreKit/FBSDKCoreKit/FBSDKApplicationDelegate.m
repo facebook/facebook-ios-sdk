@@ -24,7 +24,7 @@
 #import "FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateFactory.h"
-#import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
+#import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkFactory.h"
 #import "FBSDKAppLinkTargetFactory.h"
