@@ -45,11 +45,11 @@ class TestLogger: Logger {
     logEntryCallCount += 1
   }
 
-  var isActive: Bool {
+  override var isActive: Bool {
     stubbedIsActive
   }
 
-  func appendKey(_ key: String, value: String) {
+  override func appendKey(_ key: String, value: String) {
     capturedAppendedKeys.append(key)
     capturedAppendedValues.append(value)
   }

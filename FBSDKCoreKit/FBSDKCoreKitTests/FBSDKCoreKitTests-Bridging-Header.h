@@ -140,7 +140,7 @@
 #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKInternalUtility+Testing.h"
-#import "FBSDKLogger+Logging.h"
+#import "FBSDKLogger+Internal.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKLogging.h"
 #import "FBSDKLogo.h"

@@ -60,7 +60,6 @@
 #import "FBSDKInternalUtility+URLHosting.h"
 #import "FBSDKKeychainStoreFactory.h"
 #import "FBSDKLogger.h"
-#import "FBSDKLogger+Logging.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKLogging.h"
 #import "FBSDKPaymentObserver.h"

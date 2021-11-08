@@ -10,8 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLogger.h"
-#import "FBSDKLogger+Logging.h"
+#import "FBSDKLogger+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
