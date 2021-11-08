@@ -17,7 +17,7 @@
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield+Internal.h"
-#import "FBSDKEventDeactivationManager+Protocols.h"
+#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureExtractor+Internal.h"
 #import "FBSDKFeatureExtractor+Testing.h"

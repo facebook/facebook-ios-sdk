@@ -44,7 +44,7 @@
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporter.h"
-#import "FBSDKEventDeactivationManager+Protocols.h"
+#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureDisabling.h"
 #import "FBSDKGateKeeperManager.h"

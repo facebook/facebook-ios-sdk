@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKEventsProcessing.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(EventDeactivationManager)
-@interface FBSDKEventDeactivationManager : NSObject
+@interface FBSDKEventDeactivationManager : NSObject <FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>
 
 - (void)enable;
 - (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
