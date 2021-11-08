@@ -16,7 +16,7 @@
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareDialogConfiguration+ShareDialogConfiguration.h"
+#import "FBSDKShareDialogConfiguration+Internal.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
