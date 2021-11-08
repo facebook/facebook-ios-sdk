@@ -8,6 +8,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import "FBSDKDeviceLoginCodeInfo+Testing.h"
+
 #ifdef BUCK
  #import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
 #else
@@ -23,16 +25,6 @@ static NSString *const _validLoginCode3 = @"123abc";
 static NSURL *_validVerifictationURL;
 static NSDate *_validexpirationDate;
 static NSUInteger const _validPollingInterval = 10;
-
-@interface FBSDKDeviceLoginCodeInfo (Testing)
-
-- (instancetype)initWithIdentifier:(NSString *)identifier
-                         loginCode:(NSString *)loginCode
-                   verificationURL:(NSURL *)verificationURL
-                    expirationDate:(NSDate *)expirationDate
-                   pollingInterval:(NSUInteger)pollingInterval;
-
-@end
 
 @interface FBSDKDeviceLoginCodeInfoTests : XCTestCase
 
