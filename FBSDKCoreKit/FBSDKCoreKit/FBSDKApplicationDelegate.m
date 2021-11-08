@@ -65,7 +65,7 @@
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentProductRequestorFactory.h"
 #import "FBSDKProfileProtocols.h"
-#import "FBSDKRestrictiveDataFilterManager+Protocols.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"

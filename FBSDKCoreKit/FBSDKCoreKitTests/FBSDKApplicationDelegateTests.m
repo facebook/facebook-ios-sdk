@@ -23,7 +23,7 @@
 #import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
-#import "FBSDKRestrictiveDataFilterManager+Protocols.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKTimeSpentData.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)

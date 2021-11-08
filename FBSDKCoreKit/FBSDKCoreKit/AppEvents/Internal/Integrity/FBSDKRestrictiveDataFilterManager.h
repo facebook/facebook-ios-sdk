@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKEventsProcessing.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKServerConfigurationProviding;
 
 NS_SWIFT_NAME(RestrictiveDataFilterManager)
-@interface FBSDKRestrictiveDataFilterManager : NSObject
+@interface FBSDKRestrictiveDataFilterManager : NSObject <FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
