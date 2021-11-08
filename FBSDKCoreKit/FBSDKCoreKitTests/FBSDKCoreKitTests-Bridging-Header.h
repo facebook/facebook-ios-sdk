@@ -71,7 +71,6 @@
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility+Testing.h"
 #import "FBSDKAuthenticationToken.h"
-#import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKAuthenticationTokenProtocols.h"

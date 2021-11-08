@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
 #import <FBSDKCoreKit/FBSDKApplicationObserving.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
-#import <FBSDKCoreKit/FBSDKAuthenticationToken+AuthenticationTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKButton.h>

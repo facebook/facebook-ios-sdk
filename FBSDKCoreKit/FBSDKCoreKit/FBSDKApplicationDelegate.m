@@ -32,7 +32,6 @@
 #import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
-#import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
