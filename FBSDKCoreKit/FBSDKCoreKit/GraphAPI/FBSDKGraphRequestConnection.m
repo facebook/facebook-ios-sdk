@@ -25,7 +25,6 @@
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKURLSession+URLSessionProxying.h"
 #import "FBSDKURLSessionProxying.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";

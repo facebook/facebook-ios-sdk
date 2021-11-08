@@ -10,12 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKURLSession+Internal.h"
+
 @implementation FBSDKURLSessionProxyFactory
 
 - (nonnull id<FBSDKURLSessionProxying>)createSessionProxyWithDelegate:(id<NSURLSessionDataDelegate>)delegate
                                                                 queue:(NSOperationQueue *)queue
 {
-  return (id<FBSDKURLSessionProxying>)[[FBSDKURLSession alloc] initWithDelegate:delegate delegateQueue:queue];
+  return [[FBSDKURLSession alloc] initWithDelegate:delegate delegateQueue:queue];
 }
 
 @end
