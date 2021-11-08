@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+Internal.h"
-#import "FBSDKAccessToken+TokenStringProviding.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 

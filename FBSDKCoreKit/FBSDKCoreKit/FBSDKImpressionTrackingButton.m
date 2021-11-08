@@ -9,7 +9,7 @@
 #import "FBSDKImpressionTrackingButton.h"
 
 #import "FBSDKAccessToken.h"
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKButtonImpressionTracking.h"

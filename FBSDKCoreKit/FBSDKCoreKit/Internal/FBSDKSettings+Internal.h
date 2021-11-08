@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKClientTokenProviding.h"
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
@@ -21,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKInfoDictionaryProviding;
 @protocol FBSDKEventLogging;
 
-@interface FBSDKSettings (Internal)
+@interface FBSDKSettings (Internal) <FBSDKClientTokenProviding>
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;

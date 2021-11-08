@@ -14,18 +14,12 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppLink.h"
-#import "FBSDKAppLinkResolverRequestBuilder.h"
+#import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
+#import "FBSDKClientTokenProviding.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
-
-// Dependencies
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
-#import "FBSDKAccessTokenProtocols.h"
-#import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
-#import "FBSDKAppLinkResolverRequestBuilding.h"
-#import "FBSDKClientTokenProviding.h"
-#import "FBSDKSettings+ClientTokenProviding.h"
 
 static NSString *const kURLKey = @"url";
 static NSString *const kIOSAppStoreIdKey = @"app_store_id";

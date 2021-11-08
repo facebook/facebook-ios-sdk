@@ -10,7 +10,7 @@
 
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKGraphRequestProtocol.h"
 

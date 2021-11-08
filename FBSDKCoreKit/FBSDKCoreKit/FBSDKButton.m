@@ -10,7 +10,7 @@
 #import "FBSDKButton+Subclass.h"
 
 #import "FBSDKAccessToken.h"
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKLogo.h"

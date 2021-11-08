@@ -7,7 +7,6 @@
  */
 
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKAccessToken+TokenStringProviding.h>
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
 #import <FBSDKCoreKit/FBSDKAppAvailabilityChecker.h>
