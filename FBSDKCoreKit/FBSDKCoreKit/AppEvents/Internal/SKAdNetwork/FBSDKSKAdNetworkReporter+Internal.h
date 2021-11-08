@@ -10,12 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsReporter.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKSKAdNetworkReporter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKSKAdNetworkReporter (Internal)
+@interface FBSDKSKAdNetworkReporter (Internal) <FBSDKAppEventsReporter>
 
 // UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory

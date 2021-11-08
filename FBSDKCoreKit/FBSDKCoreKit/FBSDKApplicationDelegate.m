@@ -93,7 +93,6 @@
  #import "FBSDKMetadataIndexer.h"
  #import "FBSDKModelManager.h"
  #import "FBSDKProfile+Internal.h"
- #import "FBSDKSKAdNetworkReporter+AppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURL+Internal.h"
  #import "FBSDKURLOpener.h"
