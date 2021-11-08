@@ -8,7 +8,6 @@
 
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKIntegrityManager.h"
-#import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
 #import "FBSDKIntegrityProcessing.h"
 
 NS_ASSUME_NONNULL_BEGIN

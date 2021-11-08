@@ -20,7 +20,7 @@
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
-#import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
+#import "FBSDKIntegrityManager.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"

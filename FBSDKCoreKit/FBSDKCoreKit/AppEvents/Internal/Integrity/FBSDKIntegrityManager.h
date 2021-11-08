@@ -10,13 +10,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsParameterProcessing.h"
+
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKIntegrityProcessing;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(IntegrityManager)
-@interface FBSDKIntegrityManager : NSObject
+@interface FBSDKIntegrityManager : NSObject <FBSDKAppEventsParameterProcessing>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
