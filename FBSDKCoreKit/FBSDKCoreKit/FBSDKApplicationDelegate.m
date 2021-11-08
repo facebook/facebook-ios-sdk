@@ -64,7 +64,6 @@
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKLogging.h"
 #import "FBSDKPaymentObserver.h"
-#import "FBSDKPaymentObserver+PaymentObserving.h"
 #import "FBSDKPaymentProductRequestorFactory.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveDataFilterManager+Protocols.h"

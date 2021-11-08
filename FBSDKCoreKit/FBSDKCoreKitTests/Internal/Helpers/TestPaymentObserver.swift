@@ -11,11 +11,11 @@ class TestPaymentObserver: NSObject, PaymentObserving {
   var didStartObservingTransactions = false
   var didStopObservingTransactions = false
 
-  func startTransactions() {
+  func startObservingTransactions() {
     didStartObservingTransactions = true
   }
 
-  func stopTransactions() {
+  func stopObservingTransactions() {
     didStopObservingTransactions = true
   }
 }

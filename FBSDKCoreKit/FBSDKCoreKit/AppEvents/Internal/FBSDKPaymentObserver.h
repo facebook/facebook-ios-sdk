@@ -9,22 +9,21 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 
+#import "FBSDKPaymentObserving.h"
+
 @protocol FBSDKPaymentProductRequestorCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /// Class to encapsulate implicit logging of purchase events
 NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+@interface FBSDKPaymentObserver : NSObject <FBSDKPaymentObserving>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithPaymentQueue:(SKPaymentQueue *)paymentQueue
       paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
 
 @end
 
