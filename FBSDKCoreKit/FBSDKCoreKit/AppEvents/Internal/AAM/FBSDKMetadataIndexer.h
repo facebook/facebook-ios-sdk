@@ -10,10 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKMetadataIndexing.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(MetadataIndexer)
-@interface FBSDKMetadataIndexer : NSObject
+@interface FBSDKMetadataIndexer : NSObject <FBSDKMetadataIndexing>
 
 @property (class, nonatomic, readonly) FBSDKMetadataIndexer *shared;
 

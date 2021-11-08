@@ -94,7 +94,7 @@
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKFeatureExtractor+Internal.h"
  #import "FBSDKMeasurementEventListener.h"
- #import "FBSDKMetadataIndexer+MetadataIndexing.h"
+ #import "FBSDKMetadataIndexer.h"
  #import "FBSDKModelManager.h"
  #import "FBSDKModelManager+RulesFromKeyProvider.h"
  #import "FBSDKProfile+Internal.h"
