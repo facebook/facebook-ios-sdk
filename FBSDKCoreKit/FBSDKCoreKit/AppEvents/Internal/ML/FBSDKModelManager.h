@@ -11,6 +11,9 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKEventProcessing.h"
+#import "FBSDKIntegrityParametersProcessorProvider.h"
+#import "FBSDKIntegrityProcessing.h"
+#import "FBSDKRulesFromKeyProvider.h"
 
 @protocol FBSDKDataPersisting;
 @protocol FBSDKFeatureChecking;
@@ -24,7 +27,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ModelManager)
-@interface FBSDKModelManager : NSObject <FBSDKEventProcessing>
+@interface FBSDKModelManager : NSObject <FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider, FBSDKIntegrityProcessing, FBSDKRulesFromKeyProvider>
 
 @property (class, nonnull, readonly) FBSDKModelManager *shared;
 

@@ -9,7 +9,6 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKModelManager.h"
-#import "FBSDKModelManager+IntegrityProcessing.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
@@ -41,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKModelManager ()
 
-@property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
@@ -54,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation FBSDKModelManager
+
+@synthesize integrityParametersProcessor = _integrityParametersProcessor;
 
 typedef void (^FBSDKDownloadCompletionBlock)(void);
 

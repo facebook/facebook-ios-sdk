@@ -96,7 +96,6 @@
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKMetadataIndexer.h"
  #import "FBSDKModelManager.h"
- #import "FBSDKModelManager+RulesFromKeyProvider.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+AppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"

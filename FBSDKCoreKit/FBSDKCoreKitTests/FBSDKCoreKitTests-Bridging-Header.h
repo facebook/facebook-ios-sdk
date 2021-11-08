@@ -147,8 +147,6 @@
 #import "FBSDKMath.h"
 #import "FBSDKMetadataIndexer.h"
 #import "FBSDKMetadataIndexing.h"
-#import "FBSDKModelManager+IntegrityParametersProcessorProvider.h"
-#import "FBSDKModelManager+RulesFromKeyProvider.h"
 #import "FBSDKModelManager+Testing.h"
 #import "FBSDKModelUtility.h"
 #import "FBSDKNetworkErrorChecker.h"
