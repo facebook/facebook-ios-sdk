@@ -50,8 +50,6 @@
 #import <FBSDKCoreKit/FBSDKIcon.h>
 #import <FBSDKCoreKit/FBSDKImpressionTrackingButton.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
-#import <FBSDKCoreKit/FBSDKInternalUtility+AppAvailabilityChecker.h>
-#import <FBSDKCoreKit/FBSDKInternalUtility+AppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKKeychainStore.h>
 #import <FBSDKCoreKit/FBSDKKeychainStoreFactory.h>
@@ -94,7 +92,6 @@
  #import <FBSDKCoreKit/FBSDKBridgeAPIRequestCreating.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
  #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
- #import <FBSDKCoreKit/FBSDKInternalUtility+URLHosting.h>
  #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
  #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
  #import <FBSDKCoreKit/FBSDKMutableCopying.h>

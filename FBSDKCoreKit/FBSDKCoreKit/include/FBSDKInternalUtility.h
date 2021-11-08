@@ -9,7 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKAppAvailabilityChecker.h>
+#import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
+
+#if !TARGET_OS_TV
+ #import <FBSDKCoreKit/FBSDKURLHosting.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +31,12 @@ FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_SHARE_EXTENSION
   DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_SHARE_EXTENSION` is deprecated and will be removed in the next major release; please use `URLScheme.facebookShareExtension` instead");
 
 NS_SWIFT_NAME(InternalUtility)
-@interface FBSDKInternalUtility : NSObject <FBSDKInternalUtility>
+@interface FBSDKInternalUtility : NSObject
+#if !TARGET_OS_TV
+  <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility, FBSDKURLHosting>
+#else
+  <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility>
+#endif
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -9,10 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
-
-#import "FBSDKInternalUtility.h"
-#import "FBSDKWindowFinding.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

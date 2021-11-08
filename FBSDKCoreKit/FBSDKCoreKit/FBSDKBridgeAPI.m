@@ -22,7 +22,7 @@
 #import "FBSDKErrorCreating.h"
 #import "FBSDKErrorFactory.h"
 #import "FBSDKErrorReporter.h"
-#import "FBSDKInternalUtility+AppURLSchemeProviding.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKURLScheme.h"

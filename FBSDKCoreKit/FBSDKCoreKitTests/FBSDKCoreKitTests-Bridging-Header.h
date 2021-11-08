@@ -132,8 +132,6 @@
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKIntegrityManager+Testing.h"
 #import "FBSDKInternalURLOpener.h"
-#import "FBSDKInternalUtility+AppURLSchemeProviding.h"
-#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKLoggerFactory.h"

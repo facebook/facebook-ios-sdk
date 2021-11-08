@@ -56,7 +56,6 @@
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKInternalUtility+URLHosting.h"
 #import "FBSDKKeychainStoreFactory.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLoggerFactory.h"
