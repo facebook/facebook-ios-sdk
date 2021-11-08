@@ -90,7 +90,6 @@
  #import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
  #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPI.h>
- #import <FBSDKCoreKit/FBSDKBridgeAPI+URLOpener.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>

@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
-#import <FBSDKCoreKit/FBSDKLogger.h>
+#if !TARGET_OS_TV
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
@@ -18,7 +19,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKBridgeAPI (Internal)
+@interface FBSDKBridgeAPI (Internal) <FBSDKApplicationObserving>
 
 @property (nonatomic, readonly) FBSDKAuthenticationCompletionHandler sessionCompletionHandler;
 
@@ -42,3 +43,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

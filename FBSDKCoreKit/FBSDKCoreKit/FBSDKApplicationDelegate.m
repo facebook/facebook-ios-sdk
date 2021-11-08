@@ -34,7 +34,7 @@
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
-#import "FBSDKBridgeAPI+ApplicationObserving.h"
+#import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKButton+Subclass.h"
 #import "FBSDKCrashObserver.h"

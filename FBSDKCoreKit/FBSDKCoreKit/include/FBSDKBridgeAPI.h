@@ -18,6 +18,7 @@
  #import <FBSDKCoreKit/FBSDKBridgeAPIRequestOpening.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
+ #import <FBSDKCoreKit/FBSDKURLOpener.h>
  #import <FBSDKCoreKit/FBSDKURLOpening.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,7 +38,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(BridgeAPI)
-@interface FBSDKBridgeAPI : NSObject <FBSDKBridgeAPIRequestOpening>
+@interface FBSDKBridgeAPI : NSObject <FBSDKBridgeAPIRequestOpening, FBSDKURLOpener>
 
 @property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
 NS_SWIFT_NAME(shared);
