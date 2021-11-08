@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKCrashHandlerProtocol.h"
 #import "FBSDKCrashObserving.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(CrashHandler)
-@interface FBSDKCrashHandler : NSObject
+@interface FBSDKCrashHandler : NSObject <FBSDKCrashHandler>
 
 @property (class, nonatomic, readonly) FBSDKCrashHandler *shared;
 

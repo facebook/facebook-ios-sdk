@@ -9,7 +9,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKBase64.h>
 #import <FBSDKCoreKit_Basics/FBSDKBasicUtility.h>
 #import <FBSDKCoreKit_Basics/FBSDKCrashHandler.h>
-#import <FBSDKCoreKit_Basics/FBSDKCrashHandler+CrashHandlerProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
 #import <FBSDKCoreKit_Basics/FBSDKFileDataExtracting.h>
