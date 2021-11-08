@@ -11,8 +11,6 @@
 #import "FBSDKEventLogging.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentData+SourceApplicationTracking.h"
-#import "FBSDKTimeSpentData+TimeSpentRecording.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
