@@ -21,7 +21,7 @@
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEvents+SourceApplicationTracking.h"
-#import "FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h"
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager.h"

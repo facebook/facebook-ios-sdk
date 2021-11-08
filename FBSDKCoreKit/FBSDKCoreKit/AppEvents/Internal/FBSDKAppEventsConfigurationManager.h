@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsConfigurationProviding.h"
+
 typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
 @protocol FBSDKDataPersisting;
 @protocol FBSDKSettings;
@@ -18,7 +20,7 @@ typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsConfigurationManager)
-@interface FBSDKAppEventsConfigurationManager : NSObject
+@interface FBSDKAppEventsConfigurationManager : NSObject <FBSDKAppEventsConfigurationProviding>
 
 @property (class, nonatomic, readonly) FBSDKAppEventsConfigurationManager *shared;
 
