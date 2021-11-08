@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AvailabilityMacros.h>
-
 /**
  Main completion handling of any Gaming Service (Friend Finder, Image/Video Upload).
 

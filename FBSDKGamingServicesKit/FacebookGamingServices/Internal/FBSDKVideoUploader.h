@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKVideoUploading.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKVideoUploaderDelegate;
@@ -19,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  see https://developers.facebook.com/docs/graph-api/video-uploads
  */
 NS_SWIFT_NAME(VideoUploader)
-@interface FBSDKVideoUploader : NSObject
+@interface FBSDKVideoUploader : NSObject <FBSDKVideoUploading>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

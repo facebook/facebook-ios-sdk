@@ -11,18 +11,13 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKGamingServiceCompletionHandler.h"
+#import "FBSDKGamingServiceControllerProtocol.h"
+#import "FBSDKGamingServiceType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
-  FBSDKGamingServiceTypeFriendFinder,
-  FBSDKGamingServiceTypeMediaAsset,
-  FBSDKGamingServiceTypeCommunity,
-}
-NS_SWIFT_NAME(GamingServiceType);
-
 NS_SWIFT_NAME(GamingServiceController)
-@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
+@interface FBSDKGamingServiceController : NSObject <FBSDKGamingServiceController, FBSDKURLOpening>
 
 /**
 Used to link to gaming services on Facebook.

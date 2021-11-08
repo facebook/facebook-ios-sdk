@@ -8,12 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKGamingServiceController () <FBSDKGamingServiceController>
-@end
-
-NS_ASSUME_NONNULL_END
+typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
+  FBSDKGamingServiceTypeFriendFinder,
+  FBSDKGamingServiceTypeMediaAsset,
+  FBSDKGamingServiceTypeCommunity,
+}
+NS_SWIFT_NAME(GamingServiceType);

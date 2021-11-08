@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServiceController.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GamingServiceControllerProtocol)

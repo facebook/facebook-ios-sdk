@@ -8,6 +8,8 @@
 
 #import "FBSDKFriendFinderDialog.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
 

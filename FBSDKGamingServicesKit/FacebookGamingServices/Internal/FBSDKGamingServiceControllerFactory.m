@@ -8,7 +8,7 @@
 
 #import "FBSDKGamingServiceControllerFactory.h"
 
-#import "FBSDKGamingServiceController+GamingServiceControllerProtocol.h"
+#import "FBSDKGamingServiceController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

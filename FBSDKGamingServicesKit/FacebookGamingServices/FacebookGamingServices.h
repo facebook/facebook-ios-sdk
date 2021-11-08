@@ -28,6 +28,5 @@
 // Not sure what the correct approach here is...
 
 #import <FacebookGamingServices/FBSDKContextDialogFactoryProtocols.h>
-#import <FacebookGamingServices/FBSDKContextDialogs+Showable.h>
 #import <FacebookGamingServices/FBSDKCreateContextDialogFactory.h>
 #import <FacebookGamingServices/FBSDKShowable.h>

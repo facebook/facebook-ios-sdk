@@ -8,7 +8,7 @@
 
 #import "FBSDKVideoUploaderFactory.h"
 
-#import "FBSDKVideoUploader+VideoUploading.h"
+#import "FBSDKVideoUploader.h"
 
 @implementation FBSDKVideoUploaderFactory
 

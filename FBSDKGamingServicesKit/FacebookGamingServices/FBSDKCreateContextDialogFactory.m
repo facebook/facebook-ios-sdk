@@ -9,8 +9,7 @@
 #import "FBSDKCreateContextDialogFactory.h"
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-
-#import "FBSDKContextDialogs+Showable.h"
+#import <FacebookGamingServices/FBSDKCreateContextDialog.h>
 
 @interface FBSDKCreateContextDialogFactory ()
 

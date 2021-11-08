@@ -17,13 +17,14 @@
 
  #import <FacebookGamingServices/FBSDKContextWebDialog.h>
  #import <FacebookGamingServices/FBSDKDialogProtocol.h>
+ #import <FacebookGamingServices/FBSDKShowable.h>
 
 NS_ASSUME_NONNULL_BEGIN
 /**
   A dialog for the choose context through app switch
  */
 NS_SWIFT_NAME(ChooseContextDialog)
-@interface FBSDKChooseContextDialog : FBSDKContextWebDialog
+@interface FBSDKChooseContextDialog : FBSDKContextWebDialog <FBSDKShowable>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
