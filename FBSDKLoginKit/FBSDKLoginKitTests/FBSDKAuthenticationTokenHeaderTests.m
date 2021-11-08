@@ -11,15 +11,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @import TestTools;
+#import "FBSDKAuthenticationTokenHeader+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
-
-@interface FBSDKAuthenticationTokenHeader (Testing)
-
-- (instancetype)initWithAlg:(NSString *)alg
-                        typ:(NSString *)typ
-                        kid:(NSString *)kid;
-
-@end
 
 @interface FBSDKAuthenticationTokenHeaderTests : XCTestCase
 
