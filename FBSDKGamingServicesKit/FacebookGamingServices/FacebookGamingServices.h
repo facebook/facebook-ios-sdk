@@ -20,7 +20,6 @@
 #import <FacebookGamingServices/FBSDKGamingPayloadObserver.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
-#import <FacebookGamingServices/FBSDKGamingVideoUploaderConfiguration.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>
 
 // The headers below need to be public since they're used in the Swift files

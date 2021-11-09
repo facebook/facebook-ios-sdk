@@ -10,9 +10,10 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"
-#import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploaderFactory.h"
 

@@ -9,7 +9,7 @@
 import FacebookGamingServices
 import XCTest
 
-class FBSDKGamingVideoUploaderConfigurationTests: XCTestCase { // swiftlint:disable:this type_name
+class GamingVideoUploaderConfigurationTests: XCTestCase {
 
   let url = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
   let caption = "Cool Video"
