@@ -18,49 +18,12 @@
 #else
  #import "FBSDKPermission.h"
 #endif
+#import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
+#import "FBSDKLoginURLCompleter+Testing.h"
 
 static NSString *const _fakeAppID = @"1234567";
 static NSString *const _fakeChallence = @"some_challenge";
-
-@interface FBSDKLoginURLCompleter (Testing)
-
-@property (class, nonatomic, assign) id<FBSDKProfileCreating> profileFactory;
-
-- (FBSDKLoginCompletionParameters *)parameters;
-
-+ (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
-
-+ (void)reset;
-
-+ (NSDateFormatter *)dateFormatter;
-
-@end
-
-@interface FBSDKAuthenticationTokenClaims (Testing)
-
-- (nullable instancetype)initWithJti:(nonnull NSString *)jti
-                                 iss:(nonnull NSString *)iss
-                                 aud:(nonnull NSString *)aud
-                               nonce:(nonnull NSString *)nonce
-                                 exp:(NSTimeInterval)exp
-                                 iat:(NSTimeInterval)iat
-                                 sub:(nonnull NSString *)sub
-                                name:(nullable NSString *)name
-                           givenName:(nullable NSString *)givenName
-                          middleName:(nullable NSString *)middleName
-                          familyName:(nullable NSString *)familyName
-                               email:(nullable NSString *)email
-                             picture:(nullable NSString *)picture
-                         userFriends:(nullable NSArray<NSString *> *)userFriends
-                        userBirthday:(nullable NSString *)userBirthday
-                        userAgeRange:(nullable NSDictionary<NSString *, id> *)userAgeRange
-                        userHometown:(nullable NSDictionary<NSString *, id> *)userHometown
-                        userLocation:(nullable NSDictionary<NSString *, id> *)userLocation
-                          userGender:(nullable NSString *)userGender
-                            userLink:(nullable NSString *)userLink;
-
-@end
 
 @interface FBSDKLoginCompletionTests : XCTestCase
 
