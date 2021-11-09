@@ -32,95 +32,13 @@
  #import "FBSDKProfileFactory.h"
 #endif
 
+#import "FBSDKAccessToken+Testing.h"
+#import "FBSDKAppEvents+Testing.h"
+#import "FBSDKDeviceLoginCodeInfo+Testing.h"
+#import "FBSDKDeviceLoginManager+Testing.h"
+#import "FBSDKDeviceLoginManagerResult+Testing.h"
 #import "FBSDKInternalUtility+Testing.h"
+#import "FBSDKLoginButton+Testing.h"
 #import "FBSDKLoginManager+Testing.h"
+#import "FBSDKProfile+Testing.h"
 #import "FBSDKSettings+Testing.h"
-
-@protocol FBSDKLoginProviding;
-
-NS_ASSUME_NONNULL_BEGIN
-
-// Categories needed to expose private methods to Swift
-
-@interface FBSDKLoginButton (Testing)
-
-@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
-
-- (FBSDKLoginConfiguration *)loginConfiguration;
-- (BOOL)_isAuthenticated;
-- (void)_fetchAndSetContent;
-- (void)_initializeContent;
-- (void)_updateContentForAccessToken;
-- (void)_updateContentForUserProfile:(nullable FBSDKProfile *)profile;
-- (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
-- (void)_profileDidChangeNotification:(NSNotification *)notification;
-- (nullable NSString *)userName;
-- (nullable NSString *)userID;
-- (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider;
-- (void)_buttonPressed:(id)sender;
-- (void)_logout;
-- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory;
-
-@end
-
-@interface FBSDKAccessToken (Testing)
-
-+ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
-          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
-
-@end
-
-@interface FBSDKAppEvents (Testing)
-
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
-- (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-                 flushPeriodInSeconds:(int)flushPeriodInSeconds; // expose this since init is NS_UNAVAILABLE
-
-@end
-
-@interface FBSDKProfile (Testing)
-
-+ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
-   shouldPostNotification:(BOOL)shouldPostNotification;
-
-@end
-
-@interface FBSDKDeviceLoginManagerResult (Testing)
-
-- (instancetype)initWithToken:(nullable FBSDKAccessToken *)token
-                  isCancelled:(BOOL)cancelled;
-
-@end
-
-@interface FBSDKDeviceLoginManager (Testing)
-
-- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
-                graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestConnectionFactory
-                       devicePoller:(id<FBSDKDevicePolling>)poller;
-
-- (void)_schedulePoll:(NSUInteger)interval;
-
-- (void)setCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo;
-
-- (void)_notifyError:(NSError *)error;
-
-- (void)_notifyToken:(nullable NSString *)tokenString withExpirationDate:(nullable NSDate *)expirationDate withDataAccessExpirationDate:(nullable NSDate *)dataAccessExpirationDate;
-
-- (void)_processError:(NSError *)error;
-
-@end
-
-@interface FBSDKDeviceLoginCodeInfo (Testing)
-
-- (instancetype)initWithIdentifier:(NSString *)identifier
-                         loginCode:(NSString *)loginCode
-                   verificationURL:(NSURL *)verificationURL
-                    expirationDate:(NSDate *)expirationDate
-                   pollingInterval:(NSUInteger)pollingInterval;
-
-@end
-
-NS_ASSUME_NONNULL_END
