@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(PaymentObserving)
 @protocol FBSDKPaymentObserving
 
+// These methods need Swift name overrides since they otherwise get changed to
+// `startTransactions` and `stopTransactions` otherwise.
 - (void)startObservingTransactions NS_SWIFT_NAME(startObservingTransactions());
 - (void)stopObservingTransactions NS_SWIFT_NAME(stopObservingTransactions());
 
