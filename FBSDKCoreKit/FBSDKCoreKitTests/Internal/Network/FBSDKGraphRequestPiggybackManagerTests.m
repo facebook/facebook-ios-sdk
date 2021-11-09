@@ -11,17 +11,8 @@
 @import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
+#import "FBSDKGraphRequestPiggybackManager+Testing.h"
 #import "FBSDKServerConfigurationLoading.h"
-
-@interface FBSDKGraphRequestPiggybackManager (FBSDKGraphRequestPiggybackManagerTests)
-
-+ (int)_tokenRefreshThresholdInSeconds;
-+ (int)_tokenRefreshRetryInSeconds;
-+ (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request;
-+ (void)_setLastRefreshTry:(NSDate *)date;
-+ (void)reset;
-
-@end
 
 @interface FBSDKGraphRequestPiggybackManagerTests : XCTestCase
 

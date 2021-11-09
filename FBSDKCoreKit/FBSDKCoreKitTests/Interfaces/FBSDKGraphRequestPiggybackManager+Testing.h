@@ -13,9 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+
 + (id<FBSDKSettings>)settings;
 + (id<FBSDKServerConfigurationProviding>)serverConfiguration;
 + (id<FBSDKGraphRequestFactory>)graphRequestFactory;
++ (int)_tokenRefreshThresholdInSeconds;
++ (int)_tokenRefreshRetryInSeconds;
++ (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request;
++ (void)_setLastRefreshTry:(NSDate *)date;
++ (void)reset;
 
 @end
 
