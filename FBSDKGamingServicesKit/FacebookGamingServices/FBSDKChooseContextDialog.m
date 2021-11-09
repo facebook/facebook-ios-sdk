@@ -23,9 +23,6 @@
 #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY @"filter"
 #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY @"min_size"
 #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY @"max_size"
-#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY @"app_id"
-#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY @"params"
-#define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY @"path"
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
 
@@ -113,16 +110,9 @@
 {
   NSMutableDictionary<NSString *, id> *parametersDictionary = [self queryParameters];
   NSError *error;
-  if (_internalUtility.isFacebookAppInstalled) {
-    return [_internalUtility URLWithScheme:FBSDKURLSchemeHTTPS
-                                      host:FBSDK_CONTEXT_DIALOG_URL_HOST
-                                      path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.sharedSettings.appID]
-                           queryParameters:parametersDictionary
-                                     error:&error];
-  }
   return [_internalUtility URLWithScheme:FBSDKURLSchemeHTTPS
                                     host:FBSDK_CONTEXT_DIALOG_URL_HOST
-                                    path:FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH
+                                    path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.sharedSettings.appID]
                          queryParameters:parametersDictionary
                                    error:&error];
 }
@@ -148,19 +138,7 @@
       appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
     }
   }
-  if (_internalUtility.isFacebookAppInstalled) {
-    return appSwitchParameters;
-  }
-
-  appSwitchParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY] = FBSDKSettings.sharedSettings.appID;
-  NSString *parameterJSONString = [FBSDKBasicUtility JSONStringForObject:appSwitchParameters
-                                                                   error:NULL
-                                                    invalidObjectHandler:NULL];
-
-  NSMutableDictionary<NSString *, id> *mSiteParameters = [NSMutableDictionary new];
-  mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY] = @"/path";
-  mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY] = parameterJSONString;
-  return mSiteParameters;
+  return appSwitchParameters;
 }
 
 - (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url

@@ -117,22 +117,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertEqual(minSizeQuery, 0)
   }
 
-  func testShowDialogThroughMSite() throws {
-    let util = TestInternalUtility()
-    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
-
-    dialog.show()
-    let pathQuery = try XCTUnwrap(util.queryParameters?[URLConstants.mSiteQueryParameterPath] as? String)
-    let paramsQuery = try XCTUnwrap(util.queryParameters?[URLConstants.mSiteQueryParameterParams] as? String)
-
-    XCTAssertNotNil(dialog)
-    XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
-    XCTAssertEqual(util.host, URLConstants.host)
-    XCTAssertEqual(util.path, URLConstants.mSite.path)
-    XCTAssertEqual(pathQuery, "/path")
-    XCTAssertEqual(paramsQuery, msiteParamsQueryString)
-  }
-
   func testShowDialogWithoutSettingAppID() throws {
     let appIDErrorMessage = "App ID is not set in settings"
     let content = ChooseContextContent()
