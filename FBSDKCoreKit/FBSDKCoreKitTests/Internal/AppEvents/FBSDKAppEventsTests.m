@@ -16,10 +16,12 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEvents+SourceApplicationTracking.h"
+#import "FBSDKAppEvents+Testing.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
+#import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
@@ -29,66 +31,6 @@
 #import "FBSDKUtility.h"
 
 // An extension that redeclares a private method so that it can be mocked
-@interface FBSDKApplicationDelegate (Testing)
-- (void)_logSDKInitialize;
-@end
-
-@interface FBSDKAppEvents (Testing)
-@property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
-@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
-
-- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
-
-- (void)publishInstall;
-- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
-- (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
-- (void)instanceLogEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
-- (void)applicationDidBecomeActive;
-- (void)applicationMovingFromActiveStateOrTerminating;
-- (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior;
-- (void)publishATE;
-
-+ (FBSDKAppEvents *)shared;
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
-+ (void)reset;
-
-+ (UIApplicationState)applicationState;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-@end
-
 @interface FBSDKAppEventsTests : XCTestCase
 
 @property (nonnull, nonatomic) NSString *const mockAppID;
@@ -548,12 +490,12 @@
                                valueToSum:@(self.purchaseAmount)
                                parameters:nil
                        isImplicitlyLogged:NO
-                              accessToken:nil];
+                              accessToken:SampleAccessTokens.validToken];
   [FBSDKAppEvents.shared instanceLogEvent:self.eventName
                                valueToSum:@(self.purchaseAmount)
                                parameters:nil
                        isImplicitlyLogged:NO
-                              accessToken:nil];
+                              accessToken:SampleAccessTokens.validToken];
   [FBSDKAppEvents.shared applicationMovingFromActiveStateOrTerminating];
 
   XCTAssertTrue(
@@ -983,7 +925,7 @@
 
 - (void)testLogImplicitEvent
 {
-  [FBSDKAppEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:nil];
+  [FBSDKAppEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:SampleAccessTokens.validToken];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);

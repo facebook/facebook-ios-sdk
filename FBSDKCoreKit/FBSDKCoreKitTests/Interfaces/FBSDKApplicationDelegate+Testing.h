@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setApplicationState:(UIApplicationState)state;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
+- (void)_logSDKInitialize;
 
 @end
 
