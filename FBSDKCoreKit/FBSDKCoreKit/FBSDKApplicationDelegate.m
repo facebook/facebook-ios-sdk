@@ -66,7 +66,6 @@
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfigurationManager+Internal.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsLogging.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKSwizzler+Swizzling.h"

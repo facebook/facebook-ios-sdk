@@ -14,7 +14,7 @@
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
 
-NS_ASSUME_NONNULL_BEGIN
+#import "FBSDKClientTokenProviding.h"
 
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
@@ -22,7 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKInfoDictionaryProviding;
 @protocol FBSDKEventLogging;
 
-@interface FBSDKSettings (Internal) <FBSDKClientTokenProviding>
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKSettings (Internal) <FBSDKClientTokenProviding, FBSDKSettingsLogging>
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;

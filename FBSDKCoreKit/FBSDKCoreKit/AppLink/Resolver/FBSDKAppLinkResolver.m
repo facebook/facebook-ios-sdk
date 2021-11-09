@@ -15,6 +15,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken+Internal.h"
+#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
 #import "FBSDKClientTokenProviding.h"

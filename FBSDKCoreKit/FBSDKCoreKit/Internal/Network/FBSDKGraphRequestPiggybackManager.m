@@ -20,8 +20,7 @@
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
-#import "FBSDKSettings.h"
-#import "FBSDKSettings+SettingsLogging.h"
+#import "FBSDKSettings+Internal.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
