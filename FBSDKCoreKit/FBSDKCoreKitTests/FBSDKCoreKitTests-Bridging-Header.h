@@ -149,8 +149,6 @@
 #import "FBSDKPaymentObserving.h"
 #import "FBSDKPaymentProductRequestor.h"
 #import "FBSDKProductRequestFactory.h"
-#import "FBSDKProfile+Internal.h"
-#import "FBSDKProfile+ProfileProtocols.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKProfileCodingKey.h"
 #import "FBSDKProfilePictureView+Testing.h"

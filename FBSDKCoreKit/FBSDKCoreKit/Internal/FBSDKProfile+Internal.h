@@ -31,7 +31,7 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 @interface FBSDKProfile (Internal)
 
 + (void)cacheProfile:(nullable FBSDKProfile *)profile;
-+ (nullable FBSDKProfile *)fetchCachedProfile;
++ (nullable FBSDKProfile *)fetchCachedProfile NS_SWIFT_NAME(fetchCachedProfile());
 
 + (NSURL *)imageURLForProfileID:(NSString *)profileId
                     PictureMode:(FBSDKProfilePictureMode)mode
