@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKServerConfigurationManager ()
+@interface FBSDKServerConfigurationManager () <FBSDKServerConfigurationProviding>
 
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;

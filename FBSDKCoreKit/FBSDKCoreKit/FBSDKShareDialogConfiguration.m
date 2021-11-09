@@ -9,7 +9,7 @@
 #import "FBSDKShareDialogConfiguration.h"
 
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
+#import "FBSDKServerConfigurationManager+Internal.h"
 
 @interface FBSDKShareDialogConfiguration ()
 
