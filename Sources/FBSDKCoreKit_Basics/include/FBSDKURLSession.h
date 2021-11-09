@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKURLSessionTask.h"
+#import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

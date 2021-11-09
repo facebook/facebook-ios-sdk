@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCrashHandlerProtocol.h"
-#import "FBSDKCrashObserving.h"
+#import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
+#import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

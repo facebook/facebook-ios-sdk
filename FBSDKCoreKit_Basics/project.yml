@@ -17,14 +17,6 @@ configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
   Release: Configurations/Shared/Configuration/Release.xcconfig
 
-settings:
-  base:
-    # Some iOS defaults will be overridden by Xcodegen.
-    # We need to explicitly set them to maintain parity with
-    # the project file being replaced
-    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: false
-    SWIFT_OPTIMIZATION_LEVEL: -O
-
 targets:
   FBSDKCoreKit_Basics-Static:
     type: framework

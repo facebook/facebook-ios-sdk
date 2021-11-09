@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKWebDialog.h"
+#import <FBSDKCoreKit/FBSDKWebDialog.h>
 
 @class FBSDKWebDialog;
 

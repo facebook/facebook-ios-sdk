@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSessionProviding.h"
+#import <FBSDKCoreKit_Basics/FBSDKSessionProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
