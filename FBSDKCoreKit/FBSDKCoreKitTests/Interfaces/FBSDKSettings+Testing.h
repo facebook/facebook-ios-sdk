@@ -7,6 +7,7 @@
  */
 
 #import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,23 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
-          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                     eventLogger:(id<FBSDKEventLogging>)eventLogger
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
-// UNCRUSTIFY_FORMAT_ON
-
-- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
-                         country:(int)country
-                           state:(int)state;
-
 - (void)reset;
-
-- (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
-
-- (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 - (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors;
 

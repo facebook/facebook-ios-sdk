@@ -17,7 +17,10 @@
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEvents+Testing.h"
+#import "FBSDKAppEventsConfiguration+Testing.h"
+#import "FBSDKAppEventsConfigurationManager+Testing.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKSettings+Testing.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
@@ -35,19 +38,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   return self.stubbedAdvertisingIdentifier;
 }
 
-@end
-
-@interface FBSDKSettings ()
-+ (void)resetAdvertiserTrackingStatusCache;
-+ (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
-@end
-
-@interface FBSDKAppEventsConfiguration ()
-- (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status;
-@end
-
-@interface FBSDKAppEventsConfigurationManager ()
-@property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 @end
 
 @implementation FBSDKAppEventsUtilityTests

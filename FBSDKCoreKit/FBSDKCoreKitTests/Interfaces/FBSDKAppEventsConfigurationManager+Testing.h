@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
+@property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 
 - (void)_processResponse:(id)response error:(nullable NSError *)error;
 + (void)reset;

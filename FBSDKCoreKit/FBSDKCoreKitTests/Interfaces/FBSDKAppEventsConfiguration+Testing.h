@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (FBSDKAppEventsConfiguration *)defaultConfiguration;
 
+- (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status;
+
 // UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)defaultATEStatus
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
