@@ -16,6 +16,7 @@
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -58,8 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
   if (jsonData) {
     NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
+    NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+    [FBSDKTypeUtility dictionary:parameters setObject:(crashReports ?: @"") forKey:@"crash_reports"];
+    [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
     id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]
-                                                                               parameters:@{@"crash_reports" : crashReports ?: @""}
+                                                                               parameters:parameters
                                                                                HTTPMethod:FBSDKHTTPMethodPOST];
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

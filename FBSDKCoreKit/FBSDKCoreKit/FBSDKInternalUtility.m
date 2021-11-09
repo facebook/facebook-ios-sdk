@@ -484,6 +484,26 @@ static NSMapTable *_transientObjects;
   }
 }
 
+- (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
+{
+  NSDictionary<NSString *, id> *dataProcessingOptions = FBSDKSettings.sharedSettings.persistableDataProcessingOptions;
+  if (dataProcessingOptions) {
+    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
+    if (options && [options isKindOfClass:NSArray.class]) {
+      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
+      [FBSDKTypeUtility dictionary:parameters
+                         setObject:optionsString
+                            forKey:DATA_PROCESSING_OPTIONS];
+    }
+    [FBSDKTypeUtility dictionary:parameters
+                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
+                          forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
+    [FBSDKTypeUtility dictionary:parameters
+                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE]
+                          forKey:DATA_PROCESSING_OPTIONS_STATE];
+  }
+}
+
 - (nullable UIWindow *)findWindow
 {
   #pragma clang diagnostic push

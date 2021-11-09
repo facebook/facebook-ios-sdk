@@ -1171,6 +1171,29 @@
   XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbshareextension is present in the bundle url schemes");
 }
 
+- (void)testExtendDictionaryWithDefaultDataProcessingOptions
+{
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
+
+  XCTAssertEqualObjects(parameters, @{}, "Parameters should not change with default data processing options");
+}
+
+- (void)testExtendDictionaryWithDataProcessingOptions
+{
+  [FBSDKSettings.sharedSettings setDataProcessingOptions:@[@"LDU"] country:10 state:100];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
+
+  NSDictionary *expectedParameters = @{
+    @"data_processing_options" : @"[\"LDU\"]",
+    @"data_processing_options_country" : @(10),
+    @"data_processing_options_state" : @(100)
+  };
+
+  XCTAssertEqualObjects(parameters, expectedParameters, "Parameters is not extended with expected data processing options");
+}
+
 - (void)testIsPublishPermission
 {
   NSArray *publishPermissions = @[
