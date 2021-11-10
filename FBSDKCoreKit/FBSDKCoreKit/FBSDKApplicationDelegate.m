@@ -728,16 +728,16 @@ static UIApplicationState _applicationState;
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
                                    userDataStore:self.userDataStore];
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
-                                                            loggerFactory:[FBSDKLoggerFactory new]];
+                                                            loggerFactory:[FBSDKLoggerFactory new]]; // TEMP: added to configurator
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings
                                      graphRequestFactory:graphRequestFactory
-                           graphRequestConnectionFactory:graphRequestConnectionFactory];
+                           graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
                                           serverConfiguration:serverConfigurationProvider
                                           graphRequestFactory:graphRequestFactory];
-  FBSDKButton.applicationActivationNotifier = self;
+  FBSDKButton.applicationActivationNotifier = self; // TEMP: added to configurator
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared]; // TEMP: added to configurator
 #if !TARGET_OS_TV
   [FBSDKBridgeAPIRequest configureWithInternalURLOpener:UIApplication.sharedApplication
@@ -755,7 +755,7 @@ static UIApplicationState _applicationState;
                                           dataExtractor:NSData.class
                                       gateKeeperManager:FBSDKGateKeeperManager.class
                                  suggestedEventsIndexer:FBSDKSuggestedEventsIndexer.shared]; // TEMP: added to configurator
-  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
+  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared]; // TEMP: added to configurator
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
                                  infoDictionaryProvider:NSBundle.mainBundle
                                                settings:sharedSettings
@@ -794,7 +794,7 @@ static UIApplicationState _applicationState;
                           settings:sharedSettings
                          urlHoster:FBSDKInternalUtility.sharedUtility];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
-                                         urlOpener:UIApplication.sharedApplication];
+                                         urlOpener:UIApplication.sharedApplication]; // TEMP: added to configurator
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
                                                      metadataIndexer:FBSDKMetadataIndexer.shared
                                                  skAdNetworkReporter:self.skAdNetworkReporter

@@ -10,6 +10,7 @@
 
 import XCTest
 
+// swiftlint:disable:next type_body_length
 final class CoreKitConfiguratorTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var dependencies: SharedDependencies!
@@ -37,11 +38,14 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   private class func resetTargets() {
+    AppEventsConfigurationManager.reset()
     AppEventsUtility.reset()
+    FBButton.resetClassDependencies()
     FeatureManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
     InstrumentManager.reset()
+    InternalUtility.reset()
     SDKError.reset()
     ServerConfigurationManager.shared.reset()
 
@@ -50,10 +54,50 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppLinkUtility.reset()
     AuthenticationStatusUtility.resetClassDependencies()
     BridgeAPIRequest.resetClassDependencies()
+    FeatureExtractor.reset()
     ModelManager.reset()
+    FBWebDialogView.reset()
   }
 
   // MARK: - All Platforms
+
+  func testConfiguringAppEventsConfigurationManager() {
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.store,
+      "AppEventsConfigurationManager should not have a default data store by default"
+    )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.settings,
+      "AppEventsConfigurationManager should not have settings by default"
+    )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.graphRequestFactory,
+      "AppEventsConfigurationManager should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.graphRequestConnectionFactory,
+      "AppEventsConfigurationManager should not have a graph request connection factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.store === dependencies.defaultDataStore,
+      "AppEventsConfigurationManager should be configured with the default data store"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.settings === dependencies.settings,
+      "AppEventsConfigurationManager should be configured with the settings"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.graphRequestFactory === dependencies.graphRequestFactory,
+      "AppEventsConfigurationManager should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      "AppEventsConfigurationManager should be configured with the graph request connection factory"
+    )
+  }
 
   func testConfiguringAppEventsUtility() {
     XCTAssertNil(
@@ -66,6 +110,20 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEventsUtility.shared.appEventsConfigurationProvider === dependencies.appEventsConfigurationProvider,
       "AppEventsUtility should be configured with the app events configuration provider"
+    )
+  }
+
+  func testConfiguringButton() {
+    XCTAssertNil(
+      FBButton.applicationActivationNotifier,
+      "Button should not have an application activation notifier by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      FBButton.applicationActivationNotifier as AnyObject === dependencies.applicationActivationNotifier as AnyObject,
+      "Button should be configured with the application activation notifier"
     )
   }
 
@@ -275,6 +333,28 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       InstrumentManager.shared.crashHandler === dependencies.crashHandler,
       "InstrumentManager should be configured with the crash handler"
+    )
+  }
+
+  func testConfiguringInternalUtility() {
+    XCTAssertNil(
+      InternalUtility.shared.infoDictionaryProvider,
+      "InternalUtility should not have an info dictionary provider by default"
+    )
+    XCTAssertNil(
+      InternalUtility.shared.loggerFactory,
+      "InternalUtility should not have a logger factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      InternalUtility.shared.infoDictionaryProvider === dependencies.infoDictionaryProvider,
+      "InternalUtility should be configured with the info dictionary provider"
+    )
+    XCTAssertTrue(
+      InternalUtility.shared.loggerFactory === dependencies.loggerFactory,
+      "InternalUtility should be configured with the logger factory"
     )
   }
 
@@ -501,6 +581,20 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
+  func testConfiguringFeatureExtractor() {
+    XCTAssertNil(
+      FeatureExtractor.rulesFromKeyProvider,
+      "FeatureExtractor should not have a web view provider by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      FeatureExtractor.rulesFromKeyProvider === dependencies.rulesFromKeyProvider,
+      "FeatureExtractor should be configured with the web view provider"
+    )
+  }
+
   // swiftlint:disable:next function_body_length
   func testConfiguringModelManager() {
     XCTAssertNil(
@@ -565,6 +659,28 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       ModelManager.shared.gateKeeperManager === dependencies.gateKeeperManager,
       "ModelManager should be configured with the gate keeper manager"
+    )
+  }
+
+  func testConfiguringWebDialogView() {
+    XCTAssertNil(
+      FBWebDialogView.webViewProvider,
+      "FBWebDialogView should not have a web view factory by default"
+    )
+    XCTAssertNil(
+      FBWebDialogView.urlOpener,
+      "FBWebDialogView should not have an internal URL opener by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      FBWebDialogView.webViewProvider === dependencies.webViewProvider,
+      "FBWebDialogView should be configured with the web view factory"
+    )
+    XCTAssertTrue(
+      FBWebDialogView.urlOpener === dependencies.internalURLOpener,
+      "FBWebDialogView should be configured with the internal URL opener"
     )
   }
 }

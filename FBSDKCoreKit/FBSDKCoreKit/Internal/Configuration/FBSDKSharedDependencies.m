@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                            loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                  piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
@@ -86,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
     _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _graphRequestFactory = graphRequestFactory;
     _infoDictionaryProvider = infoDictionaryProvider;
+    _loggerFactory = loggerFactory;
     _macCatalystDeterminator = macCatalystDeterminator;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
     _piggybackManagerProvider = piggybackManagerProvider;

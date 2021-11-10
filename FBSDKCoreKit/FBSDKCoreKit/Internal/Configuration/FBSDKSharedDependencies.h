@@ -50,6 +50,7 @@
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUserIDProviding.h"
 #import "FBSDKWebViewProviding.h"
+#import "__FBSDKLoggerCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -74,6 +75,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, readonly) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (nonatomic, readonly) id<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
@@ -132,6 +134,7 @@ NS_SWIFT_NAME(SharedDependencies)
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                            loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                  piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider

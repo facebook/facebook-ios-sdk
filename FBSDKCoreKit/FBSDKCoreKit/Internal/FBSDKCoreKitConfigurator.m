@@ -8,21 +8,22 @@
 
 #import "FBSDKCoreKitConfigurator.h"
 
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAppLinkUtility+Internal.h"
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
+#import "FBSDKButton+Internal.h"
 #import "FBSDKError+Internal.h"
+#import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKInstrumentManager.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKServerConfigurationManager+Internal.h"
 #import "FBSDKURL+Internal.h"
-
-#if !TARGET_OS_TV
- #import "FBSDKAppLinkUtility+Internal.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,11 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureTargets
 {
+  [self configureAppEventsConfigurationManager];
   [self configureAppEventsUtility];
+  [self configureButton];
   [self configureFeatureManager];
   [self configureGraphRequest];
   [self configureGraphRequestConnection];
   [self configureInstrumentManager];
+  [self configureInternalUtility];
   [self configureSDKError];
   [self configureServerConfigurationManager];
 
@@ -58,13 +62,28 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAppLinkUtility];
   [self configureAuthenticationStatusUtility];
   [self configureBridgeAPIRequest];
+  [self configureFeatureExtractor];
   [self configureModelManager];
+  [self configureWebDialogView];
 #endif
+}
+
+- (void)configureAppEventsConfigurationManager
+{
+  [FBSDKAppEventsConfigurationManager configureWithStore:self.dependencies.defaultDataStore
+                                                settings:self.dependencies.settings
+                                     graphRequestFactory:self.dependencies.graphRequestFactory
+                           graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
 }
 
 - (void)configureAppEventsUtility
 {
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.dependencies.appEventsConfigurationProvider;
+}
+
+- (void)configureButton
+{
+  FBSDKButton.applicationActivationNotifier = self.dependencies.applicationActivationNotifier;
 }
 
 - (void)configureFeatureManager
@@ -104,6 +123,12 @@ NS_ASSUME_NONNULL_BEGIN
                                                crashObserver:self.dependencies.crashObserver
                                                errorReporter:self.dependencies.errorReporter
                                                 crashHandler:self.dependencies.crashHandler];
+}
+
+- (void)configureInternalUtility
+{
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.dependencies.infoDictionaryProvider
+                                                            loggerFactory:self.dependencies.loggerFactory];
 }
 
 - (void)configureSDKError
@@ -157,6 +182,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                settings:self.dependencies.settings];
 }
 
+- (void)configureFeatureExtractor
+{
+  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:self.dependencies.rulesFromKeyProvider];
+}
+
 - (void)configureModelManager
 {
   [FBSDKModelManager.shared configureWithFeatureChecker:self.dependencies.featureChecker
@@ -167,6 +197,12 @@ NS_ASSUME_NONNULL_BEGIN
                                           dataExtractor:self.dependencies.dataExtractor
                                       gateKeeperManager:self.dependencies.gateKeeperManager
                                  suggestedEventsIndexer:self.dependencies.suggestedEventsIndexer];
+}
+
+- (void)configureWebDialogView
+{
+  [FBSDKWebDialogView configureWithWebViewProvider:self.dependencies.webViewProvider
+                                         urlOpener:self.dependencies.internalURLOpener];
 }
 
 #endif

@@ -28,6 +28,7 @@ enum TestSharedDependencies {
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
       graphRequestFactory: TestGraphRequestFactory(),
       infoDictionaryProvider: TestBundle(),
+      loggerFactory: TestLoggerFactory(),
       macCatalystDeterminator: TestMacCatalystDeterminator(),
       operatingSystemVersionComparer: TestProcessInfo(),
       piggybackManagerProvider: TestGraphRequestPiggybackManagerProvider(),

@@ -587,6 +587,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
+// TEMP: added to configurator tests
 - (void)testInitializingSdkConfiguresAppEventsConfigurationManager
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
@@ -618,6 +619,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
+// TEMP: added to configurator tests as part of a complete test
 - (void)testInitializingSdkConfiguresCurrentAccessTokenProviderForGraphRequest
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
@@ -630,6 +632,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
+// TEMP: added to configurator tests
 - (void)testInitializingSdkConfiguresWebDialogView
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
@@ -648,6 +651,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
+// TEMP: added to configurator tests
 - (void)testInitializingSdkConfiguresFeatureExtractor
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
@@ -660,6 +664,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
+// TEMP: added to configurator tests
 - (void)testInitializingSdkConfiguresButtonSuperclass
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
