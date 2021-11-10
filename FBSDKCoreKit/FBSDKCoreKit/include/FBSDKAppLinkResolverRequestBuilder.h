@@ -10,14 +10,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
  */
 NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
+DEPRECATED_MSG_ATTRIBUTE("`FBSDKAppLinkResolverRequestBuilder` is deprecated and will be removed in the next major release")
 @interface FBSDKAppLinkResolverRequestBuilder : NSObject
 
 /**
@@ -25,11 +26,12 @@ NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
 
  @param urls The URLs to build the requests for
  */
-- (FBSDKGraphRequest *_Nonnull)requestForURLs:(NSArray<NSURL *> *_Nonnull)urls
+- (FBSDKGraphRequest *)requestForURLs:(NSArray<NSURL *> *)urls
     NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 
-- (NSString *_Nullable)getIdiomSpecificField
+- (nullable NSString *)getIdiomSpecificField
     NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -12,12 +12,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppLink.h"
-#import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
+#import "FBSDKAppLinkResolverRequestBuilder+Internal.h"
+#import "FBSDKAppLinkResolverRequestBuilding.h"
 #import "FBSDKClientTokenProviding.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
@@ -44,6 +46,8 @@ static NSString *const kAppLinksKey = @"app_links";
 
 @implementation FBSDKAppLinkResolver
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
 {
   return [self initWithUserInterfaceIdiom:userInterfaceIdiom
@@ -51,6 +55,8 @@ static NSString *const kAppLinksKey = @"app_links";
                       clientTokenProvider:FBSDKSettings.sharedSettings
                       accessTokenProvider:FBSDKAccessToken.class];
 }
+
+#pragma clang diagnostic pop
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
                             requestBuilder:(id<FBSDKAppLinkResolverRequestBuilding>)builder

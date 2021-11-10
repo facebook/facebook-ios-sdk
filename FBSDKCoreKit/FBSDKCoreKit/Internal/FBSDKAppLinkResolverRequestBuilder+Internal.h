@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppLinkResolverRequestBuilder.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKAppLinkResolverRequestBuilding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkResolverRequestBuilder (RequestBuilding) <FBSDKAppLinkResolverRequestBuilding>
+@interface FBSDKAppLinkResolverRequestBuilder (Internal) <FBSDKAppLinkResolverRequestBuilding>
 @end
 
 NS_ASSUME_NONNULL_END

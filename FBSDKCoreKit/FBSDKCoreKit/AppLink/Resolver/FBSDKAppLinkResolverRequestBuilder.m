@@ -8,10 +8,9 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkResolverRequestBuilder.h"
-
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKGraphRequest+Internal.h"
@@ -25,7 +24,13 @@ static NSString *const kAppLinksKey = @"app_links";
 @property (nonatomic, assign) UIUserInterfaceIdiom userInterfaceIdiom;
 @end
 
+// `FBSDKAppLinkResolverRequestBuilder` is marked as deprecated for the next
+// major release; we should make it internal when moving to Swift and retire the
+// prefixed name.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKAppLinkResolverRequestBuilder
+#pragma clang diagnostic pop
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
 {
