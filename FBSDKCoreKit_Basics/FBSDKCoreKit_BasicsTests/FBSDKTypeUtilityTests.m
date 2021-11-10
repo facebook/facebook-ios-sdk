@@ -16,10 +16,6 @@
 
 @interface FBSDKTypeUtilityTests : XCTestCase
 
-@end
-
-@interface FBSDKTypeUtilityTests ()
-
 @property (nonatomic) NSArray *validJSONObjects;
 @property (nonatomic) NSArray *invalidJSONObjects;
 
