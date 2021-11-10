@@ -14,6 +14,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenFactory (Testing)
 
++ (void)setSkipSignatureVerification:(BOOL)value;
 - (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider;
 - (void)setCertificate:(NSString *)certificate;
 - (BOOL)verifySignature:(NSString *)signature

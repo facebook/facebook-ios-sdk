@@ -28,6 +28,8 @@
  #import "FBSDKPermission.h"
 #endif
 
+#import "FBSDKAuthenticationTokenFactory+Testing.h"
+#import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
 #import "FBSDKLoginManager+Testing.h"
 
@@ -35,20 +37,6 @@ static NSString *const kFakeAppID = @"7391628439";
 static NSString *const kFakeChallenge = @"a =bcdef";
 static NSString *const kFakeNonce = @"fedcb =a";
 static NSString *const kFakeJTI = @"a jti is just any string";
-
-@interface FBSDKInternalUtility (Testing)
-
-- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
-+ (void)reset;
-
-@end
-
-@interface FBSDKAuthenticationTokenFactory (Testing)
-
-+ (void)setSkipSignatureVerification:(BOOL)value;
-
-@end
 
 @interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
 
