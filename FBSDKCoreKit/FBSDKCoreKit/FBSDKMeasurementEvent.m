@@ -8,8 +8,9 @@
 
 #if !TARGET_OS_TV
 
+#import "FBSDKMeasurementEvent+Internal.h"
+
 #import "FBSDKLogger.h"
-#import "FBSDKMeasurementEvent_Internal.h"
 
 NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 

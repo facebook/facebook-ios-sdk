@@ -15,7 +15,7 @@
 #import "FBSDKAppLinkCreating.h"
 #import "FBSDKAppLinkTargetCreating.h"
 #import "FBSDKAppLinkURLKeys.h"
-#import "FBSDKMeasurementEvent_Internal.h"
+#import "FBSDKMeasurementEvent+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
 NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
