@@ -35,7 +35,7 @@ class FBSDKCreateContextDialogFactoryTests: XCTestCase {
 
     let dialog = try XCTUnwrap(
       factory.makeCreateContextDialog(
-        with: content,
+        content: content,
         windowFinder: windowFinder,
         delegate: delegate
       ) as? CreateContextDialog,
@@ -57,7 +57,7 @@ class FBSDKCreateContextDialogFactoryTests: XCTestCase {
     let factory = CreateContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
     XCTAssertNil(
       factory.makeCreateContextDialog(
-        with: content,
+        content: content,
         windowFinder: windowFinder,
         delegate: delegate
       ),

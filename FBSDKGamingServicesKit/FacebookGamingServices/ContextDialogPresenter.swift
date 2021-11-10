@@ -107,7 +107,7 @@ public class ContextDialogPresenter {
     delegate: ContextDialogDelegate
   ) -> Showable? {
     createContextDialogFactory.makeCreateContextDialog(
-      with: content,
+      content: content,
       windowFinder: InternalUtility.shared,
       delegate: delegate
     )

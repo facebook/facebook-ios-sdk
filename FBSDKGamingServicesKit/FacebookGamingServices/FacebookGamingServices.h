@@ -26,5 +26,5 @@
 // but they probably shouldn't be actually public.
 // Not sure what the correct approach here is...
 
-#import <FacebookGamingServices/FBSDKContextDialogFactoryProtocols.h>
+#import <FacebookGamingServices/FBSDKChooseContextContent.h>
 #import <FacebookGamingServices/FBSDKShowable.h>

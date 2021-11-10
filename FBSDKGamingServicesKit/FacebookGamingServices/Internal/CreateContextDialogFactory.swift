@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class CreateContextDialogFactory: NSObject, CreateContextDialogMaking {
+struct CreateContextDialogFactory: CreateContextDialogMaking {
   private var tokenProvider: AccessTokenProviding.Type
 
   init(tokenProvider: AccessTokenProviding.Type) {
@@ -14,7 +14,7 @@ class CreateContextDialogFactory: NSObject, CreateContextDialogMaking {
   }
 
   func makeCreateContextDialog(
-    with content: CreateContextContent,
+    content: CreateContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
   ) -> Showable? {
