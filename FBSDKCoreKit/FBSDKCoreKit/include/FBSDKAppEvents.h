@@ -595,7 +595,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -605,7 +605,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters

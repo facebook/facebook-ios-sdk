@@ -42,7 +42,7 @@ A shared object that holds data about the current user's  game instance which co
 
  Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 + (nullable instancetype)createContextWithIdentifier:(NSString *)identifier size:(NSInteger)size;
 

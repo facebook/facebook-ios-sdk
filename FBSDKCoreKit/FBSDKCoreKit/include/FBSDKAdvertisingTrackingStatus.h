@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus) {
   FBSDKAdvertisingTrackingAllowed,

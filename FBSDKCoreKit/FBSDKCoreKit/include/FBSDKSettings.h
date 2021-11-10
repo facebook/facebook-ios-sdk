@@ -301,7 +301,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  Internal property exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 @property (nullable, nonatomic, copy) NSString *userAgentSuffix;
 

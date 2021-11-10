@@ -100,7 +100,7 @@ NS_SWIFT_NAME(sha256Hash(_:));
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 + (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path

@@ -17,7 +17,7 @@ NS_SWIFT_NAME(URLHosting)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 - (NSURL *)appURLWithHost:(NSString *)host
                      path:(NSString *)path
@@ -28,7 +28,7 @@ NS_SWIFT_NAME(URLHosting)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 - (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                 path:(NSString *)path

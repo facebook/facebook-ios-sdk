@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  A formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
  Internal use only
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(ErrorRecoveryAttempting)
 @protocol FBSDKErrorRecoveryAttempting <NSObject>

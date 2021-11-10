@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(WebDialog)
 @interface FBSDKWebDialog : NSObject
@@ -31,7 +31,7 @@ NS_SWIFT_NAME(WebDialog)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 @property (nonatomic) BOOL shouldDeferVisibility;
 
@@ -39,7 +39,7 @@ NS_SWIFT_NAME(WebDialog)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 @property (nullable, nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
 
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(WebDialog)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 + (instancetype)dialogWithName:(NSString *)name
                       delegate:(id<FBSDKWebDialogDelegate>)delegate;
@@ -59,7 +59,7 @@ NS_SWIFT_NAME(WebDialog)
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 // UNCRUSTIFY_FORMAT_OFF
 + (instancetype)createAndShowWithName:(NSString *)name

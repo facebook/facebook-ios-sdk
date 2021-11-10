@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  Internal block type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(LoginTooltipBlock)
 typedef void (^FBSDKLoginTooltipBlock)(FBSDKLoginTooltip *_Nullable loginTooltip, NSError *_Nullable error);
@@ -25,7 +25,7 @@ typedef void (^FBSDKLoginTooltipBlock)(FBSDKLoginTooltip *_Nullable loginTooltip
 Internal Type exposed to facilitate transition to Swift.
 API Subject to change or removal without warning. Do not use.
 
-@warning UNSAFE - DO NOT USE
+@warning INTERNAL - DO NOT USE
 */
 NS_SWIFT_NAME(ServerConfigurationProvider)
 @interface FBSDKServerConfigurationProvider : NSObject
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 @property (nonatomic, readonly) NSString *loggingToken;
 
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 - (NSUInteger)cachedSmartLoginOptions;
 
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 - (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
 
@@ -58,7 +58,7 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKLoginTooltipBlock)completionBlock;
 @end

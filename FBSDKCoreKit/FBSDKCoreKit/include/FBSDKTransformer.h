@@ -17,7 +17,7 @@ extern CATransform3D const FBSDKCATransform3DIdentity;
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 @interface FBSDKTransformer : NSObject
 - (CATransform3D)CATransform3DMakeScale:(CGFloat)sx sy:(CGFloat)sy sz:(CGFloat)sz;

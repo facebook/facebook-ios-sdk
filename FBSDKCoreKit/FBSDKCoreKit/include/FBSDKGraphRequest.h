@@ -45,7 +45,7 @@ NS_SWIFT_NAME(GraphRequest)
  Internal method exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
- @warning UNSAFE - DO NOT USE
+ @warning INTERNAL - DO NOT USE
  */
 // UNCRUSTIFY_FORMAT_OFF
 + (void)     configureWithSettings:(id<FBSDKSettings>)settings
