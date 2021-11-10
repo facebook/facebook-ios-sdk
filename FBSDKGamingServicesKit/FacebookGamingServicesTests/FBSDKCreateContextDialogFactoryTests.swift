@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import TestTools
 import XCTest
 
