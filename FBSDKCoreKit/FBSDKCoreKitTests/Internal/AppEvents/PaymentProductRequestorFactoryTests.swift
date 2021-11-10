@@ -41,41 +41,6 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
 
   // MARK: - Dependencies
 
-  func testCreatingWithDefaults() {
-    factory = PaymentProductRequestorFactory()
-
-    XCTAssertEqual(
-      factory.settings as? Settings,
-      Settings.shared,
-      "Should use the expected concrete settings by default"
-    )
-    XCTAssertEqual(
-      ObjectIdentifier(factory.eventLogger),
-      ObjectIdentifier(AppEvents.shared),
-      "Should use the expected concrete event logger by default"
-    )
-    XCTAssertTrue(
-      factory.gateKeeperManager is GateKeeperManager.Type,
-      "Should use the expected concrete gate keeper manager by default"
-    )
-    XCTAssertEqual(
-      factory.store as? UserDefaults,
-      UserDefaults.standard,
-      "Should use the expected persistent data store by default"
-    )
-    XCTAssertTrue(
-      factory.loggerFactory is LoggerFactory,
-      "Should use the expected concrete logger factory by default"
-    )
-    XCTAssertTrue(
-      factory.productsRequestFactory is ProductRequestFactory
-    )
-    XCTAssertTrue(
-      factory.appStoreReceiptProvider is Bundle,
-      "Should use the expected concrete app store receipt provider by default"
-    )
-  }
-
   func testCreatingWithCustomDependencies() {
     XCTAssertEqual(
       factory.settings as? TestSettings,

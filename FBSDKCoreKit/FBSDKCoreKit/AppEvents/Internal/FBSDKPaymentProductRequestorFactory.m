@@ -8,16 +8,7 @@
 
 #import "FBSDKPaymentProductRequestorFactory.h"
 
-#import "FBSDKAppEvents+EventLogging.h"
-#import "FBSDKAppStoreReceiptProviding.h"
-#import "FBSDKGateKeeperManager.h"
-#import "FBSDKGateKeeperManaging.h"
-#import "FBSDKLoggerFactory.h"
 #import "FBSDKPaymentProductRequestor.h"
-#import "FBSDKProductRequestFactory.h"
-#import "FBSDKProductsRequestProtocols.h"
-#import "FBSDKSettings+Internal.h"
-#import "NSUserDefaults+FBSDKDataPersisting.h"
 
 @interface FBSDKPaymentProductRequestorFactory ()
 
@@ -32,17 +23,6 @@
 @end
 
 @implementation FBSDKPaymentProductRequestorFactory
-
-- (instancetype)init
-{
-  return [self initWithSettings:FBSDKSettings.sharedSettings
-                      eventLogger:FBSDKAppEvents.shared
-                gateKeeperManager:FBSDKGateKeeperManager.class
-                            store:NSUserDefaults.standardUserDefaults
-                    loggerFactory:[FBSDKLoggerFactory new]
-           productsRequestFactory:[FBSDKProductRequestFactory new]
-          appStoreReceiptProvider:[NSBundle bundleForClass:self.class]];
-}
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
                      eventLogger:(id<FBSDKEventLogging>)eventLogger

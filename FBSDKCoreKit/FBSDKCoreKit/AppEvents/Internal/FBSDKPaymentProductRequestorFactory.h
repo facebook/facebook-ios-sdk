@@ -8,21 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKPaymentProductRequestorCreating.h"
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
 
-@protocol FBSDKSettings;
-@protocol FBSDKEventLogging;
-@protocol FBSDKGateKeeperManaging;
-@protocol FBSDKDataPersisting;
-@protocol __FBSDKLoggerCreating;
-@protocol FBSDKProductsRequestCreating;
-@protocol FBSDKAppStoreReceiptProviding;
+#import "FBSDKAppStoreReceiptProviding.h"
+#import "FBSDKDataPersisting.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKGateKeeperManaging.h"
+#import "FBSDKPaymentProductRequestorCreating.h"
+#import "FBSDKProductsRequestProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /// Factory used to create `FBSDKPaymentProductRequestor` instances with dependencies.
 NS_SWIFT_NAME(PaymentProductRequestorFactory)
 @interface FBSDKPaymentProductRequestorFactory : NSObject <FBSDKPaymentProductRequestorCreating>
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 // UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
@@ -32,7 +35,8 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
                    loggerFactory:(id<__FBSDKLoggerCreating>)logger
           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
          appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
-NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:loggerFactory:productsRequestFactory:receiptProvider:));
+NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:loggerFactory:productsRequestFactory:receiptProvider:))
+NS_DESIGNATED_INITIALIZER;
 // UNCRUSTIFY_FORMAT_ON
 
 @end

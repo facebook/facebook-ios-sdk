@@ -88,6 +88,7 @@
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKMetadataIndexer.h"
  #import "FBSDKModelManager.h"
+ #import "FBSDKProductRequestFactory.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURL+Internal.h"
@@ -163,9 +164,16 @@ static UIApplicationState _applicationState;
 #else
   FBSDKBackgroundEventLogger *backgroundEventLogger = [[FBSDKBackgroundEventLogger alloc] initWithInfoDictionaryProvider:NSBundle.mainBundle
                                                                                                              eventLogger:FBSDKAppEvents.shared];
+  FBSDKPaymentProductRequestorFactory *paymentProductRequestorFactory = [[FBSDKPaymentProductRequestorFactory alloc] initWithSettings:FBSDKSettings.sharedSettings
+                                                                                                                          eventLogger:FBSDKAppEvents.shared
+                                                                                                                    gateKeeperManager:FBSDKGateKeeperManager.class
+                                                                                                                                store:NSUserDefaults.standardUserDefaults
+                                                                                                                        loggerFactory:[FBSDKLoggerFactory new]
+                                                                                                               productsRequestFactory:[FBSDKProductRequestFactory new]
+                                                                                                              appStoreReceiptProvider:[NSBundle bundleForClass:self.class]];
   id<FBSDKPaymentObserving> paymentObserver = [[FBSDKPaymentObserver alloc]
                                                initWithPaymentQueue:SKPaymentQueue.defaultQueue
-                                               paymentProductRequestorFactory:[FBSDKPaymentProductRequestorFactory new]];
+                                               paymentProductRequestorFactory:paymentProductRequestorFactory];
 
   return [self initWithNotificationCenter:NSNotificationCenter.defaultCenter
                               tokenWallet:FBSDKAccessToken.class

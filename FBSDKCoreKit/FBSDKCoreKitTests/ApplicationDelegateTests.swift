@@ -648,6 +648,39 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSdkConfiguresPaymentProductRequestorFactory() throws {
+    let paymentObserver = try XCTUnwrap(ApplicationDelegate.shared.paymentObserver as? PaymentObserver)
+    let factory = try XCTUnwrap(paymentObserver.requestorFactory as? PaymentProductRequestorFactory)
+
+    XCTAssertTrue(
+      factory.settings === Settings.shared,
+      "Should be configured with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      factory.eventLogger === AppEvents.shared,
+      "Should be configured with the expected concrete event logger"
+    )
+    XCTAssertTrue(
+      factory.gateKeeperManager is GateKeeperManager.Type,
+      "Should be configured with the expected concrete gate keeper manager"
+    )
+    XCTAssertTrue(
+      factory.store === UserDefaults.standard,
+      "Should be configured with the expected persistent data store"
+    )
+    XCTAssertTrue(
+      factory.loggerFactory is LoggerFactory,
+      "Should be configured with the expected concrete logger factory"
+    )
+    XCTAssertTrue(
+      factory.productsRequestFactory is ProductRequestFactory
+    )
+    XCTAssertTrue(
+      factory.appStoreReceiptProvider is Bundle,
+      "Should be configured with the expected concrete app store receipt provider"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
