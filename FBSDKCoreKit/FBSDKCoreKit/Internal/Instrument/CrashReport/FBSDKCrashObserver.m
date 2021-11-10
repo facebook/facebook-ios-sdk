@@ -12,7 +12,6 @@
 
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"

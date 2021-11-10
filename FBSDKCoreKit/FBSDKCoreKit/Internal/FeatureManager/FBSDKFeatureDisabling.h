@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKFeatureManager.h"
+#import <FBSDKCoreKit/FBSDKFeature.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

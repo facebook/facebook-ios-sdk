@@ -24,7 +24,7 @@
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureExtractor+Testing.h"
-#import "FBSDKFeatureManager+FeatureChecking.h"
+#import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequestConnection+Testing.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKProfile+Testing.h"

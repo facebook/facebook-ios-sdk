@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKFeature.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKFeatureDisabling.h"
 
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKDataPersisting;
@@ -17,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(FeatureManager)
-@interface FBSDKFeatureManager : NSObject
+@interface FBSDKFeatureManager : NSObject <FBSDKFeatureChecking, FBSDKFeatureDisabling>
 
 @property (class, nonatomic, readonly, strong) FBSDKFeatureManager *shared;
 
