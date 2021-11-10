@@ -233,6 +233,8 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   });
 }
 
+#if FBTEST && DEBUG
+
 + (void)resetClassDependencies
 {
   self.internalURLOpener = nil;
@@ -248,6 +250,8 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
   self.hasBeenConfigured = NO;
 }
+
+#endif
 
 #pragma mark - Properties
 

@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKButton.h"
-#import "FBSDKButton+Subclass.h"
+#import "FBSDKButton+Internal.h"
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+Internal.h"
@@ -24,7 +23,6 @@
 
 @interface FBSDKButton ()
 
-@property (class, nonatomic) id applicationActivationNotifier;
 @property (nonatomic) BOOL skipIntrinsicContentSizing;
 @property (nonatomic) BOOL isExplicitlyDisabled;
 
@@ -34,14 +32,19 @@
 
 static id _applicationActivationNotifier;
 
-+ (id)applicationActivationNotifier
++ (nullable id)applicationActivationNotifier
 {
   return _applicationActivationNotifier;
 }
 
-+ (void)setApplicationActivationNotifier:(id)notifier
++ (void)setApplicationActivationNotifier:(nullable id)applicationActivationNotifier
 {
-  _applicationActivationNotifier = notifier;
+  _applicationActivationNotifier = applicationActivationNotifier;
+}
+
++ (void)resetClassDependencies
+{
+  self.applicationActivationNotifier = nil;
 }
 
 #pragma mark - Object Lifecycle

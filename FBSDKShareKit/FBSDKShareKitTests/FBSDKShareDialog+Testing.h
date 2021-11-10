@@ -28,7 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
     socialComposeViewControllerFactory:(id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
                           windowFinder:(id<FBSDKWindowFinding>)windowFinder;
 
+#if FBTEST && DEBUG
 + (void)resetClassDependencies;
+#endif
 
 @end
 

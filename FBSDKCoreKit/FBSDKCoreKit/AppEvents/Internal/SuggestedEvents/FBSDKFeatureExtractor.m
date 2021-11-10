@@ -36,12 +36,22 @@ void sum(float *val0, float *val1);
 
 @implementation FBSDKFeatureExtractor
 
-static id<FBSDKRulesFromKeyProvider> _keyProvider;
+static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 
-+ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)keyProvider
++ (nullable id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
+{
+  return _rulesFromKeyProvider;
+}
+
++ (void)setRulesFromKeyProvider:(nullable id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
+{
+  _rulesFromKeyProvider = rulesFromKeyProvider;
+}
+
++ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
 {
   if (self == FBSDKFeatureExtractor.class) {
-    _keyProvider = keyProvider;
+    self.rulesFromKeyProvider = rulesFromKeyProvider;
   }
 }
 
@@ -76,7 +86,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
 {
   BOOL isValid = [useCaseKey isKindOfClass:NSString.class];
   if (isValid) {
-    _rules = [_keyProvider getRulesForKey:useCaseKey];
+    _rules = [self.rulesFromKeyProvider getRulesForKey:useCaseKey];
   }
 }
 
@@ -380,14 +390,9 @@ void sum(float *val0, float *val1)
 
 #if DEBUG && FBTEST
 
-+ (id<FBSDKRulesFromKeyProvider>)keyProvider
-{
-  return _keyProvider;
-}
-
 + (void)reset
 {
-  _keyProvider = nil;
+  self.rulesFromKeyProvider = nil;
 }
 
 #endif

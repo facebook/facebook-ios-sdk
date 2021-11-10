@@ -27,7 +27,7 @@
   #import "FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "FBSDKButton+Subclass.h"
+ #import "FBSDKButton+Internal.h"
  #import "FBSDKDialogConfiguration.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKErrorRecoveryAttempter.h"
@@ -97,7 +97,7 @@
  #import "ServerConfiguration/FBSDKServerConfigurationManager.h"
  #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
  #import "TokenCaching/FBSDKTokenCache.h"
- #import "UI/FBSDKButton+Subclass.h"
+ #import "UI/FBSDKButton+Internal.h"
  #import "UI/FBSDKLogo.h"
 
 #endif

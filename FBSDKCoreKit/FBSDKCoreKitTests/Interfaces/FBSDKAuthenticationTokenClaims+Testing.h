@@ -23,7 +23,9 @@ NS_SWIFT_NAME(configure(settings:));
 
 + (void)configureClassDependencies;
 
+#if FBTEST && DEBUG
 + (void)resetClassDependencies;
+#endif
 
 - (nullable instancetype)initWithJti:(nonnull NSString *)jti
                                  iss:(nonnull NSString *)iss

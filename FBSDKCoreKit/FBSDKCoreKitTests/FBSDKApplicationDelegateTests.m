@@ -23,7 +23,6 @@
 #import "FBSDKCrashShield+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"
-#import "FBSDKFeatureExtractor+Internal.h"
 #import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGraphRequestConnection+Testing.h"
@@ -653,11 +652,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *keyProvider = (NSObject *) FBSDKFeatureExtractor.keyProvider;
+  NSObject *keyProvider = (NSObject *) FBSDKFeatureExtractor.rulesFromKeyProvider;
   XCTAssertEqualObjects(
     keyProvider.class,
     FBSDKModelManager.class,
-    "Should be configured with the expected concrete web view provider"
+    "Should be configured with the expected concrete rules from key provider"
   );
 }
 

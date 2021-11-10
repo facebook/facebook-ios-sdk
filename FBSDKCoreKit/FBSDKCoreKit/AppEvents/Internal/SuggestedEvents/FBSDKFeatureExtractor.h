@@ -11,21 +11,24 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKFeatureExtracting.h"
+#import "FBSDKRulesFromKeyProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(FeatureExtractor)
-@interface FBSDKFeatureExtractor : NSObject
+@interface FBSDKFeatureExtractor : NSObject <FBSDKFeatureExtracting>
+
+@property (class, nullable, nonatomic) id<FBSDKRulesFromKeyProvider> rulesFromKeyProvider;
+
++ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider;
 
 + (void)loadRulesForKey:(NSString *)useCaseKey;
+
 + (NSString *)getTextFeature:(NSString *)text
               withScreenName:(NSString *)screenName;
+
 + (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
 
-@end
-
-// Default conformance to the feature extracting protocol
-@interface FBSDKFeatureExtractor (FeatureExtracting) <FBSDKFeatureExtracting>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,17 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKFeatureExtracting.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKRulesFromKeyProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKFeatureExtractor (Testing)
-
-+ (nullable id<FBSDKRulesFromKeyProvider>)keyProvider;
-
-+ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)keyProvider;
 
 + (void)reset;
 

@@ -17,7 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKButton ()
 
-+ (void)setApplicationActivationNotifier:(id)notifier;
+@property (class, nullable, nonatomic) id applicationActivationNotifier;
+
+#if FBTEST && DEBUG
++ (void)resetClassDependencies;
+#endif
+
 - (void)logTapEventWithEventName:(NSString *)eventName
                       parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
