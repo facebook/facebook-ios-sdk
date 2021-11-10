@@ -11,16 +11,17 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKMetadataIndexing.h"
+#import "FBSDKUserDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(MetadataIndexer)
 @interface FBSDKMetadataIndexer : NSObject <FBSDKMetadataIndexing>
 
-@property (class, nonatomic, readonly) FBSDKMetadataIndexer *shared;
-
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithUserDataStore:(id<FBSDKUserDataPersisting>)userDataStore NS_DESIGNATED_INITIALIZER;
 
 - (void)enable;
 

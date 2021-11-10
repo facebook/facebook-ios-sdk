@@ -253,9 +253,8 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKModelManager.shared,
     "Initializing the SDK should set concrete on device model manager for event logging"
   );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedMetadataIndexer,
-    FBSDKMetadataIndexer.shared,
+  XCTAssertTrue(
+    [(NSObject *)self.appEvents.capturedMetadataIndexer isKindOfClass:FBSDKMetadataIndexer.class],
     "Initializing the SDK should set concrete metadata indexer for event logging"
   );
   XCTAssertEqualObjects(

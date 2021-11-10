@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import XCTest
+
 @objcMembers
 class TestUserDataStore: NSObject, UserDataPersisting {
 
@@ -25,6 +27,10 @@ class TestUserDataStore: NSObject, UserDataPersisting {
   var capturedSetUserDataForTypeData: String?
   var capturedSetUserDataForTypeType: FBSDKAppEventUserDataType?
   var capturedClearUserDataForTypeType: FBSDKAppEventUserDataType?
+  var getInternalHashedDataForTypeCallCount = 0
+  var capturedInternalHashedDataForTypeData: String?
+  var capturedInternalHashedDataForTypeType: FBSDKAppEventUserDataType?
+  var capturedEnableRules: [String]?
 
   func setUser( // swiftlint:disable:this function_parameter_count
     email: String?,
@@ -68,5 +74,19 @@ class TestUserDataStore: NSObject, UserDataPersisting {
 
   func clearUserData(forType type: FBSDKAppEventUserDataType) {
     capturedClearUserDataForTypeType = type
+  }
+
+  func setEnabledRules(_ rules: [String]) {
+    capturedEnableRules = rules
+  }
+
+  func getInternalHashedData(forType type: FBSDKAppEventUserDataType) -> String? {
+    getInternalHashedDataForTypeCallCount += 1
+    return nil
+  }
+
+  func setInternalHashData(_ hashData: String?, forType type: FBSDKAppEventUserDataType) {
+    capturedInternalHashedDataForTypeData = hashData
+    capturedInternalHashedDataForTypeType = type
   }
 }

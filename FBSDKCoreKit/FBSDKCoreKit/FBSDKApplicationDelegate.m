@@ -794,8 +794,9 @@ static UIApplicationState _applicationState;
                          urlHoster:FBSDKInternalUtility.sharedUtility];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication]; // TEMP: added to configurator
+  FBSDKMetadataIndexer *metaIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore];
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
-                                                     metadataIndexer:FBSDKMetadataIndexer.shared
+                                                     metadataIndexer:metaIndexer
                                                  skAdNetworkReporter:self.skAdNetworkReporter
                                                      codelessIndexer:FBSDKCodelessIndexer.class];
   [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class

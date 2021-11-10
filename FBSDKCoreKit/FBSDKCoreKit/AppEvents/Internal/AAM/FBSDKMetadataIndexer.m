@@ -21,7 +21,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSwizzler.h"
-#import "FBSDKUserDataStore.h"
+#import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"
 
@@ -38,7 +38,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 @property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *rules;
 @property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
 @property (nonatomic, readonly, strong) dispatch_queue_t serialQueue;
-@property (nonatomic, readonly, strong) FBSDKUserDataStore *userDataStore;
+@property (nonatomic, readonly, strong) id<FBSDKUserDataPersisting> userDataStore;
 
 @end
 
@@ -54,11 +54,11 @@ static NSString *const FIELD_K_DELIMITER = @",";
   return instance;
 }
 
-- (instancetype)init
+- (instancetype)initWithUserDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 {
   _rules = [NSMutableDictionary new];
   _serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
-  _userDataStore = [FBSDKUserDataStore new];
+  _userDataStore = userDataStore;
   return self;
 }
 
@@ -100,7 +100,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
 
     if (isEnabled) {
-      self.userDataStore.enabledRules = _rules.allKeys;
+      [self.userDataStore setEnabledRules:_rules.allKeys];
       [self setupMetadataIndexing];
     }
   });
@@ -264,7 +264,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   NSString *hashData = [FBSDKUtility SHA256Hash:data];
   __weak typeof(_store) weakStore = _store;
   dispatch_block_t checkAndAppendDataBlock = ^{
-    if (hashData.length == 0 || [weakStore[key] containsObject:hashData]) {
+    if (hashData.length == 0 || !weakStore[key] || [weakStore[key] containsObject:hashData]) {
       return;
     }
 

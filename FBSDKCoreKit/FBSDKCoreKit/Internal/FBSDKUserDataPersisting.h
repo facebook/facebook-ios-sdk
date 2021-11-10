@@ -42,6 +42,13 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 
 - (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
+- (void)setEnabledRules:(NSArray<NSString *> *)rules;
+
+- (nullable NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type;
+
+- (void)setInternalHashData:(nullable NSString *)hashData
+                    forType:(FBSDKAppEventUserDataType)type;
+
 @end
 
 NS_ASSUME_NONNULL_END
