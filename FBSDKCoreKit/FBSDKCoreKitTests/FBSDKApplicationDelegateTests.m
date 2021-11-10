@@ -110,7 +110,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
-- (void)testInitializingSdkEnablesAppEvents
+- (void)testInitializingSdkConfiguresAppEvents
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKAppEvents reset];

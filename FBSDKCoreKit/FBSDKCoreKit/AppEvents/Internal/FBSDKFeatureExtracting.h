@@ -14,6 +14,8 @@ NS_SWIFT_NAME(FeatureExtracting)
 @protocol FBSDKFeatureExtracting
 
 + (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
++ (NSString *)getTextFeature:(NSString *)text
+              withScreenName:(NSString *)screenName;
 
 @end
 

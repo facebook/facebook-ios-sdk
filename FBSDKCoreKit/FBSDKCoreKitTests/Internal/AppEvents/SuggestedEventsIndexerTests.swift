@@ -12,26 +12,17 @@ import XCTest
 // swiftlint:disable type_body_length
 class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
-  let graphRequestFactory = TestGraphRequestFactory()
-  let settings = TestSettings()
-  let eventLogger = TestEventLogger()
-  var eventProcessor: TestOnDeviceMLModelManager? = TestOnDeviceMLModelManager()
-  let serverConfigurationProvider = TestServerConfigurationProvider()
-  let collectionView = TestCollectionView(
-    frame: .zero,
-    collectionViewLayout: UICollectionViewFlowLayout()
-  )
-  let tableView = TestTableView()
-  let button = UIButton()
-  lazy var indexer = SuggestedEventsIndexer(
-    graphRequestFactory: graphRequestFactory,
-    serverConfigurationProvider: serverConfigurationProvider,
-    swizzler: TestSwizzler.self,
-    settings: settings,
-    eventLogger: eventLogger,
-    featureExtractor: TestFeatureExtractor.self,
-    eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
-  )
+  // swiftlint:disable implicitly_unwrapped_optional
+  var graphRequestFactory: TestGraphRequestFactory!
+  var settings: TestSettings!
+  var eventLogger: TestEventLogger!
+  var eventProcessor: TestOnDeviceMLModelManager!
+  var serverConfigurationProvider: TestServerConfigurationProvider!
+  var collectionView: TestCollectionView!
+  var tableView: TestTableView!
+  var button: UIButton!
+  var indexer: SuggestedEventsIndexer!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   enum Keys {
     static let productionEvents = "production_events"
@@ -61,8 +52,18 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     SuggestedEventsIndexerTests.reset()
 
+    graphRequestFactory = TestGraphRequestFactory()
+    settings = TestSettings()
     settings.appID = name
-
+    eventLogger = TestEventLogger()
+    eventProcessor = TestOnDeviceMLModelManager()
+    serverConfigurationProvider = TestServerConfigurationProvider()
+    collectionView = TestCollectionView(
+      frame: .zero,
+      collectionViewLayout: UICollectionViewFlowLayout()
+    )
+    tableView = TestTableView()
+    button = UIButton()
     indexer = SuggestedEventsIndexer(
       graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
@@ -80,6 +81,20 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     reset()
   }
 
+  override func tearDown() {
+    graphRequestFactory = nil
+    settings = nil
+    eventLogger = nil
+    eventProcessor = nil
+    serverConfigurationProvider = nil
+    collectionView = nil
+    tableView = nil
+    button = nil
+    indexer = nil
+
+    super.tearDown()
+  }
+
   static func reset() {
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
@@ -92,36 +107,6 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {}
 
   // MARK: - Dependencies
-
-  func testDefaultDependencies() {
-    indexer = SuggestedEventsIndexer.shared
-
-    XCTAssertTrue(
-      indexer.graphRequestFactory is GraphRequestFactory,
-      "Should have a request provider of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.serverConfigurationProvider is ServerConfigurationManager,
-      "Should have a server configuration manager of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.swizzler is Swizzler.Type,
-      "Should have a swizzler of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.settings is Settings,
-      "Should have a settings of the expected default type"
-    )
-    XCTAssertEqual(
-      ObjectIdentifier(indexer.eventLogger),
-      ObjectIdentifier(AppEvents.shared),
-      "Should have an event logger of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.eventProcessor is ModelManager,
-      "Should have an event processor of the expected default type"
-    )
-  }
 
   func testCustomDependencies() {
     XCTAssertTrue(
@@ -348,7 +333,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is too long"
     )
@@ -366,7 +351,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: "")
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is empty"
     )
@@ -384,7 +369,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: "me@example.com")
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is sensitive"
     )
@@ -398,16 +383,17 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
   }
 
-  func testPredictingEventWithoutEventProcessor() {
+  func testPredictingEventWithProcessedEventOther() {
+    eventProcessor.stubbedProcessedEvents = "other"
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertNil(
       eventLogger.capturedEventName,
-      "Should not log if there is no event processor to process events"
+      "Should not log if the processed event is 'other'"
     )
     XCTAssertNil(
       graphRequestFactory.capturedGraphPath,
-      "Should not create a request if there is no event processor to process events"
+      "Should not log a suggested event if the processed event is 'other'"
     )
   }
 
@@ -417,7 +403,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
@@ -430,12 +416,12 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | no                                  | no                        |
   func testPredictingWithProcessedEventsMatchingNone() {
-    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
@@ -448,7 +434,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | no                        |
   func testPredictingWithProcessedEventsMatchingOptinEvent() {
-    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: [AppEventNames.processedEvent.rawValue],
@@ -475,7 +461,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | processed event | matches optin | matches unconfirmed | dense data |
   // | yes             | no            | yes                 | null       |
   func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
-    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
@@ -501,7 +487,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
 
     TestFeatureExtractor.stub(denseFeatures: pointer)
-    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
@@ -524,7 +510,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | yes                       |
   func testPredictingWithProcessedEventMatchingBoth() {
-    eventProcessor?.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: [AppEventNames.processedEvent.rawValue],

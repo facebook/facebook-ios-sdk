@@ -10,17 +10,32 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+
+#import "FBSDKEventLogging.h"
+#import "FBSDKEventProcessing.h"
+#import "FBSDKFeatureExtracting.h"
+#import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSuggestedEventsIndexerProtocol.h"
+#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(SuggestedEventsIndexer)
 @interface FBSDKSuggestedEventsIndexer : NSObject <FBSDKSuggestedEventsIndexer>
 
-@property (class, nonatomic, readonly, strong) FBSDKSuggestedEventsIndexer *shared;
-
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                   swizzler:(Class<FBSDKSwizzling>)swizzler
+                                   settings:(id<FBSDKSettings>)settings
+                                eventLogger:(id<FBSDKEventLogging>)eventLogger
+                           featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
+                             eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+  NS_DESIGNATED_INITIALIZER;
 
 - (void)enable;
 

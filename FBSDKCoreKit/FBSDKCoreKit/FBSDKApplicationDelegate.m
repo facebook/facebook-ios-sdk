@@ -745,6 +745,13 @@ static UIApplicationState _applicationState;
   [FBSDKURL configureWithSettings:sharedSettings
                    appLinkFactory:[FBSDKAppLinkFactory new]
              appLinkTargetFactory:[FBSDKAppLinkTargetFactory new]]; // TEMP: added to configurator
+  FBSDKSuggestedEventsIndexer *suggestedEventsIndexer = [[FBSDKSuggestedEventsIndexer alloc] initWithGraphRequestFactory:graphRequestFactory
+                                                                                             serverConfigurationProvider:serverConfigurationProvider
+                                                                                                                swizzler:FBSDKSwizzler.class
+                                                                                                                settings:sharedSettings
+                                                                                                             eventLogger:FBSDKAppEvents.shared
+                                                                                                        featureExtractor:FBSDKFeatureExtractor.class
+                                                                                                          eventProcessor:FBSDKModelManager.shared];
   FBSDKAppEventsUtility *sharedAppEventsUtility = FBSDKAppEventsUtility.shared;
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
                                     graphRequestFactory:graphRequestFactory
@@ -753,7 +760,7 @@ static UIApplicationState _applicationState;
                                                settings:sharedSettings
                                           dataExtractor:NSData.class
                                       gateKeeperManager:FBSDKGateKeeperManager.class
-                                 suggestedEventsIndexer:FBSDKSuggestedEventsIndexer.shared]; // TEMP: added to configurator
+                                 suggestedEventsIndexer:suggestedEventsIndexer]; // TEMP: added to configurator
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared]; // TEMP: added to configurator
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
                                  infoDictionaryProvider:NSBundle.mainBundle

@@ -281,6 +281,40 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingConfiguresSuggestedEventsIndexer() throws {
+    ModelManager.reset()
+    delegate.initializeSDK(launchOptions: [:])
+
+    let indexer = try XCTUnwrap(
+      ModelManager.shared.suggestedEventsIndexer as? SuggestedEventsIndexer
+    )
+
+    XCTAssertTrue(
+      indexer.graphRequestFactory is GraphRequestFactory,
+      "Should configure with a request provider of the expected type"
+    )
+    XCTAssertTrue(
+      indexer.serverConfigurationProvider is ServerConfigurationManager,
+      "Should configure with a server configuration manager of the expected type"
+    )
+    XCTAssertTrue(
+      indexer.swizzler is Swizzler.Type,
+      "Should configure with a swizzler of the expected type"
+    )
+    XCTAssertTrue(
+      indexer.settings is Settings,
+      "Should configure with a settings of the expected type"
+    )
+    XCTAssertTrue(
+      indexer.eventLogger === AppEvents.shared,
+      "Should configure with the expected event logger"
+    )
+    XCTAssertTrue(
+      indexer.eventProcessor is ModelManager,
+      "Should have an event processor of the expected type"
+    )
+  }
+
   // TEMP: added to configurator tests
   func testInitializingConfiguresModelManager() {
     ModelManager.reset()

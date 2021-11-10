@@ -10,7 +10,10 @@ import FBSDKCoreKit
 import XCTest
 
 class TestFeatureExtractor: FeatureExtracting {
+
   static var stubbedDenseFeatures: UnsafeMutablePointer<Float>?
+  static var capturedGetTextFeatureText: String?
+  static var capturedGetTextFeatureScreenName: String?
 
   static func stub(denseFeatures: UnsafeMutablePointer<Float>) {
     stubbedDenseFeatures = denseFeatures
@@ -20,7 +23,15 @@ class TestFeatureExtractor: FeatureExtracting {
     stubbedDenseFeatures
   }
 
+  static func getTextFeature(_ text: String, withScreenName screenName: String) -> String {
+    capturedGetTextFeatureText = text
+    capturedGetTextFeatureScreenName = screenName
+    return ""
+  }
+
   static func reset() {
     stubbedDenseFeatures = nil
+    capturedGetTextFeatureText = nil
+    capturedGetTextFeatureScreenName = nil
   }
 }

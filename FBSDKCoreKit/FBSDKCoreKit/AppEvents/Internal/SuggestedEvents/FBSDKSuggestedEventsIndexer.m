@@ -17,21 +17,12 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-#import "FBSDKAppEvents.h"
-#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKEventProcessing.h"
 #import "FBSDKFeatureExtracting.h"
-#import "FBSDKFeatureExtractor.h"
-#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMLMacros.h"
-#import "FBSDKModelManager.h"
 #import "FBSDKModelUtility.h"
-#import "FBSDKServerConfigurationManager+Internal.h"
-#import "FBSDKSettings+Internal.h"
-#import "FBSDKSwizzler+Swizzling.h"
-#import "FBSDKSwizzling.h"
+#import "FBSDKServerConfiguration.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
 
@@ -54,17 +45,6 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 @implementation FBSDKSuggestedEventsIndexer
 
-- (instancetype)init
-{
-  return [self initWithGraphRequestFactory:[FBSDKGraphRequestFactory new]
-               serverConfigurationProvider:FBSDKServerConfigurationManager.shared
-                                  swizzler:FBSDKSwizzler.class
-                                  settings:FBSDKSettings.sharedSettings
-                               eventLogger:FBSDKAppEvents.shared
-                          featureExtractor:FBSDKFeatureExtractor.class
-                            eventProcessor:FBSDKModelManager.shared];
-}
-
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                    swizzler:(Class<FBSDKSwizzling>)swizzler
@@ -85,18 +65,6 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     _eventProcessor = eventProcessor;
   }
   return self;
-}
-
-// Transitional singleton introduced as a way to change the usage semantics
-// from a type-based interface to an instance-based interface.
-static FBSDKSuggestedEventsIndexer *sharedInstance;
-static dispatch_once_t sharedInstanceNonce;
-+ (instancetype)shared
-{
-  dispatch_once(&sharedInstanceNonce, ^{
-    sharedInstance = [self new];
-  });
-  return sharedInstance;
 }
 
 - (void)enable
@@ -275,7 +243,7 @@ static dispatch_once_t setupNonce;
     dispatch_block_t predictAndLogBlock = ^{
       NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
       float *denseData = [weakSelf.featureExtractor getDenseFeatures:viewTree];
-      NSString *textFeature = [FBSDKModelUtility normalizedText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
+      NSString *textFeature = [FBSDKModelUtility normalizedText:[weakSelf.featureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
       NSString *event = [weakSelf.eventProcessor processSuggestedEvents:textFeature denseData:denseData];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;
@@ -354,11 +322,6 @@ static dispatch_once_t setupNonce;
 {
   if (setupNonce) {
     setupNonce = 0;
-  }
-
-  // Reset the nonce so that a new instance will be created.
-  if (sharedInstanceNonce) {
-    sharedInstanceNonce = 0;
   }
 }
 
