@@ -8,8 +8,8 @@
 
 #import "FBSDKGraphRequestConnectionFactory.h"
 
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
+#import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
 @implementation FBSDKGraphRequestConnectionFactory
 

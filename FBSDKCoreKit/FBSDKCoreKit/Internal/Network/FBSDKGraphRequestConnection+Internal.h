@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   kStateCancelled,
 };
 
-@interface FBSDKGraphRequestConnection () <FBSDKGraphRequestConnecting>
+@interface FBSDKGraphRequestConnection ()
 
 @property (class, nullable, nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (class, nullable, nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;

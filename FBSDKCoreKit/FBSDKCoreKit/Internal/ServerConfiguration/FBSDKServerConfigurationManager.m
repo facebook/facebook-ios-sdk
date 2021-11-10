@@ -14,8 +14,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility+Internal.h"

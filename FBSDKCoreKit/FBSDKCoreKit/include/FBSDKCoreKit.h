@@ -39,7 +39,6 @@
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection+GraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactory.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>

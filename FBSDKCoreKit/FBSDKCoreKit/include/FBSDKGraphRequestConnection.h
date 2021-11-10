@@ -36,7 +36,7 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 
  */
 NS_SWIFT_NAME(GraphRequestConnection)
-@interface FBSDKGraphRequestConnection : NSObject
+@interface FBSDKGraphRequestConnection : NSObject <FBSDKGraphRequestConnecting>
 
 /**
  The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
