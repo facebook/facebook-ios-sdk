@@ -12,27 +12,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKMetadataIndexer.h"
-
-@interface FBSDKMetadataIndexer ()
-@property (nonnull, nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
-
-- (void)constructRules:(NSDictionary<NSString *, id> *)rules;
-
-- (void)initStore;
-
-- (BOOL)checkSecureTextEntry:(UIView *)view;
-
-- (UIKeyboardType)getKeyboardType:(UIView *)view;
-
-- (void)getMetadataWithText:(NSString *)text
-                placeholder:(NSString *)placeholder
-                     labels:(NSArray<NSString *> *)labels
-            secureTextEntry:(BOOL)secureTextEntry
-                  inputType:(UIKeyboardType)inputType;
-
-- (void)checkAndAppendData:(NSString *)data forKey:(NSString *)key;
-
-@end
+#import "FBSDKMetadataIndexer+Testing.h"
 
 @interface FBSDKMetadataIndexerTests : XCTestCase
 
