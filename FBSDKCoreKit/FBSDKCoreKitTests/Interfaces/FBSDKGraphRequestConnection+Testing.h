@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequestConnection (Testing)
 
++ (BOOL)canMakeRequests;
 + (void)resetCanMakeRequests;
 + (void)resetDefaultConnectionTimeout;
 

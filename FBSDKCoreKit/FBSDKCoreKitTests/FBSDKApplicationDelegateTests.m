@@ -26,39 +26,13 @@
 #import "FBSDKFeatureExtractor+Internal.h"
 #import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
+#import "FBSDKGraphRequestConnection+Testing.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKRestrictiveDataFilterManager+Testing.h"
 #import "FBSDKSKAdNetworkReporter+Testing.h"
 #import "FBSDKTimeSpentData.h"
-
-@interface FBSDKGraphRequestConnection (AppDelegateTesting)
-+ (BOOL)canMakeRequests;
-+ (void)resetCanMakeRequests;
-@end
-
-@interface FBSDKBridgeAPI (ApplicationObserving) <FBSDKApplicationObserving>
-@end
-
-@interface FBSDKAppEvents (ApplicationDelegateTesting)
-
-@property (nonatomic, readonly) id<FBSDKAtePublishing> atePublisher;
-
-+ (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
-+ (id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
-+ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-+ (id<FBSDKFeatureChecking>)featureChecker;
-+ (id<FBSDKDataPersisting>)store;
-+ (Class<FBSDKLogging>)logger;
-+ (id<FBSDKSettings>)settings;
-+ (id<FBSDKPaymentObserving>)paymentObserver;
-+ (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
-+ (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
-+ (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
-+ (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
-@end
 
 @interface FBSDKApplicationDelegateTests : XCTestCase
 
