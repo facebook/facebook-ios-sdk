@@ -79,18 +79,12 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 #pragma mark - Internal Methods
 
-+ (void)initialize
-{
-  if (self == FBSDKAppEventsDeviceInfo.class) {
-    [self.sharedDeviceInfo _collectPersistentData];
-  }
-}
-
 + (instancetype)sharedDeviceInfo
 {
   static FBSDKAppEventsDeviceInfo *_sharedDeviceInfo = nil;
   if (_sharedDeviceInfo == nil) {
     _sharedDeviceInfo = [FBSDKAppEventsDeviceInfo new];
+    [_sharedDeviceInfo _collectPersistentData];
   }
   return _sharedDeviceInfo;
 }
