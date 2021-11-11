@@ -9,8 +9,7 @@
 import FacebookGamingServices
 import Foundation
 
-class TestFileHandler: FileHandling {
-
+class TestFileHandler: _FileHandling {
   var stubbedReadData = Data()
   var stubbedSeekToEndOfFile: UInt64 = 0
   var capturedFileOffset: UInt64 = 0
@@ -23,7 +22,7 @@ class TestFileHandler: FileHandling {
     capturedFileOffset = offset
   }
 
-  func readData(ofLength length: UInt) -> Data {
+  func readData(ofLength length: Int) -> Data {
     stubbedReadData
   }
 }

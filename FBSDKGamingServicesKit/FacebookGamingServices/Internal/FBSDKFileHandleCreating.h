@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKFileHandling.h"
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

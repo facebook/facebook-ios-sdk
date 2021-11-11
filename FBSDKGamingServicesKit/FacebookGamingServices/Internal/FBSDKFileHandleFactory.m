@@ -8,7 +8,7 @@
 
 #import "FBSDKFileHandleFactory.h"
 
-#import "NSFileHandle+FileHandling.h"
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
 @implementation FBSDKFileHandleFactory
 
