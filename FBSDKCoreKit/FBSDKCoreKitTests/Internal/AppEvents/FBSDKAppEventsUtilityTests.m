@@ -68,7 +68,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                        flushPeriodInSeconds:0];
-  FBSDKAppEvents.singletonInstanceToInstance = appEvents;
+  FBSDKAppEvents.shared = appEvents;
   [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.self
                          appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
                             serverConfigurationProvider:TestServerConfigurationProvider.self

@@ -13,9 +13,6 @@
 #import <FBAEMKit/FBAEMKit.h>
 
 #import "FBSDKAccessToken.h"
-#import "FBSDKAppEvents.h"
-#import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEvents+SourceApplicationTracking.h"
 #import "FBSDKAppEvents+Testing.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
@@ -78,7 +75,7 @@
 
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                        flushPeriodInSeconds:0];
-  FBSDKAppEvents.singletonInstanceToInstance = appEvents;
+  FBSDKAppEvents.shared = appEvents;
 
   [self resetTestHelpers];
   self.settings = [TestSettings new];

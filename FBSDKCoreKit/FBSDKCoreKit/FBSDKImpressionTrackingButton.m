@@ -10,8 +10,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+Internal.h"
-#import "FBSDKAppEvents.h"
-#import "FBSDKAppEvents+EventLogging.h"
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKButtonImpressionTracking.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKViewImpressionTracker.h"

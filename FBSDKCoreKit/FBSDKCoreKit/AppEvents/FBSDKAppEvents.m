@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEvents.h"
-#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
 
 #import <StoreKit/StoreKit.h>
@@ -117,15 +115,15 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @interface FBSDKAppEvents ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
+@property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
 @property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
-@property (nonatomic, strong) dispatch_source_t flushTimer;
+@property (nonatomic) dispatch_source_t flushTimer;
 @property (nullable, nonatomic, copy) NSString *userID;
-@property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+@property (nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
-@property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
+@property (nonatomic) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic) id<FBSDKAtePublisherCreating> atePublisherFactory;
 @property (nonatomic) id<FBSDKUserDataPersisting> userDataStore;
@@ -139,7 +137,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 #endif
 
-@property (nonatomic, assign) BOOL disableTimer; // for testing only.
+@property (nonatomic) BOOL disableTimer; // for testing only.
 
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) FBSDKAppEventsState *appEventsState;
@@ -1654,7 +1652,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   g_graphRequestFactory = nil;
 }
 
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents
++ (void)setShared:(FBSDKAppEvents *)appEvents
 {
   _shared = appEvents;
 }

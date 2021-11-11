@@ -10,12 +10,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppEvents (Testing)
 
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-                 flushPeriodInSeconds:(int)flushPeriodInSeconds; // expose this since init is NS_UNAVAILABLE
 
 @end
 

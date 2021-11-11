@@ -11,7 +11,13 @@
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
 
 #import "FBSDKAppEventName.h"
+#import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKApplicationActivating.h"
+#import "FBSDKApplicationLifecycleObserving.h"
+#import "FBSDKApplicationStateSetting.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKSourceApplicationTracking.h"
 #import "FBSDKUserIDProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -31,35 +37,15 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingl
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingleCustomKey;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
-@interface FBSDKAppEvents (Internal) <FBSDKUserIDProviding>
-
-@property (nonatomic) UIApplicationState applicationState;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
-- (void)startObservingApplicationLifecycleNotifications;
+@interface FBSDKAppEvents (Internal) <
+  FBSDKAppEventsConfiguring,
+  FBSDKApplicationActivating,
+  FBSDKApplicationLifecycleObserving,
+  FBSDKApplicationStateSetting,
+  FBSDKEventLogging,
+  FBSDKSourceApplicationTracking,
+  FBSDKUserIDProviding
+>
 
 @end
 

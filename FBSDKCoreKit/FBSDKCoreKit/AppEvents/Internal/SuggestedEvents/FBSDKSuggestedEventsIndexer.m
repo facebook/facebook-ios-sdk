@@ -17,6 +17,7 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKInternalUtility+Internal.h"

@@ -16,14 +16,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppEvents (Testing)
 
+@property (class, nonatomic) FBSDKAppEvents *shared;
+
+@property (nonatomic) UIApplicationState applicationState;
+@property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
 @property (nullable, nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+             accessToken:(FBSDKAccessToken *)accessToken;
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
 - (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
                  flushPeriodInSeconds:(int)flushPeriodInSeconds;
 - (void)publishATE;
-+ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
 + (void)setSettings:(id<FBSDKSettings>)settings;
 + (void)reset;
 
@@ -36,9 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
              accessToken:(nullable FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
 - (void)applicationMovingFromActiveStateOrTerminating;
-- (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior;
-
-+ (FBSDKAppEvents *)shared;
 
 @end
 
