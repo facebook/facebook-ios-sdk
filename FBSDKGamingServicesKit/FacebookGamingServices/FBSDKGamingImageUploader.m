@@ -10,7 +10,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKGamingImageUploaderConfiguration.h"
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
 
