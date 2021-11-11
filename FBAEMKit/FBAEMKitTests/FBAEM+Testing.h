@@ -6,27 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifdef BUCK
- #import <FBAEMKit/FBAEMAdvertiserMultiEntryRule.h>
- #import <FBAEMKit/FBAEMAdvertiserRuleFactory.h>
- #import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
- #import <FBAEMKit/FBAEMAdvertiserSingleEntryRule.h>
- #import <FBAEMKit/FBAEMConfiguration.h>
- #import <FBAEMKit/FBAEMEvent.h>
- #import <FBAEMKit/FBAEMInvocation.h>
- #import <FBAEMKit/FBAEMReporter.h>
- #import <FBAEMKit/FBAEMRule.h>
-#else
- #import "FBAEMAdvertiserMultiEntryRule.h"
- #import "FBAEMAdvertiserRuleFactory.h"
- #import "FBAEMAdvertiserRuleMatching.h"
- #import "FBAEMAdvertiserSingleEntryRule.h"
- #import "FBAEMConfiguration.h"
- #import "FBAEMEvent.h"
- #import "FBAEMInvocation.h"
- #import "FBAEMReporter.h"
- #import "FBAEMRule.h"
-#endif
+#import "FBAEMAdvertiserMultiEntryRule.h"
+#import "FBAEMAdvertiserRuleFactory.h"
+#import "FBAEMAdvertiserRuleMatching.h"
+#import "FBAEMAdvertiserSingleEntryRule.h"
+#import "FBAEMConfiguration.h"
+#import "FBAEMEvent.h"
+#import "FBAEMInvocation.h"
+#import "FBAEMReporter.h"
+#import "FBAEMRule.h"
 
 typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 

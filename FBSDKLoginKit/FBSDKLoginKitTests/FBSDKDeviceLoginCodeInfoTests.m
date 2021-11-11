@@ -8,13 +8,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import "FBSDKDeviceLoginCodeInfo.h"
 #import "FBSDKDeviceLoginCodeInfo+Testing.h"
-
-#ifdef BUCK
- #import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
-#else
- #import "FBSDKDeviceLoginCodeInfo.h"
-#endif
 
 static NSString *const _validIdentifier = @"abcd";
 static NSString *const _validIdentifier2 = @"123";

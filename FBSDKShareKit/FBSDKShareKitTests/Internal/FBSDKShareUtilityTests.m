@@ -9,11 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"

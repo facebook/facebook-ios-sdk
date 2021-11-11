@@ -12,15 +12,10 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
- #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
-#else
- #import "FBSDKPermission.h"
-#endif
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
 #import "FBSDKLoginURLCompleter+Testing.h"
+#import "FBSDKPermission.h"
 
 static NSString *const _fakeAppID = @"1234567";
 static NSString *const _fakeChallence = @"some_challenge";

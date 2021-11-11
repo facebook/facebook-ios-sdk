@@ -12,26 +12,16 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginManager+Internal.h>
- #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
- #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
- #import <FBSDKLoginKit/FBSDKLoginConstants.h>
- #import <FBSDKLoginKit/FBSDKLoginManager.h>
- #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
-#else
- #import "FBSDKLoginConstants.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManager+Internal.h"
- #import "FBSDKLoginManagerLogger.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKPermission.h"
-#endif
-
 #import "FBSDKAuthenticationTokenFactory+Testing.h"
 #import "FBSDKInternalUtility+Testing.h"
+#import "FBSDKLoginConstants.h"
 #import "FBSDKLoginKitTests-Swift.h"
+#import "FBSDKLoginManager.h"
+#import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManager+Testing.h"
+#import "FBSDKLoginManagerLogger.h"
+#import "FBSDKLoginManagerLoginResult.h"
+#import "FBSDKPermission.h"
 
 static NSString *const kFakeAppID = @"7391628439";
 static NSString *const kFakeChallenge = @"a =bcdef";

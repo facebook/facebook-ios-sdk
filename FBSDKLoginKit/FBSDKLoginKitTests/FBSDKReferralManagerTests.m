@@ -13,19 +13,12 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
-
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginUtility.h>
- #import <FBSDKLoginKit+Internal/FBSDKReferralManager+Internal.h>
- #import <FBSDKLoginKit/FBSDKReferralManagerResult.h>
-#else
- #import "FBSDKInternalUtility+Testing.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKReferralManager+Internal.h"
- #import "FBSDKReferralManager+Testing.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+#import "FBSDKLoginUtility.h"
+#import "FBSDKReferralManager+Internal.h"
+#import "FBSDKReferralManager+Testing.h"
+#import "FBSDKReferralManagerResult.h"
 
 static NSString *const _mockAppID = @"mockAppID";
 static NSString *const _mockChallenge = @"mockChallenge";

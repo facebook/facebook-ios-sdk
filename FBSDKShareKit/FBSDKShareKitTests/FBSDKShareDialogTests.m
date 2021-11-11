@@ -8,15 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-@import TestTools;
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#else
+@import TestTools;
 @import FBSDKCoreKit_Basics;
 @import FBSDKCoreKit;
-#endif
 
 #import "FBSDKHashtag.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"

@@ -8,11 +8,7 @@
 
 @import FBSDKCoreKit;
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginKit+Internal.h>
-#else
- #import "FBSDKLoginManager+Internal.h"
-#endif
+#import "FBSDKLoginManager+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

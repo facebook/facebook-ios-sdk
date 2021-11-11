@@ -8,11 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 #import <XCTest/XCTest.h>
 

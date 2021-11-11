@@ -6,11 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

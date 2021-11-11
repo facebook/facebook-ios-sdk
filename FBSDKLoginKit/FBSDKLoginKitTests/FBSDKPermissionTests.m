@@ -8,11 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
-#else
- #import "FBSDKPermission.h"
-#endif
+#import "FBSDKPermission.h"
 
 @interface FBSDKPermissionTests : XCTestCase
 

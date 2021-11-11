@@ -12,14 +12,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKLoginKitTests-Swift.h"
-
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
- #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#else
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLogger.h"
-#endif
+#import "FBSDKLoginManager.h"
+#import "FBSDKLoginManagerLogger.h"
 
 @interface FBSDKLoginManagerLoggerTests : XCTestCase
 @end
