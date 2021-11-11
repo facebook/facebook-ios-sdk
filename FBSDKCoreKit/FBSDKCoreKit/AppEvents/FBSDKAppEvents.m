@@ -137,8 +137,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 #endif
 
-@property (nonatomic) BOOL disableTimer; // for testing only.
-
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) FBSDKAppEventsState *appEventsState;
 @property (nonatomic) BOOL isUnityInit;
@@ -1547,7 +1545,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 - (void)flushTimerFired:(id)arg
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
-  if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly && !self.disableTimer) {
+  if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
     [self flushForReason:FBSDKAppEventsFlushReasonTimer];
   }
 }
