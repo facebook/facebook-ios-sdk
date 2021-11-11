@@ -9,7 +9,7 @@
 import FacebookGamingServices
 import Foundation
 
-class TestFileHandleFactory: FileHandleCreating {
+class TestFileHandleFactory: _FileHandleCreating {
 
   var stubbedFileHandle = TestFileHandler()
   var capturedURL: URL?

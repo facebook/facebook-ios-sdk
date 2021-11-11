@@ -12,7 +12,6 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKFileHandleFactory.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploaderFactory.h"
 

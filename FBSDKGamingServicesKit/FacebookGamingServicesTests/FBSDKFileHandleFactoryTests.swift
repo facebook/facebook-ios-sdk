@@ -21,7 +21,7 @@ class FBSDKFileHandleFactoryTests: XCTestCase {
     FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
 
     XCTAssertNotNil(
-      try? FileHandleFactory().fileHandleForReading(from: url),
+      try? _FileHandleFactory().fileHandleForReading(from: url),
       "A file handle factory should be able to return a handle to a valid file"
     )
   }
