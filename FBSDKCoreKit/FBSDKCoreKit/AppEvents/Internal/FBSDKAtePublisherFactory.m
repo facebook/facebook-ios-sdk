@@ -15,9 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAtePublisherFactory ()
 
-@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonnull, nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic, readonly) id<FBSDKSettings> settings;
+@property (nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nonatomic, readonly) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 
 @end
 
@@ -26,11 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                      settings:(id<FBSDKSettings>)settings
+    deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
 {
   if ((self = [super init])) {
     _store = store;
     _graphRequestFactory = graphRequestFactory;
     _settings = settings;
+    _deviceInformationProvider = deviceInformationProvider;
   }
   return self;
 }
@@ -40,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
   return [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:appID
                                                graphRequestFactory:self.graphRequestFactory
                                                           settings:self.settings
-                                                             store:self.store];
+                                                             store:self.store
+                                         deviceInformationProvider:self.deviceInformationProvider];
 }
 
 @end

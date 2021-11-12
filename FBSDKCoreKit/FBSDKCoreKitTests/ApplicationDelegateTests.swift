@@ -586,6 +586,11 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       AppEventsUtility.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
       "Should configure with the expected app events configuration provider"
     )
+
+    XCTAssertTrue(
+      AppEventsUtility.shared.deviceInformationProvider is AppEventsDeviceInfo,
+      "Should configure with the expected device information provider"
+    )
   }
 
   // TEMP: added to configurator tests

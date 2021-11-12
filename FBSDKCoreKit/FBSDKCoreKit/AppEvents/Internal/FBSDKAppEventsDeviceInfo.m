@@ -90,9 +90,9 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   [self _collectPersistentData];
 }
 
-- (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary<NSString *, id> *)dictionary
+- (NSString *)storageKey
 {
-  [FBSDKTypeUtility dictionary:dictionary setObject:[self encodedDeviceInfo] forKey:@"extinfo"];
+  return @"extinfo";
 }
 
 #pragma mark - Internal Methods

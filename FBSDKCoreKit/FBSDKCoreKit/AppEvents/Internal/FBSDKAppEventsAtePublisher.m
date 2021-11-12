@@ -26,6 +26,7 @@
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 @property (nonatomic) BOOL isProcessing;
 
 @end
@@ -36,6 +37,7 @@
                            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                       settings:(id<FBSDKSettings>)settings
                                          store:(id<FBSDKDataPersisting>)store
+                     deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
 {
   if ((self = [self init])) {
     NSString *identifier = [FBSDKTypeUtility coercedToStringValue:appIdentifier];
@@ -47,6 +49,7 @@
     _graphRequestFactory = graphRequestFactory;
     _settings = settings;
     _store = store;
+    _deviceInformationProvider = deviceInformationProvider;
   }
   return self;
 }
@@ -82,7 +85,9 @@
   ];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility JSONStringForObject:event error:NULL invalidObjectHandler:NULL] forKey:@"custom_events"];
 
-  [FBSDKAppEventsDeviceInfo.shared extendDictionaryWithDeviceInfo:parameters];
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:self.deviceInformationProvider.encodedDeviceInfo
+                        forKey:self.deviceInformationProvider.storageKey];
 
   NSString *path = [NSString stringWithFormat:@"%@/activities", self.appIdentifier];
   id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path

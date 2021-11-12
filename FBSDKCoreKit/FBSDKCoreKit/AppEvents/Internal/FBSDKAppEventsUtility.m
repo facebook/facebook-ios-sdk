@@ -21,7 +21,6 @@
 
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -127,7 +126,9 @@ static dispatch_once_t singletonNonce;
 
   [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
 
-  [FBSDKAppEventsDeviceInfo.shared extendDictionaryWithDeviceInfo:parameters];
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:self.deviceInformationProvider.encodedDeviceInfo
+                        forKey:self.deviceInformationProvider.storageKey];
 
   static dispatch_once_t fetchBundleOnce;
   static NSMutableArray *urlSchemes;

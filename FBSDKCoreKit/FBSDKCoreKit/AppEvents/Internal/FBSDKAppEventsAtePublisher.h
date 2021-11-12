@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKAtePublishing.h"
+#import "FBSDKDeviceInformationProviding.h"
 
 @protocol FBSDKDataPersisting;
 @protocol FBSDKGraphRequestFactory;
@@ -26,8 +27,8 @@ NS_SWIFT_NAME(AppEventsAtePublisher)
 - (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
                            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                       settings:(id<FBSDKSettings>)settings
-                                         store:(id<FBSDKDataPersisting>)store;
-
+                                         store:(id<FBSDKDataPersisting>)store
+                     deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider;
 - (void)publishATE;
 
 @end

@@ -26,6 +26,7 @@
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorCreating.h"
 #import "FBSDKErrorReporting.h"
@@ -65,6 +66,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKCrashHandler> crashHandler;
 @property (nonatomic, readonly) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, readonly) id<FBSDKDataPersisting> defaultDataStore;
+@property (nonatomic, readonly) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 @property (nonatomic, readonly) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
 @property (nonatomic, readonly) id<FBSDKErrorReporting> errorReporter;
@@ -124,6 +126,7 @@ NS_SWIFT_NAME(SharedDependencies)
                              crashHandler:(id<FBSDKCrashHandler>)crashHandler
                             crashObserver:(id<FBSDKCrashObserving>)crashObserver
                          defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
+                deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
                errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                              errorFactory:(id<FBSDKErrorCreating>)errorFactory
                             errorReporter:(id<FBSDKErrorReporting>)errorReporter

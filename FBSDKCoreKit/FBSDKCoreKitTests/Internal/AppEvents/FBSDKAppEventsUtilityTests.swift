@@ -16,15 +16,27 @@ extension FBSDKAppEventsUtilityTests {
       AppEventsUtility.shared.appEventsConfigurationProvider,
       "Should not have an app events configuration provider by default"
     )
+    XCTAssertNil(
+      AppEventsUtility.shared.deviceInformationProvider,
+      "Should not have a device information provider by default"
+    )
   }
 
   func testCustomDependencies() {
-    let provider = TestAppEventsConfigurationProvider()
-    AppEventsUtility.shared.appEventsConfigurationProvider = provider
+    let appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
+    AppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider
 
     XCTAssertTrue(
-      AppEventsUtility.shared.appEventsConfigurationProvider === provider,
+      AppEventsUtility.shared.appEventsConfigurationProvider === appEventsConfigurationProvider,
       "Should be able to set a custom app events configuration provider"
+    )
+
+    let deviceInformationProvider = TestDeviceInformationProvider()
+    AppEventsUtility.shared.deviceInformationProvider = deviceInformationProvider
+
+    XCTAssertTrue(
+      AppEventsUtility.shared.deviceInformationProvider === deviceInformationProvider,
+      "Should be able to set a custom device information provider"
     )
   }
 
@@ -147,6 +159,27 @@ extension FBSDKAppEventsUtilityTests {
     XCTAssertNil(
       AppEventsUtility.cachedAdvertiserIdentifierManager,
       "Should clear the cache when caching is declined"
+    )
+  }
+
+  func testActivityParametersUsesDeviceInformation() throws {
+    let deviceInformationProvider = TestDeviceInformationProvider(stubbedEncodedDeviceInfo: name)
+    AppEventsUtility.shared.deviceInformationProvider = deviceInformationProvider
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
+      forEvent: "event",
+      shouldAccessAdvertisingID: true,
+      userID: nil,
+      userData: nil
+    )
+
+    let extraInformation = try XCTUnwrap(
+      parameters[deviceInformationProvider.storageKey] as? String,
+      "Should include extra information in the parameters"
+    )
+    XCTAssertEqual(
+      extraInformation,
+      deviceInformationProvider.encodedDeviceInfo,
+      "Should provide the information from the device information provider"
     )
   }
 }

@@ -18,6 +18,7 @@ enum TestSharedDependencies {
       crashHandler: TestCrashHandler(),
       crashObserver: TestCrashObserver(),
       defaultDataStore: TestDataStore(),
+      deviceInformationProvider: TestDeviceInformationProvider(),
       errorConfigurationProvider: TestErrorConfigurationProvider(),
       errorFactory: TestErrorFactory(),
       errorReporter: TestErrorReporter(),

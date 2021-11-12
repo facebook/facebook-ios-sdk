@@ -701,15 +701,18 @@ static UIApplicationState _applicationState;
               graphRequestConnectionFactory:graphRequestConnectionFactory
        graphRequestPiggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]];
   FBSDKAuthenticationToken.tokenCache = tokenCache;
+  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestFactory
-                                                                                         settings:sharedSettings];
+                                                                                         settings:sharedSettings
+                                                                        deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
   FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
     = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
                                       serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator
+  FBSDKAppEventsUtility.shared.deviceInformationProvider = FBSDKAppEventsDeviceInfo.shared; // TEMP: added to configurator
   [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:appEventsConfigurationProvider
@@ -741,7 +744,6 @@ static UIApplicationState _applicationState;
                                           graphRequestFactory:graphRequestFactory];
   FBSDKButton.applicationActivationNotifier = self; // TEMP: added to configurator
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared]; // TEMP: added to configurator
-  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
 #if !TARGET_OS_TV
   [FBSDKBridgeAPIRequest configureWithInternalURLOpener:UIApplication.sharedApplication
                                         internalUtility:FBSDKInternalUtility.sharedUtility

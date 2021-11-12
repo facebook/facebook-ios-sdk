@@ -10,10 +10,12 @@
 
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
+#import "FBSDKDeviceInformationProviding.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsDeviceInfo)
-@interface FBSDKAppEventsDeviceInfo : NSObject
+@interface FBSDKAppEventsDeviceInfo : NSObject <FBSDKDeviceInformationProviding>
 
 @property (class, nonnull, nonatomic, readonly) FBSDKAppEventsDeviceInfo *shared;
 
@@ -21,7 +23,6 @@ NS_SWIFT_NAME(AppEventsDeviceInfo)
 + (instancetype)new NS_UNAVAILABLE;
 
 - (void)configureWithSettings:(id<FBSDKSettings>)settings;
-- (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary<NSString *, id> *)dictionary;
 
 #if FBTEST && DEBUG
 + (void)reset;

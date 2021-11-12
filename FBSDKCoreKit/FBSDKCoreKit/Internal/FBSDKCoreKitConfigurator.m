@@ -79,6 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureAppEventsUtility
 {
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.dependencies.appEventsConfigurationProvider;
+  FBSDKAppEventsUtility.shared.deviceInformationProvider = self.dependencies.deviceInformationProvider;
 }
 
 - (void)configureButton

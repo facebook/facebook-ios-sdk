@@ -13,6 +13,7 @@
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKDeviceInformationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,6 +30,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (class, nonatomic, readonly, assign) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, readonly, assign) BOOL isDebugBuild;
 @property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (nullable, nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 
 + (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
