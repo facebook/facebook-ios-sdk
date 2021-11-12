@@ -16,6 +16,7 @@
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager.h"
@@ -740,6 +741,7 @@ static UIApplicationState _applicationState;
                                           graphRequestFactory:graphRequestFactory];
   FBSDKButton.applicationActivationNotifier = self; // TEMP: added to configurator
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared]; // TEMP: added to configurator
+  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
 #if !TARGET_OS_TV
   [FBSDKBridgeAPIRequest configureWithInternalURLOpener:UIApplication.sharedApplication
                                         internalUtility:FBSDKInternalUtility.sharedUtility

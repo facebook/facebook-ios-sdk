@@ -126,7 +126,8 @@ static dispatch_once_t singletonNonce;
   }
 
   [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
-  [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
+
+  [FBSDKAppEventsDeviceInfo.shared extendDictionaryWithDeviceInfo:parameters];
 
   static dispatch_once_t fetchBundleOnce;
   static NSMutableArray *urlSchemes;

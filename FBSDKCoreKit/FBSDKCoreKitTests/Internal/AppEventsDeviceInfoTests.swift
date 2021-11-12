@@ -9,13 +9,40 @@
 import XCTest
 
 class AppEventsDeviceInfoTests: XCTestCase {
-  let appEventsDeviceInfo = AppEventsDeviceInfo()
-  let settings = Settings.shared
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var settings: TestSettings!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    AppEventsDeviceInfo.reset()
+
+    settings = TestSettings()
+    AppEventsDeviceInfo.shared.configure(with: settings)
+  }
+
+  override func tearDown() {
+    AppEventsDeviceInfo.reset()
+
+    settings = nil
+
+    super.tearDown()
+  }
 
   func testDefaultDependencies() {
+    AppEventsDeviceInfo.reset()
+    XCTAssertNil(
+      AppEventsDeviceInfo.shared.settings,
+      "Should not have settings by default"
+    )
+  }
+
+  func testConfiguringWithDependencies() {
     XCTAssertTrue(
-      appEventsDeviceInfo.settings === settings,
-      "Should use the expected default settings"
+      AppEventsDeviceInfo.shared.settings === settings,
+      "Should use the provided settings"
     )
   }
 }

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppEventsDeviceInfo (Testing)
 
-@property (nonatomic, readonly) id<FBSDKSettings> settings;
+@property (nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 
 @end
 

@@ -82,7 +82,7 @@
   ];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility JSONStringForObject:event error:NULL invalidObjectHandler:NULL] forKey:@"custom_events"];
 
-  [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
+  [FBSDKAppEventsDeviceInfo.shared extendDictionaryWithDeviceInfo:parameters];
 
   NSString *path = [NSString stringWithFormat:@"%@/activities", self.appIdentifier];
   id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
