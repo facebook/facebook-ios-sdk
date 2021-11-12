@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import XCTest
 
 class GamingPayloadTests: XCTestCase {
@@ -13,7 +14,7 @@ class GamingPayloadTests: XCTestCase {
   func testGamePayloadWithValidValues() throws {
     let url = try SampleUnparsedAppLinkURLs.validGameRequestUrl()
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual("123", gamingPayload.gameRequestID)
     XCTAssertEqual("payload", gamingPayload.payload)
   }
@@ -21,7 +22,7 @@ class GamingPayloadTests: XCTestCase {
   func testGamingPayloadWithNonAlphanumericStrings() throws {
     let url = try SampleUnparsedAppLinkURLs.create(payload: "{}{}{}", gameRequestID: "{}{}{}")
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual(
       "{}{}{}",
       gamingPayload.gameRequestID,
@@ -37,7 +38,7 @@ class GamingPayloadTests: XCTestCase {
   func testGamingPayloadWithNilInPayload() throws {
     let url = try SampleUnparsedAppLinkURLs.create(payload: nil)
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual(
       "123",
       gamingPayload.gameRequestID,
@@ -49,7 +50,7 @@ class GamingPayloadTests: XCTestCase {
   func testGamingPayloadWithNilInGameRequestID() throws {
     let url = try SampleUnparsedAppLinkURLs.create(gameRequestID: nil)
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual("", gamingPayload.gameRequestID)
     XCTAssertEqual(
       "payload",
@@ -61,7 +62,7 @@ class GamingPayloadTests: XCTestCase {
   func testGamingPayloadWithBothParamsNil() throws {
     let url = try SampleUnparsedAppLinkURLs.missingKeys()
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual(
       "",
       gamingPayload.gameRequestID,
@@ -80,7 +81,7 @@ class GamingPayloadTests: XCTestCase {
       gameRequestID: "  "
     )
     let appLink = AppLinkURL(url: url)
-    let gamingPayload = GamingPayload(url: appLink)
+    let gamingPayload = GamingPayload(URL: appLink)
     XCTAssertEqual(
       "  ",
       gamingPayload.gameRequestID,

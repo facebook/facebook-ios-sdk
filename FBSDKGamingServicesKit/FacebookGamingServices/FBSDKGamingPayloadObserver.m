@@ -10,8 +10,13 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKGamingContext.h"
-#import "FBSDKGamingPayload.h"
+
+NSString *const kGamingPayload = @"payload";
+NSString *const kGamingPayloadGameRequestID = @"game_request_id";
+NSString *const kGamingPayloadContextTokenID = @"context_token_id";
 
 @interface FBSDKGamingPayloadObserver () <FBSDKApplicationObserving>
 @end

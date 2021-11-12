@@ -15,7 +15,6 @@
 #import <FacebookGamingServices/FBSDKGamingContext.h>
 #import <FacebookGamingServices/FBSDKGamingGroupIntegration.h>
 #import <FacebookGamingServices/FBSDKGamingImageUploader.h>
-#import <FacebookGamingServices/FBSDKGamingPayload.h>
 #import <FacebookGamingServices/FBSDKGamingPayloadObserver.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>

@@ -34,6 +34,10 @@ NS_SWIFT_NAME(GamingPayloadDelegate)
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const kGamingPayload;
+extern NSString *const kGamingPayloadGameRequestID;
+extern NSString *const kGamingPayloadContextTokenID;
+
 NS_SWIFT_NAME(GamingPayloadObserver)
 @interface FBSDKGamingPayloadObserver : NSObject
 
