@@ -217,15 +217,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)logEvent:(FBSDKAppEventName)eventName
 {
-  [self logEvent:eventName
-      parameters:@{}];
+  [self logEvent:eventName parameters:@{}];
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
 {
-  [self.shared logEvent:eventName
-             valueToSum:valueToSum];
+  [self.shared logEvent:eventName valueToSum:valueToSum];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -239,17 +237,16 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [self.shared logEvent:eventName
-             parameters:parameters];
+  [self.shared logEvent:eventName parameters:parameters];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logEvent:eventName
-                valueToSum:nil
-                parameters:parameters
-               accessToken:nil];
+  [self logEvent:eventName
+      valueToSum:nil
+      parameters:parameters
+     accessToken:nil];
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
@@ -265,10 +262,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       valueToSum:(double)valueToSum
       parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logEvent:eventName
-                valueToSum:@(valueToSum)
-                parameters:parameters
-               accessToken:nil];
+  [self logEvent:eventName
+      valueToSum:@(valueToSum)
+      parameters:parameters
+     accessToken:nil];
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
@@ -329,10 +326,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [newParameters setValue:currency forKey:FBSDKAppEventParameterNameCurrency];
   }
 
-  [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased
-                valueToSum:@(purchaseAmount)
-                parameters:newParameters
-               accessToken:accessToken];
+  [self.shared logEvent:FBSDKAppEventNamePurchased
+             valueToSum:@(purchaseAmount)
+             parameters:newParameters
+            accessToken:accessToken];
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.
@@ -369,7 +366,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterNamePushAction];
   }
-  [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
+  [self.shared logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
 }
 
 /*
@@ -474,8 +471,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [FBSDKTypeUtility dictionary:dict setObject:brand forKey:FBSDKAppEventParameterProductBrand];
   }
 
-  [FBSDKAppEvents logEvent:FBSDKAppEventNameProductCatalogUpdate
-                parameters:dict];
+  [self.shared logEvent:FBSDKAppEventNameProductCatalogUpdate
+             parameters:dict];
 }
 
 + (void)activateApp
@@ -522,7 +519,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (![deviceTokenString isEqualToString:([FBSDKAppEvents shared].pushNotificationsDeviceTokenString)]) {
     [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = deviceTokenString;
 
-    [FBSDKAppEvents logEvent:FBSDKAppEventNamePushTokenObtained];
+    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNamePushTokenObtained];
 
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
     if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {

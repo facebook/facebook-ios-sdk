@@ -488,7 +488,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
   FBSDKSettings.sharedSettings.appID = @"123";
-  [FBSDKAppEvents logEvent:@"event"];
+  [FBSDKAppEvents.shared logEvent:@"event"];
 
   XCTAssertFalse(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -502,7 +502,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
   FBSDKSettings.sharedSettings.appID = @"123";
-  [FBSDKAppEvents logEvent:@"event"];
+  [FBSDKAppEvents.shared logEvent:@"event"];
 
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -520,7 +520,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
   FBSDKSettings.sharedSettings.appID = @"123";
-  [FBSDKAppEvents logEvent:@"event"];
+  [FBSDKAppEvents.shared logEvent:@"event"];
 
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -539,7 +539,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   self.appEventsConfigurationProvider.stubbedConfiguration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:YES];
 
   FBSDKSettings.sharedSettings.appID = @"123";
-  [FBSDKAppEvents logEvent:@"event"];
+  [FBSDKAppEvents.shared logEvent:@"event"];
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
     "Should call addEvents on AppEventsState when sending app event"

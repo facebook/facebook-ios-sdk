@@ -255,7 +255,7 @@
   }];
   XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
 
-  [FBSDKAppEvents logEvent:@"foo"];
+  [FBSDKAppEvents.shared logEvent:@"foo"];
   [FBSDKAppEvents flush];
 
   [self waitForExpectations:@[expectation] timeout:2];
@@ -509,19 +509,19 @@
                                                     flushPeriodInSeconds:0];
   XCTAssertThrows([FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
   XCTAssertThrows([FBSDKAppEvents setLoggingOverrideAppID:self.name]);
-  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched]);
-  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched valueToSum:2]);
-  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched parameters:@{}]);
+  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched]);
+  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched valueToSum:2]);
+  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched parameters:@{}]);
   XCTAssertThrows(
-    [FBSDKAppEvents logEvent:FBSDKAppEventNameSearched
-                  valueToSum:2
-                  parameters:@{}]
+    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched
+                         valueToSum:2
+                         parameters:@{}]
   );
   XCTAssertThrows(
-    [FBSDKAppEvents logEvent:FBSDKAppEventNameSearched
-                  valueToSum:@2
-                  parameters:@{}
-                 accessToken:SampleAccessTokens.validToken]
+    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched
+                         valueToSum:@2
+                         parameters:@{}
+                        accessToken:SampleAccessTokens.validToken]
   );
   XCTAssertThrows([FBSDKAppEvents logPurchase:2 currency:foo]);
   XCTAssertThrows(
@@ -683,7 +683,10 @@
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:nil];
+  [FBSDKAppEvents.shared logEvent:FBSDKAppEventNamePurchased
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:@{}
+                      accessToken:nil];
 
   XCTAssertTrue(
     self.appEventsStateStore.retrievePersistedAppEventStatesWasCalled,
@@ -857,7 +860,7 @@
 
 - (void)testLogEventWithValueToSum
 {
-  [FBSDKAppEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
+  [FBSDKAppEvents.shared logEvent:self.eventName valueToSum:self.purchaseAmount];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -906,7 +909,7 @@
 - (void)testLogEventWillRecordAndUpdateWithSKAdNetworkReporter
 {
   if (@available(iOS 11.3, *)) {
-    [FBSDKAppEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
+    [FBSDKAppEvents.shared logEvent:self.eventName valueToSum:self.purchaseAmount];
     XCTAssertEqualObjects(
       self.eventName,
       self.skAdNetworkReporter.capturedEvent,

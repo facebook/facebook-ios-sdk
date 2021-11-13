@@ -132,86 +132,160 @@ NS_SWIFT_NAME(AppEvents)
  */
 
 /**
-
-  Log an event with just an eventName.
+ Log an event with just an event name.
 
  @param eventName   The name of the event to record.  Limitations on number of events and name length
- are given in the `FBSDKAppEvents` documentation.
+ are given in the `AppEvents` documentation.
  */
-
-+ (void)logEvent:(FBSDKAppEventName)eventName;
++ (void)logEvent:(FBSDKAppEventName)eventName
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logEvent(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logEvent(_:)` instead");
 
 /**
-
-  Log an event with an eventName and a numeric value to be aggregated with other events of this name.
+ Log an event with just an event name.
 
  @param eventName   The name of the event to record.  Limitations on number of events and name length
- are given in the `FBSDKAppEvents` documentation.  Common event names are provided in `FBAppEventName*` constants.
+ are given in the `AppEvents` documentation.
+ */
+- (void)logEvent:(FBSDKAppEventName)eventName;
 
- @param valueToSum  Amount to be aggregated into all events of this eventName, and App Insights will report
+/**
+ Log an event with an event name and a numeric value to be aggregated with other events of this name.
+
+ @param eventName   The name of the event to record.  Limitations on number of events and name length
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
+
+ @param valueToSum  Amount to be aggregated into all events of this event name, and App Insights will report
  the cumulative and average value of this amount.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(double)valueToSum
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logEvent(_:valueToSum:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logEvent(_:valueToSum:)` instead");
+
+/**
+ Log an event with an event name and a numeric value to be aggregated with other events of this name.
+
+ @param eventName   The name of the event to record.  Limitations on number of events and name length
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
+
+ @param valueToSum  Amount to be aggregated into all events of this event name, and App Insights will report
+ the cumulative and average value of this amount.
+ */
+- (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum;
 
 /**
-
-  Log an event with an eventName and a set of key/value pairs in the parameters dictionary.
+ Log an event with an event name and a set of key/value pairs in the parameters dictionary.
  Parameter limitations are described above.
 
  @param eventName   The name of the event to record.  Limitations on number of events and name construction
- are given in the `FBSDKAppEvents` documentation.  Common event names are provided in `FBAppEventName*` constants.
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
 
  @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
- be NSString's, and the values are expected to be NSString or NSNumber.  Limitations on the number of
- parameters and name construction are given in the `FBSDKAppEvents` documentation.  Commonly used parameter names
- are provided in `FBSDKAppEventParameterName*` constants.
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logEvent(_:parameters:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logEvent(_:parameters:)` instead");
+
+/**
+ Log an event with an event name and a set of key/value pairs in the parameters dictionary.
+ Parameter limitations are described above.
+
+ @param eventName   The name of the event to record.  Limitations on number of events and name construction
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
+
+ @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+ */
+- (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 /**
-
-  Log an event with an eventName, a numeric value to be aggregated with other events of this name,
+ Log an event with an event name, a numeric value to be aggregated with other events of this name,
  and a set of key/value pairs in the parameters dictionary.
 
  @param eventName   The name of the event to record.  Limitations on number of events and name construction
- are given in the `FBSDKAppEvents` documentation.  Common event names are provided in `FBAppEventName*` constants.
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
 
- @param valueToSum  Amount to be aggregated into all events of this eventName, and App Insights will report
+ @param valueToSum  Amount to be aggregated into all events of this event name, and App Insights will report
  the cumulative and average value of this amount.
 
  @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
- be NSString's, and the values are expected to be NSString or NSNumber.  Limitations on the number of
- parameters and name construction are given in the `FBSDKAppEvents` documentation.  Commonly used parameter names
- are provided in `FBSDKAppEventParameterName*` constants.
-
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(double)valueToSum
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logEvent(_:valueToSum:parameters:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logEvent(_:valueToSum:parameters:)` instead");
+
+/**
+ Log an event with an event name, a numeric value to be aggregated with other events of this name,
+ and a set of key/value pairs in the parameters dictionary.
+
+ @param eventName   The name of the event to record.  Limitations on number of events and name construction
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
+
+ @param valueToSum  Amount to be aggregated into all events of this event name, and App Insights will report
+ the cumulative and average value of this amount.
+
+ @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+ */
+- (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 /**
-
-  Log an event with an eventName, a numeric value to be aggregated with other events of this name,
- and a set of key/value pairs in the parameters dictionary.  Providing session lets the developer
- target a particular <FBSession>.  If nil is provided, then `[FBSession activeSession]` will be used.
+ Log an event with an event name, a numeric value to be aggregated with other events of this name,
+ and a set of key/value pairs in the parameters dictionary.
 
  @param eventName   The name of the event to record.  Limitations on number of events and name construction
- are given in the `FBSDKAppEvents` documentation.  Common event names are provided in `FBAppEventName*` constants.
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
 
  @param valueToSum  Amount to be aggregated into all events of this eventName, and App Insights will report
- the cumulative and average value of this amount.  Note that this is an NSNumber, and a value of `nil` denotes
+ the cumulative and average value of this amount.  Note that this is an `NSNumber`, and a value of `nil` denotes
  that this event doesn't have a value associated with it for summation.
 
  @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
- be NSString's, and the values are expected to be NSString or NSNumber.  Limitations on the number of
- parameters and name construction are given in the `FBSDKAppEvents` documentation.  Commonly used parameter names
- are provided in `FBSDKAppEventParameterName*` constants.
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
 
  @param accessToken  The optional access token to log the event as.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(nullable NSNumber *)valueToSum
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+     accessToken:(nullable FBSDKAccessToken *)accessToken
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logEvent(_:valueToSum:parameters:accessToken:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logEvent(_:valueToSum:parameters:accessToken:)` instead");
+
+/**
+ Log an event with an event name, a numeric value to be aggregated with other events of this name,
+ and a set of key/value pairs in the parameters dictionary.
+
+ @param eventName   The name of the event to record.  Limitations on number of events and name construction
+ are given in the `AppEvents` documentation.  Common event names are provided in `AppEvents.Name` constants.
+
+ @param valueToSum  Amount to be aggregated into all events of this eventName, and App Insights will report
+ the cumulative and average value of this amount.  Note that this is an `NSNumber`, and a value of `nil` denotes
+ that this event doesn't have a value associated with it for summation.
+
+ @param parameters  Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+
+ @param accessToken  The optional access token to log the event as.
+ */
+- (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(nullable NSNumber *)valueToSum
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
      accessToken:(nullable FBSDKAccessToken *)accessToken;
