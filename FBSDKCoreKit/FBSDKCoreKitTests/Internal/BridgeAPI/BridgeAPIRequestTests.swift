@@ -39,7 +39,6 @@ class BridgeAPIRequestTests: XCTestCase {
       protocolType: protocolType,
       scheme: scheme,
       methodName: "methodName",
-      methodVersion: "methodVersion",
       parameters: ["parameter": "value"],
       userInfo: ["key": "value"]
     )
@@ -93,7 +92,6 @@ class BridgeAPIRequestTests: XCTestCase {
     )
     XCTAssertEqual(request.scheme, .https, "A request should use the provided scheme")
     XCTAssertEqual(request.methodName, "methodName", "A request should use the provided method name")
-    XCTAssertEqual(request.methodVersion, "methodVersion", "A request should use the provided method version")
 
     let parametersMessage = "A request should use the provided parameters"
     let parameters = try XCTUnwrap(request.parameters, parametersMessage)

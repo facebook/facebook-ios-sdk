@@ -21,7 +21,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   enum Values {
     static let actionID = "123"
     static let methodName = "open"
-    static let methodVersion = "v1"
     static let scheme = URLScheme.https
   }
 
@@ -100,8 +99,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
         withActionID: "",
         scheme: "",
         methodName: "",
-        methodVersion: "",
-        parameters: [:]
+          parameters: [:]
       ),
       "Should not create a url without a server configuration"
     )
@@ -112,7 +110,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       withActionID: "",
       scheme: "",
       methodName: "Foo",
-      methodVersion: "",
       parameters: [:]
     )
 
@@ -128,7 +125,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       withActionID: "",
       scheme: "",
       methodName: "Foo",
-      methodVersion: "",
       parameters: [:]
     )
 
@@ -145,7 +141,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       withActionID: "",
       scheme: "",
       methodName: Values.methodName,
-      methodVersion: "",
       parameters: [:]
     )
 
@@ -167,7 +162,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       withActionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: validQueryParameters
     )
     else {
@@ -194,7 +188,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       withActionID: Values.actionID,
       scheme: Values.scheme.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: validQueryParameters
     )
     else {

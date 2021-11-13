@@ -126,7 +126,6 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                              scheme:FBSDK_MESSAGE_DIALOG_APP_SCHEME
                                                          methodName:methodName
-                                                      methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
   BOOL useSafariViewController = [[FBSDKShareDialogConfiguration new]

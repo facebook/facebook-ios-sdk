@@ -15,7 +15,6 @@ class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
   var capturedRequestUrlActionID: String?
   var capturedRequestUrlScheme: String?
   var capturedRequestUrlMethodName: String?
-  var capturedRequestUrlMethodVersion: String?
   var capturedRequestUrlParameters: [String: Any]?
   var capturedResponseActionID: String?
   var capturedResponseQueryParameters: [String: Any]?
@@ -25,13 +24,11 @@ class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
     withActionID actionID: String,
     scheme: String,
     methodName: String,
-    methodVersion: String,
     parameters: [String: Any]
   ) throws -> URL {
     capturedRequestUrlActionID = actionID
     capturedRequestUrlScheme = scheme
     capturedRequestUrlMethodName = methodName
-    capturedRequestUrlMethodVersion = methodVersion
     capturedRequestUrlParameters = parameters
 
     if let error = stubbedRequestURLError {

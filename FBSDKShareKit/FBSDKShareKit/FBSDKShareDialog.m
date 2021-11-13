@@ -43,13 +43,6 @@
  Third party apps can continue to use these URL schemes as a version check.
  */
 #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
-#define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
-#define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
-#define FBSDK_SHARE_METHOD_PHOTOS_MIN_VERSION @"20140116"
-#define FBSDK_SHARE_METHOD_VIDEO_MIN_VERSION @"20150313"
-#define FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION @"20150629"
-#define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
-#define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
 
 @interface FBSDKShareDialog () <FBSDKWebDialogDelegate>
 
@@ -322,7 +315,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   if (self.shareContent) {
     // Validate this content
     NSError *error = nil;
-    return [self _validateWithError:&error];
+    return [self validateWithError:&error];
   } else {
     // Launch an empty dialog for sharing a status message.
     switch (self.mode) {
@@ -349,7 +342,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   NSError *error;
   NSError *validationError;
 
-  if ([self _validateWithError:&error]) {
+  if ([self validateWithError:&error]) {
     switch (self.mode) {
       case FBSDKShareDialogModeAutomatic: {
         didShow = [self _showAutomatic:&error];
@@ -390,11 +383,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     [self.class.internalUtility registerTransientObject:self];
   }
   return didShow;
-}
-
-- (BOOL)validateWithError:(NSError **)errorRef
-{
-  return [self _validateWithError:errorRef] && [self _validateFullyCompatibleWithError:errorRef];
 }
 
 #pragma mark - FBSDKWebDialogDelegate
@@ -466,45 +454,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     || (!useNativeDialog && [self _showNativeWithCanShowError:NULL validationError:errorRef]));
 }
 
-- (void)_loadNativeMethodName:(NSString **)methodNameRef methodVersion:(NSString **)methodVersionRef
-{
-  if (methodNameRef != NULL) {
-    *methodNameRef = nil;
-  }
-  if (methodVersionRef != NULL) {
-    *methodVersionRef = nil;
-  }
-
-  id<FBSDKSharingContent> shareContent = self.shareContent;
-  if (!shareContent) {
-    return;
-  }
-
-  // if there is shareContent on the receiver already, we can check the minimum app version, otherwise we can only check
-  // for an app that can handle the native share dialog
-  NSString *methodName = nil;
-  NSString *methodVersion = nil;
-  if ([shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
-    methodName = FBSDK_SHARE_CAMERA_METHOD_NAME;
-    methodVersion = FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION;
-  } else {
-    methodName = FBSDK_SHARE_METHOD_NAME;
-    if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
-      methodVersion = FBSDK_SHARE_METHOD_PHOTOS_MIN_VERSION;
-    } else if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
-      methodVersion = FBSDK_SHARE_METHOD_VIDEO_MIN_VERSION;
-    } else {
-      methodVersion = FBSDK_SHARE_METHOD_MIN_VERSION;
-    }
-  }
-  if (methodNameRef != NULL) {
-    *methodNameRef = methodName;
-  }
-  if (methodVersionRef != NULL) {
-    *methodVersionRef = methodVersion;
-  }
-}
-
 - (BOOL)_canShowNative
 {
   return [self.class.internalUtility isFacebookAppInstalled];
@@ -527,9 +476,8 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   [self.class validateAPIURLSchemeRegistered];
   NSString *scheme = FBSDKURLSchemeFacebookAPI;
-  NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
   NSURLComponents *components = [NSURLComponents new];
-  components.scheme = [scheme stringByAppendingString:minimumVersion];
+  components.scheme = scheme;
   components.path = @"/";
   return ([self.class.internalURLOpener canOpenURL:components.URL]
     || [self _canUseFBShareSheet]);
@@ -540,26 +488,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   [self.class validateShareExtensionURLSchemeRegistered];
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = FBSDKURLSchemeFacebookShareExtension;
-  components.path = @"/";
-  return [self.class.internalURLOpener canOpenURL:components.URL];
-}
-
-- (BOOL)_canUseQuoteInShareSheet
-{
-  return [self _canUseFBShareSheet] && [self _supportsShareSheetMinimumVersion:FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION];
-}
-
-- (BOOL)_canUseMMPInShareSheet
-{
-  return [self _canUseFBShareSheet] && [self _supportsShareSheetMinimumVersion:FBSDK_SHARE_METHOD_MMP_MIN_VERSION];
-}
-
-- (BOOL)_supportsShareSheetMinimumVersion:(NSString *)minimumVersion
-{
-  [self.class validateAPIURLSchemeRegistered];
-  NSString *scheme = FBSDKURLSchemeFacebookAPI;
-  NSURLComponents *components = [NSURLComponents new];
-  components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
   return [self.class.internalURLOpener canOpenURL:components.URL];
 }
@@ -698,7 +626,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
         request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                                                 scheme:FBSDKURLSchemeHTTPS
                                                                             methodName:cMethodName
-                                                                         methodVersion:nil
                                                                             parameters:cParameters
                                                                               userInfo:nil];
         [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
@@ -727,7 +654,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                                             scheme:FBSDKURLSchemeHTTPS
                                                                         methodName:methodName
-                                                                     methodVersion:nil
                                                                         parameters:parameters
                                                                           userInfo:nil];
     [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
@@ -753,7 +679,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                                           scheme:FBSDKURLSchemeHTTPS
                                                                       methodName:FBSDK_SHARE_FEED_METHOD_NAME
-                                                                   methodVersion:nil
                                                                       parameters:parameters
                                                                         userInfo:nil];
   [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
@@ -799,8 +724,12 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     scheme = FBSDKURLSchemeFacebookApp;
   }
   NSString *methodName;
-  NSString *methodVersion;
-  [self _loadNativeMethodName:&methodName methodVersion:&methodVersion];
+  if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
+    methodName = FBSDK_SHARE_CAMERA_METHOD_NAME;
+  } else {
+    methodName = FBSDK_SHARE_METHOD_NAME;
+  }
+
   NSDictionary<NSString *, id> *parameters = [self.class.shareUtility parametersForShareContent:self.shareContent
                                                                                   bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                                           shouldFailOnDataError:self.shouldFailOnDataError];
@@ -808,7 +737,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                                           scheme:scheme
                                                                       methodName:methodName
-                                                                   methodVersion:methodVersion
                                                                       parameters:parameters
                                                                         userInfo:nil];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
@@ -953,7 +881,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return [[FBSDKShareDialogConfiguration new] shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
-- (BOOL)_validateWithError:(NSError **)errorRef
+- (BOOL)validateWithError:(NSError **)errorRef
 {
   if (errorRef != NULL) {
     *errorRef = nil;
@@ -1017,38 +945,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
                                                    message:nil];
   }
   return NO;
-}
-
-/**
- `validateWithError:` can be used by clients of this API to discover if certain features are
- available for a specific `mode`. However, these features could be optional for said `mode`, in which
- case `validateWithError:` should return NO but when calling `show`, the dialog must still show.
-
- ie: Quotes are only available if FB for iOS v52 or higher is installed. If the client adds a quote to
- the `ShareLinkContent` object and FB for iOS v52 or higher is not installed, `validateWithError:` will
- return NO if the `mode` is set to ShareSheet. However, calling `show` will actually show the shareSheet
- without the Quote.
-
- This method exists to enable the behavior described above and should only be called from `validateWithError:`.
- */
-- (BOOL)_validateFullyCompatibleWithError:(NSError **)errorRef
-{
-  id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
-    FBSDKShareLinkContent *shareLinkContent = (FBSDKShareLinkContent *)shareContent;
-    if (shareLinkContent.quote.length > 0
-        && self.mode == FBSDKShareDialogModeShareSheet
-        && ![self _canUseQuoteInShareSheet]) {
-      if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareLinkContent
-                                                       message:@"Quotes are only supported if Facebook for iOS version 52 and above is installed"];
-      }
-      return NO;
-    }
-  }
-  return YES;
 }
 
 - (BOOL)_validateShareContentForBrowserWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError **)errorRef
@@ -1230,12 +1126,12 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   if ([self.class.shareUtility shareMediaContentContainsPhotosAndVideos:shareContent]
       && self.mode == FBSDKShareDialogModeShareSheet
-      && ![self _canUseMMPInShareSheet]) {
+      && ![self _canUseFBShareSheet]) {
     if ((errorRef != NULL) && !*errorRef) {
       *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                         name:@"shareContent"
                                                        value:shareContent
-                                                     message:@"Multimedia content (photos + videos) is only supported if Facebook for iOS version 52 and above is installed"];
+                                                     message:@"Cannot use the share sheet if the share sheet is unavailable. Make sure the FB app is installed."];
     }
     return NO;
   }

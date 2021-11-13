@@ -349,7 +349,6 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
    bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
    scheme:FBSDKURLSchemeHTTPS
    methodName:FBSDK_APP_REQUEST_METHOD_NAME
-   methodVersion:nil
    parameters:parameters
    userInfo:nil];
 

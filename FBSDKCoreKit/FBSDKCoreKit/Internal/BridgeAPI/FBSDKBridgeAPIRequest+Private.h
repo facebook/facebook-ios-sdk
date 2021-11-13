@@ -33,11 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                    scheme:(FBSDKURLScheme)scheme
                                methodName:(nullable NSString *)methodName
-                            methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 NS_DESIGNATED_INITIALIZER
-NS_SWIFT_NAME(init(protocol:protocolType:scheme:methodName:methodVersion:parameters:userInfo:));
+NS_SWIFT_NAME(init(protocol:protocolType:scheme:methodName:parameters:userInfo:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end

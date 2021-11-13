@@ -628,7 +628,6 @@
   return [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                           scheme:FBSDKURLSchemeHTTPS
                                                       methodName:nil
-                                                   methodVersion:nil
                                                       parameters:nil
                                                         userInfo:nil];
 }

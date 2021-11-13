@@ -13,7 +13,6 @@ final class TestBridgeAPIRequestFactory: NSObject, BridgeAPIRequestCreating {
   var capturedProtocolType: FBSDKBridgeAPIProtocolType?
   var capturedScheme: String?
   var capturedMethodName: String?
-  var capturedMethodVersion: String?
   var capturedParameters: [String: Any]?
   var capturedUserInfo: [String: Any]?
   var stubbedBridgeAPIRequest: TestBridgeAPIRequest?
@@ -22,14 +21,12 @@ final class TestBridgeAPIRequestFactory: NSObject, BridgeAPIRequestCreating {
     with protocolType: FBSDKBridgeAPIProtocolType,
     scheme: String,
     methodName: String?,
-    methodVersion: String?,
     parameters: [String: Any]? = nil,
     userInfo: [String: Any]? = nil
   ) -> BridgeAPIRequestProtocol? {
     capturedProtocolType = protocolType
     capturedScheme = scheme
     capturedMethodName = methodName
-    capturedMethodVersion = methodVersion
     capturedParameters = parameters
     capturedUserInfo = userInfo
 

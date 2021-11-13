@@ -17,14 +17,12 @@
 - (nullable id<FBSDKBridgeAPIRequest>)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                                                 scheme:(nonnull NSString *)scheme
                                                             methodName:(nullable NSString *)methodName
-                                                         methodVersion:(nullable NSString *)methodVersion
                                                             parameters:(nullable NSDictionary *)parameters
                                                               userInfo:(nullable NSDictionary *)userInfo
 {
   return [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:protocolType
                                                           scheme:scheme
                                                       methodName:methodName
-                                                   methodVersion:methodVersion
                                                       parameters:parameters
                                                         userInfo:userInfo];
 }

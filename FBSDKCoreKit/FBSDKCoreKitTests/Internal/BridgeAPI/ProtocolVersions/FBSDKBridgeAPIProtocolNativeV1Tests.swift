@@ -34,7 +34,6 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
-        methodVersion: methodVersion,
         parameters: parameters
       )
 
@@ -44,7 +43,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
-      let expectedKeys = Set(["bridge_args", "method_args", "version"])
+      let expectedKeys = Set(["bridge_args", "method_args"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       do {
         let basicParameters = try BasicUtility.object(forJSONString: queryParameters["method_args", default: ""])
@@ -318,7 +317,6 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
-        methodVersion: methodVersion,
         parameters: parameters
       )
 
@@ -327,7 +325,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
-      let expectedKeys = Set(["bridge_args", "method_args", "version"])
+      let expectedKeys = Set(["bridge_args", "method_args"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
       expectedMethodArgs["data"] = stubDataSerialized(parameters["data"] as? Data)
@@ -371,7 +369,6 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
-        methodVersion: methodVersion,
         parameters: parameters
       )
 
@@ -380,7 +377,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
-      let expectedKeys = Set(["bridge_args", "method_args", "version"])
+      let expectedKeys = Set(["bridge_args", "method_args"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
       expectedMethodArgs["image"] = stubImageSerialized(parameters["image"] as? UIImage)
@@ -429,7 +426,6 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
-        methodVersion: methodVersion,
         parameters: parameters
       )
 
@@ -441,7 +437,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
-      let expectedKeys = Set(["bridge_args", "method_args", "version"])
+      let expectedKeys = Set(["bridge_args", "method_args"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
       expectedMethodArgs["data"] = stubDataContainer(withPasteboardName: pasteboardName, tag: "data")
@@ -482,7 +478,6 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         withActionID: actionID,
         scheme: scheme,
         methodName: methodName,
-        methodVersion: methodVersion,
         parameters: parameters
       )
 
@@ -494,7 +489,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
-      let expectedKeys = Set(["bridge_args", "method_args", "version"])
+      let expectedKeys = Set(["bridge_args", "method_args"])
       XCTAssertEqual(Set(queryParameters.keys), expectedKeys)
       var expectedMethodArgs = parameters
       expectedMethodArgs["image"] = stubDataContainer(withPasteboardName: pasteboardName, tag: "png")

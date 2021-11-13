@@ -575,17 +575,6 @@
 
 #pragma mark - FullyCompatible Validation
 
-- (void)testThatValidateWithErrorReturnsNOForLinkQuoteIfAValidShareExtensionVersionIsNotAvailable
-{
-  self.internalUtility.isFacebookAppInstalled = YES;
-
-  [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
-                      expectValid:NO
-                       expectShow:YES
-                             mode:FBSDKShareDialogModeShareSheet
-               nonSupportedScheme:@"fbapi20160328:/"];
-}
-
 - (void)testThatValidateWithErrorReturnsYESForLinkQuoteIfAValidShareExtensionVersionIsAvailable
 {
   self.internalUtility.isFacebookAppInstalled = YES;

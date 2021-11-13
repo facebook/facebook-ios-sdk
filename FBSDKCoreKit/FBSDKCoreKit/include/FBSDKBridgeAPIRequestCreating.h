@@ -16,13 +16,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(BridgeAPIRequestCreating)
 @protocol FBSDKBridgeAPIRequestCreating
 
 - (nullable id<FBSDKBridgeAPIRequest>)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                                                 scheme:(NSString *)scheme
                                                             methodName:(nullable NSString *)methodName
-                                                         methodVersion:(nullable NSString *)methodVersion
                                                             parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                                               userInfo:(nullable NSDictionary<NSString *, id> *)userInfo;
 

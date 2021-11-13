@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 typedef struct {
   __unsafe_unretained NSString *bridgeArgs;
   __unsafe_unretained NSString *methodArgs;
-  __unsafe_unretained NSString *methodVersion;
 } FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys;
 

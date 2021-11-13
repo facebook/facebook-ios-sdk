@@ -31,7 +31,6 @@ const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativ
 {
   .bridgeArgs = @"bridge_args",
   .methodArgs = @"method_args",
-  .methodVersion = @"version",
 };
 
 const FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys =
@@ -125,7 +124,6 @@ static const struct {
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                                     scheme:(NSString *)scheme
                                 methodName:(NSString *)methodName
-                             methodVersion:(NSString *)methodVersion
                                 parameters:(NSDictionary<NSString *, id> *)parameters
                                      error:(NSError *__autoreleasing *)errorRef
 {
@@ -133,8 +131,6 @@ static const struct {
   NSString *const path = [@"/" stringByAppendingString:methodName];
 
   NSMutableDictionary<NSString *, id> *const queryParameters = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:methodVersion
-                        forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
   if (parameters.count) {
     NSString *const parametersString = [self _JSONStringForObject:parameters enablePasteboard:YES error:errorRef];

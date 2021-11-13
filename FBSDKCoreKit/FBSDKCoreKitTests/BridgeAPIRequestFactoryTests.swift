@@ -17,7 +17,6 @@ final class BridgeAPIRequestFactoryTests: XCTestCase {
         with: .web,
         scheme: URLScheme.https.rawValue,
         methodName: nil,
-        methodVersion: nil,
         parameters: nil,
         userInfo: nil
       )

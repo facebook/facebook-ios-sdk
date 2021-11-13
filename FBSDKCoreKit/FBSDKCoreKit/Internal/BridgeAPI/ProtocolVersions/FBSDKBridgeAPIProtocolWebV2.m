@@ -82,7 +82,6 @@
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                                     scheme:(NSString *)scheme
                                 methodName:(NSString *)methodName
-                             methodVersion:(NSString *)methodVersion
                                 parameters:(NSDictionary<NSString *, id> *)parameters
                                      error:(NSError *__autoreleasing *)errorRef
 {
@@ -101,7 +100,6 @@
   NSURL *requestURL = [_nativeBridge requestURLWithActionID:actionID
                                                      scheme:scheme
                                                  methodName:methodName
-                                              methodVersion:methodVersion
                                                  parameters:parameters error:errorRef];
   if (!requestURL) {
     return nil;

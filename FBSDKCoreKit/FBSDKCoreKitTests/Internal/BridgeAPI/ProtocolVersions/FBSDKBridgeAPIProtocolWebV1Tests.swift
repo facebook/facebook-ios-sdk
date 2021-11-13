@@ -100,7 +100,6 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
       withActionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: QueryParameters.valid
     )
     let expectedGraphVersion = try XCTUnwrap(Settings.shared.graphAPIVersion)

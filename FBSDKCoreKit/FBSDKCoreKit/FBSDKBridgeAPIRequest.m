@@ -120,7 +120,6 @@ static _Nullable id<FBSDKSettings> _settings;
 + (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                                    scheme:(FBSDKURLScheme)scheme
                                                methodName:(nullable NSString *)methodName
-                                            methodVersion:(nullable NSString *)methodVersion
                                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
@@ -128,7 +127,6 @@ static _Nullable id<FBSDKSettings> _settings;
                            protocolType:protocolType
                                  scheme:scheme
                              methodName:methodName
-                          methodVersion:methodVersion
                              parameters:parameters
                                userInfo:userInfo];
 }
@@ -139,7 +137,7 @@ static _Nullable id<FBSDKSettings> _settings;
   if (!map) {
     map = @{
       @(FBSDKBridgeAPIProtocolTypeNative) : @{
-        FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
+        FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi"],
         FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
         FBSDKURLSchemeMasqueradePlayer : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
       },
@@ -159,7 +157,6 @@ static _Nullable id<FBSDKSettings> _settings;
                              protocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                    scheme:(FBSDKURLScheme)scheme
                                methodName:(nullable NSString *)methodName
-                            methodVersion:(nullable NSString *)methodVersion
                                parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                  userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
@@ -171,7 +168,6 @@ static _Nullable id<FBSDKSettings> _settings;
     _protocolType = protocolType;
     _scheme = [scheme copy];
     _methodName = [methodName copy];
-    _methodVersion = [methodVersion copy];
     _parameters = [parameters copy];
     _userInfo = [userInfo copy];
 
@@ -187,7 +183,6 @@ static _Nullable id<FBSDKSettings> _settings;
   NSURL *requestURL = [_protocol requestURLWithActionID:self.actionID
                                                  scheme:self.scheme
                                              methodName:self.methodName
-                                          methodVersion:self.methodVersion
                                              parameters:self.parameters
                                                   error:errorRef];
   if (!requestURL) {
