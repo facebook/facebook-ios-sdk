@@ -16,6 +16,7 @@
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKInternalURLOpener.h"
 #import "FBSDKMeasurementEvent+Internal.h"
+#import "FBSDKMeasurementEventNames.h"
 #import "FBSDKSettings.h"
 #import "FBSDKWebViewAppLinkResolver.h"
 #import "UIApplication+URLOpener.h"

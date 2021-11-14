@@ -10,10 +10,11 @@
 
 #import "FBSDKMeasurementEventListener.h"
 
+#import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKMeasurementEvent.h"
+#import "FBSDKMeasurementEventNames.h"
 #import "FBSDKTimeSpentData.h"
 
 static NSString *const FBSDKMeasurementEventName = @"event_name";

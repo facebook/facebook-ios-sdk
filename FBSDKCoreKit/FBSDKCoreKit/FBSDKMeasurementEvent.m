@@ -11,6 +11,7 @@
 #import "FBSDKMeasurementEvent+Internal.h"
 
 #import "FBSDKLogger.h"
+#import "FBSDKMeasurementEventNames.h"
 
 NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 

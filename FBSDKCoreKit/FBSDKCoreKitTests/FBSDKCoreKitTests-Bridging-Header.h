@@ -133,6 +133,7 @@
 #import "FBSDKLogging.h"
 #import "FBSDKLogo.h"
 #import "FBSDKMath.h"
+#import "FBSDKMeasurementEventNames.h"
 #import "FBSDKMetadataIndexer.h"
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKModelManager+Testing.h"
