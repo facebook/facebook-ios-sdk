@@ -20,7 +20,7 @@
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKSwizzler.h"
+#import "FBSDKSwizzling.h"
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"
@@ -35,10 +35,11 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
 @interface FBSDKMetadataIndexer ()
 
-@property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *rules;
-@property (nonatomic, readonly, strong) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
-@property (nonatomic, readonly, strong) dispatch_queue_t serialQueue;
-@property (nonatomic, readonly, strong) id<FBSDKUserDataPersisting> userDataStore;
+@property (nonatomic, readonly) NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *rules;
+@property (nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
+@property (nonatomic, readonly) dispatch_queue_t serialQueue;
+@property (nonnull, nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
+@property (nonnull, nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 
 @end
 
@@ -54,11 +55,13 @@ static NSString *const FIELD_K_DELIMITER = @",";
   return instance;
 }
 
-- (instancetype)initWithUserDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+- (instancetype)initWithUserDataStore:(nonnull id<FBSDKUserDataPersisting>)userDataStore
+                             swizzler:(nonnull Class<FBSDKSwizzling>)swizzler
 {
   _rules = [NSMutableDictionary new];
   _serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
   _userDataStore = userDataStore;
+  _swizzler = swizzler;
   return self;
 }
 
@@ -153,13 +156,13 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
   };
 
-  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIView.class withBlock:block named:@"metadataIndexingUIView"];
+  [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIView.class withBlock:block named:@"metadataIndexingUIView"];
 
   // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
   if (@available(iOS 12, *)) {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
+    [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
   } else {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIControl.class withBlock:block named:@"metadataIndexingUIControl"];
+    [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIControl.class withBlock:block named:@"metadataIndexingUIControl"];
   }
 }
 

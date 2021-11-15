@@ -28,10 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKDataPersisting;
 @protocol FBSDKPaymentObserving;
 @class FBSDKAccessTokenExpirer;
+@class FBSDKSKAdNetworkReporter;
 
 @interface FBSDKApplicationDelegate (Testing)
 
-@property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic) id<FBSDKNotificationObserving> notificationObserver;
 @property (nullable, nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 @property (nonnull, nonatomic, readonly) id<FBSDKFeatureChecking> featureChecker;
 @property (nonnull, nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
@@ -44,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
+@property (nonnull, nonatomic, readonly) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
+@property (nonatomic) BOOL isAppLaunched;
 
 // UNCRUSTIFY_FORMAT_OFF
 + (void)resetHasInitializeBeenCalled
@@ -67,6 +70,8 @@ NS_SWIFT_NAME(reset());
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)_logSDKInitialize;
+- (void)resetApplicationObserverCache;
+- (void)setApplicationState:(UIApplicationState)state;
 
 @end
 

@@ -13,7 +13,6 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState+Testing.h"
 #import "FBSDKAppEventsStateFactory.h"
-#import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKCodelessIndexer+Testing.h"
@@ -110,119 +109,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
-- (void)testInitializingSdkConfiguresAppEvents
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKAppEvents reset];
-
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureGateKeeperManager,
-    FBSDKGateKeeperManager.class,
-    "Initializing the SDK should set gate keeper manager for event logging"
-  );
-  NSObject *graphRequestFactory = (NSObject *) self.appEvents.capturedConfigureGraphRequestFactory;
-  XCTAssertEqualObjects(
-    graphRequestFactory.class,
-    FBSDKGraphRequestFactory.class,
-    "Initializing the SDK should set graph request factory for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureAppEventsConfigurationProvider,
-    FBSDKAppEventsConfigurationManager.shared,
-    "Initializing the SDK should set AppEvents configuration provider for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureServerConfigurationProvider,
-    FBSDKServerConfigurationManager.shared,
-    "Initializing the SDK should set server configuration provider for event logging"
-  );
-  NSObject *store = (NSObject *)self.appEvents.capturedConfigureStore;
-  XCTAssertEqualObjects(
-    store,
-    NSUserDefaults.standardUserDefaults,
-    "Should be configured with the expected concrete data store"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureFeatureChecker,
-    self.delegate.featureChecker,
-    "Initializing the SDK should set feature checker for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureLogger,
-    FBSDKLogger.class,
-    "Initializing the SDK should set concrete logger for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureSettings,
-    FBSDKSettings.sharedSettings,
-    "Initializing the SDK should set concrete settings for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigurePaymentObserver,
-    self.delegate.paymentObserver,
-    "Initializing the SDK should set concrete payment observer for event logging"
-  );
-  XCTAssertTrue(
-    [(NSObject *)self.appEvents.capturedConfigureTimeSpentRecorderFactory
-     isKindOfClass:FBSDKTimeSpentRecordingFactory.class],
-    "Initializing the SDK should set concrete time spent recorder factory for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureAppEventsStateStore,
-    FBSDKAppEventsStateManager.shared,
-    "Initializing the SDK should set concrete state store for event logging"
-  );
-  NSObject *capturedConfigureEventDeactivationParameterProcessor = (NSObject *)self.appEvents.capturedConfigureEventDeactivationParameterProcessor;
-  XCTAssertEqualObjects(
-    capturedConfigureEventDeactivationParameterProcessor.class,
-    FBSDKEventDeactivationManager.class,
-    "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
-  );
-  NSObject *capturedConfigureRestrictiveDataFilterParameterProcessor = (NSObject *)self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor;
-
-  XCTAssertEqualObjects(
-    capturedConfigureRestrictiveDataFilterParameterProcessor.class,
-    FBSDKRestrictiveDataFilterManager.class,
-    "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
-  );
-  XCTAssertTrue(
-    [(NSObject *)self.appEvents.capturedConfigureAtePublisherFactory isKindOfClass:FBSDKAtePublisherFactory.class],
-    "Initializing the SDK should set concrete ate publisher factory for event logging"
-  );
-
-  NSObject *capturedConfigureAppEventsStateProvider = (NSObject *)self.appEvents.capturedConfigureAppEventsStateProvider;
-  XCTAssertEqualObjects(
-    capturedConfigureAppEventsStateProvider.class,
-    FBSDKAppEventsStateFactory.class,
-    "Initializing the SDK should set concrete AppEvents state provider for event logging"
-  );
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureSwizzler,
-    FBSDKSwizzler.class,
-    "Initializing the SDK should set concrete swizzler for event logging"
-  );
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedAdvertiserIDProvider,
-    FBSDKAppEventsUtility.shared,
-    "Initializing the SDK should set concrete advertiser ID provider"
-  );
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedCodelessIndexer,
-    FBSDKCodelessIndexer.class,
-    "Initializing the SDK should set concrete codeless indexer"
-  );
-
-  XCTAssertTrue(
-    [(NSObject *)self.appEvents.capturedUserDataStore isKindOfClass:FBSDKUserDataStore.class],
-    "Initializing the SDK should set the expected concrete user data store"
-  );
-}
-
 - (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
@@ -238,29 +124,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKAppEventsState.eventProcessors,
     expected,
     "Initializing the SDK should configure events processors for FBSDKAppEventsState"
-  );
-}
-
-- (void)testConfiguringNonTVAppEventsDependencies
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKAppEvents reset];
-
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedOnDeviceMLModelManager,
-    FBSDKModelManager.shared,
-    "Initializing the SDK should set concrete on device model manager for event logging"
-  );
-  XCTAssertTrue(
-    [(NSObject *)self.appEvents.capturedMetadataIndexer isKindOfClass:FBSDKMetadataIndexer.class],
-    "Initializing the SDK should set concrete metadata indexer for event logging"
-  );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedSKAdNetworkReporter,
-    [self.delegate skAdNetworkReporter],
-    "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
   );
 }
 

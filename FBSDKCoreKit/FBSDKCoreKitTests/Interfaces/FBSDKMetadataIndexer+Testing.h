@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKMetadataIndexer ()
 
 @property (nonnull, nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
+@property (nonnull, nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
+@property (nonnull, nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 
 - (void)constructRules:(NSDictionary<NSString *, id> *)rules;
 

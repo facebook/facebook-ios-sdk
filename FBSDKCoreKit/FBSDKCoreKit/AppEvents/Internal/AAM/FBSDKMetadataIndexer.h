@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKMetadataIndexing.h"
+#import "FBSDKSwizzling.h"
 #import "FBSDKUserDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,7 +22,9 @@ NS_SWIFT_NAME(MetadataIndexer)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithUserDataStore:(id<FBSDKUserDataPersisting>)userDataStore NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithUserDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+                             swizzler:(Class<FBSDKSwizzling>)swizzler
+  NS_DESIGNATED_INITIALIZER;
 
 - (void)enable;
 

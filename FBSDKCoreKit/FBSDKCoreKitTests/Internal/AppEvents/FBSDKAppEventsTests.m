@@ -18,7 +18,6 @@
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
-#import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"

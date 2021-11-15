@@ -34,7 +34,8 @@
 - (void)setUp
 {
   self.userDataStore = [TestUserDataStore new];
-  self.metadataIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore];
+  self.metadataIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore
+                                                                    swizzler:TestSwizzler.class];
   self.rules = @{
     @"r1" : @{
       @"k" : @"email,e-mail,em,electronicmail",
@@ -94,6 +95,27 @@
 
   self.pwdView = [UITextView new];
   self.pwdView.secureTextEntry = YES;
+}
+
+- (void)tearDown
+{
+  [TestSwizzler reset];
+
+  [super tearDown];
+}
+
+- (void)testCreatingWithDependencies
+{
+  XCTAssertEqualObjects(
+    self.metadataIndexer.userDataStore,
+    self.userDataStore,
+    "Should use the provided user data store"
+  );
+  XCTAssertEqualObjects(
+    self.metadataIndexer.swizzler,
+    TestSwizzler.class,
+    "Should use the provided swizzler"
+  );
 }
 
 - (void)testInitStore
