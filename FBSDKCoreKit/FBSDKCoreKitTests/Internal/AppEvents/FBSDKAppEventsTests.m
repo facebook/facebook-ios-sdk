@@ -538,8 +538,8 @@
                      parameters:@{}
                     accessToken:SampleAccessTokens.validToken]
   );
-  XCTAssertThrows([FBSDKAppEvents logPushNotificationOpen:@{}]);
-  XCTAssertThrows([FBSDKAppEvents logPushNotificationOpen:@{} action:foo]);
+  XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{}]);
+  XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{} action:foo]);
   XCTAssertThrows(
     [FBSDKAppEvents logProductItem:foo
                       availability:FBSDKProductAvailabilityInStock
@@ -639,7 +639,7 @@
 {
   self.eventName = @"fb_mobile_push_opened";
 
-  [FBSDKAppEvents logPushNotificationOpen:self.payload action:@"testAction"];
+  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload action:@"testAction"];
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"fb_push_action"], @"testAction");
@@ -650,7 +650,7 @@
 {
   self.eventName = @"fb_mobile_push_opened";
 
-  [FBSDKAppEvents logPushNotificationOpen:self.payload];
+  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertNil(capturedParameters[@"fb_push_action"]);
@@ -660,7 +660,7 @@
 
 - (void)testLogPushNotificationOpenWithEmptyPayload
 {
-  [FBSDKAppEvents logPushNotificationOpen:@{}];
+  [FBSDKAppEvents.shared logPushNotificationOpen:@{}];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
@@ -668,7 +668,7 @@
 - (void)testLogPushNotificationOpenWithEmptyCampaign
 {
   self.payload = @{@"fb_push_payload" : @{@"campaign" : @""}};
-  [FBSDKAppEvents logPushNotificationOpen:self.payload];
+  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
   XCTAssertEqual(

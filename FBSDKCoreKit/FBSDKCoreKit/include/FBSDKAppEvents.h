@@ -393,19 +393,42 @@ NS_SWIFT_NAME(AppEvents)
  */
 
 /**
-  Log an app event that tracks that the application was open via Push Notification.
+ Log an app event that tracks that the application was open via Push Notification.
 
  @param payload Notification payload received via `UIApplicationDelegate`.
  */
-+ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload;
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPushNotificationOpen(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPushNotificationOpen(payload:)` instead");
 
 /**
-  Log an app event that tracks that a custom action was taken from a push notification.
+ Log an app event that tracks that the application was open via Push Notification.
+
+ @param payload Notification payload received via `UIApplicationDelegate`.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
+  NS_SWIFT_NAME(logPushNotificationOpen(payload:));
+// UNCRUSTIFY_FORMAT_ON
+
+/**
+ Log an app event that tracks that a custom action was taken from a push notification.
 
  @param payload Notification payload received via `UIApplicationDelegate`.
  @param action  Name of the action that was taken.
  */
-+ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action;
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPushNotificationOpen(_:action:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPushNotificationOpen(payload:action:)` instead");
+
+/**
+ Log an app event that tracks that a custom action was taken from a push notification.
+
+ @param payload Notification payload received via `UIApplicationDelegate`.
+ @param action  Name of the action that was taken.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
+  NS_SWIFT_NAME(logPushNotificationOpen(payload:action:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Uploads product catalog product item as an app event

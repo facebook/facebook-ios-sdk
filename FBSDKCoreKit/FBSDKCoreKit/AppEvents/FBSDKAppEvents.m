@@ -346,12 +346,22 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
 {
+  [self.shared logPushNotificationOpen:payload action:@""];
+}
+
+- (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
+{
   [self logPushNotificationOpen:payload action:@""];
 }
 
 + (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
 {
-  [self.shared validateConfiguration];
+  [self.shared logPushNotificationOpen:payload action:action];
+}
+
+- (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
+{
+  [self validateConfiguration];
 
   NSDictionary<NSString *, id> *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
   if (!facebookPayload) {
@@ -368,7 +378,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterNamePushAction];
   }
-  [self.shared logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
+
+  [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
 }
 
 /*
