@@ -39,14 +39,14 @@
 
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency
 {
-  [FBSDKAppEvents logPurchase:purchaseAmount currency:currency];
+  [FBSDKAppEvents.shared logPurchase:purchaseAmount currency:currency];
 }
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logPurchase:purchaseAmount currency:currency parameters:parameters];
+  [FBSDKAppEvents.shared logPurchase:purchaseAmount currency:currency parameters:parameters];
 }
 
 @end

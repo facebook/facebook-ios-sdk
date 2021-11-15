@@ -318,75 +318,139 @@ NS_SWIFT_NAME(AppEvents)
  */
 
 /**
-
-  Log a purchase of the specified amount, in the specified currency.
+ Log a purchase of the specified amount, in the specified currency.
 
  @param purchaseAmount    Purchase amount to be logged, as expressed in the specified currency.  This value
  will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
 
- @param currency          Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
  specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
 
-
-              This event immediately triggers a flush of the `FBSDKAppEvents` event queue, unless the `flushBehavior` is set
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
  to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
-
  */
 + (void)logPurchase:(double)purchaseAmount
-           currency:(NSString *)currency;
+           currency:(NSString *)currency
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPurchase(_:currency:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPurchase(amount:currency:)` instead");
 
 /**
+ Log a purchase of the specified amount, in the specified currency.
 
-  Log a purchase of the specified amount, in the specified currency, also providing a set of
+ @param purchaseAmount    Purchase amount to be logged, as expressed in the specified currency.  This value
+ will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
+
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+ specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
+ to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency
+  NS_SWIFT_NAME(logPurchase(amount:currency:));
+// UNCRUSTIFY_FORMAT_ON
+
+/**
+ Log a purchase of the specified amount, in the specified currency, also providing a set of
  additional characteristics describing the purchase.
 
  @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
  will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
 
- @param currency        Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
  specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
 
  @param parameters      Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
- be NSString's, and the values are expected to be NSString or NSNumber.  Limitations on the number of
- parameters and name construction are given in the `FBSDKAppEvents` documentation.  Commonly used parameter names
- are provided in `FBSDKAppEventParameterName*` constants.
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
 
-
-              This event immediately triggers a flush of the `FBSDKAppEvents` event queue, unless the `flushBehavior` is set
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
  to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
-
- */
-+ (void)logPurchase:(double)purchaseAmount
-           currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
-
-/**
-
-  Log a purchase of the specified amount, in the specified currency, also providing a set of
- additional characteristics describing the purchase, as well as an <FBSession> to log to.
-
- @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
- will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
-
- @param currency        Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
- specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
-
- @param parameters      Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
- be NSString's, and the values are expected to be NSString or NSNumber.  Limitations on the number of
- parameters and name construction are given in the `FBSDKAppEvents` documentation.  Commonly used parameter names
- are provided in `FBSDKAppEventParameterName*` constants.
-
- @param accessToken  The optional access token to log the event as.
-
-
-            This event immediately triggers a flush of the `FBSDKAppEvents` event queue, unless the `flushBehavior` is set
- to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
-
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-        accessToken:(nullable FBSDKAccessToken *)accessToken;
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPurchase(_:currency:parameters:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPurchase(amount:currency:parameters:)` instead");
+
+/**
+ Log a purchase of the specified amount, in the specified currency, also providing a set of
+ additional characteristics describing the purchase.
+
+ @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
+ will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
+
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+ specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+
+ @param parameters      Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
+ to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+  NS_SWIFT_NAME(logPurchase(amount:currency:parameters:));
+// UNCRUSTIFY_FORMAT_ON
+
+/**
+ Log a purchase of the specified amount, in the specified currency, also providing a set of
+ additional characteristics describing the purchase.
+
+ @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
+ will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
+
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+ specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+
+ @param parameters      Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+
+ @param accessToken  The optional access token to log the event as.
+
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
+ to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
+ */
++ (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+        accessToken:(nullable FBSDKAccessToken *)accessToken
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPurchase(_:currency:parameters:accessToken:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPurchase(amount:currency:parameters:accessToken:)` instead");
+
+/**
+ Log a purchase of the specified amount, in the specified currency, also providing a set of
+ additional characteristics describing the purchase.
+
+ @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
+ will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
+
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+ specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+
+ @param parameters      Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+ be `NSString`s, and the values are expected to be `NSString` or `NSNumber`.  Limitations on the number of
+ parameters and name construction are given in the `AppEvents` documentation.  Commonly used parameter names
+ are provided in `AppEvents.ParameterName` constants.
+
+ @param accessToken  The optional access token to log the event as.
+
+ This event immediately triggers a flush of the `AppEvents` event queue, unless the `flushBehavior` is set
+ to `FBSDKAppEventsFlushBehaviorExplicitOnly`.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+        accessToken:(nullable FBSDKAccessToken *)accessToken
+  NS_SWIFT_NAME(logPurchase(amount:currency:parameters:accessToken:));
+// UNCRUSTIFY_FORMAT_ON
 
 /*
  * Push Notifications Logging

@@ -296,19 +296,36 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
 {
-  [FBSDKAppEvents logPurchase:purchaseAmount
-                     currency:currency
-                   parameters:@{}];
+  [self.shared logPurchase:purchaseAmount
+                  currency:currency
+                parameters:@{}];
+}
+
+- (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+{
+  [self logPurchase:purchaseAmount
+           currency:currency
+         parameters:@{}];
 }
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logPurchase:purchaseAmount
-                     currency:currency
-                   parameters:parameters
-                  accessToken:nil];
+  [self.shared logPurchase:purchaseAmount
+                  currency:currency
+                parameters:parameters];
+}
+
+- (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  [self logPurchase:purchaseAmount
+           currency:currency
+         parameters:parameters
+        accessToken:nil];
 }
 
 + (void)logPurchase:(double)purchaseAmount
@@ -316,7 +333,18 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
          parameters:(nullable NSDictionary<NSString *, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken
 {
-  [self.shared validateConfiguration];
+  [self.shared logPurchase:purchaseAmount
+                  currency:currency
+                parameters:parameters
+               accessToken:accessToken];
+}
+
+- (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+        accessToken:(nullable FBSDKAccessToken *)accessToken
+{
+  [self validateConfiguration];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
@@ -328,10 +356,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [newParameters setValue:currency forKey:FBSDKAppEventParameterNameCurrency];
   }
 
-  [self.shared logEvent:FBSDKAppEventNamePurchased
-             valueToSum:@(purchaseAmount)
-             parameters:newParameters
-            accessToken:accessToken];
+  [self logEvent:FBSDKAppEventNamePurchased
+      valueToSum:@(purchaseAmount)
+      parameters:newParameters
+     accessToken:accessToken];
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.

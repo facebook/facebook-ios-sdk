@@ -206,7 +206,7 @@
 - (void)testLogPurchaseFlushesWhenFlushBehaviorIsExplicit
 {
   FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
-  [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
+  [FBSDKAppEvents.shared logPurchase:self.purchaseAmount currency:self.currency];
 
   // Verifying flush
   self.appEventsConfigurationProvider.firstCapturedBlock();
@@ -219,7 +219,7 @@
 
 - (void)testLogPurchase
 {
-  [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
+  [FBSDKAppEvents.shared logPurchase:self.purchaseAmount currency:self.currency];
 
   XCTAssertEqual(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
@@ -525,17 +525,17 @@
                          parameters:@{}
                         accessToken:SampleAccessTokens.validToken]
   );
-  XCTAssertThrows([FBSDKAppEvents logPurchase:2 currency:foo]);
+  XCTAssertThrows([FBSDKAppEvents.shared logPurchase:2 currency:foo]);
   XCTAssertThrows(
-    [FBSDKAppEvents logPurchase:2
-                       currency:foo
-                     parameters:@{}]
+    [FBSDKAppEvents.shared logPurchase:2
+                              currency:foo
+                            parameters:@{}]
   );
   XCTAssertThrows(
-    [FBSDKAppEvents logPurchase:2
-                       currency:foo
-                     parameters:@{}
-                    accessToken:SampleAccessTokens.validToken]
+    [FBSDKAppEvents.shared logPurchase:2
+                              currency:foo
+                            parameters:@{}
+                           accessToken:SampleAccessTokens.validToken]
   );
   XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{}]);
   XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{} action:foo]);
