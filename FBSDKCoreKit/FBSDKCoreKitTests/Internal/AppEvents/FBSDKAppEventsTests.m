@@ -264,19 +264,19 @@
 
 - (void)testLogProductItemNonNil
 {
-  [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
-                    availability:FBSDKProductAvailabilityInStock
-                       condition:FBSDKProductConditionNew
-                     description:@"description"
-                       imageLink:@"https://www.sample.com"
-                            link:@"https://www.sample.com"
-                           title:@"title"
-                     priceAmount:1.0
-                        currency:@"USD"
-                            gtin:@"BLUE MOUNTAIN"
-                             mpn:@"BLUE MOUNTAIN"
-                           brand:@"PHILZ"
-                      parameters:@{}];
+  [FBSDKAppEvents.shared logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
+                           availability:FBSDKProductAvailabilityInStock
+                              condition:FBSDKProductConditionNew
+                            description:@"description"
+                              imageLink:@"https://www.sample.com"
+                                   link:@"https://www.sample.com"
+                                  title:@"title"
+                            priceAmount:1.0
+                               currency:@"USD"
+                                   gtin:@"BLUE MOUNTAIN"
+                                    mpn:@"BLUE MOUNTAIN"
+                                  brand:@"PHILZ"
+                             parameters:@{}];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], @"fb_mobile_catalog_update");
@@ -296,19 +296,19 @@
 
 - (void)testLogProductItemNilGtinMpnBrand
 {
-  [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
-                    availability:FBSDKProductAvailabilityInStock
-                       condition:FBSDKProductConditionNew
-                     description:@"description"
-                       imageLink:@"https://www.sample.com"
-                            link:@"https://www.sample.com"
-                           title:@"title"
-                     priceAmount:1.0
-                        currency:@"USD"
-                            gtin:nil
-                             mpn:nil
-                           brand:nil
-                      parameters:@{}];
+  [FBSDKAppEvents.shared logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
+                           availability:FBSDKProductAvailabilityInStock
+                              condition:FBSDKProductConditionNew
+                            description:@"description"
+                              imageLink:@"https://www.sample.com"
+                                   link:@"https://www.sample.com"
+                                  title:@"title"
+                            priceAmount:1.0
+                               currency:@"USD"
+                                   gtin:nil
+                                    mpn:nil
+                                  brand:nil
+                             parameters:@{}];
 
   XCTAssertNil(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
@@ -540,19 +540,19 @@
   XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{}]);
   XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{} action:foo]);
   XCTAssertThrows(
-    [FBSDKAppEvents logProductItem:foo
-                      availability:FBSDKProductAvailabilityInStock
-                         condition:FBSDKProductConditionNew
-                       description:foo
-                         imageLink:foo
-                              link:foo
-                             title:foo
-                       priceAmount:1
-                          currency:foo
-                              gtin:nil
-                               mpn:nil
-                             brand:nil
-                        parameters:@{}]
+    [FBSDKAppEvents.shared logProductItem:foo
+                             availability:FBSDKProductAvailabilityInStock
+                                condition:FBSDKProductConditionNew
+                              description:foo
+                                imageLink:foo
+                                     link:foo
+                                    title:foo
+                              priceAmount:1
+                                 currency:foo
+                                     gtin:nil
+                                      mpn:nil
+                                    brand:nil
+                               parameters:@{}]
   );
   XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceToken:[NSData new]]);
   XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceTokenString:foo]);

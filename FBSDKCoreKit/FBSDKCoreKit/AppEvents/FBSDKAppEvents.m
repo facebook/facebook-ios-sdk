@@ -410,9 +410,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
 }
 
-/*
- *  Uploads product catalog product item as an app event
- */
 + (void)logProductItem:(NSString *)itemID
           availability:(FBSDKProductAvailability)availability
              condition:(FBSDKProductCondition)condition
@@ -427,7 +424,36 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                  brand:(nullable NSString *)brand
             parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [self.shared validateConfiguration];
+  [self.shared logProductItem:itemID
+                 availability:availability
+                    condition:condition
+                  description:description
+                    imageLink:imageLink
+                         link:link
+                        title:title
+                  priceAmount:priceAmount
+                     currency:currency
+                         gtin:gtin
+                          mpn:mpn
+                        brand:brand
+                   parameters:parameters];
+}
+
+- (void)logProductItem:(NSString *)itemID
+          availability:(FBSDKProductAvailability)availability
+             condition:(FBSDKProductCondition)condition
+           description:(NSString *)description
+             imageLink:(NSString *)imageLink
+                  link:(NSString *)link
+                 title:(NSString *)title
+           priceAmount:(double)priceAmount
+              currency:(NSString *)currency
+                  gtin:(nullable NSString *)gtin
+                   mpn:(nullable NSString *)mpn
+                 brand:(nullable NSString *)brand
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  [self validateConfiguration];
 
   if (itemID == nil) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -512,8 +538,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [FBSDKTypeUtility dictionary:dict setObject:brand forKey:FBSDKAppEventParameterProductBrand];
   }
 
-  [self.shared logEvent:FBSDKAppEventNameProductCatalogUpdate
-             parameters:dict];
+  [self logEvent:FBSDKAppEventNameProductCatalogUpdate
+      parameters:dict];
 }
 
 + (void)activateApp

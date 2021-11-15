@@ -495,30 +495,31 @@ NS_SWIFT_NAME(AppEvents)
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Uploads product catalog product item as an app event
-  @param itemID            Unique ID for the item. Can be a variant for a product.
-                           Max size is 100.
-  @param availability      If item is in stock. Accepted values are:
-                              in stock - Item ships immediately
-                              out of stock - No plan to restock
-                              preorder - Available in future
-                              available for order - Ships in 1-2 weeks
-                              discontinued - Discontinued
-  @param condition         Product condition: new, refurbished or used.
-  @param description       Short text describing product. Max size is 5000.
-  @param imageLink         Link to item image used in ad.
-  @param link              Link to merchant's site where someone can buy the item.
-  @param title             Title of item.
-  @param priceAmount       Amount of purchase, in the currency specified by the 'currency'
-                           parameter. This value will be rounded to the thousandths place
-                           (e.g., 12.34567 becomes 12.346).
-  @param currency          Currency used to specify the amount.
-                           E.g. "USD", "EUR", "GBP".  See ISO-4217 for specific values. One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>
-  @param gtin              Global Trade Item Number including UPC, EAN, JAN and ISBN
-  @param mpn               Unique manufacture ID for product
-  @param brand             Name of the brand
-                           Note: Either gtin, mpn or brand is required.
-  @param parameters        Optional fields for deep link specification.
+ Uploads product catalog product item as an app event
+
+ @param itemID            Unique ID for the item. Can be a variant for a product.
+                          Max size is 100.
+ @param availability      If item is in stock. Accepted values are:
+                          in stock - Item ships immediately
+                          out of stock - No plan to restock
+                          preorder - Available in future
+                          available for order - Ships in 1-2 weeks
+                          discontinued - Discontinued
+ @param condition         Product condition: new, refurbished or used.
+ @param description       Short text describing product. Max size is 5000.
+ @param imageLink         Link to item image used in ad.
+ @param link              Link to merchant's site where someone can buy the item.
+ @param title             Title of item.
+ @param priceAmount       Amount of purchase, in the currency specified by the 'currency'
+                          parameter. This value will be rounded to the thousandths place
+                          (e.g., 12.34567 becomes 12.346).
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+                          specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+ @param gtin              Global Trade Item Number including UPC, EAN, JAN and ISBN
+ @param mpn               Unique manufacture ID for product
+ @param brand             Name of the brand
+                          Note: Either gtin, mpn or brand is required.
+ @param parameters        Optional fields for deep link specification.
  */
 + (void)logProductItem:(NSString *)itemID
           availability:(FBSDKProductAvailability)availability
@@ -532,7 +533,52 @@ NS_SWIFT_NAME(AppEvents)
                   gtin:(nullable NSString *)gtin
                    mpn:(nullable NSString *)mpn
                  brand:(nullable NSString *)brand
-            parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logProductItem(_:availability:condition:description:imageLink:link:title:priceAmount:currency:gtin:mpn:brand:parameters:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logProductItem(id:availability:condition:description:imageLink:link:title:priceAmount:currency:gtin:mpn:brand:parameters:)` instead");
+
+/**
+ Uploads product catalog product item as an app event
+
+ @param itemID            Unique ID for the item. Can be a variant for a product.
+                          Max size is 100.
+ @param availability      If item is in stock. Accepted values are:
+                          in stock - Item ships immediately
+                          out of stock - No plan to restock
+                          preorder - Available in future
+                          available for order - Ships in 1-2 weeks
+                          discontinued - Discontinued
+ @param condition         Product condition: new, refurbished or used.
+ @param description       Short text describing product. Max size is 5000.
+ @param imageLink         Link to item image used in ad.
+ @param link              Link to merchant's site where someone can buy the item.
+ @param title             Title of item.
+ @param priceAmount       Amount of purchase, in the currency specified by the 'currency'
+                          parameter. This value will be rounded to the thousandths place
+                          (e.g., 12.34567 becomes 12.346).
+ @param currency          Currency string (e.g., "USD", "EUR", "GBP"); see ISO-4217 for
+                          specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
+ @param gtin              Global Trade Item Number including UPC, EAN, JAN and ISBN
+ @param mpn               Unique manufacture ID for product
+ @param brand             Name of the brand
+                          Note: Either gtin, mpn or brand is required.
+ @param parameters        Optional fields for deep link specification.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)logProductItem:(NSString *)itemID
+          availability:(FBSDKProductAvailability)availability
+             condition:(FBSDKProductCondition)condition
+           description:(NSString *)description
+             imageLink:(NSString *)imageLink
+                  link:(NSString *)link
+                 title:(NSString *)title
+           priceAmount:(double)priceAmount
+              currency:(NSString *)currency
+                  gtin:(nullable NSString *)gtin
+                   mpn:(nullable NSString *)mpn
+                 brand:(nullable NSString *)brand
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+  NS_SWIFT_NAME(logProductItem(id:availability:condition:description:imageLink:link:title:priceAmount:currency:gtin:mpn:brand:parameters:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
 
