@@ -99,7 +99,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
         withActionID: "",
         scheme: "",
         methodName: "",
-          parameters: [:]
+        parameters: [:]
       ),
       "Should not create a url without a server configuration"
     )
