@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nullable, nonatomic) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 @property (class, nullable, nonatomic) NSString *directoryPath;
+@property (nullable, nonatomic) Class<FBSDKFeatureExtracting> featureExtractor;
 
 + (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo;
 + (NSArray<NSString *> *)getIntegrityMapping;
@@ -38,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer;
+             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
+                   featureExtractor:(nonnull Class<FBSDKFeatureExtracting>)featureExtractor;
 
 @end
 

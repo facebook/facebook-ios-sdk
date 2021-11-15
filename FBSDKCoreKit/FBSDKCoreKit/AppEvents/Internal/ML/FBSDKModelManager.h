@@ -10,19 +10,20 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKFeatureChecking.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKDataPersisting.h"
 #import "FBSDKEventProcessing.h"
+#import "FBSDKFeatureExtracting.h"
+#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKIntegrityParametersProcessorProvider.h"
 #import "FBSDKIntegrityProcessing.h"
 #import "FBSDKRulesFromKeyProvider.h"
-
-@protocol FBSDKDataPersisting;
-@protocol FBSDKFeatureChecking;
-@protocol FBSDKFileManaging;
-@protocol FBSDKGraphRequestFactory;
-@protocol FBSDKSettings;
-@protocol FBSDKFileDataExtracting;
-@protocol FBSDKGateKeeperManaging;
-@protocol FBSDKSuggestedEventsIndexer;
+#import "FBSDKSuggestedEventsIndexerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,7 +47,8 @@ NS_SWIFT_NAME(ModelManager)
                            settings:(id<FBSDKSettings>)settings
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer;
+             suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
+                   featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor;
 
 @end
 

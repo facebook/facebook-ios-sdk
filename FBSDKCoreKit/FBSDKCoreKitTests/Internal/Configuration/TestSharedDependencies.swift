@@ -51,6 +51,7 @@ enum TestSharedDependencies {
       appLinkURLFactory: TestAppLinkURLFactory(),
       codelessIndexer: TestCodelessEvents.self,
       dataExtractor: TestFileDataExtractor.self,
+      featureExtractor: TestFeatureExtractor.self,
       fileManager: TestFileManager(),
       internalURLOpener: TestInternalURLOpener(),
       internalUtility: TestInternalUtility(),

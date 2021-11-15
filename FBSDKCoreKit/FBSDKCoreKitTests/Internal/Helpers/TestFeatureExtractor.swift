@@ -14,6 +14,8 @@ class TestFeatureExtractor: FeatureExtracting {
   static var stubbedDenseFeatures: UnsafeMutablePointer<Float>?
   static var capturedGetTextFeatureText: String?
   static var capturedGetTextFeatureScreenName: String?
+  static var loadRulesForKeyWasCalled = false
+  static var capturedUseCaseKeys = [String]()
 
   static func stub(denseFeatures: UnsafeMutablePointer<Float>) {
     stubbedDenseFeatures = denseFeatures
@@ -29,9 +31,17 @@ class TestFeatureExtractor: FeatureExtracting {
     return ""
   }
 
+  static func loadRules(forKey useCaseKey: String) {
+    XCTFail("Test is not checking that rules were loaded")
+    loadRulesForKeyWasCalled = true
+    capturedUseCaseKeys.append(useCaseKey)
+  }
+
   static func reset() {
     stubbedDenseFeatures = nil
     capturedGetTextFeatureText = nil
     capturedGetTextFeatureScreenName = nil
+    loadRulesForKeyWasCalled = false
+    capturedUseCaseKeys = []
   }
 }

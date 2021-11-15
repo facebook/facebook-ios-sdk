@@ -197,7 +197,8 @@ NS_ASSUME_NONNULL_BEGIN
                                                settings:self.dependencies.settings
                                           dataExtractor:self.dependencies.dataExtractor
                                       gateKeeperManager:self.dependencies.gateKeeperManager
-                                 suggestedEventsIndexer:self.dependencies.suggestedEventsIndexer];
+                                 suggestedEventsIndexer:self.dependencies.suggestedEventsIndexer
+                                       featureExtractor:self.dependencies.featureExtractor];
 }
 
 - (void)configureWebDialogView

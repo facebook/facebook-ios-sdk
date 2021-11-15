@@ -44,7 +44,8 @@ class FBSDKModelManagerTests: XCTestCase {
       settings: settings,
       dataExtractor: TestFileDataExtractor.self,
       gateKeeperManager: TestGateKeeperManager.self,
-      suggestedEventsIndexer: suggestedEventsIndexer
+      suggestedEventsIndexer: suggestedEventsIndexer,
+      featureExtractor: TestFeatureExtractor.self
     )
   }
 
@@ -52,6 +53,7 @@ class FBSDKModelManagerTests: XCTestCase {
     ModelManager.reset()
     TestFileDataExtractor.reset()
     TestGateKeeperManager.reset()
+    TestFeatureExtractor.reset()
 
     super.tearDown()
   }

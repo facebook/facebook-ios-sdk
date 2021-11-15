@@ -766,7 +766,8 @@ static UIApplicationState _applicationState;
                                                settings:sharedSettings
                                           dataExtractor:NSData.class
                                       gateKeeperManager:FBSDKGateKeeperManager.class
-                                 suggestedEventsIndexer:suggestedEventsIndexer]; // TEMP: added to configurator
+                                 suggestedEventsIndexer:suggestedEventsIndexer
+                                       featureExtractor:FBSDKFeatureExtractor.class]; // TEMP: added to configurator
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared]; // TEMP: added to configurator
   [FBSDKAppLinkUtility configureWithGraphRequestFactory:graphRequestFactory
                                  infoDictionaryProvider:NSBundle.mainBundle

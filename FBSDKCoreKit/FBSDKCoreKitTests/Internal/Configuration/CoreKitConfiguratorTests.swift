@@ -638,6 +638,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       ModelManager.shared.suggestedEventsIndexer,
       "ModelManager should not have a suggested events indexer by default"
     )
+    XCTAssertNil(
+      ModelManager.shared.featureExtractor,
+      "ModelManager should not have a feature extractor by default"
+    )
 
     configurator.configureTargets()
 
@@ -668,6 +672,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       ModelManager.shared.gateKeeperManager === dependencies.gateKeeperManager,
       "ModelManager should be configured with the gate keeper manager"
+    )
+    XCTAssertTrue(
+      ModelManager.shared.featureExtractor === dependencies.featureExtractor,
+      "ModelManager should be configured with the feature extractor"
     )
   }
 

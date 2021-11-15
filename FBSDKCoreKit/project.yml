@@ -135,7 +135,7 @@ targets:
           - ML
           - Codeless
           - ViewHierarchy
-          - FBSDKFeatureExtracting*
+          - Internal/FBSDKFeatureExtracting*
           - FBSDKHybridAppEventsScriptMessageHandler*
           - FBSDKAppEventsNumberParser*
       - path: FBSDKCoreKit/GraphAPI
@@ -155,7 +155,7 @@ targets:
           - FBSDKProfile+ProfileProtocols*
           - FBSDKProfilePictureView+Internal*
           - FBSDKProfileProtocols*
-          - FBSDKMeasurementEvent_Internal*
+          - FBSDKMeasurementEvent*
           - FBSDKMacCatalystDetermining*
           - FBSDKURL_Internal.h
           - FBSDKAppLink*
@@ -237,7 +237,7 @@ targets:
           - ML
           - Codeless
           - ViewHierarchy
-          - FBSDKFeatureExtracting*
+          - Internal/FBSDKFeatureExtracting*
           - FBSDKHybridAppEventsScriptMessageHandler*
           - FBSDKAppEventsNumberParser*
       - path: FBSDKCoreKit/GraphAPI
@@ -257,7 +257,7 @@ targets:
           - FBSDKProfile+ProfileProtocols*
           - FBSDKProfilePictureView+Internal*
           - FBSDKProfileProtocols*
-          - FBSDKMeasurementEvent_Internal*
+          - FBSDKMeasurementEvent*
           - FBSDKMacCatalystDetermining*
           - FBSDKURL_Internal.h
           - FBSDKAppLink*

@@ -34,6 +34,7 @@
 #import "FBSDKEventProcessing.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureDisabling.h"
+#import "FBSDKFeatureExtracting.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
 #import "FBSDKIntegrityParametersProcessorProvider.h"
@@ -100,6 +101,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
 @property (nonatomic, readonly) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nonatomic, readonly) Class<FBSDKFileDataExtracting> dataExtractor;
+@property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
 @property (nonatomic, readonly) id<FBSDKFileManaging> fileManager;
 @property (nonatomic, readonly) id<FBSDKInternalURLOpener> internalURLOpener;
 @property (nonatomic, readonly) id<FBSDKInternalUtility> internalUtility;
@@ -158,6 +160,7 @@ NS_SWIFT_NAME(SharedDependencies)
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
                             dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
+                         featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
                               fileManager:(id<FBSDKFileManaging>)fileManager
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           internalUtility:(id<FBSDKInternalUtility>)internalUtility

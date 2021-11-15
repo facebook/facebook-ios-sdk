@@ -10,23 +10,12 @@
 
 #import "FBSDKModelManager.h"
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
 #import "FBSDKAppEventName.h"
-#import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsParameterProcessing.h"
-#import "FBSDKDataPersisting.h"
-#import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureExtractor.h"
-#import "FBSDKGateKeeperManaging.h"
-#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKIntegrityManager.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
-#import "FBSDKSettingsProtocol.h"
-#import "FBSDKSuggestedEventsIndexerProtocol.h"
 
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
@@ -48,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nullable, nonatomic) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
+@property (nullable, nonatomic) Class<FBSDKFeatureExtracting> featureExtractor;
 
 @end
 
@@ -79,6 +69,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
              suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
+                   featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
@@ -88,6 +79,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   _dataExtractor = dataExtractor;
   _gateKeeperManager = gateKeeperManager;
   _suggestedEventsIndexer = suggestedEventsIndexer;
+  _featureExtractor = featureExtractor;
 }
 
 #pragma mark - Public methods
@@ -307,7 +299,7 @@ static dispatch_once_t enableNonce;
 
     if ([self.featureChecker isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
-        [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
+        [self.featureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
         [self.suggestedEventsIndexer enable];
       }];
     }
@@ -476,6 +468,7 @@ static dispatch_once_t enableNonce;
   self.shared.dataExtractor = nil;
   self.shared.gateKeeperManager = nil;
   self.shared.suggestedEventsIndexer = nil;
+  self.shared.featureExtractor = nil;
 }
 
 + (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo

@@ -359,6 +359,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertNil(ModelManager.shared.dataExtractor, "Should not have a data extractor by default")
     XCTAssertNil(ModelManager.shared.gateKeeperManager, "Should not have a gate keeper manager by default")
     XCTAssertNil(ModelManager.shared.suggestedEventsIndexer, "Should not have a suggested events indexer by default")
+    XCTAssertNil(ModelManager.shared.featureExtractor, "Should not have a feature extractor by default")
 
     delegate.initializeSDK(launchOptions: [:])
 
@@ -393,6 +394,10 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       ModelManager.shared.gateKeeperManager === GateKeeperManager.self,
       "Should configure with the expected concrete gatekeeper manager"
+    )
+    XCTAssertTrue(
+      ModelManager.shared.featureExtractor === FeatureExtractor.self,
+      "Should configure with the expected feature extractor"
     )
   }
 

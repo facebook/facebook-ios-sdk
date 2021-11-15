@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
                             dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
+                         featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
                               fileManager:(id<FBSDKFileManaging>)fileManager
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
@@ -111,6 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
     _appLinkURLFactory = appLinkURLFactory;
     _codelessIndexer = codelessIndexer;
     _dataExtractor = dataExtractor;
+    _featureExtractor = featureExtractor;
     _fileManager = fileManager;
     _internalURLOpener = internalURLOpener;
     _internalUtility = internalUtility;
