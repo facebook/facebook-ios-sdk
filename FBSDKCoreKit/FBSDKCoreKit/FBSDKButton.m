@@ -8,13 +8,8 @@
 
 #import "FBSDKButton+Internal.h"
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAccessToken+Internal.h"
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKLogo.h"
-#import "FBSDKViewImpressionTracker.h"
-#import "NSNotificationCenter+Extensions.h"
 
 #define HEIGHT_TO_FONT_SIZE 0.47
 #define HEIGHT_TO_MARGIN 0.27
@@ -31,6 +26,8 @@
 @implementation FBSDKButton
 
 static id _applicationActivationNotifier;
+static id<FBSDKEventLogging> _eventLogger;
+static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
 + (nullable id)applicationActivationNotifier
 {
@@ -42,10 +39,44 @@ static id _applicationActivationNotifier;
   _applicationActivationNotifier = applicationActivationNotifier;
 }
 
++ (nullable id<FBSDKEventLogging>)eventLogger
+{
+  return _eventLogger;
+}
+
++ (void)setEventLogger:(nullable id<FBSDKEventLogging>)eventLogger
+{
+  _eventLogger = eventLogger;
+}
+
++ (nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  return _accessTokenProvider;
+}
+
++ (void)setAccessTokenProvider:(nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
++ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
+                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
+                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  self.applicationActivationNotifier = applicationActivationNotifier;
+  self.eventLogger = eventLogger;
+  self.accessTokenProvider = accessTokenProvider;
+}
+
+#if FBTEST && DEBUG
 + (void)resetClassDependencies
 {
   self.applicationActivationNotifier = nil;
+  self.eventLogger = nil;
+  self.accessTokenProvider = nil;
 }
+
+#endif
 
 #pragma mark - Object Lifecycle
 
@@ -158,10 +189,10 @@ static id _applicationActivationNotifier;
 - (void)logTapEventWithEventName:(NSString *)eventName
                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [self.class.eventLogger logInternalEvent:eventName
+                                parameters:parameters
+                        isImplicitlyLogged:YES
+                               accessToken:[self.class.accessTokenProvider currentAccessToken]];
 }
 
 - (void)checkImplicitlyDisabled

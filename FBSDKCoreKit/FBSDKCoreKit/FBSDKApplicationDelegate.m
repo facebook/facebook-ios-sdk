@@ -744,7 +744,9 @@ static UIApplicationState _applicationState;
                                                      settings:sharedSettings
                                           serverConfiguration:serverConfigurationProvider
                                           graphRequestFactory:graphRequestFactory];
-  FBSDKButton.applicationActivationNotifier = self; // TEMP: added to configurator
+  [FBSDKButton configureWithApplicationActivationNotifier:self
+                                              eventLogger:FBSDKAppEvents.shared
+                                      accessTokenProvider:FBSDKAccessToken.class]; // TEMP: added to configurator
   [FBSDKError configureWithErrorReporter:FBSDKErrorReporter.shared]; // TEMP: added to configurator
 #if !TARGET_OS_TV
   [FBSDKBridgeAPIRequest configureWithInternalURLOpener:UIApplication.sharedApplication

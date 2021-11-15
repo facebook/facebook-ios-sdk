@@ -727,6 +727,25 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresButtonSuperclass() {
+    ApplicationDelegate.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      FBButton.applicationActivationNotifier is ApplicationDelegate,
+      "Should be configured with the expected concrete application activation notifier"
+    )
+    XCTAssertTrue(
+      FBButton.eventLogger === AppEvents.shared,
+      "Should be configured with the expected concrete app events"
+    )
+    XCTAssertTrue(
+      FBButton.accessTokenProvider === AccessToken.self,
+      "Should be configured with the expected concrete access token provider"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

@@ -663,19 +663,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
 }
 
-// TEMP: added to configurator tests
-- (void)testInitializingSdkConfiguresButtonSuperclass
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *notifier = (NSObject *) FBSDKButton.applicationActivationNotifier;
-  XCTAssertEqualObjects(
-    notifier.class,
-    FBSDKApplicationDelegate.class,
-    "Should be configured with the expected concrete application activation notifier"
-  );
-}
-
 - (void)testInitializingSdkChecksInstrumentFeature
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];

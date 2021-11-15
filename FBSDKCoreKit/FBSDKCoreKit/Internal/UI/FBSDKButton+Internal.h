@@ -11,17 +11,25 @@
 #import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
 
+#import "FBSDKAccessTokenProtocols.h"
+#import "FBSDKEventLogging.h"
 #import "FBSDKIcon+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKButton ()
 
-@property (class, nullable, nonatomic) id applicationActivationNotifier;
+@property (class, nullable, nonatomic, readonly) id applicationActivationNotifier;
+@property (class, nullable, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
+@property (class, nullable, nonatomic, readonly) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 
 #if FBTEST && DEBUG
 + (void)resetClassDependencies;
 #endif
+
++ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
+                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
+                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
 - (void)logTapEventWithEventName:(NSString *)eventName
                       parameters:(nullable NSDictionary<NSString *, id> *)parameters;

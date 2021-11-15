@@ -127,12 +127,28 @@ final class CoreKitConfiguratorTests: XCTestCase {
       FBButton.applicationActivationNotifier,
       "Button should not have an application activation notifier by default"
     )
+    XCTAssertNil(
+      FBButton.eventLogger,
+      "Button should not have an event logger by default"
+    )
+    XCTAssertNil(
+      FBButton.accessTokenProvider,
+      "Button should not have an access token provider by default"
+    )
 
     configurator.configureTargets()
 
     XCTAssertTrue(
       FBButton.applicationActivationNotifier as AnyObject === dependencies.applicationActivationNotifier as AnyObject,
       "Button should be configured with the application activation notifier"
+    )
+    XCTAssertTrue(
+      FBButton.eventLogger === dependencies.eventLogger,
+      "Button should be configured with the expected concrete app events"
+    )
+    XCTAssertTrue(
+      FBButton.accessTokenProvider === dependencies.accessTokenWallet,
+      "Button should be configured with the expected concrete access token provider"
     )
   }
 

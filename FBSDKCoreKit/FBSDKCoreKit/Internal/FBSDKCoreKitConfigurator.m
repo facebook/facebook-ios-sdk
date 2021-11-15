@@ -84,7 +84,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureButton
 {
-  FBSDKButton.applicationActivationNotifier = self.dependencies.applicationActivationNotifier;
+  [FBSDKButton configureWithApplicationActivationNotifier:self.dependencies.applicationActivationNotifier
+                                              eventLogger:self.dependencies.eventLogger
+                                      accessTokenProvider:self.dependencies.accessTokenWallet];
 }
 
 - (void)configureFeatureManager
