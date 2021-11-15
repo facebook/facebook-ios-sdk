@@ -61,7 +61,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testCompletingWithEmptyContextID() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: name, size: 2)
+    GamingContext.current = GamingContext(identifier: name, size: 2)
 
     let url = URL(string: "fbabc123://gaming/contextchoose/?context_id=")
 

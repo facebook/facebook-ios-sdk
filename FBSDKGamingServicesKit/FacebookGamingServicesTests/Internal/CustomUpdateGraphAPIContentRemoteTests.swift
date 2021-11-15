@@ -24,7 +24,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   }
 
   func testImageContentInitWithValidValues() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     var remoteContent: CustomUpdateGraphAPIContentRemote?
 
     do {
@@ -47,7 +47,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   }
 
   func testImageContentInitWithInvalidMessage() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     var remoteContent: CustomUpdateGraphAPIContentRemote?
 
     do {
@@ -63,7 +63,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   }
 
   func testImageContentInitWithInvalidImage() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     var remoteContent: CustomUpdateGraphAPIContentRemote?
 
     do {
@@ -94,7 +94,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   }
 
   func testMediaContentInitWithValidValues() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     var remoteContent: CustomUpdateGraphAPIContentRemote?
 
     do {
@@ -111,7 +111,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   }
 
   func testMediaContentInitWithInvalidMessage() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     var remoteContent: CustomUpdateGraphAPIContentRemote?
 
     do {

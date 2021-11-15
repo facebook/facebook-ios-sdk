@@ -12,7 +12,7 @@ import XCTest
 class FBSDKGamingContextTests: XCTestCase {
 
   func testCreating() throws {
-    let context = try XCTUnwrap(GamingContext.createContext(withIdentifier: name, size: 2))
+    let context = try XCTUnwrap(GamingContext(identifier: name, size: 2))
     XCTAssertNotNil(
       context,
       "Should be able to create a context with a valid identifier"
@@ -30,7 +30,7 @@ class FBSDKGamingContextTests: XCTestCase {
   }
 
   func testCreatingWithSizeLessThanZero() throws {
-    let context = try XCTUnwrap(GamingContext.createContext(withIdentifier: name, size: -2))
+    let context = try XCTUnwrap(GamingContext(identifier: name, size: -2))
     XCTAssertNotNil(
       context,
       "Should be able to create a context with a valid identifier"
@@ -48,7 +48,7 @@ class FBSDKGamingContextTests: XCTestCase {
   }
 
   func testCreatingWithEmptyIdentifier() {
-    let context = GamingContext.createContext(withIdentifier: "", size: 2)
+    let context = GamingContext(identifier: "", size: 2)
     XCTAssertNil(
       context,
       "Should not be able to create a context with a invalid identifier"

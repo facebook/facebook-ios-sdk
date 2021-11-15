@@ -32,7 +32,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    GamingContext.current = GamingContext.createContext(withIdentifier: validContextTokenID, size: 0)
+    GamingContext.current = GamingContext(identifier: validContextTokenID, size: 0)
     AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
   }
 

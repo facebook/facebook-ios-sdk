@@ -105,7 +105,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogSuccessfullyUpdatesGamingContext() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: "foo", size: 2)
+    GamingContext.current = GamingContext(identifier: "foo", size: 2)
 
     _ = dialog.show()
 

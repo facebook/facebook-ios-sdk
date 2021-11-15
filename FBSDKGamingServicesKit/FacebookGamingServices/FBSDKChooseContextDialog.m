@@ -161,7 +161,7 @@
     }
   }
   if (contextID && contextID.length > 0) {
-    FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:contextID size:contextSize];
+    FBSDKGamingContext.currentContext = [[FBSDKGamingContext alloc] initWithIdentifier:contextID size:contextSize];
   } else {
     FBSDKGamingContext.currentContext = nil;
   }

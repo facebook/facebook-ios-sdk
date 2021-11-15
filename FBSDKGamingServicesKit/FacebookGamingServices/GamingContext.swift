@@ -8,7 +8,7 @@
 
 @objcMembers
 @objc(FBSDKGamingContext)
-public class GamingContext: NSObject {
+public final class GamingContext: NSObject {
 
   /**
    A shared object that holds data about the current user's game instance which could be solo game or multiplayer game with other users.
@@ -18,37 +18,20 @@ public class GamingContext: NSObject {
   /**
    A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
    */
-  public private(set) var identifier: String
+  public let identifier: String
 
   /**
    The number of players in the current user's game instance
    */
-  public private(set) var size: Int = 0
+  public let size: Int
 
-  private init?(identifier: String, size: Int) {
-    if identifier.isEmpty {
-      return nil
-    }
+  public init?(identifier: String, size: Int) {
+    guard !identifier.isEmpty else { return nil }
 
     self.identifier = identifier
-    if size > 0 {
-      self.size = size
-    }
+    self.size = max(0, size)
+
     super.init()
     Self.current = self
-  }
-
-  /**
-   Internal Type exposed to facilitate transition to Swift.
-   API Subject to change or removal without warning. Do not use.
-
-   Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
-
-   @warning INTERNAL - DO NOT USE
-   */
-
-  @discardableResult
-  public static func createContext(withIdentifier identifier: String, size: Int) -> Self? {
-    GamingContext(identifier: identifier, size: size) as? Self
   }
 }
