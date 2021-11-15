@@ -94,38 +94,61 @@ NS_SWIFT_NAME(AppEvents)
  * Control over event batching/flushing
  */
 
-/**
-
- The current event flushing behavior specifying when events are sent back to Facebook servers.
- */
-@property (class, nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
+/// The current event flushing behavior specifying when events are sent back to Facebook servers.
+@property (class, nonatomic) FBSDKAppEventsFlushBehavior flushBehavior
+  DEPRECATED_MSG_ATTRIBUTE("`AppEvents.flushBehavior` is deprecated and will be removed in the next major release; please use `AppEvents.shared.flushBehavior` instead");
 
 /**
  Set the 'override' App ID for App Event logging.
 
+ In some cases, apps want to use one Facebook App ID for login and social presence and another
+ for App Event logging.  (An example is if multiple apps from the same company share an app ID for login, but
+ want distinct logging.)  By default, this value is `nil`, and defers to the `FBSDKAppEventsOverrideAppIDBundleKey`
+ plist value.  If that's not set, it defaults to `Settings.shared.appID`.
 
+ This should be set before any other calls are made to `AppEvents`.  Thus, you should set it in your application
+ delegate's `application(_:didFinishLaunchingWithOptions:)` method.
+ */
+@property (class, nullable, nonatomic, copy) NSString *loggingOverrideAppID
+  DEPRECATED_MSG_ATTRIBUTE("`AppEvents.loggingOverrideAppID` is deprecated and will be removed in the next major release; please use `AppEvents.shared.loggingOverrideAppID` instead");
+
+/**
+ The custom user ID to associate with all app events.
+
+ The userID is persisted until it is cleared by passing `nil`.
+ */
+@property (class, nullable, nonatomic, copy) NSString *userID
+  DEPRECATED_MSG_ATTRIBUTE("`AppEvents.userID` is deprecated and will be removed in the next major release; please use `AppEvents.shared.userID` instead");
+
+/// Returns generated anonymous id that persisted with current install of the app
+@property (class, nonatomic, readonly) NSString *anonymousID
+  DEPRECATED_MSG_ATTRIBUTE("`AppEvents.anonymousID` is deprecated and will be removed in the next major release; please use `AppEvents.shared.anonymousID` instead");
+
+/// The current event flushing behavior specifying when events are sent back to Facebook servers.
+@property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
+
+/**
+ Set the 'override' App ID for App Event logging.
 
  In some cases, apps want to use one Facebook App ID for login and social presence and another
  for App Event logging.  (An example is if multiple apps from the same company share an app ID for login, but
  want distinct logging.)  By default, this value is `nil`, and defers to the `FBSDKAppEventsOverrideAppIDBundleKey`
- plist value.  If that's not set, it defaults to `FBSDKSettings.sharedSettings.appID`.
+ plist value.  If that's not set, it defaults to `Settings.shared.appID`.
 
- This should be set before any other calls are made to `FBSDKAppEvents`.  Thus, you should set it in your application
- delegate's `application:didFinishLaunchingWithOptions:` delegate.
+ This should be set before any other calls are made to `AppEvents`.  Thus, you should set it in your application
+ delegate's `application(_:didFinishLaunchingWithOptions:)` method.
  */
-@property (class, nullable, nonatomic, copy) NSString *loggingOverrideAppID;
+@property (nullable, nonatomic, copy) NSString *loggingOverrideAppID;
 
-/*
+/**
  The custom user ID to associate with all app events.
 
- The userID is persisted until it is cleared by passing nil.
+ The userID is persisted until it is cleared by passing `nil`.
  */
-@property (class, nullable, nonatomic, copy) NSString *userID;
+@property (nullable, nonatomic, copy) NSString *userID;
 
-/*
-  Returns generated anonymous id that persisted with current install of the app
-*/
-@property (class, nonatomic, readonly) NSString *anonymousID;
+/// Returns generated anonymous id that persisted with current install of the app
+@property (nonatomic, readonly) NSString *anonymousID;
 
 /*
  * Basic event logging
@@ -504,7 +527,8 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
 /**
  Clears the custom user ID to associate with all app events.
  */
-+ (void)clearUserID;
++ (void)clearUserID
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.clearUserID` is deprecated and will be removed in the next major release, please set `AppEvents.shared.userID` to `nil` instead");
 
 /**
   Sets custom user data to associate with all app events. All user data are hashed

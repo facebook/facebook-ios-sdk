@@ -117,7 +117,7 @@
 
   [self configureAppEventsSingleton];
 
-  FBSDKAppEvents.loggingOverrideAppID = self.mockAppID;
+  FBSDKAppEvents.shared.loggingOverrideAppID = self.mockAppID;
 }
 
 - (void)tearDown
@@ -206,7 +206,7 @@
 
 - (void)testLogPurchaseFlushesWhenFlushBehaviorIsExplicit
 {
-  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
+  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
   [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
 
   // Verifying flush
@@ -408,17 +408,20 @@
 
 - (void)testSetAndClearUserID
 {
-  FBSDKAppEvents.userID = self.mockUserID;
-  XCTAssertEqualObjects([FBSDKAppEvents userID], self.mockUserID);
+  FBSDKAppEvents.shared.userID = self.mockUserID;
+  XCTAssertEqualObjects(FBSDKAppEvents.shared.userID, self.mockUserID);
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKAppEvents clearUserID];
-  XCTAssertNil([FBSDKAppEvents userID]);
+  #pragma clang diagnostic pop
+  XCTAssertNil(FBSDKAppEvents.shared.userID);
 }
 
 - (void)testSetLoggingOverrideAppID
 {
   NSString *mockOverrideAppID = @"2";
-  FBSDKAppEvents.loggingOverrideAppID = mockOverrideAppID;
-  XCTAssertEqualObjects([FBSDKAppEvents loggingOverrideAppID], mockOverrideAppID);
+  FBSDKAppEvents.shared.loggingOverrideAppID = mockOverrideAppID;
+  XCTAssertEqualObjects(FBSDKAppEvents.shared.loggingOverrideAppID, mockOverrideAppID);
 }
 
 - (void)testSetPushNotificationsDeviceTokenString
@@ -507,8 +510,8 @@
   [FBSDKAppEvents reset];
   FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                     flushPeriodInSeconds:0];
-  XCTAssertThrows([FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
-  XCTAssertThrows([FBSDKAppEvents setLoggingOverrideAppID:self.name]);
+  XCTAssertThrows([FBSDKAppEvents.shared setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
+  XCTAssertThrows(FBSDKAppEvents.shared.loggingOverrideAppID = self.name);
   XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched]);
   XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched valueToSum:2]);
   XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched parameters:@{}]);
@@ -559,12 +562,15 @@
   XCTAssertThrows([FBSDKAppEvents augmentHybridWKWebView:[WKWebView new]]);
   XCTAssertThrows([FBSDKAppEvents sendEventBindingsToUnity]);
   XCTAssertThrows([events activateApp]);
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   XCTAssertThrows([FBSDKAppEvents clearUserID]);
-  XCTAssertThrows(FBSDKAppEvents.userID);
-  XCTAssertThrows([FBSDKAppEvents setUserID:foo]);
+  #pragma clang diagnostic pop
+  XCTAssertThrows(FBSDKAppEvents.shared.userID);
+  XCTAssertThrows(FBSDKAppEvents.shared.userID = foo);
 
   XCTAssertNoThrow([FBSDKAppEvents setIsUnityInit:YES]);
-  XCTAssertNoThrow(FBSDKAppEvents.anonymousID);
+  XCTAssertNoThrow(FBSDKAppEvents.shared.anonymousID);
   XCTAssertNoThrow([FBSDKAppEvents.shared setUserData:foo forType:foo]);
   XCTAssertNoThrow(
     [FBSDKAppEvents.shared setUserEmail:nil
@@ -674,11 +680,11 @@
 
 - (void)testSetFlushBehavior
 {
-  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
-  XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, FBSDKAppEvents.flushBehavior);
+  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, FBSDKAppEvents.shared.flushBehavior);
 
-  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorExplicitOnly;
-  XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.flushBehavior);
+  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorExplicitOnly;
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.shared.flushBehavior);
 }
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
@@ -755,7 +761,7 @@
   self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
-  FBSDKAppEvents.loggingOverrideAppID = token.appID;
+  FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
@@ -772,7 +778,7 @@
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithAdvertiserID
 {
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
-  FBSDKAppEvents.loggingOverrideAppID = token.appID;
+  FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
   NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", token.appID];
   NSString *advertiserID = @"abc123";
   self.settings.isEventDataUsageLimited = NO;

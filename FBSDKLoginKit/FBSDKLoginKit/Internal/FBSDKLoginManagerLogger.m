@@ -117,7 +117,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (void)endSession
 {
   [self logEvent:FBSDKAppEventNameFBSessionAuthEnd result:_lastResult error:_lastError];
-  if (FBSDKAppEvents.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+  if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
     [FBSDKAppEvents flush];
   }
 }

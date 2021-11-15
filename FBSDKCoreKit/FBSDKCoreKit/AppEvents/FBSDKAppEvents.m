@@ -115,11 +115,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @interface FBSDKAppEvents ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
 @property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic) dispatch_source_t flushTimer;
-@property (nullable, nonatomic, copy) NSString *userID;
 @property (nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
@@ -144,6 +142,9 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @end
 
 @implementation FBSDKAppEvents
+{
+  NSString *_userID;
+}
 
 #pragma mark - Object Lifecycle
 
@@ -152,6 +153,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (self == FBSDKAppEvents.class) {
     g_overrideAppID = [[NSBundle.mainBundle objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+      // Forces reading or creating of `anonymousID` used by this type
       [FBSDKBasicUtility anonymousID];
     });
   }
@@ -333,8 +335,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.
-  if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+  if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+    [FBSDKAppEvents.shared flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   }
 }
 
@@ -522,37 +524,45 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     [FBSDKAppEvents.shared logEvent:FBSDKAppEventNamePushTokenObtained];
 
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
-    if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-      [[FBSDKAppEvents shared] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+      [FBSDKAppEvents.shared flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
     }
   }
 }
 
 + (FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  return [FBSDKAppEvents shared].flushBehavior;
+  return self.shared.flushBehavior;
 }
 
 + (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  [self.shared validateConfiguration];
-
   self.shared.flushBehavior = flushBehavior;
 }
 
-+ (NSString *)loggingOverrideAppID
++ (nullable NSString *)loggingOverrideAppID
+{
+  return self.shared.loggingOverrideAppID;
+}
+
++ (void)setLoggingOverrideAppID:(nullable NSString *)appID
+{
+  self.shared.loggingOverrideAppID = appID;
+}
+
+- (nullable NSString *)loggingOverrideAppID
 {
   return g_overrideAppID;
 }
 
-+ (void)setLoggingOverrideAppID:(NSString *)appID
+- (void)setLoggingOverrideAppID:(nullable NSString *)appID
 {
-  [self.shared validateConfiguration];
+  [self validateConfiguration];
 
   if (![g_overrideAppID isEqualToString:appID]) {
     if (g_explicitEventsLoggedYet) {
       [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                          logEntry:@"[FBSDKAppEvents setLoggingOverrideAppID:] should only be called prior to any events being logged."];
+                          logEntry:@"AppEvents.shared.loggingOverrideAppID should only be set prior to any events being logged."];
     }
     g_overrideAppID = appID;
   }
@@ -564,12 +574,23 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self.shared flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
-+ (void)setUserID:(NSString *)userID
++ (nullable NSString *)userID
+{
+  return self.shared.userID;
+}
+
+- (nullable NSString *)userID
+{
+  [self validateConfiguration];
+  return [_userID copy];
+}
+
++ (void)setUserID:(nullable NSString *)userID
 {
   self.shared.userID = userID;
 }
 
-- (void)setUserID:(NSString *)userID
+- (void)setUserID:(nullable NSString *)userID
 {
   [self validateConfiguration];
   _userID = [userID copy];
@@ -578,21 +599,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)clearUserID
 {
-  [self.shared clearUserID];
-}
-
-- (void)clearUserID
-{
-  [self validateConfiguration];
-
-  self.userID = nil;
-}
-
-+ (NSString *)userID
-{
-  [self.shared validateConfiguration];
-
-  return self.shared.userID;
+  self.shared.userID = nil;
 }
 
 + (void)setUserEmail:(nullable NSString *)email
@@ -685,6 +692,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 }
 
 + (NSString *)anonymousID
+{
+  return self.shared.anonymousID;
+}
+
+- (NSString *)anonymousID
 {
   return [FBSDKBasicUtility anonymousID];
 }
@@ -1043,7 +1055,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #pragma mark - Private Methods
 - (NSString *)appID
 {
-  return [FBSDKAppEvents loggingOverrideAppID] ?: [g_settings appID];
+  return FBSDKAppEvents.shared.loggingOverrideAppID ?: [g_settings appID];
 }
 
 - (void)publishInstall
@@ -1608,7 +1620,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken
-                                                loggingOverrideAppID:self.loggingOverrideAppID];
+                                                loggingOverrideAppID:self.shared.loggingOverrideAppID];
   NSString *udid = nil;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
@@ -1714,6 +1726,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
 {
+  [self validateConfiguration];
   _flushBehavior = flushBehavior;
 }
 
