@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppLinkNavigation.h"
+#import "FBSDKAppLinkNavigation+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

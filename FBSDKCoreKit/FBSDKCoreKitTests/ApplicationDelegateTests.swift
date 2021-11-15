@@ -702,6 +702,28 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSdkConfiguresAppLinkNavigation() {
+    AppLinkNavigation.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AppLinkNavigation.default === WebViewAppLinkResolver.shared,
+      "Should be configured with the expected app link resolver"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.settings === Settings.shared,
+      "Should be configured with the expected settings"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkEventPoster is MeasurementEvent,
+      "Should be configured with the expected app link event poster"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkResolver is WebViewAppLinkResolver,
+      "Should be configured with the expected app link resolver"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

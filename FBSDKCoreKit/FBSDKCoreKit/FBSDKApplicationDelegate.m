@@ -22,6 +22,7 @@
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkFactory.h"
+#import "FBSDKAppLinkNavigation+Internal.h"
 #import "FBSDKAppLinkTargetFactory.h"
 #import "FBSDKAppLinkURLFactory.h"
 #import "FBSDKApplicationLifecycleObserving.h"
@@ -80,6 +81,7 @@
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKFeatureExtractor.h"
+ #import "FBSDKMeasurementEvent+Internal.h"
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKMetadataIndexer.h"
  #import "FBSDKModelManager.h"
@@ -817,6 +819,10 @@ static UIApplicationState _applicationState;
                                        sessionDataTaskProvider:NSURLSession.sharedSession
                                              accessTokenWallet:FBSDKAccessToken.class
                                      authenticationTokenWallet:FBSDKAuthenticationToken.class]; // TEMP: added to configurator
+  [FBSDKAppLinkNavigation configureWithSettings:sharedSettings
+                                      urlOpener:UIApplication.sharedApplication
+                             appLinkEventPoster:[FBSDKMeasurementEvent new]
+                                appLinkResolver:FBSDKWebViewAppLinkResolver.sharedInstance];
 #endif
 }
 

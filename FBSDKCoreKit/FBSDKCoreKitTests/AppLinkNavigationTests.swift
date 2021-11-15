@@ -58,6 +58,49 @@ class AppLinkNavigationTests: XCTestCase {
     AppLinkNavigation.reset()
   }
 
+  func testDefaultClassDependencies() {
+    AppLinkNavigation.reset()
+
+    XCTAssertNil(
+      AppLinkNavigation.settings,
+      "Should not have a settings by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.urlOpener,
+      "Should not have a url opener by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkEventPoster,
+      "Should not have an event poster by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkResolver,
+      "Should not have an app link resolver by default"
+    )
+  }
+
+  func testDefaultResolver() {
+    AppLinkNavigation.reset()
+    XCTAssertTrue(
+      AppLinkNavigation.default === WebViewAppLinkResolver.shared,
+      "Should use the shared webview app link resolver by default"
+    )
+  }
+
+  func testSettingDefaultResolver() {
+    let resolver = AppLinkResolver()
+    AppLinkNavigation.default = resolver
+
+    XCTAssertTrue(
+      AppLinkNavigation.default === resolver,
+      "Should be able to set the default app link resolver"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkResolver === resolver,
+      "Should set the underlying resolver when setting the default"
+    )
+  }
+
   func testCreatingWithEmptyAppLink() {
     XCTAssertNotNil(
       navigation,
@@ -388,28 +431,6 @@ class AppLinkNavigationTests: XCTestCase {
       navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
       .browser,
       "The navigation type when there is an invalid target and a web url should be 'browser'"
-    )
-  }
-
-  // MARK: - Properties
-
-  func testDefaultResolver() {
-    AppLinkNavigation.reset()
-    XCTAssertEqual(
-      ObjectIdentifier(AppLinkNavigation.default),
-      ObjectIdentifier(WebViewAppLinkResolver.shared),
-      "Should use the shared webview app link resolver by default"
-    )
-  }
-
-  func testSettingDefaultResolver() {
-    let resolver = AppLinkResolver()
-    AppLinkNavigation.default = resolver
-
-    XCTAssertEqual(
-      ObjectIdentifier(AppLinkNavigation.default),
-      ObjectIdentifier(resolver),
-      "Should be able to set the default app link resolver"
     )
   }
 
