@@ -21,6 +21,7 @@
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKAppLinkCreating.h"
+#import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkTargetCreating.h"
 #import "FBSDKAppLinkURLCreating.h"
 #import "FBSDKAtePublisherCreating.h"
@@ -96,6 +97,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nullable, nonatomic, readonly) id<FBAEMNetworking> aemNetworker;
 @property (nonatomic, readonly) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (nonatomic, readonly) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
+@property (nonatomic, readonly) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
 @property (nonatomic, readonly) id<FBSDKAppLinkCreating> appLinkFactory;
 @property (nonatomic, readonly) id<FBSDKAppLinkTargetCreating> appLinkTargetFactory;
 @property (nonatomic, readonly) id<FBSDKAppLinkURLCreating> appLinkURLFactory;

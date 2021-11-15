@@ -752,7 +752,8 @@ static UIApplicationState _applicationState;
                                                settings:FBSDKSettings.sharedSettings]; // TEMP: added to configurator
   [FBSDKURL configureWithSettings:sharedSettings
                    appLinkFactory:[FBSDKAppLinkFactory new]
-             appLinkTargetFactory:[FBSDKAppLinkTargetFactory new]]; // TEMP: added to configurator
+             appLinkTargetFactory:[FBSDKAppLinkTargetFactory new]
+               appLinkEventPoster:[FBSDKMeasurementEvent new]]; // TEMP: added to configurator
   FBSDKSuggestedEventsIndexer *suggestedEventsIndexer = [[FBSDKSuggestedEventsIndexer alloc] initWithGraphRequestFactory:graphRequestFactory
                                                                                              serverConfigurationProvider:serverConfigurationProvider
                                                                                                                 swizzler:FBSDKSwizzler.class

@@ -28,14 +28,17 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 static id<FBSDKSettings> _settings;
 static id<FBSDKAppLinkCreating> _appLinkFactory;
 static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
+static id<FBSDKAppLinkEventPosting> _appLinkEventPoster;
 
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
                appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
          appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
 {
-  _settings = settings;
-  _appLinkFactory = appLinkFactory;
-  _appLinkTargetFactory = appLinkTargetFactory;
+  self.settings = settings;
+  self.appLinkFactory = appLinkFactory;
+  self.appLinkTargetFactory = appLinkTargetFactory;
+  self.appLinkEventPoster = appLinkEventPoster;
 }
 
 + (nullable id<FBSDKSettings>)settings
@@ -66,6 +69,16 @@ static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
 + (void)setAppLinkTargetFactory:(nullable id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
 {
   _appLinkTargetFactory = appLinkTargetFactory;
+}
+
++ (nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  return _appLinkEventPoster;
+}
+
++ (void)setAppLinkEventPoster:(nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  _appLinkEventPoster = appLinkEventPoster;
 }
 
 // MARK: Initializers
@@ -153,9 +166,9 @@ static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
           }
           [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
           [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
-          [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
+          [self.class.appLinkEventPoster postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
           if (forOpenURLEvent) {
-            [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
+            [self.class.appLinkEventPoster postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
           }
         }
       }
@@ -220,6 +233,7 @@ static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
   self.settings = nil;
   self.appLinkFactory = nil;
   self.appLinkTargetFactory = nil;
+  self.appLinkEventPoster = nil;
 }
 
 #endif

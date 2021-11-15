@@ -151,7 +151,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [FBSDKURL configureWithSettings:self.dependencies.settings
                    appLinkFactory:self.dependencies.appLinkFactory
-             appLinkTargetFactory:self.dependencies.appLinkTargetFactory];
+             appLinkTargetFactory:self.dependencies.appLinkTargetFactory
+               appLinkEventPoster:self.dependencies.appLinkEventPoster];
 }
 
 - (void)configureAppLinkUtility

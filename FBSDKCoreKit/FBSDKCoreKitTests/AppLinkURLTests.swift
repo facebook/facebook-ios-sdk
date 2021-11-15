@@ -36,17 +36,23 @@ class AppLinkURLTests: XCTestCase {
       AppLinkURL.appLinkTargetFactory,
       "Should not have an app link target factory by default"
     )
+    XCTAssertNil(
+      AppLinkURL.appLinkEventPoster,
+      "Should not have an app link event poster"
+    )
   }
 
   func testConfiguringDependencies() {
     let settings = TestSettings()
     let appLinkFactory = TestAppLinkFactory()
     let appLinkTargetFactory = TestAppLinkTargetFactory()
+    let appLinkEventPoster = TestMeasurementEvent()
 
     AppLinkURL.configure(
       settings: settings,
       appLinkFactory: appLinkFactory,
-      appLinkTargetFactory: appLinkTargetFactory
+      appLinkTargetFactory: appLinkTargetFactory,
+      appLinkEventPoster: appLinkEventPoster
     )
 
     XCTAssertTrue(
@@ -59,6 +65,10 @@ class AppLinkURLTests: XCTestCase {
     )
     XCTAssertTrue(
       AppLinkURL.appLinkTargetFactory === appLinkTargetFactory,
+      "Should be able to configure dependencies"
+    )
+    XCTAssertTrue(
+      AppLinkURL.appLinkEventPoster === appLinkEventPoster,
       "Should be able to configure dependencies"
     )
   }

@@ -549,7 +549,6 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   // TEMP: added to configurator tests
   func testInitializingConfiguresAppLinkURL() {
     AppLinkURL.reset()
-    XCTAssertNil(AppLinkURL.settings)
 
     delegate.initializeSDK()
 
@@ -564,6 +563,10 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       AppLinkURL.appLinkTargetFactory is AppLinkTargetFactory,
       "Should configure with the expected app link target factory"
+    )
+    XCTAssertTrue(
+      AppLinkURL.appLinkEventPoster is MeasurementEvent,
+      "Should configure with the expected app link event poster"
     )
   }
 
