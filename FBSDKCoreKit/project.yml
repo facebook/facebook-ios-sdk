@@ -124,20 +124,19 @@ targets:
         headerVisibility: project
         createIntermediateGroups: true
         excludes:
-          - AAM
-          - AEM
-          - Codeless
-          - SKAdNetwork
-          - SuggestedEvents
-          - SuggestedEvents
-          - Integrity/FBSDKIntegrityManager*
-          - Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
-          - ML
-          - Codeless
-          - ViewHierarchy
+          - Internal/AAM
+          - Internal/AEM
+          - Internal/Codeless
+          - Internal/SKAdNetwork
+          - Internal/SuggestedEvents
+          - Internal/Integrity/FBSDKIntegrityManager*
+          - Internal/Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
+          - Internal/ML
+          - Internal/Codeless
+          - Internal/ViewHierarchy
           - Internal/FBSDKFeatureExtracting*
-          - FBSDKHybridAppEventsScriptMessageHandler*
-          - FBSDKAppEventsNumberParser*
+          - Internal/FBSDKHybridAppEventsScriptMessageHandler*
+          - Internal/FBSDKAppEventsNumberParser*
       - path: FBSDKCoreKit/GraphAPI
         createIntermediateGroups: true
         excludes:
@@ -226,20 +225,19 @@ targets:
         headerVisibility: project
         createIntermediateGroups: true
         excludes:
-          - AAM
-          - AEM
-          - Codeless
-          - SKAdNetwork
-          - SuggestedEvents
-          - SuggestedEvents
-          - Integrity/FBSDKIntegrityManager*
-          - Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
-          - ML
-          - Codeless
-          - ViewHierarchy
+          - Internal/AAM
+          - Internal/AEM
+          - Internal/Codeless
+          - Internal/SKAdNetwork
+          - Internal/SuggestedEvents
+          - Internal/Integrity/FBSDKIntegrityManager*
+          - Internal/Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
+          - Internal/ML
+          - Internal/Codeless
+          - Internal/ViewHierarchy
           - Internal/FBSDKFeatureExtracting*
-          - FBSDKHybridAppEventsScriptMessageHandler*
-          - FBSDKAppEventsNumberParser*
+          - Internal/FBSDKHybridAppEventsScriptMessageHandler*
+          - Internal/FBSDKAppEventsNumberParser*
       - path: FBSDKCoreKit/GraphAPI
         createIntermediateGroups: true
         excludes:
