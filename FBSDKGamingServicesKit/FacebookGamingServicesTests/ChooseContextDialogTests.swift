@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FacebookGamingServices
 import XCTest
 
 class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {

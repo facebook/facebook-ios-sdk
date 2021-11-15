@@ -14,7 +14,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKGamingContext.h"
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
 @implementation FBSDKContextWebDialog
 

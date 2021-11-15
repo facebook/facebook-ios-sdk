@@ -12,8 +12,9 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKChooseContextContent.h"
-#import "FBSDKGamingContext.h"
 
 // Deeplink url constants
 #define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
