@@ -36,7 +36,7 @@ fi
 
 for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit FBSDKShareKit FBSDKGamingServicesKit; do
     cd $KIT_DIR || exit
-    $XCODEGEN_BINARY generate
+    $XCODEGEN_BINARY generate --use-cache
     cd ..
 done
 
