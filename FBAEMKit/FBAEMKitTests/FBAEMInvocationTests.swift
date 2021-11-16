@@ -51,6 +51,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let test = "fb_test_event"
     static let defaultMode = "DEFAULT"
     static let brandMode = "BRAND"
+    static let cpasMode = "CPAS"
     static let USD = "USD"
   }
 
@@ -377,6 +378,56 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       configWithBusinessID.businessID,
       "Should find the expected config"
     )
+  }
+
+  func testFindConfigWithCpas() {
+    let cpasConfig = SampleAEMConfigurations.createCpasConfig()
+    let invocation = AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: nil,
+      acsConfigID: nil,
+      businessID: "test_advertiserid_cpas",
+      isTestMode: false,
+      hasSKAN: false
+    )
+    let config = invocation?._findConfig([
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
+      Values.cpasMode: [cpasConfig]
+    ])
+    XCTAssertEqual(invocation?.configID, 10000, "Should set the invocation with expected configID")
+    XCTAssertEqual(invocation?.configMode, Values.cpasMode, "Should set the invocation with expected configMode")
+    XCTAssertEqual(
+      config?.validFrom,
+      cpasConfig.validFrom,
+      "Should find the expected config"
+    )
+    XCTAssertEqual(
+      config?.configMode,
+      cpasConfig.configMode,
+      "Should find the expected config"
+    )
+    XCTAssertEqual(
+      config?.businessID,
+      cpasConfig.businessID,
+      "Should find the expected config"
+    )
+  }
+
+  func testGetConfigList() {
+    let configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
+      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()]
+    ]
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+
+    var configList = invocation._getConfigList(Values.defaultMode, configs: configs)
+    XCTAssertEqual(configList.count, 1, "Should only find the default config")
+
+    configList = invocation._getConfigList(Values.brandMode, configs: configs)
+    XCTAssertEqual(configList.count, 2, "Should only find the brand or cpas config")
   }
 
   func testAttributeEventWithValue() {

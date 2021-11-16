@@ -39,6 +39,7 @@ typedef NSString *const FBAEMInvocationConfigMode;
 
 FBAEMInvocationConfigMode FBAEMInvocationConfigDefaultMode = @"DEFAULT";
 FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
+FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
 
 @implementation FBAEMInvocation
 
@@ -288,7 +289,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
 - (nullable FBAEMConfiguration *)_findConfig:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
 {
   NSString *configMode = _businessID ? FBAEMInvocationConfigBrandMode : FBAEMInvocationConfigDefaultMode;
-  NSArray<FBAEMConfiguration *> *configList = [FBSDKTypeUtility dictionary:configs objectForKey:configMode ofType:NSArray.class];
+  NSArray<FBAEMConfiguration *> *configList = [self _getConfigList:configMode configs:configs];
   if (0 == configList.count) {
     return nil;
   }
@@ -313,6 +314,21 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     [self _setConfig:config];
     return config;
   }
+}
+
+- (NSArray<FBAEMConfiguration *> *)_getConfigList:(FBAEMInvocationConfigMode)configMode
+                                          configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+{
+  if ([configMode isEqualToString:FBAEMInvocationConfigBrandMode]) {
+    NSArray<FBAEMConfiguration *> *brandConfigList = [FBSDKTypeUtility dictionary:configs
+                                                                     objectForKey:FBAEMInvocationConfigBrandMode
+                                                                           ofType:NSArray.class] ?: @[];
+    NSArray<FBAEMConfiguration *> *cpasConfigList = [FBSDKTypeUtility dictionary:configs
+                                                                    objectForKey:FBAEMInvocationConfigCpasMode
+                                                                          ofType:NSArray.class] ?: @[];
+    return [brandConfigList arrayByAddingObjectsFromArray:cpasConfigList];
+  }
+  return [FBSDKTypeUtility dictionary:configs objectForKey:configMode ofType:NSArray.class] ?: @[];
 }
 
 - (void)_setConfig:(FBAEMConfiguration *)config

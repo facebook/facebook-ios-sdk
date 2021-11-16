@@ -69,6 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable FBAEMConfiguration *)_findConfig:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 
+- (NSArray<FBAEMConfiguration *> *)_getConfigList:(NSString *)configMode
+                                          configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
+
 - (nullable NSString *)getHMAC:(NSInteger)delay;
 
 - (nullable NSData *)decodeBase64UrlSafeString:(NSString *)base64UrlSafeString;

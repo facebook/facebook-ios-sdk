@@ -29,6 +29,7 @@ enum SampleAEMConfigurations {
     static let purchase = "fb_mobile_purchase"
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
+    static let cpasMode = "CPAS"
     static let USD = "USD"
   }
 
@@ -112,6 +113,34 @@ enum SampleAEMConfigurations {
               ],
               [
                 Keys.eventName: Values.donate,
+              ],
+            ],
+          ]
+        ]
+      ]
+    )! // swiftlint:disable:this force_unwrapping
+  }
+
+  static func createCpasConfig() -> AEMConfiguration {
+    let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+
+    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+
+    return AEMConfiguration(
+      json: [
+        Keys.defaultCurrency: Values.USD,
+        Keys.cutoffTime: 1,
+        Keys.validFrom: 10000,
+        Keys.configMode: Values.cpasMode,
+        Keys.businessID: "test_advertiserid_cpas",
+        Keys.paramRule: "{\"or\":[{\"fb_content[*].id\":{\"eq\":\"abc\"}}]}",
+        Keys.conversionValueRules: [
+          [
+            Keys.conversionValue: 2,
+            Keys.priority: 10,
+            Keys.events: [
+              [
+                Keys.eventName: Values.purchase,
               ],
             ],
           ]
