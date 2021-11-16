@@ -29,6 +29,8 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nullable, nonatomic, readonly, copy) NSString *businessID;
 
+@property (nullable, nonatomic, readonly, copy) NSString *catalogID;
+
 @property (nonatomic, readonly, assign) BOOL isTestMode;
 
 @property (nonatomic, readonly, assign) BOOL hasSKAN;

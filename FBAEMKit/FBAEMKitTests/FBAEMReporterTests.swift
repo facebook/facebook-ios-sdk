@@ -50,6 +50,7 @@ class FBAEMReporterTests: XCTestCase {
     acsSharedSecret: nil,
     acsConfigID: nil,
     businessID: nil,
+    catalogID: nil,
     isTestMode: false,
     hasSKAN: false
   )
@@ -191,6 +192,7 @@ class FBAEMReporterTests: XCTestCase {
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     ), let invocation2 = AEMInvocation(
@@ -199,6 +201,7 @@ class FBAEMReporterTests: XCTestCase {
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )
@@ -413,6 +416,7 @@ class FBAEMReporterTests: XCTestCase {
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )

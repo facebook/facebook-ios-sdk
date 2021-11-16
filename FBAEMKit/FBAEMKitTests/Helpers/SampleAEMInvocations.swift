@@ -17,6 +17,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -29,6 +30,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -41,6 +43,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsSharedSecret: "debugging_shared_secret",
       acsConfigID: "debugging_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: true,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -53,6 +56,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsSharedSecret: "debugging_shared_secret",
       acsConfigID: "debugging_config_id_123",
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: true
     )! // swiftlint:disable:this force_unwrapping

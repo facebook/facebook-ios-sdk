@@ -39,12 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger conversionValue;
 @property (nullable, nonatomic, copy) NSString *ACSSharedSecret;
 @property (nullable, nonatomic, copy) NSString *ACSConfigID;
+@property (nullable, nonatomic, copy) NSString *catalogID;
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
                                    ACSToken:(NSString *)ACSToken
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
+                                  catalogID:(nullable NSString *)catalogID
                                  isTestMode:(BOOL)isTestMode
                                     hasSKAN:(BOOL)hasSKAN;
 
@@ -53,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
+                                  catalogID:(nullable NSString *)catalogID
                                   timestamp:(nullable NSDate *)timestamp
                                  configMode:(nullable NSString *)configMode
                                    configID:(NSInteger)configID

@@ -18,6 +18,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let ACSConfigID = "acs_config_id"
     static let advertiserID = "advertiser_id"
     static let businessID = "advertiser_id"
+    static let catalogID = "catalog_id"
     static let timestamp = "timestamp"
     static let configMode = "config_mode"
     static let configID = "config_id"
@@ -64,6 +65,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     acsSharedSecret: "test_shared_secret",
     acsConfigID: "test_config_123",
     businessID: "test_advertiserid_coffee",
+    catalogID: "test_catalog_123",
     timestamp: Date(timeIntervalSince1970: 1618383600),
     configMode: "DEFAULT",
     configID: 10,
@@ -188,6 +190,53 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertEqual(invocation?.businessID, "test_advertiserid_coffee")
   }
 
+  func testInvocationWithCatalogID() {
+    let invocation = AEMInvocation(appLinkData: [
+      "acs_token": "test_token_12345",
+      "campaign_ids": "test_campaign_1234",
+      "advertiser_id": "test_advertiserid_coffee",
+      "catalog_id": "test_catalog_1234"
+    ])
+
+    XCTAssertEqual(
+      invocation?.acsToken,
+      "test_token_12345",
+      "Invocation's ACS token is not expected"
+    )
+    XCTAssertEqual(
+      invocation?.campaignID,
+      "test_campaign_1234",
+      "Invocation's campaign ID is not expected"
+    )
+    XCTAssertEqual(
+      invocation?.businessID,
+      "test_advertiserid_coffee",
+      "Invocation's business ID is not expected"
+    )
+    XCTAssertEqual(
+      invocation?.catalogID,
+      "test_catalog_1234",
+      "Invocation's catalog ID is not expected"
+    )
+  }
+
+  func testInvocationWithoutCatalogID() {
+    let invocation = AEMInvocation(appLinkData: [
+      "acs_token": "test_token_12345",
+      "campaign_ids": "test_campaign_1234",
+      "advertiser_id": "test_advertiserid_coffee"
+    ])
+
+    XCTAssertNotNil(
+      invocation,
+      "Invocation is not expected to be nil"
+    )
+    XCTAssertNil(
+      invocation?.catalogID,
+      "Invocation's catalog ID is expected to be nil"
+    )
+  }
+
   func testInvocationWithDebuggingAppLinkData() throws {
     let data = [
       "acs_token": "debuggingtoken",
@@ -292,6 +341,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: nil,
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )
@@ -357,6 +407,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_123",
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )
@@ -509,6 +560,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_content_test",
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -539,6 +591,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_content_test",
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -780,6 +833,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should encode the expected acsConfigID with the correct key"
     )
     XCTAssertEqual(
+      coder.encodedObject[Keys.catalogID] as? String,
+      invocation.catalogID,
+      "Should encode the expected catalogID with the correct key"
+    )
+    XCTAssertEqual(
       coder.encodedObject[Keys.timestamp] as? Date,
       invocation.timestamp,
       "Should encode the expected timestamp with the correct key"
@@ -859,6 +917,10 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertTrue(
       decoder.decodedObject[Keys.businessID] is NSString.Type,
       "Should decode the expected type for the advertiser_id key"
+    )
+    XCTAssertTrue(
+      decoder.decodedObject[Keys.catalogID] is NSString.Type,
+      "Should decode the expected type for the catalog_id key"
     )
     XCTAssertTrue(
       decoder.decodedObject[Keys.timestamp] is NSDate.Type,
