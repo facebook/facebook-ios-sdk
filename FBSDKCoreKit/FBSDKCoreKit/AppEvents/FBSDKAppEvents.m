@@ -116,7 +116,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonatomic) UIApplicationState applicationState;
-@property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
+@property (nullable, nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic) dispatch_source_t flushTimer;
 @property (nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
@@ -564,33 +564,45 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   [self.timeSpentRecorder restore:YES];
 }
 
-+ (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
++ (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken
 {
-  [self.shared validateConfiguration];
+  [self.shared setPushNotificationsDeviceToken:deviceToken];
+}
+
+- (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken
+{
+  [self validateConfiguration];
 
   NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
   if (deviceTokenString) {
-    FBSDKAppEvents.pushNotificationsDeviceTokenString = deviceTokenString;
+    self.pushNotificationsDeviceTokenString = deviceTokenString;
   }
 }
 
-+ (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
++ (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
 {
-  [self.shared validateConfiguration];
+  [self.shared setPushNotificationsDeviceTokenString:deviceTokenString];
+}
+
+- (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
+{
+  [self validateConfiguration];
 
   if (deviceTokenString == nil) {
-    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = nil;
+    _pushNotificationsDeviceTokenString = nil;
     return;
   }
 
-  if (![deviceTokenString isEqualToString:([FBSDKAppEvents shared].pushNotificationsDeviceTokenString)]) {
-    [FBSDKAppEvents shared].pushNotificationsDeviceTokenString = deviceTokenString;
+  NSString *currentToken = self.pushNotificationsDeviceTokenString ?: @"";
 
-    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNamePushTokenObtained];
+  if (![deviceTokenString isEqualToString:currentToken]) {
+    _pushNotificationsDeviceTokenString = deviceTokenString;
+
+    [self logEvent:FBSDKAppEventNamePushTokenObtained];
 
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
-    if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-      [FBSDKAppEvents.shared flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+      [self flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
     }
   }
 }

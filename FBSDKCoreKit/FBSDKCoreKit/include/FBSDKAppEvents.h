@@ -606,15 +606,25 @@ NS_SWIFT_NAME(AppEvents)
  */
 
 /**
-  Sets and sends device token to register the current application for push notifications.
+ Sets and sends device token to register the current application for push notifications.
 
-
-
- Sets and sends a device token from `NSData` representation that you get from `UIApplicationDelegate.-application:didRegisterForRemoteNotificationsWithDeviceToken:`.
+ Sets and sends a device token from the `Data` representation that you get from
+ `UIApplicationDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)`.
 
  @param deviceToken Device token data.
  */
-+ (void)setPushNotificationsDeviceToken:(NSData *)deviceToken;
++ (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.setPushNotificationsDeviceToken(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.setPushNotificationsDeviceToken(_:)` instead");
+
+/**
+ Sets and sends device token to register the current application for push notifications.
+
+ Sets and sends a device token from the `Data` representation that you get from
+ `UIApplicationDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)`.
+
+ @param deviceToken Device token data.
+ */
+- (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken;
 
 /**
  Sets and sends device token string to register the current application for push notifications.
@@ -624,7 +634,20 @@ NS_SWIFT_NAME(AppEvents)
  @param deviceTokenString Device token string.
  */
 // UNCRUSTIFY_FORMAT_OFF
-+ (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
++ (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
+NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:))
+DEPRECATED_MSG_ATTRIBUTE("`AppEvents.setPushNotificationsDeviceToken(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.setPushNotificationsDeviceToken(_:)` instead");
+// UNCRUSTIFY_FORMAT_ON
+
+/**
+ Sets and sends device token string to register the current application for push notifications.
+
+ Sets and sends a device token string
+
+ @param deviceTokenString Device token string.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
 NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
 // UNCRUSTIFY_FORMAT_ON
 

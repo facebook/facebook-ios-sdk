@@ -428,13 +428,13 @@
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
   self.eventName = @"fb_mobile_obtain_push_token";
 
-  FBSDKAppEvents.pushNotificationsDeviceTokenString = mockDeviceTokenString;
+  FBSDKAppEvents.shared.pushNotificationsDeviceTokenString = mockDeviceTokenString;
 
   XCTAssertEqualObjects(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
     self.eventName
   );
-  XCTAssertEqualObjects([FBSDKAppEvents shared].pushNotificationsDeviceTokenString, mockDeviceTokenString);
+  XCTAssertEqualObjects(FBSDKAppEvents.shared.pushNotificationsDeviceTokenString, mockDeviceTokenString);
 }
 
 - (void)testActivateAppWithInitializedSDK
@@ -554,8 +554,8 @@
                                     brand:nil
                                parameters:@{}]
   );
-  XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceToken:[NSData new]]);
-  XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceTokenString:foo]);
+  XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceToken:[NSData new]]);
+  XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceTokenString:foo]);
   XCTAssertThrows([FBSDKAppEvents flush]);
   XCTAssertThrows([FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
   XCTAssertThrows([FBSDKAppEvents augmentHybridWKWebView:[WKWebView new]]);
