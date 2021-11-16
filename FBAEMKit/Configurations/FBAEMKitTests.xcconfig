@@ -5,6 +5,7 @@
 // LICENSE file in the root directory of this source tree.
 
 #include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/LogicTests.xcconfig"
 
 PRODUCT_NAME = FBAEMKitTests
 PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBAEMKitTests
