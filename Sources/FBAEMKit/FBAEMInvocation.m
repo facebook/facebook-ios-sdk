@@ -12,6 +12,7 @@
 
 #import <CommonCrypto/CommonHMAC.h>
 
+#import "FBAEMUtility.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define SEC_IN_DAY 86400
@@ -172,6 +173,10 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   NSString *valueCurrency = [currency uppercaseString];
   if (![config.currencySet containsObject:valueCurrency]) {
     valueCurrency = config.defaultCurrency;
+  }
+  // Use in-segment value for CPAS
+  if ([config.configMode isEqualToString:FBAEMInvocationConfigCpasMode]) {
+    value = [FBAEMUtility.sharedUtility getInSegmentValue:parameters matchingRule:config.matchingRule];
   }
   if (value != nil) {
     NSMutableDictionary<NSString *, id> *mapping = [[FBSDKTypeUtility dictionary:_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];

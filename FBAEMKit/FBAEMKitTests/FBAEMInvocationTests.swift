@@ -42,6 +42,9 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let content = "fb_content"
     static let contentID = "fb_content_id"
     static let contentType = "fb_content_type"
+    static let identity = "id"
+    static let itemPrice = "item_price"
+    static let quantity = "quantity"
   }
 
   enum Values {
@@ -555,6 +558,56 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       configs: configs
     )
     XCTAssertFalse(isAttributed, "Should attribute the event with expected parameters")
+  }
+
+  func testAttributeCpasEvent() {
+    let invocation = AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: nil,
+      acsConfigID: nil,
+      businessID: "test_advertiserid_cpas",
+      isTestMode: false,
+      hasSKAN: false
+    )! // swiftlint:disable:this force_unwrapping
+    let configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
+      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()]
+    ]
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: Values.USD,
+      value: NSNumber(value: 5000),
+      parameters: [
+        Keys.content: [
+          [
+            Keys.identity: "abc",
+            Keys.itemPrice: NSNumber(value: 100),
+            Keys.quantity: NSNumber(value: 10)
+          ],
+          [
+            Keys.identity: "test",
+            Keys.itemPrice: NSNumber(value: 200),
+            Keys.quantity: NSNumber(value: 20)
+          ]
+        ]
+      ],
+      configs: configs
+    )
+    XCTAssertTrue(
+      isAttributed,
+      "Should attribute the event"
+    )
+    XCTAssertEqual(
+      invocation.recordedEvents,
+      [Values.purchase],
+      "Should expect the event is updated in the cache"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues,
+      [Values.purchase: [Values.USD: 1000]],
+      "Should expect the value is updated in the cache"
+    )
   }
 
   func testUpdateConversionWithValue() {
