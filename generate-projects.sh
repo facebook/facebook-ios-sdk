@@ -17,7 +17,11 @@ if [ $? -eq 0 ]; then
     killall Xcode || true
 fi
 
-if ! command -v xcodegen >/dev/null; then
+XCODEGEN_BINARY="xcodegen"
+if [ -f internal/tools/xcodegen ]; then
+    CWD=$(pwd)
+    XCODEGEN_BINARY="${CWD}/internal/tools/xcodegen"
+elif ! command -v xcodegen >/dev/null; then
     echo "WARNING: Xcodegen not installed, run 'brew install xcodegen' or visit https://github.com/yonaskolb/XcodeGen"
     exit
 fi
@@ -32,7 +36,7 @@ fi
 
 for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit FBSDKShareKit FBSDKGamingServicesKit; do
     cd $KIT_DIR || exit
-    xcodegen generate
+    $XCODEGEN_BINARY generate
     cd ..
 done
 
