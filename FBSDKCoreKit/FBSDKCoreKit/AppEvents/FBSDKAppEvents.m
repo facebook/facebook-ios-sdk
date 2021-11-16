@@ -137,7 +137,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) FBSDKAppEventsState *appEventsState;
-@property (nonatomic) BOOL isUnityInit;
+@property (nonatomic) BOOL _isUnityInitialized; // not publicly readable
 
 @end
 
@@ -647,8 +647,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 + (void)flush
 {
-  [self.shared validateConfiguration];
-  [self.shared flushForReason:FBSDKAppEventsFlushReasonExplicit];
+  [self.shared flush];
+}
+
+- (void)flush
+{
+  [self validateConfiguration];
+  [self flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
 + (nullable NSString *)userID
@@ -779,9 +784,15 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 }
 
 #if !TARGET_OS_TV
+
 + (void)augmentHybridWKWebView:(WKWebView *)webView
 {
-  [self.shared validateConfiguration];
+  [self.shared augmentHybridWebView:webView];
+}
+
+- (void)augmentHybridWebView:(WKWebView *)webView
+{
+  [self validateConfiguration];
 
   if ([webView isKindOfClass:WKWebView.class]) {
     if (WKUserScript.class != nil) {
@@ -790,7 +801,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js = [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
-                      [[self shared] appID],
+                      self.appID,
                       FBSDKAppEventsWKWebViewMessagesPixelIDKey,
                       FBSDKAppEventsWKWebViewMessagesEventKey,
                       FBSDKAppEventsWKWebViewMessagesParamsKey,
@@ -801,36 +812,46 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       [controller addUserScript:[[WKUserScript.class alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
     }
   } else {
-    [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWKWebView with WebKit linked to your project and a WKWebView instance"];
+    [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWebView with WebKit linked to your project and a WKWebView instance"];
   }
 }
 
 #endif
 
-+ (void)setIsUnityInit:(BOOL)isUnityInit
++ (void)setIsUnityInit:(BOOL)isUnityInitialized
 {
-  [FBSDKAppEvents shared]->_isUnityInit = isUnityInit;
+  [FBSDKAppEvents.shared setIsUnityInitialized:isUnityInitialized];
+}
+
+- (void)setIsUnityInitialized:(BOOL)isUnityInitialized
+{
+  self._isUnityInitialized = isUnityInitialized;
+}
+
++ (void)sendEventBindingsToUnity
+{
+  [self.shared sendEventBindingsToUnity];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-+ (void)sendEventBindingsToUnity
+- (void)sendEventBindingsToUnity
 {
-  [self.shared validateConfiguration];
+  [self validateConfiguration];
 
   // Send event bindings to Unity only Unity is initialized
-  if ([FBSDKAppEvents shared]->_isUnityInit
-      && [FBSDKAppEvents shared]->_serverConfiguration
-      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings]
+  if (self._isUnityInitialized
+      && self.serverConfiguration
+      && [FBSDKTypeUtility isValidJSONObject:self.serverConfiguration.eventBindings]
   ) {
-    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents shared]->_serverConfiguration.eventBindings ?: @""
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:self.serverConfiguration.eventBindings ?: @""
                                                     options:0
                                                       error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     Class classFBUnityUtility = objc_lookUpClass(FBUnityUtilityClassName);
-    SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
-    if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
-      [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
+    SEL updateBindingsSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
+    if ([classFBUnityUtility respondsToSelector:updateBindingsSelector]) {
+      [classFBUnityUtility performSelector:updateBindingsSelector withObject:jsonString];
     }
   }
 }
@@ -1147,7 +1168,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     }
 
     if ([FBSDKInternalUtility.sharedUtility isUnity]) {
-      [FBSDKAppEvents sendEventBindingsToUnity];
+      [self sendEventBindingsToUnity];
     } else {
       FBSDKEventBindingManager *manager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler
                                                                                  eventLogger:self];
@@ -1609,11 +1630,17 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 #pragma mark - Custom Audience
 
-+ (nullable id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
++ (nullable id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
 {
-  [self.shared validateConfiguration];
+  return [self.shared requestForCustomAudienceThirdPartyIDWithAccessToken:accessToken];
+}
+
+- (nullable id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
+{
+  [self validateConfiguration];
 
   accessToken = accessToken ?: FBSDKAccessToken.currentAccessToken;
+
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
   // 1) if the OS tells us that the user has Limited Ad Tracking, then just don't send, and return a nil in the token.
   // 2) if the app has set 'limitEventAndDataUsage', this effectively implies that app-initiated ad targeting shouldn't happen,
@@ -1625,12 +1652,12 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken
-                                                loggingOverrideAppID:self.shared.loggingOverrideAppID];
+                                                loggingOverrideAppID:self.loggingOverrideAppID];
   NSString *udid = nil;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
     // available. Note that this function only makes sense to be called in the context of advertising.
-    udid = [self.shared.advertiserIDProvider advertiserID];
+    udid = self.advertiserIDProvider.advertiserID;
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;
@@ -1642,7 +1669,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     parameters = @{ @"udid" : udid };
   }
 
-  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self shared] appID]];
+  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", self.appID];
 
   id<FBSDKGraphRequest> request = [g_graphRequestFactory createGraphRequestWithGraphPath:graphPath
                                                                               parameters:parameters

@@ -652,17 +652,24 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Explicitly kick off flushing of events to Facebook.  This is an asynchronous method, but it does initiate an immediate
+ Explicitly kick off flushing of events to Facebook.  This is an asynchronous method, but it does initiate an immediate
  kick off.  Server failures will be reported through the NotificationCenter with notification ID `FBSDKAppEventsLoggingResultNotification`.
  */
-+ (void)flush;
++ (void)flush
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.flush()` is deprecated and will be removed in the next major release; please use `AppEvents.shared.flush()` instead");
 
 /**
-  Creates a request representing the Graph API call to retrieve a Custom Audience "third party ID" for the app's Facebook user.
+ Explicitly kick off flushing of events to Facebook.  This is an asynchronous method, but it does initiate an immediate
+ kick off.  Server failures will be reported through the NotificationCenter with notification ID `FBSDKAppEventsLoggingResultNotification`.
+ */
+- (void)flush;
+
+/**
+ Creates a request representing the Graph API call to retrieve a Custom Audience "third party ID" for the app's Facebook user.
  Callers will send this ID back to their own servers, collect up a set to create a Facebook Custom Audience with,
  and then use the resultant Custom Audience to target ads.
 
- The JSON in the request's response will include an "custom_audience_third_party_id" key/value pair, with the value being the ID retrieved.
+ The JSON in the request's response will include a "custom_audience_third_party_id" key/value pair with the value being the ID retrieved.
  This ID is an encrypted encoding of the Facebook user's ID and the invoking Facebook app ID.
  Multiple calls with the same user will return different IDs, thus these IDs cannot be used to correlate behavior
  across devices or applications, and are only meaningful when sent back to Facebook for creating Custom Audiences.
@@ -673,12 +680,39 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
  at the iOS level from ad tracking, then a `nil` ID will be returned.
 
  This method returns `nil` if either the user has opted-out (via iOS) from Ad Tracking, the app itself has limited event usage
- via the `[FBSDKSettings limitEventAndDataUsage]` flag, or a specific Facebook user cannot be identified.
+ via the `Settings.shared.isEventDataUsageLimited` flag, or a specific Facebook user cannot be identified.
 
  @param accessToken The access token to use to establish the user's identity for users logged into Facebook through this app.
- If `nil`, then the `[FBSDKAccessToken currentAccessToken]` is used.
+ If `nil`, then `AccessToken.current` is used.
  */
-+ (nullable FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken;
++ (nullable FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.requestForCustomAudienceThirdPartyID(with:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.requestForCustomAudienceThirdPartyID(accessToken:)` instead");
+
+/**
+ Creates a request representing the Graph API call to retrieve a Custom Audience "third party ID" for the app's Facebook user.
+ Callers will send this ID back to their own servers, collect up a set to create a Facebook Custom Audience with,
+ and then use the resultant Custom Audience to target ads.
+
+ The JSON in the request's response will include a "custom_audience_third_party_id" key/value pair with the value being the ID retrieved.
+ This ID is an encrypted encoding of the Facebook user's ID and the invoking Facebook app ID.
+ Multiple calls with the same user will return different IDs, thus these IDs cannot be used to correlate behavior
+ across devices or applications, and are only meaningful when sent back to Facebook for creating Custom Audiences.
+
+ The ID retrieved represents the Facebook user identified in the following way: if the specified access token is valid,
+ the ID will represent the user associated with that token; otherwise the ID will represent the user logged into the
+ native Facebook app on the device.  If there is no native Facebook app, no one is logged into it, or the user has opted out
+ at the iOS level from ad tracking, then a `nil` ID will be returned.
+
+ This method returns `nil` if either the user has opted-out (via iOS) from Ad Tracking, the app itself has limited event usage
+ via the `Settings.shared.isEventDataUsageLimited` flag, or a specific Facebook user cannot be identified.
+
+ @param accessToken The access token to use to establish the user's identity for users logged into Facebook through this app.
+ If `nil`, then `AccessToken.current` is used.
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (nullable FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
+NS_SWIFT_NAME(requestForCustomAudienceThirdPartyID(accessToken:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Clears the custom user ID to associate with all app events.
@@ -811,15 +845,27 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 
 #if !TARGET_OS_TV
 /**
-  Intended to be used as part of a hybrid webapp.
+ Intended to be used as part of a hybrid webapp.
  If you call this method, the FB SDK will inject a new JavaScript object into your webview.
  If the FB Pixel is used within the webview, and references the app ID of this app,
  then it will detect the presence of this injected JavaScript object
  and pass Pixel events back to the FB SDK for logging using the AppEvents framework.
 
- @param webView The webview to augment with the additional JavaScript behaviour
+ @param webView The webview to augment with the additional JavaScript behavior
  */
-+ (void)augmentHybridWKWebView:(WKWebView *)webView;
++ (void)augmentHybridWKWebView:(WKWebView *)webView
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.augmentHybridWKWebView(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.augmentHybridWebView(_:)` instead");
+
+/**
+ Intended to be used as part of a hybrid webapp.
+ If you call this method, the FB SDK will inject a new JavaScript object into your webview.
+ If the FB Pixel is used within the webview, and references the app ID of this app,
+ then it will detect the presence of this injected JavaScript object
+ and pass Pixel events back to the FB SDK for logging using the AppEvents framework.
+
+ @param webView The webview to augment with the additional JavaScript behavior
+ */
+- (void)augmentHybridWebView:(WKWebView *)webView;
 #endif
 
 /*
@@ -827,18 +873,32 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 
 /**
+ Set whether Unity is already initialized.
 
- Set if the Unity is already initialized
-
- @param isUnityInit   whether Unity is initialized.
+ @param isUnityInit   Whether Unity is initialized.
 
  */
-+ (void)setIsUnityInit:(BOOL)isUnityInit;
++ (void)setIsUnityInit:(BOOL)isUnityInit
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.setIsUnityInit(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.setIsUnityInitialized(_:)` instead");
 
 /**
- Send event binding to Unity
+ Set whether Unity is already initialized.
+
+ @param isUnityInitialized   Whether Unity is initialized.
+
  */
-+ (void)sendEventBindingsToUnity;
+- (void)setIsUnityInitialized:(BOOL)isUnityInitialized;
+
+/**
+ Send event bindings to Unity
+ */
++ (void)sendEventBindingsToUnity
+    DEPRECATED_MSG_ATTRIBUTE("`AppEvents.sendEventBindingsToUnity()` is deprecated and will be removed in the next major release; please use `AppEvents.shared.sendEventBindingsToUnity()` instead");
+
+/**
+ Send event bindings to Unity
+ */
+- (void)sendEventBindingsToUnity;
 
 /*
  * SDK Specific Event Logging

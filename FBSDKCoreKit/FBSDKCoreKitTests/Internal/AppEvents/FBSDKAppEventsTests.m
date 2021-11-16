@@ -255,7 +255,7 @@
   XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
 
   [FBSDKAppEvents.shared logEvent:@"foo"];
-  [FBSDKAppEvents flush];
+  [FBSDKAppEvents.shared flush];
 
   [self waitForExpectations:@[expectation] timeout:2];
 }
@@ -556,10 +556,10 @@
   );
   XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceToken:[NSData new]]);
   XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceTokenString:foo]);
-  XCTAssertThrows([FBSDKAppEvents flush]);
-  XCTAssertThrows([FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
-  XCTAssertThrows([FBSDKAppEvents augmentHybridWKWebView:[WKWebView new]]);
-  XCTAssertThrows([FBSDKAppEvents sendEventBindingsToUnity]);
+  XCTAssertThrows([FBSDKAppEvents.shared flush]);
+  XCTAssertThrows([FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
+  XCTAssertThrows([FBSDKAppEvents.shared augmentHybridWebView:[WKWebView new]]);
+  XCTAssertThrows([FBSDKAppEvents.shared sendEventBindingsToUnity]);
   XCTAssertThrows([events activateApp]);
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -568,7 +568,7 @@
   XCTAssertThrows(FBSDKAppEvents.shared.userID);
   XCTAssertThrows(FBSDKAppEvents.shared.userID = foo);
 
-  XCTAssertNoThrow([FBSDKAppEvents setIsUnityInit:YES]);
+  XCTAssertNoThrow([FBSDKAppEvents.shared setIsUnityInitialized:YES]);
   XCTAssertNoThrow(FBSDKAppEvents.shared.anonymousID);
   XCTAssertNoThrow([FBSDKAppEvents.shared setUserData:foo forType:foo]);
   XCTAssertNoThrow(
@@ -704,11 +704,11 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
+    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if tracking is disallowed even if there is a current access token"
   );
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if tracking is disallowed"
   );
 }
@@ -719,11 +719,11 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
+    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if event and data usage is limited even if there is a current access token"
   );
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if event and data usage is limited"
   );
 }
@@ -734,7 +734,7 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if there is no access token or advertiser id"
   );
 }
@@ -746,7 +746,7 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
 
-  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedParameters,
     @{ @"udid" : advertiserID },
@@ -762,7 +762,7 @@
 
   FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
 
-  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedTokenString,
     token.tokenString,
@@ -784,7 +784,7 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
 
-  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedTokenString,
