@@ -12,9 +12,20 @@
 
  #import <Foundation/Foundation.h>
 
+ #import "FBAEMAdvertiserRuleMatching.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AEMUtility)
 @interface FBAEMUtility : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+@property (class, nonatomic, readonly) FBAEMUtility *sharedUtility;
+
+- (NSNumber *)getInSegmentValue:(nullable NSDictionary<NSString *, id> *)parameters
+                   matchingRule:(id<FBAEMAdvertiserRuleMatching>)matchingRule;
 
 @end
 

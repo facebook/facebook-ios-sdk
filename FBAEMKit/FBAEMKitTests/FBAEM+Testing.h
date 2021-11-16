@@ -15,6 +15,7 @@
 #import "FBAEMInvocation.h"
 #import "FBAEMReporter.h"
 #import "FBAEMRule.h"
+#import "FBAEMUtility.h"
 
 typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
