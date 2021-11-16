@@ -29,40 +29,13 @@ if [ "$VERSION" != "Version: $EXPECTED_XCODEGEN_VERSION" ]; then
     exit
 fi
 
-cd FBSDKCoreKit_Basics || exit
-xcodegen generate
 
-cd ..
+for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit FBSDKShareKit FBSDKGamingServicesKit; do
+    cd $KIT_DIR || exit
+    xcodegen generate
+    cd ..
+done
 
-cd FBAEMKit || exit
-xcodegen generate
-
-cd ..
-
-cd FBSDKCoreKit || exit
-xcodegen generate
-
-cd ..
-
-cd TestTools || exit
-xcodegen generate
-
-cd ..
-
-cd FBSDKLoginKit || exit
-xcodegen generate
-
-cd ..
-
-cd FBSDKShareKit || exit
-xcodegen generate
-
-cd ..
-
-cd FBSDKGamingServicesKit || exit
-xcodegen generate
-
-cd ..
 
 if [ $XCODE_WAS_OPEN ]; then
     echo "${YELLOW}Reopening FacebookSDK.xcworkspace${RESET}"
