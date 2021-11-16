@@ -88,6 +88,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 + (void)resetTestData
 {
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [TestAccessTokenWallet reset];
   [TestAuthenticationTokenWallet reset];
   [TestGateKeeperManager reset];
@@ -96,7 +97,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testInitializingSdkAddsBridgeApiObserver
 {
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertTrue(
@@ -107,7 +107,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testInitializingSdkPerformsSettingsLogging
 {
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   XCTAssertEqual(
     self.settings.logWarningsCallCount,
@@ -128,7 +127,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testInitializingSdkPerformsBackgroundEventLogging
 {
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   XCTAssertEqual(
     self.backgroundEventLogger.logBackgroundRefresStatusCallCount,
@@ -140,7 +138,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 // TEMP: added to configurator tests
 - (void)testInitializingSdkConfiguresAppEventsConfigurationManager
 {
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *store = (NSObject *) FBSDKAppEventsConfigurationManager.shared.store;
   NSObject *settings = (NSObject *) FBSDKAppEventsConfigurationManager.shared.settings;
@@ -171,7 +168,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testInitializingSdkChecksInstrumentFeature
 {
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   XCTAssert(
     [self.featureChecker capturedFeaturesContains:FBSDKFeatureInstrument],

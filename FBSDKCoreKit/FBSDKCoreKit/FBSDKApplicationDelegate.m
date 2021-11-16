@@ -427,24 +427,26 @@ static UIApplicationState _applicationState;
 
   if (!hasInitializeBeenCalled) {
     [self initializeSDKWithLaunchOptions:launchOptions];
+
+    self.isAppLaunched = YES;
+
+    [self initializeTokenCache];
+    [self fetchServerConfiguration];
+
+    if (self.settings.isAutoLogAppEventsEnabled) {
+      [self _logSDKInitialize];
+    }
+
+  #if !TARGET_OS_TV
+    [self initializeProfile];
+    [self checkAuthentication];
+  #endif
+
+    return [self notifyLaunchObserversWithApplication:application
+                                        launchOptions:launchOptions];
+  } else {
+    return NO;
   }
-
-  self.isAppLaunched = YES;
-
-  [self initializeTokenCache];
-  [self fetchServerConfiguration];
-
-  if (self.settings.isAutoLogAppEventsEnabled) {
-    [self _logSDKInitialize];
-  }
-
-#if !TARGET_OS_TV
-  [self initializeProfile];
-  [self checkAuthentication];
-#endif
-
-  return [self notifyLaunchObserversWithApplication:application
-                                      launchOptions:launchOptions];
 }
 
 - (void)initializeTokenCache

@@ -82,7 +82,8 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
 
  @param launchOptions The launchOptions as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
 
- @return YES if the url was intended for the Facebook SDK, NO if not.
+ @return True if there are any added application observers that themselves return true from calling `application:didFinishLaunchingWithOptions:`.
+   Otherwise will return false. Note: If this method is called after calling `initializeSDK` then the return type will always be false.
  */
 - (BOOL)            application:(UIApplication *)application
   didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
