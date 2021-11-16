@@ -1243,6 +1243,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
         [g_featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
           if (AEMEnabled) {
             [FBAEMReporter enable];
+            [FBAEMReporter setCatalogReportEnabled:[g_featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
           }
         }];
       }

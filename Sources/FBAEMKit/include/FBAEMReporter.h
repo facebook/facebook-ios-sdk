@@ -61,6 +61,14 @@ NS_SWIFT_NAME(AEMReporter)
 
 /**
 
+ Control whether to enable catalog reporting
+
+ This function should be called in application(_:open:options:) from ApplicationDelegate
+ */
++ (void)setCatalogReportEnabled:(BOOL)enabled;
+
+/**
+
  Handle deeplink
 
  This function should be called in application(_:open:options:) from ApplicationDelegate

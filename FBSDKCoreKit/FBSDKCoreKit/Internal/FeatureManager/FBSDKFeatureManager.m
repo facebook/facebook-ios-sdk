@@ -148,6 +148,7 @@ static dispatch_once_t sharedInstanceNonce;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
     case FBSDKFeatureATELogging: featureName = @"ATELogging"; break;
     case FBSDKFeatureAEM: featureName = @"AEM"; break;
+    case FBSDKFeatureAEMCatalogReport: featureName = @"AEMCatalogReport"; break;
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
     case FBSDKFeatureShare: featureName = @"ShareKit"; break;
     case FBSDKFeatureGamingServices: featureName = @"GamingServicesKit"; break;
@@ -172,6 +173,7 @@ static dispatch_once_t sharedInstanceNonce;
     case FBSDKFeatureModelRequest:
     case FBSDKFeatureATELogging:
     case FBSDKFeatureAEM:
+    case FBSDKFeatureAEMCatalogReport:
     case FBSDKFeatureSKAdNetwork:
     case FBSDKFeatureSKAdNetworkConversionValue:
       return NO;

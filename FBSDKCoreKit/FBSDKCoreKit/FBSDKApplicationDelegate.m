@@ -389,6 +389,7 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
     if (enabled) {
+      [FBAEMReporter setCatalogReportEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
       [FBAEMReporter enable];
       [FBAEMReporter handleURL:url];
     }

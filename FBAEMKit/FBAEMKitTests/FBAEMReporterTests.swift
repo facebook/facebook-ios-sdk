@@ -89,6 +89,17 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
   }
 
+  func testCatalogReportDefaultConfigure() {
+    XCTAssertFalse(AEMReporter.isCatalogReportEnabled, "AEM Catalog Report should be disabled by default")
+  }
+
+  func testSetCatalogReportEnabled() {
+    AEMReporter.isCatalogReportEnabled = false
+    AEMReporter.setCatalogReportEnabled(true)
+
+    XCTAssertTrue(AEMReporter.isCatalogReportEnabled, "AEM Catalog Report should be enabled")
+  }
+
   func testConfigure() {
     XCTAssertEqual(
       networker,

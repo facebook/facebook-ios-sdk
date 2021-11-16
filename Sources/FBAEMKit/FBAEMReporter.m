@@ -43,6 +43,7 @@ static NSString *const FBAEMHTTPMethodPOST = @"POST";
 
 static BOOL g_isAEMReportEnabled = NO;
 static BOOL g_isLoadingConfiguration = NO;
+static BOOL g_isCatalogReportEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
@@ -127,6 +128,11 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
       g_isAEMReportEnabled = YES;
     });
   }
+}
+
++ (void)setCatalogReportEnabled:(BOOL)enabled
+{
+  g_isCatalogReportEnabled = enabled;
 }
 
 + (void)handleURL:(NSURL *)url
@@ -626,6 +632,16 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 + (BOOL)isEnabled
 {
   return g_isAEMReportEnabled;
+}
+
++ (void)setIsCatalogReportEnabled:(BOOL)enabled
+{
+  g_isCatalogReportEnabled = enabled;
+}
+
++ (BOOL)isCatalogReportEnabled
+{
+  return g_isCatalogReportEnabled;
 }
 
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks

@@ -27,6 +27,10 @@
 #import "FBSDKUtility.h"
 
 // An extension that redeclares a private method so that it can be mocked
+@interface FBAEMReporter (Testing)
+@property (class, nonatomic) BOOL isCatalogReportEnabled;
+@end
+
 @interface FBSDKAppEventsTests : XCTestCase
 
 @property (nonnull, nonatomic) NSString *const mockAppID;
@@ -1211,6 +1215,22 @@
     XCTAssertTrue(
       [self.featureManager capturedFeaturesContains:FBSDKFeatureAEM],
       "Fetching a configuration should check if the AEM feature is enabled"
+    );
+  }
+}
+
+- (void)testFetchingConfigurationIncludingAEMCatalogReport
+{
+  if (@available(iOS 14.0, *)) {
+    [self.featureManager enableWithFeature:FBSDKFeatureAEMCatalogReport];
+    [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+    self.appEventsConfigurationProvider.firstCapturedBlock();
+    self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
+    [self.featureManager completeCheckForFeature:FBSDKFeatureAEM
+                                            with:YES];
+    XCTAssertTrue(
+      FBAEMReporter.isCatalogReportEnabled,
+      "AEM Catalog Rport should be enabled"
     );
   }
 }

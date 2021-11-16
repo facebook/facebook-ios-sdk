@@ -36,7 +36,7 @@ class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
 
   /// Stub enabling features so that they pass the `isEnabled` check
   func enable(feature: SDKFeature) {
-    stubbedEnabledFeatures[feature] = false
+    stubbedEnabledFeatures[feature] = true
   }
 
   func isEnabled(_ feature: SDKFeature) -> Bool {

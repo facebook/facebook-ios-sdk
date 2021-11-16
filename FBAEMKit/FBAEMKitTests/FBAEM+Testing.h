@@ -103,6 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic) dispatch_queue_t queue;
 @property (class, nonatomic) NSDate *timestamp;
 @property (class, nonatomic) BOOL isEnabled;
+@property (class, nonatomic) BOOL isCatalogReportEnabled;
 @property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configs;
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
