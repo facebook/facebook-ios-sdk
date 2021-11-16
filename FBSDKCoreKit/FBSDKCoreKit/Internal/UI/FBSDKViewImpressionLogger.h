@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKAppEventName.h"
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+
+#import "FBSDKImpressionLogging.h"
 
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKEventLogging;
@@ -18,7 +20,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ViewImpressionLogger)
-@interface FBSDKViewImpressionLogger : NSObject
+@interface FBSDKViewImpressionLogger : NSObject <FBSDKImpressionLogging>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;

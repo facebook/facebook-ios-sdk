@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKImpressionLoggingButton.h"
+#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+Internal.h"
