@@ -9,28 +9,28 @@
 import TestTools
 import XCTest
 
-class ViewImpressionTrackerTests: XCTestCase {
+class ViewImpressionLoggerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let logger = TestEventLogger()
   let notificationCenter = TestNotificationCenter()
   let sharedTrackerName = AppEvents.Name("shared")
-  lazy var tracker = createImpressionTracker(named: sharedTrackerName)
+  lazy var tracker = createImpressionLogger(named: sharedTrackerName)
   let impressionIdentifier = "foo"
   let parameters = ["bar": "baz"]
 
   override func setUp() {
     super.setUp()
 
-    ViewImpressionTracker.reset()
+    ViewImpressionLogger.reset()
     TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
-    tracker = createImpressionTracker(named: sharedTrackerName)
+    tracker = createImpressionLogger(named: sharedTrackerName)
   }
 
   override class func tearDown() {
     super.tearDown()
 
-    ViewImpressionTracker.reset()
+    ViewImpressionLogger.reset()
   }
 
   // MARK: - Dependencies
@@ -64,7 +64,7 @@ class ViewImpressionTrackerTests: XCTestCase {
         TestNotificationCenter.ObserverEvidence(
           observer: tracker as Any,
           name: UIApplication.didEnterBackgroundNotification,
-          selector: #selector(ViewImpressionTracker._applicationDidEnterBackgroundNotification(_:)),
+          selector: #selector(ViewImpressionLogger._applicationDidEnterBackgroundNotification(_:)),
           object: nil
         )
       ),
@@ -142,7 +142,7 @@ class ViewImpressionTrackerTests: XCTestCase {
     )
 
     logger.capturedEventName = nil
-    tracker = createImpressionTracker(named: AppEvents.Name(name))
+    tracker = createImpressionLogger(named: AppEvents.Name(name))
 
     tracker.logImpression(
       withIdentifier: impressionIdentifier,
@@ -187,7 +187,7 @@ class ViewImpressionTrackerTests: XCTestCase {
     )
 
     logger.capturedEventName = nil
-    tracker = createImpressionTracker(named: AppEvents.Name(name))
+    tracker = createImpressionLogger(named: AppEvents.Name(name))
 
     tracker.logImpression(
       withIdentifier: name,
@@ -203,8 +203,8 @@ class ViewImpressionTrackerTests: XCTestCase {
 
   // MARK: - Helpers
 
-  func createImpressionTracker(named name: AppEvents.Name) -> ViewImpressionTracker {
-    ViewImpressionTracker(
+  func createImpressionLogger(named name: AppEvents.Name) -> ViewImpressionLogger {
+    ViewImpressionLogger(
       eventName: name,
       graphRequestFactory: graphRequestFactory,
       eventLogger: logger,

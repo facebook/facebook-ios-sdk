@@ -25,7 +25,7 @@
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKButton.h>
-#import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
+#import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
 #import <FBSDKCoreKit/FBSDKDeviceButton.h>
@@ -47,7 +47,7 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
 #import <FBSDKCoreKit/FBSDKIcon.h>
-#import <FBSDKCoreKit/FBSDKImpressionTrackingButton.h>
+#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKKeychainStore.h>

@@ -19,7 +19,7 @@
   #import "FBSDKSuggestedEventsIndexer.h"
   #import "FBSDKViewHierarchy.h"
   #import "FBSDKViewHierarchyMacros.h"
-  #import "FBSDKViewImpressionTracker.h"
+  #import "FBSDKViewImpressionLogger.h"
  #else
   #import "FBSDKDeviceButton+Internal.h"
   #import "FBSDKDeviceViewControllerBase+Internal.h"
@@ -66,7 +66,7 @@
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"
-  #import "UI/FBSDKViewImpressionTracker.h"
+  #import "UI/FBSDKViewImpressionLogger.h"
  #else
   #import "Device/FBSDKDeviceButton+Internal.h"
   #import "Device/FBSDKDeviceViewControllerBase+Internal.h"

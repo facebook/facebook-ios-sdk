@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(ImpressionTrackingButton)
-@interface FBSDKImpressionTrackingButton : UIButton
+NS_SWIFT_NAME(ImpressionLoggingButton)
+@interface FBSDKImpressionLoggingButton : UIButton
 @end
 
 NS_ASSUME_NONNULL_END

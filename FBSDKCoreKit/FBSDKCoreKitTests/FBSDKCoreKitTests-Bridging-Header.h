@@ -186,7 +186,7 @@
 #import "FBSDKUserDataStore.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
-#import "FBSDKViewImpressionTracker+Testing.h"
+#import "FBSDKViewImpressionLogger+Testing.h"
 #import "FBSDKWebDialog+Testing.h"
 #import "FBSDKWebDialogView+Testing.h"
 #import "FBSDKWindowFinding.h"

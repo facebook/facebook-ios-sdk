@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKImpressionTrackingButton.h>
+#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 @class FBSDKIcon;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
   A base class for common SDK buttons.
  */
 NS_SWIFT_NAME(FBButton)
-@interface FBSDKButton : FBSDKImpressionTrackingButton
+@interface FBSDKButton : FBSDKImpressionLoggingButton
 
 @property (nonatomic, readonly, getter = isImplicitlyDisabled) BOOL implicitlyDisabled;
 

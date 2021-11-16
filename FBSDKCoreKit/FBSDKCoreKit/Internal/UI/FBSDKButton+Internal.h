@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKButton.h>
-#import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
+#import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKEventLogging.h"

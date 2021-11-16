@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKViewImpressionTracker.h"
+#import "FBSDKViewImpressionLogger.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
@@ -17,7 +17,7 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"
 
-@interface FBSDKViewImpressionTracker ()
+@interface FBSDKViewImpressionLogger ()
 
 @property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
@@ -27,17 +27,17 @@
 
 @end
 
-@implementation FBSDKViewImpressionTracker
+@implementation FBSDKViewImpressionLogger
 
 static dispatch_once_t token;
 
 #pragma mark - Class Methods
 
-+ (instancetype)impressionTrackerWithEventName:(FBSDKAppEventName)eventName
-                           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
-                          notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
-                                   tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
++ (instancetype)impressionLoggerWithEventName:(FBSDKAppEventName)eventName
+                          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                  eventLogger:(id<FBSDKEventLogging>)eventLogger
+                         notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+                                  tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
   static NSMutableDictionary<NSString *, id> *_impressionTrackers = nil;
 
@@ -45,7 +45,7 @@ static dispatch_once_t token;
     _impressionTrackers = [NSMutableDictionary new];
   });
   // Maintains a single instance of an impression tracker for each event name
-  FBSDKViewImpressionTracker *impressionTracker = _impressionTrackers[eventName];
+  FBSDKViewImpressionLogger *impressionTracker = _impressionTrackers[eventName];
   if (!impressionTracker) {
     impressionTracker = [[self alloc] initWithEventName:eventName
                                     graphRequestFactory:graphRequestFactory

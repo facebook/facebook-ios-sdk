@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(FBButtonImpressionTracking)
-@protocol FBSDKButtonImpressionTracking <NSObject>
+NS_SWIFT_NAME(FBButtonImpressionLogging)
+@protocol FBSDKButtonImpressionLogging <NSObject>
 
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
 @property (nonatomic, readonly, copy) NSString *impressionTrackingEventName;

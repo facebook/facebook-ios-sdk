@@ -14,7 +14,7 @@
 #import "FBSDKMessengerIcon.h"
 #import "FBSDKShareAppEventName.h"
 
-@interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
+@interface FBSDKSendButton () <FBSDKButtonImpressionLogging>
 @property (nonatomic) FBSDKMessageDialog *dialog;
 @end
 
