@@ -192,10 +192,10 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   if (!_delegate) {
     return;
@@ -210,10 +210,10 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   if (!_delegate) {
     return;
@@ -228,10 +228,10 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
 
-    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
-                          parameters:parameters
-                  isImplicitlyLogged:YES
-                         accessToken:FBSDKAccessToken.currentAccessToken];
+    [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                                 parameters:parameters
+                         isImplicitlyLogged:YES
+                                accessToken:FBSDKAccessToken.currentAccessToken];
 
     if (!_delegate) {
       return;
@@ -258,10 +258,10 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                                FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
                                                FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 }
 
 @end

@@ -153,9 +153,9 @@ static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
     }
     [_extras removeAllObjects];
 
-    [FBSDKAppEvents logInternalEvent:eventName
-                          parameters:params
-                  isImplicitlyLogged:YES];
+    [FBSDKAppEvents.shared logInternalEvent:eventName
+                                 parameters:params
+                         isImplicitlyLogged:YES];
   }
 }
 

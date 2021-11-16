@@ -262,9 +262,9 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
     }
     [_extras removeAllObjects];
 
-    [FBSDKAppEvents logInternalEvent:eventName
-                          parameters:params
-                  isImplicitlyLogged:YES];
+    [FBSDKAppEvents.shared logInternalEvent:eventName
+                                 parameters:params
+                         isImplicitlyLogged:YES];
   }
 }
 

@@ -926,28 +926,12 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 #endif
 
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-{
-  [self.shared logInternalEvent:eventName
-             isImplicitlyLogged:isImplicitlyLogged];
-}
-
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
               parameters:@{}
       isImplicitlyLogged:isImplicitlyLogged];
-}
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-{
-  [self.shared logInternalEvent:eventName
-                     valueToSum:valueToSum
-             isImplicitlyLogged:isImplicitlyLogged];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -960,15 +944,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       isImplicitlyLogged:isImplicitlyLogged];
 }
 
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-{
-  [self.shared logInternalEvent:eventName
-                     parameters:parameters
-             isImplicitlyLogged:isImplicitlyLogged];
-}
-
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
@@ -978,17 +953,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               parameters:parameters
       isImplicitlyLogged:isImplicitlyLogged
              accessToken:nil];
-}
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken
-{
-  [self.shared logInternalEvent:eventName
-                     parameters:parameters
-             isImplicitlyLogged:isImplicitlyLogged
-                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1003,17 +967,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
              accessToken:accessToken];
 }
 
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-{
-  [self.shared logInternalEvent:eventName
-                     valueToSum:valueToSum
-                     parameters:parameters
-             isImplicitlyLogged:isImplicitlyLogged];
-}
-
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -1024,19 +977,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               parameters:parameters
       isImplicitlyLogged:isImplicitlyLogged
              accessToken:nil];
-}
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken
-{
-  [self.shared logInternalEvent:eventName
-                     valueToSum:valueToSum
-                     parameters:parameters
-             isImplicitlyLogged:isImplicitlyLogged
-                    accessToken:accessToken];
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -1052,18 +992,6 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
         isImplicitlyLogged:isImplicitlyLogged
                accessToken:accessToken];
   }
-}
-
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-             accessToken:(FBSDKAccessToken *)accessToken
-{
-  [self.shared instanceLogEvent:eventName
-                     valueToSum:valueToSum
-                     parameters:parameters
-             isImplicitlyLogged:YES
-                    accessToken:accessToken];
 }
 
 - (void)logImplicitEvent:(FBSDKAppEventName)eventName

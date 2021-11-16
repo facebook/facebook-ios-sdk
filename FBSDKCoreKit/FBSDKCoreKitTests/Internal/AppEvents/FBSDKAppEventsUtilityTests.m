@@ -314,7 +314,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   Class FBSDKAppEventsClass = NSClassFromString(@"FBSDKAppEvents");
   SEL logEventSelector = NSSelectorFromString(@"logImplicitEvent:valueToSum:parameters:accessToken:");
-  XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
+  XCTAssertTrue([FBSDKAppEventsClass instancesRespondToSelector:logEventSelector]);
 }
 
 - (void)testGetAdvertiserIDWithCollectionEnabled

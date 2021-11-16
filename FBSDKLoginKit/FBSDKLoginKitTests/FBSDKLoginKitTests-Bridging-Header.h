@@ -21,7 +21,6 @@
 
 // +Testing.h files
 #import "FBSDKAccessToken+Testing.h"
-#import "FBSDKAppEvents+Testing.h"
 #import "FBSDKDeviceLoginCodeInfo+Testing.h"
 #import "FBSDKDeviceLoginManager+Testing.h"
 #import "FBSDKDeviceLoginManagerResult+Testing.h"

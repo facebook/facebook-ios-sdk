@@ -1144,10 +1144,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   [_delegate sharerDidCancel:self];
 }
@@ -1158,10 +1158,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   [_delegate sharer:self didCompleteWithResults:[results copy]];
 }
@@ -1173,10 +1173,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   [_delegate sharer:self didFailWithError:error];
 }
@@ -1203,10 +1203,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     FBSDKAppEventParameterDialogShareContentType : contentType,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameShareDialogShow
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:FBSDKAccessToken.currentAccessToken];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogShow
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 }
 
 - (nullable NSString *)_calculateInitialText

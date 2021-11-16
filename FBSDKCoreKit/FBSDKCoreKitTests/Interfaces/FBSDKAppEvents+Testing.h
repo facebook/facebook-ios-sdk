@@ -24,13 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+- (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 

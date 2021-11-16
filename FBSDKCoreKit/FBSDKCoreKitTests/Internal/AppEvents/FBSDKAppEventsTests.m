@@ -874,7 +874,7 @@
 
 - (void)testLogInternalEvents
 {
-  [FBSDKAppEvents logInternalEvent:self.eventName isImplicitlyLogged:NO];
+  [FBSDKAppEvents.shared logInternalEvent:self.eventName isImplicitlyLogged:NO];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -884,7 +884,7 @@
 
 - (void)testLogInternalEventsWithValue
 {
-  [FBSDKAppEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
+  [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -894,7 +894,7 @@
 
 - (void)testLogInternalEventWithAccessToken
 {
-  [FBSDKAppEvents logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:SampleAccessTokens.validToken];
+  [FBSDKAppEvents.shared logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:SampleAccessTokens.validToken];
 
   XCTAssertEqualObjects(self.appEventsStateProvider.capturedAppID, self.mockAppID);
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
@@ -906,7 +906,7 @@
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
-  [FBSDKAppEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
+  [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
@@ -930,7 +930,7 @@
 
 - (void)testLogImplicitEvent
 {
-  [FBSDKAppEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:SampleAccessTokens.validToken];
+  [FBSDKAppEvents.shared logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:SampleAccessTokens.validToken];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);

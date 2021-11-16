@@ -851,7 +851,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 
  @warning INTERNAL - DO NOT USE
  */
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
@@ -861,7 +861,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 
  @warning INTERNAL - DO NOT USE
  */
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
