@@ -63,7 +63,8 @@ NS_SWIFT_NAME(AEMInvocation)
               currency:(nullable NSString *)currency
                  value:(nullable NSNumber *)value
             parameters:(nullable NSDictionary<NSString *, id> *)parameters
-               configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
+               configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+     shouldUpdateCache:(BOOL)shouldUpdateCache;
 
 - (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 

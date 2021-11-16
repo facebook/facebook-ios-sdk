@@ -439,6 +439,16 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.invocations = [invocation]
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     // Invocation should be attributed and updated while request should be sent
+    XCTAssertEqual(
+      invocation.recordedEvents,
+      [Values.purchase],
+      "Invocation's cached events should be updated"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues,
+      [Values.purchase: [Values.USD: 100]],
+      "Invocation's cached values should be updated"
+    )
     XCTAssertTrue(
       networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
       "Should create a request to update the conversions for a valid event"
@@ -786,16 +796,6 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertNotNil(
       attributedInvocation,
       "Should have invocation attributed without double counting"
-    )
-    XCTAssertEqual(
-      invocation.recordedEvents,
-      [Values.purchase],
-      "Should expect invocation's recorded events to be changed with double counting"
-    )
-    XCTAssertEqual(
-      invocation.recordedValues,
-      [Values.purchase: [Values.USD: 10]],
-      "Should expect invocation's recorded values to be changed with double counting"
     )
   }
 

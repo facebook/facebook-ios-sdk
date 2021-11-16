@@ -162,6 +162,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
                  value:(nullable NSNumber *)value
             parameters:(nullable NSDictionary<NSString *, id> *)parameters
                configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+     shouldUpdateCache:(BOOL)shouldUpdateCache
 {
   FBAEMConfiguration *config = [self _findConfig:configs];
   if ([self _isOutOfWindowWithConfig:config] || ![config.eventSet containsObject:event]) {
@@ -173,7 +174,9 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   }
   BOOL isAttributed = NO;
   if (![_recordedEvents containsObject:event]) {
-    [_recordedEvents addObject:event];
+    if (shouldUpdateCache) {
+      [_recordedEvents addObject:event];
+    }
     isAttributed = YES;
   }
   // Change currency to default currency if currency is not found in currencySet
@@ -190,8 +193,10 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: @0.0;
     // Overwrite values when the incoming event's value is greater than the cached one
     if (value.doubleValue > valueInMapping.doubleValue) {
-      [FBSDKTypeUtility dictionary:mapping setObject:@(value.doubleValue) forKey:valueCurrency];
-      [FBSDKTypeUtility dictionary:_recordedValues setObject:mapping forKey:event];
+      if (shouldUpdateCache) {
+        [FBSDKTypeUtility dictionary:mapping setObject:@(value.doubleValue) forKey:valueCurrency];
+        [FBSDKTypeUtility dictionary:_recordedValues setObject:mapping forKey:event];
+      }
       isAttributed = YES;
     }
   }

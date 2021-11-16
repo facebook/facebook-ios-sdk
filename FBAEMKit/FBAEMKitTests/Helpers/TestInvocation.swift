@@ -19,7 +19,8 @@ class TestInvocation: AEMInvocation {
     currency: String?,
     value: NSNumber?,
     parameters: [String: Any]?,
-    configs: [String: [AEMConfiguration]]?
+    configs: [String: [AEMConfiguration]]?,
+    shouldUpdateCache: Bool
   ) -> Bool {
     attributionCallCount += 1
     return true

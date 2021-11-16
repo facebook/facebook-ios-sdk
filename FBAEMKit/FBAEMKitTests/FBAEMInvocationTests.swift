@@ -494,7 +494,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 10,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]]
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(
@@ -508,7 +509,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 10,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]]
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
     XCTAssertTrue(
@@ -524,7 +526,12 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     invocation._setConfig(config1)
 
     let isAttributed = invocation.attributeEvent(
-      Values.test, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.test,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(invocation.recordedEvents.contains(Values.test))
@@ -537,14 +544,24 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     invocation._setConfig(config1)
 
     var isAttributed = invocation.attributeEvent(
-      Values.purchase, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.purchase,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.purchase))
     XCTAssertEqual(invocation.recordedValues.count, 0, "Should not attribute unexpected values")
 
     isAttributed = invocation.attributeEvent(
-      Values.donate, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.donate,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.donate))
@@ -577,7 +594,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
-      configs: configs
+      configs: configs,
+      shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the event with expected parameters")
   }
@@ -608,7 +626,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
-      configs: configs
+      configs: configs,
+      shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should attribute the event with expected parameters")
   }
@@ -660,6 +679,49 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       invocation.recordedValues,
       [Values.purchase: [Values.USD: 1000]],
       "Should expect the value is updated in the cache"
+    )
+  }
+
+  func testAttributeEventWithoutCache() {
+    let invocation: AEMInvocation = self.validInvocation
+    invocation.reset()
+    invocation._setConfig(config1)
+
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: false
+    )
+    XCTAssertTrue(isAttributed, "Should attribute the expected event")
+    XCTAssertFalse(invocation.recordedEvents.contains(Values.purchase), "Should not update the event cache")
+    XCTAssertEqual(invocation.recordedValues.count, 0, "Should not update value cache")
+  }
+
+  func testAttributeEventAndValueWithoutCache() {
+    let invocation: AEMInvocation = self.validInvocation
+    invocation.reset()
+    invocation._setConfig(config1)
+
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: Values.USD,
+      value: 10,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]],
+      shouldUpdateCache: false
+    )
+    XCTAssertTrue(isAttributed, "Should attribute expected event")
+    XCTAssertFalse(
+      invocation.recordedEvents.contains(Values.purchase),
+      "Should add events that can be attributed to the invocation"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues.count,
+      0,
+      "Should not update value cache"
     )
   }
 

@@ -189,6 +189,12 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
       FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
       if (attributedInvocation) {
+        [attributedInvocation attributeEvent:event
+                                    currency:currency
+                                       value:value
+                                  parameters:parameters
+                                     configs:g_configs
+                           shouldUpdateCache:YES];
         if ([attributedInvocation updateConversionValueWithConfigs:g_configs]) {
           [self _sendAggregationRequest];
         }
@@ -215,7 +221,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
       continue;
     }
 
-    if ([invocation attributeEvent:event currency:currency value:value parameters:parameters configs:configs]) {
+    if ([invocation attributeEvent:event currency:currency value:value parameters:parameters configs:configs shouldUpdateCache:NO]) {
       attributedInvocation = invocation;
       break;
     }
