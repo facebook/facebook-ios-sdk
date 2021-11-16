@@ -10,7 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequestConnection (Testing)
 
-+ (BOOL)canMakeRequests;
+@property (class, nonatomic, readonly) BOOL canMakeRequests;
+
 + (void)resetCanMakeRequests;
 + (void)resetDefaultConnectionTimeout;
 

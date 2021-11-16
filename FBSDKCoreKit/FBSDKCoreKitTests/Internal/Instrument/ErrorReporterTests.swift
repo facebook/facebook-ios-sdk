@@ -12,22 +12,20 @@ import XCTest
 
 class ErrorReporterTests: XCTestCase {
 
+  // swiftlint:disable implicitly_unwrapped_optional
+  var factory: TestGraphRequestFactory!
+  var fileManager: TestFileManager!
+  var settings: TestSettings!
+  var reporter: ErrorReporter!
+  // swiftlint:enable implicitly_unwrapped_optional
+
   let code = 2
   let domain = "test"
   let timeInterval = 10.0
-  let factory = TestGraphRequestFactory()
-  let fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
-  let settings = TestSettings()
   let validReportNames = [
     "error_report_1.json",
     "error_report_2.json"
   ]
-  lazy var reporter = ErrorReporter(
-    graphRequestFactory: factory,
-    fileManager: fileManager,
-    settings: settings,
-    fileDataExtractor: TestFileDataExtractor.self
-  )
 
   override func setUp() {
     super.setUp()
@@ -36,6 +34,25 @@ class ErrorReporterTests: XCTestCase {
     TestFileDataExtractor.reset()
     SDKError.reset()
     TestFileDataExtractor.reset()
+
+    factory = TestGraphRequestFactory()
+    fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
+    settings = TestSettings()
+    reporter = ErrorReporter(
+      graphRequestFactory: factory,
+      fileManager: fileManager,
+      settings: settings,
+      fileDataExtractor: TestFileDataExtractor.self
+    )
+  }
+
+  override func tearDown() {
+    factory = nil
+    fileManager = nil
+    settings = nil
+    reporter = nil
+
+    super.tearDown()
   }
 
   func testCreatingWithDefaults() {
@@ -45,14 +62,12 @@ class ErrorReporterTests: XCTestCase {
       reporter.graphRequestFactory is GraphRequestFactory,
       "Should use the expected default graph request factory"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(reporter.fileManager),
-      ObjectIdentifier(FileManager.default),
+    XCTAssertTrue(
+      reporter.fileManager === FileManager.default,
       "Should use the expected default file manager"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(reporter.settings),
-      ObjectIdentifier(Settings.shared),
+    XCTAssertTrue(
+      reporter.settings is Settings,
       "Should use the expected default settings"
     )
     XCTAssertTrue(

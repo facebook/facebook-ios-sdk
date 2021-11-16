@@ -209,6 +209,29 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // MARK: - Initializing SDK
 
+  func testInitializingSdkEnablesGraphRequests() {
+    GraphRequestConnection.resetCanMakeRequests()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      GraphRequestConnection.canMakeRequests,
+      "Initializing the SDK should enable making graph requests"
+    )
+  }
+
+  func testInitializingSdkConfiguresEventsProcessorsForAppEventsState() throws {
+    AppEvents.reset()
+    delegate.initializeSDK()
+
+    XCTAssertEqual(AppEventsState.eventProcessors?.count, 2)
+    XCTAssertTrue(
+      AppEventsState.eventProcessors?.first === appEvents.capturedConfigureEventDeactivationParameterProcessor
+    )
+    XCTAssertTrue(
+      AppEventsState.eventProcessors?.last === appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor
+    )
+  }
+
   func testInitializingSdkTriggersApplicationLifecycleNotificationsForAppEvents() {
     delegate.initializeSDK(launchOptions: [:])
 
@@ -857,6 +880,235 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       metadataIndexer.swizzler === Swizzler.self,
       "Should create the meta indexer with the expected swizzzler"
+    )
+  }
+
+  func testInitializingSdkConfiguresGateKeeperManager() {
+    GateKeeperManager.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      GateKeeperManager.canLoadGateKeepers,
+      "Initializing the SDK should enable loading gatekeepers"
+    )
+
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete graph request provider"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "Should be configured with the expected concrete graph request connection provider"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.store === UserDefaults.standard,
+      "Should be configured with the expected concrete data store"
+    )
+  }
+
+  func testConfiguringCodelessIndexer() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete graph request provider"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.serverConfigurationProvider === ServerConfigurationManager.shared,
+      "Should be configured with the expected concrete server configuration provider"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.store === UserDefaults.standard,
+      "Should be configured with the standard user defaults"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "Should be configured with the expected concrete graph request connection provider"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.swizzler === Swizzler.self,
+      "Should be configured with the expected concrete swizzler"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.settings === Settings.shared,
+      "Should be configured with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.advertiserIDProvider === AppEventsUtility.shared,
+      "Should be configured with the expected concrete advertiser identifier provider"
+    )
+  }
+
+  func testConfiguringCrashShield() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      CrashShield.settings is Settings,
+      "Should be configured with the expected settings"
+    )
+    XCTAssertTrue(
+      CrashShield.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete graph request provider"
+    )
+    XCTAssertTrue(
+      CrashShield.featureChecking is FeatureManager,
+      "Should be configured with the expected concrete Feature manager"
+    )
+  }
+
+  func testConfiguringRestrictiveDataFilterManager() {
+    delegate.initializeSDK()
+
+    let restrictiveDataFilterManager = appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor as? RestrictiveDataFilterManager // swiftlint:disable:this line_length
+    XCTAssertTrue(
+      restrictiveDataFilterManager?.serverConfigurationProvider === ServerConfigurationManager.shared,
+      "Should be configured with the expected concrete server configuration provider"
+    )
+  }
+
+  func testConfiguringFBSDKSKAdNetworkReporter() {
+    delegate.initializeSDK()
+    XCTAssertTrue(
+      delegate.skAdNetworkReporter.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete graph request provider"
+    )
+    XCTAssertTrue(
+      delegate.skAdNetworkReporter.store === UserDefaults.standard,
+      "Should be configured with the standard user defaults"
+    )
+    if #available(iOS 11.3, *) {
+      XCTAssertTrue(
+        delegate.skAdNetworkReporter.conversionValueUpdatable === SKAdNetwork.self,
+        "Should be configured with the default Conversion Value Updating Class"
+      )
+    }
+  }
+
+  func testInitializingSdkConfiguresAccessTokenCache() {
+    AccessToken.tokenCache = nil
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AccessToken.tokenCache is TokenCache,
+      "Should be configured with expected concrete token cache"
+    )
+  }
+
+  func testInitializingSdkConfiguresProfile() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      Profile.store === UserDefaults.standard,
+      "Should be configured with the expected concrete data store"
+    )
+    XCTAssertTrue(
+      Profile.accessTokenProvider === AccessToken.self,
+      "Should be configured with the expected concrete token provider"
+    )
+    XCTAssertTrue(
+      Profile.notificationCenter === NotificationCenter.default,
+      "Should be configured with the expected concrete Notification Center"
+    )
+    XCTAssertTrue(
+      Profile.settings === Settings.shared,
+      "Should be configured with the expected concrete Settings"
+    )
+    XCTAssertTrue(
+      Profile.urlHoster === InternalUtility.shared,
+      "Should be configured with the expected concrete Settings"
+    )
+  }
+
+  func testInitializingSdkConfiguresAuthenticationTokenCache() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AuthenticationToken.tokenCache is TokenCache,
+      "Should be configured with expected concrete token cache"
+    )
+  }
+
+  func testInitializingSdkConfiguresAccessTokenConnectionFactory() {
+    AccessToken.graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AccessToken.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "Should be configured with expected concrete graph request connection factory"
+    )
+  }
+
+  func testInitializingSdkConfiguresSettings() {
+    Settings.shared.reset()
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      Settings.store === UserDefaults.standard,
+      "Should be configured with the expected concrete data store"
+    )
+    XCTAssertTrue(
+      Settings.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+      "Should be configured with the expected concrete app events configuration provider"
+    )
+    XCTAssertTrue(
+      Settings.infoDictionaryProvider === Bundle.main,
+      "Should be configured with the expected concrete info dictionary provider"
+    )
+    XCTAssertTrue(
+      Settings.eventLogger === AppEvents.shared,
+      "Should be configured with the expected concrete event logger"
+    )
+  }
+
+  func testInitializingSdkConfiguresGraphRequestPiggybackManager() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.tokenWallet === AccessToken.self,
+      "Should be configured with the expected concrete access token provider"
+    )
+
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.settings === Settings.shared,
+      "Should be configured with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.serverConfiguration === ServerConfigurationManager.shared,
+      "Should be configured with the expected concrete server configuration"
+    )
+
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete graph request provider"
+    )
+  }
+
+  // TEMP: added to configurator tests as part of a complete test
+  func testInitializingSdkConfiguresCurrentAccessTokenProviderForGraphRequest() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      GraphRequest.accessTokenProvider === AccessToken.self,
+      "Should be configered with expected access token class."
+    )
+  }
+
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresWebDialogView() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      FBWebDialogView.webViewProvider is WebViewFactory,
+      "Should be configured with the expected concrete web view provider"
+    )
+  }
+
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresFeatureExtractor() {
+    delegate.initializeSDK()
+    XCTAssertTrue(
+      FeatureExtractor.rulesFromKeyProvider === ModelManager.shared,
+      "Should be configured with the expected concrete rules from key provider"
     )
   }
 

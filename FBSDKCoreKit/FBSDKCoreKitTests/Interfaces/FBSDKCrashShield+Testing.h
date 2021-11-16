@@ -11,6 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashShield (Testing)
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (class, nullable, nonatomic, readonly) id<FBSDKFeatureChecking, FBSDKFeatureDisabling> featureChecking;
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
@@ -18,9 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)_getClassName:(id)entry; // Using id instead of NSString for testing in Swift
 + (void)reset;
 + (FBSDKFeature)featureForString:(NSString *)featureName;
-+ (id<FBSDKSettings>)settings;
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory;
-+ (id<FBSDKFeatureChecking>)featureChecking;
+
 @end
 
 NS_ASSUME_NONNULL_END
