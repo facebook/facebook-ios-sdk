@@ -12,62 +12,84 @@ import XCTest
 
 class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body_length
 
-  var center = TestNotificationCenter()
-  var featureChecker = TestFeatureManager()
-  var appEvents = TestAppEvents()
-  var store = UserDefaultsSpy()
-  let observer = TestApplicationDelegateObserver()
-  let settings = TestSettings()
-  let backgroundEventLogger = TestBackgroundEventLogger(
-    infoDictionaryProvider: TestBundle(),
-    eventLogger: TestAppEvents()
-  )
-  let serverConfigurationProvider = TestServerConfigurationProvider()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var notificationCenter: TestNotificationCenter!
+  var featureChecker: TestFeatureManager!
+  var appEvents: TestAppEvents!
+  var userDataStore: UserDefaultsSpy!
+  var observer: TestApplicationDelegateObserver!
+  var settings: TestSettings!
+  var backgroundEventLogger: TestBackgroundEventLogger!
+  var serverConfigurationProvider: TestServerConfigurationProvider!
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
-  let paymentObserver = TestPaymentObserver()
-  lazy var profile = Profile(
-    userID: name,
-    firstName: nil,
-    middleName: nil,
-    lastName: nil,
-    name: nil,
-    linkURL: nil,
-    refreshDate: nil
-  )
-  lazy var delegate = ApplicationDelegate(
-    notificationCenter: center,
-    tokenWallet: TestAccessTokenWallet.self,
-    settings: settings,
-    featureChecker: featureChecker,
-    appEvents: appEvents,
-    serverConfigurationProvider: serverConfigurationProvider,
-    store: store,
-    authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-    profileProvider: TestProfileProvider.self,
-    backgroundEventLogger: backgroundEventLogger,
-    paymentObserver: paymentObserver
-  )
-
-  override class func setUp() {
-    super.setUp()
-
-    resetTestData()
-  }
+  var paymentObserver: TestPaymentObserver!
+  var profile: Profile!
+  var delegate: ApplicationDelegate! // swiftlint:disable:this weak_delegate
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    ApplicationDelegate.reset()
+    resetTestDependencies()
+
+    notificationCenter = TestNotificationCenter()
+    featureChecker = TestFeatureManager()
+    appEvents = TestAppEvents()
+    userDataStore = UserDefaultsSpy()
+    observer = TestApplicationDelegateObserver()
+    settings = TestSettings()
+    backgroundEventLogger = TestBackgroundEventLogger(
+      infoDictionaryProvider: TestBundle(),
+      eventLogger: TestAppEvents()
+    )
+    serverConfigurationProvider = TestServerConfigurationProvider()
+    paymentObserver = TestPaymentObserver()
+    profile = Profile(
+      userID: name,
+      firstName: nil,
+      middleName: nil,
+      lastName: nil,
+      name: nil,
+      linkURL: nil,
+      refreshDate: nil
+    )
+    delegate = ApplicationDelegate(
+      notificationCenter: notificationCenter,
+      tokenWallet: TestAccessTokenWallet.self,
+      settings: settings,
+      featureChecker: featureChecker,
+      appEvents: appEvents,
+      serverConfigurationProvider: serverConfigurationProvider,
+      store: userDataStore,
+      authenticationTokenWallet: TestAuthenticationTokenWallet.self,
+      profileProvider: TestProfileProvider.self,
+      backgroundEventLogger: backgroundEventLogger,
+      paymentObserver: paymentObserver
+    )
+
+    delegate.resetApplicationObserverCache()
   }
 
   override func tearDown() {
-    super.tearDown()
+    notificationCenter = nil
+    featureChecker = nil
+    appEvents = nil
+    userDataStore = nil
+    observer = nil
+    settings = nil
+    backgroundEventLogger = nil
+    serverConfigurationProvider = nil
+    paymentObserver = nil
+    profile = nil
+    delegate = nil
 
-    ApplicationDelegateTests.resetTestData()
-    settings.reset()
+    resetTestDependencies()
+
+    super.tearDown()
   }
 
-  static func resetTestData() {
+  func resetTestDependencies() {
+    ApplicationDelegate.reset()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     TestGateKeeperManager.reset()
@@ -144,7 +166,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
     XCTAssertEqual(
       delegate.store as? UserDefaultsSpy,
-      store,
+      userDataStore,
       "Should be able to create with a persistent store"
     )
     XCTAssertTrue(
@@ -209,6 +231,227 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // MARK: - Initializing SDK
 
+  func testInitializingSdkAddsBridgeApiObserver() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      delegate.applicationObservers.contains(BridgeAPI.shared),
+      "Should add the shared bridge api instance to the application observers"
+    )
+  }
+
+  func testInitializingSdkPerformsSettingsLogging() {
+    delegate.initializeSDK()
+    XCTAssertEqual(
+      settings.logWarningsCallCount,
+      1,
+      "Should have settings log warnings upon initialization"
+    )
+    XCTAssertEqual(
+      settings.logIfSDKSettingsChangedCallCount,
+      1,
+      "Should have settings log if there were changes upon initialization"
+    )
+    XCTAssertEqual(
+      settings.recordInstallCallCount,
+      1,
+      "Should have settings record installations upon initialization"
+    )
+  }
+
+  func testInitializingSdkPerformsBackgroundEventLogging() {
+    delegate.initializeSDK()
+    XCTAssertEqual(
+      backgroundEventLogger.logBackgroundRefresStatusCallCount,
+      1,
+      "Should have background event logger log background refresh status upon initialization"
+    )
+  }
+
+  func testInitializingSdkChecksInstrumentFeature() {
+    delegate.initializeSDK()
+    XCTAssert(
+      featureChecker.capturedFeaturesContains(.instrument),
+      "Should check if the instrument feature is enabled on initialization"
+    )
+  }
+
+  func testDidFinishLaunchingLaunchedApp() {
+    delegate.isAppLaunched = true
+
+    XCTAssertFalse(
+      delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil),
+      "Should return false if the application is already launched"
+    )
+  }
+
+  func testDidFinishLaunchingSetsCurrentAccessTokenWithCache() {
+    let expected = SampleAccessTokens.validToken
+    let cache = TestTokenCache(
+      accessToken: expected,
+      authenticationToken: nil
+    )
+    TestAccessTokenWallet.tokenCache = cache
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      TestAccessTokenWallet.currentAccessToken,
+      expected,
+      "Should set the current access token to the cached access token when it exists"
+    )
+  }
+
+  func testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache() {
+    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: nil
+    )
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertNil(
+      TestAccessTokenWallet.currentAccessToken,
+      "Should set the current access token to nil access token when there isn't a cached token"
+    )
+  }
+
+  func testDidFinishLaunchingSetsCurrentAuthenticationTokenWithCache() {
+    let expected = SampleAuthenticationToken.validToken
+    TestAuthenticationTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: expected
+    )
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      expected,
+      "Should set the current authentication token to the cached access token when it exists"
+    )
+  }
+
+  func testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache() {
+    TestAuthenticationTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: nil
+    )
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertNil(
+      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      "Should set the current authentication token to nil access token when there isn't a cached token"
+    )
+  }
+
+  func testDidFinishLaunchingWithAutoLogEnabled() {
+    settings.stubbedIsAutoLogAppEventsEnabled = true
+    userDataStore.set(1, forKey: bitmaskKey)
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      appEvents.capturedEventName,
+      .initializeSDK,
+      "Should log initialization when auto log app events is enabled"
+    )
+  }
+
+  func testDidFinishLaunchingWithAutoLogDisabled() {
+    settings.stubbedIsAutoLogAppEventsEnabled = false
+    userDataStore.set(1, forKey: bitmaskKey)
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertNil(
+      appEvents.capturedEventName,
+      "Should not log initialization when auto log app events are disabled"
+    )
+  }
+
+  func testDidFinishLaunchingWithObservers() {
+    delegate.isAppLaunched = false
+
+    let observer1 = TestApplicationDelegateObserver()
+    let observer2 = TestApplicationDelegateObserver()
+
+    delegate.addObserver(observer1)
+    delegate.addObserver(observer2)
+
+    let notifiedObservers = delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      observer1.didFinishLaunchingCallCount,
+      1,
+      "Should invoke did finish launching on all observers"
+    )
+    XCTAssertEqual(
+      observer2.didFinishLaunchingCallCount,
+      1,
+      "Should invoke did finish launching on all observers"
+    )
+    XCTAssertTrue(notifiedObservers, "Should indicate if observers were notified")
+  }
+
+  func testDidFinishLaunchingWithoutObservers() {
+    let notifiedObservers = delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertFalse(notifiedObservers, "Should indicate if no observers were notified")
+  }
+
+  func testAppEventsEnabled() {
+    settings.stubbedIsAutoLogAppEventsEnabled = true
+
+    let notification = Notification(
+      name: UIApplication.didBecomeActiveNotification,
+      object: self,
+      userInfo: nil
+    )
+    delegate.applicationDidBecomeActive(notification)
+
+    XCTAssertTrue(
+      appEvents.wasActivateAppCalled,
+      "Should have app events activate the app when autolog app events is enabled"
+    )
+    XCTAssertEqual(
+      appEvents.capturedApplicationState,
+      .active,
+      "Should set the application state to active when the notification is received"
+    )
+  }
+
+  func testAppEventsDisabled() {
+    settings.stubbedIsAutoLogAppEventsEnabled = false
+
+    let notification = Notification(
+      name: UIApplication.didBecomeActiveNotification,
+      object: self,
+      userInfo: nil
+    )
+    delegate.applicationDidBecomeActive(notification)
+
+    XCTAssertFalse(
+      appEvents.wasActivateAppCalled,
+      "Should not have app events activate the app when autolog app events is enabled"
+    )
+    XCTAssertEqual(
+      appEvents.capturedApplicationState,
+      .active,
+      "Should set the application state to active when the notification is received"
+    )
+  }
+
+  func testSettingApplicationState() {
+    delegate.setApplicationState(.background)
+    XCTAssertEqual(
+      appEvents.capturedApplicationState,
+      .background,
+      "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground"
+    )
+  }
+
   func testInitializingSdkEnablesGraphRequests() {
     GraphRequestConnection.resetCanMakeRequests()
     delegate.initializeSDK()
@@ -242,7 +485,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testInitializingSDKLogsAppEvent() {
-    store.setValue(1, forKey: bitmaskKey)
+    userDataStore.setValue(1, forKey: bitmaskKey)
 
     delegate._logSDKInitialize()
 
@@ -257,7 +500,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertTrue(
-      center.capturedAddObserverInvocations.contains(
+      notificationCenter.capturedAddObserverInvocations.contains(
         TestNotificationCenter.ObserverEvidence(
           observer: delegate as Any,
           name: UIApplication.didEnterBackgroundNotification,
@@ -268,7 +511,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should start observing application backgrounding upon initialization"
     )
     XCTAssertTrue(
-      center.capturedAddObserverInvocations.contains(
+      notificationCenter.capturedAddObserverInvocations.contains(
         TestNotificationCenter.ObserverEvidence(
           observer: delegate as Any,
           name: UIApplication.didBecomeActiveNotification,
@@ -279,7 +522,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should start observing application foregrounding upon initialization"
     )
     XCTAssertTrue(
-      center.capturedAddObserverInvocations.contains(
+      notificationCenter.capturedAddObserverInvocations.contains(
         TestNotificationCenter.ObserverEvidence(
           observer: delegate as Any,
           name: UIApplication.willResignActiveNotification,
@@ -317,6 +560,28 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       appEvents.wasRegisterAutoResetSourceApplicationCalled,
       "Should have the analytics session register to auto reset the source application"
+    )
+  }
+
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresAppEventsConfigurationManager() {
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.store === UserDefaults.standard,
+      "Should be configured with the expected concrete data store"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.settings === Settings.shared,
+      "Should be configured with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.graphRequestFactory is GraphRequestFactory,
+      "Should be configured with the expected concrete request provider"
+    )
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+      "Should be configured with the expected concrete connection provider"
     )
   }
 
