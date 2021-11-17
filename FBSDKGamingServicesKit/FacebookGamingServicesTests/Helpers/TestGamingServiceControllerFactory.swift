@@ -20,13 +20,13 @@ class TestGamingServiceController: NSObject, _GamingServiceControllerProtocol {
 @objcMembers
 class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
 
-  var capturedServiceType: GamingServiceType = .friendFinder
+  var capturedServiceType: _GamingServiceType = .friendFinder
   var capturedCompletion: GamingServiceResultCompletion = { _, _, _ in }
   var capturedPendingResult: Any?
   var controller = TestGamingServiceController()
 
   func create(
-    with serviceType: GamingServiceType,
+    with serviceType: _GamingServiceType,
     completion: @escaping GamingServiceResultCompletion,
     pendingResult: Any?
   ) -> _GamingServiceControllerProtocol {

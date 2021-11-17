@@ -84,7 +84,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
 
     XCTAssertEqual(
       factory.capturedServiceType,
-      GamingServiceType.friendFinder,
+      .friendFinder,
       "Should create a controller with the expected service type"
     )
     XCTAssertNil(
@@ -117,7 +117,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
 
     XCTAssertEqual(
       factory.capturedServiceType,
-      GamingServiceType.friendFinder,
+      .friendFinder,
       "Should create a controller with the expected service type"
     )
     XCTAssertNil(

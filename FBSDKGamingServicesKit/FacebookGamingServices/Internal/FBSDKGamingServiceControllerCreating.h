@@ -10,9 +10,8 @@
 
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 
-#import "FBSDKGamingServiceType.h"
-
 @protocol FBSDKGamingServiceController;
+typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType);
 
 NS_ASSUME_NONNULL_BEGIN
 

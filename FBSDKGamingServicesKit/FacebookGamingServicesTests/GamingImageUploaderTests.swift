@@ -135,7 +135,7 @@ class GamingImageUploaderTests: XCTestCase {
 
     XCTAssertEqual(
       factory.capturedServiceType,
-      GamingServiceType.mediaAsset,
+      .mediaAsset,
       "Should create a controller with the expected service type"
     )
     XCTAssertEqual(
@@ -190,7 +190,7 @@ class GamingImageUploaderTests: XCTestCase {
 
     XCTAssertEqual(
       factory.capturedServiceType,
-      GamingServiceType.mediaAsset,
+      .mediaAsset,
       "Should create a controller with the expected service type"
     )
     XCTAssertEqual(

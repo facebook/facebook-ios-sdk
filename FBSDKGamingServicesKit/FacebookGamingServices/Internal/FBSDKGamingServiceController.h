@@ -11,9 +11,10 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingServiceType.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType);
 
 NS_SWIFT_NAME(GamingServiceController)
 @interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
