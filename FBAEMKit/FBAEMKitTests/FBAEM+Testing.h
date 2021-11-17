@@ -124,6 +124,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)_isContentOptimized:(id _Nullable)result;
 
++ (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
+                                        event:(NSString *)event;
+
 + (NSDictionary<NSString *, id> *)_catalogRequestParameters:(nullable NSString *)catalogID
                                                   contentID:(nullable NSString *)contentID;
 

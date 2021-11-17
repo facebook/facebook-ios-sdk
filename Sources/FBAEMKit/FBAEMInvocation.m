@@ -16,6 +16,7 @@
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define SEC_IN_DAY 86400
+#define CATALOG_OPTIMIZATION_MODULUS 8
 
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_ids";
 static NSString *const ACS_TOKEN_KEY = @"acs_token";
@@ -220,6 +221,27 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
       _conversionTimestamp = [NSDate date];
       _isAggregated = NO;
       return YES;
+    }
+  }
+  return NO;
+}
+
+- (BOOL)isOptimizedEvent:(NSString *)event
+                 configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+{
+  FBAEMConfiguration *config = [self _findConfig:configs];
+  if (!config || !_catalogID) {
+    return NO;
+  }
+  // Look up conversion bit mapping to check if an event is optimzied
+  for (FBAEMRule *rule in config.conversionValueRules) {
+    if ((_campaignID.intValue % CATALOG_OPTIMIZATION_MODULUS)
+        == (rule.conversionValue % CATALOG_OPTIMIZATION_MODULUS)) {
+      for (FBAEMEvent *entry in rule.events) {
+        if ([entry.eventName isEqualToString:event]) {
+          return YES;
+        }
+      }
     }
   }
   return NO;
@@ -450,6 +472,11 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
 - (void)setBusinessID:(NSString *_Nullable)businessID
 {
   _businessID = businessID;
+}
+
+- (void)setCatalogID:(NSString *_Nullable)catalogID
+{
+  _catalogID = catalogID;
 }
 
 - (void)setConversionTimestamp:(NSDate *_Nonnull)conversionTimestamp

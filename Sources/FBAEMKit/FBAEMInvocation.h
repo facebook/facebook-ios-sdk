@@ -68,6 +68,9 @@ NS_SWIFT_NAME(AEMInvocation)
 
 - (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 
+- (BOOL)isOptimizedEvent:(NSString *)event
+                 configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
+
 - (BOOL)isOutOfWindowWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 
 - (nullable NSString *)getHMAC:(NSInteger)delay;

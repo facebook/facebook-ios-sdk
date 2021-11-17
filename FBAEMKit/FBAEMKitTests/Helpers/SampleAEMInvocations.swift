@@ -64,7 +64,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
 
   static func createCatalogOptimizedInvocation() -> AEMInvocation {
     AEMInvocation(
-      campaignID: "debugging_campaign",
+      campaignID: "81", // The campaign id mod 8 (catalog optimization modulus) modulus is 1
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
       acsConfigID: "debugging_config_id_123",

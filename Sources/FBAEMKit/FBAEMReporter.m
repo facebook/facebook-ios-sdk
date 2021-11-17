@@ -199,7 +199,11 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
       FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
       if (attributedInvocation) {
-        if (g_isCatalogReportEnabled && attributedInvocation.catalogID) {
+        // We will report conversion in catalog level if
+        // 1. invocation has catalog id
+        // 2. event is optimized
+        // 3. event's content id belongs to the catalog
+        if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
           NSString *contentID = [FBSDKTypeUtility dictionary:parameters objectForKey:FB_CONTENT_ID_KEY ofType:NSString.class];
           [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
             [self _updateAttributedInvocation:attributedInvocation event:event currency:currency value:value parameters:parameters];
@@ -348,6 +352,14 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                                                  }
                                                }];
                                              }];
+}
+
++ (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
+                                        event:(NSString *)event
+{
+  return g_isCatalogReportEnabled
+  && invocation.catalogID
+  && [invocation isOptimizedEvent:event configs:g_configs];
 }
 
 + (BOOL)_isContentOptimized:(id _Nullable)result

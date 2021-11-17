@@ -865,6 +865,42 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
+  func testIsOptimizedEventWithoutCatalogID() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    let configs = [
+      Values.defaultMode: [self.config1]
+    ]
+
+    XCTAssertFalse(
+      invocation.isOptimizedEvent(Values.purchase, configs: configs),
+      "Invocation without catalog ID doesn't have optimized event"
+    )
+  }
+
+  func testIsOptimizedEventWithoutExpectedEvent() {
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    let configs = [
+      Values.defaultMode: [self.config1]
+    ]
+
+    XCTAssertFalse(
+      invocation.isOptimizedEvent(Values.donate, configs: configs),
+      "Event is not expected to be optimized"
+    )
+  }
+
+  func testIsOptimizedEventWithExpectedEvent() {
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    let configs = [
+      Values.defaultMode: [self.config1]
+    ]
+
+    XCTAssertTrue(
+      invocation.isOptimizedEvent(Values.purchase, configs: configs),
+      "Event is expected to be optimized"
+    )
+  }
+
   func testSecureCoding() {
     XCTAssertTrue(
       AEMInvocation.supportsSecureCoding,

@@ -55,7 +55,7 @@ class FBAEMReporterTests: XCTestCase {
     catalogID: nil,
     isTestMode: false,
     hasSKAN: false
-  )
+  )! // swiftlint:disable:this force_unwrapping
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
   let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
@@ -500,17 +500,16 @@ class FBAEMReporterTests: XCTestCase {
 
   func testRecordAndUpdateEventsWithEmptyConfigs() throws {
     AEMReporter.timestamp = date
-    let unwrappedInvocation = try XCTUnwrap(testInvocation)
-    AEMReporter.invocations = [unwrappedInvocation]
+    AEMReporter.invocations = [testInvocation]
 
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     XCTAssertEqual(
-      unwrappedInvocation.attributionCallCount,
+      testInvocation.attributionCallCount,
       0,
       "Should not attribute events with empty configurations"
     )
     XCTAssertEqual(
-      unwrappedInvocation.updateConversionCallCount,
+      testInvocation.updateConversionCallCount,
       0,
       "Should not update conversions with empty configurations"
     )
@@ -913,6 +912,29 @@ class FBAEMReporterTests: XCTestCase {
     for catalogID in malformedInput {
       for contentID in malformedInput {
         AEMReporter._catalogRequestParameters(catalogID, contentID: contentID)
+      }
+    }
+  }
+
+  func testShouldReportConversionInCatalogLevel() {
+    for catalogReportEnabled in [true, false] {
+      for isOptimizedEvent in [true, false] {
+        for catalogID in ["test_catalog", nil] {
+          AEMReporter.setCatalogReportEnabled(catalogReportEnabled)
+          testInvocation.isOptimizedEvent = isOptimizedEvent
+          testInvocation.catalogID = catalogID
+          if catalogReportEnabled && isOptimizedEvent && catalogID != nil {
+            XCTAssertTrue(
+              AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
+              "Should expect to report conversion in catalog level"
+            )
+          } else {
+            XCTAssertFalse(
+              AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
+              "Should expect not to report conversion in catalog level"
+            )
+          }
+        }
       }
     }
   }

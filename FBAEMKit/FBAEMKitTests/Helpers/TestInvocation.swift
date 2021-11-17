@@ -13,6 +13,7 @@ class TestInvocation: AEMInvocation {
 
   var attributionCallCount = 0
   var updateConversionCallCount = 0
+  var isOptimizedEvent = false
 
   override func attributeEvent(
     _ event: String,
@@ -31,5 +32,12 @@ class TestInvocation: AEMInvocation {
   ) -> Bool {
     updateConversionCallCount += 1
     return true
+  }
+
+  override func isOptimizedEvent(
+    _ event: String,
+    configs: [String: [AEMConfiguration]]?
+  ) -> Bool {
+    isOptimizedEvent
   }
 }
