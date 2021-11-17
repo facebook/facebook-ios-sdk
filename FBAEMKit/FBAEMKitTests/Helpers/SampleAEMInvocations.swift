@@ -61,4 +61,17 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       hasSKAN: true
     )! // swiftlint:disable:this force_unwrapping
   }
+
+  static func createCatalogOptimizedInvocation() -> AEMInvocation {
+    AEMInvocation(
+      campaignID: "debugging_campaign",
+      acsToken: "debugging_token",
+      acsSharedSecret: "debugging_shared_secret",
+      acsConfigID: "debugging_config_id_123",
+      businessID: nil,
+      catalogID: "test_catalog_id",
+      isTestMode: false,
+      hasSKAN: true
+    )! // swiftlint:disable:this force_unwrapping
+  }
 }

@@ -26,6 +26,8 @@ class FBAEMReporterTests: XCTestCase {
     static let advertiserID = "advertiser_id"
     static let businessID = "advertiser_id"
     static let campaignID = "campaign_id"
+    static let catalogID = "catalog_id"
+    static let contentID = "fb_content_id"
     static let token = "token"
   }
 
@@ -56,6 +58,7 @@ class FBAEMReporterTests: XCTestCase {
   )
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
+  let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
 
   override class func setUp() {
     super.setUp()
@@ -835,6 +838,83 @@ class FBAEMReporterTests: XCTestCase {
       AEMReporter._isDoubleCounting(invocation, event: "fb_test"),
       "Should not expect double counting without SKAN click"
     )
+  }
+
+  // MARK: - Catalog Reporting
+
+  func testLoadCatalogOptimizationWithoutContentID() {
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    var blockCall = 0
+
+    AEMReporter._loadCatalogOptimization(with: invocation, contentID: nil) {
+      blockCall += 1
+    }
+    XCTAssertEqual(blockCall, 0, "Should not execute the block when contentID is nil")
+  }
+
+  func testLoadCatalogOptimizationWithOptimizedContent() {
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    AEMReporter.catalogNetworker = self.networker
+    var blockCall = 0
+
+    AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {
+      blockCall += 1
+    }
+    XCTAssertTrue(
+      (self.networker.capturedGraphPath?.contains("da_content_id_belongs_to_catalog_id")) == true,
+      "Should start the catalog request"
+    )
+    self.networker.capturedCompletionHandler?(nil, SampleAEMError())
+    XCTAssertEqual(blockCall, 0, "Should not execute the block when there is a network error")
+    self.networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": false]]], nil)
+    XCTAssertEqual(blockCall, 0, "Should not execute the block when content is not optmized")
+    self.networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": true]]], nil)
+    XCTAssertEqual(blockCall, 1, "Should execute the block when content is optmized")
+  }
+
+  func testLoadCatalogOptimizationWithFuzzyInput() {
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    AEMReporter.catalogNetworker = self.networker
+
+    AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {}
+    for _ in 0..<100 {
+      self.networker.capturedCompletionHandler?(
+        Fuzzer.randomize(json: self.sampleCatalogOptimizationDictionary),
+        nil
+      )
+    }
+  }
+
+  func testIsContentOptimized() {
+    var data = [
+      "data": [["content_id_belongs_to_catalog_id": true]]
+    ]
+    XCTAssertTrue(AEMReporter._isContentOptimized(data), "Should expect content is optimized")
+    data = ["data": [["content_id_belongs_to_catalog_id": false]]]
+    XCTAssertFalse(AEMReporter._isContentOptimized(data), "Should expect content is optimized")
+  }
+
+  func testCatalogRequestParameters() {
+    let params = AEMReporter._catalogRequestParameters("test_catalog", contentID: "test_content_id")
+
+    XCTAssertEqual(
+      params as NSDictionary,
+      [
+        Keys.catalogID: "test_catalog",
+        Keys.contentID: "test_content_id"
+      ],
+      "Catalog request parameters are not expected"
+    )
+  }
+
+  func testCatalogRequestParametersWithMalformedInput() {
+    let malformedInput = [nil, ""]
+
+    for catalogID in malformedInput {
+      for contentID in malformedInput {
+        AEMReporter._catalogRequestParameters(catalogID, contentID: contentID)
+      }
+    }
   }
 
   // MARK: - Helpers

@@ -34,6 +34,9 @@ static NSString *const HMAC_KEY = @"hmac";
 static NSString *const CONFIG_ID_KEY = @"config_id";
 static NSString *const DELAY_FLOW_KEY = @"delay_flow";
 
+static NSString *const FB_CONTENT_ID_KEY = @"fb_content_id";
+static NSString *const CATALOG_ID_KEY = @"catalog_id";
+
 static NSString *const FBAEMConfigurationKey = @"com.facebook.sdk:FBSDKAEMConfiguration";
 static NSString *const FBAEMReporterKey = @"com.facebook.sdk:FBSDKAEMReporter";
 static NSString *const FBAEMReporterFileName = @"FBSDKAEMReportData.report";
@@ -196,19 +199,35 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
       FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
       if (attributedInvocation) {
-        [attributedInvocation attributeEvent:event
-                                    currency:currency
-                                       value:value
-                                  parameters:parameters
-                                     configs:g_configs
-                           shouldUpdateCache:YES];
-        if ([attributedInvocation updateConversionValueWithConfigs:g_configs]) {
-          [self _sendAggregationRequest];
+        if (g_isCatalogReportEnabled && attributedInvocation.catalogID) {
+          NSString *contentID = [FBSDKTypeUtility dictionary:parameters objectForKey:FB_CONTENT_ID_KEY ofType:NSString.class];
+          [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
+            [self _updateAttributedInvocation:attributedInvocation event:event currency:currency value:value parameters:parameters];
+          }];
+        } else {
+          [self _updateAttributedInvocation:attributedInvocation event:event currency:currency value:value parameters:parameters];
         }
-        [self _saveReportData];
       }
     }];
   }
+}
+
++ (void)_updateAttributedInvocation:(FBAEMInvocation *)invocation
+                              event:(NSString *)event
+                           currency:(nullable NSString *)currency
+                              value:(nullable NSNumber *)value
+                         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  [invocation attributeEvent:event
+                    currency:currency
+                       value:value
+                  parameters:parameters
+                     configs:g_configs
+           shouldUpdateCache:YES];
+  if ([invocation updateConversionValueWithConfigs:g_configs]) {
+    [self _sendAggregationRequest];
+  }
+  [self _saveReportData];
 }
 
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
@@ -307,6 +326,39 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   }];
 }
 
++ (void)_loadCatalogOptimizationWithInvocation:(FBAEMInvocation *)invocation
+                                     contentID:(nullable NSString *)contentID
+                                         block:(dispatch_block_t)block
+{
+  if (!contentID) {
+    NSLog(@"Content ID is not found for the optimized event");
+    return;
+  }
+  [self.catalogNetworker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/da_content_id_belongs_to_catalog_id", _appId]
+                                             parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
+                                            tokenString:nil
+                                             HTTPMethod:FBAEMHTTPMethodGET
+                                             completion:^(id _Nullable result, NSError *_Nullable error) {
+                                               [self dispatchOnQueue:g_serialQueue block:^() {
+                                                 if (error) {
+                                                   return;
+                                                 }
+                                                 if ([self _isContentOptimized:result]) {
+                                                   block();
+                                                 }
+                                               }];
+                                             }];
+}
+
++ (BOOL)_isContentOptimized:(id _Nullable)result
+{
+  NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
+  NSArray<id> *data = [FBSDKTypeUtility dictionary:json objectForKey:@"data" ofType:NSArray.class];
+  NSDictionary<NSString *, id> *catalogData = [FBSDKTypeUtility dictionaryValue:[FBSDKTypeUtility array:data objectAtIndex:0]];
+  NSNumber *isOptimized = [FBSDKTypeUtility dictionary:catalogData objectForKey:@"content_id_belongs_to_catalog_id" ofType:NSNumber.class] ?: @(NO);
+  return isOptimized.boolValue;
+}
+
 + (NSDictionary<NSString *, id> *)_requestParameters
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
@@ -317,6 +369,15 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   }
   NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
   [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  return [params copy];
+}
+
++ (NSDictionary<NSString *, id> *)_catalogRequestParameters:(NSString *)catalogID
+                                                  contentID:(NSString *)contentID
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_ID_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:catalogID forKey:CATALOG_ID_KEY];
   return [params copy];
 }
 

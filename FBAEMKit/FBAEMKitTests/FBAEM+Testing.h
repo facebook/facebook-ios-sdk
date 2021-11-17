@@ -118,6 +118,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)_loadConfigurationWithBlock:(nullable FBAEMReporterBlock)block;
 
++ (void)_loadCatalogOptimizationWithInvocation:(FBAEMInvocation *)invocation
+                                     contentID:(nullable NSString *)contentID
+                                         block:(dispatch_block_t)block;
+
++ (BOOL)_isContentOptimized:(id _Nullable)result;
+
++ (NSDictionary<NSString *, id> *)_catalogRequestParameters:(nullable NSString *)catalogID
+                                                  contentID:(nullable NSString *)contentID;
+
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
                                               Event:(NSString *)event
                                            currency:(nullable NSString *)currency
