@@ -75,11 +75,7 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   class func reset() {
-    AEMReporter.invocations = []
-    AEMReporter.completionBlocks = []
-    AEMReporter.isLoadingConfiguration = false
-    AEMReporter.configs = [:]
-    AEMReporter._clearCache()
+    AEMReporter.reset()
   }
 
   func testEnable() {
@@ -87,6 +83,7 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.enable()
 
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
+    XCTAssertNotNil(AEMReporter.catalogNetworker, "AEM catalog networker should be created when AEM is enabled")
   }
 
   func testCatalogReportDefaultConfigure() {
@@ -101,6 +98,10 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testConfigure() {
+    XCTAssertNil(
+      AEMReporter.catalogNetworker,
+      "Should not configure catalog networker before enable"
+    )
     XCTAssertEqual(
       networker,
       AEMReporter.networker as? TestAEMNetworker,

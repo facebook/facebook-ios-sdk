@@ -442,6 +442,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_cpas",
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )
@@ -639,6 +640,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_cpas",
+      catalogID: nil,
       isTestMode: false,
       hasSKAN: false
     )! // swiftlint:disable:this force_unwrapping
@@ -664,7 +666,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
           ]
         ]
       ],
-      configs: configs
+      configs: configs,
+      shouldUpdateCache: true
     )
     XCTAssertTrue(
       isAttributed,

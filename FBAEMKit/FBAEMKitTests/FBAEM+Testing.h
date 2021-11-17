@@ -109,6 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
 @property (class, nonatomic) id<FBAEMNetworking> networker;
+@property (class, nullable, nonatomic) id<FBAEMNetworking> catalogNetworker;
 @property (class, nonatomic) id<FBSKAdNetworkReporting> reporter;
 
 + (void)enable;
@@ -150,6 +151,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)_saveReportData;
 
 + (void)_clearCache;
+
++ (void)reset;
 
 @end
 

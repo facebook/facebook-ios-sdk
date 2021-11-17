@@ -52,6 +52,7 @@ static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
 static _Nullable id<FBAEMNetworking> _networker = nil;
+static _Nullable id<FBAEMNetworking> _catalogNetworker = nil;
 static _Nullable id<FBSKAdNetworkReporting> _reporter = nil;
 static NSString *_appId;
 
@@ -79,6 +80,11 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 + (id<FBAEMNetworking>)networker
 {
   return _networker;
+}
+
++ (id<FBAEMNetworking>)catalogNetworker
+{
+  return _catalogNetworker;
 }
 
 + (id<FBSKAdNetworkReporting>)reporter
@@ -125,6 +131,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
         NSLog(@"App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB app ID OR add FacebookAppID in the info.plist file");
         return;
       }
+      _catalogNetworker = [FBAEMNetworker new];
       g_isAEMReportEnabled = YES;
     });
   }
@@ -650,6 +657,11 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   return g_isCatalogReportEnabled;
 }
 
++ (void)setCatalogNetworker:(id<FBAEMNetworking>)catalogNetworker
+{
+  _catalogNetworker = catalogNetworker;
+}
+
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
 {
   g_completionBlocks = completionBlocks;
@@ -678,6 +690,18 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 + (void)setReportFilePath:(NSString *)path
 {
   g_reportFile = path;
+}
+
++ (void)reset
+{
+  g_isAEMReportEnabled = NO;
+  g_isLoadingConfiguration = NO;
+  g_isCatalogReportEnabled = NO;
+  g_completionBlocks = [NSMutableArray new];
+  g_configs = [NSMutableDictionary new];
+  _networker = nil;
+  _catalogNetworker = nil;
+  [self _clearCache];
 }
 
 #endif
