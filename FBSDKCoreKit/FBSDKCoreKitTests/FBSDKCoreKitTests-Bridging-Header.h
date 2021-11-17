@@ -126,6 +126,8 @@
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
+#import "FBSDKImpressionLoggerFactory.h"
+#import "FBSDKImpressionLoggerFactoryProtocol.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKIntegrityManager+Testing.h"
 #import "FBSDKInternalURLOpener.h"
