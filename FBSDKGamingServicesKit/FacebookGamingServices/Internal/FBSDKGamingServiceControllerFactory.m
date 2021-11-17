@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGamingServiceController () <FBSDKGamingServiceController>
+@interface FBSDKGamingServiceController () <FBSDKGamingServiceController, FBSDKGamingServiceControllerCreating>
 @end
 
 @implementation FBSDKGamingServiceControllerFactory

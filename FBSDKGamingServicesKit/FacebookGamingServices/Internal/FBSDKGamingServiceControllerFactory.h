@@ -8,12 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGamingServiceControllerCreating.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GamingServiceControllerFactory)
-@interface FBSDKGamingServiceControllerFactory : NSObject <FBSDKGamingServiceControllerCreating>
+@interface FBSDKGamingServiceControllerFactory : NSObject
 @end
 
 NS_ASSUME_NONNULL_END

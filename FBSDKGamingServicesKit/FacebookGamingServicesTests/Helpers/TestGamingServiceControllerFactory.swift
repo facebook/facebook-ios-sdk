@@ -18,8 +18,7 @@ class TestGamingServiceController: NSObject, _GamingServiceControllerProtocol {
 }
 
 @objcMembers
-class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
-
+class TestGamingServiceControllerFactory: NSObject, _GamingServiceControllerCreating {
   var capturedServiceType: _GamingServiceType = .friendFinder
   var capturedCompletion: GamingServiceResultCompletion = { _, _, _ in }
   var capturedPendingResult: Any?
