@@ -8,6 +8,8 @@
 
 #import "FBSDKGamingGroupIntegration.h"
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKGamingServiceController.h"
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"

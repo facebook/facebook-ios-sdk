@@ -10,8 +10,9 @@
 
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 
-#import "FBSDKGamingServiceControllerProtocol.h"
 #import "FBSDKGamingServiceType.h"
+
+@protocol FBSDKGamingServiceController;
 
 NS_ASSUME_NONNULL_BEGIN
 

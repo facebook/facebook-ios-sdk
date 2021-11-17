@@ -10,6 +10,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";
 static NSString *const kServiceTypeStringCommunity = @"community";
@@ -39,7 +41,7 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
     argument]];
 }
 
-@interface FBSDKGamingServiceController ()
+@interface FBSDKGamingServiceController () <FBSDKGamingServiceController>
 
 @property (nonatomic) FBSDKGamingServiceType serviceType;
 @property (nonatomic) FBSDKGamingServiceResultCompletion completionHandler;

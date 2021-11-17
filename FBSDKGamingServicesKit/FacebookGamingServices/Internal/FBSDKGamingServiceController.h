@@ -11,13 +11,12 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
 #import "FBSDKGamingServiceType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GamingServiceController)
-@interface FBSDKGamingServiceController : NSObject <FBSDKGamingServiceController, FBSDKURLOpening>
+@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
 
 /**
 Used to link to gaming services on Facebook.
