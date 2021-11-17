@@ -10,10 +10,14 @@ import FBSDKCoreKit
 
 class TestImpressionLogger: ImpressionLogging {
 
-  func logImpression( // swiftlint:disable:this unavailable_function
+  var capturedIdentifier: String?
+  var capturedParameters: [String: Any]?
+
+  func logImpression(
     withIdentifier identifier: String,
     parameters: [String: Any]?
   ) {
-    fatalError("Log impression not implemented")
+    capturedIdentifier = identifier
+    capturedParameters = parameters
   }
 }

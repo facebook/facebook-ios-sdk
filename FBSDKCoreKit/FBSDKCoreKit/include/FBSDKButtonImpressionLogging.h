@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -20,7 +22,7 @@ NS_SWIFT_NAME(FBButtonImpressionLogging)
 @protocol FBSDKButtonImpressionLogging <NSObject>
 
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
-@property (nonatomic, readonly, copy) NSString *impressionTrackingEventName;
+@property (nonatomic, readonly, copy) FBSDKAppEventName impressionTrackingEventName;
 @property (nonatomic, readonly, copy) NSString *impressionTrackingIdentifier;
 
 @end

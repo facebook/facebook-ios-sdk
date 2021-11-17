@@ -1377,6 +1377,32 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  func testInitializingSdkConfiguresImpressionLoggingButton() throws {
+    ImpressionLoggingButton.resetClassDependencies()
+    delegate.initializeSDK()
+
+    let factory = try XCTUnwrap(
+      ImpressionLoggingButton.impressionLoggerFactory as? ImpressionLoggerFactory,
+      "Should be configured with the expected concrete logger factory"
+    )
+    XCTAssertTrue(
+      factory.graphRequestFactory is GraphRequestFactory,
+      "The impression factory should have the expected concrete graph request factory"
+    )
+    XCTAssertTrue(
+      factory.eventLogger === AppEvents.shared,
+      "The impression factory should have the expected concrete event logger"
+    )
+    XCTAssertTrue(
+      factory.notificationCenter === NotificationCenter.default,
+      "The impression factory should have the expected concrete notification center"
+    )
+    XCTAssertTrue(
+      factory.accessTokenWallet === AccessToken.self,
+      "The impression factory should have the expected concrete access token wallet"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

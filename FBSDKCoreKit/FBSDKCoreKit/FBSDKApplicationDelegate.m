@@ -49,6 +49,8 @@
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
+#import "FBSDKImpressionLoggerFactory.h"
+#import "FBSDKImpressionLoggingButton+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKKeychainStoreFactory.h"
@@ -737,6 +739,13 @@ static UIApplicationState _applicationState;
                                         swizzler:FBSDKSwizzler.class
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
                                    userDataStore:self.userDataStore];
+
+  FBSDKImpressionLoggerFactory *impressionLoggerFactory = [[FBSDKImpressionLoggerFactory alloc] initWithGraphRequestFactory:graphRequestFactory
+                                                                                                                eventLogger:FBSDKAppEvents.shared
+                                                                                                         notificationCenter:NSNotificationCenter.defaultCenter
+                                                                                                          accessTokenWallet:FBSDKAccessToken.class];
+  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:impressionLoggerFactory];
+
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
                                                             loggerFactory:[FBSDKLoggerFactory new]]; // TEMP: added to configurator
   [FBSDKAppEventsConfigurationManager configureWithStore:store

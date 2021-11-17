@@ -9,8 +9,12 @@
 import FBSDKCoreKit
 
 class TestImpressionLoggerFactory: ImpressionLoggerFactoryProtocol {
+  let impressionLogger = TestImpressionLogger()
+  var capturedEventName: AppEvents.Name?
 
   func makeImpressionLogger(withEventName eventName: AppEvents.Name) -> ImpressionLogging {
-    TestImpressionLogger()
+    capturedEventName = eventName
+
+    return impressionLogger
   }
 }

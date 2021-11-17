@@ -6,17 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
+#import "FBSDKImpressionLoggingButton+Internal.h"
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAccessToken+Internal.h"
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKButtonImpressionLogging.h"
-#import "FBSDKGraphRequestFactory.h"
-#import "FBSDKViewImpressionLogger.h"
-#import "NSNotificationCenter+Extensions.h"
 
 @implementation FBSDKImpressionLoggingButton
+
+static id<FBSDKImpressionLoggerFactory> _impressionLoggerFactory;
+
++ (nullable id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
+{
+  return _impressionLoggerFactory;
+}
+
++ (void)setImpressionLoggerFactory:(nullable id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
+{
+  _impressionLoggerFactory = impressionLoggerFactory;
+}
+
++ (void)configureWithImpressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
+{
+  self.impressionLoggerFactory = impressionLoggerFactory;
+}
 
 - (void)layoutSubviews
 {
@@ -26,16 +37,21 @@
     NSString *identifier = ((id<FBSDKButtonImpressionLogging>)self).impressionTrackingIdentifier;
     NSDictionary<NSString *, id> *parameters = ((id<FBSDKButtonImpressionLogging>)self).analyticsParameters;
     if (eventName && identifier) {
-      FBSDKViewImpressionLogger *impressionLogger
-        = [FBSDKViewImpressionLogger impressionLoggerWithEventName:eventName
-                                               graphRequestFactory:[FBSDKGraphRequestFactory new]
-                                                       eventLogger:FBSDKAppEvents.shared
-                                              notificationObserver:NSNotificationCenter.defaultCenter
-                                                       tokenWallet:FBSDKAccessToken.class];
+      id<FBSDKImpressionLogging> impressionLogger
+        = [self.class.impressionLoggerFactory makeImpressionLoggerWithEventName:eventName];
       [impressionLogger logImpressionWithIdentifier:identifier parameters:parameters];
     }
   }
   [super layoutSubviews];
 }
+
+#if DEBUG && FBTEST
+
++ (void)resetClassDependencies
+{
+  self.impressionLoggerFactory = nil;
+}
+
+#endif
 
 @end
