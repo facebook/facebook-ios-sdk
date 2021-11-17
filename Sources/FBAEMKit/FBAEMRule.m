@@ -50,6 +50,16 @@ static NSString *const EVENTS_KEY = @"events";
   return self;
 }
 
+- (BOOL)containsEvent:(NSString *)eventName
+{
+  for (FBAEMEvent *event in self.events) {
+    if ([event.eventName isEqualToString:eventName]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 - (BOOL)isMatchedWithRecordedEvents:(nullable NSSet<NSString *> *)recordedEvents
                      recordedValues:(nullable NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedValues
 {

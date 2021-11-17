@@ -50,7 +50,7 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
     ],
   ]
 
-  var validRule: FBAEMRule? = FBAEMRule(json: [
+  var validRule = FBAEMRule(json: [
     Keys.conversionValue: 10,
     Keys.priority: 7,
     Keys.events: [
@@ -64,7 +64,7 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
         ],
       ],
     ],
-  ])
+  ])! // swiftlint:disable:this force_unwrapping
 
   func testValidCase1() {
     let validData: [String: Any] = [
@@ -171,6 +171,19 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
   }
 
+  func testContainsEvent() {
+    let rule = self.validRule
+
+    XCTAssertTrue(
+      rule.containsEvent(Values.purchase),
+      "Should expect to return true for the event in the rule"
+    )
+    XCTAssertFalse(
+      rule.containsEvent(Values.testEvent),
+      "Should expect to return false for the event not in the rule"
+    )
+  }
+
   func testSecureCoding() {
     XCTAssertTrue(
       FBAEMRule.supportsSecureCoding,
@@ -181,23 +194,23 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testEncoding() {
     let coder = TestCoder()
     let rule = self.validRule
-    rule?.encode(with: coder)
+    rule.encode(with: coder)
 
     let encodedConversionValue = coder.encodedObject[Keys.conversionValue] as? NSNumber
     XCTAssertEqual(
       encodedConversionValue?.intValue,
-      rule?.conversionValue,
+      rule.conversionValue,
       "Should encode the expected conversion_value with the correct key"
     )
     let encodedPriority = coder.encodedObject[Keys.priority] as? NSNumber
     XCTAssertEqual(
       encodedPriority?.intValue,
-      rule?.priority,
+      rule.priority,
       "Should encode the expected priority with the correct key"
     )
     XCTAssertEqual(
       coder.encodedObject[Keys.events] as? [FBAEMEvent],
-      rule?.events,
+      rule.events,
       "Should encode the expected events with the correct key"
     )
   }

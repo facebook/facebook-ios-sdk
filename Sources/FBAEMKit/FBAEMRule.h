@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
 
+- (BOOL)containsEvent:(NSString *)event;
+
 - (BOOL)isMatchedWithRecordedEvents:(nullable NSSet<NSString *> *)recordedEvents
                      recordedValues:(nullable NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedValues;
 

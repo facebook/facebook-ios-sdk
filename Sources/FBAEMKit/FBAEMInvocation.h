@@ -66,7 +66,9 @@ NS_SWIFT_NAME(AEMInvocation)
                configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
      shouldUpdateCache:(BOOL)shouldUpdateCache;
 
-- (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
+- (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+                                   event:(NSString *)event
+                     shouldBoostPriority:(BOOL)shouldBoostPriority;
 
 - (BOOL)isOptimizedEvent:(NSString *)event
                  configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;

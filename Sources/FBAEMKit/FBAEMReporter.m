@@ -206,10 +206,19 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
         if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
           NSString *contentID = [FBSDKTypeUtility dictionary:parameters objectForKey:FB_CONTENT_ID_KEY ofType:NSString.class];
           [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
-            [self _updateAttributedInvocation:attributedInvocation event:event currency:currency value:value parameters:parameters];
+            [self _updateAttributedInvocation:attributedInvocation
+                                        event:event
+                                     currency:currency value:value
+                                   parameters:parameters
+                          shouldBoostPriority:YES];
           }];
         } else {
-          [self _updateAttributedInvocation:attributedInvocation event:event currency:currency value:value parameters:parameters];
+          [self _updateAttributedInvocation:attributedInvocation
+                                      event:event
+                                   currency:currency
+                                      value:value
+                                 parameters:parameters
+                        shouldBoostPriority:NO];
         }
       }
     }];
@@ -221,6 +230,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                            currency:(nullable NSString *)currency
                               value:(nullable NSNumber *)value
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                shouldBoostPriority:(BOOL)shouldBoostPriority
 {
   [invocation attributeEvent:event
                     currency:currency
@@ -228,7 +238,9 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                   parameters:parameters
                      configs:g_configs
            shouldUpdateCache:YES];
-  if ([invocation updateConversionValueWithConfigs:g_configs]) {
+  if ([invocation updateConversionValueWithConfigs:g_configs
+                                             event:event
+                               shouldBoostPriority:shouldBoostPriority]) {
     [self _sendAggregationRequest];
   }
   [self _saveReportData];

@@ -14,6 +14,7 @@ class TestInvocation: AEMInvocation {
   var attributionCallCount = 0
   var updateConversionCallCount = 0
   var isOptimizedEvent = false
+  var shouldBoostPriority = false
 
   override func attributeEvent(
     _ event: String,
@@ -28,9 +29,12 @@ class TestInvocation: AEMInvocation {
   }
 
   override func updateConversionValue(
-    withConfigs configs: [String: [AEMConfiguration]]?
+    withConfigs configs: [String: [AEMConfiguration]]?,
+    event: String,
+    shouldBoostPriority: Bool
   ) -> Bool {
     updateConversionCallCount += 1
+    self.shouldBoostPriority = shouldBoostPriority
     return true
   }
 

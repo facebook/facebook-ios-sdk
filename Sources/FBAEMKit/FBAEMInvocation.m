@@ -17,6 +17,7 @@
 
 #define SEC_IN_DAY 86400
 #define CATALOG_OPTIMIZATION_MODULUS 8
+#define TOP_OUT_PRIORITY 32
 
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_ids";
 static NSString *const ACS_TOKEN_KEY = @"acs_token";
@@ -205,25 +206,36 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
 }
 
 - (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
+                                   event:(NSString *)event
+                     shouldBoostPriority:(BOOL)shouldBoostPriority
 {
   FBAEMConfiguration *config = [self _findConfig:configs];
   if (!config) {
     return NO;
   }
+  BOOL isConversionValueUpdated = NO;
   // Update conversion value if a rule is matched
   for (FBAEMRule *rule in config.conversionValueRules) {
-    if (rule.priority <= _priority) {
-      break;
+    NSInteger priority = rule.priority;
+    if (
+        shouldBoostPriority &&
+        [rule containsEvent:event] &&
+        [self isOptimizedEvent:event config:config]
+    ) {
+      priority += TOP_OUT_PRIORITY;
+    }
+    if (priority <= _priority) {
+      continue;
     }
     if ([rule isMatchedWithRecordedEvents:_recordedEvents recordedValues:_recordedValues]) {
       _conversionValue = rule.conversionValue;
-      _priority = rule.priority;
+      _priority = priority;
       _conversionTimestamp = [NSDate date];
       _isAggregated = NO;
-      return YES;
+      isConversionValueUpdated = YES;
     }
   }
-  return NO;
+  return isConversionValueUpdated;
 }
 
 - (BOOL)isOptimizedEvent:(NSString *)event
@@ -233,6 +245,12 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   if (!config || !_catalogID) {
     return NO;
   }
+  return [self isOptimizedEvent:event config:config];
+}
+
+- (BOOL)isOptimizedEvent:(NSString *)event
+                  config:(FBAEMConfiguration *)config
+{
   // Look up conversion bit mapping to check if an event is optimzied
   for (FBAEMRule *rule in config.conversionValueRules) {
     if ((_campaignID.intValue % CATALOG_OPTIMIZATION_MODULUS)

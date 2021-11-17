@@ -59,6 +59,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let USD = "USD"
   }
 
+  let boostPriority = 32
+
   var validInvocation = AEMInvocation(
     campaignID: "test_campaign_1234",
     acsToken: "test_token_12345",
@@ -728,20 +730,28 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
-  func testUpdateConversionWithValue() {
+  func testUpdateConversionWithValue() { // swiftlint:disable:this function_body_length
     let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
     XCTAssertFalse(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should not update conversion value"
     )
 
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.donate]))
     XCTAssertTrue(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should update conversion value"
     )
     XCTAssertEqual(
@@ -753,7 +763,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
     invocation.setRecordedValues(NSMutableDictionary(dictionary: [Values.purchase: [Values.USD: 100]]))
     XCTAssertTrue(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should update conversion value"
     )
     XCTAssertEqual(
@@ -767,7 +781,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
     invocation.setRecordedValues(NSMutableDictionary(dictionary: [Values.purchase: [Values.USD: 100]]))
     XCTAssertFalse(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should not update conversion value under priority"
     )
   }
@@ -779,7 +797,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase]))
     XCTAssertFalse(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should not update conversion value"
     )
     XCTAssertEqual(
@@ -790,13 +812,95 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.donate]))
     XCTAssertTrue(
-      invocation.updateConversionValue(withConfigs: [Values.defaultMode: [config1, config2]]),
+      invocation.updateConversionValue(
+        withConfigs: [Values.defaultMode: [config1, config2]],
+        event: Values.purchase,
+        shouldBoostPriority: false
+      ),
       "Should update conversion value"
     )
     XCTAssertEqual(
       invocation.conversionValue,
       2,
       "Should update the expected conversion value"
+    )
+  }
+
+  func testUpdateConversionWithBoostPriority() {
+    let config = SampleAEMConfigurations.createWithMultipleRules()
+    let configs = [Values.defaultMode: [config]]
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+
+    let lowestPriorityRule = config.conversionValueRules.last! // swiftlint:disable:this force_unwrapping
+    // Set the highest priority in the conversion rules
+    invocation.setPriority(config.conversionValueRules.first!.priority) // swiftlint:disable:this force_unwrapping
+    // Add the lowest priority event
+    invocation.setRecordedEvents(
+      [lowestPriorityRule.events.first!.eventName] // swiftlint:disable:this force_unwrapping
+    )
+    XCTAssertTrue(
+      invocation.updateConversionValue(withConfigs: configs, event: Values.donate, shouldBoostPriority: true),
+      "Should expect to update the conversion value"
+    )
+    XCTAssertEqual(
+      invocation.priority,
+      lowestPriorityRule.priority + boostPriority,
+      "Should expect the updated priority to be boosted"
+    )
+    XCTAssertEqual(
+      invocation.conversionValue,
+      lowestPriorityRule.conversionValue,
+      "Should expect the conversion value is updated for the optimized event"
+    )
+  }
+
+  // Test conversion value updating when optimized event has multiple conversion values
+  func testUpdateConversionWithHigherBoostPriority() {
+    let config = SampleAEMConfigurations.createWithMultipleRules()
+    let configs = [Values.defaultMode: [config]]
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+    invocation.campaignID = "83" // The campaign id's modulo is matched to purchase's conversion value
+
+    let highestPriorityRule = config.conversionValueRules.first! // swiftlint:disable:this force_unwrapping
+    invocation.setPriority(42) // Set the second highest priority with boost priority in the conversion rules
+    invocation.setRecordedEvents([Values.purchase]) // Add the optimzied event
+    invocation.setRecordedValues([
+      Values.purchase: [Values.USD: 100]
+    ])
+    XCTAssertTrue(
+      invocation.updateConversionValue(withConfigs: configs, event: Values.purchase, shouldBoostPriority: true),
+      "Should expect to update the conversion value"
+    )
+    XCTAssertEqual(
+      invocation.priority,
+      highestPriorityRule.priority + boostPriority,
+      "Should expect the updated priority to be boosted"
+    )
+    XCTAssertEqual(
+      invocation.conversionValue,
+      highestPriorityRule.conversionValue,
+      "Should expect the conversion value is updated for the optimized event"
+    )
+  }
+
+  func testUpdateConversionWithBoostPriorityAndNonOptimziedEvent() {
+    let config = SampleAEMConfigurations.createWithMultipleRules()
+    let configs = [Values.defaultMode: [config]]
+    let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
+
+    let lowestPriorityRule = config.conversionValueRules.last! // swiftlint:disable:this force_unwrapping
+    // Set the highest priority in the conversion rules
+    invocation.setPriority(config.conversionValueRules.first!.priority) // swiftlint:disable:this force_unwrapping
+    // Add the lowest priority event
+    invocation.setRecordedEvents(
+      [
+        Values.purchase,
+        lowestPriorityRule.events.first!.eventName // swiftlint:disable:this force_unwrapping
+      ]
+    )
+    XCTAssertFalse(
+      invocation.updateConversionValue(withConfigs: configs, event: Values.purchase, shouldBoostPriority: true),
+      "Should expect not to update the conversion value"
     )
   }
 
