@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAuthenticationTokenFactory.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -13,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenFactory (Testing)
+
+@property (nonatomic, readonly) NSURL *_certificateEndpoint;
 
 + (void)setSkipSignatureVerification:(BOOL)value;
 - (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider;
@@ -23,7 +27,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
          certificateKey:(NSString *)key
              completion:(FBSDKVerifySignatureCompletionBlock)completion;
 - (NSDictionary<NSString *, id> *)claims;
-- (NSURL *)_certificateEndpoint;
 
 @end
 
