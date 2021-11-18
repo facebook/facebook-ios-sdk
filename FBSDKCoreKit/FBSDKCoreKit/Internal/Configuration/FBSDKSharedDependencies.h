@@ -48,7 +48,7 @@
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSuggestedEventsIndexerProtocol.h"
 #import "FBSDKSwizzling.h"
-#import "FBSDKTimeSpentRecordingCreating.h"
+#import "FBSDKTimeSpentRecorderCreating.h"
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUserIDProviding.h"
@@ -86,7 +86,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonatomic, readonly) id<FBSDKTimeSpentRecordingCreating> timeSpentRecordingFactory;
+@property (nonatomic, readonly) id<FBSDKTimeSpentRecorderCreating> timeSpentRecordingFactory;
 @property (nonatomic, readonly) id<FBSDKTokenCaching> tokenCache;
 @property (nonatomic, readonly) id<FBSDKURLSessionProxyProviding> urlSessionProxyFactory;
 @property (nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
@@ -148,7 +148,7 @@ NS_SWIFT_NAME(SharedDependencies)
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
-                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecordingFactory
+                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecorderCreating>)timeSpentRecordingFactory
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore

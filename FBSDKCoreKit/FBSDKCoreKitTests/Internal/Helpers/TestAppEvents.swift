@@ -47,7 +47,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureLogger: Logging.Type?
   var capturedConfigureSettings: SettingsProtocol?
   var capturedConfigurePaymentObserver: PaymentObserving?
-  var capturedConfigureTimeSpentRecorderFactory: TimeSpentRecordingCreating?
+  var capturedConfigureTimeSpentRecorderFactory: TimeSpentRecorderCreating?
   var capturedConfigureAppEventsStateStore: AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
@@ -71,7 +71,7 @@ class TestAppEvents: TestEventLogger,
     logger: Logging.Type,
     settings: SettingsProtocol,
     paymentObserver: PaymentObserving,
-    timeSpentRecorderFactory: TimeSpentRecordingCreating,
+    timeSpentRecorderFactory: TimeSpentRecorderCreating,
     appEventsStateStore: AppEventsStatePersisting,
     eventDeactivationParameterProcessor: AppEventsParameterProcessing,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,

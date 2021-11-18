@@ -1075,7 +1075,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Initializing the SDK should set concrete payment observer for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigureTimeSpentRecorderFactory is TimeSpentRecordingFactory,
+      appEvents.capturedConfigureTimeSpentRecorderFactory is TimeSpentRecorderFactory,
       "Initializing the SDK should set concrete time spent recorder factory for event logging"
     )
     XCTAssertTrue(

@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKTimeSpentRecordingCreating.h"
+#import "FBSDKTimeSpentRecorderCreating.h"
 
 @protocol FBSDKEventLogging;
 @protocol FBSDKServerConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(TimeSpentRecordingFactory)
-@interface FBSDKTimeSpentRecordingFactory : NSObject <FBSDKTimeSpentRecordingCreating>
+NS_SWIFT_NAME(TimeSpentRecorderFactory)
+@interface FBSDKTimeSpentRecorderFactory : NSObject <FBSDKTimeSpentRecorderCreating>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
