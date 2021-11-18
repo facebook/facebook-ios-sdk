@@ -1091,7 +1091,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigureAtePublisherFactory is AtePublisherFactory,
+      appEvents.capturedConfigureATEPublisherFactory is ATEPublisherFactory,
       "Initializing the SDK should set concrete ate publisher factory for event logging"
     )
 

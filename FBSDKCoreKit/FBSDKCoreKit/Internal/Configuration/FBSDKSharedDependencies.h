@@ -15,6 +15,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKATEPublisherCreating.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
@@ -24,7 +25,6 @@
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkTargetCreating.h"
 #import "FBSDKAppLinkURLCreating.h"
-#import "FBSDKAtePublisherCreating.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDeviceInformationProviding.h"
@@ -63,7 +63,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding> accessTokenWallet;
 @property (nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nonatomic, readonly) id applicationActivationNotifier;
-@property (nonatomic, readonly) id<FBSDKAtePublisherCreating> atePublisherFactory;
+@property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonatomic, readonly) id<FBSDKCrashHandler> crashHandler;
 @property (nonatomic, readonly) id<FBSDKCrashObserving> crashObserver;
@@ -125,7 +125,7 @@ NS_SWIFT_NAME(SharedDependencies)
 - (instancetype)initWithAccessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
            appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
             applicationActivationNotifier:(id)applicationActivationNotifier
-                      atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
+                      atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                              crashHandler:(id<FBSDKCrashHandler>)crashHandler
                             crashObserver:(id<FBSDKCrashObserving>)crashObserver

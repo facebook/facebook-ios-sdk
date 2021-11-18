@@ -21,7 +21,7 @@
 @protocol FBSDKAppEventsStatePersisting;
 @protocol FBSDKAppEventsParameterProcessing;
 @protocol FBSDKAppEventsParameterProcessing;
-@protocol FBSDKAtePublisherCreating;
+@protocol FBSDKATEPublisherCreating;
 @protocol FBSDKAppEventsStateProviding;
 @protocol FBSDKSwizzling;
 @protocol FBSDKAdvertiserIDProviding;
@@ -52,7 +52,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
-                      atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
+                      atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider

@@ -82,7 +82,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                     appEventsStateStore:[TestAppEventsStateStore new]
                     eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
                 restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
-                                    atePublisherFactory:[TestAtePublisherFactory new]
+                                    atePublisherFactory:[TestATEPublisherFactory new]
                                  appEventsStateProvider:self.appEventsStateProvider
                                                swizzler:TestSwizzler.class
                                    advertiserIDProvider:FBSDKAppEventsUtility.shared

@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
+#import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAccessTokenProtocols.h"
@@ -26,7 +27,6 @@
 #import "FBSDKAppLinkTargetFactory.h"
 #import "FBSDKAppLinkURLFactory.h"
 #import "FBSDKApplicationLifecycleObserving.h"
-#import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+Internal.h"
@@ -709,7 +709,7 @@ static UIApplicationState _applicationState;
        graphRequestPiggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]];
   FBSDKAuthenticationToken.tokenCache = tokenCache;
   [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
-  FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
+  FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestFactory
                                                                                          settings:sharedSettings
                                                                         deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];

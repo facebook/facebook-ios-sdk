@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAtePublisherFactory.h"
+#import "FBSDKATEPublisherFactory.h"
 
-#import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKAppEventsATEPublisher.h"
 #import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAtePublisherFactory ()
+@interface FBSDKATEPublisherFactory ()
 
 @property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@implementation FBSDKAtePublisherFactory
+@implementation FBSDKATEPublisherFactory
 
 - (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -38,9 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
   return self;
 }
 
-- (nullable id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
+- (nullable id<FBSDKATEPublishing>)createPublisherWithAppID:(NSString *)appID
 {
-  return [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:appID
+  return [[FBSDKAppEventsATEPublisher alloc] initWithAppIdentifier:appID
                                                graphRequestFactory:self.graphRequestFactory
                                                           settings:self.settings
                                                              store:self.store

@@ -7,10 +7,10 @@
  */
 
 @objcMembers
-class TestAtePublisher: NSObject, AtePublishing {
-  var publishAteWasCalled = false
+class TestATEPublisher: NSObject, ATEPublishing {
+  var publishATEWasCalled = false
 
   func publishATE() {
-    publishAteWasCalled = true
+    publishATEWasCalled = true
   }
 }

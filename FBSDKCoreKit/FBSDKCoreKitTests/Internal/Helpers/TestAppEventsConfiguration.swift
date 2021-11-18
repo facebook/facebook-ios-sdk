@@ -15,11 +15,11 @@ class TestAppEventsConfiguration: NSObject, AppEventsConfigurationProtocol {
   var eventCollectionEnabled = false
 
   init(
-    defaultAteStatus: AdvertisingTrackingStatus = .unspecified,
+    defaultATEStatus: AdvertisingTrackingStatus = .unspecified,
     advertiserIDCollectionEnabled: Bool = false,
     eventCollectionEnabled: Bool = false
   ) {
-    self.defaultATEStatus = defaultAteStatus
+    self.defaultATEStatus = defaultATEStatus
     self.advertiserIDCollectionEnabled = advertiserIDCollectionEnabled
     self.eventCollectionEnabled = eventCollectionEnabled
   }

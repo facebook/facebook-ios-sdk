@@ -51,7 +51,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureAppEventsStateStore: AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
-  var capturedConfigureAtePublisherFactory: AtePublisherCreating?
+  var capturedConfigureATEPublisherFactory: ATEPublisherCreating?
   var capturedConfigureAppEventsStateProvider: AppEventsStateProviding?
   var capturedConfigureSwizzler: Swizzling.Type?
   var capturedAdvertiserIDProvider: AdvertiserIDProviding?
@@ -75,7 +75,7 @@ class TestAppEvents: TestEventLogger,
     appEventsStateStore: AppEventsStatePersisting,
     eventDeactivationParameterProcessor: AppEventsParameterProcessing,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
-    atePublisherFactory: AtePublisherCreating,
+    atePublisherFactory: ATEPublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
     swizzler: Swizzling.Type,
     advertiserIDProvider: AdvertiserIDProviding,
@@ -94,7 +94,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAppEventsStateStore = appEventsStateStore
     capturedConfigureEventDeactivationParameterProcessor = eventDeactivationParameterProcessor
     capturedConfigureRestrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor
-    capturedConfigureAtePublisherFactory = atePublisherFactory
+    capturedConfigureATEPublisherFactory = atePublisherFactory
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedConfigureSwizzler = swizzler
     capturedAdvertiserIDProvider = advertiserIDProvider

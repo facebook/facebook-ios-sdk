@@ -10,14 +10,14 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppEventsAtePublisherTests: XCTestCase {
+class AppEventsATEPublisherTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var factory: TestGraphRequestFactory!
   var settings: TestSettings!
   var store: UserDefaultsSpy!
   var deviceInformationProvider: TestDeviceInformationProvider!
-  var publisher: AppEventsAtePublisher!
+  var publisher: AppEventsATEPublisher!
   // swiftlint:enable implicitly_unwrapped_optional
 
   let twelveHoursAgoInSeconds: TimeInterval = -12 * 60 * 60
@@ -31,7 +31,7 @@ class AppEventsAtePublisherTests: XCTestCase {
     settings = TestSettings()
     store = UserDefaultsSpy()
     deviceInformationProvider = TestDeviceInformationProvider()
-    publisher = AppEventsAtePublisher(
+    publisher = AppEventsATEPublisher(
       appIdentifier: name,
       graphRequestFactory: factory,
       settings: settings,
@@ -52,7 +52,7 @@ class AppEventsAtePublisherTests: XCTestCase {
 
   func testCreatingWithEmptyAppIdentifier() {
     XCTAssertNil(
-      AppEventsAtePublisher(
+      AppEventsATEPublisher(
         appIdentifier: "",
         graphRequestFactory: factory,
         settings: settings,
@@ -71,7 +71,7 @@ class AppEventsAtePublisherTests: XCTestCase {
     )
   }
 
-  func testPublishingAteUsesDeviceInformation() throws {
+  func testPublishingATEUsesDeviceInformation() throws {
     settings.advertisingTrackingStatus = .allowed
 
     publisher.publishATE()
@@ -82,7 +82,7 @@ class AppEventsAtePublisherTests: XCTestCase {
     )
   }
 
-  func testPublishingAteWithoutLastPublishDate() throws {
+  func testPublishingATEWithoutLastPublishDate() throws {
     settings.advertisingTrackingStatus = .allowed
 
     publisher.publishATE()

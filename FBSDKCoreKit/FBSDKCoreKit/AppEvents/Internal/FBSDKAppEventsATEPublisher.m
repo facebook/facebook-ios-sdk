@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKAppEventsATEPublisher.h"
 
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
@@ -21,7 +21,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettingsProtocol.h"
 
-@interface FBSDKAppEventsAtePublisher ()
+@interface FBSDKAppEventsATEPublisher ()
 
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
@@ -31,7 +31,7 @@
 
 @end
 
-@implementation FBSDKAppEventsAtePublisher
+@implementation FBSDKAppEventsATEPublisher
 
 - (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
                            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
