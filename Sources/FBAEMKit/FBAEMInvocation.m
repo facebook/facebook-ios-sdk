@@ -218,9 +218,9 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   for (FBAEMRule *rule in config.conversionValueRules) {
     NSInteger priority = rule.priority;
     if (
-        shouldBoostPriority &&
-        [rule containsEvent:event] &&
-        [self isOptimizedEvent:event config:config]
+      shouldBoostPriority
+      && [rule containsEvent:event]
+      && [self isOptimizedEvent:event config:config]
     ) {
       priority += TOP_OUT_PRIORITY;
     }
