@@ -29,6 +29,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
 @property (class, nonatomic, readonly, assign) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, readonly, assign) BOOL isDebugBuild;
+@property (class, nonatomic, readonly) BOOL shouldDropAppEvent;
 @property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nullable, nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 
@@ -44,7 +45,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
 + (BOOL)validateIdentifier:(nullable NSString *)identifier;
-+ (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;
 + (BOOL)isStandardEvent:(nullable NSString *)event;
 + (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
