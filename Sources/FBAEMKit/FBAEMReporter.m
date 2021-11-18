@@ -17,6 +17,7 @@
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
 #import "FBAEMSettings.h"
+#import "FBAEMUtility.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
@@ -204,7 +205,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
         // 2. event is optimized
         // 3. event's content id belongs to the catalog
         if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
-          NSString *contentID = [FBSDKTypeUtility dictionary:parameters objectForKey:FB_CONTENT_ID_KEY ofType:NSString.class];
+          NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
           [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
             [self _updateAttributedInvocation:attributedInvocation
                                         event:event

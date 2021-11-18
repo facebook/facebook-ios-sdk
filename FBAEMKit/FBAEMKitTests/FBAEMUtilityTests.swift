@@ -15,6 +15,7 @@ class FBAEMUtilityTests: XCTestCase {
 
   enum Keys {
     static let content = "fb_content"
+    static let contentID = "fb_content_id"
     static let identity = "id"
     static let itemPrice = "item_price"
     static let quantity = "quantity"
@@ -71,6 +72,38 @@ class FBAEMUtilityTests: XCTestCase {
 
     let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
     XCTAssertTrue(value.isEqual(to: NSNumber(value: 100)), "Don't get the expected in segment value")
+  }
+
+  func testGetContentWithIntID() {
+    let contentID = AEMUtility.shared.getContentID([
+      Keys.content: getJsonString(object: [
+        [Keys.identity: NSNumber(value: 123)],
+        [Keys.identity: NSNumber(value: 456)],
+      ])
+    ])
+    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+  }
+
+  func testGetContentWithStringID() {
+    let contentID = AEMUtility.shared.getContentID([
+      Keys.content: getJsonString(object: [
+        [Keys.identity: "123"],
+        [Keys.identity: "456"],
+      ])
+    ])
+    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+  }
+
+  func testGetContentFallback() {
+    let contentID = AEMUtility.shared.getContentID([
+      Keys.contentID: "[\"123\",\"456\"]"
+    ])
+    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+  }
+
+  func getJsonString(object: [Any]) -> String {
+    let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [])
+    return String(data: jsonData!, encoding: String.Encoding.ascii)! // swiftlint:disable:this force_unwrapping
   }
 }
 

@@ -27,6 +27,8 @@ NS_SWIFT_NAME(AEMUtility)
 - (NSNumber *)getInSegmentValue:(nullable NSDictionary<NSString *, id> *)parameters
                    matchingRule:(id<FBAEMAdvertiserRuleMatching>)matchingRule;
 
+- (nullable NSString *)getContentID:(nullable NSDictionary<NSString *, id> *)parameters;
+
 @end
 
 NS_ASSUME_NONNULL_END
