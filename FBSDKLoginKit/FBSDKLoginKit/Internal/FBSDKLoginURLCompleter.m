@@ -113,7 +113,9 @@ static NSDateFormatter *_dateFormatter;
   FBSDKAuthenticationTokenBlock completion = ^(FBSDKAuthenticationToken *token) {
     if (token) {
       parameters.authenticationToken = token;
-      parameters.profile = [FBSDKLoginURLCompleter profileWithClaims:token.claims];
+      if (token.claims) {
+        parameters.profile = [FBSDKLoginURLCompleter profileWithClaims:token.claims];
+      }
     } else {
       parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
     }

@@ -14,28 +14,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginCompletionParameters ()
 
-@property (nonatomic) FBSDKAuthenticationToken *authenticationToken;
-@property (nonatomic) FBSDKProfile *profile;
+@property (nullable, nonatomic) FBSDKAuthenticationToken *authenticationToken;
+@property (nullable, nonatomic) FBSDKProfile *profile;
 
-@property (nonatomic, copy) NSString *accessTokenString;
-@property (nonatomic, copy) NSString *nonceString;
-@property (nonatomic, copy) NSString *authenticationTokenString;
+@property (nullable, nonatomic, copy) NSString *accessTokenString;
+@property (nullable, nonatomic, copy) NSString *nonceString;
+@property (nullable, nonatomic, copy) NSString *authenticationTokenString;
 
-@property (nonatomic, copy) NSSet<FBSDKPermission *> *permissions;
-@property (nonatomic, copy) NSSet<FBSDKPermission *> *declinedPermissions;
-@property (nonatomic, copy) NSSet<FBSDKPermission *> *expiredPermissions;
+@property (nullable, nonatomic, copy) NSSet<FBSDKPermission *> *permissions;
+@property (nullable, nonatomic, copy) NSSet<FBSDKPermission *> *declinedPermissions;
+@property (nullable, nonatomic, copy) NSSet<FBSDKPermission *> *expiredPermissions;
 
-@property (nonatomic, copy) NSString *appID;
-@property (nonatomic, copy) NSString *userID;
+@property (nullable, nonatomic, copy) NSString *appID;
+@property (nullable, nonatomic, copy) NSString *userID;
 
-@property (nonatomic, copy) NSError *error;
+@property (nullable, nonatomic, copy) NSError *error;
 
-@property (nonatomic, copy) NSDate *expirationDate;
-@property (nonatomic, copy) NSDate *dataAccessExpirationDate;
+@property (nullable, nonatomic, copy) NSDate *expirationDate;
+@property (nullable, nonatomic, copy) NSDate *dataAccessExpirationDate;
 
-@property (nonatomic, copy) NSString *challenge;
+@property (nullable, nonatomic, copy) NSString *challenge;
 
-@property (nonatomic, copy) NSString *graphDomain;
+@property (nullable, nonatomic, copy) NSString *graphDomain;
 
 @end
 

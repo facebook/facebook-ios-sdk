@@ -20,7 +20,7 @@
 - (instancetype)initWithError:(NSError *)error
 {
   if ((self = [self init])) {
-    self.error = error;
+    _error = error;
   }
   return self;
 }
