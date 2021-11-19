@@ -7,14 +7,14 @@
  */
 
 #import "FBSDKLoginURLCompleter.h"
+#import "FBSDKProfileCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginURLCompleter (Testing)
 
 @property (class, nonatomic, assign) id<FBSDKProfileCreating> profileFactory;
-
-- (FBSDKLoginCompletionParameters *)parameters;
+@property (nonatomic, readonly) FBSDKLoginCompletionParameters *parameters;
 
 + (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
 

@@ -8,6 +8,7 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
+#import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKAuthenticationTokenFactory+Testing.h"
@@ -18,6 +19,7 @@
 #import "FBSDKDevicePolling.h"
 #import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginProviding.h"
+#import "FBSDKLoginURLCompleter+Testing.h"
 #import "FBSDKNonceUtility.h"
 #import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
