@@ -29,10 +29,10 @@ NS_SWIFT_NAME(AEMReporter)
  and BEFORE [FBAEMReporter enable] function
 
  @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
- @param appID   The Facebook app ID
+ @param appID   An optional Facebook app ID, if it's null, we will get it from info.plist file with key: FacebookAppID
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
-                         appID:(NSString *)appID;
+                         appID:(nullable NSString *)appID;
 
 /**
 
@@ -44,11 +44,11 @@ NS_SWIFT_NAME(AEMReporter)
  double counting.
 
  @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
- @param appID   The Facebook app ID
+ @param appID   An optional Facebook app ID, if it's null, we will get it from info.plist file with key: FacebookAppID
  @param reporter   The SKAdNetwork repoter
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
-                         appID:(NSString *)appID
+                         appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter;
 
 /**
