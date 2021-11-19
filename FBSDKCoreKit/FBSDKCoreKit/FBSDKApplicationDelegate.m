@@ -312,7 +312,9 @@ static UIApplicationState _applicationState;
 - (void)initializeMeasurementListener
 {
   // Register Listener for App Link measurement events
-  [FBSDKMeasurementEventListener defaultListener];
+  FBSDKMeasurementEventListener *listener = [[FBSDKMeasurementEventListener alloc] initWithEventLogger:self.appEvents
+                                                                              sourceApplicationTracker:self.appEvents];
+  [listener registerForAppLinkMeasurementEvents];
 }
 
 #endif

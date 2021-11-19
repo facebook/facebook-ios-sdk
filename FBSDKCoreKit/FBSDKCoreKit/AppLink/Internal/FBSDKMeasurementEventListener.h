@@ -10,16 +10,21 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKEventLogging.h"
+#import "FBSDKSourceApplicationTracking.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(MeasurementEventListener)
 @interface FBSDKMeasurementEventListener : NSObject
 
-@property (class, nonatomic, readonly, strong) FBSDKMeasurementEventListener *defaultListener
-NS_SWIFT_NAME(default);
-
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
+           sourceApplicationTracker:(id<FBSDKSourceApplicationTracking>)sourceApplicationTracker;
+
+- (void)registerForAppLinkMeasurementEvents;
 
 @end
 
