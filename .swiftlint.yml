@@ -30,6 +30,7 @@ file_name:
   excluded: [Enums+Extensions.swift]
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
+  allowed_symbols: "_"
 
 # Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
 modifier_order:

@@ -15,7 +15,7 @@ import Foundation
  @warning INTERNAL - DO NOT USE
  */
 @objc(FBSDKFileHandleFactory)
-public class _FileHandleFactory: NSObject, _FileHandleCreating { // swiftlint:disable:this type_name
+public class _FileHandleFactory: NSObject, _FileHandleCreating {
   public func fileHandleForReading(from url: URL) throws -> _FileHandling {
     try FileHandle(forReadingFrom: url)
   }

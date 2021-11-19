@@ -13,7 +13,7 @@
  @warning INTERNAL - DO NOT USE
  */
 @objc(FBSDKGamingServiceType)
-public enum _GamingServiceType: UInt { // swiftlint:disable:this type_name
+public enum _GamingServiceType: UInt {
   case friendFinder
   case mediaAsset
   case community

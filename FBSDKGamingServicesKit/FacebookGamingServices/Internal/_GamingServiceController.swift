@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 
 @objcMembers
-@objc(FBSDKGamingServiceController) // swiftlint:disable:next type_name
+@objc(FBSDKGamingServiceController)
 public class _GamingServiceController: NSObject {
 
   private let serviceType: _GamingServiceType
