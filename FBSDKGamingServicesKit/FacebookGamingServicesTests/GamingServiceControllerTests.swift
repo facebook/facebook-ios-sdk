@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import FBSDKCoreKit
 import TestTools
 import XCTest
@@ -19,7 +19,7 @@ class GamingServiceControllerTests: XCTestCase {
   var capturedSuccess = false
   var capturedResults = [Any]()
   var serviceError: Error?
-  lazy var gamingService = GamingServiceController(
+  lazy var gamingService = _GamingServiceController(
     serviceType: .community,
     completionHandler: { success, _, error in
       self.capturedSuccess = success
@@ -37,7 +37,7 @@ class GamingServiceControllerTests: XCTestCase {
   }
 
   func testSuccessfullyOpeningURL() {
-    gamingService.application(UIApplication.shared, open: url, sourceApplication: "", annotation: "")
+    _ = gamingService.application(.shared, open: url, sourceApplication: "", annotation: "")
     XCTAssertTrue(
       capturedSuccess,
       "Should complete successfully if the url is formatted correctly."
@@ -55,7 +55,7 @@ class GamingServiceControllerTests: XCTestCase {
   }
 
   func testInvalidGamingURLWithValidTypeNotMatchingURLSource() {
-    gamingService = GamingServiceController(
+    gamingService = _GamingServiceController(
       serviceType: .friendFinder,
       completionHandler: { success, _, error in
         self.capturedSuccess = success
@@ -66,7 +66,7 @@ class GamingServiceControllerTests: XCTestCase {
       settings: settings
     )
 
-    gamingService.application(UIApplication.shared, open: url, sourceApplication: "", annotation: "")
+    _ = gamingService.application(.shared, open: url, sourceApplication: "", annotation: "")
     XCTAssertFalse(
       capturedSuccess,
       "Should not call the completionHandler with invalid format in the URL"

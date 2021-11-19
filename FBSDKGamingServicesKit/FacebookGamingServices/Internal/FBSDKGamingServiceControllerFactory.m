@@ -10,12 +10,7 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceController.h"
-
 NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKGamingServiceController () <FBSDKGamingServiceController, FBSDKGamingServiceControllerCreating>
-@end
 
 @implementation FBSDKGamingServiceControllerFactory
 

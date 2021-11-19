@@ -10,7 +10,6 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceController.h"
 #import "FBSDKGamingServiceControllerFactory.h"
 
 @interface FBSDKGamingGroupIntegration ()

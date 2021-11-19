@@ -16,8 +16,6 @@
 #import "FBSDKGamingGroupIntegration+Testing.h"
 #import "FBSDKGamingImageUploader+Testing.h"
 #import "FBSDKGamingPayloadObserver+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceController+Testing.h"
 #import "FBSDKGamingServiceControllerFactory.h"
 #import "FBSDKGamingVideoUploader+Testing.h"
 #import "FBSDKVideoUploader.h"
