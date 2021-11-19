@@ -8,6 +8,8 @@
 
 #import "FBSDKVideoUploaderFactory.h"
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #import "FBSDKVideoUploader.h"
 
 @implementation FBSDKVideoUploaderFactory

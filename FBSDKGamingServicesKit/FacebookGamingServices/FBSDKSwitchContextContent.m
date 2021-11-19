@@ -12,6 +12,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
 
 @interface FBSDKSwitchContextContent () <NSCopying, NSObject>

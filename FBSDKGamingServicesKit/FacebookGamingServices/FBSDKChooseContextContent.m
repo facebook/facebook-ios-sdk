@@ -14,6 +14,8 @@
 
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+ #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 @interface FBSDKChooseContextContent () <NSCopying, NSObject>
 @end
 

@@ -12,6 +12,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
 #define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY @"completionGesture"
 #define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST @"post"
 #define FBSDK_GAMING_VIDEO_END_OFFSET @"end_offset"

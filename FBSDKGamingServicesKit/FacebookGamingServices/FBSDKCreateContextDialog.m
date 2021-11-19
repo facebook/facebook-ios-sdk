@@ -14,6 +14,8 @@
 
  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+ #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
+
  #import "FBSDKCreateContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
