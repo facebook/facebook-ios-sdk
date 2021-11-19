@@ -11,10 +11,23 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+#import "FBSDKEventLogging.h"
+#import "FBSDKLoggingNotifying.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(HybridAppEventsScriptMessageHandler)
 @interface FBSDKHybridAppEventsScriptMessageHandler : NSObject <WKScriptMessageHandler>
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+// UNCRUSTIFY_FORMAT_OFF
+- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
+                  loggingNotifier:(id<FBSDKLoggingNotifying>)loggingNotifier
+NS_SWIFT_NAME(init(eventLogger:loggingNotifier:));
+// UNCRUSTIFY_FORMAT_ON
+
 @end
 
 NS_ASSUME_NONNULL_END

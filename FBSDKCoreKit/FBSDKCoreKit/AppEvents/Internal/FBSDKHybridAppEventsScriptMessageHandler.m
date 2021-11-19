@@ -12,8 +12,10 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEventsWKWebViewKeys.h"
 #import "FBSDKEventLogging.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";
 
@@ -22,21 +24,19 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 
 @interface FBSDKHybridAppEventsScriptMessageHandler ()
 
-@property (nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic, weak) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic) id<FBSDKLoggingNotifying> loggingNotifier;
 
 @end
 
 @implementation FBSDKHybridAppEventsScriptMessageHandler
 
-- (instancetype)init
-{
-  return [self initWithEventLogger:FBSDKAppEvents.shared];
-}
-
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
+                    loggingNotifier:(id<FBSDKLoggingNotifying>)loggingNotifier
 {
   if ((self = [super init])) {
     _eventLogger = eventLogger;
+    _loggingNotifier = loggingNotifier;
   }
   return self;
 }
@@ -61,11 +61,11 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
       }
       NSString *pixelID = body[FBSDKAppEventsWKWebViewMessagesPixelIDKey];
       if (pixelID == nil) {
-        [FBSDKAppEventsUtility logAndNotify:@"Can't bridge an event without a referral Pixel ID. Check your webview Pixel configuration."];
+        [self.loggingNotifier logAndNotify:@"Can't bridge an event without a referral Pixel ID. Check your webview Pixel configuration."];
         return;
       }
       if (jsonParseError != nil || ![params isKindOfClass:[NSDictionary<NSString *, id> class]] || params == nil) {
-        [FBSDKAppEventsUtility logAndNotify:@"Could not find parameters for your Pixel request. Check your webview Pixel configuration."];
+        [self.loggingNotifier logAndNotify:@"Could not find parameters for your Pixel request. Check your webview Pixel configuration."];
         params = [@{FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey : pixelID} mutableCopy];
       } else {
         [FBSDKTypeUtility dictionary:params setObject:pixelID forKey:FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey];
@@ -78,5 +78,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

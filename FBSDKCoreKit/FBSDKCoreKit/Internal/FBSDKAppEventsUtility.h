@@ -14,13 +14,14 @@
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKDeviceInformationProviding.h"
+#import "FBSDKLoggingNotifying.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
 NS_SWIFT_NAME(AppEventsUtility)
-@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting>
+@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKLoggingNotifying>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -40,8 +41,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
-+ (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;
-+ (void)logAndNotify:(NSString *)msg;
 + (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
 + (BOOL)validateIdentifier:(nullable NSString *)identifier;

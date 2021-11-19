@@ -249,12 +249,12 @@ static dispatch_once_t singletonNonce;
   return result;
 }
 
-+ (void)logAndNotify:(NSString *)msg
+- (void)logAndNotify:(NSString *)msg
 {
-  [self.class logAndNotify:msg allowLogAsDeveloperError:YES];
+  [self logAndNotify:msg allowLogAsDeveloperError:YES];
 }
 
-+ (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError
+- (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError
 {
   NSString *behaviorToLog = FBSDKLoggingBehaviorAppEvents;
   if (allowLogAsDeveloperError) {
@@ -324,8 +324,8 @@ static dispatch_once_t singletonNonce;
 + (BOOL)validateIdentifier:(nullable NSString *)identifier
 {
   if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self.class regexValidateIdentifier:identifier]) {
-    [self.class logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
-                              identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
+    [self.shared logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
+                               identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
     return NO;
   }
 

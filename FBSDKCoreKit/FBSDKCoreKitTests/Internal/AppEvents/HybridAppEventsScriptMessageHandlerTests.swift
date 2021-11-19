@@ -27,17 +27,42 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     static let validEventName = "Did the thing"
   }
 
-  let controller = WKUserContentController()
-  let logger = TestEventLogger()
-  lazy var handler = HybridAppEventsScriptMessageHandler(eventLogger: logger)
+  // swiftlint:disable implicitly_unwrapped_optional
+  var controller: WKUserContentController!
+  var eventLogger: TestEventLogger!
+  var loggerAndNotifier: TestLoggingNotifier!
+  var handler: HybridAppEventsScriptMessageHandler!
+  // swiftlint:enable implicitly_unwrapped_optional
 
-  func testCreatingWithDefaults() {
-    handler = HybridAppEventsScriptMessageHandler()
+  override func setUp() {
+    super.setUp()
 
-    XCTAssertEqual(
-      ObjectIdentifier(handler.eventLogger),
-      ObjectIdentifier(AppEvents.shared),
-      "Should use the correct concrete event logger by default"
+    controller = WKUserContentController()
+    eventLogger = TestEventLogger()
+    loggerAndNotifier = TestLoggingNotifier()
+    handler = HybridAppEventsScriptMessageHandler(
+      eventLogger: eventLogger,
+      loggingNotifier: loggerAndNotifier
+    )
+  }
+
+  override func tearDown() {
+    controller = nil
+    eventLogger = nil
+    loggerAndNotifier = nil
+    handler = nil
+
+    super.tearDown()
+  }
+
+  func testCreatingWithDependencies() {
+    XCTAssertTrue(
+      handler.eventLogger is TestEventLogger,
+      "Should use the provided event logger"
+    )
+    XCTAssertTrue(
+      handler.loggingNotifier is TestLoggingNotifier,
+      "Should use the provided logger and notifier"
     )
   }
 
@@ -48,7 +73,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     )
 
     XCTAssertNil(
-      logger.capturedEventName,
+      eventLogger.capturedEventName,
       "Should not log an event if the message isn't named correctly"
     )
   }
@@ -60,7 +85,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     )
 
     XCTAssertNil(
-      logger.capturedEventName,
+      eventLogger.capturedEventName,
       "Should not log an event if the message has no body"
     )
   }
@@ -75,7 +100,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     )
 
     XCTAssertNil(
-      logger.capturedEventName,
+      eventLogger.capturedEventName,
       "Should not log an event if the message's event is empty"
     )
   }
@@ -97,7 +122,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
         )
       )
       XCTAssertNil(
-        logger.capturedEventName,
+        eventLogger.capturedEventName,
         "Should not log events of invalid types"
       )
     }
@@ -112,8 +137,13 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
       )
     )
     XCTAssertNil(
-      logger.capturedEventName,
+      eventLogger.capturedEventName,
       "Should not log events without pixel identifiers"
+    )
+    XCTAssertEqual(
+      loggerAndNotifier.capturedMessage,
+      "Can't bridge an event without a referral Pixel ID. Check your webview Pixel configuration.",
+      "Should log and notify with a useful message"
     )
   }
 
@@ -147,6 +177,11 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
           Keys.pixelID: Values.nonEmptyString
         ]
       )
+    )
+    XCTAssertEqual(
+      loggerAndNotifier.capturedMessage,
+      "Could not find parameters for your Pixel request. Check your webview Pixel configuration.",
+      "Should log and notify about missing parameters"
     )
     assertEventLogged(
       name: Values.validEventName,
@@ -189,21 +224,21 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     line: UInt = #line
   ) {
     XCTAssertEqual(
-      logger.capturedEventName,
+      eventLogger.capturedEventName,
       AppEvents.Name(name),
       "Should log the expected event name",
       file: file,
       line: line
     )
     XCTAssertEqual(
-      logger.capturedParameters as? [String: String],
+      eventLogger.capturedParameters as? [String: String],
       parameters,
       "Should log the expected parameters",
       file: file,
       line: line
     )
     XCTAssertFalse(
-      logger.capturedIsImplicitlyLogged,
+      eventLogger.capturedIsImplicitlyLogged,
       "Should not implicitly log handled events",
       file: file,
       line: line

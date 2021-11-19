@@ -33,6 +33,9 @@
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAppEventsWKWebViewKeys.h"
+#import "FBSDKAtePublisherCreating.h"
+#import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDataPersisting.h"
@@ -80,15 +83,6 @@ static NSString *const FBSDKActivitesParameterPushDeviceToken = @"device_token";
 // Payload Keys
 static NSString *const FBSDKAppEventsPushPayloadKey = @"fb_push_payload";
 static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
-
-//
-// Augmentation of web browser constants
-//
-NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey = @"pixelID";
-NSString *const FBSDKAppEventsWKWebViewMessagesHandlerKey = @"fbmqHandler";
-NSString *const FBSDKAppEventsWKWebViewMessagesEventKey = @"event";
-NSString *const FBSDKAppEventsWKWebViewMessagesParamsKey = @"params";
-NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 
 #define NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER 100
 #define FLUSH_PERIOD_IN_SECONDS 15
@@ -797,7 +791,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if ([webView isKindOfClass:WKWebView.class]) {
     if (WKUserScript.class != nil) {
       WKUserContentController *controller = webView.configuration.userContentController;
-      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [FBSDKHybridAppEventsScriptMessageHandler new];
+      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [[FBSDKHybridAppEventsScriptMessageHandler alloc] initWithEventLogger:self
+                                                                                                                      loggingNotifier:FBSDKAppEventsUtility.shared];
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js = [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
@@ -806,13 +801,13 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                       FBSDKAppEventsWKWebViewMessagesEventKey,
                       FBSDKAppEventsWKWebViewMessagesParamsKey,
                       FBSDKAppEventsWKWebViewMessagesHandlerKey,
-                      FBSDKAPPEventsWKWebViewMessagesProtocolKey
+                      FBSDKAppEventsWKWebViewMessagesProtocolKey
       ];
 
       [controller addUserScript:[[WKUserScript.class alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
     }
   } else {
-    [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWebView with WebKit linked to your project and a WKWebView instance"];
+    [FBSDKAppEventsUtility.shared logAndNotify:@"You must call augmentHybridWebView with WebKit linked to your project and a WKWebView instance"];
   }
 }
 
@@ -1306,14 +1301,14 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   // Make sure parameter dictionary is well formed.  Log and exit if not.
   [FBSDKTypeUtility dictionary:parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
     if (![key isKindOfClass:NSString.class]) {
-      [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The keys in the parameters must be NSStrings, '%@' is not.", key]];
+      [FBSDKAppEventsUtility.shared logAndNotify:[NSString stringWithFormat:@"The keys in the parameters must be NSStrings, '%@' is not.", key]];
       failed = YES;
     }
     if (![FBSDKAppEventsUtility validateIdentifier:key]) {
       failed = YES;
     }
     if (![obj isKindOfClass:NSString.class] && ![obj isKindOfClass:NSNumber.class]) {
-      [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The values in the parameters dictionary must be NSStrings or NSNumbers, '%@' is not.", obj]];
+      [FBSDKAppEventsUtility.shared logAndNotify:[NSString stringWithFormat:@"The values in the parameters dictionary must be NSStrings or NSNumbers, '%@' is not.", obj]];
       failed = YES;
     }
   }];
@@ -1545,7 +1540,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
     // as opposed to cases where the token is bad.
     if ([error.userInfo[FBSDKGraphRequestErrorKey] unsignedIntegerValue] == FBSDKGraphRequestErrorOther) {
       NSString *message = [NSString stringWithFormat:@"Failed to send AppEvents: %@", error];
-      [FBSDKAppEventsUtility logAndNotify:message allowLogAsDeveloperError:!appEventsState.areAllEventsImplicit];
+      [FBSDKAppEventsUtility.shared logAndNotify:message allowLogAsDeveloperError:!appEventsState.areAllEventsImplicit];
     }
   } else if (flushResult == FlushResultNoConnectivity) {
     @synchronized(self) {

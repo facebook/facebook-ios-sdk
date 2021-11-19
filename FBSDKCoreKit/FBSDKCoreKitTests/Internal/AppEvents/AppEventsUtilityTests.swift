@@ -83,7 +83,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testLogNotification() {
     expectation(forNotification: .AppEventsLoggingResult, object: nil)
-    AppEventsUtility.logAndNotify("test")
+    AppEventsUtility.shared.logAndNotify("test")
     waitForExpectations(timeout: 2, handler: nil)
   }
 
