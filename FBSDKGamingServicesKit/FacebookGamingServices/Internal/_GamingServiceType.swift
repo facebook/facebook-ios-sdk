@@ -17,4 +17,15 @@ public enum _GamingServiceType: UInt { // swiftlint:disable:this type_name
   case friendFinder
   case mediaAsset
   case community
+
+  var urlPath: String {
+    switch self {
+    case .friendFinder:
+      return "friendfinder"
+    case .mediaAsset:
+      return "media_asset"
+    case .community:
+      return "community"
+    }
+  }
 }
