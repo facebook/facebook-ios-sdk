@@ -16,7 +16,7 @@
 #import "FBSDKDeviceLoginCodeInfo+Testing.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
-#import "FBSDKLoginCompletion+Internal.h"
+#import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginProviding.h"
 #import "FBSDKNonceUtility.h"
 #import "FBSDKPermission.h"

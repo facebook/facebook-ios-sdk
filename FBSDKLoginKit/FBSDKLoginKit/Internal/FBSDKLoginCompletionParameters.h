@@ -10,21 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKAuthenticationToken;
-@class FBSDKLoginCompletionParameters;
-@class FBSDKPermission;
-@class FBSDKProfile;
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@protocol FBSDKGraphRequestConnectionFactory;
-@protocol FBSDKAuthenticationTokenCreating;
+#import "FBSDKPermission.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- Success Block
- */
-typedef void (^ FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
-NS_SWIFT_NAME(LoginCompletionParametersBlock);
 
 /**
   Structured interface for accessing the parameters used to complete a log in request.
@@ -59,47 +49,6 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 @property (nullable, nonatomic, readonly, copy) NSString *challenge;
 
 @property (nullable, nonatomic, readonly, copy) NSString *graphDomain;
-
-@end
-
-NS_SWIFT_NAME(LoginCompleting)
-@protocol FBSDKLoginCompleting
-
-/**
-  Invoke \p handler with the login parameters derived from the authentication result.
- See the implementing class's documentation for whether it completes synchronously or asynchronously.
- */
-- (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
-
-/**
-  Invoke \p handler with the login parameters derived from the authentication result.
- See the implementing class's documentation for whether it completes synchronously or asynchronously.
- */
-- (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-                           nonce:(nullable NSString *)nonce;
-
-@end
-
-#pragma mark - Completers
-
-/**
-  Extracts the log in completion parameters from the \p parameters dictionary,
- which must contain the parsed result of the return URL query string.
-
- The \c user_id key is first used to derive the User ID. If that fails, \c signed_request
- is used.
-
- Completion occurs synchronously.
- */
-NS_SWIFT_NAME(LoginURLCompleter)
-@interface FBSDKLoginURLCompleter : NSObject <FBSDKLoginCompleting>
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
-                                appID:(NSString *)appID
-        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-           authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator;
 
 @end
 

@@ -13,11 +13,11 @@
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
+ #import "FBSDKLoginCompletionParameters.h"
  #import "FBSDKLoginProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManagerLogger;
 @class FBSDKPermission;
 

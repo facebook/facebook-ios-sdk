@@ -6,11 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAuthenticationTokenFactory.h"
+#if !TARGET_OS_TV
+
 #import "FBSDKLoginCompletionParameters+Internal.h"
-#import "FBSDKLoginError.h"
-#import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginManagerLogger.h"
-#import "FBSDKLoginUtility.h"
-#import "FBSDKMonotonicTime.h"
-#import "FBSDKPermission.h"
+
+@implementation FBSDKLoginCompletionParameters
+
+- (instancetype)init
+{
+  return [super init];
+}
+
+- (instancetype)initWithError:(NSError *)error
+{
+  if ((self = [self init])) {
+    self.error = error;
+  }
+  return self;
+}
+
+@end
+
+#endif
