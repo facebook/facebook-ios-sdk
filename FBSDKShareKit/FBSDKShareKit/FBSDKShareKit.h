@@ -22,6 +22,7 @@
  #import <FBSDKShareKit/FBSDKAppInviteContent.h>
  #import <FBSDKShareKit/FBSDKGameRequestContent.h>
  #import <FBSDKShareKit/FBSDKGameRequestDialog.h>
+ #import <FBSDKShareKit/FBSDKGameRequestDialogDelegate.h>
  #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
  #import <FBSDKShareKit/FBSDKMessageDialog.h>
  #import <FBSDKShareKit/FBSDKSendButton.h>
