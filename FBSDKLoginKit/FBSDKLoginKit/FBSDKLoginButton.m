@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKLoginAppEventName.h"
+#import "FBSDKLoginButtonDelegate.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginTooltipView.h"
 #import "FBSDKNonceUtility.h"
