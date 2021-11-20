@@ -51,7 +51,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
       serverConfigurationProvider: TestServerConfigurationProvider(),
       graphRequestFactory: TestGraphRequestFactory(),
       featureChecker: TestFeatureManager(),
-      store: userDefaultsSpy,
+      primaryDataStore: userDefaultsSpy,
       logger: TestLogger.self,
       settings: TestSettings(),
       paymentObserver: TestPaymentObserver(),
@@ -61,7 +61,6 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
       atePublisherFactory: TestATEPublisherFactory(),
       appEventsStateProvider: appEventsStateProvider,
-      swizzler: TestSwizzler.self,
       advertiserIDProvider: AppEventsUtility.shared,
       userDataStore: TestUserDataStore()
     )

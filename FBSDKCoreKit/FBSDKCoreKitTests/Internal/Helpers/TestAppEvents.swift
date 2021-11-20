@@ -43,7 +43,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
   var capturedConfigureGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedConfigureFeatureChecker: FeatureChecking?
-  var capturedConfigureStore: DataPersisting?
+  var capturedConfigurePrimaryDataStore: DataPersisting?
   var capturedConfigureLogger: Logging.Type?
   var capturedConfigureSettings: SettingsProtocol?
   var capturedConfigurePaymentObserver: PaymentObserving?
@@ -67,7 +67,7 @@ class TestAppEvents: TestEventLogger,
     serverConfigurationProvider: ServerConfigurationProviding,
     graphRequestFactory: GraphRequestFactoryProtocol,
     featureChecker: FeatureChecking,
-    store: DataPersisting,
+    primaryDataStore: DataPersisting,
     logger: Logging.Type,
     settings: SettingsProtocol,
     paymentObserver: PaymentObserving,
@@ -77,7 +77,6 @@ class TestAppEvents: TestEventLogger,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
     atePublisherFactory: ATEPublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
-    swizzler: Swizzling.Type,
     advertiserIDProvider: AdvertiserIDProviding,
     userDataStore: UserDataPersisting
   ) {
@@ -86,7 +85,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureServerConfigurationProvider = serverConfigurationProvider
     capturedConfigureGraphRequestFactory = graphRequestFactory
     capturedConfigureFeatureChecker = featureChecker
-    capturedConfigureStore = store
+    capturedConfigurePrimaryDataStore = primaryDataStore
     capturedConfigureLogger = logger
     capturedConfigureSettings = settings
     capturedConfigurePaymentObserver = paymentObserver
@@ -96,7 +95,6 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureRestrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor
     capturedConfigureATEPublisherFactory = atePublisherFactory
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
-    capturedConfigureSwizzler = swizzler
     capturedAdvertiserIDProvider = advertiserIDProvider
     capturedUserDataStore = userDataStore
   }
@@ -105,12 +103,14 @@ class TestAppEvents: TestEventLogger,
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
     skAdNetworkReporter: AppEventsReporter?,
-    codelessIndexer: CodelessIndexing.Type
+    codelessIndexer: CodelessIndexing.Type,
+    swizzler: Swizzling.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer
     capturedSKAdNetworkReporter = skAdNetworkReporter
     capturedCodelessIndexer = codelessIndexer
+    capturedConfigureSwizzler = swizzler
   }
 
   // MARK: - Source Application Tracking

@@ -23,7 +23,6 @@
 @protocol FBSDKAppEventsParameterProcessing;
 @protocol FBSDKATEPublisherCreating;
 @protocol FBSDKAppEventsStateProviding;
-@protocol FBSDKSwizzling;
 @protocol FBSDKAdvertiserIDProviding;
 @protocol FBSDKUserDataPersisting;
 
@@ -32,6 +31,7 @@
 @protocol FBSDKMetadataIndexing;
 @protocol FBSDKAppEventsReporter;
 @protocol FBSDKCodelessIndexing;
+@protocol FBSDKSwizzling;
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                    store:(id<FBSDKDataPersisting>)store
+                         primaryDataStore:(id<FBSDKDataPersisting>)primaryDataStore
                                    logger:(Class<FBSDKLogging>)logger
                                  settings:(id<FBSDKSettings>)settings
                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
@@ -54,7 +54,6 @@ NS_SWIFT_NAME(AppEventsConfiguring)
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
-                                 swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore;
 
@@ -63,7 +62,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
-                                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer;
+                                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
+                                                  swizzler:(Class<FBSDKSwizzling>)swizzler;
 
 #endif
 

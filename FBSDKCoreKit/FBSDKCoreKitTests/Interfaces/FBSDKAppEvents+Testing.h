@@ -18,11 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic) FBSDKAppEvents *shared;
 
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
+
 @property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
 @property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
-@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
+
++ (void)reset;
 
 - (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
@@ -37,8 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
                  flushPeriodInSeconds:(int)flushPeriodInSeconds;
 - (void)publishATE;
-+ (void)setSettings:(id<FBSDKSettings>)settings;
-+ (void)reset;
 
 - (void)publishInstall;
 - (void)fetchServerConfiguration:(nullable FBSDKCodeBlock)callback;

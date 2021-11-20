@@ -45,7 +45,7 @@
 @property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
 @property (nonnull, nonatomic) TestGraphRequestFactory *graphRequestFactory;
-@property (nonnull, nonatomic) UserDefaultsSpy *store;
+@property (nonnull, nonatomic) UserDefaultsSpy *primaryDataStore;
 @property (nonnull, nonatomic) TestFeatureManager *featureManager;
 @property (nonnull, nonatomic) TestSettings *settings;
 @property (nonnull, nonatomic) TestOnDeviceMLModelManager *onDeviceMLModelManager;
@@ -97,7 +97,7 @@
   self.purchaseAmount = 1.0;
   self.currency = @"USD";
   self.graphRequestFactory = [TestGraphRequestFactory new];
-  self.store = [UserDefaultsSpy new];
+  self.primaryDataStore = [UserDefaultsSpy new];
   self.featureManager = [TestFeatureManager new];
   self.paymentObserver = [TestPaymentObserver new];
   self.appEventsStateStore = [TestAppEventsStateStore new];
@@ -147,7 +147,7 @@
                             serverConfigurationProvider:self.serverConfigurationProvider
                                     graphRequestFactory:self.graphRequestFactory
                                          featureChecker:self.featureManager
-                                                  store:self.store
+                                       primaryDataStore:self.primaryDataStore
                                                  logger:TestLogger.class
                                                settings:self.settings
                                         paymentObserver:self.paymentObserver
@@ -157,14 +157,14 @@
                 restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
                                     atePublisherFactory:self.atePublisherFactory
                                  appEventsStateProvider:self.appEventsStateProvider
-                                               swizzler:TestSwizzler.class
                                    advertiserIDProvider:self.advertiserIDProvider
                                           userDataStore:self.userDataStore];
 
   [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                             metadataIndexer:self.metadataIndexer
                                                         skAdNetworkReporter:self.skAdNetworkReporter
-                                                            codelessIndexer:TestCodelessEvents.class];
+                                                            codelessIndexer:TestCodelessEvents.class
+                                                                   swizzler:TestSwizzler.class];
 }
 
 - (void)testConfiguringSetsSwizzlerDependency
@@ -192,18 +192,13 @@
 
 - (void)testPublishingATEWithNilPublisher
 {
-  self.atePublisherFactory.stubbedPublisher = nil;
-  [self configureAppEventsSingleton];
-
-  XCTAssertNil(FBSDKAppEvents.shared.atePublisher);
-
-  // Make sure the factory can create a publisher
-  self.atePublisherFactory.stubbedPublisher = self.atePublisher;
+  FBSDKAppEvents.shared.atePublisher = nil;
   [FBSDKAppEvents.shared publishATE];
 
-  XCTAssertNotNil(
+  XCTAssertEqualObjects(
     FBSDKAppEvents.shared.atePublisher,
-    "Will lazily create an ate publisher when needed"
+    self.atePublisher,
+    "Should lazily create an ATE publisher when needed"
   );
 }
 

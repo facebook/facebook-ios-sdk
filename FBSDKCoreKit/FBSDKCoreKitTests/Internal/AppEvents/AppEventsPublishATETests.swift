@@ -15,7 +15,7 @@ class AppEventsPublishATETests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    AppEvents.setSettings(settings)
+    AppEvents.shared.settings = settings
   }
 
   func testDefaultAppEventsATEPublisher() {
@@ -56,7 +56,7 @@ class AppEventsPublishATETests: XCTestCase {
       serverConfigurationProvider: TestServerConfigurationProvider(),
       graphRequestFactory: TestGraphRequestFactory(),
       featureChecker: TestFeatureManager(),
-      store: UserDefaultsSpy(),
+      primaryDataStore: UserDefaultsSpy(),
       logger: TestLogger.self,
       settings: self.settings,
       paymentObserver: TestPaymentObserver(),
@@ -66,7 +66,6 @@ class AppEventsPublishATETests: XCTestCase {
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
       atePublisherFactory: factory,
       appEventsStateProvider: TestAppEventsStateProvider(),
-      swizzler: TestSwizzler.self,
       advertiserIDProvider: TestAdvertiserIDProvider(),
       userDataStore: TestUserDataStore()
     )

@@ -1055,8 +1055,8 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Initializing the SDK should set server configuration provider for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigureStore === UserDefaults.standard,
-      "Should be configured with the expected concrete data store"
+      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
+      "Should be configured with the expected concrete primary data store"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureFeatureChecker === delegate.featureChecker,

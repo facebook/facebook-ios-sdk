@@ -728,7 +728,7 @@ static UIApplicationState _applicationState;
                      serverConfigurationProvider:serverConfigurationProvider
                              graphRequestFactory:graphRequestFactory
                                   featureChecker:self.featureChecker
-                                           store:store
+                                primaryDataStore:store
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
                                  paymentObserver:self.paymentObserver
@@ -738,7 +738,6 @@ static UIApplicationState _applicationState;
          restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
-                                        swizzler:FBSDKSwizzler.class
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
                                    userDataStore:self.userDataStore];
 
@@ -832,7 +831,8 @@ static UIApplicationState _applicationState;
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
                                                      metadataIndexer:metaIndexer
                                                  skAdNetworkReporter:self.skAdNetworkReporter
-                                                     codelessIndexer:FBSDKCodelessIndexer.class];
+                                                     codelessIndexer:FBSDKCodelessIndexer.class
+                                                            swizzler:FBSDKSwizzler.class];
   [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class
                                        sessionDataTaskProvider:NSURLSession.sharedSession
                                              accessTokenWallet:FBSDKAccessToken.class
