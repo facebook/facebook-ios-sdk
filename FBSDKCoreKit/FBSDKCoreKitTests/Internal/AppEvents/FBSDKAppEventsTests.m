@@ -41,7 +41,6 @@
 @property (nonnull, nonatomic) NSString *currency;
 @property (nonnull, nonatomic) TestATEPublisherFactory *atePublisherFactory;
 @property (nonnull, nonatomic) TestATEPublisher *atePublisher;
-@property (nonnull, nonatomic) TestTimeSpentRecorderFactory *timeSpentRecorderFactory;
 @property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
 @property (nonnull, nonatomic) TestGraphRequestFactory *graphRequestFactory;
@@ -106,8 +105,7 @@
   self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
   self.appEventsStateProvider = [TestAppEventsStateProvider new];
   self.atePublisherFactory = [TestATEPublisherFactory new];
-  self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
-  self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
+  self.timeSpentRecorder = [TestTimeSpentRecorder new];
   self.advertiserIDProvider = [TestAdvertiserIDProvider new];
   self.skAdNetworkReporter = [TestAppEventsReporter new];
   self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
@@ -151,7 +149,7 @@
                                                  logger:TestLogger.class
                                                settings:self.settings
                                         paymentObserver:self.paymentObserver
-                               timeSpentRecorderFactory:self.timeSpentRecorderFactory
+                                      timeSpentRecorder:self.timeSpentRecorder
                                     appEventsStateStore:self.appEventsStateStore
                     eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
                 restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor

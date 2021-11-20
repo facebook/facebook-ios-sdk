@@ -38,11 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
-                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecorderCreating>)timeSpentRecordingFactory
+                        timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
+  // UNCRUSTIFY_FORMAT_OFF
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
@@ -57,8 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
-                             modelManager:(id <FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>) modelManager
-                       notificationCenter:(id <FBSDKNotificationPosting, FBSDKNotificationObserving>) notificationCenter
+                             modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
+                       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
@@ -68,6 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
                            userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
                           webViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
+  // UNCRUSTIFY_FORMAT_ON
 #endif
 {
   if ((self = [super init])) {
@@ -97,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
     _restrictiveDataFilterManager = restrictiveDataFilterManager;
     _serverConfigurationProvider = serverConfigurationProvider;
     _settings = settings;
-    _timeSpentRecordingFactory = timeSpentRecordingFactory;
+    _timeSpentRecorder = timeSpentRecorder;
     _tokenCache = tokenCache;
     _urlSessionProxyFactory = urlSessionProxyFactory;
     _userDataStore = userDataStore;

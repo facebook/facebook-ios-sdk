@@ -177,8 +177,6 @@
 #import "FBSDKSwizzler.h"
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentData+Testing.h"
-#import "FBSDKTimeSpentRecorderCreating.h"
-#import "FBSDKTimeSpentRecorderFactory.h"
 #import "FBSDKTimeSpentRecording.h"
 #import "FBSDKTokenCache.h"
 #import "FBSDKURL+Internal.h"

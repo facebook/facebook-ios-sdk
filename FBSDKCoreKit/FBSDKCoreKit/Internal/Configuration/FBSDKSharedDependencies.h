@@ -46,9 +46,10 @@
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKRulesFromKeyProvider.h"
 #import "FBSDKServerConfigurationProviding.h"
+#import "FBSDKSourceApplicationTracking.h"
 #import "FBSDKSuggestedEventsIndexerProtocol.h"
 #import "FBSDKSwizzling.h"
-#import "FBSDKTimeSpentRecorderCreating.h"
+#import "FBSDKTimeSpentRecording.h"
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUserIDProviding.h"
@@ -86,7 +87,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonatomic, readonly) id<FBSDKTimeSpentRecorderCreating> timeSpentRecordingFactory;
+@property (nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic, readonly) id<FBSDKTokenCaching> tokenCache;
 @property (nonatomic, readonly) id<FBSDKURLSessionProxyProviding> urlSessionProxyFactory;
 @property (nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
@@ -148,11 +149,12 @@ NS_SWIFT_NAME(SharedDependencies)
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
-                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecorderCreating>)timeSpentRecordingFactory
+                        timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
+  // UNCRUSTIFY_FORMAT_OFF
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
@@ -167,8 +169,8 @@ NS_SWIFT_NAME(SharedDependencies)
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
-                             modelManager:(id <FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>) modelManager
-                       notificationCenter:(id <FBSDKNotificationPosting, FBSDKNotificationObserving>) notificationCenter
+                             modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
+                       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
@@ -178,6 +180,7 @@ NS_SWIFT_NAME(SharedDependencies)
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
                            userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
                           webViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
+  // UNCRUSTIFY_FORMAT_ON
 #endif
 ;
 

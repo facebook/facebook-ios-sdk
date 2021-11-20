@@ -47,7 +47,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureLogger: Logging.Type?
   var capturedConfigureSettings: SettingsProtocol?
   var capturedConfigurePaymentObserver: PaymentObserving?
-  var capturedConfigureTimeSpentRecorderFactory: TimeSpentRecorderCreating?
+  var capturedConfigureTimeSpentRecorder: (SourceApplicationTracking & TimeSpentRecording)?
   var capturedConfigureAppEventsStateStore: AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
@@ -71,7 +71,7 @@ class TestAppEvents: TestEventLogger,
     logger: Logging.Type,
     settings: SettingsProtocol,
     paymentObserver: PaymentObserving,
-    timeSpentRecorderFactory: TimeSpentRecorderCreating,
+    timeSpentRecorder: SourceApplicationTracking & TimeSpentRecording,
     appEventsStateStore: AppEventsStatePersisting,
     eventDeactivationParameterProcessor: AppEventsParameterProcessing,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
@@ -89,7 +89,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureLogger = logger
     capturedConfigureSettings = settings
     capturedConfigurePaymentObserver = paymentObserver
-    capturedConfigureTimeSpentRecorderFactory = timeSpentRecorderFactory
+    capturedConfigureTimeSpentRecorder = timeSpentRecorder
     capturedConfigureAppEventsStateStore = appEventsStateStore
     capturedConfigureEventDeactivationParameterProcessor = eventDeactivationParameterProcessor
     capturedConfigureRestrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor

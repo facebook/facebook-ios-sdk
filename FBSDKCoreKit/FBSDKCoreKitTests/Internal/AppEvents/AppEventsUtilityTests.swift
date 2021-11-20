@@ -55,7 +55,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
       logger: TestLogger.self,
       settings: TestSettings(),
       paymentObserver: TestPaymentObserver(),
-      timeSpentRecorderFactory: TestTimeSpentRecorderFactory(),
+      timeSpentRecorder: TestTimeSpentRecorder(),
       appEventsStateStore: TestAppEventsStateStore(),
       eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),

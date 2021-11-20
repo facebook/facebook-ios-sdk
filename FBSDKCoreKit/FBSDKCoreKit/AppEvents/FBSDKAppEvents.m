@@ -53,7 +53,7 @@
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKSwizzling.h"
-#import "FBSDKTimeSpentRecorderCreating.h"
+#import "FBSDKTimeSpentRecording.h"
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 
@@ -867,7 +867,7 @@ static BOOL g_explicitEventsLoggedYet;
                                    logger:(nonnull Class<FBSDKLogging>)logger
                                  settings:(nonnull id<FBSDKSettings>)settings
                           paymentObserver:(nonnull id<FBSDKPaymentObserving>)paymentObserver
-                 timeSpentRecorderFactory:(nonnull id<FBSDKTimeSpentRecorderCreating>)timeSpentRecorderFactory
+                        timeSpentRecorder:(nonnull id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
                       appEventsStateStore:(nonnull id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(nonnull id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(nonnull id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor
@@ -885,7 +885,7 @@ static BOOL g_explicitEventsLoggedYet;
   self.logger = logger;
   self.settings = settings; // This must be set before using/changing `userID`
   self.paymentObserver = paymentObserver;
-  self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
+  self.timeSpentRecorder = timeSpentRecorder;
   self.appEventsStateStore = appEventsStateStore;
   self.eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
   self.restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;

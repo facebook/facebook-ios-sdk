@@ -36,7 +36,7 @@ enum TestSharedDependencies {
       restrictiveDataFilterManager: TestAppEventsParameterProcessor(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
       settings: TestSettings(),
-      timeSpentRecordingFactory: TestTimeSpentRecorderFactory(),
+      timeSpentRecorder: TestTimeSpentRecorder(),
       tokenCache: TestTokenCache(),
       urlSessionProxyFactory: TestURLSessionProxyFactory(),
       userDataStore: TestUserDataStore(),

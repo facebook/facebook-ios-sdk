@@ -66,7 +66,7 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKSwizzler+Swizzling.h"
-#import "FBSDKTimeSpentRecorderFactory.h"
+#import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKUserDataStore.h"
@@ -715,9 +715,9 @@ static UIApplicationState _applicationState;
                                                                               graphRequestFactory:graphRequestFactory
                                                                                          settings:sharedSettings
                                                                         deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
-  FBSDKTimeSpentRecorderFactory *timeSpentRecordingFactory
-    = [[FBSDKTimeSpentRecorderFactory alloc] initWithEventLogger:self.appEvents
-                                     serverConfigurationProvider:serverConfigurationProvider];
+  id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
+  timeSpentRecorder = [[FBSDKTimeSpentData alloc] initWithEventLogger:self.appEvents
+                                          serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator
@@ -732,7 +732,7 @@ static UIApplicationState _applicationState;
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
                                  paymentObserver:self.paymentObserver
-                        timeSpentRecorderFactory:timeSpentRecordingFactory
+                               timeSpentRecorder:timeSpentRecorder
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
              eventDeactivationParameterProcessor:eventDeactivationManager
          restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager

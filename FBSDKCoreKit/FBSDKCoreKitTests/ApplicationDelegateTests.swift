@@ -1034,7 +1034,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
-  func testInitializingSdkConfiguresAppEvents() { // swiftlint:disable:this function_body_length
+  func testInitializingSdkConfiguresAppEvents() throws { // swiftlint:disable:this function_body_length
     AppEvents.reset()
     delegate.initializeSDK()
 
@@ -1074,10 +1074,20 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedConfigurePaymentObserver === delegate.paymentObserver,
       "Initializing the SDK should set concrete payment observer for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureTimeSpentRecorderFactory is TimeSpentRecorderFactory,
-      "Initializing the SDK should set concrete time spent recorder factory for event logging"
+
+    let recorder = try XCTUnwrap(
+      appEvents.capturedConfigureTimeSpentRecorder as? TimeSpentData,
+      "Initializing the SDK should set concrete time spent recorder for event logging"
     )
+    XCTAssertTrue(
+      recorder.eventLogger === appEvents,
+      "The time spent recorder's event logger should be the shared app events"
+    )
+    XCTAssertTrue(
+      recorder.serverConfigurationProvider === ServerConfigurationManager.shared,
+      "The time spent recorder's server configuration provider should be the shared server configuration manager"
+    )
+
     XCTAssertTrue(
       appEvents.capturedConfigureAppEventsStateStore === AppEventsStateManager.shared,
       "Initializing the SDK should set concrete state store for event logging"

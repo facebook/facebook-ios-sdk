@@ -60,7 +60,7 @@ class AppEventsPublishATETests: XCTestCase {
       logger: TestLogger.self,
       settings: self.settings,
       paymentObserver: TestPaymentObserver(),
-      timeSpentRecorderFactory: TestTimeSpentRecorderFactory(),
+      timeSpentRecorder: TestTimeSpentRecorder(),
       appEventsStateStore: TestAppEventsStateStore(),
       eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
