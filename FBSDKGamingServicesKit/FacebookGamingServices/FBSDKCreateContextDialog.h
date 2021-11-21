@@ -13,7 +13,6 @@
  #import <Foundation/Foundation.h>
 
  #import <FacebookGamingServices/FBSDKContextWebDialog.h>
- #import <FacebookGamingServices/FBSDKShowable.h>
 
 @class FBSDKCreateContextContent;
 
@@ -22,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
   A dialog to create a context through a web view
  */
 NS_SWIFT_NAME(CreateContextDialog)
-@interface FBSDKCreateContextDialog : FBSDKContextWebDialog <FBSDKShowable>
+@interface FBSDKCreateContextDialog : FBSDKContextWebDialog
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

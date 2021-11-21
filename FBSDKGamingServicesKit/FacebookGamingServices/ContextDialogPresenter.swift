@@ -52,7 +52,7 @@ public class ContextDialogPresenter {
       throw ContextDialogPresenterError.showCreateContext
     }
 
-    dialog.show()
+    _ = dialog.show()
   }
 
   /**
@@ -71,7 +71,7 @@ public class ContextDialogPresenter {
       throw ContextDialogPresenterError.showSwitchContext
     }
 
-    dialog.show()
+    _ = dialog.show()
   }
 
   /**
@@ -85,7 +85,7 @@ public class ContextDialogPresenter {
     content: ChooseContextContent,
     delegate: ContextDialogDelegate
   ) {
-    makeChooseContextDialog(content: content, delegate: delegate)
+    _ = makeChooseContextDialog(content: content, delegate: delegate)
       .show()
   }
 
@@ -95,7 +95,7 @@ public class ContextDialogPresenter {
     delegate: ContextDialogDelegate
   ) -> ChooseContextDialog {
     let dialog = ContextDialogPresenter().makeChooseContextDialog(content: content, delegate: delegate)
-    dialog.show()
+    _ = dialog.show()
 
     return dialog as? ChooseContextDialog ?? ChooseContextDialog(content: content, delegate: delegate)
   }

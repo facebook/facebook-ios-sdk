@@ -6,13 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-NS_ASSUME_NONNULL_BEGIN
+@objc(FBSDKShowable)
+public protocol Showable {
+  func show() -> Bool
+}
 
-NS_SWIFT_NAME(Showable)
-@protocol FBSDKShowable
-
-- (BOOL)show;
-
-@end
-
-NS_ASSUME_NONNULL_END
+extension ChooseContextDialog: Showable { }
+extension CreateContextDialog: Showable { }
