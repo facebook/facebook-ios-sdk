@@ -28,32 +28,6 @@ static NSString *const kFakeChallenge = @"a =bcdef";
 static NSString *const kFakeNonce = @"fedcb =a";
 static NSString *const kFakeJTI = @"a jti is just any string";
 
-@interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
-
-@property (nonatomic) int openURLWithSFVCCount;
-@property (nonatomic) int openURLCount;
-
-@end
-
-@implementation TestFBSDKBridgeAPI
-
-- (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
-                                handler:(FBSDKSuccessBlock)handler
-{
-  _openURLWithSFVCCount += 1;
-  handler(YES, nil);
-}
-
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
-{
-  _openURLCount += 1;
-  handler(YES, nil);
-}
-
-@end
-
 @interface FBSDKLoginManagerTests : XCTestCase
 
 @property (nonatomic) NSDictionary<NSString *, id> *claims;
