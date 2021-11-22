@@ -12,59 +12,59 @@ import XCTest
 
 class ProfileFactoryTests: XCTestCase {
 
-  let expected = Profile(
-    userID: SampleUserProfiles.valid.userID,
-    firstName: SampleUserProfiles.valid.firstName,
-    middleName: SampleUserProfiles.valid.middleName,
-    lastName: SampleUserProfiles.valid.lastName,
-    name: SampleUserProfiles.valid.name,
-    linkURL: SampleUserProfiles.valid.linkURL,
-    refreshDate: SampleUserProfiles.valid.refreshDate,
-    imageURL: SampleUserProfiles.valid.imageURL,
-    email: SampleUserProfiles.valid.email,
-    friendIDs: SampleUserProfiles.valid.friendIDs,
-    birthday: SampleUserProfiles.valid.birthday,
-    ageRange: SampleUserProfiles.valid.ageRange,
-    hometown: SampleUserProfiles.valid.hometown,
-    location: SampleUserProfiles.valid.location,
-    gender: SampleUserProfiles.valid.gender,
-    isLimited: true
-  )
-  let factory = ProfileFactory()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var sampleProfile: Profile!
+  var factory: ProfileFactory!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    sampleProfile = SampleUserProfiles.createValid(isLimited: true)
+    factory = ProfileFactory()
+  }
+
+  override func tearDown() {
+    sampleProfile = nil
+    factory = nil
+
+    super.tearDown()
+  }
 
   func testCreatingProfile() {
     let profile = factory.createProfile(
-      userID: SampleUserProfiles.valid.userID,
-      firstName: SampleUserProfiles.valid.firstName,
-      middleName: SampleUserProfiles.valid.middleName,
-      lastName: SampleUserProfiles.valid.lastName,
-      name: SampleUserProfiles.valid.name,
-      linkURL: SampleUserProfiles.valid.linkURL,
-      refreshDate: SampleUserProfiles.valid.refreshDate,
-      imageURL: SampleUserProfiles.valid.imageURL,
-      email: SampleUserProfiles.valid.email,
-      friendIDs: SampleUserProfiles.valid.friendIDs,
-      birthday: SampleUserProfiles.valid.birthday,
-      ageRange: SampleUserProfiles.valid.ageRange,
-      hometown: SampleUserProfiles.valid.hometown,
-      location: SampleUserProfiles.valid.location,
-      gender: SampleUserProfiles.valid.gender,
+      userID: sampleProfile.userID,
+      firstName: sampleProfile.firstName,
+      middleName: sampleProfile.middleName,
+      lastName: sampleProfile.lastName,
+      name: sampleProfile.name,
+      linkURL: sampleProfile.linkURL,
+      refreshDate: sampleProfile.refreshDate,
+      imageURL: sampleProfile.imageURL,
+      email: sampleProfile.email,
+      friendIDs: sampleProfile.friendIDs,
+      birthday: sampleProfile.birthday,
+      ageRange: sampleProfile.ageRange,
+      hometown: sampleProfile.hometown,
+      location: sampleProfile.location,
+      gender: sampleProfile.gender,
       isLimited: true
     )
-    XCTAssertEqual(profile.userID, expected.userID)
-    XCTAssertEqual(profile.firstName, expected.firstName)
-    XCTAssertEqual(profile.middleName, expected.middleName)
-    XCTAssertEqual(profile.lastName, expected.lastName)
-    XCTAssertEqual(profile.name, expected.name)
-    XCTAssertEqual(profile.linkURL, expected.linkURL)
-    XCTAssertEqual(profile.refreshDate, expected.refreshDate)
-    XCTAssertEqual(profile.imageURL, expected.imageURL)
-    XCTAssertEqual(profile.email, expected.email)
-    XCTAssertEqual(profile.friendIDs, expected.friendIDs)
-    XCTAssertEqual(profile.birthday, expected.birthday)
-    XCTAssertEqual(profile.ageRange, expected.ageRange)
-    XCTAssertEqual(profile.hometown, expected.hometown)
-    XCTAssertEqual(profile.location, expected.location)
-    XCTAssertEqual(profile.gender, expected.gender)
+
+    XCTAssertEqual(profile.userID, sampleProfile.userID)
+    XCTAssertEqual(profile.firstName, sampleProfile.firstName)
+    XCTAssertEqual(profile.middleName, sampleProfile.middleName)
+    XCTAssertEqual(profile.lastName, sampleProfile.lastName)
+    XCTAssertEqual(profile.name, sampleProfile.name)
+    XCTAssertEqual(profile.linkURL, sampleProfile.linkURL)
+    XCTAssertEqual(profile.refreshDate, sampleProfile.refreshDate)
+    XCTAssertEqual(profile.imageURL, sampleProfile.imageURL)
+    XCTAssertEqual(profile.email, sampleProfile.email)
+    XCTAssertEqual(profile.friendIDs, sampleProfile.friendIDs)
+    XCTAssertEqual(profile.birthday, sampleProfile.birthday)
+    XCTAssertEqual(profile.ageRange, sampleProfile.ageRange)
+    XCTAssertEqual(profile.hometown, sampleProfile.hometown)
+    XCTAssertEqual(profile.location, sampleProfile.location)
+    XCTAssertEqual(profile.gender, sampleProfile.gender)
   }
 }

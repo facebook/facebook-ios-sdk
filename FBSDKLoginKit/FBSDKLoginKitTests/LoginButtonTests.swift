@@ -94,7 +94,7 @@ class LoginButtonTests: XCTestCase {
   func testInitialContentUpdateWithInactiveAccessTokenWithProfile() {
     let button = TestButton()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
 
     button._initializeContent()
 
@@ -265,20 +265,21 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testUpdatingContentWithProfile() {
-    button._updateContent(forUserProfile: SampleUserProfiles.valid)
+    let profile = SampleUserProfiles.createValid()
+    button._updateContent(forUserProfile: profile)
 
     XCTAssertTrue(
       button.isSelected,
       "Should be selected if there is a valid profile"
     )
-    XCTAssertEqual(button.userName(), SampleUserProfiles.valid.name)
-    XCTAssertEqual(button.userID(), SampleUserProfiles.valid.userID)
+    XCTAssertEqual(button.userName(), profile.name)
+    XCTAssertEqual(button.userID(), profile.userID)
   }
 
   func testUpdatingContentForProfileWithNewId() {
     let button = TestButton()
     let profile = SampleUserProfiles.createValid(name: name)
-    button._updateContent(forUserProfile: SampleUserProfiles.valid)
+    button._updateContent(forUserProfile: SampleUserProfiles.createValid())
     button._updateContent(forUserProfile: profile)
 
     XCTAssertEqual(
@@ -296,7 +297,7 @@ class LoginButtonTests: XCTestCase {
   func testUpdatingContentForProfileWithNewName() {
     let button = TestButton()
     let profile = SampleUserProfiles.createValid(name: name)
-    button._updateContent(forUserProfile: SampleUserProfiles.valid)
+    button._updateContent(forUserProfile: SampleUserProfiles.createValid())
     button._updateContent(forUserProfile: profile)
 
     XCTAssertEqual(
