@@ -42,7 +42,7 @@ NS_SWIFT_NAME(LoginManagerLogger)
                                andExistingState:(nullable NSDictionary<NSString *, id> *)existingState
                                          logger:(nullable FBSDKLoginManagerLogger *)logger;
 
-- (void)willAttemptAppSwitchingBehavior;
+- (void)willAttemptAppSwitchingBehaviorWithUrlScheme:(NSString *)urlScheme;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 

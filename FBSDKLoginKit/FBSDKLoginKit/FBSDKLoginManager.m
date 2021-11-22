@@ -526,7 +526,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 // change bool to auth method string.
 - (void)performBrowserLogInWithHandler:(FBSDKBrowserLoginSuccessBlock)handler
 {
-  [_logger willAttemptAppSwitchingBehavior];
+  NSString *urlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
+  [_logger willAttemptAppSwitchingBehaviorWithUrlScheme:urlScheme];
   FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
   BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:@"login"];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
