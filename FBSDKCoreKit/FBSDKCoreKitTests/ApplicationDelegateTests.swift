@@ -1273,7 +1273,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      Profile.store === UserDefaults.standard,
+      Profile.dataStore === UserDefaults.standard,
       "Should be configured with the expected concrete data store"
     )
     XCTAssertTrue(

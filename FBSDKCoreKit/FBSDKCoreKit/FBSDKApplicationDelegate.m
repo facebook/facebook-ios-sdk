@@ -819,11 +819,11 @@ static UIApplicationState _applicationState;
                                     appID:sharedSettings.appID
                                  reporter:self.skAdNetworkReporter];
   }
-  [FBSDKProfile configureWithStore:store
-               accessTokenProvider:FBSDKAccessToken.class
-                notificationCenter:NSNotificationCenter.defaultCenter
-                          settings:sharedSettings
-                         urlHoster:FBSDKInternalUtility.sharedUtility];
+  [FBSDKProfile configureWithDataStore:store
+                   accessTokenProvider:FBSDKAccessToken.class
+                    notificationCenter:NSNotificationCenter.defaultCenter
+                              settings:sharedSettings
+                             urlHoster:FBSDKInternalUtility.sharedUtility];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication]; // TEMP: added to configurator
   FBSDKMetadataIndexer *metaIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore

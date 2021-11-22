@@ -12,7 +12,7 @@ import XCTest
 
 class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   // swiftlint:disable implicitly_unwrapped_optional
-  var store: UserDefaultsSpy!
+  var dataStore: UserDefaultsSpy!
   var notificationCenter: TestNotificationCenter!
   var settings: TestSettings!
   var urlHoster: TestURLHoster!
@@ -36,7 +36,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   override func setUp() {
     super.setUp()
 
-    store = UserDefaultsSpy()
+    dataStore = UserDefaultsSpy()
     notificationCenter = TestNotificationCenter()
     settings = TestSettings()
     urlHoster = TestURLHoster(url: stubbedURL)
@@ -57,7 +57,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     TestAccessTokenWallet.reset()
     Profile.resetCurrentProfileCache()
     Profile.configure(
-      store: store,
+      dataStore: dataStore,
       accessTokenProvider: TestAccessTokenWallet.self,
       notificationCenter: notificationCenter,
       settings: settings,
@@ -1097,17 +1097,17 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
   }
 
-  func testDefaultStore() {
+  func testDefaultDataStore() {
     Profile.reset()
     XCTAssertNil(
-      Profile.store,
+      Profile.dataStore,
       "Should not have a default data store"
     )
   }
 
-  func testConfiguringWithStore() {
+  func testConfiguringWithDataStore() {
     XCTAssertTrue(
-      Profile.store === store,
+      Profile.dataStore === dataStore,
       "Should be able to set a persistent data store"
     )
   }
@@ -1169,9 +1169,9 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     _ = Profile.fetchCachedProfile()
 
     XCTAssertEqual(
-      store.capturedObjectRetrievalKey,
+      dataStore.capturedObjectRetrievalKey,
       "com.facebook.sdk.FBSDKProfile.currentProfile",
-      "Fetching a cached profile should query the store with the expected retrieval key"
+      "Fetching a cached profile should query the data store with the expected retrieval key"
     )
   }
 
