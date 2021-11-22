@@ -18,6 +18,7 @@
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKLoginCompletionParameters+Internal.h"
+#import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginProviding.h"
 #import "FBSDKLoginURLCompleter+Testing.h"
 #import "FBSDKNonceUtility.h"
