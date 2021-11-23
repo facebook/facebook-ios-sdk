@@ -474,6 +474,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
       NSSet<Class> *classes = [NSSet setWithArray:@[
         NSMutableDictionary.class,
         NSMutableArray.class,
+        NSString.class,
         FBAEMConfiguration.class,
         FBAEMRule.class,
         FBAEMEvent.class]];
