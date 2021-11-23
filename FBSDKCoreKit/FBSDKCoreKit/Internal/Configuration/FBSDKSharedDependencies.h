@@ -108,6 +108,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (nonatomic, readonly) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
 @property (nonatomic, readonly) id<FBSDKAppLinkCreating> appLinkFactory;
+@property (nonatomic, readonly) id<FBSDKAppLinkResolving> appLinkResolver;
 @property (nonatomic, readonly) id<FBSDKAppLinkTargetCreating> appLinkTargetFactory;
 @property (nonatomic, readonly) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
 @property (nonatomic, readonly) Class<FBSDKCodelessIndexing> codelessIndexer;
@@ -171,7 +172,9 @@ NS_SWIFT_NAME(SharedDependencies)
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
+                       appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
                            appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+                          appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
                      appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer

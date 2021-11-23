@@ -993,6 +993,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppLinkNavigation() {
     AppLinkNavigation.reset()
     delegate.initializeSDK()
@@ -1179,6 +1180,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringCodelessIndexer() {
     delegate.initializeSDK()
 
@@ -1267,6 +1269,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresProfile() {
     delegate.initializeSDK()
 
@@ -1280,15 +1283,15 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
     XCTAssertTrue(
       Profile.notificationCenter === NotificationCenter.default,
-      "Should be configured with the expected concrete Notification Center"
+      "Should be configured with the expected concrete notification center"
     )
     XCTAssertTrue(
       Profile.settings === Settings.shared,
-      "Should be configured with the expected concrete Settings"
+      "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
       Profile.urlHoster === InternalUtility.shared,
-      "Should be configured with the expected concrete Settings"
+      "Should be configured with the expected concrete URL hoster"
     )
   }
 

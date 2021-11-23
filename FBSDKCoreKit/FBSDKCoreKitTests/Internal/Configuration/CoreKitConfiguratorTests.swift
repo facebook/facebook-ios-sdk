@@ -51,13 +51,16 @@ final class CoreKitConfiguratorTests: XCTestCase {
     ServerConfigurationManager.shared.reset()
 
     // Non-tvOS
+    AppLinkNavigation.reset()
     AppLinkURL.reset()
     AppLinkUtility.reset()
     AuthenticationStatusUtility.resetClassDependencies()
     BridgeAPIRequest.resetClassDependencies()
+    CodelessIndexer.reset()
+    FBWebDialogView.reset()
     FeatureExtractor.reset()
     ModelManager.reset()
-    FBWebDialogView.reset()
+    Profile.reset()
   }
 
   // MARK: - All Platforms
@@ -609,6 +612,44 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
   // MARK: - Non-tvOS
 
+  func testConfiguringAppLinkNavigation() {
+    XCTAssertNil(
+      AppLinkNavigation.settings,
+      "AppLinkNavigation should not have settings by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.urlOpener,
+      "AppLinkNavigation should not have an internal URL opener by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkEventPoster,
+      "AppLinkNavigation should not have an app link event poster by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkResolver,
+      "AppLinkNavigation should not have an app link resolver by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppLinkNavigation.settings === dependencies.settings,
+      "AppLinkNavigation should be configured with the settings"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.urlOpener === dependencies.internalURLOpener,
+      "AppLinkNavigation should be configured with the internal URL opener"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkEventPoster === dependencies.appLinkEventPoster,
+      "AppLinkNavigation should be configured with the app link event poster"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkResolver === dependencies.appLinkResolver,
+      "AppLinkNavigation should be configured with the app link resolver"
+    )
+  }
+
   func testConfiguringAppLinkURL() {
     XCTAssertNil(
       AppLinkURL.settings,
@@ -793,6 +834,68 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
+  func testConfiguringCodelessIndexer() {
+    XCTAssertNil(
+      CodelessIndexer.graphRequestFactory,
+      "CodelessIndexer should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.serverConfigurationProvider,
+      "CodelessIndexer should not have a server configuration provider by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.dataStore,
+      "CodelessIndexer should be not have a data store by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.graphRequestConnectionFactory,
+      "CodelessIndexer should not have a graph request connection provider by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.swizzler,
+      "CodelessIndexer should not have a swizzler by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.settings,
+      "CodelessIndexer should not have settings by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.advertiserIDProvider,
+      "CodelessIndexer should not have an advertiser ID provider by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestFactory === dependencies.graphRequestFactory,
+      "CodelessIndexer should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.serverConfigurationProvider === dependencies.serverConfigurationProvider,
+      "CodelessIndexer should be configured with the server configuration provider"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.dataStore === dependencies.defaultDataStore,
+      "Should be configured with the default data store"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      "CodelessIndexer should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.swizzler === dependencies.swizzler,
+      "CodelessIndexer should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.settings === dependencies.settings,
+      "CodelessIndexer should be configured with the settings"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.advertiserIDProvider === dependencies.advertiserIDProvider,
+      "CodelessIndexer should be configured with the advertiser ID provider"
+    )
+  }
+
   func testConfiguringFeatureExtractor() {
     XCTAssertNil(
       FeatureExtractor.rulesFromKeyProvider,
@@ -878,6 +981,52 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       ModelManager.shared.featureExtractor === dependencies.featureExtractor,
       "ModelManager should be configured with the feature extractor"
+    )
+  }
+
+  func testConfiguringProfile() {
+    XCTAssertNil(
+      Profile.dataStore,
+      "Profile should not have a data store by default"
+    )
+    XCTAssertNil(
+      Profile.accessTokenProvider,
+      "Profile should not have an access token provider by default"
+    )
+    XCTAssertNil(
+      Profile.notificationCenter,
+      "Profile should not have a notification center by default"
+    )
+    XCTAssertNil(
+      Profile.settings,
+      "Profile should not have settings by default"
+    )
+    XCTAssertNil(
+      Profile.urlHoster,
+      "Profile should not have a URL hoster by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      Profile.dataStore === dependencies.defaultDataStore,
+      "Profile should be configured with the default data store"
+    )
+    XCTAssertTrue(
+      Profile.accessTokenProvider === dependencies.accessTokenWallet,
+      "Profile should be configured with the access token wallet"
+    )
+    XCTAssertTrue(
+      Profile.notificationCenter === dependencies.notificationCenter,
+      "Profile should be configured with the notification center"
+    )
+    XCTAssertTrue(
+      Profile.settings === dependencies.settings,
+      "Profile should be configured with the settings"
+    )
+    XCTAssertTrue(
+      Profile.urlHoster === dependencies.urlHoster,
+      "Profile should be configured with the URL hoster"
     )
   }
 

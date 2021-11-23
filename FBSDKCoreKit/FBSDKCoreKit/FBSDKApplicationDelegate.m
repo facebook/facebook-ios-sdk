@@ -803,7 +803,7 @@ static UIApplicationState _applicationState;
                            graphRequestConnectionFactory:graphRequestConnectionFactory
                                                 swizzler:FBSDKSwizzler.class
                                                 settings:sharedSettings
-                                    advertiserIDProvider:FBSDKAppEventsUtility.shared];
+                                    advertiserIDProvider:FBSDKAppEventsUtility.shared]; // TEMP: added to configurator
   [FBSDKCrashShield configureWithSettings:sharedSettings
                       graphRequestFactory:[FBSDKGraphRequestFactory new]
                           featureChecking:FBSDKFeatureManager.shared];
@@ -822,7 +822,7 @@ static UIApplicationState _applicationState;
                    accessTokenProvider:FBSDKAccessToken.class
                     notificationCenter:NSNotificationCenter.defaultCenter
                               settings:sharedSettings
-                             urlHoster:FBSDKInternalUtility.sharedUtility];
+                             urlHoster:FBSDKInternalUtility.sharedUtility]; // TEMP: added to configurator
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication]; // TEMP: added to configurator
   FBSDKMetadataIndexer *metaIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore
@@ -839,7 +839,7 @@ static UIApplicationState _applicationState;
   [FBSDKAppLinkNavigation configureWithSettings:sharedSettings
                                       urlOpener:UIApplication.sharedApplication
                              appLinkEventPoster:[FBSDKMeasurementEvent new]
-                                appLinkResolver:FBSDKWebViewAppLinkResolver.sharedInstance];
+                                appLinkResolver:FBSDKWebViewAppLinkResolver.sharedInstance]; // TEMP: added to configurator
 #endif
 }
 

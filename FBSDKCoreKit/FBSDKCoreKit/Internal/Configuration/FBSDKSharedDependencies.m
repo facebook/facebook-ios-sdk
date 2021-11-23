@@ -52,7 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
+                       appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
                            appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+                          appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
                      appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
@@ -117,7 +119,9 @@ NS_ASSUME_NONNULL_BEGIN
     _aemNetworker = aemNetworker;
     _appEventParametersExtractor = appEventParametersExtractor;
     _appEventsDropDeterminer = appEventsDropDeterminer;
+    _appLinkEventPoster = appLinkEventPoster;
     _appLinkFactory = appLinkFactory;
+    _appLinkResolver = appLinkResolver;
     _appLinkTargetFactory = appLinkTargetFactory;
     _appLinkURLFactory = appLinkURLFactory;
     _codelessIndexer = codelessIndexer;
