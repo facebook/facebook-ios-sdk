@@ -43,12 +43,15 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppEventsUtility.reset()
     FBButton.resetClassDependencies()
     FeatureManager.reset()
+    GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
+    GraphRequestPiggybackManager.reset()
     InstrumentManager.reset()
     InternalUtility.reset()
     SDKError.reset()
     ServerConfigurationManager.shared.reset()
+    Settings.shared.reset()
 
     // Non-tvOS
     AppLinkNavigation.reset()
@@ -374,6 +377,44 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
+  func testConfiguringGateKeeperManager() {
+    XCTAssertNil(
+      GateKeeperManager.settings,
+      "GateKeeperManager should not have settings by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.graphRequestFactory,
+      "GateKeeperManager should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.graphRequestConnectionFactory,
+      "GateKeeperManager should not have a graph request connection factory by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.store,
+      "GateKeeperManager should not have a data store by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      GateKeeperManager.settings === dependencies.settings,
+      "GateKeeperManager should be configured with the settings"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestFactory === dependencies.graphRequestFactory,
+      "GateKeeperManager should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      "GateKeeperManager should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.store === dependencies.defaultDataStore,
+      "GateKeeperManager should be configured with the data store"
+    )
+  }
+
   func testConfiguringGraphRequest() {
     XCTAssertNil(
       GraphRequest.settings,
@@ -506,6 +547,44 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
+  func testConfiguringGraphRequestPiggybackManager() {
+    XCTAssertNil(
+      GraphRequestPiggybackManager.tokenWallet,
+      "GraphRequestPiggybackManager should not have an access token wallet by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.settings,
+      "GraphRequestPiggybackManager should not have a settings by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.serverConfigurationProvider,
+      "GraphRequestPiggybackManager should not have a server configuration by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.graphRequestFactory,
+      "GraphRequestPiggybackManager should not have a graph request factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.tokenWallet === dependencies.accessTokenWallet,
+      "GraphRequestPiggybackManager should be configured with the access token wallet"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.settings === dependencies.settings,
+      "GraphRequestPiggybackManager should be configured with the settings"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.serverConfigurationProvider === dependencies.serverConfigurationProvider,
+      "GraphRequestPiggybackManager should be configured with the server configuration"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.graphRequestFactory === dependencies.graphRequestFactory,
+      "GraphRequestPiggybackManager should be configured with the graph request factory"
+    )
+  }
+
   func testConfiguringInstrumentManager() {
     XCTAssertNil(
       InstrumentManager.shared.crashObserver,
@@ -607,6 +686,44 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       ServerConfigurationManager.shared.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
       "ServerConfigurationManager should be configured with the graph request connection factory"
+    )
+  }
+
+  func testConfiguringSettings() {
+    XCTAssertNil(
+      Settings.store,
+      "Settings should not have a data store by default"
+    )
+    XCTAssertNil(
+      Settings.shared.appEventsConfigurationProvider,
+      "Settings should not have an app events configuration provider by default"
+    )
+    XCTAssertNil(
+      Settings.infoDictionaryProvider,
+      "Settings should not have an info dictionary provider by default"
+    )
+    XCTAssertNil(
+      Settings.eventLogger,
+      "Settings should not have an event logger by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      Settings.store === dependencies.defaultDataStore,
+      "Settings should be configured with the data store"
+    )
+    XCTAssertTrue(
+      Settings.shared.appEventsConfigurationProvider === dependencies.appEventsConfigurationProvider,
+      "Settings should be configured with the app events configuration provider"
+    )
+    XCTAssertTrue(
+      Settings.infoDictionaryProvider === dependencies.infoDictionaryProvider,
+      "Settings should be configured with the info dictionary provider"
+    )
+    XCTAssertTrue(
+      Settings.eventLogger === dependencies.eventLogger,
+      "Settings should be configured with the event logger"
     )
   }
 

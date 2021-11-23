@@ -20,13 +20,16 @@
 #import "FBSDKError+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
+#import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKProfile+Internal.h"
 #import "FBSDKServerConfigurationManager.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKURL+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -55,12 +58,15 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAppEventsUtility];
   [self configureButton];
   [self configureFeatureManager];
+  [self configureGatekeeperManager];
   [self configureGraphRequest];
   [self configureGraphRequestConnection];
+  [self configureGraphRequestPiggybackManager];
   [self configureInstrumentManager];
   [self configureInternalUtility];
   [self configureSDKError];
   [self configureServerConfigurationManager];
+  [self configureSettings];
 
 #if !TARGET_OS_TV
   [self configureNonTVOSAppEvents];
@@ -126,6 +132,14 @@ NS_ASSUME_NONNULL_BEGIN
                                                        store:self.dependencies.defaultDataStore];
 }
 
+- (void)configureGatekeeperManager
+{
+  [FBSDKGateKeeperManager configureWithSettings:self.dependencies.settings
+                            graphRequestFactory:self.dependencies.graphRequestFactory
+                  graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
+                                          store:self.dependencies.defaultDataStore];
+}
+
 - (void)configureGraphRequest
 {
   [FBSDKGraphRequest configureWithSettings:self.dependencies.settings
@@ -147,6 +161,14 @@ NS_ASSUME_NONNULL_BEGIN
                                                  accessTokenSetter:self.dependencies.accessTokenWallet
                                                       errorFactory:self.dependencies.errorFactory
                                        authenticationTokenProvider:self.dependencies.authenticationTokenWallet];
+}
+
+- (void)configureGraphRequestPiggybackManager
+{
+  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:self.dependencies.accessTokenWallet
+                                                     settings:self.dependencies.settings
+                                  serverConfigurationProvider:self.dependencies.serverConfigurationProvider
+                                          graphRequestFactory:self.dependencies.graphRequestFactory];
 }
 
 - (void)configureInstrumentManager
@@ -173,6 +195,14 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:self.dependencies.graphRequestFactory
                                              graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
+}
+
+- (void)configureSettings
+{
+  [FBSDKSettings configureWithStore:self.dependencies.defaultDataStore
+     appEventsConfigurationProvider:self.dependencies.appEventsConfigurationProvider
+             infoDictionaryProvider:self.dependencies.infoDictionaryProvider
+                        eventLogger:self.dependencies.eventLogger];
 }
 
 // MARK: - Non-tvOS

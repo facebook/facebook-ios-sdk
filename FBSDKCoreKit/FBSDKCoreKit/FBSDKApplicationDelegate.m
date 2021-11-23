@@ -686,18 +686,18 @@ static UIApplicationState _applicationState;
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:appEventsConfigurationProvider
              infoDictionaryProvider:NSBundle.mainBundle
-                        eventLogger:FBSDKAppEvents.shared];
+                        eventLogger:FBSDKAppEvents.shared]; // TEMP: added to configurator
   [FBSDKFeatureManager.shared configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                                                     settings:sharedSettings
                                                        store:store]; // TEMP: added to configurator
   [FBSDKGraphRequest configureWithSettings:sharedSettings
           currentAccessTokenStringProvider:FBSDKAccessToken.class
-             graphRequestConnectionFactory:graphRequestConnectionFactory];
+             graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:sharedSettings
                             graphRequestFactory:graphRequestFactory
                   graphRequestConnectionFactory:graphRequestConnectionFactory
-                                          store:store];
+                                          store:store]; // TEMP: added to configurator
   [FBSDKInstrumentManager.shared configureWithFeatureChecker:sharedFeatureChecker
                                                     settings:sharedSettings
                                                crashObserver:crashObserver
@@ -755,7 +755,7 @@ static UIApplicationState _applicationState;
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
                                   serverConfigurationProvider:serverConfigurationProvider
-                                          graphRequestFactory:graphRequestFactory];
+                                          graphRequestFactory:graphRequestFactory]; // TEMP: added to configurator
   [FBSDKButton configureWithApplicationActivationNotifier:self
                                               eventLogger:FBSDKAppEvents.shared
                                       accessTokenProvider:FBSDKAccessToken.class]; // TEMP: added to configurator

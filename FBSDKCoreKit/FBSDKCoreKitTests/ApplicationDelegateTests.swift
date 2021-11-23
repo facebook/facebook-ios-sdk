@@ -1157,6 +1157,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGateKeeperManager() {
     GateKeeperManager.reset()
     delegate.initializeSDK()
@@ -1314,6 +1315,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSettings() {
     Settings.shared.reset()
     delegate.initializeSDK()
@@ -1336,6 +1338,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGraphRequestPiggybackManager() {
     delegate.initializeSDK()
 
