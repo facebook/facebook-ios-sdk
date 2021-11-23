@@ -800,7 +800,7 @@ static UIApplicationState _applicationState;
 
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
-                                                   store:store
+                                               dataStore:store
                            graphRequestConnectionFactory:graphRequestConnectionFactory
                                                 swizzler:FBSDKSwizzler.class
                                                 settings:sharedSettings

@@ -1193,7 +1193,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete server configuration provider"
     )
     XCTAssertTrue(
-      CodelessIndexer.store === UserDefaults.standard,
+      CodelessIndexer.dataStore === UserDefaults.standard,
       "Should be configured with the standard user defaults"
     )
     XCTAssertTrue(

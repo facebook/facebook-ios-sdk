@@ -40,13 +40,13 @@
 
 @interface FBSDKCodelessIndexer ()
 
-@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nullable, nonatomic, readonly, copy) Class<FBSDKSwizzling> swizzler;
-@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
-@property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (class, nullable, nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (class, nullable, nonatomic) id<FBSDKDataPersisting> dataStore;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 
 @end
 
@@ -65,7 +65,7 @@ static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
-static id<FBSDKDataPersisting> _store;
+static id<FBSDKDataPersisting> _dataStore;
 static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static Class<FBSDKSwizzling> _swizzler;
 static id<FBSDKSettings> _settings;
@@ -74,56 +74,91 @@ static id<FBSDKSettings> _settings;
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                   store:(id<FBSDKDataPersisting>)store
+                               dataStore:(id<FBSDKDataPersisting>)dataStore
            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                 swizzler:(Class<FBSDKSwizzling>)swizzler
                                 settings:(id<FBSDKSettings>)settings
                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
   if (self == FBSDKCodelessIndexer.class) {
-    _graphRequestFactory = graphRequestFactory;
-    _serverConfigurationProvider = serverConfigurationProvider;
-    _store = store;
-    _graphRequestConnectionFactory = graphRequestConnectionFactory;
-    _swizzler = swizzler;
-    _settings = settings;
-    _advertiserIDProvider = advertiserIDProvider;
+    self.graphRequestFactory = graphRequestFactory;
+    self.serverConfigurationProvider = serverConfigurationProvider;
+    self.dataStore = dataStore;
+    self.graphRequestConnectionFactory = graphRequestConnectionFactory;
+    self.swizzler = swizzler;
+    self.settings = settings;
+    self.advertiserIDProvider = advertiserIDProvider;
   }
 }
 
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory
++ (nullable id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   return _graphRequestFactory;
 }
 
-+ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
++ (void)setGraphRequestFactory:(nullable id<FBSDKGraphRequestFactory>)graphRequestFactory
+{
+  _graphRequestFactory = graphRequestFactory;
+}
+
++ (nullable id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   return _serverConfigurationProvider;
 }
 
-+ (id<FBSDKDataPersisting>)store
++ (void)setServerConfigurationProvider:(nullable id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
-  return _store;
+  _serverConfigurationProvider = serverConfigurationProvider;
 }
 
-+ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
++ (nullable id<FBSDKDataPersisting>)dataStore
+{
+  return _dataStore;
+}
+
++ (void)setDataStore:(nullable id<FBSDKDataPersisting>)dataStore
+{
+  _dataStore = dataStore;
+}
+
++ (nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   return _graphRequestConnectionFactory;
 }
 
-+ (Class<FBSDKSwizzling>)swizzler
++ (void)setGraphRequestConnectionFactory:(nullable id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  _graphRequestConnectionFactory = graphRequestConnectionFactory;
+}
+
++ (nullable Class<FBSDKSwizzling>)swizzler
 {
   return _swizzler;
 }
 
-+ (id<FBSDKSettings>)settings
++ (void)setSwizzler:(nullable Class<FBSDKSwizzling>)swizzler
+{
+  _swizzler = swizzler;
+}
+
++ (nullable id<FBSDKSettings>)settings
 {
   return _settings;
 }
 
-+ (id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
++ (nullable id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
   return _advertiserIDProvider;
+}
+
++ (void)setAdvertiserIDProvider:(nullable id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+{
+  _advertiserIDProvider = advertiserIDProvider;
 }
 
 + (void)enable
@@ -163,7 +198,7 @@ static id<FBSDKSettings> _settings;
 
     // load the defaults
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
-    NSData *data = [self.store objectForKey:defaultKey];
+    NSData *data = [self.dataStore objectForKey:defaultKey];
     if ([data isKindOfClass:NSData.class]) {
       NSMutableDictionary<NSString *, id> *codelessSetting = nil;
       id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
@@ -201,7 +236,7 @@ static id<FBSDKSettings> _settings;
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
           // update the cached copy in user defaults
-          [self.store setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
+          [self.dataStore setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
           completionBlock(isCodelessSetupEnabled, codelessLoadingError);
         }
       }];
@@ -263,11 +298,11 @@ static id<FBSDKSettings> _settings;
     CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID],
     CODELESS_INDEXING_EXT_INFO_KEY : [self extInfo]
   };
-  id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                                         [self.settings appID],
-                                                                                         CODELESS_INDEXING_SESSION_ENDPOINT]
-                                                                             parameters:parameters
-                                                                             HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                                             [self.settings appID],
+                                                                                             CODELESS_INDEXING_SESSION_ENDPOINT]
+                                                                                 parameters:parameters
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
@@ -385,16 +420,16 @@ static id<FBSDKSettings> _settings;
 
   NSBundle *mainBundle = NSBundle.mainBundle;
   NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-  id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                                         [self.settings appID],
-                                                                                         CODELESS_INDEXING_ENDPOINT]
-                                                                             parameters:@{
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                                             [self.settings appID],
+                                                                                             CODELESS_INDEXING_ENDPOINT]
+                                                                                 parameters:@{
                                      CODELESS_INDEXING_TREE_KEY : tree,
                                      CODELESS_INDEXING_APP_VERSION_KEY : version ?: @"",
                                      CODELESS_INDEXING_PLATFORM_KEY : @"iOS",
                                      CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID]
                                    }
-                                                                             HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
   _isCodelessIndexing = YES;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCodelessIndexing = NO;
@@ -501,13 +536,13 @@ static id<FBSDKSettings> _settings;
   _isCodelessIndexingEnabled = NO;
   _isGestureSet = NO;
   _codelessSetting = nil;
-  _graphRequestFactory = nil;
-  _serverConfigurationProvider = nil;
-  _store = nil;
-  _graphRequestConnectionFactory = nil;
-  _swizzler = nil;
-  _settings = nil;
-  _advertiserIDProvider = nil;
+  self.graphRequestFactory = nil;
+  self.serverConfigurationProvider = nil;
+  self.dataStore = nil;
+  self.graphRequestConnectionFactory = nil;
+  self.swizzler = nil;
+  self.settings = nil;
+  self.advertiserIDProvider = nil;
   _deviceSessionID = nil;
   _lastTreeHash = nil;
 }

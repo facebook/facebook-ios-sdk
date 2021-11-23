@@ -12,7 +12,7 @@ import XCTest
 class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   let graphRequestFactory = TestGraphRequestFactory()
-  let store = UserDefaultsSpy()
+  let dataStore = UserDefaultsSpy()
   let connection = TestGraphRequestConnection()
   lazy var graphRequestConnectionFactory: TestGraphRequestConnectionFactory = {
     TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
@@ -45,9 +45,9 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     settings.appID = name
 
     CodelessIndexer.configure(
-      with: graphRequestFactory,
+      graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
-      store: store,
+      dataStore: dataStore,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       swizzler: TestSwizzler.self,
       settings: settings,
@@ -80,7 +80,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should not have a server configuration provider by default"
     )
     XCTAssertNil(
-      CodelessIndexer.store,
+      CodelessIndexer.dataStore,
       "Should not have a persistent data store by default"
     )
     XCTAssertNil(
@@ -112,8 +112,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should be able to configure with a server configuration provider"
     )
     XCTAssertEqual(
-      CodelessIndexer.store as? UserDefaultsSpy,
-      store,
+      CodelessIndexer.dataStore as? UserDefaultsSpy,
+      dataStore,
       "Should be able to configure with a persistent data store"
     )
     XCTAssertEqual(
@@ -224,13 +224,13 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       nil
     )
     XCTAssertNil(
-      store.capturedObjectRetrievalKey,
+      dataStore.capturedObjectRetrievalKey,
       "Should not attempt to read the cached codeless setting when codeless events are disabled"
     )
   }
 
   func testLoadingValidCachedSetting() throws {
-    store.set(archivedSetting(), forKey: codelessSettingStorageKey)
+    dataStore.set(archivedSetting(), forKey: codelessSettingStorageKey)
 
     CodelessIndexer.loadCodelessSetting { isEnabled, potentialError in
       self.capturedIsEnabled = isEnabled
@@ -240,7 +240,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertEqual(
-      store.capturedObjectRetrievalKey,
+      dataStore.capturedObjectRetrievalKey,
       codelessSettingStorageKey,
       "Should read the cached codeless setting"
     )
@@ -255,7 +255,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   }
 
   func testLoadingExpiredCachedSettingWithoutAdvertiserID() {
-    store.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion")
@@ -271,7 +271,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testLoadingExpiredCachedSettingWithAdvertiserID() {
     advertiserIDProvider.advertiserID = name
-    store.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion")
@@ -292,7 +292,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testCompletingLoadingSettingWithOnlyError() {
     advertiserIDProvider.advertiserID = name
-    store.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion if the network call completes with an error")
@@ -365,7 +365,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should complete with the enabled value from the network result"
     )
     XCTAssertEqual(
-      store.capturedSetObjectKey,
+      dataStore.capturedSetObjectKey,
       codelessSettingStorageKey,
       "Should persist the fetched setting"
     )
@@ -373,7 +373,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testCompletingLoadingNewSettingWithExpiredCachedSetting() {
     advertiserIDProvider.advertiserID = name
-    store.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     CodelessIndexer.loadCodelessSetting { isEnabled, potentialError in
       self.capturedIsEnabled = isEnabled
@@ -390,7 +390,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should complete with the enabled value from the network result"
     )
     XCTAssertEqual(
-      store.capturedSetObjectKey,
+      dataStore.capturedSetObjectKey,
       codelessSettingStorageKey,
       "Should persist the fetched setting"
     )
