@@ -10,16 +10,11 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceControllerFactory.h"
-
 @interface FBSDKGamingGroupIntegration ()
 
 @property (nonatomic) id<FBSDKGamingServiceControllerCreating> serviceControllerFactory;
 @property (nonatomic) id<FBSDKSettings> settings;
 
-@end
-
-@interface FBSDKGamingServiceControllerFactory () <FBSDKGamingServiceControllerCreating>
 @end
 
 @implementation FBSDKGamingGroupIntegration

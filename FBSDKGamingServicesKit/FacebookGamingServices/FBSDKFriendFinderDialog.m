@@ -12,11 +12,6 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceControllerFactory.h"
-
-@interface FBSDKGamingServiceControllerFactory () <FBSDKGamingServiceControllerCreating>
-@end
-
 @interface FBSDKFriendFinderDialog ()
 
 @property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;

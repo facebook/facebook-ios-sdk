@@ -12,11 +12,6 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceControllerFactory.h"
-
-@interface FBSDKGamingServiceControllerFactory () <FBSDKGamingServiceControllerCreating>
-@end
-
 @interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
 
 @property (nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
