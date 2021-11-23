@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- Fixed NSKeyedUnarchiver validateAllowedClass Warnings in Xcode Console. Fixes #1941 and #1930
 - An implementation bug in `ApplicationDelegate` where added application observers were notified twice for `application:didFinishLaunchingWithOptions:`.
 The return type of `ApplicationDelegate.application:didFinishLaunchingWithOptions:` was also incorrectly stated as, "YES if the url was intended for the Facebook SDK, NO if not". In actuality, the method returns whether there are any application observers that themselves return true from calling their implementation of `application:didFinishLaunchingWithOptions:`.
 This fix means that application observers will now only be notified once per app launch, however, if `ApplicationDelegate.application:didFinishLaunchingWithOptions:` is called after calling `ApplicationDelegate.initializeSDK` then the return type will always be false regardless of any application observers.
