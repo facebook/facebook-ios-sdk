@@ -38,8 +38,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   private class func resetTargets() {
+    AccessToken.resetClassDependencies()
     AppEvents.reset()
     AppEventsConfigurationManager.reset()
+    AppEventsState.eventProcessors = nil
     AppEventsUtility.reset()
     FBButton.resetClassDependencies()
     FeatureManager.reset()
@@ -60,6 +62,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AuthenticationStatusUtility.resetClassDependencies()
     BridgeAPIRequest.resetClassDependencies()
     CodelessIndexer.reset()
+    CrashShield.reset()
     FBWebDialogView.reset()
     FeatureExtractor.reset()
     ModelManager.reset()
@@ -68,7 +71,37 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
   // MARK: - All Platforms
 
-  func testConfiguringAppEvents() throws {
+  func testConfiguringAccessToken() {
+    XCTAssertNil(
+      AccessToken.tokenCache,
+      "AccessToken should be not have a token cache by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestConnectionFactory,
+      "AccessToken should be not have a graph request connection factory by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestPiggybackManager,
+      "AccessToken should be not have a graph request piggyback manager by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AccessToken.tokenCache === dependencies.tokenCache,
+      "Should be configured with the token cache"
+    )
+    XCTAssertTrue(
+      AccessToken.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      AccessToken.graphRequestPiggybackManager === dependencies.piggybackManager,
+      "Should be configured with the graph request piggyback manager"
+    )
+  }
+
+  func testConfiguringAppEvents() {
     XCTAssertNil(
       AppEvents.shared.gateKeeperManager,
       "AppEvents should not have a gate keeper manager by default"
@@ -291,6 +324,29 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEventsConfigurationManager.shared.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
       "AppEventsConfigurationManager should be configured with the graph request connection factory"
+    )
+  }
+
+  func testConfiguringAppEventsState() throws {
+    XCTAssertNil(
+      AppEventsState.eventProcessors,
+      "AppEventsState should not have event processors by default"
+    )
+
+    configurator.configureTargets()
+
+    let processors = try XCTUnwrap(
+      AppEventsState.eventProcessors,
+      "AppEventsState's event processors should be configured"
+    )
+    XCTAssertEqual(processors.count, 2, "AppEventsState should have two event processors")
+    XCTAssertTrue(
+      processors.first === dependencies.eventDeactivationManager,
+      "AppEventsState's event processors should be configured with the event deactivation manager"
+    )
+    XCTAssertTrue(
+      processors.last === dependencies.restrictiveDataFilterManager,
+      "AppEventsState's event processors should be configured with the restrictive data filter manager"
     )
   }
 
@@ -1010,6 +1066,36 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       CodelessIndexer.advertiserIDProvider === dependencies.advertiserIDProvider,
       "CodelessIndexer should be configured with the advertiser ID provider"
+    )
+  }
+
+  func testConfiguringCrashShield() {
+    XCTAssertNil(
+      CrashShield.settings,
+      "CrashShield should not have settings by default"
+    )
+    XCTAssertNil(
+      CrashShield.graphRequestFactory,
+      "CrashShield should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      CrashShield.featureChecking,
+      "CrashShield should not have a feature checker by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      CrashShield.settings === dependencies.settings,
+      "CrashShield should be configured with the settings"
+    )
+    XCTAssertTrue(
+      CrashShield.graphRequestFactory === dependencies.graphRequestFactory,
+      "CrashShield should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      CrashShield.featureChecking === dependencies.featureChecker,
+      "CrashShield should be configured with the feature checker"
     )
   }
 

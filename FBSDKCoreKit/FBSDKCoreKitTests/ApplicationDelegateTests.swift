@@ -462,6 +462,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresEventsProcessorsForAppEventsState() throws {
     AppEvents.reset()
     delegate.initializeSDK()
@@ -1215,6 +1216,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringCrashShield() {
     delegate.initializeSDK()
 
@@ -1260,6 +1262,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     }
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenCache() {
     AccessToken.tokenCache = nil
     delegate.initializeSDK()
@@ -1267,6 +1270,17 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       AccessToken.tokenCache is TokenCache,
       "Should be configured with expected concrete token cache"
+    )
+  }
+
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresAccessTokenGraphRequestPiggybackManager() {
+    AccessToken.graphRequestPiggybackManager = nil
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AccessToken.graphRequestPiggybackManager === GraphRequestPiggybackManager.self,
+      "Should be configured with expected concrete graph request piggyback manager"
     )
   }
 
@@ -1305,6 +1319,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenConnectionFactory() {
     AccessToken.graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
     delegate.initializeSDK()

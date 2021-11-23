@@ -21,8 +21,6 @@
 #define FBSDK_APPEVENTSTATE_RECEIPTDATA_KEY @"receipt_data"
 #define FBSDK_APPEVENTSTATE_RECEIPTID_KEY @"receipt_id"
 
-static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
-
 @interface FBSDKAppEventsState ()
 
 @property (nonatomic) NSMutableArray *mutableEvents;
@@ -31,7 +29,14 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 @implementation FBSDKAppEventsState
 
-+ (void)configureWithEventProcessors:(nonnull NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
+static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
+
++ (nullable NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
+{
+  return _eventProcessors;
+}
+
++ (void)setEventProcessors:(nullable NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {
   _eventProcessors = eventProcessors;
 }
@@ -167,8 +172,8 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 - (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents
 {
-  if (_eventProcessors != nil) {
-    for (id<FBSDKEventsProcessing> processor in _eventProcessors) {
+  if (self.class.eventProcessors != nil) {
+    for (id<FBSDKEventsProcessing> processor in self.class.eventProcessors) {
       [processor processEvents:_mutableEvents];
     }
   }
@@ -187,15 +192,5 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
   return [FBSDKBasicUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
 }
-
-#if DEBUG
- #if FBTEST
-+ (NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
-{
-  return _eventProcessors;
-}
-
- #endif
-#endif
 
 @end

@@ -707,7 +707,7 @@ static UIApplicationState _applicationState;
                                                      keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
   [FBSDKAccessToken configureWithTokenCache:tokenCache
               graphRequestConnectionFactory:graphRequestConnectionFactory
-               graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self];
+               graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self]; // TEMP: added to configurator
   FBSDKAuthenticationToken.tokenCache = tokenCache;
   [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
   FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithStore:store
@@ -721,7 +721,7 @@ static UIApplicationState _applicationState;
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator
   FBSDKAppEventsUtility.shared.deviceInformationProvider = FBSDKAppEventsDeviceInfo.shared; // TEMP: added to configurator
-  [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
+  FBSDKAppEventsState.eventProcessors = @[eventDeactivationManager, restrictiveDataFilterManager]; // TEMP: added to configurator
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:appEventsConfigurationProvider
                      serverConfigurationProvider:serverConfigurationProvider
@@ -806,7 +806,7 @@ static UIApplicationState _applicationState;
                                     advertiserIDProvider:FBSDKAppEventsUtility.shared]; // TEMP: added to configurator
   [FBSDKCrashShield configureWithSettings:sharedSettings
                       graphRequestFactory:[FBSDKGraphRequestFactory new]
-                          featureChecking:FBSDKFeatureManager.shared];
+                          featureChecking:FBSDKFeatureManager.shared]; // TEMP: added to configurator
   self.skAdNetworkReporter = nil;
   if (@available(iOS 11.3, *)) {
     self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithGraphRequestFactory:graphRequestFactory

@@ -24,7 +24,7 @@ class AppEventsStateTests: XCTestCase {
     super.setUp()
 
     setUpFixtures()
-    AppEventsState.configure(withEventProcessors: [eventsProcessor])
+    AppEventsState.eventProcessors = [eventsProcessor]
   }
 
   func setUpFixtures(

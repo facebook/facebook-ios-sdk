@@ -40,7 +40,6 @@
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKAppEventsReporter.h"
 #import "FBSDKAppEventsState.h"
-#import "FBSDKAppEventsState+Testing.h"
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsStatePersisting.h"

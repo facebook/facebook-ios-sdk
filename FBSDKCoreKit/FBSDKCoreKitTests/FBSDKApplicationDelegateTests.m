@@ -11,7 +11,7 @@
 @import TestTools;
 
 #import "FBSDKAppEvents.h"
-#import "FBSDKAppEventsState+Testing.h"
+#import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"

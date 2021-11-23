@@ -8,8 +8,10 @@
 
 #import "FBSDKCoreKitConfigurator.h"
 
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkNavigation+Internal.h"
 #import "FBSDKAppLinkUtility+Internal.h"
@@ -17,6 +19,7 @@
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKButton+Internal.h"
 #import "FBSDKCodelessIndexer+Internal.h"
+#import "FBSDKCrashShield+Internal.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
@@ -53,8 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureTargets
 {
+  [self configureAccessToken];
   [self configureAppEvents];
   [self configureAppEventsConfigurationManager];
+  [self configureAppEventsState];
   [self configureAppEventsUtility];
   [self configureButton];
   [self configureFeatureManager];
@@ -76,11 +81,19 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAuthenticationStatusUtility];
   [self configureBridgeAPIRequest];
   [self configureCodelessIndexer];
+  [self configureCrashShield];
   [self configureFeatureExtractor];
   [self configureModelManager];
   [self configureProfile];
   [self configureWebDialogView];
 #endif
+}
+
+- (void)configureAccessToken
+{
+  [FBSDKAccessToken configureWithTokenCache:self.dependencies.tokenCache
+              graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
+               graphRequestPiggybackManager:self.dependencies.piggybackManager];
 }
 
 - (void)configureAppEvents
@@ -110,6 +123,14 @@ NS_ASSUME_NONNULL_BEGIN
                                                 settings:self.dependencies.settings
                                      graphRequestFactory:self.dependencies.graphRequestFactory
                            graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
+}
+
+- (void)configureAppEventsState
+{
+  FBSDKAppEventsState.eventProcessors = @[
+    self.dependencies.eventDeactivationManager,
+    self.dependencies.restrictiveDataFilterManager
+  ];
 }
 
 - (void)configureAppEventsUtility
@@ -272,6 +293,13 @@ NS_ASSUME_NONNULL_BEGIN
                                                 swizzler:self.dependencies.swizzler
                                                 settings:self.dependencies.settings
                                     advertiserIDProvider:self.dependencies.advertiserIDProvider];
+}
+
+- (void)configureCrashShield
+{
+  [FBSDKCrashShield configureWithSettings:self.dependencies.settings
+                      graphRequestFactory:self.dependencies.graphRequestFactory
+                          featureChecking:self.dependencies.featureChecker];
 }
 
 - (void)configureFeatureExtractor
