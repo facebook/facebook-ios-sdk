@@ -465,11 +465,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     return NO;
   }
 
-  // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
-  NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
-  BOOL operatingSystemIsAdequate = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version];
-  BOOL composerIsAvailable = [self.class.socialComposeViewControllerFactory canMakeSocialComposeViewController];
-  return operatingSystemIsAdequate || composerIsAvailable;
+  return [self.class.socialComposeViewControllerFactory canMakeSocialComposeViewController];
 }
 
 - (BOOL)_canAttributeThroughShareSheet
