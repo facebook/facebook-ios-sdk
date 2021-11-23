@@ -22,7 +22,7 @@
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKModelManager.h"
-#import "FBSDKServerConfigurationManager+Internal.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKURL+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -12,7 +12,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager+Testing.h"
-#import "FBSDKServerConfigurationLoading.h"
 
 @interface FBSDKGraphRequestPiggybackManagerTests : XCTestCase
 

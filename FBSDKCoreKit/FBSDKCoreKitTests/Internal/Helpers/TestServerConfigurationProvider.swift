@@ -9,7 +9,7 @@
 import TestTools
 
 @objcMembers
-class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, ServerConfigurationLoading {
+class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
 
   var capturedCompletionBlock: ServerConfigurationBlock?
   var secondCapturedCompletionBlock: ServerConfigurationBlock?

@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKServerConfiguration;
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKServerConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +20,8 @@ typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration *_Nullabl
 NS_SWIFT_NAME(ServerConfigurationProviding)
 @protocol FBSDKServerConfigurationProviding
 
+- (FBSDKServerConfiguration *)cachedServerConfiguration;
+
 /**
   Executes the completionBlock with a valid and current configuration when it is available.
 
@@ -25,7 +29,9 @@ NS_SWIFT_NAME(ServerConfigurationProviding)
  */
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
 
-- (FBSDKServerConfiguration *)cachedServerConfiguration;
+- (void)processLoadRequestResponse:(id)result error:(nullable NSError *)error appID:(NSString *)appID;
+
+- (nullable FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
 
 @end
 

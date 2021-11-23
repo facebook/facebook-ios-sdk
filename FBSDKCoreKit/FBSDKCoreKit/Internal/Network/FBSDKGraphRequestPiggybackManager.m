@@ -17,7 +17,6 @@
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -30,7 +29,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
-static id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
+static id<FBSDKServerConfigurationProviding> _serverConfiguration;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
@@ -43,7 +42,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   return _settings;
 }
 
-+ (id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
++ (id<FBSDKServerConfigurationProviding>)serverConfiguration
 {
   return _serverConfiguration;
 }
@@ -55,7 +54,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+             serverConfiguration:(id<FBSDKServerConfigurationProviding>)serverConfiguration
              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   if (self == FBSDKGraphRequestPiggybackManager.class) {

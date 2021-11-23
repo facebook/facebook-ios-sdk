@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -21,31 +20,23 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ServerConfigurationManager)
-@interface FBSDKServerConfigurationManager : NSObject
+@interface FBSDKServerConfigurationManager : NSObject <FBSDKServerConfigurationProviding>
 
 @property (class, readonly) FBSDKServerConfigurationManager *shared;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
-  Returns the locally cached configuration.
+@property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
- The result will be valid for the appID from FBSDKSettings, but may be expired. A network request will be
- initiated to update the configuration if a valid and unexpired configuration is not available.
- */
-- (FBSDKServerConfiguration *)cachedServerConfiguration;
-
-/**
-  Executes the completionBlock with a valid and current configuration when it is available.
-
- This method will use a cached configuration if it is valid and not expired.
- */
-- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
-
-- (void)configureWithGraphRequestFactory     :(id<FBSDKGraphRequestFactory>)graphRequestFactory
-           graphRequestConnectionFactory     :(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+// UNCRUSTIFY_FORMAT_OFF
+- (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
   NS_SWIFT_NAME(configure(graphRequestFactory:graphRequestConnectionFactory:));
+// UNCRUSTIFY_FORMAT_ON
+
+- (void)clearCache;
 
 @end
 
