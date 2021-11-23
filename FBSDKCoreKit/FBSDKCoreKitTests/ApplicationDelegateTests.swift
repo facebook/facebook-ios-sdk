@@ -1348,7 +1348,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
-      GraphRequestPiggybackManager.serverConfiguration === ServerConfigurationManager.shared,
+      GraphRequestPiggybackManager.serverConfigurationProvider === ServerConfigurationManager.shared,
       "Should be configured with the expected concrete server configuration"
     )
 

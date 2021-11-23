@@ -11,7 +11,6 @@
 @import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
-#import "FBSDKGraphRequestPiggybackManager+Testing.h"
 
 @interface FBSDKGraphRequestPiggybackManagerTests : XCTestCase
 
@@ -23,8 +22,6 @@
 
 @implementation FBSDKGraphRequestPiggybackManagerTests
 
-typedef FBSDKGraphRequestPiggybackManager Manager;
-
 - (void)setUp
 {
   [super setUp];
@@ -33,10 +30,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc] initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   self.settings = [TestSettings new];
   self.settings.appID = @"abc123";
-  [Manager configureWithTokenWallet:TestAccessTokenWallet.class
-                           settings:self.settings
-                serverConfiguration:self.serverConfigurationProvider
-                graphRequestFactory:self.graphRequestFactory];
+  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:TestAccessTokenWallet.class
+                                                     settings:self.settings
+                                  serverConfigurationProvider:self.serverConfigurationProvider
+                                          graphRequestFactory:self.graphRequestFactory];
 }
 
 - (void)tearDown
@@ -57,9 +54,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testDefaultTokenWallet
 {
-  [Manager reset];
+  [FBSDKGraphRequestPiggybackManager reset];
   XCTAssertNil(
-    [Manager tokenWallet],
+    [FBSDKGraphRequestPiggybackManager tokenWallet],
     "Should not have an access token provider by default"
   );
 }
@@ -67,7 +64,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testConfiguringWithTokenWallet
 {
   XCTAssertEqualObjects(
-    [Manager tokenWallet],
+    [FBSDKGraphRequestPiggybackManager tokenWallet],
     TestAccessTokenWallet.class,
     "Should be configurable with an access token provider"
   );
@@ -77,7 +74,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   int oneDayInSeconds = 24 * 60 * 60;
   XCTAssertEqual(
-    [Manager _tokenRefreshThresholdInSeconds],
+    FBSDKGraphRequestPiggybackManager.tokenRefreshThresholdInSeconds,
     oneDayInSeconds,
     "There should be a well-known value for the token refresh threshold"
   );
@@ -87,7 +84,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   int oneHourInSeconds = 60 * 60;
   XCTAssertEqual(
-    [Manager _tokenRefreshRetryInSeconds],
+    FBSDKGraphRequestPiggybackManager.tokenRefreshRetryInSeconds,
     oneHourInSeconds,
     "There should be a well-known value for the token refresh retry threshold"
   );
@@ -98,7 +95,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testSafeForAddingWithMatchingGraphVersionWithAttachment
 {
   XCTAssertFalse(
-    [Manager _safeForPiggyback:SampleGraphRequests.withAttachment],
+    [FBSDKGraphRequestPiggybackManager isRequestSafeForPiggyback:SampleGraphRequests.withAttachment],
     "A request with an attachment is not considered safe for piggybacking"
   );
 }
@@ -106,7 +103,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testSafeForAddingWithMatchingGraphVersionWithoutAttachment
 {
   XCTAssertTrue(
-    [Manager _safeForPiggyback:SampleGraphRequests.valid],
+    [FBSDKGraphRequestPiggybackManager isRequestSafeForPiggyback:SampleGraphRequests.valid],
     "A request without an attachment is considered safe for piggybacking"
   );
 }
@@ -114,7 +111,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testSafeForAddingWithoutMatchingGraphVersionWithAttachment
 {
   XCTAssertFalse(
-    [Manager _safeForPiggyback:SampleGraphRequests.withOutdatedVersionWithAttachment],
+    [FBSDKGraphRequestPiggybackManager isRequestSafeForPiggyback:SampleGraphRequests.withOutdatedVersionWithAttachment],
     "A request with an attachment and outdated version is not considered safe for piggybacking"
   );
 }
@@ -122,7 +119,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testSafeForAddingWithoutMatchingGraphVersionWithoutAttachment
 {
   XCTAssertFalse(
-    [Manager _safeForPiggyback:SampleGraphRequests.withOutdatedVersion],
+    [FBSDKGraphRequestPiggybackManager isRequestSafeForPiggyback:SampleGraphRequests.withOutdatedVersion],
     "A request with an outdated version is not considered safe for piggybacking"
   );
 }
@@ -133,7 +130,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self.settings setAppID:@""];
 
-  [Manager addPiggybackRequests:SampleGraphRequestConnections.empty];
+  [FBSDKGraphRequestPiggybackManager addPiggybackRequests:SampleGraphRequestConnections.empty];
   XCTAssertFalse(
     [TestAccessTokenWallet wasTokenRead],
     "Adding a request without an app identifier should attempt to refresh the access token"
@@ -147,7 +144,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   id<FBSDKGraphRequestConnecting> connection = [SampleGraphRequestConnections withRequests:@[SampleGraphRequests.valid]];
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
-  [Manager addPiggybackRequests:connection];
+  [FBSDKGraphRequestPiggybackManager addPiggybackRequests:connection];
 
   XCTAssertTrue(
     [TestAccessTokenWallet wasTokenRead],
@@ -162,7 +159,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   id<FBSDKGraphRequestConnecting> connection = [SampleGraphRequestConnections withRequests:@[SampleGraphRequests.withAttachment]];
 
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
-  [Manager addPiggybackRequests:connection];
+  [FBSDKGraphRequestPiggybackManager addPiggybackRequests:connection];
 
   XCTAssertFalse(
     [TestAccessTokenWallet wasTokenRead],
@@ -177,7 +174,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     SampleGraphRequests.valid,
     SampleGraphRequests.withAttachment
                                                 ]];
-  [Manager addPiggybackRequests:connection];
+  [FBSDKGraphRequestPiggybackManager addPiggybackRequests:connection];
   XCTAssertFalse(self.serverConfigurationProvider.requestToLoadConfigurationCallWasCalled);
 }
 
@@ -189,7 +186,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
 
-  [Manager addRefreshPiggyback:connection permissionHandler:nil];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:nil];
 
   id<FBSDKGraphRequest> request = connection.capturedRequests.firstObject;
   XCTAssertNotNil(request, "Adding a refresh piggyback to a connection should add a request for refreshing the access token");
@@ -335,7 +332,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
 
-  [Manager addRefreshPiggyback:connection permissionHandler:nil];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:nil];
 
   TestGraphRequest *permissionRequest = self.graphRequestFactory.capturedRequests.lastObject;
 
@@ -523,7 +520,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithoutAccessToken
 {
   // Shouldn't add the refresh if there's no access token
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
@@ -531,7 +528,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   // Should not add the refresh if the access token is missing a refresh date
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
@@ -540,8 +537,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithOldRefreshWithOldTokenRefresh
 {
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
-  [Manager _setLastRefreshTry:NSDate.distantPast];
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantPast;
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
 
   XCTAssertNotNil([self.graphRequestFactory capturedGraphPath]);
 }
@@ -550,10 +547,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 // | true                           | false                          | false          |
 - (void)testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh
 {
-  [Manager _setLastRefreshTry:NSDate.distantPast];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantPast;
 
   TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
@@ -562,9 +559,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithRecentLastRefreshWithRecentTokenRefresh
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
-  [Manager _setLastRefreshTry:NSDate.distantFuture];
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
-  [Manager _setLastRefreshTry:NSDate.distantFuture];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantFuture;
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantFuture;
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
@@ -575,8 +572,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
 
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
-  [Manager _setLastRefreshTry:NSDate.distantFuture];
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantFuture;
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
@@ -584,12 +581,28 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
-  [Manager _setLastRefreshTry:NSDate.distantPast];
-  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
+  FBSDKGraphRequestPiggybackManager.lastRefreshTry = NSDate.distantPast;
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNotNil([self.graphRequestFactory capturedGraphPath]);
 }
 
 // MARK: - Server Configuration Piggyback
+
+- (void)testAddingServerConfigurationPiggybackWithoutAppID
+{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{ @"defaults" : @YES }];
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
+  self.settings.appID = nil;
+
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.capturedRequests.count,
+    0,
+    "Should not add a server configuration request without an app ID"
+  );
+}
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationExpiredCache
 {
@@ -605,7 +618,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self.settings setAppID:config.appID];
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
   id<FBSDKGraphRequest> request = connection.capturedRequests.firstObject;
   FBSDKGraphRequest *expectedServerConfigurationRequest = [self.serverConfigurationProvider requestToLoadServerConfiguration:@""];
 
@@ -619,10 +632,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                         @"defaults" : @YES,
                                         @"timestamp" : NSDate.date
                                       }];
+  FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
   self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
 
   XCTAssertEqual(
     connection.capturedRequests.count,
@@ -637,10 +652,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                         @"defaults" : @YES,
                                         @"timestamp" : self.twoDaysAgo
                                       }];
+  FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
   self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
 
   XCTAssertEqual(
     connection.capturedRequests.count,
@@ -660,7 +677,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
 
   XCTAssertEqual(
     connection.capturedRequests.count,
@@ -675,10 +692,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @NO
                                       }];
+  FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
   self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
 
   XCTAssertEqual(
     connection.capturedRequests.count,
@@ -693,10 +712,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES
                                       }];
+  FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
   self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  [Manager addServerConfigurationPiggyback:connection];
+  [FBSDKGraphRequestPiggybackManager addServerConfigurationPiggyback:connection];
 
   XCTAssertEqual(
     connection.capturedRequests.count,
@@ -834,7 +855,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   TestAccessTokenWallet.currentAccessToken = token;
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
 
-  [Manager addRefreshPiggyback:connection permissionHandler:nil];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:nil];
 
   // The callback that sets the token ignores the first call to it
   // because it's waiting on the permissions call to complete first.
@@ -872,7 +893,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   TestAccessTokenWallet.currentAccessToken = token;
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
 
-  [Manager addRefreshPiggyback:connection permissionHandler:permissionHandler];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:permissionHandler];
   FBSDKGraphRequestCompletion tokenRefreshRequestCompletion = connection.capturedCompletions.firstObject;
   FBSDKGraphRequestCompletion permissionsRequestCompletion = connection.capturedCompletions.lastObject;
 

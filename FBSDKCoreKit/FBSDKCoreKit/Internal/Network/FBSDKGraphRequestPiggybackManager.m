@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKGraphRequestPiggybackManager.h"
+#import "FBSDKGraphRequestPiggybackManager+Internal.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
@@ -24,44 +24,71 @@
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 
+@interface FBSDKGraphRequestPiggybackManager ()
+
+@property (nullable, nonatomic) NSDate *lastRefreshTry;
+
+@end
+
 @implementation FBSDKGraphRequestPiggybackManager
 
-static NSDate *_lastRefreshTry = nil;
-static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
+static NSDate *_lastRefreshTry;
+
+static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
 static id<FBSDKSettings> _settings;
-static id<FBSDKServerConfigurationProviding> _serverConfiguration;
+static id<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
-+ (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
++ (nullable Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   return _tokenWallet;
 }
 
-+ (id<FBSDKSettings>)settings
++ (void)setTokenWallet:(nullable Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+{
+  _tokenWallet = tokenWallet;
+}
+
++ (nullable id<FBSDKSettings>)settings
 {
   return _settings;
 }
 
-+ (id<FBSDKServerConfigurationProviding>)serverConfiguration
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
 {
-  return _serverConfiguration;
+  _settings = settings;
 }
 
-+ (id<FBSDKGraphRequestFactory>)graphRequestFactory
++ (nullable id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  return _serverConfigurationProvider;
+}
+
++ (void)setServerConfigurationProvider:(nullable id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  _serverConfigurationProvider = serverConfigurationProvider;
+}
+
++ (nullable id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   return _graphRequestFactory;
 }
 
++ (void)setGraphRequestFactory:(nullable id<FBSDKGraphRequestFactory>)graphRequestFactory
+{
+  _graphRequestFactory = graphRequestFactory;
+}
+
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(id<FBSDKServerConfigurationProviding>)serverConfiguration
+     serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   if (self == FBSDKGraphRequestPiggybackManager.class) {
-    _tokenWallet = tokenWallet;
-    _settings = settings;
-    _serverConfiguration = serverConfiguration;
-    _graphRequestFactory = graphRequestFactory;
+    self.tokenWallet = tokenWallet;
+    self.settings = settings;
+    self.serverConfigurationProvider = serverConfigurationProvider;
+    self.graphRequestFactory = graphRequestFactory;
   }
 }
 
@@ -72,7 +99,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
     id<_FBSDKGraphRequestConnecting> internalConnection = FBSDK_CAST_TO_PROTOCOL_OR_NIL(connection, _FBSDKGraphRequestConnecting);
 
     for (FBSDKGraphRequestMetadata *metadata in internalConnection.requests) {
-      if (![self _safeForPiggyback:metadata.request]) {
+      if (![self isRequestSafeForPiggyback:metadata.request]) {
         safeForPiggyback = NO;
         break;
       }
@@ -172,46 +199,56 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   NSDate *now = [NSDate date];
   NSDate *tokenRefreshDate = [self.tokenWallet currentAccessToken].refreshDate;
   if (tokenRefreshDate
-      && [now timeIntervalSinceDate:[self _lastRefreshTry]] > [self _tokenRefreshRetryInSeconds]
-      && [now timeIntervalSinceDate:tokenRefreshDate] > [self _tokenRefreshThresholdInSeconds]) {
+      && [now timeIntervalSinceDate:self.lastRefreshTry] > self.tokenRefreshRetryInSeconds
+      && [now timeIntervalSinceDate:tokenRefreshDate] > self.tokenRefreshThresholdInSeconds) {
     [self addRefreshPiggyback:connection permissionHandler:NULL];
-    [self _setLastRefreshTry:[NSDate date]];
+    self.lastRefreshTry = [NSDate date];
   }
 }
 
 + (void)addServerConfigurationPiggyback:(id<FBSDKGraphRequestConnecting>)connection
 {
-  if (![self.serverConfiguration cachedServerConfiguration].isDefaults
-      && [[NSDate date] timeIntervalSinceDate:[self.serverConfiguration cachedServerConfiguration].timestamp]
+  id<FBSDKServerConfigurationProviding> serverConfigurationProvider = self.serverConfigurationProvider;
+  if (!serverConfigurationProvider) {
+    return;
+  }
+
+  if (![serverConfigurationProvider cachedServerConfiguration].isDefaults
+      && [[NSDate date] timeIntervalSinceDate:[serverConfigurationProvider cachedServerConfiguration].timestamp]
       < FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT) {
     return;
   }
+
   NSString *appID = [self.settings appID];
-  id<FBSDKGraphRequest> serverConfigurationRequest = [self.serverConfiguration requestToLoadServerConfiguration:appID];
-  [connection addRequest:serverConfigurationRequest
-              completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
-                [self.serverConfiguration processLoadRequestResponse:result error:error appID:appID];
-              }];
+  if (appID) {
+    id<FBSDKGraphRequest> serverConfigurationRequest = [serverConfigurationProvider requestToLoadServerConfiguration:appID];
+    if (serverConfigurationRequest) {
+      [connection addRequest:serverConfigurationRequest
+                  completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
+                    [self.serverConfigurationProvider processLoadRequestResponse:result error:error appID:appID];
+                  }];
+    }
+  }
 }
 
-+ (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
++ (BOOL)isRequestSafeForPiggyback:(id<FBSDKGraphRequest>)request
 {
   BOOL isVersionSafe = [request.version isEqualToString:self.settings.graphAPIVersion];
   BOOL hasAttachments = [(id<FBSDKGraphRequest>)request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }
 
-+ (int)_tokenRefreshThresholdInSeconds
++ (int)tokenRefreshThresholdInSeconds
 {
   return FBSDKTokenRefreshThresholdSeconds;
 }
 
-+ (int)_tokenRefreshRetryInSeconds
++ (int)tokenRefreshRetryInSeconds
 {
   return FBSDKTokenRefreshRetrySeconds;
 }
 
-+ (NSDate *)_lastRefreshTry
++ (NSDate *)lastRefreshTry
 {
   if (!_lastRefreshTry) {
     _lastRefreshTry = NSDate.distantPast;
@@ -219,21 +256,20 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
   return _lastRefreshTry;
 }
 
-+ (void)_setLastRefreshTry:(NSDate *)date
++ (void)setLastRefreshTry:(NSDate *)lastRefreshTry
 {
-  _lastRefreshTry = date;
+  _lastRefreshTry = lastRefreshTry;
 }
 
 #if DEBUG && FBTEST
 
-+ (void)setTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-{
-  _tokenWallet = tokenWallet;
-}
-
 + (void)reset
 {
-  _tokenWallet = nil;
+  self.tokenWallet = nil;
+  self.settings = nil;
+  self.serverConfigurationProvider = nil;
+  self.graphRequestFactory = nil;
+
   _lastRefreshTry = nil;
 }
 

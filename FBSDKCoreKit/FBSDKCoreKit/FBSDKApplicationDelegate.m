@@ -755,7 +755,7 @@ static UIApplicationState _applicationState;
                            graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
-                                          serverConfiguration:serverConfigurationProvider
+                                  serverConfigurationProvider:serverConfigurationProvider
                                           graphRequestFactory:graphRequestFactory];
   [FBSDKButton configureWithApplicationActivationNotifier:self
                                               eventLogger:FBSDKAppEvents.shared
