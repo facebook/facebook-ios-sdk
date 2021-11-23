@@ -15,10 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @interface FBSDKGraphRequestPiggybackManager : NSObject <FBSDKGraphRequestPiggybackManaging>
 
-+ (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection;
-
-+ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(nullable FBSDKGraphRequestCompletion)permissionHandler;
-
 + (void)addRefreshPiggybackIfStale:(id<FBSDKGraphRequestConnecting>)connection;
 
 + (void)addServerConfigurationPiggyback:(id<FBSDKGraphRequestConnecting>)connection;

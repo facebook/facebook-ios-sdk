@@ -37,7 +37,7 @@
 #import "FBSDKFeatureDisabling.h"
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKGraphRequestPiggybackManaging.h"
 #import "FBSDKIntegrityParametersProcessorProvider.h"
 #import "FBSDKInternalURLOpener.h"
 #import "FBSDKMacCatalystDetermining.h"
@@ -83,7 +83,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
-@property (nonatomic, readonly) id<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (nonatomic, readonly) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
@@ -145,7 +145,7 @@ NS_SWIFT_NAME(SharedDependencies)
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                 piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                         piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings

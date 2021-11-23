@@ -223,8 +223,8 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not have an error configuration provider by default"
     )
     XCTAssertNil(
-      GraphRequestConnection.piggybackManagerProvider,
-      "GraphRequestConnection should not have a piggyback manager provider by default"
+      GraphRequestConnection.piggybackManager,
+      "GraphRequestConnection should not have a piggyback manager by default"
     )
     XCTAssertNil(
       GraphRequestConnection.settings,
@@ -274,7 +274,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should be configured with the error configuration provider"
     )
     XCTAssertTrue(
-      GraphRequestConnection.piggybackManagerProvider === dependencies.piggybackManagerProvider,
+      GraphRequestConnection.piggybackManager === dependencies.piggybackManager,
       "GraphRequestConnection should be configured with the piggyback manager provider"
     )
     XCTAssertTrue(

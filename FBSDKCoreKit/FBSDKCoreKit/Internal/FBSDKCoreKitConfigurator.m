@@ -107,7 +107,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.dependencies.urlSessionProxyFactory
                                         errorConfigurationProvider:self.dependencies.errorConfigurationProvider
-                                          piggybackManagerProvider:self.dependencies.piggybackManagerProvider
+                                                  piggybackManager:self.dependencies.piggybackManager
                                                           settings:self.dependencies.settings
                                      graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
                                                        eventLogger:self.dependencies.eventLogger

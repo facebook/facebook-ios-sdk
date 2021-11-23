@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                 piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                         piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
     _loggerFactory = loggerFactory;
     _macCatalystDeterminator = macCatalystDeterminator;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
-    _piggybackManagerProvider = piggybackManagerProvider;
+    _piggybackManager = piggybackManager;
     _restrictiveDataFilterManager = restrictiveDataFilterManager;
     _serverConfigurationProvider = serverConfigurationProvider;
     _settings = settings;

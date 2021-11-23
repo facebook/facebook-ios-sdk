@@ -32,7 +32,7 @@ enum TestSharedDependencies {
       loggerFactory: TestLoggerFactory(),
       macCatalystDeterminator: TestMacCatalystDeterminator(),
       operatingSystemVersionComparer: TestProcessInfo(),
-      piggybackManagerProvider: TestGraphRequestPiggybackManagerProvider(),
+      piggybackManager: TestGraphRequestPiggybackManager.self,
       restrictiveDataFilterManager: TestAppEventsParameterProcessor(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
       settings: TestSettings(),

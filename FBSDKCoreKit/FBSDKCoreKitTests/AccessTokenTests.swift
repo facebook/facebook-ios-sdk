@@ -15,7 +15,7 @@ class AccessTokenTests: XCTestCase {
   var tokenCache: TestTokenCache!
   var connection: TestGraphRequestConnection!
   var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
-  var graphRequestPiggybackManagerProvider: TestGraphRequestPiggybackManagerProvider!
+  var graphRequestPiggybackManager: TestGraphRequestPiggybackManager.Type!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -27,12 +27,12 @@ class AccessTokenTests: XCTestCase {
     tokenCache = TestTokenCache()
     connection = TestGraphRequestConnection()
     graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
-    graphRequestPiggybackManagerProvider = TestGraphRequestPiggybackManagerProvider()
+    graphRequestPiggybackManager = TestGraphRequestPiggybackManager.self
 
     AccessToken.configure(
       withTokenCache: tokenCache,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
-      graphRequestPiggybackManagerProvider: graphRequestPiggybackManagerProvider
+      graphRequestPiggybackManager: graphRequestPiggybackManager
     )
   }
 
@@ -56,8 +56,8 @@ class AccessTokenTests: XCTestCase {
       "Should not have a graph request connection factory by default"
     )
     XCTAssertNil(
-      AccessToken.graphRequestPiggybackManagerProvider,
-      "Should not have a graph request piggyback manager provider by default"
+      AccessToken.graphRequestPiggybackManager,
+      "Should not have a graph request piggyback manager by default"
     )
   }
 

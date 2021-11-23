@@ -48,7 +48,6 @@
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
-#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKImpressionLoggerFactory.h"
 #import "FBSDKImpressionLoggingButton+Internal.h"
 #import "FBSDKInstrumentManager.h"
@@ -672,7 +671,7 @@ static UIApplicationState _applicationState;
 
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
                                         errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
-                                          piggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]
+                                                  piggybackManager:FBSDKGraphRequestPiggybackManager.self
                                                           settings:sharedSettings
                                      graphRequestConnectionFactory:graphRequestConnectionFactory
                                                        eventLogger:FBSDKAppEvents.shared
@@ -708,7 +707,7 @@ static UIApplicationState _applicationState;
                                                      keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
   [FBSDKAccessToken configureWithTokenCache:tokenCache
               graphRequestConnectionFactory:graphRequestConnectionFactory
-       graphRequestPiggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]];
+               graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self];
   FBSDKAuthenticationToken.tokenCache = tokenCache;
   [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
   FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithStore:store
