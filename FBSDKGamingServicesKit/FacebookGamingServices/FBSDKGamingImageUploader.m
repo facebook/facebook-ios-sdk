@@ -157,8 +157,8 @@
      id<FBSDKGamingServiceController> const controller =
      [weakSelf.factory
       createWithServiceType:FBSDKGamingServiceTypeMediaAsset
-      completion:completionHandler
-      pendingResult:result];
+      pendingResult:result
+      completion:completionHandler];
 
      [controller callWithArgument:result[@"id"]];
    }];

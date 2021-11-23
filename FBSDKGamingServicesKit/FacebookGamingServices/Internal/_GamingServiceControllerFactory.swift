@@ -16,14 +16,14 @@
 @objc(FBSDKGamingServiceControllerFactory)
 public class _GamingServiceControllerFactory: NSObject, _GamingServiceControllerCreating {
   public func create(
-    with serviceType: _GamingServiceType,
-    completion: @escaping GamingServiceResultCompletion,
-    pendingResult: Any?
+    serviceType: _GamingServiceType,
+    pendingResult: [String: Any]?,
+    completion: @escaping GamingServiceResultCompletion
   ) -> _GamingServiceControllerProtocol {
     _GamingServiceController(
       serviceType: serviceType,
-      completionHandler: completion,
-      pendingResult: pendingResult as? [String: Any] ?? [:]
+      pendingResult: pendingResult ?? [:],
+      completionHandler: completion
     )
   }
 }

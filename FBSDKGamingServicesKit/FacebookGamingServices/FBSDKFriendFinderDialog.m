@@ -67,12 +67,12 @@
   id<FBSDKGamingServiceController> const controller =
   [self.factory
    createWithServiceType:FBSDKGamingServiceTypeFriendFinder
+   pendingResult:nil
    completion:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
      if (completionHandler) {
        completionHandler(success, error);
      }
-   }
-   pendingResult:nil];
+   }];
 
   [controller callWithArgument:appID];
 }
