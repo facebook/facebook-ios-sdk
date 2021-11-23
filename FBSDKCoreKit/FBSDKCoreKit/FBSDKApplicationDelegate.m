@@ -738,7 +738,7 @@ static UIApplicationState _applicationState;
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
-                                   userDataStore:self.userDataStore];
+                                   userDataStore:self.userDataStore]; // TEMP: added to configurator
 
   FBSDKImpressionLoggerFactory *impressionLoggerFactory = [[FBSDKImpressionLoggerFactory alloc] initWithGraphRequestFactory:graphRequestFactory
                                                                                                                 eventLogger:FBSDKAppEvents.shared
@@ -831,7 +831,7 @@ static UIApplicationState _applicationState;
                                                      metadataIndexer:metaIndexer
                                                  skAdNetworkReporter:self.skAdNetworkReporter
                                                      codelessIndexer:FBSDKCodelessIndexer.class
-                                                            swizzler:FBSDKSwizzler.class];
+                                                            swizzler:FBSDKSwizzler.class]; // TEMP: added to configurator
   [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class
                                        sessionDataTaskProvider:NSURLSession.sharedSession
                                              accessTokenWallet:FBSDKAccessToken.class

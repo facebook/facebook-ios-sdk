@@ -21,6 +21,9 @@
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKAppEventsReporter.h"
+#import "FBSDKAppEventsStatePersisting.h"
+#import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppLinkCreating.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkTargetCreating.h"
@@ -44,6 +47,7 @@
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKNotificationProtocols.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKPaymentObserving.h"
 #import "FBSDKRulesFromKeyProvider.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSourceApplicationTracking.h"
@@ -62,7 +66,10 @@ NS_SWIFT_NAME(SharedDependencies)
 @interface FBSDKSharedDependencies : NSObject
 
 @property (nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding> accessTokenWallet;
+@property (nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
+@property (nonatomic, readonly) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
 @property (nonatomic, readonly) id applicationActivationNotifier;
 @property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
@@ -80,9 +87,11 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, readonly) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nonatomic, readonly) Class<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
+@property (nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 @property (nonatomic, readonly) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
@@ -94,7 +103,6 @@ NS_SWIFT_NAME(SharedDependencies)
 
 #if !TARGET_OS_TV
 
-@property (nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nullable, nonatomic, readonly) id<FBAEMNetworking> aemNetworker;
 @property (nonatomic, readonly) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (nonatomic, readonly) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
@@ -114,7 +122,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) Class<FBSDKProfileProviding> profileSetter;
 @property (nonatomic, readonly) id<FBSDKRulesFromKeyProvider> rulesFromKeyProvider;
 @property (nonatomic, readonly) id<FBSDKSessionProviding> sessionDataTaskProvider;
-@property (nullable, nonatomic, readonly) id<FBSKAdNetworkReporting> skadNetworkReporter;
+@property (nullable, nonatomic, readonly) id<FBSDKAppEventsReporter, FBSKAdNetworkReporting> skAdNetworkReporter;
 @property (nonatomic, readonly) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKURLHosting> urlHoster;
@@ -124,7 +132,10 @@ NS_SWIFT_NAME(SharedDependencies)
 #endif
 
 - (instancetype)initWithAccessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
            appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                   appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
+                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
             applicationActivationNotifier:(id)applicationActivationNotifier
                       atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
@@ -142,9 +153,11 @@ NS_SWIFT_NAME(SharedDependencies)
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                                   logger:(Class<FBSDKLogging>)logger
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                          piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -155,7 +168,6 @@ NS_SWIFT_NAME(SharedDependencies)
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
-                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
@@ -174,7 +186,7 @@ NS_SWIFT_NAME(SharedDependencies)
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
-                      skadNetworkReporter:(nullable id<FBSKAdNetworkReporting>)skadNetworkReporter
+                      skAdNetworkReporter:(nullable id <FBSDKAppEventsReporter, FBSKAdNetworkReporting>) skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster

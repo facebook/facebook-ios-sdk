@@ -8,6 +8,7 @@
 
 #import "FBSDKCoreKitConfigurator.h"
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkUtility+Internal.h"
@@ -46,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureTargets
 {
+  [self configureAppEvents];
   [self configureAppEventsConfigurationManager];
   [self configureAppEventsUtility];
   [self configureButton];
@@ -58,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureServerConfigurationManager];
 
 #if !TARGET_OS_TV
+  [self configureNonTVOSAppEvents];
   [self configureAppLinkURL];
   [self configureAppLinkUtility];
   [self configureAuthenticationStatusUtility];
@@ -66,6 +69,27 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureModelManager];
   [self configureWebDialogView];
 #endif
+}
+
+- (void)configureAppEvents
+{
+  [FBSDKAppEvents.shared configureWithGateKeeperManager:self.dependencies.gateKeeperManager
+                         appEventsConfigurationProvider:self.dependencies.appEventsConfigurationProvider
+                            serverConfigurationProvider:self.dependencies.serverConfigurationProvider
+                                    graphRequestFactory:self.dependencies.graphRequestFactory
+                                         featureChecker:self.dependencies.featureChecker
+                                       primaryDataStore:self.dependencies.defaultDataStore
+                                                 logger:self.dependencies.logger
+                                               settings:self.dependencies.settings
+                                        paymentObserver:self.dependencies.paymentObserver
+                                      timeSpentRecorder:self.dependencies.timeSpentRecorder
+                                    appEventsStateStore:self.dependencies.appEventsStateStore
+                    eventDeactivationParameterProcessor:self.dependencies.eventDeactivationManager
+                restrictiveDataFilterParameterProcessor:self.dependencies.restrictiveDataFilterManager
+                                    atePublisherFactory:self.dependencies.atePublisherFactory
+                                 appEventsStateProvider:self.dependencies.appEventsStateProvider
+                                   advertiserIDProvider:self.dependencies.advertiserIDProvider
+                                          userDataStore:self.dependencies.userDataStore];
 }
 
 - (void)configureAppEventsConfigurationManager
@@ -148,6 +172,15 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Non-tvOS
 
 #if !TARGET_OS_TV
+
+- (void)configureNonTVOSAppEvents
+{
+  [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.dependencies.modelManager
+                                                            metadataIndexer:self.dependencies.metadataIndexer
+                                                        skAdNetworkReporter:self.dependencies.skAdNetworkReporter
+                                                            codelessIndexer:self.dependencies.codelessIndexer
+                                                                   swizzler:self.dependencies.swizzler];
+}
 
 - (void)configureAppLinkURL
 {

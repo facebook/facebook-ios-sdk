@@ -6,11 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable file_length
+// swiftlint:disable file_length type_body_length function_body_length
 
 import XCTest
 
-// swiftlint:disable:next type_body_length
 final class CoreKitConfiguratorTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var dependencies: SharedDependencies!
@@ -21,6 +20,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     super.setUp()
 
     Self.resetTargets()
+
     dependencies = TestSharedDependencies.makeDependencies()
     configurator = CoreKitConfigurator(dependencies: dependencies)
   }
@@ -38,6 +38,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   private class func resetTargets() {
+    AppEvents.reset()
     AppEventsConfigurationManager.reset()
     AppEventsUtility.reset()
     FBButton.resetClassDependencies()
@@ -60,6 +61,194 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   // MARK: - All Platforms
+
+  func testConfiguringAppEvents() throws {
+    XCTAssertNil(
+      AppEvents.shared.gateKeeperManager,
+      "AppEvents should not have a gate keeper manager by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsConfigurationProvider,
+      "AppEvents should not have an app events configuration provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.serverConfigurationProvider,
+      "AppEvents should not have a server configuration provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.graphRequestFactory,
+      "AppEvents should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.featureChecker,
+      "AppEvents should not have a feature checker by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.primaryDataStore,
+      "AppEvents should not have a primary data store by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.logger,
+      "AppEvents should not have a logger by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.settings,
+      "AppEvents should not have settings by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.paymentObserver,
+      "AppEvents should not have a payment observer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.timeSpentRecorder,
+      "AppEvents should not have a time spent recorder by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsStateStore,
+      "AppEvents should not have an app events state store by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.eventDeactivationParameterProcessor,
+      "AppEvents should not have an event deactivation parameter processor by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.restrictiveDataFilterParameterProcessor,
+      "AppEvents should not have a restrictive data filter parameter processor by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.atePublisherFactory,
+      "AppEvents should not have an ATE publisher factory by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsStateProvider,
+      "AppEvents should not have an app events state provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.advertiserIDProvider,
+      "AppEvents should not have an advertiser ID provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.userDataStore,
+      "AppEvents should not have a user data store by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEvents.shared.gateKeeperManager === dependencies.gateKeeperManager,
+      "AppEvents should be configured with the gate keeper manager"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsConfigurationProvider === dependencies.appEventsConfigurationProvider,
+      "AppEvents should be configured with the app events configuration provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.serverConfigurationProvider === dependencies.serverConfigurationProvider,
+      "AppEvents should be configured with the server configuration provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.graphRequestFactory === dependencies.graphRequestFactory,
+      "AppEvents should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.featureChecker === dependencies.featureChecker,
+      "AppEvents should be configured with the feature checker"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.primaryDataStore === dependencies.defaultDataStore,
+      "AppEvents should be configured with the primary data store"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.logger === dependencies.logger,
+      "AppEvents should be configured with the logger"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.settings === dependencies.settings,
+      "AppEvents should be configured with the"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.paymentObserver === dependencies.paymentObserver,
+      "AppEvents should be configured with the payment observer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.timeSpentRecorder === dependencies.timeSpentRecorder,
+      "AppEvents should be configured with the time spent recorder"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsStateStore === dependencies.appEventsStateStore,
+      "AppEvents should be configured with the app events state store"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.eventDeactivationParameterProcessor === dependencies.eventDeactivationManager,
+      "AppEvents should be configured with the event deactivation parameter processor"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.restrictiveDataFilterParameterProcessor === dependencies.restrictiveDataFilterManager,
+      "AppEvents should be configured with the restrictive data filter parameter processor"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.atePublisherFactory === dependencies.atePublisherFactory,
+      "AppEvents should be configured with the ATE publisher factory"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsStateProvider === dependencies.appEventsStateProvider,
+      "AppEvents should be configured with the app events state provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.advertiserIDProvider === dependencies.advertiserIDProvider,
+      "AppEvents should be configured with the advertiser ID provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.userDataStore === dependencies.userDataStore,
+      "AppEvents should be configured with the user data store"
+    )
+  }
+
+  func testConfiguringNonTVAppEvents() {
+    XCTAssertNil(
+      AppEvents.shared.onDeviceMLModelManager,
+      "AppEvents should not have an on-device ML model manager by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.metadataIndexer,
+      "AppEvents should not have a metadata indexer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.skAdNetworkReporter,
+      "AppEvents should not have a StoreKit ad network reporter by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.codelessIndexer,
+      "AppEvents should not have a codeless indexer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.swizzler,
+      "AppEvents should not have a swizzler by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEvents.shared.onDeviceMLModelManager === dependencies.modelManager,
+      "AppEvents should be configured with the on-device ML model manager"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.metadataIndexer === dependencies.metadataIndexer,
+      "AppEvents should be configured with the metadata indexer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.skAdNetworkReporter === dependencies.skAdNetworkReporter,
+      "AppEvents should be configured with StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.codelessIndexer === dependencies.codelessIndexer,
+      "AppEvents should be configured with the codeless indexer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.swizzler === dependencies.swizzler,
+      "AppEvents should be configured with the swizzler"
+    )
+  }
 
   func testConfiguringAppEventsConfigurationManager() {
     XCTAssertNil(
@@ -212,7 +401,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringGraphRequestConnection() {
     XCTAssertNil(
       GraphRequestConnection.sessionProxyFactory,
@@ -451,7 +639,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringAppLinkUtility() {
     XCTAssertNil(
       AppLinkUtility.graphRequestFactory,
@@ -620,7 +807,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringModelManager() {
     XCTAssertNil(
       ModelManager.shared.featureChecker,

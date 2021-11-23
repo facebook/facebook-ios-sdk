@@ -1034,6 +1034,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppEvents() throws { // swiftlint:disable:this function_body_length
     AppEvents.reset()
     delegate.initializeSDK()
@@ -1041,10 +1042,6 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       appEvents.capturedConfigureGateKeeperManager === GateKeeperManager.self,
       "Initializing the SDK should set gate keeper manager for event logging"
-    )
-    XCTAssertTrue(
-      appEvents.capturedConfigureGraphRequestFactory is GraphRequestFactory,
-      "Initializing the SDK should set graph request factory for event logging"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureAppEventsConfigurationProvider === AppEventsConfigurationManager.shared,
@@ -1055,12 +1052,16 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Initializing the SDK should set server configuration provider for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
-      "Should be configured with the expected concrete primary data store"
+      appEvents.capturedConfigureGraphRequestFactory is GraphRequestFactory,
+      "Initializing the SDK should set graph request factory for event logging"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureFeatureChecker === delegate.featureChecker,
       "Initializing the SDK should set feature checker for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
+      "Should be configured with the expected concrete primary data store"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureLogger === Logger.self,
@@ -1104,33 +1105,21 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedConfigureATEPublisherFactory is ATEPublisherFactory,
       "Initializing the SDK should set concrete ate publisher factory for event logging"
     )
-
     XCTAssertTrue(
       appEvents.capturedConfigureAppEventsStateProvider is AppEventsStateFactory,
       "Initializing the SDK should set concrete AppEvents state provider for event logging"
     )
-
-    XCTAssertTrue(
-      appEvents.capturedConfigureSwizzler === Swizzler.self,
-      "Initializing the SDK should set concrete swizzler for event logging"
-    )
-
     XCTAssertTrue(
       appEvents.capturedAdvertiserIDProvider === AppEventsUtility.shared,
       "Initializing the SDK should set concrete advertiser ID provider"
     )
-
-    XCTAssertTrue(
-      appEvents.capturedCodelessIndexer === CodelessIndexer.self,
-      "Initializing the SDK should set concrete codeless indexer"
-    )
-
     XCTAssertTrue(
       appEvents.capturedUserDataStore is UserDataStore,
       "Initializing the SDK should set the expected concrete user data store"
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringNonTVAppEventsDependencies() throws {
     AppEvents.reset()
     delegate.initializeSDK()
@@ -1138,10 +1127,6 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       appEvents.capturedOnDeviceMLModelManager === ModelManager.shared,
       "Initializing the SDK should set concrete on device model manager for event logging"
-    )
-    XCTAssertTrue(
-      appEvents.capturedSKAdNetworkReporter === delegate.skAdNetworkReporter,
-      "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
     )
 
     let metadataIndexer = try XCTUnwrap(
@@ -1155,6 +1140,19 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       metadataIndexer.swizzler === Swizzler.self,
       "Should create the meta indexer with the expected swizzzler"
+    )
+
+    XCTAssertTrue(
+      appEvents.capturedSKAdNetworkReporter === delegate.skAdNetworkReporter,
+      "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedConfigureSwizzler === Swizzler.self,
+      "Initializing the SDK should set concrete swizzler for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedCodelessIndexer === CodelessIndexer.self,
+      "Initializing the SDK should set concrete codeless indexer"
     )
   }
 

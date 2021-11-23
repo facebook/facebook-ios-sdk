@@ -11,7 +11,10 @@ enum TestSharedDependencies {
   static func makeDependencies() -> SharedDependencies {
     SharedDependencies(
       accessTokenWallet: TestAccessTokenWallet.self,
+      advertiserIDProvider: TestAdvertiserIDProvider(),
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
+      appEventsStateProvider: TestAppEventsStateProvider(),
+      appEventsStateStore: TestAppEventsStateStore(),
       applicationActivationNotifier: UninhabitedObject(),
       atePublisherFactory: TestATEPublisherFactory(),
       authenticationTokenWallet: TestAuthenticationTokenWallet.self,
@@ -29,9 +32,11 @@ enum TestSharedDependencies {
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
       graphRequestFactory: TestGraphRequestFactory(),
       infoDictionaryProvider: TestBundle(),
+      logger: TestLogger.self,
       loggerFactory: TestLoggerFactory(),
       macCatalystDeterminator: TestMacCatalystDeterminator(),
       operatingSystemVersionComparer: TestProcessInfo(),
+      paymentObserver: TestPaymentObserver(),
       piggybackManager: TestGraphRequestPiggybackManager.self,
       restrictiveDataFilterManager: TestAppEventsParameterProcessor(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
@@ -42,7 +47,6 @@ enum TestSharedDependencies {
       userDataStore: TestUserDataStore(),
 
       // Non-tvOS
-      advertiserIDProvider: TestAdvertiserIDProvider(),
       aemNetworker: TestAEMNetworker(),
       appEventParametersExtractor: TestAppEventParametersExtractor(),
       appEventsDropDeterminer: TestAppEventsDropDeterminer(),
@@ -61,7 +65,7 @@ enum TestSharedDependencies {
       profileSetter: TestProfileProvider.self,
       rulesFromKeyProvider: TestOnDeviceMLModelManager(),
       sessionDataTaskProvider: TestSessionProvider(),
-      skadNetworkReporter: TestSKAdNetworkReporter(),
+      skAdNetworkReporter: TestSKAdNetworkReporter(),
       suggestedEventsIndexer: TestSuggestedEventsIndexer(),
       swizzler: TestSwizzler.self,
       urlHoster: TestURLHoster(),
