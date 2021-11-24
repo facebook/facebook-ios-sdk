@@ -73,7 +73,7 @@ static NSString *const AMOUNT_KEY = @"amount";
     NSDictionary.class,
     NSNumber.class,
     NSString.class,
-  ]];
+                           ]];
   NSString *eventName = [decoder decodeObjectOfClass:NSString.class forKey:EVENT_NAME_KEY];
   NSDictionary<NSString *, NSNumber *> *values = [decoder decodeObjectOfClasses:classes forKey:VALUES_KEY];
   return [self initWithEventName:eventName values:values];
