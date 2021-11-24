@@ -14,16 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginManager (Testing)
 
-@property (nonatomic) FBSDKLoginManagerLoginResultBlock handler;
-@property (nonatomic) FBSDKLoginConfiguration *configuration;
-@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
-@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-@property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
-@property (nonatomic) Class<FBSDKProfileProviding> profile;
-@property (nonatomic)  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
-@property (nonatomic) id<FBSDKURLOpener> urlOpener;
-
 - (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
 
 - (nullable NSString *)loadExpectedNonce;
@@ -50,14 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(UIViewController *)viewController
                      handler:(FBSDKLoginManagerLoginResultBlock)handler;
-
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
-                   keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
-                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
-                                profile:(Class<FBSDKProfileProviding>)profile
-                              urlOpener:(id<FBSDKURLOpener>)urlOpener;
 
 @end
 

@@ -39,6 +39,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic) TestGraphRequestConnection *connection;
 @property (nonatomic) TestURLOpener *urlOpener;
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestLoginCompleter *loginCompleter;
+@property (nonatomic) TestLoginCompleterFactory *loginCompleterFactory;
+@property (nonatomic) FBSDKProfile *testUser;
 
 @end
 
@@ -60,37 +64,42 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   self.connection = [TestGraphRequestConnection new];
   self.graphRequestConnectionFactory = [[TestGraphRequestConnectionFactory alloc] initWithStubbedConnection:self.connection];
   self.urlOpener = [TestURLOpener new];
+  self.settings = [TestSettings new];
+  self.settings.appID = kFakeAppID;
+  self.loginCompleter = [TestLoginCompleter new];
+  self.loginCompleterFactory = [[TestLoginCompleterFactory alloc] initWithStubbedLoginCompleter:self.loginCompleter];
 
   self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility
                                                     keychainStoreFactory:self.keychainStoreFactory
-                                                             tokenWallet:TestAccessTokenWallet.class
+                                                       accessTokenWallet:TestAccessTokenWallet.class
                                            graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                      authenticationToken:TestAuthenticationTokenWallet.class
                                                                  profile:TestProfileProvider.class
                                                                urlOpener:self.urlOpener
+                                                                settings:self.settings
+                                                   loginCompleterFactory:self.loginCompleterFactory
   ];
 
-  FBSDKSettings.sharedSettings.appID = kFakeAppID;
-  FBSDKProfile *testUser = [[FBSDKProfile alloc] initWithUserID:@"1234"
-                                                      firstName:@"Test"
-                                                     middleName:@"Middle"
-                                                       lastName:@"User"
-                                                           name:@"Test User"
-                                                        linkURL:[NSURL URLWithString:@"https://www.facebook.com"]
-                                                    refreshDate:nil
-                                                       imageURL:[NSURL URLWithString:@"https://www.facebook.com/some_picture"]
-                                                          email:@"email@email.com"
-                                                      friendIDs:@[@"123", @"456"]
-                                                       birthday:[formatter dateFromString:@"01/01/1990"]
-                                                       ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:@{@"min" : @((long)21)}]
-                                                       hometown:[FBSDKLocation locationFromDictionary:@{@"id" : @"112724962075996",
-                                                                                                        @"name" : @"Martinez, California"}]
-                                                       location:[FBSDKLocation locationFromDictionary:@{@"id" : @"110843418940484",
-                                                                                                        @"name" : @"Seattle, Washington"}]
-                                                         gender:@"male"
-                                                      isLimited:NO
+  self.testUser = [[FBSDKProfile alloc] initWithUserID:@"1234"
+                                             firstName:@"Test"
+                                            middleName:@"Middle"
+                                              lastName:@"User"
+                                                  name:@"Test User"
+                                               linkURL:[NSURL URLWithString:@"https://www.facebook.com"]
+                                           refreshDate:nil
+                                              imageURL:[NSURL URLWithString:@"https://www.facebook.com/some_picture"]
+                                                 email:@"email@email.com"
+                                             friendIDs:@[@"123", @"456"]
+                                              birthday:[formatter dateFromString:@"01/01/1990"]
+                                              ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:@{@"min" : @((long)21)}]
+                                              hometown:[FBSDKLocation locationFromDictionary:@{@"id" : @"112724962075996",
+                                                                                               @"name" : @"Martinez, California"}]
+                                              location:[FBSDKLocation locationFromDictionary:@{@"id" : @"110843418940484",
+                                                                                               @"name" : @"Seattle, Washington"}]
+                                                gender:@"male"
+                                             isLimited:NO
   ];
-  TestProfileProvider.currentProfile = testUser;
+  TestProfileProvider.currentProfile = self.testUser;
 
   FBSDKAuthenticationToken.currentAuthenticationToken = nil;
   TestAccessTokenWallet.currentAccessToken = nil;
@@ -133,11 +142,13 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
   NSObject *internalUtility = (NSObject *)loginManager.internalUtility;
   NSObject *keychainStore = (NSObject *)loginManager.keychainStore;
-  NSObject *tokenWallet = (NSObject *)loginManager.tokenWallet;
+  NSObject *tokenWallet = (NSObject *)loginManager.accessTokenWallet;
   NSObject *graphRequestConnectionFactory = (NSObject *)loginManager.graphRequestConnectionFactory;
   NSObject *authenticationToken = (NSObject *)loginManager.authenticationToken;
   NSObject *profile = (NSObject *)loginManager.profile;
   NSObject *urlOpener = (NSObject *)loginManager.urlOpener;
+  NSObject *settings = (NSObject *)loginManager.settings;
+  NSObject *loginCompleterFactory = (NSObject *)loginManager.loginCompleterFactory;
 
   XCTAssertEqualObjects(internalUtility.class, FBSDKInternalUtility.class);
   XCTAssertEqualObjects(keychainStore.class, FBSDKKeychainStore.class);
@@ -146,52 +157,152 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(authenticationToken.class, FBSDKAuthenticationToken.class);
   XCTAssertEqualObjects(profile.class, FBSDKProfile.class);
   XCTAssertEqualObjects(urlOpener.class, FBSDKBridgeAPI.class);
+  XCTAssertEqualObjects(settings.class, FBSDKSettings.class);
+  XCTAssertEqualObjects(loginCompleterFactory.class, FBSDKLoginCompleterFactory.class);
 }
 
 // MARK: openURL Auth
 
-// verify basic case of first login and getting granted and declined permissions (is not classified as cancelled)
-- (void)testOpenURLAuth
+- (NSURL *)createMixedPermissionsURL
+{
+  return [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
+}
+
+- (void)testOpenUrlUsesLoginCompleterFactory
+{
+  XCTAssertTrue([self.loginManager application:nil openURL:[self createMixedPermissionsURL] sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedAppID,
+    self.settings.appID,
+    "Should create a login completer using the expected app identifier"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"access_token"],
+    @"sometoken"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"denied_scopes"],
+    @"email,user_friends"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"expires_in"],
+    @"5183949"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"granted_scopes"],
+    @"public_profile"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"signed_request"],
+    @"ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"state"],
+    @"{\"challenge\":\"a%20%3Dbcdef\"}"
+  );
+  XCTAssertEqualObjects(
+    self.loginCompleterFactory.capturedUrlParameters[@"user_id"],
+    @"123"
+  );
+  NSObject *authenticationTokenFactory = (NSObject *)self.loginCompleterFactory.capturedAuthenticationTokenCreator;
+  XCTAssertEqualObjects(
+    authenticationTokenFactory.class,
+    FBSDKAuthenticationTokenFactory.class,
+    "Should create a login completer using the expected authentication token factory"
+  );
+}
+
+- (void)testCompletingAuthenticationWithMixedPermissionsWithExpectedChallenge
 {
   __block BOOL handlerCalled;
-  NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
-  __weak FBSDKLoginManager *target = self.loginManager;
-
-  [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
-  __block FBSDKAccessToken *tokenAfterAuth;
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  [self.loginManager setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  [self.loginManager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     handlerCalled = YES;
-    XCTAssertFalse(result.isCancelled);
-
-    XCTAssertEqualObjects(@"sometoken", result.token.tokenString);
-    tokenAfterAuth = TestAccessTokenWallet.currentAccessToken;
-    XCTAssertEqualObjects(tokenAfterAuth, result.token);
-    XCTAssertTrue([tokenAfterAuth.userID isEqualToString:@"123"], @"failed to parse userID");
-    XCTAssertTrue([tokenAfterAuth.permissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
-    XCTAssertTrue([result.grantedPermissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
-    NSSet<NSString *> *expectedDeclined = [NSSet setWithObjects:@"email", @"user_friends", nil];
-    XCTAssertEqualObjects(tokenAfterAuth.declinedPermissions, expectedDeclined, @"unexpected permissions");
-    XCTAssertEqualObjects(result.declinedPermissions, expectedDeclined, @"unexpected permissions");
-
-    TestKeychainStore *keychainStore = (TestKeychainStore *)target.keychainStore;
-    XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
-    XCTAssertTrue(keychainStore.wasStringForKeyCalled);
-    XCTAssertNil(result.authenticationToken);
+    capturedResult = result;
   }];
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  BOOL didSet __unused = [self.keychainStore setString:kFakeChallenge
+                                                forKey:@"expected_login_challenge"
+                                         accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.accessTokenString = @"accessTokenString";
+  parameters.challenge = kFakeChallenge;
+  parameters.authenticationTokenString = @"sometoken";
+  parameters.permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObject:@"public_profile"]];
+  parameters.declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  parameters.userID = @"123";
+
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertFalse(capturedResult.isCancelled);
+  FBSDKAccessToken *tokenAfterAuth = TestAccessTokenWallet.currentAccessToken;
+  XCTAssertEqualObjects(
+    tokenAfterAuth.tokenString,
+    @"accessTokenString"
+  );
+  XCTAssertEqualObjects(
+    tokenAfterAuth.userID,
+    @"123",
+    @"failed to parse userID"
+  );
+  XCTAssertEqualObjects(
+    tokenAfterAuth.permissions,
+    [NSSet setWithObject:@"public_profile"],
+    @"unexpected permissions"
+  );
+  XCTAssertEqualObjects(
+    capturedResult.grantedPermissions,
+    [NSSet setWithObject:@"public_profile"],
+    @"unexpected permissions"
+  );
+  NSSet<NSString *> *expectedDeclined = [NSSet setWithObjects:@"email", @"user_friends", nil];
+  XCTAssertEqualObjects(
+    tokenAfterAuth.declinedPermissions,
+    expectedDeclined,
+    @"unexpected permissions"
+  );
+  XCTAssertEqualObjects(
+    capturedResult.declinedPermissions,
+    expectedDeclined,
+    @"unexpected permissions"
+  );
+  XCTAssertNil(capturedResult.authenticationToken);
+  XCTAssertNil(self.keychainStore.keychainDictionary[@"expected_login_challenge"]);
+  XCTAssertTrue(self.keychainStore.wasStringForKeyCalled);
+
   XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+}
 
-  // now test a cancel and make sure the current token is not touched.
-  url = [self authorizeURLWithParameters:@"error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_" joinedBy:@"?"];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  FBSDKAccessToken *actualTokenAfterCancel = TestAccessTokenWallet.currentAccessToken;
-  XCTAssertEqualObjects(tokenAfterAuth, actualTokenAfterCancel);
+- (void)testCompletingAuthenticationWithError
+{
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
+  [self.loginManager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    capturedResult = result;
+    capturedError = error;
+  }];
+
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.error = [NSError new];
+
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertEqualObjects(
+    TestAccessTokenWallet.currentAccessToken,
+    SampleAccessTokens.validToken,
+    "Handling a cancelled auth attempt should not affect the current access token"
+  );
+  XCTAssertNil(capturedResult);
+  XCTAssertNotNil(capturedError);
 }
 
 // verify basic case of first login and no declined permissions.
-- (void)testOpenURLAuthNoDeclines
+- (void)testCompletingAuthenticationWithoutDeclines
 {
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
   TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
@@ -203,57 +314,70 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 }
 
 // verify that recentlyDeclined is a subset of requestedPermissions (i.e., other declined permissions are not in recentlyDeclined)
-- (void)testOpenURLRecentlyDeclined
+- (void)testCompletingAuthenticationWithRecentlyDeclinedPermissions
 {
-  __block BOOL handlerCalled;
-  // receive url with denied_scopes more than what was requested.
-  NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
-
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
   FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    handlerCalled = YES;
-    XCTAssertFalse(result.isCancelled);
-    XCTAssertEqualObjects(result.declinedPermissions, [NSSet setWithObject:@"user_friends"]);
-    XCTAssertEqualObjects(result.grantedPermissions, [NSSet setWithObject:@"public_profile"]);
-
-    TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
-    XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
-    XCTAssertTrue(keychainStore.wasStringForKeyCalled);
+    capturedResult = result;
+    capturedError = error;
   };
-
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
 
   [self.loginManager setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
   [self.loginManager setHandler:handler];
-  XCTAssertTrue([self.loginManager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+  BOOL didSet __unused = [self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.accessTokenString = @"accessTokenString";
+  parameters.challenge = kFakeChallenge;
+  parameters.authenticationTokenString = @"sometoken";
+  parameters.permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObject:@"public_profile"]];
+  parameters.declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObjects:@"user_likes", @"user_friends", nil]];
+
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertFalse(capturedResult.isCancelled);
+  XCTAssertEqualObjects(capturedResult.declinedPermissions, [NSSet setWithObject:@"user_friends"]);
+  XCTAssertEqualObjects(capturedResult.grantedPermissions, [NSSet setWithObject:@"public_profile"]);
+
+  TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
+  XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
+  XCTAssertTrue(keychainStore.wasStringForKeyCalled);
+
+  XCTAssertNil(capturedError);
 }
 
-- (void)testOpenURLNoGrantedPermission
+- (void)testCompletingAuthenticationWithoutGrantedPermissions
 {
-  __block BOOL handlerCalled;
-  // receive url with denied_scopes more than what was requested.
-  NSURL *url = [self authorizeURLWithFragment:@"denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
   FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    handlerCalled = YES;
-    XCTAssertNil(result.token);
-
-    TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
-    XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
-    XCTAssertTrue(keychainStore.wasStringForKeyCalled);
+    capturedResult = result;
+    capturedError = error;
   };
-  FBSDKLoginManager *target = self.loginManager;
-  [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
-  target.handler = handler;
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+  [self.loginManager setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
+  self.loginManager.handler = handler;
+
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.accessTokenString = @"accessTokenString";
+  parameters.challenge = kFakeChallenge;
+  parameters.authenticationTokenString = @"sometoken";
+  parameters.declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObjects:@"user_likes", @"user_friends", nil]];
+
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertNil(capturedResult.token);
+
+  TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
+  XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
+  XCTAssertTrue(keychainStore.wasStringForKeyCalled);
 }
 
 // verify that a reauth for already granted permissions is not treated as a cancellation.
-- (void)testOpenURLReauthSamePermissionsIsNotCancelled
+- (void)testCompletingReauthenticationSamePermissionsIsNotCancelled
 {
-  // XCTestExpectation *expectation = [self expectationWithDescription:@"completed reauth"];
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile", @"read_stream"]
@@ -288,7 +412,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 // verify that a reauth for already granted permissions is not treated as a cancellation.
 - (void)testOpenURLReauthNoPermissionsIsNotCancelled
 {
-  // XCTestExpectation *expectation = [self expectationWithDescription:@"completed reauth"];
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile", @"read_stream"]
@@ -316,39 +439,52 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 }
 
-- (void)testOpenURLWithBadChallenge
+- (void)testCompletingAuthenticationWithBadChallenge
 {
-  __block BOOL handlerCalled;
-  NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"
-                                    challenge:@"someotherchallenge"];
-  FBSDKLoginManager *target = self.loginManager;
-  [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    XCTAssertNotNil(error);
-    XCTAssertNil(result.token);
-    handlerCalled = YES;
-  }];
+  // Sets challenge that will not be matched by the parameters
+  BOOL didSet __unused = [self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    capturedResult = result;
+    capturedError = error;
+  };
 
-  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+  [self.loginManager setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  [self.loginManager setHandler:handler];
+
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.accessTokenString = @"accessTokenString";
+  parameters.challenge = @"someotherchallenge";
+  parameters.authenticationTokenString = @"sometoken";
+  parameters.declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObjects:@"user_likes", @"user_friends", nil]];
+
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertNotNil(capturedError);
+  XCTAssertNil(capturedResult);
 }
 
-- (void)testOpenURLWithNoChallengeAndError
+- (void)testCompletingAuthenticationWithNoChallengeAndError
 {
-  __block BOOL handlerCalled;
-  NSURL *url = [self authorizeURLWithParameters:@"error=some_error&error_code=999&error_message=Errorerror_reason=foo#_=_" joinedBy:@"?"];
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    capturedResult = result;
+    capturedError = error;
+  };
 
-  FBSDKLoginManager *target = self.loginManager;
-  [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    handlerCalled = YES;
-    XCTAssertNotNil(error);
-  }];
+  [self.loginManager setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  [self.loginManager setHandler:handler];
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.error = [NSError new];
 
-  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
+
+  XCTAssertNil(capturedResult);
+  XCTAssertNotNil(capturedError);
 }
 
 - (void)testOpenURLWithNonFacebookURL
@@ -358,6 +494,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   target.state = FBSDKLoginManagerStatePerformingLogin;
 
   XCTAssertFalse([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  XCTAssertNil(self.loginCompleter.capturedCompletionHandler);
   XCTAssertEqual(
     target.state,
     FBSDKLoginManagerStateIdle,
@@ -367,8 +505,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testOpenURLAuthWithAuthenticationToken
 {
-  __block BOOL handlerCalled;
-  FBSDKAuthenticationTokenFactory.skipSignatureVerification = YES;
+  BOOL didSet __unused = [self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  didSet = [self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 
   NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
   NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
@@ -376,70 +514,46 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
 
   NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSArray *permissions = @[
-    @"public_profile",
-    @"email",
-    @"user_friends",
-    @"user_birthday",
-    @"user_age_range",
-    @"user_hometown",
-    @"user_location",
-    @"user_gender",
-    @"user_link"
-  ];
-  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=%@&id_token=%@", [permissions componentsJoinedByString:@","], tokenString] challenge:kFakeChallenge];
 
-  __weak FBSDKLoginManager *target = self.loginManager;
-  FBSDKAccessToken.currentAccessToken = nil;
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    handlerCalled = YES;
-    XCTAssertFalse(result.isCancelled);
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    capturedResult = result;
+    capturedError = error;
+  };
 
-    FBSDKAuthenticationToken *authToken = result.authenticationToken;
-    XCTAssertNotNil(authToken);
-    [self validateAuthenticationToken:authToken expectedTokenString:tokenString];
+  [self.loginManager setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  [self.loginManager setHandler:handler];
 
-    TestKeychainStore *keychainStore = (TestKeychainStore *)target.keychainStore;
-    XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
-    XCTAssertTrue(keychainStore.wasStringForKeyCalled);
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.authenticationTokenString = tokenString;
+  parameters.authenticationToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:kFakeNonce];
+  parameters.challenge = kFakeChallenge;
+  parameters.profile = self.testUser;
+  parameters.permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObject:@"public_profile"]];
 
-    [self validateProfile:TestProfileProvider.currentProfile];
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
 
-    XCTAssertNil(result.token);
-  }];
+  XCTAssertNotNil(capturedResult);
+  XCTAssertNil(capturedError);
+  XCTAssertFalse(capturedResult.isCancelled);
+  XCTAssertNotNil(capturedResult.authenticationToken);
 
-  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  [self validateAuthenticationToken:capturedResult.authenticationToken expectedTokenString:tokenString];
 
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
+  XCTAssertNil(self.keychainStore.keychainDictionary[@"expected_login_challenge"]);
+  XCTAssertTrue(self.keychainStore.wasStringForKeyCalled);
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  [self validateProfile:TestProfileProvider.currentProfile];
 
-  XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
-
-  FBSDKAuthenticationTokenFactory.skipSignatureVerification = NO;
+  XCTAssertNil(capturedResult.token);
 }
 
-- (void)testOpenURLAuthWithInvalidAuthenticationToken
+- (void)testCompletingAuthenticationWithAuthenticationTokenWithAccessToken
 {
-  __block BOOL resultBlockInvoked = NO;
-  NSURL *url = [self authorizeURLWithFragment:@"id_token=invalid_token" challenge:kFakeChallenge];
-  __weak FBSDKLoginManager *target = self.loginManager;
+  BOOL didSet __unused = [self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    XCTAssertNotNil(error);
-    TestAuthenticationTokenWallet.currentAuthenticationToken = nil;
-    resultBlockInvoked = YES;
-  }];
-
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  XCTAssertTrue(resultBlockInvoked, "Should invoke completion synchronously");
-}
-
-- (void)testOpenURLAuthWithAuthenticationTokenWithAccessToken
-{
-  __block BOOL handlerCalled;
-  __weak FBSDKLoginManager *target = self.loginManager;
-  FBSDKAuthenticationTokenFactory.skipSignatureVerification = YES;
+  didSet = [self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 
   NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
   NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
@@ -447,35 +561,35 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
 
   NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSString *fragment = [@"granted_scopes=public_profile%2Cemail%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&id_token=" stringByAppendingString:tokenString];
-  NSURL *url = [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
 
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    XCTAssertFalse(result.isCancelled);
+  __block FBSDKLoginManagerLoginResult *capturedResult;
+  __block NSError *capturedError;
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    capturedResult = result;
+    capturedError = error;
+  };
 
-    FBSDKAuthenticationToken *authToken = result.authenticationToken;
+  [self.loginManager setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
+  [self.loginManager setHandler:handler];
 
-    XCTAssertNotNil(authToken);
-    [self validateAuthenticationToken:authToken expectedTokenString:tokenString];
+  FBSDKLoginCompletionParameters *parameters = [FBSDKLoginCompletionParameters new];
+  parameters.authenticationTokenString = tokenString;
+  parameters.authenticationToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:kFakeNonce];
+  parameters.challenge = kFakeChallenge;
+  parameters.profile = self.testUser;
+  parameters.permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithObject:@"public_profile"]];
 
-    TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
-    XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
-    XCTAssertTrue(keychainStore.wasStringForKeyCalled);
+  [self.loginManager completeAuthentication:parameters expectChallenge:YES];
 
-    [self validateProfile:TestProfileProvider.currentProfile];
+  XCTAssertFalse(capturedResult.isCancelled);
+  XCTAssertNotNil(capturedResult.authenticationToken);
+  [self validateAuthenticationToken:capturedResult.authenticationToken expectedTokenString:tokenString];
 
-    handlerCalled = YES;
-  }];
+  TestKeychainStore *keychainStore = (TestKeychainStore *)self.loginManager.keychainStore;
+  XCTAssertNil(keychainStore.keychainDictionary[@"expected_login_challenge"]);
+  XCTAssertTrue(keychainStore.wasStringForKeyCalled);
 
-  XCTAssertTrue([self.keychainStore setString:kFakeNonce forKey:@"expected_login_nonce" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
-
-  XCTAssertTrue([self.keychainStore setString:kFakeChallenge forKey:@"expected_login_challenge" accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]);
-
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-
-  XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
-
-  FBSDKAuthenticationTokenFactory.skipSignatureVerification = NO;
+  [self validateProfile:TestProfileProvider.currentProfile];
 }
 
 // MARK: FBSDKURLOpening
@@ -583,6 +697,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
+  self.internalUtility.stubbedURL = [NSURL URLWithString:@"www.example.com"];
   NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
@@ -604,6 +719,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingLimited];
 
+  self.internalUtility.stubbedURL = [NSURL URLWithString:@"www.example.com"];
   NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"browser_auth"];
 
   [self validateCommonLoginParameters:params];
@@ -642,6 +758,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
+  self.internalUtility.stubbedURL = [NSURL URLWithString:@"www.example.com"];
   NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
@@ -663,7 +780,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                      authType:FBSDKLoginAuthTypeReauthorize];
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
-
+  self.internalUtility.stubbedURL = [NSURL URLWithString:@"www.example.com"];
   NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config loggingToken:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
@@ -984,7 +1101,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
   XCTAssertEqualObjects(params[@"return_scopes"], @"true");
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
-  XCTAssertEqualObjects(params[@"ies"], @(FBSDKSettings.sharedSettings.isAutoLogAppEventsEnabled));
+  XCTAssertEqualObjects(params[@"ies"], @(self.settings.isAutoLogAppEventsEnabled));
   XCTAssertNotNil(params[@"e2e"]);
 
   NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
@@ -994,9 +1111,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   long long cbt = [params[@"cbt"] longLongValue];
   long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
-
-  NSString *expectedRedirectUri = [NSString stringWithFormat:@"fb%@://authorize/", kFakeAppID];
-  XCTAssertEqualObjects(params[@"redirect_uri"], expectedRedirectUri);
+  XCTAssertEqualObjects(params[@"redirect_uri"], self.internalUtility.stubbedURL.absoluteString);
 }
 
 - (void)validateProfile:(FBSDKProfile *)profile
@@ -1064,9 +1179,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)mockURLScheme
 {
+  NSString *scheme = [NSString stringWithFormat:@"fb%@", self.settings.appID];
   TestBundle *bundle = [[TestBundle alloc] initWithInfoDictionary:@{
                           @"CFBundleURLTypes" : @[
-                            @{ @"CFBundleURLSchemes" : @[@"fb7391628439"] }
+                            @{ @"CFBundleURLSchemes" : @[scheme] }
                           ]
                         }];
 
