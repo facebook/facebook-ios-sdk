@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)storeExpectedNonce:(nullable NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
 
-- (FBSDKLoginConfiguration *)configuration;
-
 - (void)storeExpectedNonce:(nullable NSString *)nonceExpected;
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
@@ -32,8 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                         withToken:(FBSDKAccessToken *)currentToken
                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken
-                      withResult:(nullable FBSDKLoginManagerLoginResult *)loginResult;
+                      withResult:(nullable FBSDKLoginManagerLoginResult *)loginResult
+NS_SWIFT_NAME(validateReauthentication(accessToken:result:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
 

@@ -56,6 +56,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nullable, nonatomic, strong) FBSDKLoginConfiguration *config;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
+@property (nonatomic, readonly) BOOL isPerformingLogin;
 
 @property (nullable, nonatomic, readonly, copy) NSString *loadExpectedChallenge;
 @property (nullable, nonatomic, readonly, copy) NSString *loadExpectedNonce;
@@ -77,8 +78,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // made available for testing only
 - (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(nullable FBSDKLoginConfiguration *)configuration
-                                                               loggingToken:(NSString *)loggingToken
-                                                                     logger:(FBSDKLoginManagerLogger *)logger
+                                                               loggingToken:(nullable NSString *)loggingToken
+                                                                     logger:(nullable FBSDKLoginManagerLogger *)logger
                                                                  authMethod:(NSString *)authMethod;
 
 // for testing only
@@ -90,7 +91,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)handleImplicitCancelOfLogIn;
 - (void)invokeHandler:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error;
 - (BOOL)validateLoginStartState;
-- (BOOL)isPerformingLogin;
 + (NSString *)stringForChallenge;
 - (void)storeExpectedChallenge:(nullable NSString *)expectedChallenge;
 

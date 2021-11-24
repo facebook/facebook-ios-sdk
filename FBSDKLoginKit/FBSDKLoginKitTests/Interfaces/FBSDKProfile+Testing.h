@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification;
 
++ (void)reset;
+
 @end
 
 NS_ASSUME_NONNULL_END
