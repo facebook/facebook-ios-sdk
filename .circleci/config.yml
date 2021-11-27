@@ -1,91 +1,37 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+# For a detailed guide to building and testing on iOS, read the docs:
+# https://circleci.com/docs/2.0/testing-ios/
 version: 2.1
 
-executors:
-  xcode:
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  build:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     macos:
-      xcode: "12.5.1"
+      xcode: 11.0.0 # Specify the Xcode version to use
 
-useMacOS: &useMacOS
-  executor: xcode
-
-requiresSetup: &requiresSetup
-  requires:
-    - setup
-
-tagFilters: &onlyRunOnTags
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
-
-commands:
-  setup:
-    description: Runs before each job and checks out the source code and installs dependencies
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - install_gems
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
+      - run: pod install # Install CocoaPods dependencies
+      - run: fastlane scan # Run tests using Fastlane
 
-  install_gems:
-    description: Installs ruby gems in the Gemfile
-    steps:
-      - run:
-          name: Set Ruby Version
-          command: echo 'chruby ruby-2.7' >> ~/.bash_profile
-      - run: gem install cocoapods
+      # Collect XML test results data to show in the UI, and save the same XML
+      # files under test-results folder in the Artifacts tab
+      - store_test_results:
+          path: test_output
+      - store_artifacts:
+          path: test_output
+          destination: scan-output
 
-  publish_cocoapods:
-    description: Pushes all CocoaPods to trunk
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/publish_cocoapods.sh
-
-  publish_to_github:
-    description: Creates a draft for a release on github
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          STRIPPED_VERSION_NUMBER=${CIRCLE_TAG//.}
-          STRIPPED_VERSION_NUMBER=${STRIPPED_VERSION_NUMBER//v}
-
-          ghr \
-            --token ${GITHUB_ACCESS_TOKEN} \
-            --username ${CIRCLE_PROJECT_USERNAME} \
-            --repository ${CIRCLE_PROJECT_REPONAME}  \
-            --commitish ${CIRCLE_SHA1} \
-            --name "Facebook SDK ${CIRCLE_TAG}" \
-            --body "Consult [Changelog](https://github.com/facebook/facebook-ios-sdk/blob/main/CHANGELOG.md#${STRIPPED_VERSION_NUMBER})" \
-            --draft \
-            ${CIRCLE_TAG}
-
-jobs:
-  setup:
-    <<: *useMacOS
-    steps:
-      - setup
-  publish-cocoapods:
-    <<: *useMacOS
-    steps:
-      - publish_cocoapods
-  publish-to-github:
-    docker:
-      - image: cibuilds/github:0.13
-    steps:
-      - publish_to_github
-
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  release:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - setup:
-          <<: *onlyRunOnTags
-      - publish-to-github:
-          <<: *onlyRunOnTags
-      - publish-cocoapods:
-          <<: *onlyRunOnTags
-          <<: *requiresSetup
+      - build
