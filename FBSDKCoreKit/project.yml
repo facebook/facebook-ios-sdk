@@ -350,7 +350,6 @@ schemes:
     test:
       targets:
         - FBSDKCoreKitTests
-        - FBSDKCoreKit_Basics/FBSDKCoreKit_BasicsTests
       coverageTargets:
         - FBSDKCoreKit-Dynamic
   FBSDKCoreKit_TV-Static:

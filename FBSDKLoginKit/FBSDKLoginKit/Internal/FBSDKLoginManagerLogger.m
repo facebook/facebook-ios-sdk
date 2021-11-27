@@ -10,7 +10,6 @@
 
 #import "FBSDKLoginManagerLogger.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKLoginAppEventName.h"
@@ -183,10 +182,9 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   return params;
 }
 
-- (void)willAttemptAppSwitchingBehavior
+- (void)willAttemptAppSwitchingBehaviorWithUrlScheme:(NSString *)urlScheme
 {
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
-  BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:defaultUrlScheme];
+  BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:urlScheme];
 
   BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
   BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];

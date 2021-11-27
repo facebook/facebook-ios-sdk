@@ -44,8 +44,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   func testWithNonHttpUrlScheme() {
     api.expectingBackground = true // So we can check that it's unchanged
     let nonHTTPUrl = URL(string: "file://example.com")! // swiftlint:disable:this force_unwrapping
-    api.openURL(
-      withSafariViewController: nonHTTPUrl,
+    api.openURLWithSafariViewController(
+      url: nonHTTPUrl,
       sender: nil,
       from: nil,
       handler: uninvokedSuccessBlock()
@@ -70,8 +70,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     loginManager.stubbedIsAuthenticationUrl = true
     api.expectingBackground = true
 
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: nil,
       handler: uninvokedSuccessBlock()
@@ -89,8 +89,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     loginManager.stubbedIsAuthenticationUrl = false
     api.expectingBackground = true
 
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: nil,
       handler: uninvokedSuccessBlock()
@@ -109,8 +109,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     loginManager.stubbedIsAuthenticationUrl = false
     api.expectingBackground = true
 
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: nil,
       handler: uninvokedSuccessBlock()
@@ -133,8 +133,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     loginManager.stubbedIsAuthenticationUrl = false
     api.expectingBackground = true
 
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: nil,
       handler: uninvokedSuccessBlock()
@@ -163,8 +163,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       didInvokeHandler = true
     }
 
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: spy,
       handler: handler
@@ -222,8 +222,8 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       XCTAssertNil(error, "Should not call the handler with an error")
       didInvokeHandler = true
     }
-    api.openURL(
-      withSafariViewController: sampleUrl,
+    api.openURLWithSafariViewController(
+      url: sampleUrl,
       sender: loginManager,
       from: spy,
       handler: handler

@@ -65,7 +65,7 @@ class LoginCompletionTests: XCTestCase {
   }
 
   func testSettingProfileProvider() {
-    let provider = TestProfileFactory(stubbedProfile: SampleUserProfiles.valid)
+    let provider = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
     LoginURLCompleter.profileFactory = provider
 
     XCTAssertTrue(
@@ -481,7 +481,7 @@ class LoginCompletionTests: XCTestCase {
   // MARK: Profile
 
   func testCreateProfileWithClaims() throws {
-    let factory = TestProfileFactory(stubbedProfile: SampleUserProfiles.valid)
+    let factory = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
     LoginURLCompleter.profileFactory = factory
 
     let claim = try XCTUnwrap(

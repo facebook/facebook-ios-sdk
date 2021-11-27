@@ -29,8 +29,6 @@
 @property (nonatomic) TestErrorConfiguration *errorConfiguration;
 @property (nonatomic) TestErrorConfigurationProvider *errorConfigurationProvider;
 @property (nonatomic) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
-@property (nonatomic) TestGraphRequestPiggybackManager *piggybackManager;
-@property (nonatomic) TestGraphRequestPiggybackManagerProvider *graphRequestPiggybackManagerProvider;
 @property (nonatomic) TestSettings *settings;
 @property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 @property (nonatomic) TestEventLogger *eventLogger;
@@ -65,8 +63,6 @@
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
-  self.piggybackManager = [TestGraphRequestPiggybackManager new];
-  self.graphRequestPiggybackManagerProvider = [TestGraphRequestPiggybackManagerProvider new];
   self.settings = [TestSettings new];
   self.settings.appID = self.appID;
   self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
@@ -76,7 +72,7 @@
   self.errorFactory = [TestErrorFactory new];
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.sessionFactory
                                         errorConfigurationProvider:self.errorConfigurationProvider
-                                          piggybackManagerProvider:self.graphRequestPiggybackManagerProvider
+                                                  piggybackManager:TestGraphRequestPiggybackManager.self
                                                           settings:self.settings
                                      graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                        eventLogger:self.eventLogger
@@ -151,8 +147,8 @@
     @"A graph request connection should not have a error configuration provider by default"
   );
   XCTAssertNil(
-    FBSDKGraphRequestConnection.piggybackManagerProvider,
-    @"A graph request connection should not have a piggyback manager provider by default"
+    FBSDKGraphRequestConnection.piggybackManager,
+    @"A graph request connection should not have a piggyback manager by default"
   );
   XCTAssertNil(
     FBSDKGraphRequestConnection.settings,
@@ -210,9 +206,9 @@
     @"A graph request connection should persist the error configuration provider it was created with"
   );
   XCTAssertEqualObjects(
-    FBSDKGraphRequestConnection.piggybackManagerProvider,
-    self.graphRequestPiggybackManagerProvider,
-    @"A graph request connection should persist the piggyback manager provider it was created with"
+    FBSDKGraphRequestConnection.piggybackManager,
+    TestGraphRequestPiggybackManager.self,
+    @"A graph request connection should persist the piggyback manager it was created with"
   );
   XCTAssertEqualObjects(
     FBSDKGraphRequestConnection.settings,

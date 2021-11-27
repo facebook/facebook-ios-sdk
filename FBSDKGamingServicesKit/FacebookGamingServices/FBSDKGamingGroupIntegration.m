@@ -10,16 +10,11 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceControllerFactory.h"
-
 @interface FBSDKGamingGroupIntegration ()
 
 @property (nonatomic) id<FBSDKGamingServiceControllerCreating> serviceControllerFactory;
 @property (nonatomic) id<FBSDKSettings> settings;
 
-@end
-
-@interface FBSDKGamingServiceControllerFactory () <FBSDKGamingServiceControllerCreating>
 @end
 
 @implementation FBSDKGamingGroupIntegration
@@ -52,12 +47,12 @@
   id<FBSDKGamingServiceController> const controller =
   [self.serviceControllerFactory
    createWithServiceType:FBSDKGamingServiceTypeCommunity
+   pendingResult:nil
    completion:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
      if (completionHandler) {
        completionHandler(success, error);
      }
-   }
-   pendingResult:nil];
+   }];
 
   [controller callWithArgument:self.settings.appID];
 }

@@ -25,7 +25,7 @@ class AuthenticationStatusUtilityTests: XCTestCase {
 
     TestAccessTokenWallet.stubbedCurrentAccessToken = SampleAccessTokens.validToken
     TestAuthenticationTokenWallet.currentAuthenticationToken = SampleAuthenticationToken.validToken
-    TestProfileProvider.current = SampleUserProfiles.valid
+    TestProfileProvider.current = SampleUserProfiles.createValid()
 
     sessionDataTask = TestSessionDataTask()
     sessionDataTaskProvider = TestSessionProvider()

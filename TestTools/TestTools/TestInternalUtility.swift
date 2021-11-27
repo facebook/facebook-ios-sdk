@@ -29,7 +29,7 @@ public class TestInternalUtility: NSObject,
     queryParameters: [String: Any],
     error errorRef: NSErrorPointer
   ) -> URL {
-    URL(string: "facebook.com")! // swiftlint:disable:this force_unwrapping
+    stubbedURL ?? URL(string: "facebook.com")! // swiftlint:disable:this force_unwrapping
   }
 
   public func appURL(
@@ -38,7 +38,7 @@ public class TestInternalUtility: NSObject,
     queryParameters: [String: Any],
     error errorRef: NSErrorPointer
   ) -> URL {
-    URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
+    stubbedURL ?? URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
   }
 
   public func appURLScheme() -> String {

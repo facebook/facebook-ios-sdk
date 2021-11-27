@@ -26,13 +26,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCodelessIndexer (Internal) <FBSDKCodelessIndexing>
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                   store:(id<FBSDKDataPersisting>)store
+                               dataStore:(id<FBSDKDataPersisting>)dataStore
            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                 swizzler:(Class<FBSDKSwizzling>)swizzler
                                 settings:(id<FBSDKSettings>)settings
-                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
+                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider
+NS_SWIFT_NAME(configure(graphRequestFactory:serverConfigurationProvider:dataStore:graphRequestConnectionFactory:swizzler:settings:advertiserIDProvider:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

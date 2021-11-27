@@ -20,7 +20,6 @@
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestDataAttachment.h"
-#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
@@ -102,7 +101,7 @@ static BOOL _canMakeRequests = NO;
 static BOOL _hasBeenConfigured = NO;
 static id<FBSDKURLSessionProxyProviding> _sessionProxyFactory;
 static id<FBSDKErrorConfigurationProviding> _errorConfigurationProvider;
-static id<FBSDKGraphRequestPiggybackManagerProviding> _piggybackManagerProvider;
+static Class<FBSDKGraphRequestPiggybackManaging> _piggybackManager;
 static id<FBSDKSettings> _settings;
 static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static id<FBSDKEventLogging> _eventLogger;
@@ -143,14 +142,14 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   _errorConfigurationProvider = errorConfigurationProvider;
 }
 
-+ (nullable id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
++ (nullable Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
 {
-  return _piggybackManagerProvider;
+  return _piggybackManager;
 }
 
-+ (void)setPiggybackManagerProvider:(nullable id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
++ (void)setPiggybackManager:(nullable Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
 {
-  _piggybackManagerProvider = piggybackManagerProvider;
+  _piggybackManager = piggybackManager;
 }
 
 + (nullable id<FBSDKSettings>)settings
@@ -245,7 +244,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 + (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
                  errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                   piggybackManagerProvider:(nonnull id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                           piggybackManager:(nonnull Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
                                    settings:(nonnull id<FBSDKSettings>)settings
               graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
                                 eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
@@ -262,7 +261,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
   self.sessionProxyFactory = proxyFactory;
   self.errorConfigurationProvider = errorConfigurationProvider;
-  self.piggybackManagerProvider = piggybackManagerProvider;
+  self.piggybackManager = piggybackManager;
   self.settings = settings;
   self.graphRequestConnectionFactory = factory;
   self.eventLogger = eventLogger;
@@ -283,7 +282,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.hasBeenConfigured = NO;
   self.sessionProxyFactory = nil;
   self.errorConfigurationProvider = nil;
-  self.piggybackManagerProvider = nil;
+  self.piggybackManager = nil;
   self.settings = nil;
   self.graphRequestConnectionFactory = nil;
   self.eventLogger = nil;
@@ -388,8 +387,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
                                  logEntry:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
-  Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.class.piggybackManagerProvider piggybackManager];
-  [piggybackManager.class addPiggybackRequests:self];
+  [self.class.piggybackManager addPiggybackRequests:self];
   NSMutableURLRequest *request = [self requestWithBatch:self.requests timeout:self.timeout];
 
   self.state = kStateStarted;

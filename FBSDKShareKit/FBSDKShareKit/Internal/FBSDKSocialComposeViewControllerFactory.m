@@ -21,7 +21,11 @@
 
 - (BOOL)canMakeSocialComposeViewController
 {
-  return [SLComposeViewController isAvailableForServiceType:FBSDKSocialComposeServiceType];
+  // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
+  NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
+  BOOL operatingSystemIsAdequate = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version];
+  BOOL composerIsAvailable = [SLComposeViewController isAvailableForServiceType:FBSDKSocialComposeServiceType];
+  return operatingSystemIsAdequate || composerIsAvailable;
 }
 
 - (nullable id<FBSDKSocialComposeViewController>)makeSocialComposeViewController

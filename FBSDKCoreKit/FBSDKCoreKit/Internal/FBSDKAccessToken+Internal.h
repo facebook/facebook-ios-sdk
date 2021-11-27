@@ -10,18 +10,18 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
-#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKGraphRequestPiggybackManaging.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAccessToken (Internal)
 
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nullable, nonatomic) id<FBSDKGraphRequestPiggybackManagerProviding> graphRequestPiggybackManagerProvider;
+@property (class, nullable, nonatomic) Class<FBSDKGraphRequestPiggybackManaging> graphRequestPiggybackManager;
 
-+ (void)       configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
-         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-  graphRequestPiggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider;
++ (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+   graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager;
 
 + (void)resetTokenCache;
 

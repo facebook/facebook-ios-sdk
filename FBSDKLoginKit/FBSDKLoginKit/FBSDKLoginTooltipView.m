@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKLoginTooltipViewDelegate.h"
+
 @interface FBSDKLoginTooltipView ()
 @end
 

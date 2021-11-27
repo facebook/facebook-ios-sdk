@@ -19,7 +19,7 @@
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKGraphRequestPiggybackManaging.h"
 #import "FBSDKMacCatalystDetermining.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKURLSessionProxyProviding.h"
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @property (class, nullable, nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (class, nullable, nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
-@property (class, nullable, nonatomic) id<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (class, nullable, nonatomic) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
@@ -69,7 +69,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 + (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
                  errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                   piggybackManagerProvider:(nonnull id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                           piggybackManager:(nonnull Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
                                    settings:(nonnull id<FBSDKSettings>)settings
               graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
                                 eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger

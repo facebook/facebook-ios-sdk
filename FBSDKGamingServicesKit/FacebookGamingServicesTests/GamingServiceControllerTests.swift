@@ -21,14 +21,13 @@ class GamingServiceControllerTests: XCTestCase {
   var serviceError: Error?
   lazy var gamingService = _GamingServiceController(
     serviceType: .community,
-    completionHandler: { success, _, error in
-      self.capturedSuccess = success
-      self.serviceError = error
-    },
     pendingResult: [:],
     urlOpener: urlOpener,
     settings: settings
-  )
+  ) { success, _, error in
+    self.capturedSuccess = success
+    self.serviceError = error
+  }
 
   override func setUp() {
     super.setUp()
@@ -57,14 +56,13 @@ class GamingServiceControllerTests: XCTestCase {
   func testInvalidGamingURLWithValidTypeNotMatchingURLSource() {
     gamingService = _GamingServiceController(
       serviceType: .friendFinder,
-      completionHandler: { success, _, error in
-        self.capturedSuccess = success
-        self.serviceError = error
-      },
       pendingResult: [:],
       urlOpener: urlOpener,
       settings: settings
-    )
+    ) { success, _, error in
+      self.capturedSuccess = success
+      self.serviceError = error
+    }
 
     _ = gamingService.application(.shared, open: url, sourceApplication: "", annotation: "")
     XCTAssertFalse(

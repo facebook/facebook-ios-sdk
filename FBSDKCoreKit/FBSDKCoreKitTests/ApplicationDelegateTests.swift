@@ -462,6 +462,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresEventsProcessorsForAppEventsState() throws {
     AppEvents.reset()
     delegate.initializeSDK()
@@ -903,7 +904,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "A graph request connection should have the correct error configuration provider by default"
     )
     XCTAssertTrue(
-      GraphRequestConnection.piggybackManagerProvider is GraphRequestPiggybackManagerProvider,
+      GraphRequestConnection.piggybackManager === GraphRequestPiggybackManager.self,
       "A graph request connection should have the correct piggyback manager provider by default"
     )
     XCTAssertTrue(
@@ -993,6 +994,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppLinkNavigation() {
     AppLinkNavigation.reset()
     delegate.initializeSDK()
@@ -1034,6 +1036,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppEvents() throws { // swiftlint:disable:this function_body_length
     AppEvents.reset()
     delegate.initializeSDK()
@@ -1041,10 +1044,6 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       appEvents.capturedConfigureGateKeeperManager === GateKeeperManager.self,
       "Initializing the SDK should set gate keeper manager for event logging"
-    )
-    XCTAssertTrue(
-      appEvents.capturedConfigureGraphRequestFactory is GraphRequestFactory,
-      "Initializing the SDK should set graph request factory for event logging"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureAppEventsConfigurationProvider === AppEventsConfigurationManager.shared,
@@ -1055,12 +1054,16 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Initializing the SDK should set server configuration provider for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
-      "Should be configured with the expected concrete primary data store"
+      appEvents.capturedConfigureGraphRequestFactory is GraphRequestFactory,
+      "Initializing the SDK should set graph request factory for event logging"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureFeatureChecker === delegate.featureChecker,
       "Initializing the SDK should set feature checker for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
+      "Should be configured with the expected concrete primary data store"
     )
     XCTAssertTrue(
       appEvents.capturedConfigureLogger === Logger.self,
@@ -1104,33 +1107,21 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedConfigureATEPublisherFactory is ATEPublisherFactory,
       "Initializing the SDK should set concrete ate publisher factory for event logging"
     )
-
     XCTAssertTrue(
       appEvents.capturedConfigureAppEventsStateProvider is AppEventsStateFactory,
       "Initializing the SDK should set concrete AppEvents state provider for event logging"
     )
-
-    XCTAssertTrue(
-      appEvents.capturedConfigureSwizzler === Swizzler.self,
-      "Initializing the SDK should set concrete swizzler for event logging"
-    )
-
     XCTAssertTrue(
       appEvents.capturedAdvertiserIDProvider === AppEventsUtility.shared,
       "Initializing the SDK should set concrete advertiser ID provider"
     )
-
-    XCTAssertTrue(
-      appEvents.capturedCodelessIndexer === CodelessIndexer.self,
-      "Initializing the SDK should set concrete codeless indexer"
-    )
-
     XCTAssertTrue(
       appEvents.capturedUserDataStore is UserDataStore,
       "Initializing the SDK should set the expected concrete user data store"
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringNonTVAppEventsDependencies() throws {
     AppEvents.reset()
     delegate.initializeSDK()
@@ -1138,10 +1129,6 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertTrue(
       appEvents.capturedOnDeviceMLModelManager === ModelManager.shared,
       "Initializing the SDK should set concrete on device model manager for event logging"
-    )
-    XCTAssertTrue(
-      appEvents.capturedSKAdNetworkReporter === delegate.skAdNetworkReporter,
-      "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
     )
 
     let metadataIndexer = try XCTUnwrap(
@@ -1156,8 +1143,22 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       metadataIndexer.swizzler === Swizzler.self,
       "Should create the meta indexer with the expected swizzzler"
     )
+
+    XCTAssertTrue(
+      appEvents.capturedSKAdNetworkReporter === delegate.skAdNetworkReporter,
+      "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedConfigureSwizzler === Swizzler.self,
+      "Initializing the SDK should set concrete swizzler for event logging"
+    )
+    XCTAssertTrue(
+      appEvents.capturedCodelessIndexer === CodelessIndexer.self,
+      "Initializing the SDK should set concrete codeless indexer"
+    )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGateKeeperManager() {
     GateKeeperManager.reset()
     delegate.initializeSDK()
@@ -1181,6 +1182,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringCodelessIndexer() {
     delegate.initializeSDK()
 
@@ -1193,7 +1195,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete server configuration provider"
     )
     XCTAssertTrue(
-      CodelessIndexer.store === UserDefaults.standard,
+      CodelessIndexer.dataStore === UserDefaults.standard,
       "Should be configured with the standard user defaults"
     )
     XCTAssertTrue(
@@ -1214,6 +1216,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testConfiguringCrashShield() {
     delegate.initializeSDK()
 
@@ -1259,6 +1262,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     }
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenCache() {
     AccessToken.tokenCache = nil
     delegate.initializeSDK()
@@ -1269,11 +1273,23 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
+  func testInitializingSdkConfiguresAccessTokenGraphRequestPiggybackManager() {
+    AccessToken.graphRequestPiggybackManager = nil
+    delegate.initializeSDK()
+
+    XCTAssertTrue(
+      AccessToken.graphRequestPiggybackManager === GraphRequestPiggybackManager.self,
+      "Should be configured with expected concrete graph request piggyback manager"
+    )
+  }
+
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresProfile() {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      Profile.store === UserDefaults.standard,
+      Profile.dataStore === UserDefaults.standard,
       "Should be configured with the expected concrete data store"
     )
     XCTAssertTrue(
@@ -1282,15 +1298,15 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
     XCTAssertTrue(
       Profile.notificationCenter === NotificationCenter.default,
-      "Should be configured with the expected concrete Notification Center"
+      "Should be configured with the expected concrete notification center"
     )
     XCTAssertTrue(
       Profile.settings === Settings.shared,
-      "Should be configured with the expected concrete Settings"
+      "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
       Profile.urlHoster === InternalUtility.shared,
-      "Should be configured with the expected concrete Settings"
+      "Should be configured with the expected concrete URL hoster"
     )
   }
 
@@ -1303,6 +1319,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenConnectionFactory() {
     AccessToken.graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
     delegate.initializeSDK()
@@ -1313,6 +1330,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSettings() {
     Settings.shared.reset()
     delegate.initializeSDK()
@@ -1335,6 +1353,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGraphRequestPiggybackManager() {
     delegate.initializeSDK()
 
@@ -1348,7 +1367,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
-      GraphRequestPiggybackManager.serverConfiguration === ServerConfigurationManager.shared,
+      GraphRequestPiggybackManager.serverConfigurationProvider === ServerConfigurationManager.shared,
       "Should be configured with the expected concrete server configuration"
     )
 

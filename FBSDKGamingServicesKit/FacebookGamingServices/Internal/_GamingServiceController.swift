@@ -20,24 +20,24 @@ public class _GamingServiceController: NSObject {
 
   public convenience init(
     serviceType: _GamingServiceType,
-    completionHandler completion: @escaping GamingServiceResultCompletion,
-    pendingResult: [String: Any]
+    pendingResult: [String: Any],
+    completionHandler completion: @escaping GamingServiceResultCompletion
   ) {
     self.init(
       serviceType: serviceType,
-      completionHandler: completion,
       pendingResult: pendingResult,
       urlOpener: BridgeAPI.shared,
-      settings: Settings.shared
+      settings: Settings.shared,
+      completionHandler: completion
     )
   }
 
   init(
     serviceType: _GamingServiceType,
-    completionHandler completion: @escaping GamingServiceResultCompletion,
     pendingResult: [String: Any],
     urlOpener: URLOpener,
-    settings: SettingsProtocol
+    settings: SettingsProtocol,
+    completionHandler completion: @escaping GamingServiceResultCompletion
   ) {
     self.serviceType = serviceType
     self.completionHandler = completion

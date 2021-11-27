@@ -12,11 +12,6 @@
 
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
-#import "FBSDKGamingServiceControllerFactory.h"
-
-@interface FBSDKGamingServiceControllerFactory () <FBSDKGamingServiceControllerCreating>
-@end
-
 @interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
 
 @property (nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
@@ -162,8 +157,8 @@
      id<FBSDKGamingServiceController> const controller =
      [weakSelf.factory
       createWithServiceType:FBSDKGamingServiceTypeMediaAsset
-      completion:completionHandler
-      pendingResult:result];
+      pendingResult:result
+      completion:completionHandler];
 
      [controller callWithArgument:result[@"id"]];
    }];

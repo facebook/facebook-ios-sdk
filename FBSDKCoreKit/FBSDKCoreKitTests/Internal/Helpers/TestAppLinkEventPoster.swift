@@ -6,12 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(GamingServiceControllerFactory)
-@interface FBSDKGamingServiceControllerFactory : NSObject
-@end
-
-NS_ASSUME_NONNULL_END
+final class TestAppLinkEventPoster: AppLinkEventPosting {
+  func postNotification(forEventName name: String, args: [String: Any]) {}
+}

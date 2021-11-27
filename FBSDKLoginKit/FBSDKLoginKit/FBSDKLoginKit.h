@@ -22,6 +22,7 @@
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
  #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
  #import <FBSDKLoginKit/FBSDKLoginTooltipView.h>
+ #import <FBSDKLoginKit/FBSDKLoginTooltipViewDelegate.h>
  #import <FBSDKLoginKit/FBSDKReferralManager.h>
  #import <FBSDKLoginKit/FBSDKReferralManagerResult.h>
 #endif

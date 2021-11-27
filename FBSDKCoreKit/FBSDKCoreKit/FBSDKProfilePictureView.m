@@ -395,8 +395,9 @@
   // If there's an existing profile, use that profile's image url handler
   if (FBSDKProfile.currentProfile != nil) {
     return [FBSDKProfile.currentProfile imageURLForPictureMode:self.pictureMode size:state.size];
+  } else {
+    return [FBSDKProfile imageURLForProfileID:state.profileID pictureMode:self.pictureMode size:state.size];
   }
-  return [FBSDKProfile imageURLForProfileID:state.profileID PictureMode:self.pictureMode size:state.size];
 }
 
 - (void)_setPlaceholderImage

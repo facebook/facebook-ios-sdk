@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation FBSDKSharedDependencies
 
 - (instancetype)initWithAccessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
            appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                   appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
+                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
             applicationActivationNotifier:(id)applicationActivationNotifier
                       atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
@@ -31,10 +34,12 @@ NS_ASSUME_NONNULL_BEGIN
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                                   logger:(Class<FBSDKLogging>)logger
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                 piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
+                         piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
@@ -44,11 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
-                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
+                       appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
                            appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+                          appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
                      appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
@@ -63,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
-                      skadNetworkReporter:(nullable id<FBSKAdNetworkReporting>)skadNetworkReporter
+                      skAdNetworkReporter:(nullable id <FBSDKAppEventsReporter, FBSKAdNetworkReporting>) skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
@@ -74,7 +80,10 @@ NS_ASSUME_NONNULL_BEGIN
 {
   if ((self = [super init])) {
     _accessTokenWallet = accessTokenWallet;
+    _advertiserIDProvider = advertiserIDProvider;
     _appEventsConfigurationProvider = appEventsConfigurationProvider;
+    _appEventsStateProvider = appEventsStateProvider;
+    _appEventsStateStore = appEventsStateStore;
     _applicationActivationNotifier = applicationActivationNotifier;
     _atePublisherFactory = atePublisherFactory;
     _authenticationTokenWallet = authenticationTokenWallet;
@@ -92,10 +101,12 @@ NS_ASSUME_NONNULL_BEGIN
     _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _graphRequestFactory = graphRequestFactory;
     _infoDictionaryProvider = infoDictionaryProvider;
+    _logger = logger;
     _loggerFactory = loggerFactory;
     _macCatalystDeterminator = macCatalystDeterminator;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
-    _piggybackManagerProvider = piggybackManagerProvider;
+    _paymentObserver = paymentObserver;
+    _piggybackManager = piggybackManager;
     _restrictiveDataFilterManager = restrictiveDataFilterManager;
     _serverConfigurationProvider = serverConfigurationProvider;
     _settings = settings;
@@ -105,11 +116,12 @@ NS_ASSUME_NONNULL_BEGIN
     _userDataStore = userDataStore;
 
   #if !TARGET_OS_TV
-    _advertiserIDProvider = advertiserIDProvider;
     _aemNetworker = aemNetworker;
     _appEventParametersExtractor = appEventParametersExtractor;
     _appEventsDropDeterminer = appEventsDropDeterminer;
+    _appLinkEventPoster = appLinkEventPoster;
     _appLinkFactory = appLinkFactory;
+    _appLinkResolver = appLinkResolver;
     _appLinkTargetFactory = appLinkTargetFactory;
     _appLinkURLFactory = appLinkURLFactory;
     _codelessIndexer = codelessIndexer;
@@ -124,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
     _profileSetter = profileSetter;
     _rulesFromKeyProvider = rulesFromKeyProvider;
     _sessionDataTaskProvider = sessionDataTaskProvider;
-    _skadNetworkReporter = skadNetworkReporter;
+    _skAdNetworkReporter = skAdNetworkReporter;
     _suggestedEventsIndexer = suggestedEventsIndexer;
     _swizzler = swizzler;
     _urlHoster = urlHoster;

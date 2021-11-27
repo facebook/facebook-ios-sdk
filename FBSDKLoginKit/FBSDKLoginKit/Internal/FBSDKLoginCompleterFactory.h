@@ -6,18 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSharing.h"
+#import "FBSDKLoginCompleterFactoryProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FakeSharingDelegate : NSObject <FBSDKSharingDelegate>
-
-@property (nonatomic) NSDictionary<NSString *, id> *capturedResults;
-@property (nonatomic) NSError *capturedError;
-@property (nonatomic) BOOL didCancel;
-
+NS_SWIFT_NAME(LoginCompleterFactory)
+@interface FBSDKLoginCompleterFactory : NSObject <FBSDKLoginCompleterFactory>
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

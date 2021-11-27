@@ -19,4 +19,3 @@
 #import "FBSDKShareUtility.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactoryProtocol.h"
-#import "FakeSharingDelegate.h"

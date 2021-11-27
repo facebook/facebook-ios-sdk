@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKProfile (Testing)
 
-@property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
+@property (class, nullable, nonatomic) id<FBSDKDataPersisting> dataStore;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
@@ -22,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
    shouldPostNotification:(BOOL)shouldPostNotification;
 
 + (void)reset;
-
-+ (id<FBSDKDataPersisting>)store;
 
 + (void)resetCurrentProfileCache;
 

@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
                               nonce:(NSString *)nonce
                         graphDomain:(NSString *)graphDomain;
 
++ (void)resetCurrentAuthenticationTokenCache;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -15,29 +15,6 @@ public class SampleUserProfiles: NSObject {
   public static let defaultImageUrl = URL(string: "http://www.example.com/image.jpg")
   public static let defaultUserID = "123"
 
-  public class var valid: Profile {
-    Profile(
-      userID: defaultUserID,
-      firstName: "John",
-      middleName: "K",
-      lastName: "Smith",
-      name: defaultName,
-      linkURL: URL(string: "http://www.example.com"),
-      refreshDate: .distantFuture,
-      imageURL: defaultImageUrl,
-      email: "example@example.com",
-      friendIDs: [
-        "456",
-        "789",
-      ],
-      birthday: Date(timeIntervalSince1970: 0),
-      ageRange: UserAgeRange(from: ["min": 21]),
-      hometown: Location(from: ["id": "112724962075996", "name": "Martinez, California"]),
-      location: Location(from: ["id": "110843418940484", "name": "Seattle, Washington"]),
-      gender: "male"
-    )
-  }
-
   public static var missingImageUrl = createValid(imageURL: nil)
   public static var validLimited = createValid(isLimited: true)
 
