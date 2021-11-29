@@ -45,6 +45,7 @@ NS_SWIFT_NAME(AppEventsUtility)
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
 + (BOOL)validateIdentifier:(nullable NSString *)identifier;
 + (BOOL)isSensitiveUserData:(NSString *)text;
++ (BOOL)isHotKeyEvent:(UIResponder *)uiResponder;
 + (BOOL)isStandardEvent:(nullable NSString *)event;
 + (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
 

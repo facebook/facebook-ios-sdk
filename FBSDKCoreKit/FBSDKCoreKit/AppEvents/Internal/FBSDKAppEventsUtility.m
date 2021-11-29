@@ -467,6 +467,15 @@ static dispatch_once_t singletonNonce;
   return matches > 0;
 }
 
++ (BOOL)isHotKeyEvent:(UIResponder *)uiResponder
+{
+    NSString *responderClass = NSStringFromClass([uiResponder class]);
+    if ([responderClass rangeOfString:@"UIKeyShortcutHUDToolbarCategoryCell"].length > 0) {
+        return YES;
+    }
+    return NO;
+}
+
 #if DEBUG && FBTEST
 
 // Reset the nonce so that a new instance will be created.
