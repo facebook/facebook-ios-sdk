@@ -18,6 +18,7 @@
 #import "ApplicationDelegate+Testing.h"
 #import "BackgroundEventLogger+Testing.h"
 #import "CodelessIndexer+Testing.h"
+#import "FBSDKAEMReporterProtocol.h"
 #import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"

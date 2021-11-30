@@ -48,6 +48,7 @@ enum TestSharedDependencies {
 
       // Non-tvOS
       aemNetworker: TestAEMNetworker(),
+      aemReporter: TestAEMReporter.self,
       appEventParametersExtractor: TestAppEventParametersExtractor(),
       appEventsDropDeterminer: TestAppEventsDropDeterminer(),
       appLinkEventPoster: TestAppLinkEventPoster(),

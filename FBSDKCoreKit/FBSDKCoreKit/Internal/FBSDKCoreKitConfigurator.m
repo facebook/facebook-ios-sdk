@@ -236,7 +236,8 @@ NS_ASSUME_NONNULL_BEGIN
                                                             metadataIndexer:self.dependencies.metadataIndexer
                                                         skAdNetworkReporter:self.dependencies.skAdNetworkReporter
                                                             codelessIndexer:self.dependencies.codelessIndexer
-                                                                   swizzler:self.dependencies.swizzler];
+                                                                   swizzler:self.dependencies.swizzler
+                                                                aemReporter:self.dependencies.aemReporter];
 }
 
 - (void)configureAppLinkNavigation

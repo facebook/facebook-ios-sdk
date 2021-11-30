@@ -1156,6 +1156,10 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedCodelessIndexer === CodelessIndexer.self,
       "Initializing the SDK should set concrete codeless indexer"
     )
+    XCTAssertTrue(
+      appEvents.capturedAEMReporter === AEMReporter.self,
+      "Initializing the SDK should set the concrete AEM reporter"
+    )
   }
 
   // TEMP: added to configurator tests

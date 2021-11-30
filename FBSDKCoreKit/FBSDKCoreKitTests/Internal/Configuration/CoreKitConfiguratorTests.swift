@@ -264,6 +264,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.swizzler,
       "AppEvents should not have a swizzler by default"
     )
+    XCTAssertNil(
+      AppEvents.shared.aemReporter,
+      "AppEvents should not have an AEM reporter by default"
+    )
 
     configurator.configureTargets()
 
@@ -286,6 +290,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.swizzler === dependencies.swizzler,
       "AppEvents should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.aemReporter === dependencies.aemReporter,
+      "AppEvents should be configured with the AEM reporter"
     )
   }
 

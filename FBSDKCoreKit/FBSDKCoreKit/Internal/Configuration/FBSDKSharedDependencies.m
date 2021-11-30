@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
+                              aemReporter:(nullable Class<FBSDKAEMReporter>)aemReporter
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
                        appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
@@ -117,6 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 
   #if !TARGET_OS_TV
     _aemNetworker = aemNetworker;
+    _aemReporter = aemReporter;
     _appEventParametersExtractor = appEventParametersExtractor;
     _appEventsDropDeterminer = appEventsDropDeterminer;
     _appLinkEventPoster = appLinkEventPoster;

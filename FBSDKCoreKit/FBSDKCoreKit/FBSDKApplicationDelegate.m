@@ -831,7 +831,8 @@ static UIApplicationState _applicationState;
                                                      metadataIndexer:metaIndexer
                                                  skAdNetworkReporter:self.skAdNetworkReporter
                                                      codelessIndexer:FBSDKCodelessIndexer.class
-                                                            swizzler:FBSDKSwizzler.class]; // TEMP: added to configurator
+                                                            swizzler:FBSDKSwizzler.class
+                                                         aemReporter:FBAEMReporter.class]; // TEMP: added to configurator
   [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class
                                        sessionDataTaskProvider:NSURLSession.sharedSession
                                              accessTokenWallet:FBSDKAccessToken.class

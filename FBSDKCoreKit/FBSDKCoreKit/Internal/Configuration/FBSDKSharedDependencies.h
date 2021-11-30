@@ -10,6 +10,8 @@
 
 #if !TARGET_OS_TV
  #import <FBAEMKit/FBAEMKit.h>
+
+ #import "FBSDKAEMReporterProtocol.h"
 #endif
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -104,6 +106,7 @@ NS_SWIFT_NAME(SharedDependencies)
 #if !TARGET_OS_TV
 
 @property (nullable, nonatomic, readonly) id<FBAEMNetworking> aemNetworker;
+@property (nullable, nonatomic, readonly) Class<FBSDKAEMReporter> aemReporter;
 @property (nonatomic, readonly) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (nonatomic, readonly) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (nonatomic, readonly) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
@@ -170,6 +173,7 @@ NS_SWIFT_NAME(SharedDependencies)
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
+                              aemReporter:(nullable Class<FBSDKAEMReporter>)aemReporter
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
                        appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
