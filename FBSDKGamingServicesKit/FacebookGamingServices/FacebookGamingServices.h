@@ -23,4 +23,3 @@
 // Not sure what the correct approach here is...
 
 #import <FacebookGamingServices/FBSDKChooseContextContent.h>
-#import <FacebookGamingServices/FBSDKGamingPayloadDelegate.h>
