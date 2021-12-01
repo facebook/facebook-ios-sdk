@@ -425,6 +425,7 @@ static id<FBSKAdNetworkReporting> _reporter;
   }
   NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
   [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:@"" forKey:@"fields"];
   return [params copy];
 }
 
