@@ -14,7 +14,6 @@
 #import <FacebookGamingServices/FBSDKFriendFinderDialog.h>
 #import <FacebookGamingServices/FBSDKGamingGroupIntegration.h>
 #import <FacebookGamingServices/FBSDKGamingImageUploader.h>
-#import <FacebookGamingServices/FBSDKGamingPayloadObserver.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>
@@ -24,3 +23,4 @@
 // Not sure what the correct approach here is...
 
 #import <FacebookGamingServices/FBSDKChooseContextContent.h>
+#import <FacebookGamingServices/FBSDKGamingPayloadDelegate.h>

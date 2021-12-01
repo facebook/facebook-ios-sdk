@@ -15,7 +15,6 @@
 #import "FBSDKFriendFinderDialog+Testing.h"
 #import "FBSDKGamingGroupIntegration+Testing.h"
 #import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingPayloadObserver+Testing.h"
 #import "FBSDKGamingVideoUploader+Testing.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploader+Testing.h"

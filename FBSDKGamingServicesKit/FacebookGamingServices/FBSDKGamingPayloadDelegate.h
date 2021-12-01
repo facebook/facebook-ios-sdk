@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GamingPayloadDelegate)
-@protocol FBSDKGamingPayloadDelegate
+@protocol FBSDKGamingPayloadDelegate <NSObject>
 
 // MARK: Game Request
 
