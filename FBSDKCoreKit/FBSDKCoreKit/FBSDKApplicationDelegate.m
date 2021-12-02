@@ -703,8 +703,12 @@ static UIApplicationState _applicationState;
                                                crashObserver:crashObserver
                                                errorReporter:FBSDKErrorReporter.shared
                                                 crashHandler:sharedCrashHandler]; // TEMP: added to configurator
+  id<FBSDKKeychainStoreProviding> keychainStoreFactory = [FBSDKKeychainStoreFactory new];
+  NSString *keychainService = [NSString stringWithFormat:@"%@.%@", DefaultKeychainServicePrefix, NSBundle.mainBundle.bundleIdentifier];
+  id<FBSDKKeychainStore> keychainStore = [keychainStoreFactory createKeychainStoreWithService:keychainService
+                                                                                  accessGroup:nil];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings
-                                                     keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
+                                                            keychainStore:keychainStore];
   [FBSDKAccessToken configureWithTokenCache:tokenCache
               graphRequestConnectionFactory:graphRequestConnectionFactory
                graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self]; // TEMP: added to configurator

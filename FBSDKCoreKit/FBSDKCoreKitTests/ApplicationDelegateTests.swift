@@ -1301,13 +1301,31 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   // TEMP: added to configurator tests
-  func testInitializingSdkConfiguresAccessTokenCache() {
+  func testInitializingSdkConfiguresAccessTokenCache() throws {
     AccessToken.tokenCache = nil
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AccessToken.tokenCache is TokenCache,
+    let cache = try XCTUnwrap(
+      AccessToken.tokenCache as? TokenCache,
       "Should be configured with expected concrete token cache"
+    )
+    XCTAssertTrue(
+      cache.settings === Settings.shared,
+      "The cache should use the shared Settings instance"
+    )
+
+    let store = try XCTUnwrap(
+      cache.keychainStore as? KeychainStore,
+      "The cache should use an instance of KeychainStore"
+    )
+    XCTAssertEqual(
+      store.service,
+      "com.facebook.sdk.tokencache.com.apple.dt.xctest.tool",
+      "The keychain store should use a service with a well-known prefix plus the main bundle identifier"
+    )
+    XCTAssertNil(
+      store.accessGroup,
+      "The keychain store should not have an access group"
     )
   }
 
