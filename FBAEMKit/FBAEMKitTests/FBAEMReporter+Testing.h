@@ -24,7 +24,6 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
-@property (class, nullable, nonatomic) id<FBAEMNetworking> catalogNetworker;
 @property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
 
 + (void)enable;

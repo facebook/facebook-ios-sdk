@@ -38,6 +38,7 @@ static NSString *const IS_AGGREGATED_KEY = @"is_aggregated";
 static NSString *const HAS_SKAN_KEY = @"has_skan";
 
 static NSString *const FB_CONTENT = @"fb_content";
+static NSString *const FB_CONTENT_ID = @"fb_content_id";
 
 typedef NSString *const FBAEMInvocationConfigMode;
 
@@ -171,7 +172,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     return NO;
   }
   // Check advertiser rule matching
-  if (config.matchingRule && ![config.matchingRule isMatchedEventParameters:[self processedParameters:parameters]]) {
+  NSDictionary<NSString *, id> *processedParameters = [self processedParameters:parameters];
+  if (config.matchingRule && ![config.matchingRule isMatchedEventParameters:processedParameters]) {
     return NO;
   }
   BOOL isAttributed = NO;
@@ -188,7 +190,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   }
   // Use in-segment value for CPAS
   if ([config.configMode isEqualToString:FBAEMInvocationConfigCpasMode]) {
-    value = [FBAEMUtility.sharedUtility getInSegmentValue:parameters matchingRule:config.matchingRule];
+    value = [FBAEMUtility.sharedUtility getInSegmentValue:processedParameters matchingRule:config.matchingRule];
   }
   if (value != nil) {
     NSMutableDictionary<NSString *, id> *mapping = [[FBSDKTypeUtility dictionary:_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
@@ -326,6 +328,14 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
                                                                 options:0
                                                                   error:nil]
                             forKey:FB_CONTENT];
+    }
+    NSString *contentID = [FBSDKTypeUtility dictionary:result objectForKey:FB_CONTENT_ID ofType:NSString.class];
+    if (contentID) {
+      [FBSDKTypeUtility dictionary:result
+                         setObject:[FBSDKTypeUtility JSONObjectWithData:[contentID dataUsingEncoding:NSUTF8StringEncoding]
+                                                                options:0
+                                                                  error:nil]
+                            forKey:FB_CONTENT_ID];
     }
     return [result copy];
   } @catch (NSException *exception) {

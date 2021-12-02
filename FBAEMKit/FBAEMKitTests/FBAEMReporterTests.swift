@@ -27,7 +27,7 @@ class FBAEMReporterTests: XCTestCase {
     static let businessID = "advertiser_id"
     static let campaignID = "campaign_id"
     static let catalogID = "catalog_id"
-    static let contentID = "fb_content_id"
+    static let contentID = "fb_content_ids"
     static let token = "token"
   }
 
@@ -86,7 +86,6 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.enable()
 
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
-    XCTAssertNotNil(AEMReporter.catalogNetworker, "AEM catalog networker should be created when AEM is enabled")
   }
 
   func testCatalogReportDefaultConfigure() {
@@ -101,10 +100,6 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testConfigure() {
-    XCTAssertNil(
-      AEMReporter.catalogNetworker,
-      "Should not configure catalog networker before enable"
-    )
     XCTAssertEqual(
       networker,
       AEMReporter.networker as? TestAEMNetworker,
@@ -853,14 +848,13 @@ class FBAEMReporterTests: XCTestCase {
 
   func testLoadCatalogOptimizationWithOptimizedContent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
-    AEMReporter.catalogNetworker = self.networker
     var blockCall = 0
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {
       blockCall += 1
     }
     XCTAssertTrue(
-      (self.networker.capturedGraphPath?.contains("da_content_id_belongs_to_catalog_id")) == true,
+      (self.networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
       "Should start the catalog request"
     )
     self.networker.capturedCompletionHandler?(nil, SampleAEMError())
@@ -873,7 +867,6 @@ class FBAEMReporterTests: XCTestCase {
 
   func testLoadCatalogOptimizationWithFuzzyInput() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
-    AEMReporter.catalogNetworker = self.networker
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {}
     for _ in 0..<100 {

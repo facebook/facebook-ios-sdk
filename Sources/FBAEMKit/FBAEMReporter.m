@@ -35,7 +35,7 @@ static NSString *const HMAC_KEY = @"hmac";
 static NSString *const CONFIG_ID_KEY = @"config_id";
 static NSString *const DELAY_FLOW_KEY = @"delay_flow";
 
-static NSString *const FB_CONTENT_ID_KEY = @"fb_content_id";
+static NSString *const FB_CONTENT_IDS_KEY = @"fb_content_ids";
 static NSString *const CATALOG_ID_KEY = @"catalog_id";
 
 static NSString *const FBAEMConfigurationKey = @"com.facebook.sdk:FBSDKAEMConfiguration";
@@ -55,7 +55,6 @@ static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
-static _Nullable id<FBAEMNetworking> _catalogNetworker = nil;
 
 @interface FBAEMReporter ()
 
@@ -96,11 +95,6 @@ static id<FBAEMNetworking> _networker;
 + (void)setNetworker:(nullable id<FBAEMNetworking>)networker
 {
   _networker = networker;
-}
-
-+ (id<FBAEMNetworking>)catalogNetworker
-{
-  return _catalogNetworker;
 }
 
 static NSString *_appID;
@@ -166,7 +160,6 @@ static id<FBSKAdNetworkReporting> _reporter;
         NSLog(@"App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB app ID OR add FacebookAppID in the info.plist file");
         return;
       }
-      _catalogNetworker = [FBAEMNetworker new];
       g_isAEMReportEnabled = YES;
     });
   }
@@ -382,20 +375,20 @@ static id<FBSKAdNetworkReporting> _reporter;
     NSLog(@"Content ID is not found for the optimized event");
     return;
   }
-  [self.catalogNetworker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/da_content_id_belongs_to_catalog_id", self.appID]
-                                             parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
-                                            tokenString:nil
-                                             HTTPMethod:FBAEMHTTPMethodGET
-                                             completion:^(id _Nullable result, NSError *_Nullable error) {
-                                               [self dispatchOnQueue:g_serialQueue block:^() {
-                                                 if (error) {
-                                                   return;
-                                                 }
-                                                 if ([self _isContentOptimized:result]) {
-                                                   block();
-                                                 }
-                                               }];
-                                             }];
+  [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_filter", self.appID]
+                                      parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
+                                     tokenString:nil
+                                      HTTPMethod:FBAEMHTTPMethodGET
+                                      completion:^(id _Nullable result, NSError *_Nullable error) {
+                                        [self dispatchOnQueue:g_serialQueue block:^() {
+                                          if (error) {
+                                            return;
+                                          }
+                                          if ([self _isContentOptimized:result]) {
+                                            block();
+                                          }
+                                        }];
+                                      }];
 }
 
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
@@ -433,7 +426,7 @@ static id<FBSKAdNetworkReporting> _reporter;
                                                   contentID:(NSString *)contentID
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_ID_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_IDS_KEY];
   [FBSDKTypeUtility dictionary:params setObject:catalogID forKey:CATALOG_ID_KEY];
   return [params copy];
 }
@@ -776,11 +769,6 @@ static id<FBSKAdNetworkReporting> _reporter;
   return g_isCatalogReportEnabled;
 }
 
-+ (void)setCatalogNetworker:(id<FBAEMNetworking>)catalogNetworker
-{
-  _catalogNetworker = catalogNetworker;
-}
-
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
 {
   g_completionBlocks = completionBlocks;
@@ -819,7 +807,6 @@ static id<FBSKAdNetworkReporting> _reporter;
   g_completionBlocks = [NSMutableArray new];
   g_configs = [NSMutableDictionary new];
   self.networker = nil;
-  _catalogNetworker = nil;
   self.appID = nil;
   self.reporter = nil;
   [self _clearCache];
