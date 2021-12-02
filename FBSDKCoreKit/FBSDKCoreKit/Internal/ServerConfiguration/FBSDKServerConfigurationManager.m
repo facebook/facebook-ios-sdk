@@ -382,7 +382,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
-- (NSDictionary<NSString *, id> *)_parseDialogConfigurations:(NSDictionary<NSString *, id> *)dictionary
+- (NSDictionary<NSString *, FBSDKDialogConfiguration *> *)_parseDialogConfigurations:(NSDictionary<NSString *, id> *)dictionary
 {
   NSMutableDictionary<NSString *, id> *dialogConfigurations = [NSMutableDictionary new];
   NSArray *dialogConfigurationsArray = [FBSDKTypeUtility arrayValue:dictionary[@"data"]];

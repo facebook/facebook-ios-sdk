@@ -92,6 +92,7 @@
 #import "FBSDKCrashShield.h"
 #import "FBSDKCrashShield+Testing.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKDynamicFrameworkResolving.h"
 #import "FBSDKError+Testing.h"
