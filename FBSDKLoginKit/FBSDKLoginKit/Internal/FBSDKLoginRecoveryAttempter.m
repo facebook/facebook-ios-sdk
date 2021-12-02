@@ -15,6 +15,22 @@
 
 @implementation FBSDKLoginRecoveryAttempter
 
+- (instancetype)init
+{
+  return [self initWithLoginManager:[FBSDKLoginManager new]
+                accessTokenProvider:FBSDKAccessToken.class];
+}
+
+- (instancetype)initWithLoginManager:(id<FBSDKLoginProviding>)loginManager
+                 accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  if ((self = [super init])) {
+    _loginManager = loginManager;
+    _accessTokenProvider = accessTokenProvider;
+  }
+  return self;
+}
+
 - (void)attemptRecoveryFromError:(NSError *)error
                completionHandler:(void (^)(BOOL didRecover))completionHandler
 {

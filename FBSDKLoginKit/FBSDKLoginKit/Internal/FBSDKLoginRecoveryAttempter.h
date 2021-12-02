@@ -8,12 +8,21 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKLoginProviding.h"
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
 
 NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(LoginRecoveryAttempter)
 @interface FBSDKLoginRecoveryAttempter : NSObject <FBSDKErrorRecoveryAttempting>
+
+@property (nonatomic) id<FBSDKLoginProviding> loginManager;
+@property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
+
+- (instancetype)initWithLoginManager:(id<FBSDKLoginProviding>)loginManager
+                 accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
 @end
 

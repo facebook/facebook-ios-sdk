@@ -21,6 +21,7 @@
 #import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginProviding.h"
+#import "FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginURLCompleter+Testing.h"
 #import "FBSDKLoginUtility.h"
 #import "FBSDKNonceUtility.h"
