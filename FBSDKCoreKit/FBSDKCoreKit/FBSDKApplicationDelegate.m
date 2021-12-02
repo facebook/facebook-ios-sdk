@@ -14,6 +14,7 @@
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessTokenExpirer.h"
+#import "FBSDKAccessTokenExpiring.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
@@ -113,7 +114,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
-@property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
+@property (nonnull, nonatomic, readonly) id<FBSDKAccessTokenExpiring> accessTokenExpirer;
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 @property (nonnull, nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
 
