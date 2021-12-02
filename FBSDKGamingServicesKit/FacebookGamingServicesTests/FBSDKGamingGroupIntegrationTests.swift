@@ -8,6 +8,8 @@
 
 import XCTest
 
+@testable import FacebookGamingServices
+
 class FBSDKGamingGroupIntegrationTests: XCTestCase {
 
   let factory = TestGamingServiceControllerFactory()

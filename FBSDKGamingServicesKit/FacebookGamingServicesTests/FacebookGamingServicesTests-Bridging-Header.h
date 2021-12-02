@@ -13,7 +13,6 @@
 #import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKContextWebDialog+Testing.h"
 #import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingGroupIntegration+Testing.h"
 #import "FBSDKGamingImageUploader+Testing.h"
 #import "FBSDKGamingVideoUploader+Testing.h"
 #import "FBSDKVideoUploader.h"
