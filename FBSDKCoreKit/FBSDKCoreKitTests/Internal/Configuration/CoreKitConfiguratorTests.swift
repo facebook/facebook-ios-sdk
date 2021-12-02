@@ -41,14 +41,18 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AccessToken.resetClassDependencies()
     AppEvents.reset()
     AppEventsConfigurationManager.reset()
+    AppEventsDeviceInfo.reset()
     AppEventsState.eventProcessors = nil
     AppEventsUtility.reset()
+    AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
     FeatureManager.reset()
     GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
+    GraphRequestConnection.resetCanMakeRequests()
     GraphRequestPiggybackManager.reset()
+    ImpressionLoggingButton.resetClassDependencies()
     InstrumentManager.reset()
     InternalUtility.reset()
     SDKError.reset()
@@ -56,6 +60,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     Settings.shared.reset()
 
     // Non-tvOS
+    AEMReporter.reset()
     AppLinkNavigation.reset()
     AppLinkURL.reset()
     AppLinkUtility.reset()
@@ -335,6 +340,20 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
+  func testConfiguringAppEventsDeviceInfo() throws {
+    XCTAssertNil(
+      AppEventsDeviceInfo.shared.settings,
+      "AppEventsDeviceInfo should not have settings by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEventsDeviceInfo.shared.settings === dependencies.settings,
+      "AppEventsDeviceInfo should be configured with the settings"
+    )
+  }
+
   func testConfiguringAppEventsState() throws {
     XCTAssertNil(
       AppEventsState.eventProcessors,
@@ -378,6 +397,20 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEventsUtility.shared.deviceInformationProvider === dependencies.deviceInformationProvider,
       "AppEventsUtility should be configured with the device information provider"
+    )
+  }
+
+  func testConfiguringAuthenticationToken() {
+    XCTAssertNil(
+      AuthenticationToken.tokenCache,
+      "AuthenticationToken should not have a token cache by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AuthenticationToken.tokenCache === dependencies.tokenCache,
+      "AuthenticationToken should be configured with the token cache"
     )
   }
 
@@ -559,6 +592,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not have an authentication token provider by default"
     )
 
+    XCTAssertFalse(
+      GraphRequestConnection.canMakeRequests,
+      "GraphRequestConnection should not be able to make requests by default"
+    )
+
     configurator.configureTargets()
 
     XCTAssertTrue(
@@ -609,6 +647,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
       GraphRequestConnection.authenticationTokenProvider === dependencies.authenticationTokenWallet,
       "GraphRequestConnection should be configured with the authentication token provider"
     )
+
+    XCTAssertTrue(
+      GraphRequestConnection.canMakeRequests,
+      "GraphRequestConnection should be configured to be able to make requests"
+    )
   }
 
   func testConfiguringGraphRequestPiggybackManager() {
@@ -646,6 +689,20 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       GraphRequestPiggybackManager.graphRequestFactory === dependencies.graphRequestFactory,
       "GraphRequestPiggybackManager should be configured with the graph request factory"
+    )
+  }
+
+  func testConfiguringImpressionLoggingButton() throws {
+    XCTAssertNil(
+      ImpressionLoggingButton.impressionLoggerFactory,
+      "ImpressionLoggingButton should not have an impression logger factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      ImpressionLoggingButton.impressionLoggerFactory === dependencies.impressionLoggerFactory,
+      "ImpressionLoggingButton should be configured with the impression logger factory"
     )
   }
 
@@ -792,6 +849,39 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   // MARK: - Non-tvOS
+
+  @available(iOS 14.0, *)
+  func testConfiguringAEMReporter() {
+    XCTAssertNil(
+      AEMReporter.networker,
+      "AEMReporter should not have an AEM networker by default"
+    )
+    XCTAssertNil(
+      AEMReporter.appID,
+      "AEMReporter should not have an app ID by default"
+    )
+    XCTAssertNil(
+      AEMReporter.reporter,
+      "AEMReporter should not have an SKAdNetwork reporter by default"
+    )
+
+    dependencies.settings.appID = "sample"
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AEMReporter.networker === dependencies.aemNetworker,
+      "AEMReporter should be configured with the AEM networker"
+    )
+    XCTAssertEqual(
+      AEMReporter.appID,
+      dependencies.settings.appID,
+      "AEMReporter should be configured with the settings' app ID"
+    )
+    XCTAssertTrue(
+      AEMReporter.reporter === dependencies.skAdNetworkReporter,
+      "AEMReporter should be configured with the SKAdNetwork reporter"
+    )
+  }
 
   func testConfiguringAppLinkNavigation() {
     XCTAssertNil(

@@ -8,6 +8,7 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBAEMKit/FBAEMKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <TestTools/TestTools.h>
@@ -18,6 +19,8 @@
 #import "ApplicationDelegate+Testing.h"
 #import "BackgroundEventLogger+Testing.h"
 #import "CodelessIndexer+Testing.h"
+#import "FBAEMReporter+Testing.h"
+#import "FBSDKAEMNetworker.h"
 #import "FBSDKAEMReporterProtocol.h"
 #import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublisherFactory.h"

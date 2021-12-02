@@ -11,6 +11,7 @@
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppLinkNavigation+Internal.h"
@@ -27,6 +28,7 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
+#import "FBSDKImpressionLoggingButton+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKModelManager.h"
@@ -59,14 +61,17 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAccessToken];
   [self configureAppEvents];
   [self configureAppEventsConfigurationManager];
+  [self configureAppEventsDeviceInfo];
   [self configureAppEventsState];
   [self configureAppEventsUtility];
+  [self configureAuthenticationToken];
   [self configureButton];
   [self configureFeatureManager];
   [self configureGatekeeperManager];
   [self configureGraphRequest];
   [self configureGraphRequestConnection];
   [self configureGraphRequestPiggybackManager];
+  [self configureImpressionLoggingButton];
   [self configureInstrumentManager];
   [self configureInternalUtility];
   [self configureSDKError];
@@ -74,6 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureSettings];
 
 #if !TARGET_OS_TV
+  [self configureAEMReporter];
   [self configureNonTVOSAppEvents];
   [self configureAppLinkNavigation];
   [self configureAppLinkURL];
@@ -88,6 +94,8 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureWebDialogView];
 #endif
 }
+
+// MARK: - All platforms
 
 - (void)configureAccessToken
 {
@@ -125,6 +133,11 @@ NS_ASSUME_NONNULL_BEGIN
                            graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
 }
 
+- (void)configureAppEventsDeviceInfo
+{
+  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:self.dependencies.settings];
+}
+
 - (void)configureAppEventsState
 {
   FBSDKAppEventsState.eventProcessors = @[
@@ -137,6 +150,11 @@ NS_ASSUME_NONNULL_BEGIN
 {
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.dependencies.appEventsConfigurationProvider;
   FBSDKAppEventsUtility.shared.deviceInformationProvider = self.dependencies.deviceInformationProvider;
+}
+
+- (void)configureAuthenticationToken
+{
+  FBSDKAuthenticationToken.tokenCache = self.dependencies.tokenCache;
 }
 
 - (void)configureButton
@@ -182,6 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                  accessTokenSetter:self.dependencies.accessTokenWallet
                                                       errorFactory:self.dependencies.errorFactory
                                        authenticationTokenProvider:self.dependencies.authenticationTokenWallet];
+  [FBSDKGraphRequestConnection setCanMakeRequests];
 }
 
 - (void)configureGraphRequestPiggybackManager
@@ -190,6 +209,11 @@ NS_ASSUME_NONNULL_BEGIN
                                                      settings:self.dependencies.settings
                                   serverConfigurationProvider:self.dependencies.serverConfigurationProvider
                                           graphRequestFactory:self.dependencies.graphRequestFactory];
+}
+
+- (void)configureImpressionLoggingButton
+{
+  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:self.dependencies.impressionLoggerFactory];
 }
 
 - (void)configureInstrumentManager
@@ -229,6 +253,15 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Non-tvOS
 
 #if !TARGET_OS_TV
+
+- (void)configureAEMReporter
+{
+  if (@available(iOS 14.0, *)) {
+    [FBAEMReporter configureWithNetworker:self.dependencies.aemNetworker
+                                    appID:self.dependencies.settings.appID
+                                 reporter:self.dependencies.skAdNetworkReporter];
+  }
+}
 
 - (void)configureNonTVOSAppEvents
 {

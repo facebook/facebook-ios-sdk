@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
                         gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                  impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                                    logger:(Class<FBSDKLogging>)logger
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
@@ -50,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
-                              aemReporter:(nullable Class<FBSDKAEMReporter>)aemReporter
+                              aemReporter:(Class<FBSDKAEMReporter>)aemReporter
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
                        appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
@@ -70,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
-                      skAdNetworkReporter:(nullable id <FBSDKAppEventsReporter, FBSKAdNetworkReporting>) skAdNetworkReporter
+                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter, FBSKAdNetworkReporting>)skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
@@ -101,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
     _gateKeeperManager = gateKeeperManager;
     _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _graphRequestFactory = graphRequestFactory;
+    _impressionLoggerFactory = impressionLoggerFactory;
     _infoDictionaryProvider = infoDictionaryProvider;
     _logger = logger;
     _loggerFactory = loggerFactory;

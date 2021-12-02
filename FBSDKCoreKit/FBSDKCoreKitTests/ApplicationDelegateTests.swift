@@ -589,6 +589,39 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   // MARK: - Configuring Dependencies
 
   // TEMP: added to configurator tests
+  func testInitializingConfiguresAEMReporter() {
+    AEMReporter.reset()
+    XCTAssertNil(
+      AEMReporter.networker,
+      "AEMReporter should not have an AEM networker by default"
+    )
+    XCTAssertNil(
+      AEMReporter.appID,
+      "AEMReporter should not have an app ID by default"
+    )
+    XCTAssertNil(
+      AEMReporter.reporter,
+      "AEMReporter should not have an SKAdNetwork reporter by default"
+    )
+
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertTrue(
+      AEMReporter.networker is AEMNetworker,
+      "AEMReporter should be configured with an AEM networker"
+    )
+    XCTAssertEqual(
+      AEMReporter.appID,
+      Settings.shared.appID,
+      "AEMReporter should be configured with the settings' app ID"
+    )
+    XCTAssertTrue(
+      AEMReporter.reporter is SKAdNetworkReporter,
+      "AEMReporter should be configured with a SKAdNetwork reporter"
+    )
+  }
+
+  // TEMP: added to configurator tests
   func testInitializingConfiguresError() {
     SDKError.reset()
     XCTAssertNil(
@@ -983,6 +1016,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSharedAppEventsDeviceInfo() throws {
     AppEventsDeviceInfo.reset()
 
@@ -1314,6 +1348,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAuthenticationTokenCache() {
     delegate.initializeSDK()
 
@@ -1410,6 +1445,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresImpressionLoggingButton() throws {
     ImpressionLoggingButton.resetClassDependencies()
     delegate.initializeSDK()

@@ -31,6 +31,7 @@ enum TestSharedDependencies {
       gateKeeperManager: TestGateKeeperManager.self,
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
       graphRequestFactory: TestGraphRequestFactory(),
+      impressionLoggerFactory: TestImpressionLoggerFactory(),
       infoDictionaryProvider: TestBundle(),
       logger: TestLogger.self,
       loggerFactory: TestLoggerFactory(),

@@ -43,6 +43,7 @@
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestPiggybackManaging.h"
+#import "FBSDKImpressionLoggerFactoryProtocol.h"
 #import "FBSDKIntegrityParametersProcessorProvider.h"
 #import "FBSDKInternalURLOpener.h"
 #import "FBSDKMacCatalystDetermining.h"
@@ -88,6 +89,7 @@ NS_SWIFT_NAME(SharedDependencies)
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nonatomic, readonly) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic, readonly) id<FBSDKImpressionLoggerFactory> impressionLoggerFactory;
 @property (nonatomic, readonly) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nonatomic, readonly) Class<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
@@ -106,7 +108,7 @@ NS_SWIFT_NAME(SharedDependencies)
 #if !TARGET_OS_TV
 
 @property (nullable, nonatomic, readonly) id<FBAEMNetworking> aemNetworker;
-@property (nullable, nonatomic, readonly) Class<FBSDKAEMReporter> aemReporter;
+@property (nonatomic, readonly) Class<FBSDKAEMReporter> aemReporter;
 @property (nonatomic, readonly) id<FBSDKAppEventParametersExtracting> appEventParametersExtractor;
 @property (nonatomic, readonly) id<FBSDKAppEventDropDetermining> appEventsDropDeterminer;
 @property (nonatomic, readonly) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
@@ -156,6 +158,7 @@ NS_SWIFT_NAME(SharedDependencies)
                         gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                  impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                                    logger:(Class<FBSDKLogging>)logger
                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
@@ -173,7 +176,7 @@ NS_SWIFT_NAME(SharedDependencies)
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
-                              aemReporter:(nullable Class<FBSDKAEMReporter>)aemReporter
+                              aemReporter:(Class<FBSDKAEMReporter>)aemReporter
               appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
                   appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
                        appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
@@ -193,7 +196,7 @@ NS_SWIFT_NAME(SharedDependencies)
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
-                      skAdNetworkReporter:(nullable id <FBSDKAppEventsReporter, FBSKAdNetworkReporting>) skAdNetworkReporter
+                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter, FBSKAdNetworkReporting>)skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                                 urlHoster:(id<FBSDKURLHosting>)urlHoster
