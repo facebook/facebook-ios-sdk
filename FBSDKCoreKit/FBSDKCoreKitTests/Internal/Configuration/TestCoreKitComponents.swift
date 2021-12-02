@@ -10,8 +10,10 @@ enum TestCoreKitComponents {
   // swiftlint:disable:next function_body_length
   static func makeComponents() -> CoreKitComponents {
     CoreKitComponents(
+      accessTokenExpirer: TestAccessTokenExpirer(),
       accessTokenWallet: TestAccessTokenWallet.self,
       advertiserIDProvider: TestAdvertiserIDProvider(),
+      appEvents: TestAppEvents(),
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       appEventsStateProvider: TestAppEventsStateProvider(),
       appEventsStateStore: TestAppEventsStateStore(),
@@ -57,6 +59,7 @@ enum TestCoreKitComponents {
       appLinkResolver: TestAppLinkResolver(),
       appLinkTargetFactory: TestAppLinkTargetFactory(),
       appLinkURLFactory: TestAppLinkURLFactory(),
+      backgroundEventLogger: TestBackgroundEventLogger(),
       codelessIndexer: TestCodelessEvents.self,
       dataExtractor: TestFileDataExtractor.self,
       featureExtractor: TestFeatureExtractor.self,

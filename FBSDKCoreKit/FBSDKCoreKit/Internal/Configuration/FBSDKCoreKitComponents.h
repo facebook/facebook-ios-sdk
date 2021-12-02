@@ -18,10 +18,12 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKATEPublisherCreating.h"
+#import "FBSDKAccessTokenExpiring.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
+#import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKAppEventsReporter.h"
 #import "FBSDKAppEventsStatePersisting.h"
@@ -30,6 +32,10 @@
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkTargetCreating.h"
 #import "FBSDKAppLinkURLCreating.h"
+#import "FBSDKApplicationActivating.h"
+#import "FBSDKApplicationLifecycleObserving.h"
+#import "FBSDKApplicationStateSetting.h"
+#import "FBSDKBackgroundEventLogging.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDeviceInformationProviding.h"
@@ -68,8 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CoreKitComponents)
 @interface FBSDKCoreKitComponents : NSObject
 
+@property (nonatomic, readonly) id<FBSDKAccessTokenExpiring> accessTokenExpirer;
 @property (nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding> accessTokenWallet;
 @property (nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
@@ -116,6 +124,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKAppLinkResolving> appLinkResolver;
 @property (nonatomic, readonly) id<FBSDKAppLinkTargetCreating> appLinkTargetFactory;
 @property (nonatomic, readonly) id<FBSDKAppLinkURLCreating> appLinkURLFactory;
+@property (nonatomic, readonly) id<FBSDKBackgroundEventLogging> backgroundEventLogger;
 @property (nonatomic, readonly) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nonatomic, readonly) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
@@ -137,42 +146,44 @@ NS_SWIFT_NAME(CoreKitComponents)
 
 #endif
 
-- (instancetype)initWithAccessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
-                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
-           appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-                   appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
-                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
-            applicationActivationNotifier:(id)applicationActivationNotifier
-                      atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
-                authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
-                             crashHandler:(id<FBSDKCrashHandler>)crashHandler
-                            crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                         defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
-                deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
-               errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                             errorFactory:(id<FBSDKErrorCreating>)errorFactory
-                            errorReporter:(id<FBSDKErrorReporting>)errorReporter
-                 eventDeactivationManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationManager
-                              eventLogger:(id<FBSDKEventLogging>)eventLogger
-                           featureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
-                        gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-                      graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                  impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
-                   infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                                   logger:(Class<FBSDKLogging>)logger
-                            loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
-                  macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-           operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                         piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
-             restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
-              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                 settings:(id<FBSDKSettings>)settings
-                        timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
-                               tokenCache:(id<FBSDKTokenCaching>)tokenCache
-                   urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
-                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+- (instancetype)initWithAccessTokenExpirer:(id<FBSDKAccessTokenExpiring>)accessTokenExpirer
+                         accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
+                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+                                 appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+            appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
+                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+             applicationActivationNotifier:(id)applicationActivationNotifier
+                       atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
+                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                              crashHandler:(id<FBSDKCrashHandler>)crashHandler
+                             crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                          defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
+                 deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
+                errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                              errorFactory:(id<FBSDKErrorCreating>)errorFactory
+                             errorReporter:(id<FBSDKErrorReporting>)errorReporter
+                  eventDeactivationManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationManager
+                               eventLogger:(id<FBSDKEventLogging>)eventLogger
+                            featureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
+                         gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+             graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                       graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                   impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
+                    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                                    logger:(Class<FBSDKLogging>)logger
+                             loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                   macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+            operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
+                          piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
+               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                  settings:(id<FBSDKSettings>)settings
+                         timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
+                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
+                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
+                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
@@ -184,6 +195,7 @@ NS_SWIFT_NAME(CoreKitComponents)
                           appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
                      appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
                         appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+                     backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
                           codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
                             dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                          featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
