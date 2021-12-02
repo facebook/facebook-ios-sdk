@@ -22,6 +22,7 @@
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginProviding.h"
 #import "FBSDKLoginURLCompleter+Testing.h"
+#import "FBSDKLoginUtility.h"
 #import "FBSDKNonceUtility.h"
 #import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
