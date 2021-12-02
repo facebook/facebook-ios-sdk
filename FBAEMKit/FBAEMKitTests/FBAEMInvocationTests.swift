@@ -289,6 +289,27 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
+  func testProcessedParametersWithValidContentAndContentID() {
+    let invocation: AEMInvocation? = self.validInvocation
+    let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
+    let contentIDs: [String] = ["id123", "id456"]
+
+    let parameters = invocation?.processedParameters([
+      Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+      Keys.contentID: "[\"id123\", \"id456\"]",
+      Keys.contentType: "product"
+    ]) as? [String: AnyHashable]
+    XCTAssertEqual(
+      parameters,
+      [
+        Keys.content: [content],
+        Keys.contentID: contentIDs,
+        Keys.contentType: "product"
+      ],
+      "Processed parameters are not expected"
+    )
+  }
+
   func testProcessedParametersWithValidContent() {
     let invocation: AEMInvocation? = self.validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
