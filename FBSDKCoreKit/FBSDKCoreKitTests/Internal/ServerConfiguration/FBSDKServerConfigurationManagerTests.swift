@@ -105,6 +105,60 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     )
   }
 
+  func testParsingWithMissingDialogConfigurations() {
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      [String: Any](),
+      error: nil,
+      appID: name
+    )
+    XCTAssertNil(
+      dialogConfigurationMapBuilder.capturedRawConfigurations,
+      "Should not invoke the dialog configuration builder when the raw response is missing a raw dialog configuration"
+    )
+  }
+
+  func testParsingWithDialogConfigurationsMissingDataKey() {
+    let response = [
+      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any]()
+    ]
+
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      response,
+      error: nil,
+      appID: name
+    )
+    XCTAssertNil(
+      dialogConfigurationMapBuilder.capturedRawConfigurations,
+      "Should not invoke the dialog configuration builder when the raw dialog configuration is missing a data key"
+    )
+  }
+
+  func testParsingWithValidDialogConfigurations() {
+    let expectedRawConfigurations = [
+      SampleRawDialogConfigurations.createValid(name: name),
+      SampleRawDialogConfigurations.createValid(name: "foo")
+    ]
+    let response = [
+      "ios_dialog_configs": [
+        "data": expectedRawConfigurations
+      ]
+    ]
+
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      response,
+      error: nil,
+      appID: name
+    )
+
+    zip(
+      dialogConfigurationMapBuilder.capturedRawConfigurations ?? [],
+      expectedRawConfigurations
+    )
+    .forEach { actual, expected in
+      assertEqualRawDialogConfigurations(actual, expected)
+    }
+  }
+
   func testParsingResponses() {
     for _ in 0..<100 {
       ServerConfigurationManager.shared.processLoadRequestResponse(
@@ -113,5 +167,33 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
         appID: name
       )
     }
+  }
+
+  // MARK: - Helpers
+
+  func assertEqualRawDialogConfigurations(
+    _ actual: [String: Any],
+    _ expected: [String: Any],
+    _ file: StaticString = #file,
+    _ line: UInt = #line
+  ) {
+    XCTAssertEqual(
+      actual["name"] as? String,
+      expected["name"] as? String,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      actual["url"] as? String,
+      expected["url"] as? String,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      actual["versions"] as? [String],
+      expected["versions"] as? [String],
+      file: file,
+      line: line
+    )
   }
 }

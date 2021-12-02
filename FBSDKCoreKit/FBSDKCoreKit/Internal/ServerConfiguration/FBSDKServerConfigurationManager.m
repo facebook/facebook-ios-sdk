@@ -218,7 +218,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSString *defaultShareMode = [FBSDKTypeUtility coercedToStringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD]];
     BOOL implicitLoggingEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD]];
     NSDictionary<NSString *, id> *dialogConfigurations = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD]];
-    dialogConfigurations = [self _parseDialogConfigurations:dialogConfigurations];
+    if (dialogConfigurations) {
+      dialogConfigurations = [self _parseDialogConfigurations:dialogConfigurations];
+    } else {
+      dialogConfigurations = @{};
+    }
     NSDictionary<NSString *, id> *dialogFlows = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD]];
     FBSDKErrorConfiguration *errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
     [errorConfiguration updateWithArray:resultDictionary[FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD]];
@@ -384,24 +388,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
-- (NSDictionary<NSString *, FBSDKDialogConfiguration *> *)_parseDialogConfigurations:(NSDictionary<NSString *, id> *)dictionary
+- (NSDictionary<NSString *, FBSDKDialogConfiguration *> *)_parseDialogConfigurations:(nonnull NSDictionary<NSString *, id> *)dictionary
 {
-  NSMutableDictionary<NSString *, id> *dialogConfigurations = [NSMutableDictionary new];
-  NSArray *dialogConfigurationsArray = [FBSDKTypeUtility arrayValue:dictionary[@"data"]];
-  for (id dialogConfiguration in dialogConfigurationsArray) {
-    NSDictionary<NSString *, id> *dialogConfigurationDictionary = [FBSDKTypeUtility dictionaryValue:dialogConfiguration];
-    if (dialogConfigurationDictionary) {
-      NSString *name = [FBSDKTypeUtility coercedToStringValue:dialogConfigurationDictionary[@"name"]];
-      if (name.length) {
-        NSURL *URL = [FBSDKTypeUtility coercedToURLValue:dialogConfigurationDictionary[@"url"]];
-        NSArray *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
-        [FBSDKTypeUtility dictionary:dialogConfigurations setObject:[[FBSDKDialogConfiguration alloc] initWithName:name
-                                                                                                               URL:URL
-                                                                                                       appVersions:appVersions] forKey:name];
-      }
-    }
+  NSArray<NSDictionary<NSString *, id> *> *dialogConfigurationsArray = [FBSDKTypeUtility arrayValue:dictionary[@"data"]];
+  if (dialogConfigurationsArray) {
+    return [self.dialogConfigurationMapBuilder buildDialogConfigurationMapWithRawConfigurations:dialogConfigurationsArray];
+  } else {
+    return @{};
   }
-  return dialogConfigurations;
 }
 
 - (BOOL)_serverConfigurationTimestampIsValid:(NSDate *)timestamp
