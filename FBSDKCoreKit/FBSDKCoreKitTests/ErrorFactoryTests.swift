@@ -11,6 +11,8 @@
 import FBSDKCoreKit
 import XCTest
 
+// swiftformat:disable indent // Will be fixed in 0.49.0
+
 final class ErrorFactoryTests: XCTestCase {
 
   // MARK: - Test Assumptions
@@ -458,7 +460,7 @@ final class ErrorFactoryTests: XCTestCase {
     var name: String {
       switch self {
       case .invalid(name: let name, _),
-        .required(name: let name):
+           .required(name: let name): // swiftlint:disable:this indentation_width
         return name
       }
     }

@@ -1624,7 +1624,8 @@ class SettingsTests: XCTestCase {
     XCTAssertNotEqual(
       date as? Date,
       userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"] as? Date,
-      "Should update set advertiser tracking enabled timesstamp")
+      "Should update set advertiser tracking enabled timesstamp"
+    )
   }
 
   func testIsEventDelayTimerExpired() {

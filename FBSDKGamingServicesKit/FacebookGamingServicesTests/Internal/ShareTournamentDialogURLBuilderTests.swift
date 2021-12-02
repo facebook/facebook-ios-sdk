@@ -32,7 +32,7 @@ class ShareTournamentDialogURLBuilderTests: XCTestCase {
       ShareTournamentDialogURLBuilder
         .update(updateTournament)
         .url(withPathAppID: "12345", score: 1000)
-      )
+    )
     let updateURLComponents = try XCTUnwrap(
       URLComponents(
         url: updateURL,

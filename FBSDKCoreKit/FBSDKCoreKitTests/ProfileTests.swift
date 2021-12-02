@@ -989,106 +989,94 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     decodeObjectCheck(
       decodedObject: "userID",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the userID key"
+      failureMessage: "Should decode a string for the userID key"
     )
 
     decodeObjectCheck(
       decodedObject: "firstName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the firstName key"
+      failureMessage: "Should decode a string for the firstName key"
     )
 
     decodeObjectCheck(
       decodedObject: "middleName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the middleName key"
+      failureMessage: "Should decode a string for the middleName key"
     )
 
     decodeObjectCheck(
       decodedObject: "lastName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the lastName key"
+      failureMessage: "Should decode a string for the lastName key"
     )
 
     decodeObjectCheck(
       decodedObject: "name",
       objectType: NSString.self,
       failureMessage:
-        "Should decode a string for the name key"
+      "Should decode a string for the name key"
     )
 
     decodeObjectCheck(
       decodedObject: "linkURL",
       objectType: NSURL.self,
-      failureMessage:
-        "Should decode a url for the linkURL key"
+      failureMessage: "Should decode a url for the linkURL key"
     )
 
     decodeObjectCheck(
       decodedObject: "refreshDate",
       objectType: NSDate.self,
-      failureMessage:
-        "Should decode a date for the refreshDate key"
+      failureMessage: "Should decode a date for the refreshDate key"
     )
 
     decodeObjectCheck(
       decodedObject: "imageURL",
       objectType: NSURL.self,
-      failureMessage:
-        "Should decode a url for the imageURL key"
+      failureMessage: "Should decode a url for the imageURL key"
     )
 
     decodeObjectCheck(
       decodedObject: "email",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the email key"
+      failureMessage: "Should decode a string for the email key"
     )
 
     decodeObjectCheck(
       decodedObject: "friendIDs",
       objectType: NSArray.self,
-      failureMessage:
-        "Should decode an array for the friendIDs key"
+      failureMessage: "Should decode an array for the friendIDs key"
     )
 
     decodeObjectCheck(
       decodedObject: "birthday",
       objectType: NSDate.self,
-      failureMessage:
-        "Should decode a date for the birthday key"
+      failureMessage: "Should decode a date for the birthday key"
     )
 
     decodeObjectCheck(
       decodedObject: "ageRange",
       objectType: UserAgeRange.self,
       failureMessage:
-        "Should decode a UserAgeRange object for the ageRange key"
+      "Should decode a UserAgeRange object for the ageRange key"
     )
 
     decodeObjectCheck(
       decodedObject: "hometown",
       objectType: Location.self,
-      failureMessage:
-        "Should decode a Location object for the hometown key"
+      failureMessage: "Should decode a Location object for the hometown key"
     )
 
     decodeObjectCheck(
       decodedObject: "location",
       objectType: Location.self,
-      failureMessage:
-        "Should decode a Location object for the location key"
+      failureMessage: "Should decode a Location object for the location key"
     )
 
     decodeObjectCheck(
       decodedObject: "gender",
       objectType: NSString.self,
       failureMessage:
-        "Should decode a string for the gender key"
+      "Should decode a string for the gender key"
     )
     XCTAssertEqual(
       coder.decodedObject["isLimited"] as? String,
