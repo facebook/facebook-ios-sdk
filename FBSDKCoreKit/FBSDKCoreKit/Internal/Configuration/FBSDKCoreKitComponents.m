@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKSharedDependencies.h"
+#import "FBSDKCoreKitComponents.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation FBSDKSharedDependencies
+@implementation FBSDKCoreKitComponents
 
 - (instancetype)initWithAccessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider

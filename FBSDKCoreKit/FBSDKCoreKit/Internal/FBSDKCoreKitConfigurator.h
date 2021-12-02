@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSharedDependencies.h"
+#import "FBSDKCoreKitComponents.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CoreKitConfigurator)
 @interface FBSDKCoreKitConfigurator : NSObject
 
-- (instancetype)initWithDependencies:(FBSDKSharedDependencies *)dependencies;
+- (instancetype)initWithComponents:(FBSDKCoreKitComponents *)components;
 
 - (void)configureTargets;
 

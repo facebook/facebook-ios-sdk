@@ -41,16 +41,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCoreKitConfigurator ()
 
-@property (nonatomic) FBSDKSharedDependencies *dependencies;
+@property (nonatomic) FBSDKCoreKitComponents *components;
 
 @end
 
 @implementation FBSDKCoreKitConfigurator
 
-- (instancetype)initWithDependencies:(FBSDKSharedDependencies *)dependencies
+- (instancetype)initWithComponents:(FBSDKCoreKitComponents *)components
 {
   if ((self = [super init])) {
-    _dependencies = dependencies;
+    _components = components;
   }
 
   return self;
@@ -99,155 +99,155 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureAccessToken
 {
-  [FBSDKAccessToken configureWithTokenCache:self.dependencies.tokenCache
-              graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
-               graphRequestPiggybackManager:self.dependencies.piggybackManager];
+  [FBSDKAccessToken configureWithTokenCache:self.components.tokenCache
+              graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
+               graphRequestPiggybackManager:self.components.piggybackManager];
 }
 
 - (void)configureAppEvents
 {
-  [FBSDKAppEvents.shared configureWithGateKeeperManager:self.dependencies.gateKeeperManager
-                         appEventsConfigurationProvider:self.dependencies.appEventsConfigurationProvider
-                            serverConfigurationProvider:self.dependencies.serverConfigurationProvider
-                                    graphRequestFactory:self.dependencies.graphRequestFactory
-                                         featureChecker:self.dependencies.featureChecker
-                                       primaryDataStore:self.dependencies.defaultDataStore
-                                                 logger:self.dependencies.logger
-                                               settings:self.dependencies.settings
-                                        paymentObserver:self.dependencies.paymentObserver
-                                      timeSpentRecorder:self.dependencies.timeSpentRecorder
-                                    appEventsStateStore:self.dependencies.appEventsStateStore
-                    eventDeactivationParameterProcessor:self.dependencies.eventDeactivationManager
-                restrictiveDataFilterParameterProcessor:self.dependencies.restrictiveDataFilterManager
-                                    atePublisherFactory:self.dependencies.atePublisherFactory
-                                 appEventsStateProvider:self.dependencies.appEventsStateProvider
-                                   advertiserIDProvider:self.dependencies.advertiserIDProvider
-                                          userDataStore:self.dependencies.userDataStore];
+  [FBSDKAppEvents.shared configureWithGateKeeperManager:self.components.gateKeeperManager
+                         appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
+                            serverConfigurationProvider:self.components.serverConfigurationProvider
+                                    graphRequestFactory:self.components.graphRequestFactory
+                                         featureChecker:self.components.featureChecker
+                                       primaryDataStore:self.components.defaultDataStore
+                                                 logger:self.components.logger
+                                               settings:self.components.settings
+                                        paymentObserver:self.components.paymentObserver
+                                      timeSpentRecorder:self.components.timeSpentRecorder
+                                    appEventsStateStore:self.components.appEventsStateStore
+                    eventDeactivationParameterProcessor:self.components.eventDeactivationManager
+                restrictiveDataFilterParameterProcessor:self.components.restrictiveDataFilterManager
+                                    atePublisherFactory:self.components.atePublisherFactory
+                                 appEventsStateProvider:self.components.appEventsStateProvider
+                                   advertiserIDProvider:self.components.advertiserIDProvider
+                                          userDataStore:self.components.userDataStore];
 }
 
 - (void)configureAppEventsConfigurationManager
 {
-  [FBSDKAppEventsConfigurationManager configureWithStore:self.dependencies.defaultDataStore
-                                                settings:self.dependencies.settings
-                                     graphRequestFactory:self.dependencies.graphRequestFactory
-                           graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
+  [FBSDKAppEventsConfigurationManager configureWithStore:self.components.defaultDataStore
+                                                settings:self.components.settings
+                                     graphRequestFactory:self.components.graphRequestFactory
+                           graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
 }
 
 - (void)configureAppEventsDeviceInfo
 {
-  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:self.dependencies.settings];
+  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:self.components.settings];
 }
 
 - (void)configureAppEventsState
 {
   FBSDKAppEventsState.eventProcessors = @[
-    self.dependencies.eventDeactivationManager,
-    self.dependencies.restrictiveDataFilterManager
+    self.components.eventDeactivationManager,
+    self.components.restrictiveDataFilterManager
   ];
 }
 
 - (void)configureAppEventsUtility
 {
-  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.dependencies.appEventsConfigurationProvider;
-  FBSDKAppEventsUtility.shared.deviceInformationProvider = self.dependencies.deviceInformationProvider;
+  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.components.appEventsConfigurationProvider;
+  FBSDKAppEventsUtility.shared.deviceInformationProvider = self.components.deviceInformationProvider;
 }
 
 - (void)configureAuthenticationToken
 {
-  FBSDKAuthenticationToken.tokenCache = self.dependencies.tokenCache;
+  FBSDKAuthenticationToken.tokenCache = self.components.tokenCache;
 }
 
 - (void)configureButton
 {
-  [FBSDKButton configureWithApplicationActivationNotifier:self.dependencies.applicationActivationNotifier
-                                              eventLogger:self.dependencies.eventLogger
-                                      accessTokenProvider:self.dependencies.accessTokenWallet];
+  [FBSDKButton configureWithApplicationActivationNotifier:self.components.applicationActivationNotifier
+                                              eventLogger:self.components.eventLogger
+                                      accessTokenProvider:self.components.accessTokenWallet];
 }
 
 - (void)configureFeatureManager
 {
-  [FBSDKFeatureManager.shared configureWithGateKeeperManager:self.dependencies.gateKeeperManager
-                                                    settings:self.dependencies.settings
-                                                       store:self.dependencies.defaultDataStore];
+  [FBSDKFeatureManager.shared configureWithGateKeeperManager:self.components.gateKeeperManager
+                                                    settings:self.components.settings
+                                                       store:self.components.defaultDataStore];
 }
 
 - (void)configureGatekeeperManager
 {
-  [FBSDKGateKeeperManager configureWithSettings:self.dependencies.settings
-                            graphRequestFactory:self.dependencies.graphRequestFactory
-                  graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
-                                          store:self.dependencies.defaultDataStore];
+  [FBSDKGateKeeperManager configureWithSettings:self.components.settings
+                            graphRequestFactory:self.components.graphRequestFactory
+                  graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
+                                          store:self.components.defaultDataStore];
 }
 
 - (void)configureGraphRequest
 {
-  [FBSDKGraphRequest configureWithSettings:self.dependencies.settings
-          currentAccessTokenStringProvider:self.dependencies.accessTokenWallet
-             graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
+  [FBSDKGraphRequest configureWithSettings:self.components.settings
+          currentAccessTokenStringProvider:self.components.accessTokenWallet
+             graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
 }
 
 - (void)configureGraphRequestConnection
 {
-  [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.dependencies.urlSessionProxyFactory
-                                        errorConfigurationProvider:self.dependencies.errorConfigurationProvider
-                                                  piggybackManager:self.dependencies.piggybackManager
-                                                          settings:self.dependencies.settings
-                                     graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
-                                                       eventLogger:self.dependencies.eventLogger
-                                    operatingSystemVersionComparer:self.dependencies.operatingSystemVersionComparer
-                                           macCatalystDeterminator:self.dependencies.macCatalystDeterminator
-                                               accessTokenProvider:self.dependencies.accessTokenWallet
-                                                 accessTokenSetter:self.dependencies.accessTokenWallet
-                                                      errorFactory:self.dependencies.errorFactory
-                                       authenticationTokenProvider:self.dependencies.authenticationTokenWallet];
+  [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.components.urlSessionProxyFactory
+                                        errorConfigurationProvider:self.components.errorConfigurationProvider
+                                                  piggybackManager:self.components.piggybackManager
+                                                          settings:self.components.settings
+                                     graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
+                                                       eventLogger:self.components.eventLogger
+                                    operatingSystemVersionComparer:self.components.operatingSystemVersionComparer
+                                           macCatalystDeterminator:self.components.macCatalystDeterminator
+                                               accessTokenProvider:self.components.accessTokenWallet
+                                                 accessTokenSetter:self.components.accessTokenWallet
+                                                      errorFactory:self.components.errorFactory
+                                       authenticationTokenProvider:self.components.authenticationTokenWallet];
   [FBSDKGraphRequestConnection setCanMakeRequests];
 }
 
 - (void)configureGraphRequestPiggybackManager
 {
-  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:self.dependencies.accessTokenWallet
-                                                     settings:self.dependencies.settings
-                                  serverConfigurationProvider:self.dependencies.serverConfigurationProvider
-                                          graphRequestFactory:self.dependencies.graphRequestFactory];
+  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:self.components.accessTokenWallet
+                                                     settings:self.components.settings
+                                  serverConfigurationProvider:self.components.serverConfigurationProvider
+                                          graphRequestFactory:self.components.graphRequestFactory];
 }
 
 - (void)configureImpressionLoggingButton
 {
-  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:self.dependencies.impressionLoggerFactory];
+  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:self.components.impressionLoggerFactory];
 }
 
 - (void)configureInstrumentManager
 {
-  [FBSDKInstrumentManager.shared configureWithFeatureChecker:self.dependencies.featureChecker
-                                                    settings:self.dependencies.settings
-                                               crashObserver:self.dependencies.crashObserver
-                                               errorReporter:self.dependencies.errorReporter
-                                                crashHandler:self.dependencies.crashHandler];
+  [FBSDKInstrumentManager.shared configureWithFeatureChecker:self.components.featureChecker
+                                                    settings:self.components.settings
+                                               crashObserver:self.components.crashObserver
+                                               errorReporter:self.components.errorReporter
+                                                crashHandler:self.components.crashHandler];
 }
 
 - (void)configureInternalUtility
 {
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.dependencies.infoDictionaryProvider
-                                                            loggerFactory:self.dependencies.loggerFactory];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.components.infoDictionaryProvider
+                                                            loggerFactory:self.components.loggerFactory];
 }
 
 - (void)configureSDKError
 {
-  [FBSDKError configureWithErrorReporter:self.dependencies.errorReporter];
+  [FBSDKError configureWithErrorReporter:self.components.errorReporter];
 }
 
 - (void)configureServerConfigurationManager
 {
-  [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:self.dependencies.graphRequestFactory
-                                             graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory];
+  [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:self.components.graphRequestFactory
+                                             graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
 }
 
 - (void)configureSettings
 {
-  [FBSDKSettings configureWithStore:self.dependencies.defaultDataStore
-     appEventsConfigurationProvider:self.dependencies.appEventsConfigurationProvider
-             infoDictionaryProvider:self.dependencies.infoDictionaryProvider
-                        eventLogger:self.dependencies.eventLogger];
+  [FBSDKSettings configureWithStore:self.components.defaultDataStore
+     appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
+             infoDictionaryProvider:self.components.infoDictionaryProvider
+                        eventLogger:self.components.eventLogger];
 }
 
 // MARK: - Non-tvOS
@@ -257,116 +257,116 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureAEMReporter
 {
   if (@available(iOS 14.0, *)) {
-    [FBAEMReporter configureWithNetworker:self.dependencies.aemNetworker
-                                    appID:self.dependencies.settings.appID
-                                 reporter:self.dependencies.skAdNetworkReporter];
+    [FBAEMReporter configureWithNetworker:self.components.aemNetworker
+                                    appID:self.components.settings.appID
+                                 reporter:self.components.skAdNetworkReporter];
   }
 }
 
 - (void)configureNonTVOSAppEvents
 {
-  [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.dependencies.modelManager
-                                                            metadataIndexer:self.dependencies.metadataIndexer
-                                                        skAdNetworkReporter:self.dependencies.skAdNetworkReporter
-                                                            codelessIndexer:self.dependencies.codelessIndexer
-                                                                   swizzler:self.dependencies.swizzler
-                                                                aemReporter:self.dependencies.aemReporter];
+  [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.components.modelManager
+                                                            metadataIndexer:self.components.metadataIndexer
+                                                        skAdNetworkReporter:self.components.skAdNetworkReporter
+                                                            codelessIndexer:self.components.codelessIndexer
+                                                                   swizzler:self.components.swizzler
+                                                                aemReporter:self.components.aemReporter];
 }
 
 - (void)configureAppLinkNavigation
 {
-  [FBSDKAppLinkNavigation configureWithSettings:self.dependencies.settings
-                                      urlOpener:self.dependencies.internalURLOpener
-                             appLinkEventPoster:self.dependencies.appLinkEventPoster
-                                appLinkResolver:self.dependencies.appLinkResolver];
+  [FBSDKAppLinkNavigation configureWithSettings:self.components.settings
+                                      urlOpener:self.components.internalURLOpener
+                             appLinkEventPoster:self.components.appLinkEventPoster
+                                appLinkResolver:self.components.appLinkResolver];
 }
 
 - (void)configureAppLinkURL
 {
-  [FBSDKURL configureWithSettings:self.dependencies.settings
-                   appLinkFactory:self.dependencies.appLinkFactory
-             appLinkTargetFactory:self.dependencies.appLinkTargetFactory
-               appLinkEventPoster:self.dependencies.appLinkEventPoster];
+  [FBSDKURL configureWithSettings:self.components.settings
+                   appLinkFactory:self.components.appLinkFactory
+             appLinkTargetFactory:self.components.appLinkTargetFactory
+               appLinkEventPoster:self.components.appLinkEventPoster];
 }
 
 - (void)configureAppLinkUtility
 {
-  [FBSDKAppLinkUtility configureWithGraphRequestFactory:self.dependencies.graphRequestFactory
-                                 infoDictionaryProvider:self.dependencies.infoDictionaryProvider
-                                               settings:self.dependencies.settings
-                         appEventsConfigurationProvider:self.dependencies.appEventsConfigurationProvider
-                                   advertiserIDProvider:self.dependencies.advertiserIDProvider
-                                appEventsDropDeterminer:self.dependencies.appEventsDropDeterminer
-                            appEventParametersExtractor:self.dependencies.appEventParametersExtractor
-                                      appLinkURLFactory:self.dependencies.appLinkURLFactory
-                                         userIDProvider:self.dependencies.userIDProvider
-                                          userDataStore:self.dependencies.userDataStore];
+  [FBSDKAppLinkUtility configureWithGraphRequestFactory:self.components.graphRequestFactory
+                                 infoDictionaryProvider:self.components.infoDictionaryProvider
+                                               settings:self.components.settings
+                         appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
+                                   advertiserIDProvider:self.components.advertiserIDProvider
+                                appEventsDropDeterminer:self.components.appEventsDropDeterminer
+                            appEventParametersExtractor:self.components.appEventParametersExtractor
+                                      appLinkURLFactory:self.components.appLinkURLFactory
+                                         userIDProvider:self.components.userIDProvider
+                                          userDataStore:self.components.userDataStore];
 }
 
 - (void)configureAuthenticationStatusUtility
 {
-  [FBSDKAuthenticationStatusUtility configureWithProfileSetter:self.dependencies.profileSetter
-                                       sessionDataTaskProvider:self.dependencies.sessionDataTaskProvider
-                                             accessTokenWallet:self.dependencies.accessTokenWallet
-                                     authenticationTokenWallet:self.dependencies.authenticationTokenWallet];
+  [FBSDKAuthenticationStatusUtility configureWithProfileSetter:self.components.profileSetter
+                                       sessionDataTaskProvider:self.components.sessionDataTaskProvider
+                                             accessTokenWallet:self.components.accessTokenWallet
+                                     authenticationTokenWallet:self.components.authenticationTokenWallet];
 }
 
 - (void)configureBridgeAPIRequest
 {
-  [FBSDKBridgeAPIRequest configureWithInternalURLOpener:self.dependencies.internalURLOpener
-                                        internalUtility:self.dependencies.internalUtility
-                                               settings:self.dependencies.settings];
+  [FBSDKBridgeAPIRequest configureWithInternalURLOpener:self.components.internalURLOpener
+                                        internalUtility:self.components.internalUtility
+                                               settings:self.components.settings];
 }
 
 - (void)configureCodelessIndexer
 {
-  [FBSDKCodelessIndexer configureWithGraphRequestFactory:self.dependencies.graphRequestFactory
-                             serverConfigurationProvider:self.dependencies.serverConfigurationProvider
-                                               dataStore:self.dependencies.defaultDataStore
-                           graphRequestConnectionFactory:self.dependencies.graphRequestConnectionFactory
-                                                swizzler:self.dependencies.swizzler
-                                                settings:self.dependencies.settings
-                                    advertiserIDProvider:self.dependencies.advertiserIDProvider];
+  [FBSDKCodelessIndexer configureWithGraphRequestFactory:self.components.graphRequestFactory
+                             serverConfigurationProvider:self.components.serverConfigurationProvider
+                                               dataStore:self.components.defaultDataStore
+                           graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
+                                                swizzler:self.components.swizzler
+                                                settings:self.components.settings
+                                    advertiserIDProvider:self.components.advertiserIDProvider];
 }
 
 - (void)configureCrashShield
 {
-  [FBSDKCrashShield configureWithSettings:self.dependencies.settings
-                      graphRequestFactory:self.dependencies.graphRequestFactory
-                          featureChecking:self.dependencies.featureChecker];
+  [FBSDKCrashShield configureWithSettings:self.components.settings
+                      graphRequestFactory:self.components.graphRequestFactory
+                          featureChecking:self.components.featureChecker];
 }
 
 - (void)configureFeatureExtractor
 {
-  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:self.dependencies.rulesFromKeyProvider];
+  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:self.components.rulesFromKeyProvider];
 }
 
 - (void)configureModelManager
 {
-  [FBSDKModelManager.shared configureWithFeatureChecker:self.dependencies.featureChecker
-                                    graphRequestFactory:self.dependencies.graphRequestFactory
-                                            fileManager:self.dependencies.fileManager
-                                                  store:self.dependencies.defaultDataStore
-                                               settings:self.dependencies.settings
-                                          dataExtractor:self.dependencies.dataExtractor
-                                      gateKeeperManager:self.dependencies.gateKeeperManager
-                                 suggestedEventsIndexer:self.dependencies.suggestedEventsIndexer
-                                       featureExtractor:self.dependencies.featureExtractor];
+  [FBSDKModelManager.shared configureWithFeatureChecker:self.components.featureChecker
+                                    graphRequestFactory:self.components.graphRequestFactory
+                                            fileManager:self.components.fileManager
+                                                  store:self.components.defaultDataStore
+                                               settings:self.components.settings
+                                          dataExtractor:self.components.dataExtractor
+                                      gateKeeperManager:self.components.gateKeeperManager
+                                 suggestedEventsIndexer:self.components.suggestedEventsIndexer
+                                       featureExtractor:self.components.featureExtractor];
 }
 
 - (void)configureProfile
 {
-  [FBSDKProfile configureWithDataStore:self.dependencies.defaultDataStore
-                   accessTokenProvider:self.dependencies.accessTokenWallet
-                    notificationCenter:self.dependencies.notificationCenter
-                              settings:self.dependencies.settings
-                             urlHoster:self.dependencies.urlHoster];
+  [FBSDKProfile configureWithDataStore:self.components.defaultDataStore
+                   accessTokenProvider:self.components.accessTokenWallet
+                    notificationCenter:self.components.notificationCenter
+                              settings:self.components.settings
+                             urlHoster:self.components.urlHoster];
 }
 
 - (void)configureWebDialogView
 {
-  [FBSDKWebDialogView configureWithWebViewProvider:self.dependencies.webViewProvider
-                                         urlOpener:self.dependencies.internalURLOpener];
+  [FBSDKWebDialogView configureWithWebViewProvider:self.components.webViewProvider
+                                         urlOpener:self.components.internalURLOpener];
 }
 
 #endif

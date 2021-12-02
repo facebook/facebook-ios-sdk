@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-enum TestSharedDependencies {
+enum TestCoreKitComponents {
   // swiftlint:disable:next function_body_length
-  static func makeDependencies() -> SharedDependencies {
-    SharedDependencies(
+  static func makeComponents() -> CoreKitComponents {
+    CoreKitComponents(
       accessTokenWallet: TestAccessTokenWallet.self,
       advertiserIDProvider: TestAdvertiserIDProvider(),
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
