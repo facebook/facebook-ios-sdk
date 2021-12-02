@@ -10,6 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKDialogConfigurationMapBuilding.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 
@@ -29,11 +30,13 @@ NS_SWIFT_NAME(ServerConfigurationManager)
 
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nullable, nonatomic) id<FBSDKDialogConfigurationMapBuilding> dialogConfigurationMapBuilder;
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-  NS_SWIFT_NAME(configure(graphRequestFactory:graphRequestConnectionFactory:));
+           dialogConfigurationMapBuilder:(id<FBSDKDialogConfigurationMapBuilding>)dialogConfigurationMapBuilder
+  NS_SWIFT_NAME(configure(graphRequestFactory:graphRequestConnectionFactory:dialogConfigurationMapBuilder:));
 // UNCRUSTIFY_FORMAT_ON
 
 - (void)clearCache;

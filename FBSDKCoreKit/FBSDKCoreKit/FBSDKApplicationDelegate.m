@@ -35,6 +35,7 @@
 #import "FBSDKButton+Internal.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield+Internal.h"
+#import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
@@ -683,7 +684,8 @@ static UIApplicationState _applicationState;
                                                       errorFactory:errorFactory
                                        authenticationTokenProvider:FBSDKAuthenticationToken.class]; // TEMP: added to configurator
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory
-                                             graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
+                                             graphRequestConnectionFactory:graphRequestConnectionFactory
+                                             dialogConfigurationMapBuilder:[FBSDKDialogConfigurationMapBuilder new]]; // TEMP: added to configurator
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:appEventsConfigurationProvider
              infoDictionaryProvider:NSBundle.mainBundle

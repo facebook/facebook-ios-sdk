@@ -39,6 +39,7 @@
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDeviceInformationProviding.h"
+#import "FBSDKDialogConfigurationMapBuilding.h"
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorCreating.h"
 #import "FBSDKErrorReporting.h"
@@ -93,6 +94,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKErrorReporting> errorReporter;
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> eventDeactivationManager;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic, readonly) id<FBSDKDialogConfigurationMapBuilding> dialogConfigurationMapBuilder;
 @property (nonatomic, readonly) id<FBSDKFeatureChecking, FBSDKFeatureDisabling> featureChecker;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nonatomic, readonly) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
@@ -160,6 +162,7 @@ NS_SWIFT_NAME(CoreKitComponents)
                              crashObserver:(id<FBSDKCrashObserving>)crashObserver
                           defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
                  deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
+             dialogConfigurationMapBuilder:(id<FBSDKDialogConfigurationMapBuilding>)dialogConfigurationMapBuilder
                 errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                               errorFactory:(id<FBSDKErrorCreating>)errorFactory
                              errorReporter:(id<FBSDKErrorReporting>)errorReporter

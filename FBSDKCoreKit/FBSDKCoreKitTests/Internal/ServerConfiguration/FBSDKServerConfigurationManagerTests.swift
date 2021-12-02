@@ -14,6 +14,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
   var connection: TestGraphRequestConnection!
   var requestFactory: TestGraphRequestFactory!
   var connectionFactory: TestGraphRequestConnectionFactory!
+  var dialogConfigurationMapBuilder: TestDialogConfigurationMapBuilder!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -22,9 +23,11 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     connection = TestGraphRequestConnection()
     requestFactory = TestGraphRequestFactory()
     connectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    dialogConfigurationMapBuilder = TestDialogConfigurationMapBuilder()
     ServerConfigurationManager.shared.configure(
       graphRequestFactory: requestFactory,
-      graphRequestConnectionFactory: connectionFactory
+      graphRequestConnectionFactory: connectionFactory,
+      dialogConfigurationMapBuilder: dialogConfigurationMapBuilder
     )
   }
 
@@ -33,6 +36,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     connection = nil
     requestFactory = nil
     connectionFactory = nil
+    dialogConfigurationMapBuilder = nil
 
     super.tearDown()
   }
@@ -48,6 +52,10 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
       ServerConfigurationManager.shared.graphRequestConnectionFactory,
       "Should not have a graph request connection factory by default"
     )
+    XCTAssertNil(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      "Should not have a dialog configuration map builder by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -58,6 +66,10 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     XCTAssertTrue(
       ServerConfigurationManager.shared.graphRequestConnectionFactory === connectionFactory,
       "Should set the provided graph request connection factory"
+    )
+    XCTAssertTrue(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder === dialogConfigurationMapBuilder,
+      "Should set the provided dialog configuration map builder"
     )
   }
 

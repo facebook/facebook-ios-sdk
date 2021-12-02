@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
                              crashObserver:(id<FBSDKCrashObserving>)crashObserver
                           defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
                  deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
+             dialogConfigurationMapBuilder:(id<FBSDKDialogConfigurationMapBuilding>)dialogConfigurationMapBuilder
                 errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                               errorFactory:(id<FBSDKErrorCreating>)errorFactory
                              errorReporter:(id<FBSDKErrorReporting>)errorReporter
@@ -98,6 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
     _crashObserver = crashObserver;
     _defaultDataStore = defaultDataStore;
     _deviceInformationProvider = deviceInformationProvider;
+    _dialogConfigurationMapBuilder = dialogConfigurationMapBuilder;
     _errorConfigurationProvider = errorConfigurationProvider;
     _errorFactory = errorFactory;
     _errorReporter = errorReporter;

@@ -24,6 +24,7 @@ enum TestCoreKitComponents {
       crashObserver: TestCrashObserver(),
       defaultDataStore: TestDataStore(),
       deviceInformationProvider: TestDeviceInformationProvider(),
+      dialogConfigurationMapBuilder: TestDialogConfigurationMapBuilder(),
       errorConfigurationProvider: TestErrorConfigurationProvider(),
       errorFactory: TestErrorFactory(),
       errorReporter: TestErrorReporter(),

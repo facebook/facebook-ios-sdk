@@ -92,9 +92,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
 - (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
            graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+           dialogConfigurationMapBuilder:(id<FBSDKDialogConfigurationMapBuilding>)dialogConfigurationMapBuilder
 {
   self.graphRequestFactory = graphRequestFactory;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
+  self.dialogConfigurationMapBuilder = dialogConfigurationMapBuilder;
 }
 
 #pragma mark - Public
@@ -432,6 +434,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   [self clearCache];
   self.graphRequestFactory = nil;
   self.graphRequestConnectionFactory = nil;
+  self.dialogConfigurationMapBuilder = nil;
 }
 
 #endif

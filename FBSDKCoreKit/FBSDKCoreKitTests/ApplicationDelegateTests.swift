@@ -866,6 +866,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
     XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
     XCTAssertTrue(manager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
+    XCTAssertTrue(manager.dialogConfigurationMapBuilder is DialogConfigurationMapBuilder)
   }
 
   // TEMP: added to configurator tests

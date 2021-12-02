@@ -239,7 +239,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureServerConfigurationManager
 {
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:self.components.graphRequestFactory
-                                             graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
+                                             graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
+                                             dialogConfigurationMapBuilder:self.components.dialogConfigurationMapBuilder];
 }
 
 - (void)configureSettings

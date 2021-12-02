@@ -797,6 +797,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       ServerConfigurationManager.shared.graphRequestConnectionFactory,
       "ServerConfigurationManager should not have a graph request connection factory by default"
     )
+    XCTAssertNil(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      "ServerConfigurationManager should not have a dialog configuration map builder by default"
+    )
 
     configurator.configureTargets()
 
@@ -807,6 +811,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       ServerConfigurationManager.shared.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
       "ServerConfigurationManager should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder === components.dialogConfigurationMapBuilder,
+      "ServerConfigurationManager should be configured with the dialog configuration map builder"
     )
   }
 
