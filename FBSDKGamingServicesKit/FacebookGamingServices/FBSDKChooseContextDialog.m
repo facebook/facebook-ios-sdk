@@ -26,6 +26,7 @@
 #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY @"max_size"
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
 #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
+#define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_ERROR_MESSAGE_KEY @"error_message"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
 @property (nonatomic) id<FBSDKInternalUtility> internalUtility;
@@ -142,7 +143,7 @@
   return appSwitchParameters;
 }
 
-- (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url
+- (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url error:(NSError *__autoreleasing *)errorRef
 {
   NSString *contextID;
   NSInteger contextSize = 0;
@@ -159,7 +160,11 @@
     if ([queryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY]) {
       contextSize = [queryItem.value integerValue];
     }
+    if ([queryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_ERROR_MESSAGE_KEY] && errorRef != nil) {
+      *errorRef = [FBSDKError unknownErrorWithMessage:queryItem.value];
+    }
   }
+
   if (contextID && contextID.length > 0) {
     FBSDKGamingContext.currentContext = [[FBSDKGamingContext alloc] initWithIdentifier:contextID size:contextSize];
   } else {
@@ -186,8 +191,11 @@
     return isGamingUrl;
   }
 
-  FBSDKGamingContext *context = [self _gamingContextFromURL:url];
-  if (context) {
+  NSError *error;
+  FBSDKGamingContext *context = [self _gamingContextFromURL:url error:&error];
+  if (error) {
+    [self _handleDialogError:error];
+  } else if (context) {
     [self.delegate contextDialogDidComplete:self];
   } else {
     [self.delegate contextDialogDidCancel:self];
