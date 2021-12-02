@@ -137,9 +137,8 @@ static _Nullable id<FBSDKSettings> _settings;
   if (!map) {
     map = @{
       @(FBSDKBridgeAPIProtocolTypeNative) : @{
-        FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi"],
-        FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
-        FBSDKURLSchemeMasqueradePlayer : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
+        FBSDKURLSchemeFacebookAPI : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi"],
+        FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"]
       },
       @(FBSDKBridgeAPIProtocolTypeWeb) : @{
         FBSDKURLSchemeHTTPS : [FBSDKBridgeAPIProtocolWebV1 new],

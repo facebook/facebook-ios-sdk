@@ -10,13 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(InternalUtilityProtocol)
 @protocol FBSDKInternalUtility
 
 #pragma mark - FB Apps Installed
 
 @property (nonatomic, readonly) BOOL isFacebookAppInstalled;
-@property (nonatomic, readonly) BOOL isMSQRDPlayerAppInstalled;
 
 /**
   Constructs an NSURL.
