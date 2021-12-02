@@ -11,14 +11,30 @@
 #import <Foundation/Foundation.h>
 
 #import <FBAEMKit/FBAEMKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKAppEventsReporter.h"
+#import "FBSDKConversionValueUpdating.h"
+#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(SKAdNetworkReporter)
-@interface FBSDKSKAdNetworkReporter : NSObject <FBSKAdNetworkReporting>
+@interface FBSDKSKAdNetworkReporter : NSObject <FBSKAdNetworkReporting, FBSDKAppEventsReporter>
+
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic) id<FBSDKDataPersisting> dataStore;
+@property (nonatomic) Class<FBSDKConversionValueUpdating> conversionValueUpdater;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+// UNCRUSTIFY_FORMAT_OFF
+- (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                  dataStore:(id<FBSDKDataPersisting>)dataStore
+                     conversionValueUpdater:(Class<FBSDKConversionValueUpdating>)conversionValueUpdater
+NS_SWIFT_NAME(init(graphRequestFactory:dataStore:conversionValueUpdater:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)enable;
 

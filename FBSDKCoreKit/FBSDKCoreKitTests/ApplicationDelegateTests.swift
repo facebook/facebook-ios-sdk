@@ -1289,12 +1289,12 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete graph request provider"
     )
     XCTAssertTrue(
-      delegate.skAdNetworkReporter.store === UserDefaults.standard,
+      delegate.skAdNetworkReporter.dataStore === UserDefaults.standard,
       "Should be configured with the standard user defaults"
     )
     if #available(iOS 11.3, *) {
       XCTAssertTrue(
-        delegate.skAdNetworkReporter.conversionValueUpdatable === SKAdNetwork.self,
+        delegate.skAdNetworkReporter.conversionValueUpdater === SKAdNetwork.self,
         "Should be configured with the default Conversion Value Updating Class"
       )
     }
