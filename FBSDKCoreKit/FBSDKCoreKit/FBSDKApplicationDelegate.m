@@ -710,10 +710,10 @@ static UIApplicationState _applicationState;
                graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self]; // TEMP: added to configurator
   FBSDKAuthenticationToken.tokenCache = tokenCache; // TEMP: added to configurator
   [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings]; // TEMP: added to configurator
-  FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithStore:store
-                                                                              graphRequestFactory:graphRequestFactory
-                                                                                         settings:sharedSettings
-                                                                        deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
+  FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithDataStore:store
+                                                                                  graphRequestFactory:graphRequestFactory
+                                                                                             settings:sharedSettings
+                                                                            deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
   id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
   timeSpentRecorder = [[FBSDKTimeSpentData alloc] initWithEventLogger:self.appEvents
                                           serverConfigurationProvider:serverConfigurationProvider];
