@@ -79,6 +79,14 @@ public class GamingPayloadObserver: NSObject {
       delegate.parsedGamingContextURLContaining?(payload)
       return true
     }
+
+    if
+      let tournamentID = gameEntryData[Keys.gamingPayloadTournamentID.rawValue],
+      delegate.responds(to: #selector(GamingPayloadDelegate.parsedTournamentURLContaining(_:tournamentID:)))
+    {
+      delegate.parsedTournamentURLContaining?(payload, tournamentID: tournamentID)
+      return true
+    }
     return false
   }
 }
