@@ -20,4 +20,11 @@ public protocol GamingPayloadDelegate: NSObjectProtocol {
    @param payload The payload recieved in the url
    */
   @objc optional func parsedGamingContextURLContaining(_ payload: GamingPayload)
+
+  /**
+   Delegate method will be triggered when a `GamingPayloadObserver` parses a url with a payload and tournament ID
+   @param payload The payload associated with the tournament
+   @param tournamentID The tournament ID the player wants to enter
+   */
+  @objc optional func parsedTournamentURLContaining(_ payload: GamingPayload, tournamentID: String)
 }

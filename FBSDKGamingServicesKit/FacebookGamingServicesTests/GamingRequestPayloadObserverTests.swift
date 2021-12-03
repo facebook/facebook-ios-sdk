@@ -9,11 +9,11 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class GamingRequestPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
+class GamingRequestPayloadObserverTests: XCTestCase {
+
   let gameRequestDelegate = GameRequestPayloadObserverDelegate()
   lazy var gameRequestObserver = GamingPayloadObserver(delegate: gameRequestDelegate)
   var capturedPayload: GamingPayload?
-  var wasUpdatedURLContainingCalled = false
 
   func testCreatingObserver() {
     XCTAssertTrue(
