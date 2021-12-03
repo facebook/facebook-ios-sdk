@@ -94,7 +94,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
 + (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
 {
   _internalUtility = internalUtility;
-  [_internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
+  [_internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
 }
 
 static _Nullable id<FBSDKSettings> _settings;
@@ -217,15 +217,6 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   });
 }
 
-static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
-
-+ (void)validateShareExtensionURLSchemeRegistered
-{
-  dispatch_once(&validateShareExtensionURLSchemeRegisteredToken, ^{
-    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookShareExtension];
-  });
-}
-
 #if FBTEST && DEBUG
 
 + (void)resetClassDependencies
@@ -239,7 +230,6 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   self.socialComposeViewControllerFactory = nil;
 
   validateAPIURLSchemeRegisteredToken = 0;
-  validateShareExtensionURLSchemeRegisteredToken = 0;
 
   self.hasBeenConfigured = NO;
 }
@@ -481,9 +471,9 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (BOOL)_canUseFBShareSheet
 {
-  [self.class validateShareExtensionURLSchemeRegistered];
+  [self _canShowNative];
   NSURLComponents *components = [NSURLComponents new];
-  components.scheme = FBSDKURLSchemeFacebookShareExtension;
+  components.scheme = FBSDKURLSchemeFacebookAPI;
   components.path = @"/";
   return [self.class.internalURLOpener canOpenURL:components.URL];
 }
@@ -713,11 +703,14 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     return NO;
   }
   NSString *scheme = nil;
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([self.shareContent respondsToSelector:@selector(schemeForMode:)]) {
     scheme = [(id<FBSDKSharingScheme>)self.shareContent schemeForMode:FBSDKShareDialogModeNative];
   }
+  #pragma clang diagnostic pop
   if (!(scheme.length > 0)) {
-    scheme = FBSDKURLSchemeFacebookApp;
+    scheme = FBSDKURLSchemeFacebookAPI;
   }
   NSString *methodName;
   if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {

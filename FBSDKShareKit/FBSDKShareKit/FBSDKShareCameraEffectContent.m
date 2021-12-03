@@ -165,16 +165,14 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
 
 #pragma mark - FBSDKSharingScheme
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode
 {
-  if ((FBSDKShareDialogModeNative == mode) || (FBSDKShareDialogModeAutomatic == mode)) {
-    if ([self.class.internalUtility isMSQRDPlayerAppInstalled]) {
-      // If installed, launch MSQRD Player for testing effects.
-      return FBSDKURLSchemeMasqueradePlayer;
-    }
-  }
   return nil;
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark - FBSDKSharingValidation
 

@@ -20,15 +20,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_FACEBOOK
-  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_FACEBOOK` is deprecated and will be removed in the next major release; please use `URLScheme.facebookApp` instead");
+  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_FACEBOOK` is deprecated and will be removed in the next major release; please use `URLScheme.facebookAPI` instead");
 FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_FBAPI
   DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_FBAPI` is deprecated and will be removed in the next major release; please use `URLScheme.facebookAPI` instead");
 FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_MESSENGER
   DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_MESSENGER` is deprecated and will be removed in the next major release; please use `URLScheme.messengerApp` instead");
 FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_MSQRD_PLAYER
-  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_MSQRD_PLAYER` is deprecated and will be removed in the next major release; please use `URLScheme.masqueradePlayer` instead");
+  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_MSQRD_PLAYER` is deprecated and will be removed in the next major release");
 FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_SHARE_EXTENSION
-  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_SHARE_EXTENSION` is deprecated and will be removed in the next major release; please use `URLScheme.facebookShareExtension` instead");
+  DEPRECATED_MSG_ATTRIBUTE("`FBSDK_CANOPENURL_SHARE_EXTENSION` is deprecated and will be removed in the next major release; please use `URLScheme.facebookAPI`");
 
 NS_SWIFT_NAME(InternalUtility)
 @interface FBSDKInternalUtility : NSObject

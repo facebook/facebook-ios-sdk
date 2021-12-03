@@ -6,6 +6,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Deprecated
+
+
+- Starting with v12.2.0 apps no longer need to embed numerous custom URL schemes in `LSApplicationQueriesSchemes` for their `Info.plist`.  Only the `fbapi` and `fb-messenger-share-api` custom URL schemes are needed.  With the change to iOS 15 that limits `LSApplicationQueriesSchemes` to 50 schemes, this should relieve some pressure that apps may face when running up against this limit. As part of this change the following symbols are deprecated:
+  - `URLScheme.facebookApp`
+  - `URLScheme.facebookShareExtension`
+  - `URLScheme.masqueradePlayer`
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.0...HEAD)
 
 ## 12.2.0
