@@ -8,10 +8,6 @@
 
 import FBSDKCoreKit
 
-let kGamingPayload = "payload"
-let kGamingPayloadGameRequestID = "game_request_id"
-let kGamingPayloadContextTokenID = "context_token_id"
-
 @objcMembers
 @objc(FBSDKGamingPayloadObserver)
 public class GamingPayloadObserver: NSObject {
@@ -32,12 +28,58 @@ public class GamingPayloadObserver: NSObject {
 
   private static var shared: GamingPayloadObserver? = GamingPayloadObserver()
 
+  enum Keys: String, CaseIterable {
+    case gamingPayload = "payload"
+    case gamingPayloadGameRequestID = "game_request_id"
+    case gamingPayloadContextTokenID = "context_token_id"
+    case gamingPayloadTournamentID = "tournament_id"
+  }
+
   private override init() { }
 
   public convenience init(delegate: GamingPayloadDelegate?) {
     self.init()
     self.delegate = delegate
     ApplicationDelegate.shared.addObserver(self)
+  }
+
+  private func parseURLForPayloadEntryData(appLinkUrl: AppLinkURL) -> [String: String]? {
+    let expectedParameters = Keys.allCases.map { $0.rawValue }
+    let urlParameters = appLinkUrl.appLinkExtras
+    let recievedParameters = urlParameters?.filter { expectedParameters.contains($0.key) }
+    let containsPayload = recievedParameters?[Keys.gamingPayload.rawValue] != nil
+
+    if containsPayload && recievedParameters?.keys.count ?? 0 > 1 {
+      return recievedParameters as? [String: String]
+    }
+    return [:]
+  }
+
+  private func handleDeeplinkURLIntoApp(appLinkUrl: AppLinkURL) -> Bool {
+    guard
+      let delegate = delegate,
+      let gameEntryData = self.parseURLForPayloadEntryData(appLinkUrl: appLinkUrl),
+      !gameEntryData.keys.isEmpty
+      else {
+        return false
+      }
+    let payload = GamingPayload(URL: appLinkUrl)
+
+    if
+      let gameRequestID = gameEntryData[Keys.gamingPayloadGameRequestID.rawValue],
+      delegate.responds(to: #selector(GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:))) {
+      delegate.parsedGameRequestURLContaining?(payload, gameRequestID: gameRequestID)
+      return true
+    }
+
+    if
+      let gameContextTokenID = gameEntryData[Keys.gamingPayloadContextTokenID.rawValue],
+      delegate.responds(to: #selector(GamingPayloadDelegate.parsedGamingContextURLContaining(_:))) {
+      GamingContext.current = GamingContext(identifier: gameContextTokenID, size: 0)
+      delegate.parsedGamingContextURLContaining?(payload)
+      return true
+    }
+    return false
   }
 }
 
@@ -49,34 +91,6 @@ extension GamingPayloadObserver: FBSDKApplicationObserving {
     annotation: Any?
   ) -> Bool {
     let sdkURL = AppLinkURL(url: url)
-    let urlContainsGamingPayload = sdkURL.appLinkExtras?[kGamingPayload] != nil
-
-    let gameRequestID = sdkURL.appLinkExtras?[kGamingPayloadGameRequestID] as? String
-    let urlContainsGameRequestID = gameRequestID != nil
-
-    let gameContextTokenID = sdkURL.appLinkExtras?[kGamingPayloadContextTokenID] as? String
-    let urlContainsGameContextTokenID = gameContextTokenID != nil
-
-    if !urlContainsGamingPayload || (urlContainsGameContextTokenID && urlContainsGameRequestID) {
-      return false
-    }
-
-    guard let delegate = delegate else { return false }
-
-    let payload = GamingPayload(URL: sdkURL)
-
-    if let gameRequestID = gameRequestID, // swiftlint:disable:next indentation_width
-       delegate.responds(to: #selector(GamingPayloadDelegate.parsedGameRequestURLContaining(_:gameRequestID:))) {
-      delegate.parsedGameRequestURLContaining?(payload, gameRequestID: gameRequestID)
-      return true
-    }
-
-    if let gameContextTokenID = gameContextTokenID, // swiftlint:disable:next indentation_width
-       delegate.responds(to: #selector(GamingPayloadDelegate.parsedGamingContextURLContaining(_:))) {
-      GamingContext.current = GamingContext(identifier: gameContextTokenID, size: 0)
-      delegate.parsedGamingContextURLContaining?(payload)
-      return true
-    }
-    return false
+    return self.handleDeeplinkURLIntoApp(appLinkUrl: sdkURL)
   }
 }
