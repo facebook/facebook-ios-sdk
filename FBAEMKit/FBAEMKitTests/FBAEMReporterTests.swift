@@ -36,6 +36,7 @@ class FBAEMReporterTests: XCTestCase {
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
     static let brandMode = "BRAND"
+    static let cpasMode = "CPAS"
     static let USD = "USD"
   }
 
@@ -236,6 +237,34 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertEqual(configList?.count, 2, "Should have the expected number of configs")
     XCTAssertEqual(configList?[0].validFrom, 10000, "Should keep the expected config")
     XCTAssertEqual(configList?[1].validFrom, 20000, "Should keep the expected config")
+  }
+
+  func testClearConfigs() {
+    AEMReporter.configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()]),
+      Values.cpasMode: NSMutableArray(array: [SampleAEMConfigurations.createCpasConfig()])
+    ]
+
+    AEMReporter._clearConfigs()
+    let defaultConfigs = AEMReporter.configs[Values.defaultMode] as? [AEMConfiguration]
+    let brandConfigs = AEMReporter.configs[Values.brandMode] as? [AEMConfiguration]
+    let cpasConfigs = AEMReporter.configs[Values.cpasMode] as? [AEMConfiguration]
+    XCTAssertEqual(
+      defaultConfigs?.count,
+      1,
+      "Should have default mode config"
+    )
+    XCTAssertEqual(
+      brandConfigs?.count,
+      0,
+      "Should not have brand mode config"
+    )
+    XCTAssertEqual(
+      cpasConfigs?.count,
+      0,
+      "Should not have cpas mode config"
+    )
   }
 
   func testHandleURL() throws {
