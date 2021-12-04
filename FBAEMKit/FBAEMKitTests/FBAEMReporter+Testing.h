@@ -78,6 +78,8 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (void)_clearCache;
 
++ (void)_clearConfigs;
+
 + (void)reset;
 
 @end

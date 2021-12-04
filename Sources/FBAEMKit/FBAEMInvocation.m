@@ -393,7 +393,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     NSArray<FBAEMConfiguration *> *cpasConfigList = [FBSDKTypeUtility dictionary:configs
                                                                     objectForKey:FBAEMInvocationConfigCpasMode
                                                                           ofType:NSArray.class] ?: @[];
-    return [brandConfigList arrayByAddingObjectsFromArray:cpasConfigList];
+    return [cpasConfigList arrayByAddingObjectsFromArray:brandConfigList];
   }
   return [FBSDKTypeUtility dictionary:configs objectForKey:configMode ofType:NSArray.class] ?: @[];
 }

@@ -672,10 +672,13 @@ static id<FBSKAdNetworkReporting> _reporter;
       NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configs objectForKey:key ofType:NSMutableArray.class];
       NSMutableArray<FBAEMConfiguration *> *newConfigurations = [NSMutableArray new];
 
-      // Removes the last of the old configurations and stores it so it can be
+      // Removes the last of the old default mode configurations and stores it so it can be
       // added to the array-to-save
-      FBAEMConfiguration *lastConfiguration = oldConfigurations.lastObject;
-      [oldConfigurations removeLastObject];
+      FBAEMConfiguration *lastConfiguration = nil;
+      if ([key isEqualToString:@"DEFAULT"]) {
+        lastConfiguration = oldConfigurations.lastObject;
+        [oldConfigurations removeLastObject];
+      }
 
       for (FBAEMConfiguration *oldConfiguration in oldConfigurations) {
         if (![self _isUsingConfig:oldConfiguration forInvocations:g_invocations]) {

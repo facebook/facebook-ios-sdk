@@ -506,6 +506,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     configList = invocation._getConfigList(Values.brandMode, configs: configs)
     XCTAssertEqual(configList.count, 2, "Should only find the brand or cpas config")
+    XCTAssertEqual(configList.first?.configMode, Values.cpasMode, "Should have the caps config first")
+    XCTAssertEqual(configList.last?.configMode, Values.brandMode, "Should have the brand config last")
   }
 
   func testAttributeEventWithValue() {
