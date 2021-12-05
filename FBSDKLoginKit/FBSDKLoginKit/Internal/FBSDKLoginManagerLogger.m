@@ -186,7 +186,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 {
   BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:urlScheme];
 
-  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
+  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
   BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
 
   [_extras addEntriesFromDictionary:@{

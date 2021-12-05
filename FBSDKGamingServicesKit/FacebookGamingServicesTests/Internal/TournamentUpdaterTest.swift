@@ -178,6 +178,47 @@ class TournamentUpdaterTest: XCTestCase {
     XCTAssertTrue(didSucceed)
   }
 
+  // Update with Tournament ID
+
+  func testHandlingUpdateWithInvalidTournamentID() throws {
+    var completionWasInvoked = false
+    updater.update(tournamentID: "", score: 1) { result in
+      switch result {
+      case .failure(let error):
+        guard case .invalidTournamentID = error else {
+          return XCTFail("Should receive invalidTournamentID error but instead received: \(error)")
+        }
+      case .success:
+        XCTFail("Should not succeed")
+      }
+      completionWasInvoked = true
+    }
+
+    XCTAssert(completionWasInvoked)
+  }
+
+  func testHandlingUpdateSuccessWithTournamentID() throws {
+    var completionWasInvoked = false
+    var didSucceed = false
+    updater.update(tournamentID: "12345", score: score) { result in
+      switch result {
+      case .failure(let error):
+        return XCTFail(
+          "Expecting the request to succeed instead received: \(error)"
+        )
+      case .success:
+        didSucceed = true
+      }
+      completionWasInvoked = true
+    }
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+
+    completion(nil, TournamentUpdateGraphAPIResults.successTrue, nil)
+
+    XCTAssert(completionWasInvoked)
+    XCTAssertTrue(didSucceed)
+  }
+
   enum TournamentUpdateGraphAPIResults {
     static let successTrue = ["success": 1]
     static let successFalse = ["success": 0]

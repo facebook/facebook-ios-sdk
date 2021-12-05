@@ -33,6 +33,7 @@ enum SampleAEMConfigurations {
     static let addToCart = "fb_mobile_add_to_cart"
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
+    static let brandMode = "BRAND"
     static let cpasMode = "CPAS"
     static let USD = "USD"
   }
@@ -139,7 +140,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.configMode: Values.brandMode,
         Keys.businessID: "test_advertiserid_content_test",
         Keys.paramRule: "{\"or\":[{\"fb_content[*].id\":{\"eq\":\"abc\"}}]}",
         Keys.conversionValueRules: [

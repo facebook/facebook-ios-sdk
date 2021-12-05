@@ -7,9 +7,11 @@
  */
 
 class TestLoginProvider: LoginProviding {
+
   var defaultAudience: DefaultAudience = .friends
   var capturedCompletion: LoginManagerLoginResultBlock?
   var capturedConfiguration: LoginConfiguration?
+  var capturedPermissions: [String]?
   var didLogout = false
 
   func logIn(
@@ -19,6 +21,15 @@ class TestLoginProvider: LoginProviding {
   ) {
     capturedConfiguration = configuration
     capturedCompletion = completion
+  }
+
+  func logIn(
+    withPermissions permissions: [String],
+    from viewController: UIViewController?,
+    handler: @escaping LoginManagerLoginResultBlock
+  ) {
+    capturedPermissions = permissions
+    capturedCompletion = handler
   }
 
   func logOut() {

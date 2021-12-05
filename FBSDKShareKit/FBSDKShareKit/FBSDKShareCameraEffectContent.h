@@ -17,11 +17,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 /**
  A model for content to share with a Facebook camera effect.
  */
 NS_SWIFT_NAME(ShareCameraEffectContent)
 @interface FBSDKShareCameraEffectContent : NSObject <FBSDKSharingContent, FBSDKSharingScheme>
+#pragma clang diagnostic pop
 
 /**
  ID of the camera effect to use.

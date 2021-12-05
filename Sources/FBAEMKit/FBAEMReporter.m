@@ -35,7 +35,7 @@ static NSString *const HMAC_KEY = @"hmac";
 static NSString *const CONFIG_ID_KEY = @"config_id";
 static NSString *const DELAY_FLOW_KEY = @"delay_flow";
 
-static NSString *const FB_CONTENT_ID_KEY = @"fb_content_id";
+static NSString *const FB_CONTENT_IDS_KEY = @"fb_content_ids";
 static NSString *const CATALOG_ID_KEY = @"catalog_id";
 
 static NSString *const FBAEMConfigurationKey = @"com.facebook.sdk:FBSDKAEMConfiguration";
@@ -55,10 +55,14 @@ static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
-static _Nullable id<FBAEMNetworking> _networker = nil;
-static _Nullable id<FBAEMNetworking> _catalogNetworker = nil;
-static _Nullable id<FBSKAdNetworkReporting> _reporter = nil;
-static NSString *_Nullable _appId;
+
+@interface FBAEMReporter ()
+
+@property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
+@property (class, nullable, nonatomic) NSString *appID;
+@property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
+
+@end
 
 @implementation FBAEMReporter
 
@@ -75,25 +79,46 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
 {
   if (self == FBAEMReporter.class) {
-    _networker = networker;
-    _appId = appID;
-    _reporter = reporter;
+    self.networker = networker;
+    self.appID = appID;
+    self.reporter = reporter;
   }
 }
 
-+ (id<FBAEMNetworking>)networker
+static id<FBAEMNetworking> _networker;
+
++ (nullable id<FBAEMNetworking>)networker
 {
   return _networker;
 }
 
-+ (id<FBAEMNetworking>)catalogNetworker
++ (void)setNetworker:(nullable id<FBAEMNetworking>)networker
 {
-  return _catalogNetworker;
+  _networker = networker;
 }
 
-+ (id<FBSKAdNetworkReporting>)reporter
+static NSString *_appID;
+
++ (nullable NSString *)appID
+{
+  return _appID;
+}
+
++ (void)setAppID:(nullable NSString *)appID
+{
+  _appID = appID;
+}
+
+static id<FBSKAdNetworkReporting> _reporter;
+
++ (nullable id<FBSKAdNetworkReporting>)reporter
 {
   return _reporter;
+}
+
++ (void)setReporter:(nullable id<FBSKAdNetworkReporting>)reporter
+{
+  _reporter = reporter;
 }
 
 + (void)enable
@@ -122,20 +147,19 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
       // If developers forget to call configureWithNetworker:appID:
       // or pass nil for networker,
       // we use default networker in FBAEMKit
-      if (!_networker) {
-        _networker = [FBAEMNetworker new];
+      if (!self.networker) {
+        self.networker = [FBAEMNetworker new];
       }
       // If developers forget to call configureWithNetworker:appID:,
       // we will look up app id in plist file, key is FacebookAppID
-      if (!_appId) {
-        _appId = [FBAEMSettings appID];
+      if (!self.appID) {
+        self.appID = [FBAEMSettings appID];
       }
       // If appId is still nil, we don't enable AEM and throw warning here
-      if (!_appId) {
+      if (!self.appID) {
         NSLog(@"App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB app ID OR add FacebookAppID in the info.plist file");
         return;
       }
-      _catalogNetworker = [FBAEMNetworker new];
       g_isAEMReportEnabled = YES;
     });
   }
@@ -283,8 +307,8 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   // 2. The conversion happens before SKAdNetwork cutoff
   // 3. The event is also being reported by SKAdNetwork
   return invocation.hasSKAN
-  && ![_reporter shouldCutoff]
-  && [_reporter isReportingEvent:event];
+  && ![self.reporter shouldCutoff]
+  && [self.reporter isReportingEvent:event];
 }
 
 + (void)_appendAndSaveInvocation:(FBAEMInvocation *)invocation
@@ -312,7 +336,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
     }
     g_isLoadingConfiguration = YES;
 
-    [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_configs", _appId]
+    [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_configs", self.appID]
                                         parameters:[self _requestParameters]
                                        tokenString:nil
                                         HTTPMethod:FBAEMHTTPMethodGET
@@ -351,20 +375,20 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
     NSLog(@"Content ID is not found for the optimized event");
     return;
   }
-  [self.catalogNetworker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/da_content_id_belongs_to_catalog_id", _appId]
-                                             parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
-                                            tokenString:nil
-                                             HTTPMethod:FBAEMHTTPMethodGET
-                                             completion:^(id _Nullable result, NSError *_Nullable error) {
-                                               [self dispatchOnQueue:g_serialQueue block:^() {
-                                                 if (error) {
-                                                   return;
-                                                 }
-                                                 if ([self _isContentOptimized:result]) {
-                                                   block();
-                                                 }
-                                               }];
-                                             }];
+  [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_filter", self.appID]
+                                      parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
+                                     tokenString:nil
+                                      HTTPMethod:FBAEMHTTPMethodGET
+                                      completion:^(id _Nullable result, NSError *_Nullable error) {
+                                        [self dispatchOnQueue:g_serialQueue block:^() {
+                                          if (error) {
+                                            return;
+                                          }
+                                          if ([self _isContentOptimized:result]) {
+                                            block();
+                                          }
+                                        }];
+                                      }];
 }
 
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
@@ -394,6 +418,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   }
   NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
   [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:@"" forKey:@"fields"];
   return [params copy];
 }
 
@@ -401,7 +426,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                                                   contentID:(NSString *)contentID
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_ID_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_IDS_KEY];
   [FBSDKTypeUtility dictionary:params setObject:catalogID forKey:CATALOG_ID_KEY];
   return [params copy];
 }
@@ -437,7 +462,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
     if (jsonData) {
       NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", _appId]
+      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", self.appID]
                                           parameters:@{@"aem_conversions" : reports}
                                          tokenString:nil
                                           HTTPMethod:FBAEMHTTPMethodPOST
@@ -581,7 +606,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
     if (jsonData) {
       NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", _appId]
+      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", self.appID]
                                           parameters:@{@"aem_conversions" : reports}
                                          tokenString:nil
                                           HTTPMethod:FBAEMHTTPMethodPOST
@@ -647,10 +672,13 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
       NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configs objectForKey:key ofType:NSMutableArray.class];
       NSMutableArray<FBAEMConfiguration *> *newConfigurations = [NSMutableArray new];
 
-      // Removes the last of the old configurations and stores it so it can be
+      // Removes the last of the old default mode configurations and stores it so it can be
       // added to the array-to-save
-      FBAEMConfiguration *lastConfiguration = oldConfigurations.lastObject;
-      [oldConfigurations removeLastObject];
+      FBAEMConfiguration *lastConfiguration = nil;
+      if ([key isEqualToString:@"DEFAULT"]) {
+        lastConfiguration = oldConfigurations.lastObject;
+        [oldConfigurations removeLastObject];
+      }
 
       for (FBAEMConfiguration *oldConfiguration in oldConfigurations) {
         if (![self _isUsingConfig:oldConfiguration forInvocations:g_invocations]) {
@@ -744,11 +772,6 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   return g_isCatalogReportEnabled;
 }
 
-+ (void)setCatalogNetworker:(id<FBAEMNetworking>)catalogNetworker
-{
-  _catalogNetworker = catalogNetworker;
-}
-
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
 {
   g_completionBlocks = completionBlocks;
@@ -786,8 +809,9 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   g_isCatalogReportEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
   g_configs = [NSMutableDictionary new];
-  _networker = nil;
-  _catalogNetworker = nil;
+  self.networker = nil;
+  self.appID = nil;
+  self.reporter = nil;
   [self _clearCache];
 }
 

@@ -6,11 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@import FacebookGamingServices;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKGamingPayloadObserver (Testing) <FBSDKApplicationObserving>
-@end
-
-NS_ASSUME_NONNULL_END
+@objcMembers
+final class TestAccessTokenExpirer: NSObject, AccessTokenExpiring {}

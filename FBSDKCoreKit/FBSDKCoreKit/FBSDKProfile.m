@@ -650,7 +650,11 @@ static id<FBSDKURLHosting> _urlHoster;
     }
 
     NSString *urlString = [FBSDKTypeUtility coercedToStringValue:result[@"link"]];
-    NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
+
+    NSURL *linkUrl;
+    if (urlString) {
+      linkUrl = [FBSDKTypeUtility coercedToURLValue:[NSURL URLWithString:urlString]];
+    }
     NSArray<FBSDKUserIdentifier *> *friendIDs = [self friendIDsFromGraphResult:[FBSDKTypeUtility dictionaryValue:result[@"friends"]]];
     FBSDKUserAgeRange *ageRange = [FBSDKUserAgeRange ageRangeFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"age_range"]]];
 

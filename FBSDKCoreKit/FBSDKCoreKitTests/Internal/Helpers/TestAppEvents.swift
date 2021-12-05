@@ -59,8 +59,9 @@ class TestAppEvents: TestEventLogger,
   var capturedMetadataIndexer: MetadataIndexing?
   var capturedSKAdNetworkReporter: AppEventsReporter?
   var capturedUserDataStore: UserDataPersisting?
+  var capturedAEMReporter: AEMReporterProtocol.Type?
 
-  // swiftlint:disable:next function_parameter_count
+  // swiftlint:disable function_parameter_count
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
     appEventsConfigurationProvider: AppEventsConfigurationProviding,
@@ -104,14 +105,17 @@ class TestAppEvents: TestEventLogger,
     metadataIndexer: MetadataIndexing,
     skAdNetworkReporter: AppEventsReporter?,
     codelessIndexer: CodelessIndexing.Type,
-    swizzler: Swizzling.Type
+    swizzler: Swizzling.Type,
+    aemReporter: AEMReporterProtocol.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer
     capturedSKAdNetworkReporter = skAdNetworkReporter
     capturedCodelessIndexer = codelessIndexer
     capturedConfigureSwizzler = swizzler
+    capturedAEMReporter = aemReporter
   }
+  // swiftlint:enable function_parameter_count
 
   // MARK: - Source Application Tracking
 

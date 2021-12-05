@@ -166,7 +166,7 @@
   }
 }
 
-+ (nullable NSURL *)URLValue:(id)object
++ (nullable NSURL *)coercedToURLValue:(id)object
 {
   if ([object isKindOfClass:NSURL.class]) {
     return (NSURL *)object;

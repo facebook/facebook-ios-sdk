@@ -8,10 +8,10 @@
 
 #import "FBSDKTokenCache.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKKeychainStoreProviding.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"
 
 static NSString *const kFBSDKAccessTokenUserDefaultsKey = @"com.facebook.sdk.v4.FBSDKAccessTokenInformationKey";
@@ -23,23 +23,18 @@ static NSString *const kFBSDKAuthenticationTokenKeychainKey = @"com.facebook.sdk
 static NSString *const kFBSDKTokenUUIDKey = @"tokenUUID";
 static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
-@interface FBSDKTokenCache ()
-
-@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
-@property (nonatomic) id<FBSDKSettings> settings;
-
-@end
+NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
 
 @implementation FBSDKTokenCache
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
-            keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
+                   keychainStore:(id<FBSDKKeychainStore>)keychainStore
 {
   if ((self = [super init])) {
-    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", NSBundle.mainBundle.bundleIdentifier];
-    _keychainStore = [keychainStoreFactory createKeychainStoreWithService:keyChainServiceIdentifier accessGroup:nil];
+    _keychainStore = keychainStore;
     _settings = settings;
   }
+
   return self;
 }
 

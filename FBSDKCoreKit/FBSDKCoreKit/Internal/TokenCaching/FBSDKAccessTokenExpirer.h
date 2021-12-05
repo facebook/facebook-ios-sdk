@@ -8,13 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAccessTokenExpiring.h"
+
 @protocol FBSDKNotificationPosting;
 @protocol FBSDKNotificationObserving;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AccessTokenExpirer)
-@interface FBSDKAccessTokenExpirer : NSObject
+@interface FBSDKAccessTokenExpirer : NSObject <FBSDKAccessTokenExpiring>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;

@@ -191,6 +191,36 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
     XCTAssertNotNil(dialogURL.query)
   }
 
+  // MARK: - Share Dialog Updating Tournament with ID
+
+  func testUpdateDialogWithInvalidTournamentID() throws {
+    var caughtInvalidTournamentID = false
+    do {
+      try shareDialog.show(score: 1, tournamentID: "")
+    } catch ShareTournamentDialogError.invalidTournamentID {
+      caughtInvalidTournamentID = true
+    } catch {
+      return XCTFail("Should not throw an error other than invalid access token, error received: \(error)")
+    }
+
+    XCTAssertTrue(caughtInvalidTournamentID, "Should catch error ShareTournamentDialogError.invalidTournamentID")
+    XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
+    XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
+    XCTAssertNil(dialogError, "Dialog should not call delegate with error")
+  }
+
+  func testUpdateDialogWithTournamentIDCreatesValidURL() throws {
+    _ = try shareDialog.show(score: 1, tournamentID: "12345")
+    guard let dialogURL = bridgeOpener.capturedURL else {
+      return XCTFail("The bridge opener should be called with a valid url")
+    }
+
+    XCTAssertEqual(dialogURL.scheme, URLScheme.https.rawValue)
+    XCTAssertEqual(dialogURL.host, "fb.gg")
+    XCTAssertEqual(dialogURL.path, "/me/instant_tournament/\(SampleAccessTokens.defaultAppID)")
+    XCTAssertNotNil(dialogURL.query)
+  }
+
   func didComplete(dialog: ShareTournamentDialog, tournament: Tournament) {
     dialogDidCompleteSuccessfully = true
   }

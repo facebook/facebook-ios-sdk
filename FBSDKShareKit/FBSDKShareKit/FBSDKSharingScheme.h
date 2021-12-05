@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A base interface for indicating a custom URL scheme
  */
+DEPRECATED_MSG_ATTRIBUTE("`SharingScheme` is deprecated and will be removed in the next major release")
 NS_SWIFT_NAME(SharingScheme)
 @protocol FBSDKSharingScheme
 
@@ -23,7 +24,8 @@ NS_SWIFT_NAME(SharingScheme)
  @param mode The intended dialog mode for sharing the content.
  @return A custom URL scheme to use for the specified mode, or nil.
  */
-- (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode;
+- (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode
+    DEPRECATED_MSG_ATTRIBUTE("`SharingScheme` is deprecated and will be removed in the next major release");
 
 @end
 

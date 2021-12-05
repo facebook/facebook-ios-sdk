@@ -19,7 +19,6 @@
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
-#import "FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginUtility.h"
 #import "FBSDKMonotonicTime.h"
 #import "FBSDKPermission.h"
@@ -36,7 +35,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 + (void)initialize
 {
   if (self == [FBSDKLoginManager class]) {
-    [FBSDKLoginRecoveryAttempter class];
     FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
     [provider loadServerConfigurationWithCompletionBlock:NULL];
   }

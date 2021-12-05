@@ -10,6 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKAEMReporterProtocol.h"
 #import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKApplicationActivating.h"
 #import "FBSDKApplicationLifecycleObserving.h"
@@ -65,6 +66,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 @property (nullable, nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
 @property (nullable, nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
+@property (nullable, nonatomic) Class<FBSDKAEMReporter> aemReporter;
 #endif
 
 @end

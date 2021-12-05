@@ -1,8 +1,8 @@
 # SwiftFormat Config
 
-# https://github.com/nicklockwood/SwiftFormat
+# https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
 
-# Version: 0.48.11
+# Version: 0.48.18
 
 --exclude samples,testing,ads,internal # dirs
 --exclude Package.swift # files

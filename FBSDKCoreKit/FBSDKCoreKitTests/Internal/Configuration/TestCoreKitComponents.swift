@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-enum TestSharedDependencies {
+enum TestCoreKitComponents {
   // swiftlint:disable:next function_body_length
-  static func makeDependencies() -> SharedDependencies {
-    SharedDependencies(
+  static func makeComponents() -> CoreKitComponents {
+    CoreKitComponents(
+      accessTokenExpirer: TestAccessTokenExpirer(),
       accessTokenWallet: TestAccessTokenWallet.self,
       advertiserIDProvider: TestAdvertiserIDProvider(),
+      appEvents: TestAppEvents(),
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       appEventsStateProvider: TestAppEventsStateProvider(),
       appEventsStateStore: TestAppEventsStateStore(),
@@ -22,6 +24,7 @@ enum TestSharedDependencies {
       crashObserver: TestCrashObserver(),
       defaultDataStore: TestDataStore(),
       deviceInformationProvider: TestDeviceInformationProvider(),
+      dialogConfigurationMapBuilder: TestDialogConfigurationMapBuilder(),
       errorConfigurationProvider: TestErrorConfigurationProvider(),
       errorFactory: TestErrorFactory(),
       errorReporter: TestErrorReporter(),
@@ -31,6 +34,7 @@ enum TestSharedDependencies {
       gateKeeperManager: TestGateKeeperManager.self,
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
       graphRequestFactory: TestGraphRequestFactory(),
+      impressionLoggerFactory: TestImpressionLoggerFactory(),
       infoDictionaryProvider: TestBundle(),
       logger: TestLogger.self,
       loggerFactory: TestLoggerFactory(),
@@ -48,6 +52,7 @@ enum TestSharedDependencies {
 
       // Non-tvOS
       aemNetworker: TestAEMNetworker(),
+      aemReporter: TestAEMReporter.self,
       appEventParametersExtractor: TestAppEventParametersExtractor(),
       appEventsDropDeterminer: TestAppEventsDropDeterminer(),
       appLinkEventPoster: TestAppLinkEventPoster(),
@@ -55,6 +60,7 @@ enum TestSharedDependencies {
       appLinkResolver: TestAppLinkResolver(),
       appLinkTargetFactory: TestAppLinkTargetFactory(),
       appLinkURLFactory: TestAppLinkURLFactory(),
+      backgroundEventLogger: TestBackgroundEventLogger(),
       codelessIndexer: TestCodelessEvents.self,
       dataExtractor: TestFileDataExtractor.self,
       featureExtractor: TestFeatureExtractor.self,

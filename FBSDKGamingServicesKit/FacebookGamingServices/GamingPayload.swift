@@ -13,16 +13,20 @@ import FBSDKCoreKit
 public class GamingPayload: NSObject {
 
   public var URL: AppLinkURL
+  var gameEntryData: [String: String] = [:]
 
-  public var payload: String {
-    URL.appLinkExtras?[kGamingPayload] as? String ?? ""
-  }
+  public var payload: String
 
   var gameRequestID: String {
-    URL.appLinkExtras?[kGamingPayloadGameRequestID] as? String ?? ""
+    gameEntryData[GamingPayloadObserver.Keys.gamingPayloadGameRequestID.rawValue] ?? ""
   }
 
   public init(URL: AppLinkURL) {
     self.URL = URL
+    let requestID = URL.appLinkExtras?[GamingPayloadObserver.Keys.gamingPayloadGameRequestID.rawValue]  as? String ?? ""
+    payload = URL.appLinkExtras?[GamingPayloadObserver.Keys.gamingPayload.rawValue] as? String ?? ""
+
+    gameEntryData[GamingPayloadObserver.Keys.gamingPayload.rawValue] = payload
+    gameEntryData[GamingPayloadObserver.Keys.gamingPayloadGameRequestID.rawValue] = requestID
   }
 }

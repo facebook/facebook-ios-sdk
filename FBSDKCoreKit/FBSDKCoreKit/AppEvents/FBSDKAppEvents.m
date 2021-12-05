@@ -59,8 +59,6 @@
 
 #if !TARGET_OS_TV
 
- #import <FBAEMKit/FBAEMKit.h>
-
  #import "FBSDKEventBindingManager.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
@@ -134,6 +132,7 @@ static BOOL g_explicitEventsLoggedYet;
 @property (nullable, nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) FBSDKEventBindingManager *eventBindingManager;
+@property (nullable, nonatomic) Class<FBSDKAEMReporter> aemReporter;
 #endif
 
 @end
@@ -911,12 +910,14 @@ static BOOL g_explicitEventsLoggedYet;
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
                                            codelessIndexer:(nonnull Class<FBSDKCodelessIndexing>)codelessIndexer
                                                   swizzler:(nonnull Class<FBSDKSwizzling>)swizzler
+                                               aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
 {
   self.onDeviceMLModelManager = modelManager;
   self.metadataIndexer = metadataIndexer;
   self.skAdNetworkReporter = skAdNetworkReporter;
   self.codelessIndexer = codelessIndexer;
   self.swizzler = swizzler;
+  self.aemReporter = aemReporter;
 }
 
 #endif
@@ -1216,8 +1217,8 @@ static BOOL g_explicitEventsLoggedYet;
       if (@available(iOS 14.0, *)) {
         [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
           if (AEMEnabled) {
-            [FBAEMReporter enable];
-            [FBAEMReporter setCatalogReportEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
+            [self.aemReporter enable];
+            [self.aemReporter setCatalogReportEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
           }
         }];
       }
@@ -1258,10 +1259,10 @@ static BOOL g_explicitEventsLoggedYet;
                                            value:valueToSum
                                       parameters:parameters];
   // Update conversion value for AEM if needed
-  [FBAEMReporter recordAndUpdateEvent:eventName
-                             currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
-                                value:valueToSum
-                           parameters:parameters];
+  [self.aemReporter recordAndUpdateEvent:eventName
+                                currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                   value:valueToSum
+                              parameters:parameters];
 #endif
 
   if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
@@ -1689,6 +1690,7 @@ static BOOL g_explicitEventsLoggedYet;
   self.shared.codelessIndexer = nil;
   self.shared.swizzler = nil;
   self.shared.eventBindingManager = nil;
+  self.shared.aemReporter = nil;
 #endif
 }
 

@@ -8,15 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
+#import "FBSDKDialogConfigurationMapBuilding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(GamingGroupIntegration)
-@interface FBSDKGamingGroupIntegration : NSObject
-
-+ (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
-
+NS_SWIFT_NAME(DialogConfigurationMapBuilder)
+@interface FBSDKDialogConfigurationMapBuilder : NSObject <FBSDKDialogConfigurationMapBuilding>
 @end
 
 NS_ASSUME_NONNULL_END

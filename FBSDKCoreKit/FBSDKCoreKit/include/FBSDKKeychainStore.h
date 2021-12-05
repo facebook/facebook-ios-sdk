@@ -16,7 +16,7 @@ NS_SWIFT_NAME(KeychainStore)
 @interface FBSDKKeychainStore : NSObject <FBSDKKeychainStore>
 
 @property (nonatomic, readonly, copy) NSString *service;
-@property (nonatomic, readonly, copy) NSString *accessGroup;
+@property (nullable, nonatomic, readonly, copy) NSString *accessGroup;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
