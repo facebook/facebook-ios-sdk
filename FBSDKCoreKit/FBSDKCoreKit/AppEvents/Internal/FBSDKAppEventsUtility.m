@@ -81,6 +81,11 @@ static FBSDKAppEventsUtility *_shared;
   return _shared;
 }
 
++ (void)setShared:(FBSDKAppEventsUtility *)shared
+{
+  _shared = shared;
+}
+
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
                                                                        userID:(nullable NSString *)userID

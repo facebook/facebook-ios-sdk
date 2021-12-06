@@ -23,10 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsUtility)
 @interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKLoggingNotifying>
 
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
-@property (class, nonatomic, readonly) FBSDKAppEventsUtility *shared;
+@property (class, nonatomic) FBSDKAppEventsUtility *shared;
 @property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
 @property (nonatomic, readonly) NSTimeInterval unixTimeNow;
 @property (nonatomic, readonly) BOOL isDebugBuild;
