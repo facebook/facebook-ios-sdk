@@ -73,7 +73,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsStateProvider = nil
     appEventsConfigurationProvider = nil
 
-    AppEvents.reset()
+    AppEvents.shared.reset()
     TestGateKeeperManager.reset()
     AppEventsUtility.cachedAdvertiserIdentifierManager = nil
     Settings.shared.reset()

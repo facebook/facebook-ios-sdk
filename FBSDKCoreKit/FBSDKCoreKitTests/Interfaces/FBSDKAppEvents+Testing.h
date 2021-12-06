@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 
-+ (void)reset;
+- (void)reset;
 
 - (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
@@ -44,11 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)publishInstall;
 - (void)fetchServerConfiguration:(nullable FBSDKCodeBlock)callback;
-- (void)instanceLogEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(nullable FBSDKAccessToken *)accessToken;
+- (void)    logEvent:(FBSDKAppEventName)eventName
+          valueToSum:(NSNumber *)valueToSum
+          parameters:(nullable NSDictionary<NSString *, id> *)parameters
+  isImplicitlyLogged:(BOOL)isImplicitlyLogged
+         accessToken:(nullable FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
 - (void)applicationMovingFromActiveStateOrTerminating;
 
