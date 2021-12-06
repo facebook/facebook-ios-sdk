@@ -45,6 +45,7 @@
 --rules spaceAroundOperators
 --rules spaceAroundParens
 --rules spaceInsideBraces
+--rules spaceInsideBrackets
 --rules spaceInsideComments
 --rules spaceInsideGenerics
 --rules spaceInsideParens
