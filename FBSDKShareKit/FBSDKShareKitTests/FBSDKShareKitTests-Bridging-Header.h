@@ -19,5 +19,6 @@
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
+#import "FBSDKShareVideoContent.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactoryProtocol.h"
