@@ -63,19 +63,19 @@ class BridgeAPIResponseTests: XCTestCase {
       FBSDKBridgeAPIProtocolType.native,
       .web
     ]
-    .forEach { protocolType in
-      request.protocolType = protocolType
+      .forEach { protocolType in
+        request.protocolType = protocolType
 
-      XCTAssertNil(
-        try? BridgeAPIResponse(
-          request: request,
-          responseURL: responseURL,
-          sourceApplication: "foo",
-          osVersionComparer: TestProcessInfo(stubbedOperatingSystemCheckResult: false)
-        ),
-        "Should not create a response when the source application is invalid for the protocol type"
-      )
-    }
+        XCTAssertNil(
+          try? BridgeAPIResponse(
+            request: request,
+            responseURL: responseURL,
+            sourceApplication: "foo",
+            osVersionComparer: TestProcessInfo(stubbedOperatingSystemCheckResult: false)
+          ),
+          "Should not create a response when the source application is invalid for the protocol type"
+        )
+      }
   }
 
   func testCreatingWithValidProtocolAndSourceApplicationCombinations() {
