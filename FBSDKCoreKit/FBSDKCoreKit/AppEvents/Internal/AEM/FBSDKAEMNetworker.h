@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(SDKAEMNetworker)
+NS_SWIFT_NAME(AEMNetworker)
 @interface FBSDKAEMNetworker : NSObject <FBAEMNetworking>
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath

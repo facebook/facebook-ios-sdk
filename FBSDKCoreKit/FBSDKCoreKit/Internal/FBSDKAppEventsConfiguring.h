@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKAEMReporter;
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKAppEventsConfigurationProviding;
 @protocol FBSDKSourceApplicationTracking;
@@ -64,7 +65,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
                                            codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
-                                                  swizzler:(Class<FBSDKSwizzling>)swizzler;
+                                                  swizzler:(Class<FBSDKSwizzling>)swizzler
+                                               aemReporter:(Class<FBSDKAEMReporter>)aemReporter;
 
 #endif
 

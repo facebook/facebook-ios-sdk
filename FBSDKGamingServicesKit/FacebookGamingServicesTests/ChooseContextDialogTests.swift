@@ -15,7 +15,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCancel = false
   var dialogError: NSError?
   let defaultAppID = "abc123"
-  let msiteParamsQueryString = "{\"filter\":\"NO_FILTER\",\"min_size\":0,\"max_size\":0,\"app_id\":\"abc123\"}"
+  let msiteParamsQueryString = #"{"filter": "NO_FILTER", "min_size": 0, "max_size": 0, "app_id": "abc123"}"#
 
   override func setUp() {
     super.setUp()

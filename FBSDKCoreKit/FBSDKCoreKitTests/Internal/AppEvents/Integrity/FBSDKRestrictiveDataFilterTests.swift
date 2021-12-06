@@ -38,7 +38,7 @@ class FBSDKRestrictiveDataFilterTests: XCTestCase {
       "dob": "06-29-2019"
     ]
     let expected1 = [
-      "_restrictedParams": "{\"dob\":\"4\"}"
+      "_restrictedParams": #"{"dob":"4"}"#
     ]
     let processedParameters1 = restrictiveDataFilterManager.processParameters(parameters1, eventName: eventName)
 

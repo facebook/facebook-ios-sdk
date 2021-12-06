@@ -276,7 +276,7 @@ class AuthenticationTokenFactoryTests: XCTestCase { // swiftlint:disable:this ty
     session.stubbedDataTask = dataTask
     let factory = AuthenticationTokenFactory(sessionProvider: session)
 
-    try (1 ..< 100).forEach { _ in
+    try (1..<100).forEach { _ in
       let certificates = Fuzzer.randomize(json: validRawCertificateResponse)
       var wasCalled = false
       factory.verifySignature(
@@ -298,7 +298,7 @@ class AuthenticationTokenFactoryTests: XCTestCase { // swiftlint:disable:this ty
     }
   }
 
-   // MARK: - Helpers
+  // MARK: - Helpers
 
   var validRawCertificateResponse: [String: Any] {
     [

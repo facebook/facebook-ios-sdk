@@ -77,7 +77,7 @@ class BridgeAPIRequestTests: XCTestCase {
 
   func testOpenableURL() {
     XCTAssertNotNil(
-      makeRequest(protocolType: .native, scheme: .facebookApp),
+      makeRequest(protocolType: .native, scheme: .facebookAPI),
       "BridgeAPIRequests should only be created for openable URLs"
     )
   }

@@ -22,7 +22,7 @@ NS_SWIFT_NAME(ShareModelTestUtility)
 + (NSString *)linkContentDescription;
 + (NSString *)linkContentTitle;
 + (NSURL *)linkImageURL;
-+ (NSArray *)peopleIDs;
++ (NSArray<NSString *> *)peopleIDs;
 + (FBSDKSharePhotoContent *)photoContent;
 + (FBSDKSharePhotoContent *)photoContentWithFileURLs;
 + (FBSDKSharePhotoContent *)photoContentWithImages;

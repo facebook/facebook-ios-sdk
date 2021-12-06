@@ -26,11 +26,6 @@
 #import "FBSDKLogger.h"
 #import "FBSDKUtility.h"
 
-// An extension that redeclares a private method so that it can be mocked
-@interface FBAEMReporter (Testing)
-@property (class, nonatomic) BOOL isCatalogReportEnabled;
-@end
-
 @interface FBSDKAppEventsTests : XCTestCase
 
 @property (nonnull, nonatomic) NSString *const mockAppID;
@@ -136,6 +131,7 @@
   [self.settings reset];
   [TestLogger reset];
   [TestCodelessEvents reset];
+  [TestAEMReporter reset];
 }
 
 - (void)configureAppEventsSingleton
@@ -162,7 +158,8 @@
                                                             metadataIndexer:self.metadataIndexer
                                                         skAdNetworkReporter:self.skAdNetworkReporter
                                                             codelessIndexer:TestCodelessEvents.class
-                                                                   swizzler:TestSwizzler.class];
+                                                                   swizzler:TestSwizzler.class
+                                                                aemReporter:TestAEMReporter.class];
 }
 
 - (void)testConfiguringSetsSwizzlerDependency
@@ -212,6 +209,10 @@
     self.graphRequestFactory.capturedRequests.firstObject.graphPath,
     @"mockAppID/activities"
   );
+  [self validateAEMReporterCalledWithEventName:@"fb_mobile_purchase"
+                                      currency:self.currency
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{@"fb_currency" : @"USD"}];
 }
 
 - (void)testLogPurchase
@@ -241,6 +242,10 @@
     self.appEventsStateProvider.state.capturedIsImplicit,
     "Shouldn't implicitly add events to AppEventsState when logging purshase"
   );
+  [self validateAEMReporterCalledWithEventName:@"fb_mobile_purchase"
+                                      currency:self.currency
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{@"fb_currency" : @"USD"}];
 }
 
 - (void)testFlush
@@ -255,6 +260,11 @@
   [FBSDKAppEvents.shared flush];
 
   [self waitForExpectations:@[expectation] timeout:2];
+
+  [self validateAEMReporterCalledWithEventName:@"foo"
+                                      currency:nil
+                                         value:nil
+                                    parameters:@{}];
 }
 
 #pragma mark  Tests for log product item
@@ -275,6 +285,21 @@
                                   brand:@"PHILZ"
                              parameters:@{}];
 
+  NSDictionary<NSString *, NSString *> *expectedAEMParameters = @{
+    @"fb_product_availability" : @"IN_STOCK",
+    @"fb_product_brand" : @"PHILZ",
+    @"fb_product_condition" : @"NEW",
+    @"fb_product_description" : @"description",
+    @"fb_product_gtin" : @"BLUE MOUNTAIN",
+    @"fb_product_image_link" : @"https://www.sample.com",
+    @"fb_product_item_id" : @"F40CEE4E-471E-45DB-8541-1526043F4B21",
+    @"fb_product_link" : @"https://www.sample.com",
+    @"fb_product_mpn" : @"BLUE MOUNTAIN",
+    @"fb_product_price_amount" : @"1.000",
+    @"fb_product_price_currency" : @"USD",
+    @"fb_product_title" : @"title"
+  };
+
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], @"fb_mobile_catalog_update");
   XCTAssertEqualObjects(capturedParameters[@"fb_product_availability"], @"IN_STOCK");
@@ -289,6 +314,10 @@
   XCTAssertEqualObjects(capturedParameters[@"fb_product_price_amount"], @"1.000");
   XCTAssertEqualObjects(capturedParameters[@"fb_product_price_currency"], @"USD");
   XCTAssertEqualObjects(capturedParameters[@"fb_product_title"], @"title");
+  [self validateAEMReporterCalledWithEventName:@"fb_mobile_catalog_update"
+                                      currency:nil
+                                         value:nil
+                                    parameters:expectedAEMParameters];
 }
 
 - (void)testLogProductItemNilGtinMpnBrand
@@ -432,6 +461,10 @@
     self.eventName
   );
   XCTAssertEqualObjects(FBSDKAppEvents.shared.pushNotificationsDeviceTokenString, mockDeviceTokenString);
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:nil
+                                    parameters:@{}];
 }
 
 - (void)testActivateAppWithInitializedSDK
@@ -498,6 +531,10 @@
     self.appEventsStateStore.capturedPersistedState.count > 0,
     "When application terminates or moves from active state, the existing state should be persisted."
   );
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:nil];
 }
 
 - (void)testUsingAppEventsWithUninitializedSDK
@@ -587,6 +624,10 @@
     self.timeSpentRecorder.restoreWasCalled,
     "Activating App without initialized SDK cannot restore recording time spent data."
   );
+  [self validateAEMReporterCalledWithEventName:nil
+                                      currency:nil
+                                         value:nil
+                                    parameters:nil];
 }
 
 - (void)testInstanceLogEventFilteringOutDeactivatedParameters
@@ -607,6 +648,10 @@
     parameters,
     "AppEvents instance should submit the parameters to event deactivation parameters processor."
   );
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:parameters];
 }
 
 - (void)testInstanceLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor
@@ -635,11 +680,20 @@
 {
   self.eventName = @"fb_mobile_push_opened";
 
+  NSDictionary<NSString *, NSString *> *expectedAEMParameters = @{
+    @"fb_push_action" : @"testAction",
+    @"fb_push_campaign" : @"testCampaign",
+  };
+
   [FBSDKAppEvents.shared logPushNotificationOpen:self.payload action:@"testAction"];
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"fb_push_action"], @"testAction");
   XCTAssertEqualObjects(capturedParameters[@"fb_push_campaign"], @"testCampaign");
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:nil
+                                    parameters:expectedAEMParameters];
 }
 
 - (void)testLogPushNotificationOpenWithEmptyAction
@@ -648,10 +702,18 @@
 
   [FBSDKAppEvents.shared logPushNotificationOpen:self.payload];
 
+  NSDictionary<NSString *, NSString *> *expectedAEMParameters = @{
+    @"fb_push_campaign" : @"testCampaign",
+  };
+
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertNil(capturedParameters[@"fb_push_action"]);
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"fb_push_campaign"], @"testCampaign");
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:nil
+                                    parameters:expectedAEMParameters];
 }
 
 - (void)testLogPushNotificationOpenWithEmptyPayload
@@ -694,6 +756,10 @@
     self.appEventsStateStore.retrievePersistedAppEventStatesWasCalled,
     "Should retrieve persisted states when logEvent was called and flush behavior was FlushReasonEagerlyFlushingEvent"
   );
+  [self validateAEMReporterCalledWithEventName:FBSDKAppEventNamePurchased
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{}];
 }
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed
@@ -839,6 +905,10 @@
     self.appEventsStateProvider.state.capturedIsImplicit,
     "Shouldn't implicitly add events to AppEventsState when killswitch is disabled"
   );
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:nil];
 }
 
 - (void)testAppEventsKillSwitchEnabled
@@ -856,6 +926,10 @@
     self.appEventsStateProvider.state.isAddEventCalled,
     "Shouldn't add events to AppEventsState when killswitch is enabled"
   );
+  [self validateAEMReporterCalledWithEventName:nil
+                                      currency:nil
+                                         value:nil
+                                    parameters:nil];
 }
 
 #pragma mark  Tests for log event
@@ -877,6 +951,10 @@
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertNil(capturedParameters[@"_valueToSum"]);
   XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:nil
+                                    parameters:@{}];
 }
 
 - (void)testLogInternalEventsWithValue
@@ -887,6 +965,10 @@
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"_valueToSum"], @(self.purchaseAmount));
   XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{}];
 }
 
 - (void)testLogInternalEventWithAccessToken
@@ -898,6 +980,10 @@
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertNil(capturedParameters[@"_valueToSum"]);
   XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:nil
+                                    parameters:@{}];
 }
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
@@ -923,6 +1009,10 @@
       "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
     );
   }
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{}];
 }
 
 - (void)testLogImplicitEvent
@@ -933,6 +1023,10 @@
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"_valueToSum"], @(self.purchaseAmount));
   XCTAssertEqualObjects(capturedParameters[@"_implicitlyLogged"], @"1");
+  [self validateAEMReporterCalledWithEventName:self.eventName
+                                      currency:nil
+                                         value:@(self.purchaseAmount)
+                                    parameters:@{}];
 }
 
 #pragma mark ParameterProcessing
@@ -1222,8 +1316,12 @@
     [self.featureManager completeCheckForFeature:FBSDKFeatureAEM
                                             with:YES];
     XCTAssertTrue(
-      FBAEMReporter.isCatalogReportEnabled,
-      "AEM Catalog Rport should be enabled"
+      TestAEMReporter.setCatalogReportEnabledWasCalled,
+      "Should enable or disable the catalog report"
+    );
+    XCTAssertTrue(
+      TestAEMReporter.capturedSetCatalogReportEnabled,
+      "AEM Catalog Report should be enabled"
     );
   }
 }
@@ -1301,6 +1399,35 @@
 - (void)registerAutoResetSourceApplication
 {
   [self.timeSpentRecorder registerAutoResetSourceApplication];
+}
+
+// MARK: - Helpers
+
+- (void)validateAEMReporterCalledWithEventName:(NSString *)eventName
+                                      currency:(nullable NSString *)currency
+                                         value:(NSNumber *)value
+                                    parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  XCTAssertEqualObjects(
+    TestAEMReporter.capturedEvent,
+    eventName,
+    "Should invoke the AEM reporter with the expected event name"
+  );
+  XCTAssertEqualObjects(
+    TestAEMReporter.capturedCurrency,
+    currency,
+    "Should invoke the AEM reporter with the correct currency inferred from the parameters"
+  );
+  XCTAssertEqualObjects(
+    TestAEMReporter.capturedValue,
+    value,
+    "Should invoke the AEM reporter with the expected value"
+  );
+  XCTAssertEqualObjects(
+    TestAEMReporter.capturedParameters,
+    parameters,
+    "Should invoke the AEM reporter with the expected parameters"
+  );
 }
 
 @end

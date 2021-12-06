@@ -28,8 +28,8 @@ class SKAdNetworkReporterTests: XCTestCase {
   lazy var defaultConfiguration = SKAdNetworkConversionConfiguration(json: json)!
   lazy var skAdNetworkReporter = SKAdNetworkReporter(
     graphRequestFactory: graphRequestFactory,
-    store: userDefaultsSpy,
-    conversionValueUpdatable: TestConversionValueUpdating.self
+    dataStore: userDefaultsSpy,
+    conversionValueUpdater: TestConversionValueUpdating.self
   )
 
   override func setUp() {
@@ -333,8 +333,8 @@ class SKAdNetworkReporterTests: XCTestCase {
     let store = UserDefaultsSpy()
     let reporter = SKAdNetworkReporter(
       graphRequestFactory: graphRequestFactory,
-      store: store,
-      conversionValueUpdatable: TestConversionValueUpdating.self
+      dataStore: store,
+      conversionValueUpdater: TestConversionValueUpdating.self
     )
 
     XCTAssertEqual(
@@ -344,11 +344,11 @@ class SKAdNetworkReporterTests: XCTestCase {
     )
     XCTAssertEqual(
       store,
-      reporter.store as? UserDefaultsSpy,
+      reporter.dataStore as? UserDefaultsSpy,
       "Should be able to configure a reporter with a request provider"
     )
     XCTAssertTrue(
-      reporter.conversionValueUpdatable == TestConversionValueUpdating.self,
+      reporter.conversionValueUpdater == TestConversionValueUpdating.self,
       "Should be able to configure a reporter with a Conversion Value Updater"
     )
   }

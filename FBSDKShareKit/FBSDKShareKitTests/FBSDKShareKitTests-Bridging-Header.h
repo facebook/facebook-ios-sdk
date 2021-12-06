@@ -8,6 +8,8 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
+#import "XCTestCase+Assertions.h"
+
 #import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
@@ -17,5 +19,6 @@
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
+#import "FBSDKShareVideoContent.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactoryProtocol.h"

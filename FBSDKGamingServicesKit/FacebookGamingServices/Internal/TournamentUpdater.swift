@@ -13,10 +13,11 @@ public enum TournamentUpdaterError: Error {
   case decoding
   case invalidAuthToken
   case invalidAccessToken
+  case invalidTournamentID
 }
 
 /**
-  A graph request wrapper to update a tournament
+ A graph request wrapper to update a tournament
  */
 public class TournamentUpdater {
 
@@ -43,7 +44,26 @@ public class TournamentUpdater {
   }
 
   /**
-      Updates the given tournament with the given score
+   Updates the given tournament with the given score
+
+   - Parameter tournamentID: The ID of the tournament you want to update
+   - Parameter score: The new score to update within the tournament
+   - Parameter completionHandler: The caller's completion handler to invoke once the graph request is complete
+   */
+
+  public func update(
+    tournamentID: String,
+    score: Int,
+    completionHandler: @escaping (Result<Bool, TournamentUpdaterError>) -> Void
+  ) {
+    guard !tournamentID.isEmpty else {
+      return completionHandler(.failure(TournamentUpdaterError.invalidTournamentID))
+    }
+    self.update(tournament: Tournament(identifier: tournamentID), score: score, completionHandler: completionHandler)
+  }
+
+  /**
+   Updates the given tournament with the given score
 
    - Parameter tournament: The tournament you want to update
    - Parameter score: The new score to update within the tournament

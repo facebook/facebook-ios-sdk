@@ -41,7 +41,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 static dispatch_once_t fetchApplicationQuerySchemesToken;
 static dispatch_once_t checkIfFacebookAppInstalledToken;
 static dispatch_once_t checkIfMessengerAppInstalledToken;
-static dispatch_once_t checkIfMSQRDPlayerAppInstalledToken;
 static dispatch_once_t checkRegisteredCanOpenUrlSchemesToken;
 static dispatch_once_t checkOperatingSystemVersionToken;
 static dispatch_once_t fetchUrlSchemesToken;
@@ -393,9 +392,9 @@ static NSMapTable *_transientObjects;
 - (BOOL)isFacebookAppInstalled
 {
   dispatch_once(&checkIfFacebookAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
   });
-  return [self _canOpenURLScheme:FBSDKURLSchemeFacebookApp];
+  return [self _canOpenURLScheme:FBSDKURLSchemeFacebookAPI];
 }
 
 - (BOOL)isMessengerAppInstalled
@@ -404,14 +403,6 @@ static NSMapTable *_transientObjects;
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
   });
   return [self _canOpenURLScheme:FBSDKURLSchemeMessengerApp];
-}
-
-- (BOOL)isMSQRDPlayerAppInstalled
-{
-  dispatch_once(&checkIfMSQRDPlayerAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMasqueradePlayer];
-  });
-  return [self _canOpenURLScheme:FBSDKURLSchemeMasqueradePlayer];
 }
 
 - (BOOL)_canOpenURLScheme:(NSString *)scheme
@@ -470,10 +461,8 @@ static NSMapTable *_transientObjects;
 - (void)validateFacebookReservedURLSchemes
 {
   NSArray<FBSDKURLScheme> *schemes = @[
-    FBSDKURLSchemeFacebookApp,
     FBSDKURLSchemeMessengerApp,
-    FBSDKURLSchemeFacebookAPI,
-    FBSDKURLSchemeFacebookShareExtension
+    FBSDKURLSchemeFacebookAPI
   ];
 
   for (FBSDKURLScheme scheme in schemes) {
@@ -693,9 +682,6 @@ static NSMapTable *_transientObjects;
   }
   if (checkIfMessengerAppInstalledToken) {
     checkIfMessengerAppInstalledToken = 0;
-  }
-  if (checkIfMSQRDPlayerAppInstalledToken) {
-    checkIfMSQRDPlayerAppInstalledToken = 0;
   }
   if (checkOperatingSystemVersionToken) {
     checkOperatingSystemVersionToken = 0;

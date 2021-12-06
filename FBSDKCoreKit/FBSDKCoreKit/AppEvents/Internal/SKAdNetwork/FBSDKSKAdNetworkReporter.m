@@ -45,21 +45,21 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 @property (nonatomic) NSDate *timestamp;
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
 @property (nonnull, nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *recordedValues;
-@property (nonnull, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonnull, nonatomic) id<FBSDKDataPersisting> store;
-@property (nonnull, nonatomic) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
 
 @end
 
 @implementation FBSDKSKAdNetworkReporter
 
 - (instancetype)initWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                                      store:(id<FBSDKDataPersisting>)store
-                   conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
+                                  dataStore:(id<FBSDKDataPersisting>)dataStore
+                     conversionValueUpdater:(Class<FBSDKConversionValueUpdating>)conversionValueUpdater
 {
-  self.graphRequestFactory = graphRequestFactory;
-  self.store = store;
-  self.conversionValueUpdatable = conversionValueUpdatable;
+  if ((self = [super init])) {
+    _graphRequestFactory = graphRequestFactory;
+    _dataStore = dataStore;
+    _conversionValueUpdater = conversionValueUpdater;
+  }
+
   return self;
 }
 
@@ -124,7 +124,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     return;
   }
   // Executes block if there is cache
-  if ([self _isConfigRefreshTimestampValid] && [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
+  if ([self _isConfigRefreshTimestampValid] && [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
     [self dispatchOnQueue:self.serialQueue block:^() {
       [FBSDKTypeUtility array:self.completionBlocks addObject:block];
       for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
@@ -149,7 +149,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
         }
         NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
         if (json) {
-          [self.store setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
+          [self.dataStore setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
           self.configRefreshTimestamp = [NSDate date];
           self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
           for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
@@ -236,7 +236,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     if ([self shouldCutoff]) {
       return;
     }
-    [self.conversionValueUpdatable updateConversionValue:value];
+    [self.conversionValueUpdater updateConversionValue:value];
     self.conversionValue = value + 1;
     self.timestamp = [NSDate date];
     [self _saveReportData];
@@ -248,7 +248,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.config.cutoffTime) {
     return true;
   }
-  NSDate *installTimestamp = [self.store objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
+  NSDate *installTimestamp = [self.dataStore objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.config.cutoffTime * 86400;
 }
 
@@ -261,9 +261,9 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_loadReportData
 {
-  id cachedJSON = [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
+  id cachedJSON = [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
   self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
-  NSData *cachedReportData = [self.store objectForKey:FBSDKSKAdNetworkReporterKey];
+  NSData *cachedReportData = [self.dataStore objectForKey:FBSDKSKAdNetworkReporterKey];
   self.recordedEvents = [NSMutableSet new];
   self.recordedValues = [NSMutableDictionary new];
   if ([cachedReportData isKindOfClass:NSData.class]) {
@@ -300,7 +300,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   [FBSDKTypeUtility dictionary:reportData setObject:self.recordedValues forKey:@"recorded_values"];
   NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData];
   if (cache) {
-    [self.store setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
+    [self.dataStore setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
   }
 }
 

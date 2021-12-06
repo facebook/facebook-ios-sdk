@@ -548,31 +548,6 @@
   XCTAssertNotNil(error);
 }
 
-- (void)testShowCameraShareToPlayerWhenPlayerInstalled
-{
-  FBSDKShareDialog *const dialog = [self createEmptyDialog];
-  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
-  self.internalUtility.isFacebookAppInstalled = YES;
-  self.internalUtility.isMSQRDPlayerAppInstalled = YES;
-
-  [self _showNativeDialog:dialog
-       nonSupportedScheme:nil
-      expectRequestScheme:FBSDKURLSchemeMasqueradePlayer
-               methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
-}
-
-- (void)testShowCameraShareToFBWhenPlayerNotInstalled
-{
-  FBSDKShareDialog *const dialog = [self createEmptyDialog];
-  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
-  self.internalUtility.isFacebookAppInstalled = YES;
-
-  [self _showNativeDialog:dialog
-       nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDKURLSchemeMasqueradePlayer]
-      expectRequestScheme:FBSDKURLSchemeFacebookApp
-               methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
-}
-
 #pragma mark - FullyCompatible Validation
 
 - (void)testThatValidateWithErrorReturnsYESForLinkQuoteIfAValidShareExtensionVersionIsAvailable

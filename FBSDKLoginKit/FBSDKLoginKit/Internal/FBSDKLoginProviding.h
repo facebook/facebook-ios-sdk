@@ -23,6 +23,10 @@ NS_SWIFT_NAME(LoginProviding)
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(FBSDKLoginManagerLoginResultBlock)completion;
 
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+          fromViewController:(nullable UIViewController *)viewController
+                     handler:(FBSDKLoginManagerLoginResultBlock)handler;
+
 - (void)logOut;
 
 @end

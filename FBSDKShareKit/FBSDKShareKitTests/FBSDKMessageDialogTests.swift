@@ -119,7 +119,8 @@ class FBSDKMessageDialogTests: XCTestCase {
       code: CoreError.errorInvalidArgument.rawValue,
       userInfo: [
         ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Value for shareContent is required."]
+        ErrorDeveloperMessageKey: "Value for shareContent is required."
+      ]
     )
     XCTAssertEqual(delegate.capturedError as NSError?, error)
   }
@@ -142,7 +143,8 @@ class FBSDKMessageDialogTests: XCTestCase {
       code: CoreError.errorInvalidArgument.rawValue,
       userInfo: [
         ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Message dialog does not support FBSDKShareCameraEffectContent."]
+        ErrorDeveloperMessageKey: "Message dialog does not support FBSDKShareCameraEffectContent."
+      ]
     )
     XCTAssertEqual(delegate.capturedError as NSError?, error)
   }

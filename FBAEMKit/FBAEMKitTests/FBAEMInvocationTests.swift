@@ -289,12 +289,33 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
+  func testProcessedParametersWithValidContentAndContentID() {
+    let invocation: AEMInvocation? = self.validInvocation
+    let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
+    let contentIDs: [String] = ["id123", "id456"]
+
+    let parameters = invocation?.processedParameters([
+      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
+      Keys.contentID: #"["id123", "id456"]"#,
+      Keys.contentType: "product"
+    ]) as? [String: AnyHashable]
+    XCTAssertEqual(
+      parameters,
+      [
+        Keys.content: [content],
+        Keys.contentID: contentIDs,
+        Keys.contentType: "product"
+      ],
+      "Processed parameters are not expected"
+    )
+  }
+
   func testProcessedParametersWithValidContent() {
     let invocation: AEMInvocation? = self.validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
 
     let parameters = invocation?.processedParameters([
-      Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
       Keys.contentID: "001",
       Keys.contentType: "product"
     ]) as? [String: AnyHashable]
@@ -313,14 +334,14 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let invocation: AEMInvocation? = self.validInvocation
 
     let parameters = invocation?.processedParameters([
-      Keys.content: "[{\"id\":,\"quantity\":5}]",
+      Keys.content: #"[{"id": ,"quantity": 5}]"#,
       Keys.contentID: "001",
       Keys.contentType: "product"
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
-        Keys.content: "[{\"id\":,\"quantity\":5}]",
+        Keys.content: #"[{"id": ,"quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
@@ -485,6 +506,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     configList = invocation._getConfigList(Values.brandMode, configs: configs)
     XCTAssertEqual(configList.count, 2, "Should only find the brand or cpas config")
+    XCTAssertEqual(configList.first?.configMode, Values.cpasMode, "Should have the caps config first")
+    XCTAssertEqual(configList.last?.configMode, Values.brandMode, "Should have the brand config last")
   }
 
   func testAttributeEventWithValue() {
@@ -593,7 +616,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 0,
       parameters: [
-        Keys.content: "[{\"id\":\"abc\",\"quantity\":5}]",
+        Keys.content: #"[{"id": "abc", "quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
@@ -625,7 +648,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 0,
       parameters: [
-        Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+        Keys.content: #"[{"id": "123", "quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],

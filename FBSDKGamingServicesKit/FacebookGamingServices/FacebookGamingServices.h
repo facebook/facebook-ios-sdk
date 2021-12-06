@@ -11,10 +11,7 @@
 #import <FacebookGamingServices/FBSDKCreateContextContent.h>
 #import <FacebookGamingServices/FBSDKCreateContextDialog.h>
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
-#import <FacebookGamingServices/FBSDKFriendFinderDialog.h>
-#import <FacebookGamingServices/FBSDKGamingGroupIntegration.h>
 #import <FacebookGamingServices/FBSDKGamingImageUploader.h>
-#import <FacebookGamingServices/FBSDKGamingPayloadObserver.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>

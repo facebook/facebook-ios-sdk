@@ -806,76 +806,6 @@
   XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
 }
 
-- (void)testMSQRDPlayerAppInstalledMissingQuerySchemes
-{
-  self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-
-  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
-                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
-}
-
-- (void)testMSQRDPlayerAppInstalledEmptyQuerySchemes
-{
-  NSArray *querySchemes = @[];
-  self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-
-  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
-                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
-}
-
-- (void)testMSQRDPlayerAppInstalledMissingQueryScheme
-{
-  NSArray *querySchemes = @[@"Foo"];
-  self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-
-  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
-                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
-}
-
-- (void)testMSQRDPlayerAppInstalledValidQueryScheme
-{
-  NSArray *querySchemes = @[@"msqrdplayer"];
-  self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-
-  XCTAssertNil(TestLogger.capturedLoggingBehavior);
-}
-
-- (void)testMSQRDPlayerAppInstalledCache
-{
-  self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
-
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-
-  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"One developer error should be logged");
-
-  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
-                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
-
-  // Calling it again should not result in an additional call to the singleShotLogEntry method
-  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
-  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
-}
-
 // MARK: - Random Utility Methods
 
 - (void)verifyTestLoggerLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior logEntry:(NSString *)logEntry
@@ -1136,15 +1066,6 @@
 }
 
 // We can't loop through these because of how stubbing works.
-- (void)testValidatingFacebookUrlSchemes_auth
-{
-  self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbauth2"]];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbauth2 is present in the bundle url schemes");
-}
-
-// We can't loop through these because of how stubbing works.
 - (void)testValidatingFacebookUrlSchemes_api
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbapi"]];
@@ -1160,15 +1081,6 @@
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
                                                             loggerFactory:self.loggerFactory];
   XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fb-messenger-share-api is present in the bundle url schemes");
-}
-
-// We can't loop through these because of how stubbing works.
-- (void)testValidatingFacebookUrlSchemes_shareextension
-{
-  self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbshareextension"]];
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
-                                                            loggerFactory:self.loggerFactory];
-  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbshareextension is present in the bundle url schemes");
 }
 
 - (void)testExtendDictionaryWithDefaultDataProcessingOptions
@@ -1348,9 +1260,8 @@
 }
 
 NSString *const validPath = @"example";
-NSString *const facebookUrlSchemeMissingMessage = @"fbauth2 is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
+NSString *const facebookUrlSchemeMissingMessage = @"fbapi is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
 NSString *const messengerUrlSchemeMissingMessage = @"fb-messenger-share-api is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
-NSString *const msqrdPlayerUrlSchemeMissingMessage = @"msqrdplayer is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
 
 - (TestBundle *)bundleWithRegisteredUrlSchemes:(NSArray<NSString *> *)schemes
 {

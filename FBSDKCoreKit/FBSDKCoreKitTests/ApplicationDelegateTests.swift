@@ -589,6 +589,39 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   // MARK: - Configuring Dependencies
 
   // TEMP: added to configurator tests
+  func testInitializingConfiguresAEMReporter() {
+    AEMReporter.reset()
+    XCTAssertNil(
+      AEMReporter.networker,
+      "AEMReporter should not have an AEM networker by default"
+    )
+    XCTAssertNil(
+      AEMReporter.appID,
+      "AEMReporter should not have an app ID by default"
+    )
+    XCTAssertNil(
+      AEMReporter.reporter,
+      "AEMReporter should not have an SKAdNetwork reporter by default"
+    )
+
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertTrue(
+      AEMReporter.networker is AEMNetworker,
+      "AEMReporter should be configured with an AEM networker"
+    )
+    XCTAssertEqual(
+      AEMReporter.appID,
+      Settings.shared.appID,
+      "AEMReporter should be configured with the settings' app ID"
+    )
+    XCTAssertTrue(
+      AEMReporter.reporter is SKAdNetworkReporter,
+      "AEMReporter should be configured with a SKAdNetwork reporter"
+    )
+  }
+
+  // TEMP: added to configurator tests
   func testInitializingConfiguresError() {
     SDKError.reset()
     XCTAssertNil(
@@ -833,6 +866,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
     XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
     XCTAssertTrue(manager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
+    XCTAssertTrue(manager.dialogConfigurationMapBuilder is DialogConfigurationMapBuilder)
   }
 
   // TEMP: added to configurator tests
@@ -983,6 +1017,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSharedAppEventsDeviceInfo() throws {
     AppEventsDeviceInfo.reset()
 
@@ -1156,6 +1191,10 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedCodelessIndexer === CodelessIndexer.self,
       "Initializing the SDK should set concrete codeless indexer"
     )
+    XCTAssertTrue(
+      appEvents.capturedAEMReporter === AEMReporter.self,
+      "Initializing the SDK should set the concrete AEM reporter"
+    )
   }
 
   // TEMP: added to configurator tests
@@ -1251,25 +1290,43 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should be configured with the expected concrete graph request provider"
     )
     XCTAssertTrue(
-      delegate.skAdNetworkReporter.store === UserDefaults.standard,
+      delegate.skAdNetworkReporter.dataStore === UserDefaults.standard,
       "Should be configured with the standard user defaults"
     )
     if #available(iOS 11.3, *) {
       XCTAssertTrue(
-        delegate.skAdNetworkReporter.conversionValueUpdatable === SKAdNetwork.self,
+        delegate.skAdNetworkReporter.conversionValueUpdater === SKAdNetwork.self,
         "Should be configured with the default Conversion Value Updating Class"
       )
     }
   }
 
   // TEMP: added to configurator tests
-  func testInitializingSdkConfiguresAccessTokenCache() {
+  func testInitializingSdkConfiguresAccessTokenCache() throws {
     AccessToken.tokenCache = nil
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AccessToken.tokenCache is TokenCache,
+    let cache = try XCTUnwrap(
+      AccessToken.tokenCache as? TokenCache,
       "Should be configured with expected concrete token cache"
+    )
+    XCTAssertTrue(
+      cache.settings === Settings.shared,
+      "The cache should use the shared Settings instance"
+    )
+
+    let store = try XCTUnwrap(
+      cache.keychainStore as? KeychainStore,
+      "The cache should use an instance of KeychainStore"
+    )
+    XCTAssertEqual(
+      store.service,
+      "com.facebook.sdk.tokencache.com.apple.dt.xctest.tool",
+      "The keychain store should use a service with a well-known prefix plus the main bundle identifier"
+    )
+    XCTAssertNil(
+      store.accessGroup,
+      "The keychain store should not have an access group"
     )
   }
 
@@ -1310,6 +1367,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAuthenticationTokenCache() {
     delegate.initializeSDK()
 
@@ -1406,6 +1464,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
+  // TEMP: added to configurator tests
   func testInitializingSdkConfiguresImpressionLoggingButton() throws {
     ImpressionLoggingButton.resetClassDependencies()
     delegate.initializeSDK()

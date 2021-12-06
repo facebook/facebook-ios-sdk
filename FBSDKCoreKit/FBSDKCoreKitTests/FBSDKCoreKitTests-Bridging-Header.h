@@ -8,6 +8,7 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBAEMKit/FBAEMKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <TestTools/TestTools.h>
@@ -18,6 +19,9 @@
 #import "ApplicationDelegate+Testing.h"
 #import "BackgroundEventLogger+Testing.h"
 #import "CodelessIndexer+Testing.h"
+#import "FBAEMReporter+Testing.h"
+#import "FBSDKAEMNetworker.h"
+#import "FBSDKAEMReporterProtocol.h"
 #import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"
@@ -80,6 +84,7 @@
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCloseIcon+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
+#import "FBSDKCoreKitComponents.h"
 #import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKCrashHandler+Testing.h"
 #import "FBSDKCrashObserver.h"
@@ -87,6 +92,7 @@
 #import "FBSDKCrashShield.h"
 #import "FBSDKCrashShield+Testing.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKDynamicFrameworkResolving.h"
 #import "FBSDKError+Testing.h"
@@ -170,7 +176,6 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKShareDialogConfiguration+Testing.h"
-#import "FBSDKSharedDependencies.h"
 #import "FBSDKSwizzler.h"
 #import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentData+Testing.h"

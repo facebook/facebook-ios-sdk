@@ -76,7 +76,6 @@ targets:
     dependencies:
       - target: FBAEMKit-Dynamic
       - target: TestTools/TestTools
-        link: false
         embed: false
 
 schemes:
