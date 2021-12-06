@@ -138,16 +138,16 @@ class DialogConfigurationMapBuilderTests: XCTestCase {
   ) {
     XCTAssertEqual(actual.name, expected.name, file: file, line: line)
     XCTAssertEqual(actual.url, expected.url, file: file, line: line)
-    if let actualStringVersions = actual.appVersions as? [String],
-    let expectedStringVersions = expected.appVersions as? [String] {
+    if let actualStringVersions = actual.appVersions as? [String], // swiftlint:disable:next indentation_width
+       let expectedStringVersions = expected.appVersions as? [String] {
       XCTAssertEqual(
         actualStringVersions,
         expectedStringVersions,
         file: file,
         line: line
       )
-    } else if let actualIntegerVersions = actual.appVersions as? [Int],
-    let expectedIntegerVersions = expected.appVersions as? [Int] {
+    } else if let actualIntegerVersions = actual.appVersions as? [Int], // swiftlint:disable:next indentation_width
+              let expectedIntegerVersions = expected.appVersions as? [Int] {
       XCTAssertEqual(
         actualIntegerVersions,
         expectedIntegerVersions,

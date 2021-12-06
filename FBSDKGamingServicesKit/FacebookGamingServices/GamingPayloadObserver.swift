@@ -60,9 +60,9 @@ public class GamingPayloadObserver: NSObject {
       let delegate = delegate,
       let gameEntryData = self.parseURLForPayloadEntryData(appLinkUrl: appLinkUrl),
       !gameEntryData.keys.isEmpty
-      else {
-        return false
-      }
+    else {
+      return false
+    }
     let payload = GamingPayload(URL: appLinkUrl)
 
     if

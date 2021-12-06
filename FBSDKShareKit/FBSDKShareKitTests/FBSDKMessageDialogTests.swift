@@ -13,10 +13,12 @@ import XCTest
 class FBSDKMessageDialogTests: XCTestCase {
 
   enum Assumptions {
+    // swiftformat:disable indent // Will be fixed in 0.49.0
     static let contentValidation = """
       Known valid content should pass validation without issue. \
       If this test fails then the criteria for the fixture may no longer be valid
       """
+    // swiftformat:enable indent
   }
 
   // swiftlint:disable implicitly_unwrapped_optional
