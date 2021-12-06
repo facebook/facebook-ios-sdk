@@ -220,7 +220,7 @@ class LoginManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       loginCompleterFactory.capturedUrlParameters["state"] as? String,
-      "{\"challenge\":\"a%20%3Dbcdef\"}",
+      #"{"challenge":"a%20%3Dbcdef"}"#,
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(

@@ -295,8 +295,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let contentIDs: [String] = ["id123", "id456"]
 
     let parameters = invocation?.processedParameters([
-      Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
-      Keys.contentID: "[\"id123\", \"id456\"]",
+      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
+      Keys.contentID: #"["id123", "id456"]"#,
       Keys.contentType: "product"
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
@@ -315,7 +315,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
 
     let parameters = invocation?.processedParameters([
-      Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
       Keys.contentID: "001",
       Keys.contentType: "product"
     ]) as? [String: AnyHashable]
@@ -334,14 +334,14 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     let invocation: AEMInvocation? = self.validInvocation
 
     let parameters = invocation?.processedParameters([
-      Keys.content: "[{\"id\":,\"quantity\":5}]",
+      Keys.content: #"[{"id": ,"quantity": 5}]"#,
       Keys.contentID: "001",
       Keys.contentType: "product"
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
-        Keys.content: "[{\"id\":,\"quantity\":5}]",
+        Keys.content: #"[{"id": ,"quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
@@ -616,7 +616,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 0,
       parameters: [
-        Keys.content: "[{\"id\":\"abc\",\"quantity\":5}]",
+        Keys.content: #"[{"id": "abc", "quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
@@ -648,7 +648,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       currency: Values.USD,
       value: 0,
       parameters: [
-        Keys.content: "[{\"id\":\"123\",\"quantity\":5}]",
+        Keys.content: #"[{"id": "123", "quantity": 5}]"#,
         Keys.contentID: "001",
         Keys.contentType: "product"
       ],
