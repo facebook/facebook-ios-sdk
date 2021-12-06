@@ -47,16 +47,6 @@
   XCTAssertEqualObjects(unarchivedObject, content);
 }
 
-- (void)testWithInvalidPhotos
-{
-  FBSDKSharePhotoContent *content = [FBSDKSharePhotoContent new];
-  NSArray *photos = @[
-    [FBSDKShareModelTestUtility photoWithImageURL],
-    [FBSDKShareModelTestUtility photoImageURL],
-  ];
-  XCTAssertThrowsSpecificNamed([content setPhotos:photos], NSException, NSInvalidArgumentException);
-}
-
 - (void)testValidationWithValidContent
 {
   FBSDKSharePhotoContent *content = [FBSDKSharePhotoContent new];
