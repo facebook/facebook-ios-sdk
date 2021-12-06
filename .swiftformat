@@ -47,6 +47,7 @@
 --rules spaceInsideBraces
 --rules spaceInsideComments
 --rules spaceInsideGenerics
+--rules spaceInsideParens
 --rules strongifiedSelf
 --rules strongOutlets
 --rules todos

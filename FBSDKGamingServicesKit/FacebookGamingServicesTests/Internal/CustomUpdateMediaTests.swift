@@ -16,7 +16,7 @@ class CustomUpdateMediaTests: XCTestCase {
 
   func testIntilizationWithGif() throws {
     let media = try XCTUnwrap(CustomUpdateMedia(media: fakeGIF))
-    let gif = try XCTUnwrap( media.gif)
+    let gif = try XCTUnwrap(media.gif)
 
     XCTAssertNotNil(media)
     XCTAssertNil(media.video)
