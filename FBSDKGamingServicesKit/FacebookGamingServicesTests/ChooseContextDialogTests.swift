@@ -106,8 +106,8 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
 
     dialog.show()
     let filterQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterFilter] as? String)
-    let maxSizeQuery  = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize] as? Int)
-    let minSizeQuery  = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize] as? Int)
+    let maxSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize] as? Int)
+    let minSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize] as? Int)
 
     XCTAssertNotNil(dialog)
     XCTAssertEqual(util.scheme, URLScheme.https.rawValue)

@@ -23,7 +23,7 @@ public class GamingPayload: NSObject {
 
   public init(URL: AppLinkURL) {
     self.URL = URL
-    let requestID = URL.appLinkExtras?[GamingPayloadObserver.Keys.gamingPayloadGameRequestID.rawValue]  as? String ?? ""
+    let requestID = URL.appLinkExtras?[GamingPayloadObserver.Keys.gamingPayloadGameRequestID.rawValue] as? String ?? ""
     payload = URL.appLinkExtras?[GamingPayloadObserver.Keys.gamingPayload.rawValue] as? String ?? ""
 
     gameEntryData[GamingPayloadObserver.Keys.gamingPayload.rawValue] = payload

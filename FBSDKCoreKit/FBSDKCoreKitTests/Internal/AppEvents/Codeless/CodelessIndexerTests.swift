@@ -479,7 +479,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       graphRequestFactory.capturedParameters as? [String: String],
       [
         "app_version": appVersion,
-        Keys.deviceSessionID: CodelessIndexer.currentSessionDeviceID!,  // swiftlint:disable:this force_unwrapping
+        Keys.deviceSessionID: CodelessIndexer.currentSessionDeviceID!, // swiftlint:disable:this force_unwrapping
         "platform": "iOS",
         "tree": "UIButton"
       ],

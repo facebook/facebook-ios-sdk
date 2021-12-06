@@ -15,6 +15,7 @@
 --rules blankLinesAtEndOfScope
 --rules braces
 --rules consecutiveBlankLines
+--rules consecutiveSpaces
 --rules duplicateImports
 --rules elseOnSameLine
 --rules enumNamespaces

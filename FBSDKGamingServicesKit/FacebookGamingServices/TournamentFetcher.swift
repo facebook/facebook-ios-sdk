@@ -38,7 +38,7 @@ public class TournamentFetcher {
    - Parameter completionHandler: The caller's completion handler to invoke once the graph request is complete
    */
   public func fetchTournaments(completionHandler: @escaping (Result<[Tournament], TournamentFetchError>) -> Void) {
-    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain else {
       return completionHandler(.failure(TournamentFetchError.invalidAuthToken))
     }
 
