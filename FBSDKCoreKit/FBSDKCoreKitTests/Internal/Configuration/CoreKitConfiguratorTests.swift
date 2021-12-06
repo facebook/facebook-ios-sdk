@@ -43,7 +43,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppEventsConfigurationManager.reset()
     AppEventsDeviceInfo.reset()
     AppEventsState.eventProcessors = nil
-    AppEventsUtility.reset()
+    AppEventsUtility.shared.reset()
     AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
     FeatureManager.reset()

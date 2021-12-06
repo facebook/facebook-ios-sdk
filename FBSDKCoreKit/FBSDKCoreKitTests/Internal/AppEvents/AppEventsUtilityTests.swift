@@ -87,14 +87,14 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testValidation() {
-    XCTAssertFalse(AppEventsUtility.validateIdentifier("x-9adc++|!@#"))
-    XCTAssertTrue(AppEventsUtility.validateIdentifier("4simple id_-3"))
-    XCTAssertTrue(AppEventsUtility.validateIdentifier("_4simple id_-3"))
-    XCTAssertFalse(AppEventsUtility.validateIdentifier("-4simple id_-3"))
+    XCTAssertFalse(AppEventsUtility.shared.validateIdentifier("x-9adc++|!@#"))
+    XCTAssertTrue(AppEventsUtility.shared.validateIdentifier("4simple id_-3"))
+    XCTAssertTrue(AppEventsUtility.shared.validateIdentifier("_4simple id_-3"))
+    XCTAssertFalse(AppEventsUtility.shared.validateIdentifier("-4simple id_-3"))
   }
 
   func testActivityParametersWithoutUserID() {
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -109,7 +109,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testActivityParametersWithUserID() {
     let userID = NSUUID().uuidString
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: userID,
@@ -124,7 +124,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testActivityParametersWithoutUserData() {
-    let dict = AppEventsUtility.activityParametersDictionary(
+    let dict = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -159,7 +159,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     store.setUserData(testExternalId, forType: .externalId)
     let hashedUserData = store.getUserData()
 
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -195,7 +195,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   func testParametersDictionaryWithApplicationTrackingEnabled() {
     Settings.shared.isEventDataUsageLimited = false
 
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -212,7 +212,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   func testParametersDictionaryWithApplicationTrackingDisabled() {
     Settings.shared.isEventDataUsageLimited = true
 
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -227,7 +227,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testParametersDictionaryWithAccessibleAdvertiserID() {
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -243,7 +243,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testParametersDictionaryWithInaccessibleAdvertiserID() {
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: false,
       userID: nil,
@@ -269,7 +269,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     let uuid = try XCTUnwrap(UUID(uuidString: identifier))
     let identifierManager = TestASIdentifierManager(stubbedAdvertisingIdentifier: uuid)
     AppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -286,7 +286,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testActivityParametersWithNonEmptyLimitedDataProcessingOptions() {
     Settings.shared.setDataProcessingOptions(["LDU"], country: 100, state: 1)
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: false,
       userID: nil,
@@ -308,7 +308,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testActivityParametersWithEmptyLimitedDataProcessingOptions() {
     Settings.shared.setDataProcessingOptions([])
-    let parameters = AppEventsUtility.activityParametersDictionary(
+    let parameters = AppEventsUtility.shared.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
@@ -358,7 +358,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertFalse(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should not drop events"
     )
   }
@@ -376,7 +376,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertFalse(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should not drop events"
     )
   }
@@ -394,7 +394,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertFalse(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should not drop events"
     )
   }
@@ -412,7 +412,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertFalse(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should not drop events"
     )
   }
@@ -430,7 +430,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertFalse(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should not drop events"
     )
   }
@@ -447,7 +447,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertTrue(
-      AppEventsUtility.shouldDropAppEvent,
+      AppEventsUtility.shared.shouldDropAppEvents,
       "Should drop events when tracking is disallowed and event collection is disabled"
     )
   }
@@ -474,7 +474,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
           Settings.setAdvertiserTrackingStatus(status)
         }
 
-        let dict = AppEventsUtility.activityParametersDictionary(
+        let dict = AppEventsUtility.shared.activityParametersDictionary(
           forEvent: "event",
           shouldAccessAdvertisingID: true,
           userID: nil,
@@ -581,22 +581,22 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testFlushReasonToString() {
-    let result1 = AppEventsUtility.flushReason(toString: .explicit)
+    let result1 = AppEventsUtility.shared.flushReason(toString: .explicit)
     XCTAssertEqual("Explicit", result1)
 
-    let result2 = AppEventsUtility.flushReason(toString: .timer)
+    let result2 = AppEventsUtility.shared.flushReason(toString: .timer)
     XCTAssertEqual("Timer", result2)
 
-    let result3 = AppEventsUtility.flushReason(toString: .sessionChange)
+    let result3 = AppEventsUtility.shared.flushReason(toString: .sessionChange)
     XCTAssertEqual("SessionChange", result3)
 
-    let result4 = AppEventsUtility.flushReason(toString: .persistedEvents)
+    let result4 = AppEventsUtility.shared.flushReason(toString: .persistedEvents)
     XCTAssertEqual("PersistedEvents", result4)
 
-    let result5 = AppEventsUtility.flushReason(toString: .eventThreshold)
+    let result5 = AppEventsUtility.shared.flushReason(toString: .eventThreshold)
     XCTAssertEqual("EventCountThreshold", result5)
 
-    let result6 = AppEventsUtility.flushReason(toString: .eagerlyFlushingEvent)
+    let result6 = AppEventsUtility.shared.flushReason(toString: .eagerlyFlushingEvent)
     XCTAssertEqual("EagerlyFlushingEvent", result6)
   }
 
@@ -628,7 +628,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     ]
 
     for event in standardEvents {
-      XCTAssertTrue(AppEventsUtility.isStandardEvent(event))
+      XCTAssertTrue(AppEventsUtility.shared.isStandardEvent(event))
     }
   }
 
@@ -637,7 +637,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     Settings.shared.appID = nil
     Settings.shared.clientToken = nil
 
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
 
     XCTAssertNil(
       tokenString,
@@ -650,7 +650,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     Settings.shared.appID = nil
     Settings.shared.clientToken = "toktok"
 
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertNil(
       tokenString,
       "Should not provide a token string without an app id"
@@ -662,7 +662,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     Settings.shared.appID = SampleAccessTokens.validToken.appID
     Settings.shared.clientToken = nil
 
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertNil(
       tokenString,
       "Should not provide a token string without a client Token"
@@ -673,7 +673,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = nil
     Settings.shared.appID = "abc"
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
       "abc|toktok",
@@ -685,7 +685,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = nil
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
 
     XCTAssertEqual(
       tokenString,
@@ -698,7 +698,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = nil
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
       SampleAccessTokens.validToken.tokenString,
@@ -713,7 +713,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = "456"
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
       SampleAccessTokens.validToken.tokenString,
@@ -728,7 +728,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = "456"
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
       SampleAccessTokens.validToken.tokenString,
@@ -740,7 +740,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = nil
     Settings.shared.appID = nil
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string without an access token, app id, or client token"
@@ -751,7 +751,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = nil
     Settings.shared.appID = nil
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string without an access token or app id"
@@ -762,7 +762,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = nil
     Settings.shared.appID = SampleAccessTokens.validToken.appID
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string without a client token"
@@ -773,7 +773,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = nil
     Settings.shared.appID = SampleAccessTokens.validToken.appID
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string with the logging app id and client token"
@@ -784,7 +784,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = nil
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string when the logging override and access token app ids are mismatched"
@@ -795,7 +795,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = nil
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string when the logging override and access token app ids are mismatched"
@@ -806,7 +806,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = "456"
     Settings.shared.clientToken = nil
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string when the logging override and access token app ids are mismatched"
@@ -817,7 +817,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = "456"
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
       "Should not provide a token string when the logging override and access token app ids are mismatched"
@@ -828,7 +828,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     AccessToken.current = SampleAccessTokens.validToken
     Settings.shared.appID = "456"
     Settings.shared.clientToken = "toktok"
-    let tokenString = AppEventsUtility.tokenStringToUse(
+    let tokenString = AppEventsUtility.shared.tokenStringToUse(
       for: nil,
       loggingOverrideAppID: SampleAccessTokens.validToken.appID
     )
@@ -843,7 +843,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testDefaultDependencies() {
-    AppEventsUtility.reset()
+    AppEventsUtility.shared.reset()
     XCTAssertNil(
       AppEventsUtility.shared.appEventsConfigurationProvider,
       "Should not have an app events configuration provider by default"
@@ -874,23 +874,23 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testIsSensitiveUserData() {
     var text = "test@sample.com"
-    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertTrue(AppEventsUtility.shared.isSensitiveUserData(text))
 
     text = "4716 5255 0221 9085"
-    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertTrue(AppEventsUtility.shared.isSensitiveUserData(text))
 
     text = "4716525502219085"
-    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertTrue(AppEventsUtility.shared.isSensitiveUserData(text))
 
     text = "4716525502219086"
-    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertFalse(AppEventsUtility.shared.isSensitiveUserData(text))
 
     text = ""
-    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertFalse(AppEventsUtility.shared.isSensitiveUserData(text))
 
     // number of digits less than 9 will not be considered as credit card number
     text = "4716525"
-    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+    XCTAssertFalse(AppEventsUtility.shared.isSensitiveUserData(text))
   }
 
   func testIdentifierManagerWithShouldUseCachedManagerWithCachedManager() {

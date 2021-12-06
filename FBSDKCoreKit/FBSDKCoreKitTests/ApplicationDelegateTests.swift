@@ -910,7 +910,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAppEventsUtility() {
-    AppEventsUtility.reset()
+    AppEventsUtility.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertTrue(
