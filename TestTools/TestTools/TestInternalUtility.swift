@@ -16,7 +16,6 @@ public class TestInternalUtility: NSObject,
   AppURLSchemeProviding,
   InternalUtilityProtocol {
 
-  public var isMSQRDPlayerAppInstalled = false
   public var stubbedScheme = "No stub app url scheme provided"
   public var validateURLSchemesCalled = false
   public var isFacebookAppInstalled = false

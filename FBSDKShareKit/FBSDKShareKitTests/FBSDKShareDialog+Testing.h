@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKShareDialog (Testing)
 
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithInternalURLOpener:(id<FBSDKShareInternalURLOpening>)internalURLOpener
                        internalUtility:(id<FBSDKInternalUtility>)internalUtility
                               settings:(id<FBSDKSettings>)settings
@@ -26,7 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
                bridgeAPIRequestFactory:(id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
-                          windowFinder:(id<FBSDKWindowFinding>)windowFinder;
+                          windowFinder:(id<FBSDKWindowFinding>)windowFinder
+NS_SWIFT_NAME(configure(internalURLOpener:internalUtility:settings:shareUtility:bridgeAPIRequestFactory:bridgeAPIRequestOpener:socialComposeViewControllerFactory:windowFinder:));
+// UNCRUSTIFY_FORMAT_ON
 
 #if FBTEST && DEBUG
 + (void)resetClassDependencies;

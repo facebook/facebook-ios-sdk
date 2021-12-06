@@ -14,7 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKShareCameraEffectContent (Testing)
 
-+ (void)configureWithInternalUtility:(id<FBSDKInternalUtility>)internalUtility;
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithInternalUtility:(id<FBSDKInternalUtility>)internalUtility
+NS_SWIFT_NAME(configure(internalUtility:));
+// UNCRUSTIFY_FORMAT_ON
 
 + (void)resetClassDependencies;
 
