@@ -21,6 +21,30 @@
 
 @implementation FBSDKAppInviteContent
 
+// This exists because you cannot deprecate a method that has never been implemented.
+// You should not be able to create app invite content without an app link URL.
+// This preserves the now-deprecated behavior and should be removed as soon as possible.
++ (instancetype)new
+{
+  return [[self alloc] init];
+}
+
+// This exists because you cannot deprecate a method that has never been implemented.
+// You should not be able to create app invite content without an app link URL.
+// This preserves the now-deprecated behavior and should be removed as soon as possible.
+- (instancetype)init
+{
+  return [super init];
+}
+
+- (instancetype)initWithAppLinkURL:(nonnull NSURL *)appLinkURL
+{
+  if ((self = [super init])) {
+    _appLinkURL = appLinkURL;
+  }
+  return self;
+}
+
 - (NSURL *)previewImageURL
 {
   return self.appInvitePreviewImageURL;
@@ -128,8 +152,8 @@
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  if ((self = [self init])) {
-    _appLinkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
+  NSURL *appLinkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
+  if (appLinkURL && (self = [self initWithAppLinkURL:appLinkURL])) {
     _appInvitePreviewImageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
     _promotionCode = [decoder decodeObjectOfClass:NSString.class forKey:
                       FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY];
@@ -154,8 +178,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKAppInviteContent *copy = [FBSDKAppInviteContent new];
-  copy->_appLinkURL = [_appLinkURL copy];
+  FBSDKAppInviteContent *copy = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:[_appLinkURL copy]];
   copy->_appInvitePreviewImageURL = [_appInvitePreviewImageURL copy];
   copy->_promotionText = [_promotionText copy];
   copy->_promotionCode = [_promotionCode copy];

@@ -11,6 +11,7 @@
 #import "XCTestCase+Assertions.h"
 
 #import "FBSDKHashtag.h"
+#import "FBSDKAppInviteContent.h"
 #import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
@@ -23,6 +24,7 @@
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
+#import "FBSDKSharingValidation.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactory.h"
 #import "FBSDKSocialComposeViewControllerFactoryProtocol.h"
