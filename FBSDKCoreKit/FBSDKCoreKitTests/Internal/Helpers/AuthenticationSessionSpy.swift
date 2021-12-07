@@ -17,7 +17,7 @@ class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
   var startCallCount = 0
   var cancelCallCount = 0
 
-  static var makeDefaultSpy: AuthenticationSessionSpy {
+  static func makeDefaultSpy() -> AuthenticationSessionSpy {
     guard let url = URL(string: "http://example.com") else { fatalError("Url creation failed") }
 
     return AuthenticationSessionSpy(url: url, callbackURLScheme: nil) { _, _ in }

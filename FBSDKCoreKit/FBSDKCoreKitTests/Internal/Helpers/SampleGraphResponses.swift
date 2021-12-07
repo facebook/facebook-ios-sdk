@@ -39,7 +39,7 @@ enum SampleGraphResponses {
       return (unserialized as! String).data(using: .utf8)! // swiftlint:disable:this force_cast force_unwrapping
 
     case .dictionary:
-      return try! JSONSerialization.data(  // swiftlint:disable:this force_try
+      return try! JSONSerialization.data( // swiftlint:disable:this force_try
         withJSONObject: unserialized as Any,
         options: []
       )

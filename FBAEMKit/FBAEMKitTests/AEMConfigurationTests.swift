@@ -34,7 +34,7 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   enum Values {
     static let coffeeBrand = "coffeebrand"
-    static let paramRule = "{\"and\":[{\"fb_content[*].brand\":{\"eq\":\"CoffeeShop\"}}]}"
+    static let paramRule = #"{"and": [{"fb_content[*].brand": {"eq": "CoffeeShop"}}]}"#
     static let purchase = "fb_mobile_purchase"
     static let donate = "Donate"
     static let defaultMode = "default"

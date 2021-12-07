@@ -29,15 +29,15 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
       "Should not create valid Single Entry Rule with nil"
     )
     XCTAssertNotNil(
-      factory.createRule(withJson: "{\"and\":[{\"value\":{\"contains\":\"abc\"}}]}"),
+      factory.createRule(withJson: #"{"and": [{"value": {"contains": "abc"}}]}"#),
       "Should create expected Multi Entry Rule"
     )
     XCTAssertNotNil(
-      factory.createRule(withJson: "{\"value\":{\"contains\":\"abc\"}}"),
+      factory.createRule(withJson: #"{"value": {"contains": "abc"}}"#),
       "Should create expected Single Entry Rule"
     )
     XCTAssertNotNil(
-      factory.createRule(withJson: "{\"and\":[{\"event\":{\"eq\":\"Lead\"}},{\"or\":[{\"URL\":{\"contains\":\"achievetestprep.com\"}}]}]}"), // swiftlint:disable:this line_length
+      factory.createRule(withJson: #"{"and": [{"event": {"eq": "Lead"}}, {"or": [{"URL": {"contains": "achievetestprep.com"}}]}]}"#), // swiftlint:disable:this line_length
       "Should create expected nested Multi Entry Rule"
     )
   }

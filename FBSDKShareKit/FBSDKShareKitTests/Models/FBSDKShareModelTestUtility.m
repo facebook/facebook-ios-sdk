@@ -60,7 +60,7 @@
   return [NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xpa1/t39.2178-6/851594_549760571770473_1178259000_n.png"];
 }
 
-+ (NSArray *)peopleIDs
++ (NSArray<NSString *> *)peopleIDs
 {
   return @[];
 }

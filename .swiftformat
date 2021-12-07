@@ -1,17 +1,70 @@
 # SwiftFormat Config
-
-# https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
-
 # Version: 0.48.18
+# Rules: https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
+
+# How to automatically run swiftformat to "Live Test" a change to this config
+# brew install entr
+# ls .swiftformat | entr -c sh -c "git add .swiftformat && git checkout . && swiftformat . && git -P diff"
 
 --exclude samples,testing,ads,internal # dirs
 --exclude Package.swift # files
 
 # Rules to run
+
+--rules anyObjectProtocol
+--rules blankLinesAtEndOfScope
+--rules braces
+--rules consecutiveBlankLines
+--rules consecutiveSpaces
+--rules duplicateImports
+--rules elseOnSameLine
+--rules enumNamespaces
+--rules extensionAccessControl
+--rules fileHeader
 --rules indent
+--rules initCoderUnavailable
+--rules leadingDelimiters
+--rules linebreakAtEndOfFile
+--rules linebreaks
+--rules preferKeyPath
+--rules redundantBackticks
+--rules redundantBreak
+--rules redundantExtensionACL
+--rules redundantFileprivate
+--rules redundantGet
+--rules redundantInit
+--rules redundantLet
+--rules redundantNilInit
+--rules redundantObjc
+--rules redundantPattern
+--rules redundantType
+--rules redundantVoidReturnType
+--rules semicolons
+--rules sortedImports
+--rules spaceAroundBraces
+--rules spaceAroundBrackets
+--rules spaceAroundComments
+--rules spaceAroundGenerics
 --rules spaceAroundOperators
 --rules spaceAroundParens
+--rules spaceInsideBraces
+--rules spaceInsideBrackets
+--rules spaceInsideComments
+--rules spaceInsideGenerics
+--rules spaceInsideParens
+--rules strongifiedSelf
+--rules strongOutlets
+--rules todos
+--rules trailingClosures
+--rules trailingSpace
+--rules typeSugar
+--rules void
+--rules wrap
 --rules wrapArguments
+--rules wrapAttributes
+--rules wrapEnumCases
+--rules yodaConditions
+
 
 # Options
 --swiftversion 5
@@ -19,3 +72,6 @@
 --ifdef no-indent
 --xcodeindentation enabled
 --ranges no-space
+--importgrouping  "testable-first"
+--header "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
+--indentstrings true

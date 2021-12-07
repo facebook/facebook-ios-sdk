@@ -31,7 +31,7 @@ class LoginUtilityTests: XCTestCase {
 
   enum Values {
     static let accessToken = "sometoken"
-    static let challenge = "{\"challenge\":\"a%20%3Dbcdef\"}"
+    static let challenge = #"{"challenge":"a%20%3Dbcdef"}"#
     static let error = "access_denied"
     static let errorCode = "200"
     static let errorReason = "user_denied"

@@ -170,7 +170,7 @@ class EventBindingManagerTests: XCTestCase,
           "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UITableView)",
           "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UICollectionView)"
         ]
-        .joined(separator: ", ")
+          .joined(separator: ", ")
       )
       .appending("]")
 

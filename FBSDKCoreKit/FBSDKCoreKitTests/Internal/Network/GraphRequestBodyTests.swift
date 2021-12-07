@@ -70,7 +70,7 @@ class GraphRequestBodyTests: XCTestCase {
     let decodedData = try XCTUnwrap(String(data: body.data, encoding: .utf8))
 
     XCTAssertTrue(body.mimeContentType().contains("multipart/form-data"))
-    XCTAssertTrue(decodedData.contains("filename=\"test_filename\""))
+    XCTAssertTrue(decodedData.contains(#"filename="test_filename""#))
     XCTAssertTrue(decodedData.contains("Content-Type: test_content_type"))
   }
 }

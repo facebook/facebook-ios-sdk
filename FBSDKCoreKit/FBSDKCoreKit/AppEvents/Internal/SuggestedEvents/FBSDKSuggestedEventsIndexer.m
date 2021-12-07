@@ -207,7 +207,7 @@ static dispatch_once_t setupNonce;
 
 - (void)predictEventWithUIResponder:(UIResponder *)uiResponder text:(NSString *)text
 {
-  if (text.length > 100 || text.length == 0 || [FBSDKAppEventsUtility isSensitiveUserData:text]) {
+  if (text.length > 100 || text.length == 0 || [FBSDKAppEventsUtility.shared isSensitiveUserData:text]) {
     return;
   }
 

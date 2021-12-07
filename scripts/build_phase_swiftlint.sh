@@ -16,13 +16,12 @@ export PATH="/usr/local/bin:/opt/facebook/hg/bin:$PATH"
 HG_ROOT=$(hg root 2>/dev/null)
 if [ -n "$HG_ROOT" ]; then
   SWIFTLINT_PATH="../Tools/swiftlint/swiftlint"
+  SWIFTFORMAT_PATH="internal/tools/swiftformat"
   IFS=$'\n' CHANGED_FILES=($(hg status --modified --added --no-status --rev 'ancestor(master,.)::.' && hg status --no-status --unknown --modified --added | grep -v '\.\./'))
-elif which swiftlint >/dev/null; then
-  SWIFTLINT_PATH=$(which swiftlint)
-  IFS=$'\n' CHANGED_FILES=($(git -P diff --name-only --diff-filter=MA main...HEAD && git -P diff --name-only --diff-filter=MA HEAD))
 else
-  echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-  exit
+  SWIFTLINT_PATH=$(which swiftlint)
+  SWIFTFORMAT_PATH=$(which swiftformat)
+  IFS=$'\n' CHANGED_FILES=($(git -P diff --name-only --diff-filter=MA main...HEAD && git -P diff --name-only --diff-filter=MA HEAD))
 fi
 
 # Lint changes from the current revision and uncommitted changes
@@ -38,4 +37,16 @@ if [ ${#UNIQUE_SWIFT_FILES[@]} -eq 0 ]; then
     exit
 fi
 
-$SWIFTLINT_PATH lint "${UNIQUE_SWIFT_FILES[@]}"
+# Run SwiftFormat
+if [ -n "$SWIFTFORMAT_PATH" ]; then
+  $SWIFTFORMAT_PATH "${UNIQUE_SWIFT_FILES[@]}"
+else
+  echo "warning: SwiftFormat not installed. Install with 'brew install swiftformat' or from https://github.com/nicklockwood/SwiftFormat"
+fi
+
+# Run SwiftLint
+if [ -n "$SWIFTLINT_PATH" ]; then
+  $SWIFTLINT_PATH lint "${UNIQUE_SWIFT_FILES[@]}"
+else
+  echo "warning: SwiftLint not installed, Install with 'brew install swiftlint' or from https://github.com/realm/SwiftLint"
+fi

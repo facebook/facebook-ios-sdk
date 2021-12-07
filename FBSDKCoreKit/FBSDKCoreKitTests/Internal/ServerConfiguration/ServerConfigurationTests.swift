@@ -2014,7 +2014,7 @@ class ServerConfigurationTests: XCTestCase { // swiftlint:disable:this type_body
       ]
     }
 
-    config = Fixtures.config(withDictionary: ["dialogFlows": dialogFlows ])
+    config = Fixtures.config(withDictionary: ["dialogFlows": dialogFlows])
   }
 
   func assertSafariVcIs(

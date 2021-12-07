@@ -29,6 +29,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   )
 
   // MARK: - Url Opening
+
   func testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithFromVc() {
     frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
     let spy = ViewControllerSpy.makeDefaultSpy()
@@ -52,7 +53,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       "Should try and load the safari view controller class"
     )
     XCTAssertEqual(
-      api.safariViewController.delegate as? BridgeAPI,
+      api.safariViewController?.delegate as? BridgeAPI,
       api,
       "Should create a safari controller with the bridge as its delegate"
     )

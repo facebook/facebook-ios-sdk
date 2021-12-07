@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 @property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
 @property (nonatomic) BOOL expectingBackground;
-@property (nonatomic) SFSafariViewController *safariViewController;
+@property (nullable, nonatomic) SFSafariViewController *safariViewController;
 @property (nonatomic) BOOL isDismissingSafariViewController;
 @property (nonatomic) id<FBSDKOperatingSystemVersionComparing> processInfo;
 @property (nonatomic) BOOL isAppLaunched;

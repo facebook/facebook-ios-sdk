@@ -177,18 +177,18 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should create and set a safari view controller for display"
     )
     XCTAssertEqual(
-      safariVc.modalPresentationStyle,
+      safariVc?.modalPresentationStyle,
       .overFullScreen,
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc.delegate as? BridgeAPI,
+      safariVc?.delegate as? BridgeAPI,
       api,
       "Should set the safari view controller delegate to the bridge api"
     )
     XCTAssertEqual(
       spy.capturedPresentViewController,
-      safariVc.parent,
+      safariVc?.parent,
       "Should present the view controller containing the safari view controller"
     )
     XCTAssertTrue(
@@ -248,18 +248,18 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should create and set a safari view controller for display"
     )
     XCTAssertEqual(
-      safariVc.modalPresentationStyle,
+      safariVc?.modalPresentationStyle,
       .overFullScreen,
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc.delegate as? BridgeAPI,
+      safariVc?.delegate as? BridgeAPI,
       self.api,
       "Should set the safari view controller delegate to the bridge api"
     )
     XCTAssertEqual(
       spy.capturedPresentViewController,
-      safariVc.parent,
+      safariVc?.parent,
       "Should present the view controller containing the safari view controller"
     )
     XCTAssertTrue(

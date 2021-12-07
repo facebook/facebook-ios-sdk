@@ -68,25 +68,22 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 // from a type-based interface to an instance-based interface.
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
-static dispatch_once_t singletonNonce;
+static FBSDKAppEventsUtility *_shared;
+
 + (instancetype)shared
 {
-  static id instance;
-  dispatch_once(&singletonNonce, ^{
-    instance = [self new];
-  });
-  return instance;
+  @synchronized(_shared) {
+    if (!_shared) {
+      _shared = [self new];
+    }
+  }
+
+  return _shared;
 }
 
-+ (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
-                                                                       userID:(nullable NSString *)userID
-                                                                     userData:(nullable NSString *)userData
++ (void)setShared:(FBSDKAppEventsUtility *)shared
 {
-  return [self.shared activityParametersDictionaryForEvent:eventCategory
-                                 shouldAccessAdvertisingID:shouldAccessAdvertisingID
-                                                    userID:userID
-                                                  userData:userData];
+  _shared = shared;
 }
 
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
@@ -194,7 +191,7 @@ static dispatch_once_t singletonNonce;
   return manager;
 }
 
-+ (BOOL)isStandardEvent:(nullable NSString *)event
+- (BOOL)isStandardEvent:(nullable NSString *)event
 {
   if (!event) {
     return NO;
@@ -204,7 +201,7 @@ static dispatch_once_t singletonNonce;
 
 #pragma mark - Internal, for testing
 
-+ (void)clearLibraryFiles
+- (void)clearLibraryFiles
 {
   [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
                                            error:NULL];
@@ -212,7 +209,7 @@ static dispatch_once_t singletonNonce;
                                            error:NULL];
 }
 
-+ (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
+- (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
   if (!NSThread.isMainThread) {
     NSString *message = [NSString stringWithFormat:@"*** <%@, %@> is not called on the main thread. This can lead to errors.",
@@ -223,7 +220,7 @@ static dispatch_once_t singletonNonce;
   }
 }
 
-+ (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
+- (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
 {
   NSString *result = @"Unknown";
   switch (flushReason) {
@@ -269,7 +266,7 @@ static dispatch_once_t singletonNonce;
   [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
-+ (BOOL)       matchString:(NSString *)string
+- (BOOL)       matchString:(NSString *)string
          firstCharacterSet:(NSCharacterSet *)firstCharacterSet
   restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
 {
@@ -291,7 +288,7 @@ static dispatch_once_t singletonNonce;
   return YES;
 }
 
-+ (BOOL)regexValidateIdentifier:(NSString *)identifier
+- (BOOL)regexValidateIdentifier:(NSString *)identifier
 {
   static NSCharacterSet *firstCharacterSet;
   static NSCharacterSet *restOfStringCharacterSet;
@@ -321,11 +318,11 @@ static dispatch_once_t singletonNonce;
   return YES;
 }
 
-+ (BOOL)validateIdentifier:(nullable NSString *)identifier
+- (BOOL)validateIdentifier:(nullable NSString *)identifier
 {
-  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self.class regexValidateIdentifier:identifier]) {
-    [self.shared logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
-                               identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
+  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self regexValidateIdentifier:identifier]) {
+    [self logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
+                        identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
     return NO;
   }
 
@@ -334,7 +331,7 @@ static dispatch_once_t singletonNonce;
 
 // Given a candidate token (which may be nil), find the real token to string to use.
 // Precedence: 1) provided token, 2) current token, 3) app | client token, 4) fully anonymous session.
-+ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
+- (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID
 {
   if (!token) {
@@ -361,17 +358,17 @@ static dispatch_once_t singletonNonce;
   return tokenString;
 }
 
-+ (NSTimeInterval)unixTimeNow
+- (NSTimeInterval)unixTimeNow
 {
   return round([NSDate date].timeIntervalSince1970);
 }
 
-+ (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date
+- (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date
 {
   return round([date timeIntervalSince1970]);
 }
 
-+ (BOOL)isDebugBuild
+- (BOOL)isDebugBuild
 {
 #if TARGET_OS_SIMULATOR
   return YES;
@@ -399,11 +396,6 @@ static dispatch_once_t singletonNonce;
 #endif
 }
 
-+ (BOOL)shouldDropAppEvent
-{
-  return [self.shared shouldDropAppEvents];
-}
-
 - (BOOL)shouldDropAppEvents
 {
   if (@available(iOS 14.0, *)) {
@@ -414,7 +406,7 @@ static dispatch_once_t singletonNonce;
   return NO;
 }
 
-+ (BOOL)isSensitiveUserData:(NSString *)text
+- (BOOL)isSensitiveUserData:(NSString *)text
 {
   if (0 == text.length) {
     return NO;
@@ -423,7 +415,7 @@ static dispatch_once_t singletonNonce;
   return [self isEmailAddress:text] || [self isCreditCardNumber:text];
 }
 
-+ (BOOL)isCreditCardNumber:(NSString *)text
+- (BOOL)isCreditCardNumber:(NSString *)text
 {
   text = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet.decimalDigitCharacterSet invertedSet]] componentsJoinedByString:@""];
 
@@ -459,7 +451,7 @@ static dispatch_once_t singletonNonce;
   return ((oddSum + evenSum) % 10 == 0);
 }
 
-+ (BOOL)isEmailAddress:(NSString *)text
+- (BOOL)isEmailAddress:(NSString *)text
 {
   NSString *pattern = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
   NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
@@ -469,12 +461,10 @@ static dispatch_once_t singletonNonce;
 
 #if DEBUG && FBTEST
 
-// Reset the nonce so that a new instance will be created.
-+ (void)reset
+- (void)reset
 {
-  if (singletonNonce) {
-    singletonNonce = 0;
-  }
+  self.appEventsConfigurationProvider = nil;
+  self.deviceInformationProvider = nil;
 }
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager

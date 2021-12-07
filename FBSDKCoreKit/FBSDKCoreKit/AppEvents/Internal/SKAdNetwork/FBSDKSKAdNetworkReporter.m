@@ -190,7 +190,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if ([self shouldCutoff]) {
     return;
   }
-  if (![self.config.eventSet containsObject:event] && ![FBSDKAppEventsUtility isStandardEvent:event]) {
+  if (![self.config.eventSet containsObject:event] && ![FBSDKAppEventsUtility.shared isStandardEvent:event]) {
     return;
   }
   BOOL isCacheUpdated = false;

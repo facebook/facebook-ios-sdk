@@ -464,7 +464,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresEventsProcessorsForAppEventsState() throws {
-    AppEvents.reset()
+    AppEvents.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertEqual(AppEventsState.eventProcessors?.count, 2)
@@ -910,7 +910,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAppEventsUtility() {
-    AppEventsUtility.reset()
+    AppEventsUtility.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertTrue(
@@ -1073,7 +1073,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppEvents() throws { // swiftlint:disable:this function_body_length
-    AppEvents.reset()
+    AppEvents.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertTrue(
@@ -1158,7 +1158,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
 
   // TEMP: added to configurator tests
   func testConfiguringNonTVAppEventsDependencies() throws {
-    AppEvents.reset()
+    AppEvents.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertTrue(

@@ -339,7 +339,7 @@ static id<FBSDKSettings> _settings;
   NSString *machine = @(systemInfo.machine);
   NSString *advertiserID = self.advertiserIDProvider.advertiserID ?: @"";
   machine = machine ?: @"";
-  NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
+  NSString *debugStatus = [FBSDKAppEventsUtility.shared isDebugBuild] ? @"1" : @"0";
 #if TARGET_OS_SIMULATOR
   NSString *isSimulator = @"1";
 #else

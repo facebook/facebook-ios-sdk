@@ -49,7 +49,7 @@ public class CustomUpdateGraphRequest {
     content: CustomUpdateContentMedia,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
   ) throws {
-    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain else {
       throw CustomUpdateGraphRequestError.invalidAccessToken
     }
 
@@ -75,7 +75,7 @@ public class CustomUpdateGraphRequest {
     content: CustomUpdateContentImage,
     completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
   ) throws {
-    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain  else {
+    guard let authToken = AuthenticationToken.current, authToken.graphDomain == gamingGraphDomain else {
       throw CustomUpdateGraphRequestError.invalidAccessToken
     }
 

@@ -14,6 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(SocialComposeViewControllerFactory)
 @interface FBSDKSocialComposeViewControllerFactory : NSObject <FBSDKSocialComposeViewControllerFactory>
 @end
 

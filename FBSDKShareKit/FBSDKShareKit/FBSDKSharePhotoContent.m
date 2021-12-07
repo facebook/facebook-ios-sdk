@@ -49,24 +49,6 @@
   return self;
 }
 
-#pragma mark - Setters
-
-- (void)setPeopleIDs:(NSArray *)peopleIDs
-{
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
-  if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
-    _peopleIDs = [peopleIDs copy];
-  }
-}
-
-- (void)setPhotos:(NSArray *)photos
-{
-  [FBSDKShareUtility assertCollection:photos ofClass:FBSDKSharePhoto.class name:@"photos"];
-  if (![FBSDKInternalUtility.sharedUtility object:_photos isEqualToObject:photos]) {
-    _photos = [photos copy];
-  }
-}
-
 #pragma mark - FBSDKSharingContent
 
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
