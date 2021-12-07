@@ -360,7 +360,7 @@ class GateKeeperManagerTests: XCTestCase {
   }
 
   func testParsingWithRandomizedResults() {
-    (1...100).forEach { _ in
+    (1 ... 100).forEach { _ in
       let result = Fuzzer.randomize(json: SampleRawRemoteGatekeeperList.valid)
       GateKeeperManager.parse(result: result, error: nil)
     }

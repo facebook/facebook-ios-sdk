@@ -92,7 +92,7 @@ class CrashShieldTests: XCTestCase {
       "(22 DEV METHODS)"
     ]
 
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       _ = CrashShield._getFeature(Fuzzer.randomize(json: callstack))
     }
   }
@@ -118,7 +118,7 @@ class CrashShieldTests: XCTestCase {
   }
 
   func testParsingClassName() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       CrashShield._getClassName(Fuzzer.random)
     }
   }

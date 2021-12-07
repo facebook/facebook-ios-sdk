@@ -814,7 +814,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testLoadProfileWithRandomData() throws {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let randomizedResult = Fuzzer.randomize(json: sampleGraphResult())
       var completed = false
       Profile.load(

@@ -46,7 +46,7 @@ class AppEventsStateTests: XCTestCase {
       file: file,
       line: line
     )
-    for _ in 0..<appEventsStateMaxEvents {
+    for _ in 0 ..< appEventsStateMaxEvents {
       fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
     }
 
@@ -374,7 +374,7 @@ class AppEventsStateTests: XCTestCase {
   func testAddEventsFromFullStateToFullState() {
     let otherFullState = AppEventsState(token: name, appID: appId)
 
-    for _ in 0..<(appEventsStateMaxEvents * 2) {
+    for _ in 0 ..< (appEventsStateMaxEvents * 2) {
       otherFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
     }
 

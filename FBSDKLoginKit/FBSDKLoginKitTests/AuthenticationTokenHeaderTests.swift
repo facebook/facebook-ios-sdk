@@ -81,7 +81,7 @@ class AuthenticationTokenHeaderTests: XCTestCase {
   }
 
   func testDecodeRandomHeader() throws {
-    try (1..<100).forEach { _ in
+    try (1 ..< 100).forEach { _ in
       let randomizedHeader = Fuzzer.randomize(json: headerDictionary as Any)
       guard JSONSerialization.isValidJSONObject(randomizedHeader) else { return }
 

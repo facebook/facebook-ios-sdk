@@ -898,7 +898,7 @@ class FBAEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {}
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       self.networker.capturedCompletionHandler?(
         Fuzzer.randomize(json: self.sampleCatalogOptimizationDictionary),
         nil

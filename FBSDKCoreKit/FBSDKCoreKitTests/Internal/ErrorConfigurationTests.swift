@@ -172,7 +172,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomName() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": Fuzzer.random,
@@ -191,7 +191,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomSubcodes() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -210,7 +210,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomCodes() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -229,7 +229,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomItemDictionaries() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -248,7 +248,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomRecoveryOptionsArray() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -267,7 +267,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomRecoveryOptions() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -286,7 +286,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRecoveryMessageWithoutOptions() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let array = [
         [
           "name": "other",
@@ -305,7 +305,7 @@ class ErrorConfigurationTests: XCTestCase {
   }
 
   func testParsingRandomEntries() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       // swiftlint:disable:next force_cast
       let array = Fuzzer.randomize(json: rawErrorCodeConfiguration) as! [[String: Any]]
       let configuration = ErrorConfiguration(dictionary: nil)
