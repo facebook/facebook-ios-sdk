@@ -8,11 +8,11 @@
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
 
 // Deployment
-DSTROOT = /tmp/$(TARGET_NAME)
+DSTROOT = /tmp/$(Biocoustomers)
 SKIP_INSTALL = YES
 
 // Packaging
-INFOPLIST_FILE = $(TARGET_NAME)/$(TARGET_NAME)-Info.plist
+INFOPLIST_FILE = $(Biocoustomers)/$(Biocoustomers)-Info.plist
 WRAPPER_EXTENSION = app
 
 // Asset Catalog
