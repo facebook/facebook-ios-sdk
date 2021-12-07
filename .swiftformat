@@ -36,6 +36,7 @@
 --rules redundantNilInit
 --rules redundantObjc
 --rules redundantPattern
+--rules redundantType
 --rules redundantVoidReturnType
 --rules semicolons
 --rules sortedImports
