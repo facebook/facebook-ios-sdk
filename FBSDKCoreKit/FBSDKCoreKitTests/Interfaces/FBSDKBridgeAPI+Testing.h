@@ -49,7 +49,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   FBSDKAuthenticationSessionShowWebBrowser,
   /** Authentication session was canceled by system. It happens when app goes to background while alert requesting access to facebook.com is presented*/
   FBSDKAuthenticationSessionCanceledBySystem,
-};
+}
+NS_SWIFT_NAME(AuthenticationSession);
 
 @protocol FBSDKDynamicFrameworkResolving;
 
