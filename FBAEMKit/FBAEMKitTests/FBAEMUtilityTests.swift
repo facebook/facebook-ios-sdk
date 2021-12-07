@@ -81,7 +81,7 @@ class FBAEMUtilityTests: XCTestCase {
         [Keys.identity: NSNumber(value: 456)],
       ])
     ])
-    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+    XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
   func testGetContentWithStringID() {
@@ -91,14 +91,14 @@ class FBAEMUtilityTests: XCTestCase {
         [Keys.identity: "456"],
       ])
     ])
-    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+    XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
   func testGetContentFallback() {
     let contentID = AEMUtility.shared.getContentID([
-      Keys.contentID: "[\"123\",\"456\"]"
+      Keys.contentID: #"["123","456"]"#
     ])
-    XCTAssertEqual(contentID, "[\"123\",\"456\"]")
+    XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
   func getJsonString(object: [Any]) -> String {

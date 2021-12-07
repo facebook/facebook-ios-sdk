@@ -59,6 +59,8 @@ Facebook welcomes contributions to our SDKs. Please see the [CONTRIBUTING](CONTR
 
 See the [LICENSE](LICENSE) file.
 
+Copyright © Meta Platforms, Inc
+
 ## SECURITY POLICY
 
 See the [SECURITY POLICY](SECURITY.md) for more info on our bug bounty program.

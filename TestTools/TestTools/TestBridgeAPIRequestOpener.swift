@@ -8,6 +8,7 @@
 
 @objcMembers
 public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+
   public var capturedURL: URL?
   public var capturedHandler: SuccessBlock?
   public var capturedRequest: BridgeAPIRequestProtocol?
@@ -28,8 +29,8 @@ public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
     capturedCompletionBlock = completionBlock
   }
 
-  public func openURL(
-    withSafariViewController url: URL,
+  public func openURLWithSafariViewController(
+    url: URL,
     sender: URLOpening?,
     from fromViewController: UIViewController?,
     handler: @escaping SuccessBlock

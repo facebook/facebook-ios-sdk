@@ -191,9 +191,10 @@ class FBAEMEventTests: XCTestCase {
       decoder.decodedObject[Keys.eventName] is NSString.Type,
       "Should decode the expected type for the event_name key"
     )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.values] is NSDictionary.Type,
-      "Should decode the expected type for the values key"
+    XCTAssertEqual(
+      decoder.decodedObject[Keys.values] as? NSSet,
+      [NSDictionary.self, NSNumber.self, NSString.self],
+      "Should decode the expected types for the values key"
     )
   }
 }

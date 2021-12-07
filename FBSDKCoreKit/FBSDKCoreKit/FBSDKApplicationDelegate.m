@@ -14,6 +14,7 @@
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessTokenExpirer.h"
+#import "FBSDKAccessTokenExpiring.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
@@ -34,6 +35,7 @@
 #import "FBSDKButton+Internal.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield+Internal.h"
+#import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
@@ -48,7 +50,6 @@
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
-#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKImpressionLoggerFactory.h"
 #import "FBSDKImpressionLoggingButton+Internal.h"
 #import "FBSDKInstrumentManager.h"
@@ -61,7 +62,7 @@
 #import "FBSDKPaymentProductRequestorFactory.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
-#import "FBSDKServerConfigurationManager+Internal.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSuggestedEventsIndexer.h"
@@ -89,7 +90,7 @@
  #import "FBSDKModelManager.h"
  #import "FBSDKProductRequestFactory.h"
  #import "FBSDKProfile+Internal.h"
- #import "FBSDKSKAdNetworkReporter+Internal.h"
+ #import "FBSDKSKAdNetworkReporter.h"
  #import "FBSDKURL+Internal.h"
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
@@ -114,7 +115,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
-@property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
+@property (nonnull, nonatomic, readonly) id<FBSDKAccessTokenExpiring> accessTokenExpirer;
 @property (nonnull, nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 @property (nonnull, nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
 
@@ -672,7 +673,7 @@ static UIApplicationState _applicationState;
 
   [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
                                         errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
-                                          piggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]
+                                                  piggybackManager:FBSDKGraphRequestPiggybackManager.self
                                                           settings:sharedSettings
                                      graphRequestConnectionFactory:graphRequestConnectionFactory
                                                        eventLogger:FBSDKAppEvents.shared
@@ -683,38 +684,43 @@ static UIApplicationState _applicationState;
                                                       errorFactory:errorFactory
                                        authenticationTokenProvider:FBSDKAuthenticationToken.class]; // TEMP: added to configurator
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory
-                                             graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
+                                             graphRequestConnectionFactory:graphRequestConnectionFactory
+                                             dialogConfigurationMapBuilder:[FBSDKDialogConfigurationMapBuilder new]]; // TEMP: added to configurator
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:appEventsConfigurationProvider
              infoDictionaryProvider:NSBundle.mainBundle
-                        eventLogger:FBSDKAppEvents.shared];
+                        eventLogger:FBSDKAppEvents.shared]; // TEMP: added to configurator
   [FBSDKFeatureManager.shared configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                                                     settings:sharedSettings
                                                        store:store]; // TEMP: added to configurator
   [FBSDKGraphRequest configureWithSettings:sharedSettings
           currentAccessTokenStringProvider:FBSDKAccessToken.class
-             graphRequestConnectionFactory:graphRequestConnectionFactory];
-  [FBSDKGraphRequestConnection setCanMakeRequests];
+             graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
+  [FBSDKGraphRequestConnection setCanMakeRequests]; // TEMP: added to configurator
   [FBSDKGateKeeperManager configureWithSettings:sharedSettings
                             graphRequestFactory:graphRequestFactory
                   graphRequestConnectionFactory:graphRequestConnectionFactory
-                                          store:store];
+                                          store:store]; // TEMP: added to configurator
   [FBSDKInstrumentManager.shared configureWithFeatureChecker:sharedFeatureChecker
                                                     settings:sharedSettings
                                                crashObserver:crashObserver
                                                errorReporter:FBSDKErrorReporter.shared
                                                 crashHandler:sharedCrashHandler]; // TEMP: added to configurator
+  id<FBSDKKeychainStoreProviding> keychainStoreFactory = [FBSDKKeychainStoreFactory new];
+  NSString *keychainService = [NSString stringWithFormat:@"%@.%@", DefaultKeychainServicePrefix, NSBundle.mainBundle.bundleIdentifier];
+  id<FBSDKKeychainStore> keychainStore = [keychainStoreFactory createKeychainStoreWithService:keychainService
+                                                                                  accessGroup:nil];
   FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:sharedSettings
-                                                     keychainStoreFactory:[FBSDKKeychainStoreFactory new]];
+                                                            keychainStore:keychainStore];
   [FBSDKAccessToken configureWithTokenCache:tokenCache
               graphRequestConnectionFactory:graphRequestConnectionFactory
-       graphRequestPiggybackManagerProvider:[FBSDKGraphRequestPiggybackManagerProvider new]];
-  FBSDKAuthenticationToken.tokenCache = tokenCache;
-  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings];
-  FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithStore:store
-                                                                              graphRequestFactory:graphRequestFactory
-                                                                                         settings:sharedSettings
-                                                                        deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
+               graphRequestPiggybackManager:FBSDKGraphRequestPiggybackManager.self]; // TEMP: added to configurator
+  FBSDKAuthenticationToken.tokenCache = tokenCache; // TEMP: added to configurator
+  [FBSDKAppEventsDeviceInfo.shared configureWithSettings:sharedSettings]; // TEMP: added to configurator
+  FBSDKATEPublisherFactory *atePublisherFactory = [[FBSDKATEPublisherFactory alloc] initWithDataStore:store
+                                                                                  graphRequestFactory:graphRequestFactory
+                                                                                             settings:sharedSettings
+                                                                            deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
   id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
   timeSpentRecorder = [[FBSDKTimeSpentData alloc] initWithEventLogger:self.appEvents
                                           serverConfigurationProvider:serverConfigurationProvider];
@@ -722,7 +728,7 @@ static UIApplicationState _applicationState;
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator
   FBSDKAppEventsUtility.shared.deviceInformationProvider = FBSDKAppEventsDeviceInfo.shared; // TEMP: added to configurator
-  [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
+  FBSDKAppEventsState.eventProcessors = @[eventDeactivationManager, restrictiveDataFilterManager]; // TEMP: added to configurator
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:appEventsConfigurationProvider
                      serverConfigurationProvider:serverConfigurationProvider
@@ -739,13 +745,13 @@ static UIApplicationState _applicationState;
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
-                                   userDataStore:self.userDataStore];
+                                   userDataStore:self.userDataStore]; // TEMP: added to configurator
 
   FBSDKImpressionLoggerFactory *impressionLoggerFactory = [[FBSDKImpressionLoggerFactory alloc] initWithGraphRequestFactory:graphRequestFactory
                                                                                                                 eventLogger:FBSDKAppEvents.shared
                                                                                                          notificationCenter:NSNotificationCenter.defaultCenter
                                                                                                           accessTokenWallet:FBSDKAccessToken.class];
-  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:impressionLoggerFactory];
+  [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:impressionLoggerFactory]; // TEMP: added to configurator
 
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
                                                             loggerFactory:[FBSDKLoggerFactory new]]; // TEMP: added to configurator
@@ -755,8 +761,8 @@ static UIApplicationState _applicationState;
                            graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
-                                          serverConfiguration:serverConfigurationProvider
-                                          graphRequestFactory:graphRequestFactory];
+                                  serverConfigurationProvider:serverConfigurationProvider
+                                          graphRequestFactory:graphRequestFactory]; // TEMP: added to configurator
   [FBSDKButton configureWithApplicationActivationNotifier:self
                                               eventLogger:FBSDKAppEvents.shared
                                       accessTokenProvider:FBSDKAccessToken.class]; // TEMP: added to configurator
@@ -800,30 +806,30 @@ static UIApplicationState _applicationState;
 
   [FBSDKCodelessIndexer configureWithGraphRequestFactory:graphRequestFactory
                              serverConfigurationProvider:serverConfigurationProvider
-                                                   store:store
+                                               dataStore:store
                            graphRequestConnectionFactory:graphRequestConnectionFactory
                                                 swizzler:FBSDKSwizzler.class
                                                 settings:sharedSettings
-                                    advertiserIDProvider:FBSDKAppEventsUtility.shared];
+                                    advertiserIDProvider:FBSDKAppEventsUtility.shared]; // TEMP: added to configurator
   [FBSDKCrashShield configureWithSettings:sharedSettings
                       graphRequestFactory:[FBSDKGraphRequestFactory new]
-                          featureChecking:FBSDKFeatureManager.shared];
+                          featureChecking:FBSDKFeatureManager.shared]; // TEMP: added to configurator
   self.skAdNetworkReporter = nil;
   if (@available(iOS 11.3, *)) {
     self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithGraphRequestFactory:graphRequestFactory
-                                                                                       store:store
-                                                                    conversionValueUpdatable:SKAdNetwork.class];
+                                                                                   dataStore:store
+                                                                      conversionValueUpdater:SKAdNetwork.class];; // TEMP: added to configurator
   }
   if (@available(iOS 14.0, *)) {
     [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new]
                                     appID:sharedSettings.appID
-                                 reporter:self.skAdNetworkReporter];
+                                 reporter:self.skAdNetworkReporter]; // TEMP: added to configurator
   }
-  [FBSDKProfile configureWithStore:store
-               accessTokenProvider:FBSDKAccessToken.class
-                notificationCenter:NSNotificationCenter.defaultCenter
-                          settings:sharedSettings
-                         urlHoster:FBSDKInternalUtility.sharedUtility];
+  [FBSDKProfile configureWithDataStore:store
+                   accessTokenProvider:FBSDKAccessToken.class
+                    notificationCenter:NSNotificationCenter.defaultCenter
+                              settings:sharedSettings
+                             urlHoster:FBSDKInternalUtility.sharedUtility]; // TEMP: added to configurator
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication]; // TEMP: added to configurator
   FBSDKMetadataIndexer *metaIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore
@@ -832,7 +838,8 @@ static UIApplicationState _applicationState;
                                                      metadataIndexer:metaIndexer
                                                  skAdNetworkReporter:self.skAdNetworkReporter
                                                      codelessIndexer:FBSDKCodelessIndexer.class
-                                                            swizzler:FBSDKSwizzler.class];
+                                                            swizzler:FBSDKSwizzler.class
+                                                         aemReporter:FBAEMReporter.class]; // TEMP: added to configurator
   [FBSDKAuthenticationStatusUtility configureWithProfileSetter:FBSDKProfile.class
                                        sessionDataTaskProvider:NSURLSession.sharedSession
                                              accessTokenWallet:FBSDKAccessToken.class
@@ -840,7 +847,7 @@ static UIApplicationState _applicationState;
   [FBSDKAppLinkNavigation configureWithSettings:sharedSettings
                                       urlOpener:UIApplication.sharedApplication
                              appLinkEventPoster:[FBSDKMeasurementEvent new]
-                                appLinkResolver:FBSDKWebViewAppLinkResolver.sharedInstance];
+                                appLinkResolver:FBSDKWebViewAppLinkResolver.sharedInstance]; // TEMP: added to configurator
 #endif
 }
 

@@ -20,13 +20,18 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ATEPublisherFactory)
 @interface FBSDKATEPublisherFactory : NSObject <FBSDKATEPublisherCreating>
 
+@property (nonatomic) id<FBSDKDataPersisting> dataStore;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
+
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
-          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-                     settings:(id<FBSDKSettings>)settings
-    deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider;
+- (instancetype)initWithDataStore:(id<FBSDKDataPersisting>)dataStore
+              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                         settings:(id<FBSDKSettings>)settings
+        deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider;
 
 @end
 

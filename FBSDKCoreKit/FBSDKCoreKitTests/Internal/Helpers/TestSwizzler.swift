@@ -12,10 +12,10 @@ struct SwizzleEvidence: Equatable {
 
   init(
     selector: Selector,
-    `class`: AnyClass
+    class: AnyClass
   ) {
     self.selector = selector
-    self.`class` = `class`
+    self.class = `class`
   }
 
   static func == (lhs: SwizzleEvidence, rhs: SwizzleEvidence) -> Bool {

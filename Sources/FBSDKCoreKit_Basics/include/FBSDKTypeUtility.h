@@ -88,8 +88,8 @@ NS_SWIFT_NAME(TypeUtility)
 /// Returns an NSUInteger if the provided object is an NSUInteger, otherwise returns nil.
 + (NSUInteger)unsignedIntegerValue:(id)object;
 
-/// Returns an NSURL if the provided object is an NSURL, otherwise returns nil.
-+ (nullable NSURL *)URLValue:(id)object;
+/// Returns an NSURL if the provided object is an NSURL; will attempt to create an NSURL if the object is an NSString; returns nil otherwise.
++ (nullable NSURL *)coercedToURLValue:(id)object;
 
 /*
  Lightweight wrapper around Foundation's isValidJSONObject:

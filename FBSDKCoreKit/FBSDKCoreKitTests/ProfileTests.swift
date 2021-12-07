@@ -11,31 +11,24 @@ import TestTools
 import XCTest
 
 class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
-  var store = UserDefaultsSpy()
-  var notificationCenter = TestNotificationCenter()
-  let settings = TestSettings()
-  let stubbedURL = URL(string: "testProfile.com")! // swiftlint:disable:this force_unwrapping
-  lazy var urlHoster = TestURLHoster(url: stubbedURL)
+  // swiftlint:disable implicitly_unwrapped_optional
+  var dataStore: UserDefaultsSpy!
+  var notificationCenter: TestNotificationCenter!
+  var settings: TestSettings!
+  var urlHoster: TestURLHoster!
+  var profile: Profile!
+  var testGraphRequest: TestGraphRequest!
+  var result: [String: Any]!
+  var imageURL: URL!
+  // swiftlint:enable implicitly_unwrapped_optional
 
+  let stubbedURL = URL(string: "testProfile.com")! // swiftlint:disable:this force_unwrapping
   let accessTokenKey = "access_token"
   let pictureModeKey = "type"
   let widthKey = "width"
   let heightKey = "height"
   let sdkVersion = "100"
-  let profile = SampleUserProfiles.valid
   let validClientToken = "Foo"
-  let testGraphRequest = TestGraphRequest()
-  var imageURL: URL! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  var result = [
-    "id": SampleUserProfiles.valid.userID,
-    "first_name": SampleUserProfiles.valid.firstName as Any,
-    "middle_name": SampleUserProfiles.valid.middleName as Any,
-    "last_name": SampleUserProfiles.valid.lastName as Any,
-    "name": SampleUserProfiles.valid.name as Any,
-    "link": SampleUserProfiles.valid.linkURL as Any,
-    "email": SampleUserProfiles.valid.email as Any
-  ]
 
   static let validSquareSize = CGSize(width: 100, height: 100)
   static let validNonSquareSize = CGSize(width: 10, height: 20)
@@ -43,10 +36,28 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   override func setUp() {
     super.setUp()
 
+    dataStore = UserDefaultsSpy()
+    notificationCenter = TestNotificationCenter()
+    settings = TestSettings()
+    urlHoster = TestURLHoster(url: stubbedURL)
+    profile = SampleUserProfiles.createValid()
+    testGraphRequest = TestGraphRequest()
+
+    result = [
+      "id": profile.userID,
+      "first_name": profile.firstName as Any,
+      "middle_name": profile.middleName as Any,
+      "last_name": profile.lastName as Any,
+      "name": profile.name as Any,
+      "link": profile.linkURL as Any,
+      "email": profile.email as Any
+    ]
+
     Settings.shared.graphAPIVersion = sdkVersion
     TestAccessTokenWallet.reset()
+    Profile.resetCurrentProfileCache()
     Profile.configure(
-      store: store,
+      dataStore: dataStore,
       accessTokenProvider: TestAccessTokenWallet.self,
       notificationCenter: notificationCenter,
       settings: settings,
@@ -418,22 +429,23 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     completion(nil, sampleGraphResult(), nil)
     XCTAssertNil(capturedError)
     let profile = try XCTUnwrap(capturedProfile, "capturedProfile should not be nil")
-    XCTAssertEqual(profile.firstName, SampleUserProfiles.valid.firstName)
-    XCTAssertEqual(profile.middleName, SampleUserProfiles.valid.middleName)
-    XCTAssertEqual(profile.lastName, SampleUserProfiles.valid.lastName)
-    XCTAssertEqual(profile.name, SampleUserProfiles.valid.name)
-    XCTAssertEqual(profile.userID, SampleUserProfiles.valid.userID)
-    XCTAssertEqual(profile.linkURL, SampleUserProfiles.valid.linkURL)
-    XCTAssertEqual(profile.email, SampleUserProfiles.valid.email)
-    XCTAssertEqual(profile.friendIDs, SampleUserProfiles.valid.friendIDs)
+    let expectedProfile = SampleUserProfiles.createValid()
+    XCTAssertEqual(profile.firstName, expectedProfile.firstName)
+    XCTAssertEqual(profile.middleName, expectedProfile.middleName)
+    XCTAssertEqual(profile.lastName, expectedProfile.lastName)
+    XCTAssertEqual(profile.name, expectedProfile.name)
+    XCTAssertEqual(profile.userID, expectedProfile.userID)
+    XCTAssertEqual(profile.linkURL, expectedProfile.linkURL)
+    XCTAssertEqual(profile.email, expectedProfile.email)
+    XCTAssertEqual(profile.friendIDs, expectedProfile.friendIDs)
     XCTAssertEqual(
       formatter.string(from: profile.birthday ?? Date()),
       "01/01/1990"
     )
-    XCTAssertEqual(profile.ageRange, SampleUserProfiles.valid.ageRange)
-    XCTAssertEqual(profile.hometown, SampleUserProfiles.valid.hometown)
-    XCTAssertEqual(profile.gender, SampleUserProfiles.valid.gender)
-    XCTAssertEqual(profile.location, SampleUserProfiles.valid.location)
+    XCTAssertEqual(profile.ageRange, expectedProfile.ageRange)
+    XCTAssertEqual(profile.hometown, expectedProfile.hometown)
+    XCTAssertEqual(profile.gender, expectedProfile.gender)
+    XCTAssertEqual(profile.location, expectedProfile.location)
   }
 
   func testLoadingProfileWithInvalidLink() throws {
@@ -618,7 +630,7 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testProfileNotRefreshedIfNotStale() throws {
-    Profile.current = SampleUserProfiles.valid
+    Profile.current = profile
     var capturedProfile: Profile?
     var capturedError: Error?
 
@@ -636,13 +648,14 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
     XCTAssertNil(capturedError)
     let profile = try XCTUnwrap(capturedProfile, "capturedProfile should not be nil")
-    XCTAssertEqual(profile.firstName, SampleUserProfiles.valid.firstName)
-    XCTAssertEqual(profile.middleName, SampleUserProfiles.valid.middleName)
-    XCTAssertEqual(profile.lastName, SampleUserProfiles.valid.lastName)
-    XCTAssertEqual(profile.name, SampleUserProfiles.valid.name)
-    XCTAssertEqual(profile.userID, SampleUserProfiles.valid.userID)
-    XCTAssertEqual(profile.linkURL, SampleUserProfiles.valid.linkURL)
-    XCTAssertEqual(profile.email, SampleUserProfiles.valid.email)
+    let expectedProfile = SampleUserProfiles.createValid()
+    XCTAssertEqual(profile.firstName, expectedProfile.firstName)
+    XCTAssertEqual(profile.middleName, expectedProfile.middleName)
+    XCTAssertEqual(profile.lastName, expectedProfile.lastName)
+    XCTAssertEqual(profile.name, expectedProfile.name)
+    XCTAssertEqual(profile.userID, expectedProfile.userID)
+    XCTAssertEqual(profile.linkURL, expectedProfile.linkURL)
+    XCTAssertEqual(profile.email, expectedProfile.email)
   }
 
   func testLoadingProfileWithLimitedProfileWithoutToken() throws {
@@ -816,6 +829,68 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
   }
 
+  // MARK: Update Notifications
+
+  func testClearingMissingProfile() {
+    Profile.setCurrent(nil, shouldPostNotification: true)
+    XCTAssertTrue(
+      notificationCenter.capturedPostNames.isEmpty,
+      "Clearing an empty current profile should not post a notification"
+    )
+  }
+
+  func testClearingProfile() {
+    Profile.setCurrent(profile, shouldPostNotification: false)
+    notificationCenter.capturedPostNames = []
+
+    Profile.setCurrent(nil, shouldPostNotification: true)
+
+    XCTAssertFalse(
+      notificationCenter.capturedPostNames.isEmpty,
+      "Clearing the current profile should post a notification"
+    )
+  }
+
+  func testSettingProfile() {
+    Profile.setCurrent(profile, shouldPostNotification: true)
+
+    XCTAssertFalse(
+      notificationCenter.capturedPostNames.isEmpty,
+      "Setting the current profile to `nil` should post a notification"
+    )
+  }
+
+  func testSettingSameProfile() {
+    Profile.setCurrent(profile, shouldPostNotification: true)
+    notificationCenter.capturedPostNames = []
+
+    Profile.setCurrent(profile, shouldPostNotification: true)
+
+    XCTAssertTrue(
+      notificationCenter.capturedPostNames.isEmpty,
+      "Setting the current profile to the same profile should not post a notification"
+    )
+  }
+
+  func testUpdatingProfile() {
+    Profile.setCurrent(profile, shouldPostNotification: true)
+    notificationCenter.capturedPostNames = []
+
+    let newProfile = SampleUserProfiles.createValid(
+      userID: "different",
+      name: "different",
+      imageURL: nil,
+      isExpired: true,
+      isLimited: true
+    )
+    Profile.setCurrent(newProfile, shouldPostNotification: true)
+
+    XCTAssertFalse(
+      notificationCenter.capturedPostNames.isEmpty,
+      "Replacing the current profile should post a notification"
+    )
+  }
+
   // MARK: Storage
 
   // swiftlint:disable:next function_body_length
@@ -914,106 +989,94 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     decodeObjectCheck(
       decodedObject: "userID",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the userID key"
+      failureMessage: "Should decode a string for the userID key"
     )
 
     decodeObjectCheck(
       decodedObject: "firstName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the firstName key"
+      failureMessage: "Should decode a string for the firstName key"
     )
 
     decodeObjectCheck(
       decodedObject: "middleName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the middleName key"
+      failureMessage: "Should decode a string for the middleName key"
     )
 
     decodeObjectCheck(
       decodedObject: "lastName",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the lastName key"
+      failureMessage: "Should decode a string for the lastName key"
     )
 
     decodeObjectCheck(
       decodedObject: "name",
       objectType: NSString.self,
       failureMessage:
-        "Should decode a string for the name key"
+      "Should decode a string for the name key"
     )
 
     decodeObjectCheck(
       decodedObject: "linkURL",
       objectType: NSURL.self,
-      failureMessage:
-        "Should decode a url for the linkURL key"
+      failureMessage: "Should decode a url for the linkURL key"
     )
 
     decodeObjectCheck(
       decodedObject: "refreshDate",
       objectType: NSDate.self,
-      failureMessage:
-        "Should decode a date for the refreshDate key"
+      failureMessage: "Should decode a date for the refreshDate key"
     )
 
     decodeObjectCheck(
       decodedObject: "imageURL",
       objectType: NSURL.self,
-      failureMessage:
-        "Should decode a url for the imageURL key"
+      failureMessage: "Should decode a url for the imageURL key"
     )
 
     decodeObjectCheck(
       decodedObject: "email",
       objectType: NSString.self,
-      failureMessage:
-        "Should decode a string for the email key"
+      failureMessage: "Should decode a string for the email key"
     )
 
     decodeObjectCheck(
       decodedObject: "friendIDs",
       objectType: NSArray.self,
-      failureMessage:
-        "Should decode an array for the friendIDs key"
+      failureMessage: "Should decode an array for the friendIDs key"
     )
 
     decodeObjectCheck(
       decodedObject: "birthday",
       objectType: NSDate.self,
-      failureMessage:
-        "Should decode a date for the birthday key"
+      failureMessage: "Should decode a date for the birthday key"
     )
 
     decodeObjectCheck(
       decodedObject: "ageRange",
       objectType: UserAgeRange.self,
       failureMessage:
-        "Should decode a UserAgeRange object for the ageRange key"
+      "Should decode a UserAgeRange object for the ageRange key"
     )
 
     decodeObjectCheck(
       decodedObject: "hometown",
       objectType: Location.self,
-      failureMessage:
-        "Should decode a Location object for the hometown key"
+      failureMessage: "Should decode a Location object for the hometown key"
     )
 
     decodeObjectCheck(
       decodedObject: "location",
       objectType: Location.self,
-      failureMessage:
-        "Should decode a Location object for the location key"
+      failureMessage: "Should decode a Location object for the location key"
     )
 
     decodeObjectCheck(
       decodedObject: "gender",
       objectType: NSString.self,
       failureMessage:
-        "Should decode a string for the gender key"
+      "Should decode a string for the gender key"
     )
     XCTAssertEqual(
       coder.decodedObject["isLimited"] as? String,
@@ -1022,17 +1085,17 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
   }
 
-  func testDefaultStore() {
+  func testDefaultDataStore() {
     Profile.reset()
     XCTAssertNil(
-      Profile.store,
+      Profile.dataStore,
       "Should not have a default data store"
     )
   }
 
-  func testConfiguringWithStore() {
+  func testConfiguringWithDataStore() {
     XCTAssertTrue(
-      Profile.store === store,
+      Profile.dataStore === dataStore,
       "Should be able to set a persistent data store"
     )
   }
@@ -1094,44 +1157,44 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     _ = Profile.fetchCachedProfile()
 
     XCTAssertEqual(
-      store.capturedObjectRetrievalKey,
+      dataStore.capturedObjectRetrievalKey,
       "com.facebook.sdk.FBSDKProfile.currentProfile",
-      "Fetching a cached profile should query the store with the expected retrieval key"
+      "Fetching a cached profile should query the data store with the expected retrieval key"
     )
   }
 
   func sampleGraphResult() -> [String: Any] {
     [
-      "id": SampleUserProfiles.valid.userID,
-      "first_name": SampleUserProfiles.valid.firstName as Any,
-      "middle_name": SampleUserProfiles.valid.middleName as Any,
-      "last_name": SampleUserProfiles.valid.lastName as Any,
-      "name": SampleUserProfiles.valid.name as Any,
-      "link": SampleUserProfiles.valid.linkURL as Any,
-      "email": SampleUserProfiles.valid.email as Any,
+      "id": profile.userID,
+      "first_name": profile.firstName as Any,
+      "middle_name": profile.middleName as Any,
+      "last_name": profile.lastName as Any,
+      "name": profile.name as Any,
+      "link": profile.linkURL as Any,
+      "email": profile.email as Any,
       "friends": ["data": [
         [
           "name": "user1",
-          "id": SampleUserProfiles.valid.friendIDs?[0]
+          "id": profile.friendIDs?[0]
         ],
         [
           "name": "user2",
-          "id": SampleUserProfiles.valid.friendIDs?[1]
+          "id": profile.friendIDs?[1]
         ]
       ]],
       "birthday": "01/01/1990",
       "age_range": [
-        "min": SampleUserProfiles.valid.ageRange?.min
+        "min": profile.ageRange?.min
       ],
       "hometown": [
-        "id": SampleUserProfiles.valid.hometown?.id,
-        "name": SampleUserProfiles.valid.hometown?.name
+        "id": profile.hometown?.id,
+        "name": profile.hometown?.name
       ],
       "location": [
-        "id": SampleUserProfiles.valid.location?.id,
-        "name": SampleUserProfiles.valid.location?.name
+        "id": profile.location?.id,
+        "name": profile.location?.name
       ],
-      "gender": SampleUserProfiles.valid.gender as Any
+      "gender": profile.gender as Any
     ]
   }
 

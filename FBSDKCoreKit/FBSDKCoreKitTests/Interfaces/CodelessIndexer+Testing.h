@@ -14,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
+@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> dataStore;
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (class, nullable, nonatomic, readonly) NSString *currentSessionDeviceID;

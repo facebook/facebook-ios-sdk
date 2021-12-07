@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
           shouldDispatchNotif:(BOOL)shouldDispatchNotif;
 
++ (void)resetClassDependencies;
++ (void)resetCurrentAccessTokenCache;
+
 @end
 
 NS_ASSUME_NONNULL_END

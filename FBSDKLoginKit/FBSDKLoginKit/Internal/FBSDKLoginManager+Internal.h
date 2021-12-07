@@ -13,6 +13,7 @@
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
+ #import "FBSDKLoginCompleterFactoryProtocol.h"
  #import "FBSDKLoginCompletionParameters.h"
  #import "FBSDKLoginProviding.h"
 
@@ -36,15 +37,40 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 };
 
 @interface FBSDKLoginManager () <FBSDKURLOpening, FBSDKLoginProviding>
+
+@property (nullable, nonatomic) FBSDKLoginManagerLoginResultBlock handler;
+@property (nullable, nonatomic) FBSDKLoginConfiguration *configuration;
+@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
+@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> accessTokenWallet;
+@property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
+@property (nonatomic) Class<FBSDKProfileProviding> profile;
+@property (nonatomic)  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
+@property (nonatomic) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKLoginCompleterFactory> loginCompleterFactory;
+
 @property (nullable, nonatomic, weak) UIViewController *fromViewController;
 @property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nullable, nonatomic, strong) FBSDKLoginManagerLogger *logger;
 @property (nullable, nonatomic, strong) FBSDKLoginConfiguration *config;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
+@property (nonatomic, readonly) BOOL isPerformingLogin;
 
 @property (nullable, nonatomic, readonly, copy) NSString *loadExpectedChallenge;
 @property (nullable, nonatomic, readonly, copy) NSString *loadExpectedNonce;
+
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+                   keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
+                      accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
+                                profile:(Class<FBSDKProfileProviding>)profile
+                              urlOpener:(id<FBSDKURLOpener>)urlOpener
+                               settings:(id<FBSDKSettings>)settings
+                  loginCompleterFactory:(id<FBSDKLoginCompleterFactory>)loginCompleterFactory
+;
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
 
@@ -52,8 +78,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // made available for testing only
 - (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(nullable FBSDKLoginConfiguration *)configuration
-                                                               loggingToken:(NSString *)loggingToken
-                                                                     logger:(FBSDKLoginManagerLogger *)logger
+                                                               loggingToken:(nullable NSString *)loggingToken
+                                                                     logger:(nullable FBSDKLoginManagerLogger *)logger
                                                                  authMethod:(NSString *)authMethod;
 
 // for testing only
@@ -65,7 +91,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)handleImplicitCancelOfLogIn;
 - (void)invokeHandler:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error;
 - (BOOL)validateLoginStartState;
-- (BOOL)isPerformingLogin;
 + (NSString *)stringForChallenge;
 - (void)storeExpectedChallenge:(nullable NSString *)expectedChallenge;
 

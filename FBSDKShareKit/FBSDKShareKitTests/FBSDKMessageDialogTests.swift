@@ -22,7 +22,7 @@ class FBSDKMessageDialogTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var appAvailabilityChecker: TestInternalUtility!
   var shareDialogConfiguration: TestShareDialogConfiguration!
-  var delegate: FakeSharingDelegate!
+  var delegate: TestSharingDelegate!
   var dialog: MessageDialog!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -31,7 +31,7 @@ class FBSDKMessageDialogTests: XCTestCase {
 
     appAvailabilityChecker = TestInternalUtility()
     shareDialogConfiguration = TestShareDialogConfiguration()
-    delegate = FakeSharingDelegate()
+    delegate = TestSharingDelegate()
 
     dialog = MessageDialog(
       content: nil,
@@ -106,7 +106,7 @@ class FBSDKMessageDialogTests: XCTestCase {
       code: ShareError.dialogNotAvailable.rawValue,
       userInfo: [ErrorDeveloperMessageKey: "Message dialog is not available."]
     )
-    XCTAssertEqual(delegate.capturedError as NSError, error)
+    XCTAssertEqual(delegate.capturedError as NSError?, error)
   }
 
   func testShowInvokesDelegateWhenMissingContent() {
@@ -119,9 +119,10 @@ class FBSDKMessageDialogTests: XCTestCase {
       code: CoreError.errorInvalidArgument.rawValue,
       userInfo: [
         ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Value for shareContent is required."]
+        ErrorDeveloperMessageKey: "Value for shareContent is required."
+      ]
     )
-    XCTAssertEqual(delegate.capturedError as NSError, error)
+    XCTAssertEqual(delegate.capturedError as NSError?, error)
   }
 
   func testShowInvokesDelegateWhenCannotValidate() {
@@ -142,8 +143,9 @@ class FBSDKMessageDialogTests: XCTestCase {
       code: CoreError.errorInvalidArgument.rawValue,
       userInfo: [
         ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Message dialog does not support FBSDKShareCameraEffectContent."]
+        ErrorDeveloperMessageKey: "Message dialog does not support FBSDKShareCameraEffectContent."
+      ]
     )
-    XCTAssertEqual(delegate.capturedError as NSError, error)
+    XCTAssertEqual(delegate.capturedError as NSError?, error)
   }
 }

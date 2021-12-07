@@ -14,6 +14,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
   var connection: TestGraphRequestConnection!
   var requestFactory: TestGraphRequestFactory!
   var connectionFactory: TestGraphRequestConnectionFactory!
+  var dialogConfigurationMapBuilder: TestDialogConfigurationMapBuilder!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -22,9 +23,11 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     connection = TestGraphRequestConnection()
     requestFactory = TestGraphRequestFactory()
     connectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    dialogConfigurationMapBuilder = TestDialogConfigurationMapBuilder()
     ServerConfigurationManager.shared.configure(
       graphRequestFactory: requestFactory,
-      graphRequestConnectionFactory: connectionFactory
+      graphRequestConnectionFactory: connectionFactory,
+      dialogConfigurationMapBuilder: dialogConfigurationMapBuilder
     )
   }
 
@@ -33,6 +36,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     connection = nil
     requestFactory = nil
     connectionFactory = nil
+    dialogConfigurationMapBuilder = nil
 
     super.tearDown()
   }
@@ -48,6 +52,10 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
       ServerConfigurationManager.shared.graphRequestConnectionFactory,
       "Should not have a graph request connection factory by default"
     )
+    XCTAssertNil(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      "Should not have a dialog configuration map builder by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -58,6 +66,10 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     XCTAssertTrue(
       ServerConfigurationManager.shared.graphRequestConnectionFactory === connectionFactory,
       "Should set the provided graph request connection factory"
+    )
+    XCTAssertTrue(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder === dialogConfigurationMapBuilder,
+      "Should set the provided dialog configuration map builder"
     )
   }
 
@@ -93,6 +105,60 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
     )
   }
 
+  func testParsingWithMissingDialogConfigurations() {
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      [String: Any](),
+      error: nil,
+      appID: name
+    )
+    XCTAssertNil(
+      dialogConfigurationMapBuilder.capturedRawConfigurations,
+      "Should not invoke the dialog configuration builder when the raw response is missing a raw dialog configuration"
+    )
+  }
+
+  func testParsingWithDialogConfigurationsMissingDataKey() {
+    let response = [
+      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any]()
+    ]
+
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      response,
+      error: nil,
+      appID: name
+    )
+    XCTAssertNil(
+      dialogConfigurationMapBuilder.capturedRawConfigurations,
+      "Should not invoke the dialog configuration builder when the raw dialog configuration is missing a data key"
+    )
+  }
+
+  func testParsingWithValidDialogConfigurations() {
+    let expectedRawConfigurations = [
+      SampleRawDialogConfigurations.createValid(name: name),
+      SampleRawDialogConfigurations.createValid(name: "foo")
+    ]
+    let response = [
+      "ios_dialog_configs": [
+        "data": expectedRawConfigurations
+      ]
+    ]
+
+    ServerConfigurationManager.shared.processLoadRequestResponse(
+      response,
+      error: nil,
+      appID: name
+    )
+
+    zip(
+      dialogConfigurationMapBuilder.capturedRawConfigurations ?? [],
+      expectedRawConfigurations
+    )
+      .forEach { actual, expected in
+        assertEqualRawDialogConfigurations(actual, expected)
+      }
+  }
+
   func testParsingResponses() {
     for _ in 0..<100 {
       ServerConfigurationManager.shared.processLoadRequestResponse(
@@ -101,5 +167,33 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
         appID: name
       )
     }
+  }
+
+  // MARK: - Helpers
+
+  func assertEqualRawDialogConfigurations(
+    _ actual: [String: Any],
+    _ expected: [String: Any],
+    _ file: StaticString = #file,
+    _ line: UInt = #line
+  ) {
+    XCTAssertEqual(
+      actual["name"] as? String,
+      expected["name"] as? String,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      actual["url"] as? String,
+      expected["url"] as? String,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      actual["versions"] as? [String],
+      expected["versions"] as? [String],
+      file: file,
+      line: line
+    )
   }
 }

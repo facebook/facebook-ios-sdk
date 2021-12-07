@@ -65,7 +65,7 @@ class LoginCompletionTests: XCTestCase {
   }
 
   func testSettingProfileProvider() {
-    let provider = TestProfileFactory(stubbedProfile: SampleUserProfiles.valid)
+    let provider = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
     LoginURLCompleter.profileFactory = provider
 
     XCTAssertTrue(
@@ -152,7 +152,7 @@ class LoginCompletionTests: XCTestCase {
   }
 
   func testInitWithFuzzyParameters() {
-    (0 ..< 100).forEach { _ in
+    (0..<100).forEach { _ in
       let parameters = SampleRawLoginCompletionParameters.defaultParameters
       if let fuzzyParameters = Fuzzer.randomize(json: parameters) as? [String: Any] {
         _ = createLoginCompleter(parameters: fuzzyParameters, appID: Values.appID)
@@ -321,7 +321,7 @@ class LoginCompletionTests: XCTestCase {
       completionWasInvoked = true
     }
 
-    (0 ..< 100).forEach { _ in
+    (0..<100).forEach { _ in
       let mangledResult = stubbedResult
       let parameters = Fuzzer.randomize(json: mangledResult)
 
@@ -481,7 +481,7 @@ class LoginCompletionTests: XCTestCase {
   // MARK: Profile
 
   func testCreateProfileWithClaims() throws {
-    let factory = TestProfileFactory(stubbedProfile: SampleUserProfiles.valid)
+    let factory = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
     LoginURLCompleter.profileFactory = factory
 
     let claim = try XCTUnwrap(

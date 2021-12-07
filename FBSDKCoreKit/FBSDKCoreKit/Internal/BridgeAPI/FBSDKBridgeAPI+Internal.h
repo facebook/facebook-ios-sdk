@@ -33,10 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openURLWithAuthenticationSession:(NSURL *)url;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)openURLWithSafariViewController:(NSURL *)url
                                  sender:(nullable id<FBSDKURLOpening>)sender
                      fromViewController:(nullable UIViewController *)fromViewController
-                                handler:(FBSDKSuccessBlock)handler;
+                                handler:(FBSDKSuccessBlock)handler
+NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
 

@@ -100,20 +100,18 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     ]
   ]
 
-  static let validAdvertiserSingleEntryRule: AEMAdvertiserSingleEntryRule
-    = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
-      paramKey: "test",
-      linguisticCondition: "hello",
-      numericalCondition: NSNumber(10),
-      arrayCondition: ["abv"]
-    )
+  static let validAdvertiserSingleEntryRule = AEMAdvertiserSingleEntryRule(
+    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
+    paramKey: "test",
+    linguisticCondition: "hello",
+    numericalCondition: NSNumber(10),
+    arrayCondition: ["abv"]
+  )
 
-  static let validAdvertiserMultiEntryRule: AEMAdvertiserMultiEntryRule
-    = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
-      rules: [validAdvertiserSingleEntryRule]
-    )
+  static let validAdvertiserMultiEntryRule = AEMAdvertiserMultiEntryRule(
+    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+    rules: [validAdvertiserSingleEntryRule]
+  )
 
   static let validAdvertiserSingleEntryRuleJson1: [String: Any] = ["content": ["starts_with": "abc"]]
 

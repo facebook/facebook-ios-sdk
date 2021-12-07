@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 class TestProcessInfo: NSObject, OperatingSystemVersionComparing {
-  let stubbedOperatingSystemCheckResult: Bool
+  var stubbedOperatingSystemCheckResult: Bool
 
   override convenience init() {
     self.init(stubbedOperatingSystemCheckResult: true)

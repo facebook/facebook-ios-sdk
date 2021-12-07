@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsState)
 @interface FBSDKAppEventsState : NSObject <NSCopying, NSSecureCoding>
 
+@property (class, nullable, nonatomic) NSArray<id<FBSDKEventsProcessing>> *eventProcessors;
+
 @property (nonatomic, readonly, copy) NSArray *events;
 @property (nonatomic, readonly, assign) NSUInteger numSkipped;
 @property (nonatomic, readonly, copy) NSString *tokenString;
@@ -32,8 +34,6 @@ NS_SWIFT_NAME(AppEventsState)
 - (BOOL)isCompatibleWithTokenString:(NSString *)tokenString appID:(NSString *)appID;
 - (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents;
 - (NSString *)extractReceiptData;
-
-+ (void)configureWithEventProcessors:(NSArray<id<FBSDKEventsProcessing>> *)eventProcessors;
 
 @end
 

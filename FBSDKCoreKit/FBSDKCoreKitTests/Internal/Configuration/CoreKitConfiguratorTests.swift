@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable file_length
+// swiftlint:disable file_length type_body_length function_body_length
 
 import XCTest
 
-// swiftlint:disable:next type_body_length
 final class CoreKitConfiguratorTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
-  var dependencies: SharedDependencies!
+  var components: CoreKitComponents!
   var configurator: CoreKitConfigurator!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -21,12 +20,13 @@ final class CoreKitConfiguratorTests: XCTestCase {
     super.setUp()
 
     Self.resetTargets()
-    dependencies = TestSharedDependencies.makeDependencies()
-    configurator = CoreKitConfigurator(dependencies: dependencies)
+
+    components = TestCoreKitComponents.makeComponents()
+    configurator = CoreKitConfigurator(components: components)
   }
 
   override func tearDown() {
-    dependencies = nil
+    components = nil
     configurator = nil
 
     super.tearDown()
@@ -38,28 +38,269 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   private class func resetTargets() {
+    AccessToken.resetClassDependencies()
+    AppEvents.shared.reset()
     AppEventsConfigurationManager.reset()
-    AppEventsUtility.reset()
+    AppEventsDeviceInfo.reset()
+    AppEventsState.eventProcessors = nil
+    AppEventsUtility.shared.reset()
+    AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
     FeatureManager.reset()
+    GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
+    GraphRequestConnection.resetCanMakeRequests()
+    GraphRequestPiggybackManager.reset()
+    ImpressionLoggingButton.resetClassDependencies()
     InstrumentManager.reset()
     InternalUtility.reset()
     SDKError.reset()
     ServerConfigurationManager.shared.reset()
+    Settings.shared.reset()
 
     // Non-tvOS
+    AEMReporter.reset()
+    AppLinkNavigation.reset()
     AppLinkURL.reset()
     AppLinkUtility.reset()
     AuthenticationStatusUtility.resetClassDependencies()
     BridgeAPIRequest.resetClassDependencies()
+    CodelessIndexer.reset()
+    CrashShield.reset()
+    FBWebDialogView.reset()
     FeatureExtractor.reset()
     ModelManager.reset()
-    FBWebDialogView.reset()
+    Profile.reset()
   }
 
   // MARK: - All Platforms
+
+  func testConfiguringAccessToken() {
+    XCTAssertNil(
+      AccessToken.tokenCache,
+      "AccessToken should be not have a token cache by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestConnectionFactory,
+      "AccessToken should be not have a graph request connection factory by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestPiggybackManager,
+      "AccessToken should be not have a graph request piggyback manager by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AccessToken.tokenCache === components.tokenCache,
+      "Should be configured with the token cache"
+    )
+    XCTAssertTrue(
+      AccessToken.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      AccessToken.graphRequestPiggybackManager === components.piggybackManager,
+      "Should be configured with the graph request piggyback manager"
+    )
+  }
+
+  func testConfiguringAppEvents() {
+    XCTAssertNil(
+      AppEvents.shared.gateKeeperManager,
+      "AppEvents should not have a gate keeper manager by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsConfigurationProvider,
+      "AppEvents should not have an app events configuration provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.serverConfigurationProvider,
+      "AppEvents should not have a server configuration provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.graphRequestFactory,
+      "AppEvents should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.featureChecker,
+      "AppEvents should not have a feature checker by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.primaryDataStore,
+      "AppEvents should not have a primary data store by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.logger,
+      "AppEvents should not have a logger by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.settings,
+      "AppEvents should not have settings by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.paymentObserver,
+      "AppEvents should not have a payment observer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.timeSpentRecorder,
+      "AppEvents should not have a time spent recorder by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsStateStore,
+      "AppEvents should not have an app events state store by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.eventDeactivationParameterProcessor,
+      "AppEvents should not have an event deactivation parameter processor by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.restrictiveDataFilterParameterProcessor,
+      "AppEvents should not have a restrictive data filter parameter processor by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.atePublisherFactory,
+      "AppEvents should not have an ATE publisher factory by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.appEventsStateProvider,
+      "AppEvents should not have an app events state provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.advertiserIDProvider,
+      "AppEvents should not have an advertiser ID provider by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.userDataStore,
+      "AppEvents should not have a user data store by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEvents.shared.gateKeeperManager === components.gateKeeperManager,
+      "AppEvents should be configured with the gate keeper manager"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
+      "AppEvents should be configured with the app events configuration provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.serverConfigurationProvider === components.serverConfigurationProvider,
+      "AppEvents should be configured with the server configuration provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.graphRequestFactory === components.graphRequestFactory,
+      "AppEvents should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.featureChecker === components.featureChecker,
+      "AppEvents should be configured with the feature checker"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.primaryDataStore === components.defaultDataStore,
+      "AppEvents should be configured with the primary data store"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.logger === components.logger,
+      "AppEvents should be configured with the logger"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.settings === components.settings,
+      "AppEvents should be configured with the"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.paymentObserver === components.paymentObserver,
+      "AppEvents should be configured with the payment observer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.timeSpentRecorder === components.timeSpentRecorder,
+      "AppEvents should be configured with the time spent recorder"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsStateStore === components.appEventsStateStore,
+      "AppEvents should be configured with the app events state store"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.eventDeactivationParameterProcessor === components.eventDeactivationManager,
+      "AppEvents should be configured with the event deactivation parameter processor"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.restrictiveDataFilterParameterProcessor === components.restrictiveDataFilterManager,
+      "AppEvents should be configured with the restrictive data filter parameter processor"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.atePublisherFactory === components.atePublisherFactory,
+      "AppEvents should be configured with the ATE publisher factory"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsStateProvider === components.appEventsStateProvider,
+      "AppEvents should be configured with the app events state provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.advertiserIDProvider === components.advertiserIDProvider,
+      "AppEvents should be configured with the advertiser ID provider"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.userDataStore === components.userDataStore,
+      "AppEvents should be configured with the user data store"
+    )
+  }
+
+  func testConfiguringNonTVAppEvents() {
+    XCTAssertNil(
+      AppEvents.shared.onDeviceMLModelManager,
+      "AppEvents should not have an on-device ML model manager by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.metadataIndexer,
+      "AppEvents should not have a metadata indexer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.skAdNetworkReporter,
+      "AppEvents should not have a StoreKit ad network reporter by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.codelessIndexer,
+      "AppEvents should not have a codeless indexer by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.swizzler,
+      "AppEvents should not have a swizzler by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.aemReporter,
+      "AppEvents should not have an AEM reporter by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEvents.shared.onDeviceMLModelManager === components.modelManager,
+      "AppEvents should be configured with the on-device ML model manager"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.metadataIndexer === components.metadataIndexer,
+      "AppEvents should be configured with the metadata indexer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.skAdNetworkReporter === components.skAdNetworkReporter,
+      "AppEvents should be configured with StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.codelessIndexer === components.codelessIndexer,
+      "AppEvents should be configured with the codeless indexer"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.swizzler === components.swizzler,
+      "AppEvents should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.aemReporter === components.aemReporter,
+      "AppEvents should be configured with the AEM reporter"
+    )
+  }
 
   func testConfiguringAppEventsConfigurationManager() {
     XCTAssertNil(
@@ -82,20 +323,57 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.store === dependencies.defaultDataStore,
+      AppEventsConfigurationManager.shared.store === components.defaultDataStore,
       "AppEventsConfigurationManager should be configured with the default data store"
     )
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.settings === dependencies.settings,
+      AppEventsConfigurationManager.shared.settings === components.settings,
       "AppEventsConfigurationManager should be configured with the settings"
     )
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.graphRequestFactory === dependencies.graphRequestFactory,
+      AppEventsConfigurationManager.shared.graphRequestFactory === components.graphRequestFactory,
       "AppEventsConfigurationManager should be configured with the graph request factory"
     )
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      AppEventsConfigurationManager.shared.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
       "AppEventsConfigurationManager should be configured with the graph request connection factory"
+    )
+  }
+
+  func testConfiguringAppEventsDeviceInfo() throws {
+    XCTAssertNil(
+      AppEventsDeviceInfo.shared.settings,
+      "AppEventsDeviceInfo should not have settings by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppEventsDeviceInfo.shared.settings === components.settings,
+      "AppEventsDeviceInfo should be configured with the settings"
+    )
+  }
+
+  func testConfiguringAppEventsState() throws {
+    XCTAssertNil(
+      AppEventsState.eventProcessors,
+      "AppEventsState should not have event processors by default"
+    )
+
+    configurator.configureTargets()
+
+    let processors = try XCTUnwrap(
+      AppEventsState.eventProcessors,
+      "AppEventsState's event processors should be configured"
+    )
+    XCTAssertEqual(processors.count, 2, "AppEventsState should have two event processors")
+    XCTAssertTrue(
+      processors.first === components.eventDeactivationManager,
+      "AppEventsState's event processors should be configured with the event deactivation manager"
+    )
+    XCTAssertTrue(
+      processors.last === components.restrictiveDataFilterManager,
+      "AppEventsState's event processors should be configured with the restrictive data filter manager"
     )
   }
 
@@ -112,13 +390,27 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      AppEventsUtility.shared.appEventsConfigurationProvider === dependencies.appEventsConfigurationProvider,
+      AppEventsUtility.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
       "AppEventsUtility should be configured with the app events configuration provider"
     )
 
     XCTAssertTrue(
-      AppEventsUtility.shared.deviceInformationProvider === dependencies.deviceInformationProvider,
+      AppEventsUtility.shared.deviceInformationProvider === components.deviceInformationProvider,
       "AppEventsUtility should be configured with the device information provider"
+    )
+  }
+
+  func testConfiguringAuthenticationToken() {
+    XCTAssertNil(
+      AuthenticationToken.tokenCache,
+      "AuthenticationToken should not have a token cache by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AuthenticationToken.tokenCache === components.tokenCache,
+      "AuthenticationToken should be configured with the token cache"
     )
   }
 
@@ -139,15 +431,15 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      FBButton.applicationActivationNotifier as AnyObject === dependencies.applicationActivationNotifier as AnyObject,
+      FBButton.applicationActivationNotifier as AnyObject === components.applicationActivationNotifier as AnyObject,
       "Button should be configured with the application activation notifier"
     )
     XCTAssertTrue(
-      FBButton.eventLogger === dependencies.eventLogger,
+      FBButton.eventLogger === components.eventLogger,
       "Button should be configured with the expected concrete app events"
     )
     XCTAssertTrue(
-      FBButton.accessTokenProvider === dependencies.accessTokenWallet,
+      FBButton.accessTokenProvider === components.accessTokenWallet,
       "Button should be configured with the expected concrete access token provider"
     )
   }
@@ -169,16 +461,54 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager === dependencies.gateKeeperManager,
+      FeatureManager.shared.gateKeeperManager === components.gateKeeperManager,
       "FeatureManager should be configured with the gatekeeper manager"
     )
     XCTAssertTrue(
-      FeatureManager.shared.settings === dependencies.settings,
+      FeatureManager.shared.settings === components.settings,
       "FeatureManager should be configured with the settings"
     )
     XCTAssertTrue(
-      FeatureManager.shared.store === dependencies.defaultDataStore,
+      FeatureManager.shared.store === components.defaultDataStore,
       "FeatureManager should be configured with the default data store"
+    )
+  }
+
+  func testConfiguringGateKeeperManager() {
+    XCTAssertNil(
+      GateKeeperManager.settings,
+      "GateKeeperManager should not have settings by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.graphRequestFactory,
+      "GateKeeperManager should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.graphRequestConnectionFactory,
+      "GateKeeperManager should not have a graph request connection factory by default"
+    )
+    XCTAssertNil(
+      GateKeeperManager.store,
+      "GateKeeperManager should not have a data store by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      GateKeeperManager.settings === components.settings,
+      "GateKeeperManager should be configured with the settings"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestFactory === components.graphRequestFactory,
+      "GateKeeperManager should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
+      "GateKeeperManager should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      GateKeeperManager.store === components.defaultDataStore,
+      "GateKeeperManager should be configured with the data store"
     )
   }
 
@@ -199,20 +529,19 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      GraphRequest.settings === dependencies.settings,
+      GraphRequest.settings === components.settings,
       "GraphRequest should be configured with the settings"
     )
     XCTAssertTrue(
-      GraphRequest.accessTokenProvider === dependencies.accessTokenWallet,
+      GraphRequest.accessTokenProvider === components.accessTokenWallet,
       "GraphRequest should be configured with the access token wallet"
     )
     XCTAssertTrue(
-      GraphRequest.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      GraphRequest.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
       "GraphRequest should be configured with the connection factory"
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringGraphRequestConnection() {
     XCTAssertNil(
       GraphRequestConnection.sessionProxyFactory,
@@ -223,8 +552,8 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not have an error configuration provider by default"
     )
     XCTAssertNil(
-      GraphRequestConnection.piggybackManagerProvider,
-      "GraphRequestConnection should not have a piggyback manager provider by default"
+      GraphRequestConnection.piggybackManager,
+      "GraphRequestConnection should not have a piggyback manager by default"
     )
     XCTAssertNil(
       GraphRequestConnection.settings,
@@ -263,55 +592,117 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not have an authentication token provider by default"
     )
 
+    XCTAssertFalse(
+      GraphRequestConnection.canMakeRequests,
+      "GraphRequestConnection should not be able to make requests by default"
+    )
+
     configurator.configureTargets()
 
     XCTAssertTrue(
-      GraphRequestConnection.sessionProxyFactory === dependencies.urlSessionProxyFactory,
+      GraphRequestConnection.sessionProxyFactory === components.urlSessionProxyFactory,
       "GraphRequestConnection should be configured with the concrete session provider"
     )
     XCTAssertTrue(
-      GraphRequestConnection.errorConfigurationProvider === dependencies.errorConfigurationProvider,
+      GraphRequestConnection.errorConfigurationProvider === components.errorConfigurationProvider,
       "GraphRequestConnection should be configured with the error configuration provider"
     )
     XCTAssertTrue(
-      GraphRequestConnection.piggybackManagerProvider === dependencies.piggybackManagerProvider,
+      GraphRequestConnection.piggybackManager === components.piggybackManager,
       "GraphRequestConnection should be configured with the piggyback manager provider"
     )
     XCTAssertTrue(
-      GraphRequestConnection.settings === dependencies.settings,
+      GraphRequestConnection.settings === components.settings,
       "GraphRequestConnection should be configured with the settings type"
     )
     XCTAssertTrue(
-      GraphRequestConnection.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      GraphRequestConnection.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
       "GraphRequestConnection should be configured with the connection factory"
     )
     XCTAssertTrue(
-      GraphRequestConnection.eventLogger === dependencies.eventLogger,
+      GraphRequestConnection.eventLogger === components.eventLogger,
       "GraphRequestConnection should be configured with the event logger"
     )
     XCTAssertTrue(
-      GraphRequestConnection.operatingSystemVersionComparer === dependencies.operatingSystemVersionComparer,
+      GraphRequestConnection.operatingSystemVersionComparer === components.operatingSystemVersionComparer,
       "GraphRequestConnection should be configured with the operating system version comparer"
     )
     XCTAssertTrue(
-      GraphRequestConnection.macCatalystDeterminator === dependencies.macCatalystDeterminator,
+      GraphRequestConnection.macCatalystDeterminator === components.macCatalystDeterminator,
       "GraphRequestConnection should be configured with the Mac Catalyst determinator"
     )
     XCTAssertTrue(
-      GraphRequestConnection.accessTokenProvider === dependencies.accessTokenWallet,
+      GraphRequestConnection.accessTokenProvider === components.accessTokenWallet,
       "GraphRequestConnection should be configured with the access token provider"
     )
     XCTAssertTrue(
-      GraphRequestConnection.accessTokenSetter === dependencies.accessTokenWallet,
+      GraphRequestConnection.accessTokenSetter === components.accessTokenWallet,
       "GraphRequestConnection should be configured with the access token setter by default"
     )
     XCTAssertTrue(
-      GraphRequestConnection.errorFactory === dependencies.errorFactory,
+      GraphRequestConnection.errorFactory === components.errorFactory,
       "GraphRequestConnection should be configured with the error factory"
     )
     XCTAssertTrue(
-      GraphRequestConnection.authenticationTokenProvider === dependencies.authenticationTokenWallet,
+      GraphRequestConnection.authenticationTokenProvider === components.authenticationTokenWallet,
       "GraphRequestConnection should be configured with the authentication token provider"
+    )
+
+    XCTAssertTrue(
+      GraphRequestConnection.canMakeRequests,
+      "GraphRequestConnection should be configured to be able to make requests"
+    )
+  }
+
+  func testConfiguringGraphRequestPiggybackManager() {
+    XCTAssertNil(
+      GraphRequestPiggybackManager.tokenWallet,
+      "GraphRequestPiggybackManager should not have an access token wallet by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.settings,
+      "GraphRequestPiggybackManager should not have a settings by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.serverConfigurationProvider,
+      "GraphRequestPiggybackManager should not have a server configuration by default"
+    )
+    XCTAssertNil(
+      GraphRequestPiggybackManager.graphRequestFactory,
+      "GraphRequestPiggybackManager should not have a graph request factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.tokenWallet === components.accessTokenWallet,
+      "GraphRequestPiggybackManager should be configured with the access token wallet"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.settings === components.settings,
+      "GraphRequestPiggybackManager should be configured with the settings"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.serverConfigurationProvider === components.serverConfigurationProvider,
+      "GraphRequestPiggybackManager should be configured with the server configuration"
+    )
+    XCTAssertTrue(
+      GraphRequestPiggybackManager.graphRequestFactory === components.graphRequestFactory,
+      "GraphRequestPiggybackManager should be configured with the graph request factory"
+    )
+  }
+
+  func testConfiguringImpressionLoggingButton() throws {
+    XCTAssertNil(
+      ImpressionLoggingButton.impressionLoggerFactory,
+      "ImpressionLoggingButton should not have an impression logger factory by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      ImpressionLoggingButton.impressionLoggerFactory === components.impressionLoggerFactory,
+      "ImpressionLoggingButton should be configured with the impression logger factory"
     )
   }
 
@@ -340,23 +731,23 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      InstrumentManager.shared.crashObserver === dependencies.crashObserver,
+      InstrumentManager.shared.crashObserver === components.crashObserver,
       "InstrumentManager should be configured with the crash observer"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.featureChecker === dependencies.featureChecker,
+      InstrumentManager.shared.featureChecker === components.featureChecker,
       "InstrumentManager should be configured with the feature checker"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.settings === dependencies.settings,
+      InstrumentManager.shared.settings === components.settings,
       "InstrumentManager should be configured with the settings"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.errorReporter === dependencies.errorReporter,
+      InstrumentManager.shared.errorReporter === components.errorReporter,
       "InstrumentManager should be configured with the error reporter"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.crashHandler === dependencies.crashHandler,
+      InstrumentManager.shared.crashHandler === components.crashHandler,
       "InstrumentManager should be configured with the crash handler"
     )
   }
@@ -374,11 +765,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      InternalUtility.shared.infoDictionaryProvider === dependencies.infoDictionaryProvider,
+      InternalUtility.shared.infoDictionaryProvider === components.infoDictionaryProvider,
       "InternalUtility should be configured with the info dictionary provider"
     )
     XCTAssertTrue(
-      InternalUtility.shared.loggerFactory === dependencies.loggerFactory,
+      InternalUtility.shared.loggerFactory === components.loggerFactory,
       "InternalUtility should be configured with the logger factory"
     )
   }
@@ -392,7 +783,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      SDKError.errorReporter === dependencies.errorReporter,
+      SDKError.errorReporter === components.errorReporter,
       "SDKError should be configured with the error reporter"
     )
   }
@@ -406,20 +797,137 @@ final class CoreKitConfiguratorTests: XCTestCase {
       ServerConfigurationManager.shared.graphRequestConnectionFactory,
       "ServerConfigurationManager should not have a graph request connection factory by default"
     )
+    XCTAssertNil(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      "ServerConfigurationManager should not have a dialog configuration map builder by default"
+    )
 
     configurator.configureTargets()
 
     XCTAssertTrue(
-      ServerConfigurationManager.shared.graphRequestFactory === dependencies.graphRequestFactory,
+      ServerConfigurationManager.shared.graphRequestFactory === components.graphRequestFactory,
       "ServerConfigurationManager should be configured with the graph request factory"
     )
     XCTAssertTrue(
-      ServerConfigurationManager.shared.graphRequestConnectionFactory === dependencies.graphRequestConnectionFactory,
+      ServerConfigurationManager.shared.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
       "ServerConfigurationManager should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      ServerConfigurationManager.shared.dialogConfigurationMapBuilder === components.dialogConfigurationMapBuilder,
+      "ServerConfigurationManager should be configured with the dialog configuration map builder"
+    )
+  }
+
+  func testConfiguringSettings() {
+    XCTAssertNil(
+      Settings.store,
+      "Settings should not have a data store by default"
+    )
+    XCTAssertNil(
+      Settings.shared.appEventsConfigurationProvider,
+      "Settings should not have an app events configuration provider by default"
+    )
+    XCTAssertNil(
+      Settings.infoDictionaryProvider,
+      "Settings should not have an info dictionary provider by default"
+    )
+    XCTAssertNil(
+      Settings.eventLogger,
+      "Settings should not have an event logger by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      Settings.store === components.defaultDataStore,
+      "Settings should be configured with the data store"
+    )
+    XCTAssertTrue(
+      Settings.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
+      "Settings should be configured with the app events configuration provider"
+    )
+    XCTAssertTrue(
+      Settings.infoDictionaryProvider === components.infoDictionaryProvider,
+      "Settings should be configured with the info dictionary provider"
+    )
+    XCTAssertTrue(
+      Settings.eventLogger === components.eventLogger,
+      "Settings should be configured with the event logger"
     )
   }
 
   // MARK: - Non-tvOS
+
+  @available(iOS 14.0, *)
+  func testConfiguringAEMReporter() {
+    XCTAssertNil(
+      AEMReporter.networker,
+      "AEMReporter should not have an AEM networker by default"
+    )
+    XCTAssertNil(
+      AEMReporter.appID,
+      "AEMReporter should not have an app ID by default"
+    )
+    XCTAssertNil(
+      AEMReporter.reporter,
+      "AEMReporter should not have an SKAdNetwork reporter by default"
+    )
+
+    components.settings.appID = "sample"
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AEMReporter.networker === components.aemNetworker,
+      "AEMReporter should be configured with the AEM networker"
+    )
+    XCTAssertEqual(
+      AEMReporter.appID,
+      components.settings.appID,
+      "AEMReporter should be configured with the settings' app ID"
+    )
+    XCTAssertTrue(
+      AEMReporter.reporter === components.skAdNetworkReporter,
+      "AEMReporter should be configured with the SKAdNetwork reporter"
+    )
+  }
+
+  func testConfiguringAppLinkNavigation() {
+    XCTAssertNil(
+      AppLinkNavigation.settings,
+      "AppLinkNavigation should not have settings by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.urlOpener,
+      "AppLinkNavigation should not have an internal URL opener by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkEventPoster,
+      "AppLinkNavigation should not have an app link event poster by default"
+    )
+    XCTAssertNil(
+      AppLinkNavigation.appLinkResolver,
+      "AppLinkNavigation should not have an app link resolver by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      AppLinkNavigation.settings === components.settings,
+      "AppLinkNavigation should be configured with the settings"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.urlOpener === components.internalURLOpener,
+      "AppLinkNavigation should be configured with the internal URL opener"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkEventPoster === components.appLinkEventPoster,
+      "AppLinkNavigation should be configured with the app link event poster"
+    )
+    XCTAssertTrue(
+      AppLinkNavigation.appLinkResolver === components.appLinkResolver,
+      "AppLinkNavigation should be configured with the app link resolver"
+    )
+  }
 
   func testConfiguringAppLinkURL() {
     XCTAssertNil(
@@ -438,20 +946,19 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      AppLinkURL.settings === dependencies.settings,
+      AppLinkURL.settings === components.settings,
       "AppLinkURL should be configured with the settings"
     )
     XCTAssertTrue(
-      AppLinkURL.appLinkFactory === dependencies.appLinkFactory,
+      AppLinkURL.appLinkFactory === components.appLinkFactory,
       "AppLinkURL should be configured with the app link factory"
     )
     XCTAssertTrue(
-      AppLinkURL.appLinkTargetFactory === dependencies.appLinkTargetFactory,
+      AppLinkURL.appLinkTargetFactory === components.appLinkTargetFactory,
       "AppLinkURL should be configured with the app link target factory"
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringAppLinkUtility() {
     XCTAssertNil(
       AppLinkUtility.graphRequestFactory,
@@ -497,43 +1004,43 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      AppLinkUtility.graphRequestFactory === dependencies.graphRequestFactory,
+      AppLinkUtility.graphRequestFactory === components.graphRequestFactory,
       "AppLinkUtility should be configured with the graph request factory"
     )
     XCTAssertTrue(
-      AppLinkUtility.infoDictionaryProvider === dependencies.infoDictionaryProvider,
+      AppLinkUtility.infoDictionaryProvider === components.infoDictionaryProvider,
       "AppLinkUtility should be configured with the info dictionary provider"
     )
     XCTAssertTrue(
-      AppLinkUtility.settings === dependencies.settings,
+      AppLinkUtility.settings === components.settings,
       "AppLinkUtility should be configured with the settings"
     )
     XCTAssertTrue(
-      AppLinkUtility.appEventsConfigurationProvider === dependencies.appEventsConfigurationProvider,
+      AppLinkUtility.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
       "AppLinkUtility should be configured with the app events configuration manager"
     )
     XCTAssertTrue(
-      AppLinkUtility.advertiserIDProvider === dependencies.advertiserIDProvider,
+      AppLinkUtility.advertiserIDProvider === components.advertiserIDProvider,
       "AppLinkUtility should be configured with the advertiser ID provider"
     )
     XCTAssertTrue(
-      AppLinkUtility.appEventsDropDeterminer === dependencies.appEventsDropDeterminer,
+      AppLinkUtility.appEventsDropDeterminer === components.appEventsDropDeterminer,
       "AppLinkUtility should be configured with the app events drop determiner"
     )
     XCTAssertTrue(
-      AppLinkUtility.appEventParametersExtractor === dependencies.appEventParametersExtractor,
+      AppLinkUtility.appEventParametersExtractor === components.appEventParametersExtractor,
       "AppLinkUtility should be configured with the app events parameter extractor"
     )
     XCTAssertTrue(
-      AppLinkUtility.appLinkURLFactory === dependencies.appLinkURLFactory,
+      AppLinkUtility.appLinkURLFactory === components.appLinkURLFactory,
       "AppLinkUtility should be configured with the app link URL factory"
     )
     XCTAssertTrue(
-      AppLinkUtility.userIDProvider === dependencies.userIDProvider,
+      AppLinkUtility.userIDProvider === components.userIDProvider,
       "AppLinkUtility should be configured with the user ID provider"
     )
     XCTAssertTrue(
-      AppLinkUtility.userDataStore === dependencies.userDataStore,
+      AppLinkUtility.userDataStore === components.userDataStore,
       "AppLinkUtility should be configured with the user data store"
     )
   }
@@ -559,19 +1066,19 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      AuthenticationStatusUtility.profileSetter === dependencies.profileSetter,
+      AuthenticationStatusUtility.profileSetter === components.profileSetter,
       "AuthenticationStatusUtility should be configured with the profile setter"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.sessionDataTaskProvider === dependencies.sessionDataTaskProvider,
+      AuthenticationStatusUtility.sessionDataTaskProvider === components.sessionDataTaskProvider,
       "AuthenticationStatusUtility should be configured with the session data task provider"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.accessTokenWallet === dependencies.accessTokenWallet,
+      AuthenticationStatusUtility.accessTokenWallet === components.accessTokenWallet,
       "AuthenticationStatusUtility should be configured with the access token"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.authenticationTokenWallet === dependencies.authenticationTokenWallet,
+      AuthenticationStatusUtility.authenticationTokenWallet === components.authenticationTokenWallet,
       "AuthenticationStatusUtility should be configured with the authentication token"
     )
   }
@@ -593,16 +1100,108 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      BridgeAPIRequest.internalURLOpener === dependencies.internalURLOpener,
+      BridgeAPIRequest.internalURLOpener === components.internalURLOpener,
       "BridgeAPIRequest should be configured with the internal URL opener"
     )
     XCTAssertTrue(
-      BridgeAPIRequest.internalUtility === dependencies.internalUtility,
+      BridgeAPIRequest.internalUtility === components.internalUtility,
       "BridgeAPIRequest should be configured with the internal utility"
     )
     XCTAssertTrue(
-      BridgeAPIRequest.settings === dependencies.settings,
+      BridgeAPIRequest.settings === components.settings,
       "BridgeAPIRequest should be configured with the settings"
+    )
+  }
+
+  func testConfiguringCodelessIndexer() {
+    XCTAssertNil(
+      CodelessIndexer.graphRequestFactory,
+      "CodelessIndexer should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.serverConfigurationProvider,
+      "CodelessIndexer should not have a server configuration provider by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.dataStore,
+      "CodelessIndexer should be not have a data store by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.graphRequestConnectionFactory,
+      "CodelessIndexer should not have a graph request connection provider by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.swizzler,
+      "CodelessIndexer should not have a swizzler by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.settings,
+      "CodelessIndexer should not have settings by default"
+    )
+    XCTAssertNil(
+      CodelessIndexer.advertiserIDProvider,
+      "CodelessIndexer should not have an advertiser ID provider by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestFactory === components.graphRequestFactory,
+      "CodelessIndexer should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.serverConfigurationProvider === components.serverConfigurationProvider,
+      "CodelessIndexer should be configured with the server configuration provider"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.dataStore === components.defaultDataStore,
+      "Should be configured with the default data store"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
+      "CodelessIndexer should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.swizzler === components.swizzler,
+      "CodelessIndexer should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.settings === components.settings,
+      "CodelessIndexer should be configured with the settings"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.advertiserIDProvider === components.advertiserIDProvider,
+      "CodelessIndexer should be configured with the advertiser ID provider"
+    )
+  }
+
+  func testConfiguringCrashShield() {
+    XCTAssertNil(
+      CrashShield.settings,
+      "CrashShield should not have settings by default"
+    )
+    XCTAssertNil(
+      CrashShield.graphRequestFactory,
+      "CrashShield should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      CrashShield.featureChecking,
+      "CrashShield should not have a feature checker by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      CrashShield.settings === components.settings,
+      "CrashShield should be configured with the settings"
+    )
+    XCTAssertTrue(
+      CrashShield.graphRequestFactory === components.graphRequestFactory,
+      "CrashShield should be configured with the graph request factory"
+    )
+    XCTAssertTrue(
+      CrashShield.featureChecking === components.featureChecker,
+      "CrashShield should be configured with the feature checker"
     )
   }
 
@@ -615,12 +1214,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      FeatureExtractor.rulesFromKeyProvider === dependencies.rulesFromKeyProvider,
+      FeatureExtractor.rulesFromKeyProvider === components.rulesFromKeyProvider,
       "FeatureExtractor should be configured with the web view provider"
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testConfiguringModelManager() {
     XCTAssertNil(
       ModelManager.shared.featureChecker,
@@ -662,36 +1260,82 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      ModelManager.shared.featureChecker === dependencies.featureChecker,
+      ModelManager.shared.featureChecker === components.featureChecker,
       "ModelManager should be configured with the feature checker"
     )
     XCTAssertTrue(
-      ModelManager.shared.graphRequestFactory === dependencies.graphRequestFactory,
+      ModelManager.shared.graphRequestFactory === components.graphRequestFactory,
       "ModelManager should be configured with the request factory"
     )
     XCTAssertTrue(
-      ModelManager.shared.fileManager === dependencies.fileManager,
+      ModelManager.shared.fileManager === components.fileManager,
       "ModelManager should be configured with the file manager"
     )
     XCTAssertTrue(
-      ModelManager.shared.store === dependencies.defaultDataStore,
+      ModelManager.shared.store === components.defaultDataStore,
       "ModelManager should be configured with the default data store"
     )
     XCTAssertTrue(
-      ModelManager.shared.settings === dependencies.settings,
+      ModelManager.shared.settings === components.settings,
       "ModelManager should be configured with the settings"
     )
     XCTAssertTrue(
-      ModelManager.shared.dataExtractor === dependencies.dataExtractor,
+      ModelManager.shared.dataExtractor === components.dataExtractor,
       "ModelManager should be configured with the data extractor"
     )
     XCTAssertTrue(
-      ModelManager.shared.gateKeeperManager === dependencies.gateKeeperManager,
+      ModelManager.shared.gateKeeperManager === components.gateKeeperManager,
       "ModelManager should be configured with the gate keeper manager"
     )
     XCTAssertTrue(
-      ModelManager.shared.featureExtractor === dependencies.featureExtractor,
+      ModelManager.shared.featureExtractor === components.featureExtractor,
       "ModelManager should be configured with the feature extractor"
+    )
+  }
+
+  func testConfiguringProfile() {
+    XCTAssertNil(
+      Profile.dataStore,
+      "Profile should not have a data store by default"
+    )
+    XCTAssertNil(
+      Profile.accessTokenProvider,
+      "Profile should not have an access token provider by default"
+    )
+    XCTAssertNil(
+      Profile.notificationCenter,
+      "Profile should not have a notification center by default"
+    )
+    XCTAssertNil(
+      Profile.settings,
+      "Profile should not have settings by default"
+    )
+    XCTAssertNil(
+      Profile.urlHoster,
+      "Profile should not have a URL hoster by default"
+    )
+
+    configurator.configureTargets()
+
+    XCTAssertTrue(
+      Profile.dataStore === components.defaultDataStore,
+      "Profile should be configured with the default data store"
+    )
+    XCTAssertTrue(
+      Profile.accessTokenProvider === components.accessTokenWallet,
+      "Profile should be configured with the access token wallet"
+    )
+    XCTAssertTrue(
+      Profile.notificationCenter === components.notificationCenter,
+      "Profile should be configured with the notification center"
+    )
+    XCTAssertTrue(
+      Profile.settings === components.settings,
+      "Profile should be configured with the settings"
+    )
+    XCTAssertTrue(
+      Profile.urlHoster === components.urlHoster,
+      "Profile should be configured with the URL hoster"
     )
   }
 
@@ -708,11 +1352,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     configurator.configureTargets()
 
     XCTAssertTrue(
-      FBWebDialogView.webViewProvider === dependencies.webViewProvider,
+      FBWebDialogView.webViewProvider === components.webViewProvider,
       "FBWebDialogView should be configured with the web view factory"
     )
     XCTAssertTrue(
-      FBWebDialogView.urlOpener === dependencies.internalURLOpener,
+      FBWebDialogView.urlOpener === components.internalURLOpener,
       "FBWebDialogView should be configured with the internal URL opener"
     )
   }

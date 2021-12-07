@@ -27,7 +27,7 @@ NSString *const FBSDKAccessTokenDidExpireKey = @"FBSDKAccessTokenDidExpireKey";
 static FBSDKAccessToken *g_currentAccessToken;
 static id<FBSDKTokenCaching> g_tokenCache;
 static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
-static id<FBSDKGraphRequestPiggybackManagerProviding> g_graphRequestPiggybackManagerProvider;
+static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
 
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
@@ -153,7 +153,7 @@ static id<FBSDKGraphRequestPiggybackManagerProviding> g_graphRequestPiggybackMan
   if (FBSDKAccessToken.currentAccessToken) {
     id<FBSDKGraphRequestConnecting> connection = [FBSDKAccessToken.graphRequestConnectionFactory createGraphRequestConnection];
     if (connection) {
-      [self.graphRequestPiggybackManagerProvider.piggybackManager addRefreshPiggyback:connection permissionHandler:completion];
+      [self.graphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completion];
       [connection start];
     } else {
     #if DEBUG
@@ -187,23 +187,23 @@ static id<FBSDKGraphRequestPiggybackManagerProviding> g_graphRequestPiggybackMan
   }
 }
 
-+ (nullable id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
++ (nullable Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
 {
-  return g_graphRequestPiggybackManagerProvider;
+  return g_graphRequestPiggybackManager;
 }
 
-+ (void)setGraphRequestPiggybackManagerProvider:(nullable id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
++ (void)setGraphRequestPiggybackManager:(nullable Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
 {
-  g_graphRequestPiggybackManagerProvider = graphRequestPiggybackManagerProvider;
+  g_graphRequestPiggybackManager = graphRequestPiggybackManager;
 }
 
-+ (void)       configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
-         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-  graphRequestPiggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)graphRequestPiggybackManagerProvider
++ (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+   graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
 {
   self.tokenCache = tokenCache;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
-  self.graphRequestPiggybackManagerProvider = graphRequestPiggybackManagerProvider;
+  self.graphRequestPiggybackManager = graphRequestPiggybackManager;
 }
 
 #pragma mark - Equality
@@ -317,7 +317,7 @@ static id<FBSDKGraphRequestPiggybackManagerProviding> g_graphRequestPiggybackMan
 {
   self.tokenCache = nil;
   self.graphRequestConnectionFactory = nil;
-  self.graphRequestPiggybackManagerProvider = nil;
+  self.graphRequestPiggybackManager = nil;
 }
 
 + (void)resetCurrentAccessTokenCache

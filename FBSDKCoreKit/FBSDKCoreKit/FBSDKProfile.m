@@ -45,36 +45,56 @@ static NSDateFormatter *_dateFormatter;
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
-static id<FBSDKDataPersisting> _store;
+static id<FBSDKDataPersisting> _dataStore;
 static id<FBSDKSettings> _settings;
 static id<FBSDKURLHosting> _urlHoster;
 
-+ (Class<FBSDKAccessTokenProviding>)accessTokenProvider
++ (nullable id<FBSDKDataPersisting>)dataStore
+{
+  return _dataStore;
+}
+
++ (void)setDataStore:(nullable id<FBSDKDataPersisting>)dataStore
+{
+  _dataStore = dataStore;
+}
+
++ (nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   return _accessTokenProvider;
 }
 
-+ (id<FBSDKSettings>)settings
++ (void)setAccessTokenProvider:(nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
++ (nullable id<FBSDKSettings>)settings
 {
   return _settings;
 }
 
-+ (void)setSettings:(id<FBSDKSettings>)settings
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
 {
   _settings = settings;
 }
 
-+ (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
++ (nullable id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
   return _notificationCenter;
 }
 
-+ (id<FBSDKURLHosting>)urlHoster
++ (void)setNotificationCenter:(nullable id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+{
+  _notificationCenter = notificationCenter;
+}
+
++ (nullable id<FBSDKURLHosting>)urlHoster
 {
   return _urlHoster;
 }
 
-+ (void)setUrlHoster:(id<FBSDKURLHosting>)urlHoster
++ (void)setUrlHoster:(nullable id<FBSDKURLHosting>)urlHoster
 {
   _urlHoster = urlHoster;
 }
@@ -285,7 +305,7 @@ static id<FBSDKURLHosting> _urlHoster;
     _imageURL = [imageURL copy];
     _email = [email copy];
     _friendIDs = [friendIDs copy];
-    self.isLimited = NO;
+    _isLimited = NO;
     _birthday = [birthday copy];
     _ageRange = [ageRange copy];
     _hometown = [hometown copy];
@@ -308,36 +328,40 @@ static id<FBSDKURLHosting> _urlHoster;
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification
 {
-  if (profile != g_currentProfile && ![profile isEqualToProfile:g_currentProfile]) {
+  if (!profile && !self.currentProfile) {
+    return;
+  }
+
+  if (![profile isEqual:self.currentProfile]) {
     [self.class cacheProfile:profile];
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
 
     [FBSDKTypeUtility dictionary:userInfo setObject:profile forKey:FBSDKProfileChangeNewKey];
-    [FBSDKTypeUtility dictionary:userInfo setObject:g_currentProfile forKey:FBSDKProfileChangeOldKey];
+    [FBSDKTypeUtility dictionary:userInfo setObject:self.currentProfile forKey:FBSDKProfileChangeOldKey];
     g_currentProfile = profile;
 
     if (shouldPostNotification) {
-      [_notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
-                                         object:self.class
-                                       userInfo:userInfo];
+      [self.notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
+                                             object:self.class
+                                           userInfo:userInfo];
     }
   }
 }
 
 - (nullable NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 {
-  return [FBSDKProfile imageURLForProfileID:_userID PictureMode:mode size:size];
+  return [FBSDKProfile imageURLForProfileID:self.userID pictureMode:mode size:size];
 }
 
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
 {
   if (enable) {
-    [_notificationCenter addObserver:self
-                            selector:@selector(observeChangeAccessTokenChange:)
-                                name:FBSDKAccessTokenDidChangeNotification
-                              object:nil];
+    [self.notificationCenter addObserver:self
+                                selector:@selector(observeChangeAccessTokenChange:)
+                                    name:FBSDKAccessTokenDidChangeNotification
+                                  object:nil];
   } else {
-    [_notificationCenter removeObserver:self];
+    [self.notificationCenter removeObserver:self];
   }
 }
 
@@ -381,33 +405,39 @@ static id<FBSDKURLHosting> _urlHoster;
 
 - (BOOL)isEqual:(id)object
 {
+  if (object == nil) {
+    return NO;
+  }
+
   if (self == object) {
     return YES;
   }
+
   if (![object isKindOfClass:FBSDKProfile.class]) {
     return NO;
   }
+
   return [self isEqualToProfile:object];
 }
 
 - (BOOL)isEqualToProfile:(FBSDKProfile *)profile
 {
-  return ([_userID isEqualToString:profile.userID]
-    && [_firstName isEqualToString:profile.firstName]
-    && [_middleName isEqualToString:profile.middleName]
-    && [_lastName isEqualToString:profile.lastName]
-    && [_name isEqualToString:profile.name]
-    && [_linkURL isEqual:profile.linkURL]
-    && [_refreshDate isEqualToDate:profile.refreshDate]
-    && [_imageURL isEqual:profile.imageURL]
-    && [_email isEqualToString:profile.email]
-    && [_friendIDs isEqualToArray:profile.friendIDs]
-    && _isLimited == profile.isLimited
-    && [_birthday isEqualToDate:profile.birthday]
-    && [_ageRange isEqual:profile.ageRange]
-    && [_hometown isEqual:profile.hometown]
-    && [_location isEqual:profile.location]
-    && [_gender isEqual:profile.gender]);
+  return ([self.userID isEqualToString:profile.userID]
+    && [self.firstName isEqualToString:profile.firstName]
+    && [self.middleName isEqualToString:profile.middleName]
+    && [self.lastName isEqualToString:profile.lastName]
+    && [self.name isEqualToString:profile.name]
+    && [self.linkURL isEqual:profile.linkURL]
+    && [self.refreshDate isEqualToDate:profile.refreshDate]
+    && [self.imageURL isEqual:profile.imageURL]
+    && [self.email isEqualToString:profile.email]
+    && [self.friendIDs isEqualToArray:profile.friendIDs]
+    && (self.isLimited == profile.isLimited)
+    && [self.birthday isEqualToDate:profile.birthday]
+    && [self.ageRange isEqual:profile.ageRange]
+    && [self.hometown isEqual:profile.hometown]
+    && [self.location isEqual:profile.location]
+    && [self.gender isEqual:profile.gender]);
 }
 
 #pragma mark NSCoding
@@ -473,20 +503,16 @@ static id<FBSDKURLHosting> _urlHoster;
   [encoder encodeObject:self.gender forKey:FBSDKProfileCodingKeyGender];
 }
 
-@end
-
-@implementation FBSDKProfile (Internal)
-
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
-       accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
-                  settings:(id<FBSDKSettings>)settings
-                 urlHoster:(id<FBSDKURLHosting>)urlHoster
++ (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
+           accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                      settings:(id<FBSDKSettings>)settings
+                     urlHoster:(id<FBSDKURLHosting>)urlHoster
 {
   if (self == FBSDKProfile.class) {
-    _store = store;
-    _accessTokenProvider = accessTokenProvider;
-    _notificationCenter = notificationCenter;
+    self.dataStore = dataStore;
+    self.accessTokenProvider = accessTokenProvider;
+    self.notificationCenter = notificationCenter;
     self.urlHoster = urlHoster;
     self.settings = settings;
   }
@@ -498,15 +524,15 @@ static id<FBSDKURLHosting> _urlHoster;
 {
   if (profile) {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profile];
-    [_store setObject:data forKey:FBSDKProfileUserDefaultsKey];
+    [self.dataStore setObject:data forKey:FBSDKProfileUserDefaultsKey];
   } else {
-    [_store removeObjectForKey:FBSDKProfileUserDefaultsKey];
+    [self.dataStore removeObjectForKey:FBSDKProfileUserDefaultsKey];
   }
 }
 
 + (nullable FBSDKProfile *)fetchCachedProfile
 {
-  NSData *data = [_store objectForKey:FBSDKProfileUserDefaultsKey];
+  NSData *data = [self.dataStore objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
 
@@ -520,7 +546,7 @@ static id<FBSDKURLHosting> _urlHoster;
 }
 
 + (NSURL *)imageURLForProfileID:(FBSDKUserIdentifier *)profileId
-                    PictureMode:(FBSDKProfilePictureMode)mode
+                    pictureMode:(FBSDKProfilePictureMode)mode
                            size:(CGSize)size
 {
   NSString *const accessTokenKey = @"access_token";
@@ -624,7 +650,11 @@ static id<FBSDKURLHosting> _urlHoster;
     }
 
     NSString *urlString = [FBSDKTypeUtility coercedToStringValue:result[@"link"]];
-    NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
+
+    NSURL *linkUrl;
+    if (urlString) {
+      linkUrl = [FBSDKTypeUtility coercedToURLValue:[NSURL URLWithString:urlString]];
+    }
     NSArray<FBSDKUserIdentifier *> *friendIDs = [self friendIDsFromGraphResult:[FBSDKTypeUtility dictionaryValue:result[@"friends"]]];
     FBSDKUserAgeRange *ageRange = [FBSDKUserAgeRange ageRangeFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"age_range"]]];
 
@@ -664,14 +694,14 @@ static id<FBSDKURLHosting> _urlHoster;
 {
   static id<FBSDKGraphRequestConnecting> executingRequestConnection = nil;
 
-  BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
+  BOOL isStale = [[NSDate date] timeIntervalSinceDate:self.currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
   if (token
-      && (isStale || ![g_currentProfile.userID isEqualToString:token.userID] || g_currentProfile.isLimited)) {
-    FBSDKProfile *expectedCurrentProfile = g_currentProfile;
+      && (isStale || ![self.currentProfile.userID isEqualToString:token.userID] || self.currentProfile.isLimited)) {
+    FBSDKProfile *expectedCurrentProfile = self.currentProfile;
 
     [executingRequestConnection cancel];
     executingRequestConnection = [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      if (expectedCurrentProfile != g_currentProfile) {
+      if (expectedCurrentProfile != self.currentProfile) {
         // current profile has already changed since request was started. Let's not overwrite.
         if (completion != NULL) {
           completion(nil, nil);
@@ -688,7 +718,7 @@ static id<FBSDKURLHosting> _urlHoster;
       }
     }];
   } else if (completion != NULL) {
-    completion(g_currentProfile, nil);
+    completion(self.currentProfile, nil);
   }
 }
 
@@ -731,24 +761,14 @@ static id<FBSDKURLHosting> _urlHoster;
 
 + (void)resetCurrentProfileCache
 {
-  g_currentProfile = nil;
-}
-
-+ (id<FBSDKDataPersisting>)store
-{
-  return _store;
-}
-
-+ (void)setAccessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-{
-  _accessTokenProvider = accessTokenProvider;
+  self.currentProfile = nil;
 }
 
 + (void)reset
 {
-  _store = nil;
-  _accessTokenProvider = nil;
-  _notificationCenter = nil;
+  self.dataStore = nil;
+  self.accessTokenProvider = nil;
+  self.notificationCenter = nil;
   self.urlHoster = nil;
   self.settings = nil;
 }

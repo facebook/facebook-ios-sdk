@@ -10,6 +10,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKURLOpening;
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(URLOpener)
 @protocol FBSDKURLOpener
 
@@ -17,10 +23,13 @@ NS_SWIFT_NAME(URLOpener)
          sender:(nullable id<FBSDKURLOpening>)sender
         handler:(FBSDKSuccessBlock)handler;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)openURLWithSafariViewController:(NSURL *)url
                                  sender:(id<FBSDKURLOpening>)sender
                      fromViewController:(UIViewController *)fromViewController
-                                handler:(FBSDKSuccessBlock)handler;
+                                handler:(FBSDKSuccessBlock)handler
+NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

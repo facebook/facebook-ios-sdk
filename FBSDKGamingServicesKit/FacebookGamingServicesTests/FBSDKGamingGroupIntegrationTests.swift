@@ -8,6 +8,8 @@
 
 import XCTest
 
+@testable import FacebookGamingServices
+
 class FBSDKGamingGroupIntegrationTests: XCTestCase {
 
   let factory = TestGamingServiceControllerFactory()
@@ -23,7 +25,7 @@ class FBSDKGamingGroupIntegrationTests: XCTestCase {
       "Should have a default settings of the expected type"
     )
     XCTAssertTrue(
-      GamingGroupIntegration().serviceControllerFactory is GamingServiceControllerFactory,
+      GamingGroupIntegration().serviceControllerFactory is _GamingServiceControllerFactory,
       "Should have a default service controller factory of the expected type"
     )
   }

@@ -14,16 +14,21 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettings;
-@protocol FBSDKKeychainStoreProviding;
+@protocol FBSDKKeychainStore;
+
+FOUNDATION_EXPORT NSString *const DefaultKeychainServicePrefix;
 
 NS_SWIFT_NAME(TokenCache)
 @interface FBSDKTokenCache : NSObject <FBSDKTokenCaching>
+
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
-            keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory;
+                   keychainStore:(id<FBSDKKeychainStore>)keychainStore;
 
 @end
 

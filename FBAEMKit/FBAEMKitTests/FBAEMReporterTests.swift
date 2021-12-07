@@ -27,7 +27,7 @@ class FBAEMReporterTests: XCTestCase {
     static let businessID = "advertiser_id"
     static let campaignID = "campaign_id"
     static let catalogID = "catalog_id"
-    static let contentID = "fb_content_id"
+    static let contentID = "fb_content_ids"
     static let token = "token"
   }
 
@@ -36,6 +36,7 @@ class FBAEMReporterTests: XCTestCase {
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
     static let brandMode = "BRAND"
+    static let cpasMode = "CPAS"
     static let USD = "USD"
   }
 
@@ -86,7 +87,6 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.enable()
 
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
-    XCTAssertNotNil(AEMReporter.catalogNetworker, "AEM catalog networker should be created when AEM is enabled")
   }
 
   func testCatalogReportDefaultConfigure() {
@@ -101,10 +101,6 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testConfigure() {
-    XCTAssertNil(
-      AEMReporter.catalogNetworker,
-      "Should not configure catalog networker before enable"
-    )
     XCTAssertEqual(
       networker,
       AEMReporter.networker as? TestAEMNetworker,
@@ -241,6 +237,34 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertEqual(configList?.count, 2, "Should have the expected number of configs")
     XCTAssertEqual(configList?[0].validFrom, 10000, "Should keep the expected config")
     XCTAssertEqual(configList?[1].validFrom, 20000, "Should keep the expected config")
+  }
+
+  func testClearConfigs() {
+    AEMReporter.configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()]),
+      Values.cpasMode: NSMutableArray(array: [SampleAEMConfigurations.createCpasConfig()])
+    ]
+
+    AEMReporter._clearConfigs()
+    let defaultConfigs = AEMReporter.configs[Values.defaultMode] as? [AEMConfiguration]
+    let brandConfigs = AEMReporter.configs[Values.brandMode] as? [AEMConfiguration]
+    let cpasConfigs = AEMReporter.configs[Values.cpasMode] as? [AEMConfiguration]
+    XCTAssertEqual(
+      defaultConfigs?.count,
+      1,
+      "Should have default mode config"
+    )
+    XCTAssertEqual(
+      brandConfigs?.count,
+      0,
+      "Should not have brand mode config"
+    )
+    XCTAssertEqual(
+      cpasConfigs?.count,
+      0,
+      "Should not have cpas mode config"
+    )
   }
 
   func testHandleURL() throws {
@@ -550,7 +574,7 @@ class FBAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["advertiser_ids": "[]"],
+      ["fields": "", "advertiser_ids": "[]"],
       "Should not have unexpected advertiserIDs in config request params"
     )
   }
@@ -561,7 +585,7 @@ class FBAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["fields": "", "advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
       "Should have expected advertiserIDs in config request params"
     )
 
@@ -570,7 +594,7 @@ class FBAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["fields": "", "advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
       "Should have expected advertiserIDs in config request params"
     )
   }
@@ -853,14 +877,13 @@ class FBAEMReporterTests: XCTestCase {
 
   func testLoadCatalogOptimizationWithOptimizedContent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
-    AEMReporter.catalogNetworker = self.networker
     var blockCall = 0
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {
       blockCall += 1
     }
     XCTAssertTrue(
-      (self.networker.capturedGraphPath?.contains("da_content_id_belongs_to_catalog_id")) == true,
+      (self.networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
       "Should start the catalog request"
     )
     self.networker.capturedCompletionHandler?(nil, SampleAEMError())
@@ -873,7 +896,6 @@ class FBAEMReporterTests: XCTestCase {
 
   func testLoadCatalogOptimizationWithFuzzyInput() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
-    AEMReporter.catalogNetworker = self.networker
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {}
     for _ in 0..<100 {

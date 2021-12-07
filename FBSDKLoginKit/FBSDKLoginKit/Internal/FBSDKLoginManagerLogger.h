@@ -19,15 +19,22 @@ FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
 
 NS_SWIFT_NAME(LoginManagerLogger)
 @interface FBSDKLoginManagerLogger : NSObject
+
+// UNCRUSTIFY_FORMAT_OFF
 + (nullable FBSDKLoginManagerLogger *)loggerFromParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                  tracking:(FBSDKLoginTracking)tracking;
+                                                  tracking:(FBSDKLoginTracking)tracking
+NS_SWIFT_NAME(init(parameters:tracking:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (nullable instancetype)initWithLoggingToken:(nullable NSString *)loggingToken
                                      tracking:(FBSDKLoginTracking)tracking
-  NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER
+NS_SWIFT_NAME(init(loggingToken:tracking:));
+// UNCRUSTIFY_FORMAT_ON
 
 // this must not retain loginManager - only used to conveniently grab various properties to log.
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager;
@@ -42,7 +49,7 @@ NS_SWIFT_NAME(LoginManagerLogger)
                                andExistingState:(nullable NSDictionary<NSString *, id> *)existingState
                                          logger:(nullable FBSDKLoginManagerLogger *)logger;
 
-- (void)willAttemptAppSwitchingBehavior;
+- (void)willAttemptAppSwitchingBehaviorWithUrlScheme:(NSString *)urlScheme;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 

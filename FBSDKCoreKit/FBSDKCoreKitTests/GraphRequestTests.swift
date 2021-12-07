@@ -136,16 +136,16 @@ final class GraphRequestTests: XCTestCase {
       GraphRequest(graphPath: path, parameters: [:], flags: []),
       GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .get)
     ]
-    .forEach {
-      verifyRequest(
-        $0,
-        expectedGraphPath: path,
-        expectedParameters: [:],
-        expectedTokenString: nil,
-        expectedVersion: version,
-        expectedMethod: .get
-      )
-    }
+      .forEach {
+        verifyRequest(
+          $0,
+          expectedGraphPath: path,
+          expectedParameters: [:],
+          expectedTokenString: nil,
+          expectedVersion: version,
+          expectedMethod: .get
+        )
+      }
   }
 
   func testGraphRequestGETWithNonEmptyParameters() {
@@ -154,16 +154,16 @@ final class GraphRequestTests: XCTestCase {
       GraphRequest(graphPath: path, parameters: parameters, flags: []),
       GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .get)
     ]
-    .forEach {
-      verifyRequest(
-        $0,
-        expectedGraphPath: path,
-        expectedParameters: parameters,
-        expectedTokenString: nil,
-        expectedVersion: version,
-        expectedMethod: .get
-      )
-    }
+      .forEach {
+        verifyRequest(
+          $0,
+          expectedGraphPath: path,
+          expectedParameters: parameters,
+          expectedTokenString: nil,
+          expectedVersion: version,
+          expectedMethod: .get
+        )
+      }
   }
 
   func testDefaultPOSTParameters() {
@@ -183,16 +183,16 @@ final class GraphRequestTests: XCTestCase {
       GraphRequest(graphPath: path, parameters: [:], httpMethod: .post),
       GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .post)
     ]
-    .forEach {
-      verifyRequest(
-        $0,
-        expectedGraphPath: path,
-        expectedParameters: [:],
-        expectedTokenString: nil,
-        expectedVersion: version,
-        expectedMethod: .post
-      )
-    }
+      .forEach {
+        verifyRequest(
+          $0,
+          expectedGraphPath: path,
+          expectedParameters: [:],
+          expectedTokenString: nil,
+          expectedVersion: version,
+          expectedMethod: .post
+        )
+      }
   }
 
   func testGraphRequestPOSTWithNonEmptyParameters() {
@@ -200,16 +200,16 @@ final class GraphRequestTests: XCTestCase {
       GraphRequest(graphPath: path, parameters: parameters, httpMethod: .post),
       GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .post)
     ]
-    .forEach {
-      verifyRequest(
-        $0,
-        expectedGraphPath: path,
-        expectedParameters: parameters,
-        expectedTokenString: nil,
-        expectedVersion: version,
-        expectedMethod: .post
-      )
-    }
+      .forEach {
+        verifyRequest(
+          $0,
+          expectedGraphPath: path,
+          expectedParameters: parameters,
+          expectedTokenString: nil,
+          expectedVersion: version,
+          expectedMethod: .post
+        )
+      }
   }
 
   func testSerializeURL() {

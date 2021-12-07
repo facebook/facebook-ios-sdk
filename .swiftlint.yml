@@ -27,7 +27,11 @@ nesting:
 private_outlet:
   allow_private_set: true
 file_name:
-  excluded: [Enums+Extensions.swift]
+  excluded: [
+    Enums+Extensions.swift,
+    BridgeAPI+ApplicationOpenUrlTests.swift,
+    BridgeAPI+SessionCompletionHandlerTests.swift
+  ]
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"

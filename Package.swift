@@ -45,8 +45,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBAEMKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBAEMKit-Static_XCFramework.zip",
-                checksum: "41abd6a96538472de68b09e4e0aa9567f75f2ab3caef8ba1d8e83f18cf17e297"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBAEMKit-Static_XCFramework.zip",
+                checksum: "d3de558731ba281d9555002c7892ebc735232df55f2f5f3faf0bce64ca0ef51e"
             )
         }
     }
@@ -61,8 +61,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBSDKCoreKit_Basics",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKCoreKit_Basics-Static_XCFramework.zip",
-                checksum: "d3fde61b8e3ea778a9abafcda05f4f6b2896b9b628932defc719a02f71bd1b2a"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBSDKCoreKit_Basics-Static_XCFramework.zip",
+                checksum: "ab90cdc8b3973da19be9b1a120807c0189adad1b0e34dc9534170bfcef9d3f55"
             )
         }
     }
@@ -77,8 +77,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBSDKCoreKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKCoreKit-Static_XCFramework.zip",
-                checksum: "f10353c07cebbe39518a16eccd2c8fed83f61727fb7d3ea0f59f15df1485be17"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBSDKCoreKit-Static_XCFramework.zip",
+                checksum: "f8b57bfbd797c3296b610b75767c1531d66b5f6c23b9865aa688124da1ea20ac"
             )
         }
     }
@@ -93,8 +93,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBSDKLoginKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKLoginKit-Static_XCFramework.zip",
-                checksum: "b2d589f1dfeea29d1981a9b4bb716900a27f64f99ec9b37e5775c6a821794eed"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBSDKLoginKit-Static_XCFramework.zip",
+                checksum: "da310bab209675808ea0923ab428e3109b7a838f145f3e03a3516e5f5e25545c"
             )
         }
     }
@@ -109,8 +109,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBSDKShareKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKShareKit-Static_XCFramework.zip",
-                checksum: "178268c9d468f6b72bb07f44c2f26da8aaa5e063d9e5131bf176bbb3e097544b"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBSDKShareKit-Static_XCFramework.zip",
+                checksum: "d9c386a2ecbf2e766ceed989cb47998ad960694644cf76fd1856d74cfca9a1d2"
             )
         }
     }
@@ -125,8 +125,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FacebookGamingServices",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FacebookGamingServices-Static_XCFramework.zip",
-                checksum: "d2ffe5a09965e9efa85c61e6ef0746f00eb6fe0a8c1d86f68b15f0501c0b4894"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FacebookGamingServices-Static_XCFramework.zip",
+                checksum: "8e41800362a95f6e46039e9724d909e083879382fdca68eb41be053e8f903123"
             )
         }
     }
@@ -141,8 +141,8 @@ struct BinaryTargets {
         case .remote:
             return .binaryTarget(
                 name: "FBSDKGamingServicesKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKGamingServicesKit-Static_XCFramework.zip",
-                checksum: "9445055e3ae5735c47d3c1d056391e1db68b06d804fddab4c7c7bf17cf3c37ac"
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.2.0/FBSDKGamingServicesKit-Static_XCFramework.zip",
+                checksum: "4e3458a9fec19f5e0b922c4d4565b615b8d40685cbdff4b90ed6bed893b70f79"
             )
         }
     }

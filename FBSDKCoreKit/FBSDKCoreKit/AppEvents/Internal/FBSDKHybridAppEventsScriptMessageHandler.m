@@ -12,6 +12,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppEventsWKWebViewKeys.h"
 #import "FBSDKEventLogging.h"
 

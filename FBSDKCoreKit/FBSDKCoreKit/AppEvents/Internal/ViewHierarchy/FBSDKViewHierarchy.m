@@ -494,7 +494,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
   }
 
   NSString *text = [FBSDKViewHierarchy getText:obj];
-  return text.length > 0 && [FBSDKAppEventsUtility isSensitiveUserData:text];
+  return text.length > 0 && [FBSDKAppEventsUtility.shared isSensitiveUserData:text];
 }
 
 + (nullable NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode

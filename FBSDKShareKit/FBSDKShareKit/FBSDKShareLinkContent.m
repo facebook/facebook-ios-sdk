@@ -47,16 +47,6 @@
   return self;
 }
 
-#pragma mark - Setters
-
-- (void)setPeopleIDs:(NSArray<NSString *> *)peopleIDs
-{
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
-  if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
-    _peopleIDs = [peopleIDs copy];
-  }
-}
-
 #pragma mark - FBSDKSharingContent
 
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters

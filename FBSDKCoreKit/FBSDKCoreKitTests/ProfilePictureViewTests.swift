@@ -24,7 +24,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfile() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
 
     view._updateImage()
 
@@ -43,7 +43,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithAccessTokenWithProfile() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
 
     view._updateImage()
 
@@ -135,7 +135,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testReceivingProfileNotification() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
     let notification = Notification(
       name: .ProfileDidChange,
       object: nil,
@@ -155,7 +155,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithImageURL() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
 
     view._updateImageWithProfile()
 

@@ -70,14 +70,14 @@ class FBSDKJSONValueTests: XCTestCase {
   func testFieldMatchers() {
     var error: NSError?
     let jsonValue = FBSDKCreateJSONFromString("""
-    [
-      1,
-      "hi",
-      null,
-      [1, 2, 3],
-      {"key": "value"}
-    ]
-    """, &error)
+      [
+        1,
+        "hi",
+        null,
+        [1, 2, 3],
+        {"key": "value"}
+      ]
+      """, &error)
 
     var actual = [FBSDKJSONField]()
     jsonValue?.matchArray({ array in

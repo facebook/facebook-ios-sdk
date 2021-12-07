@@ -1281,7 +1281,7 @@ class SettingsTests: XCTestCase {
 
   func testInitialAccessForCachablePropertyWithNonEmptyCache() {
     // Using false because it is not the default value for `isAutoInitializationEnabled`
-    userDefaultsSpy.capturedValues = [ "FacebookAutoLogAppEventsEnabled": false ]
+    userDefaultsSpy.capturedValues = ["FacebookAutoLogAppEventsEnabled": false]
 
     XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
@@ -1624,7 +1624,8 @@ class SettingsTests: XCTestCase {
     XCTAssertNotEqual(
       date as? Date,
       userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"] as? Date,
-      "Should update set advertiser tracking enabled timesstamp")
+      "Should update set advertiser tracking enabled timesstamp"
+    )
   }
 
   func testIsEventDelayTimerExpired() {

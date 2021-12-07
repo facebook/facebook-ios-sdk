@@ -13,6 +13,7 @@ import FBSDKCoreKit
 public enum ShareTournamentDialogError: Error {
   case invalidAccessToken
   case invalidAuthToken
+  case invalidTournamentID
   case unableToCreateDialogUrl
   case unknownBridgeError
   case errorMessage(String)
@@ -45,6 +46,20 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     delegate: ShareTournamentDialogDelegate
   ) {
     self.init(delegate: delegate, urlOpener: BridgeAPI.shared)
+  }
+
+  /**
+   Attempts to show the share dialog to share an existing tournament
+   - Parameter score: A score to share in the tournament could be a numeric score or time interval
+      dependent on the given tournament score type
+   - Parameter tournamentID: The ID of the  tournament to share and update with the given score
+   - throws  Will throw if an error occurs when attempting to show the dialog
+   */
+  public func show(score: Int, tournamentID: String) throws {
+    guard !tournamentID.isEmpty else {
+      throw ShareTournamentDialogError.invalidTournamentID
+    }
+    try self.show(score: score, tournament: Tournament(identifier: tournamentID))
   }
 
   /**

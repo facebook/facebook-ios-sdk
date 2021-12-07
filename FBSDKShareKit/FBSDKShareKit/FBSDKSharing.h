@@ -85,24 +85,24 @@ NS_SWIFT_NAME(SharingDialog)
  to distinguish between completion of a share and cancellation.
  */
 NS_SWIFT_NAME(SharingDelegate)
-@protocol FBSDKSharingDelegate <NSObject>
+@protocol FBSDKSharingDelegate
 
 /**
-  Sent to the delegate when the share completes without error or cancellation.
+ Sent to the delegate when the share completes without error or cancellation.
  @param sharer The FBSDKSharing that completed.
  @param results The results from the sharer.  This may be nil or empty.
  */
 - (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 
 /**
-  Sent to the delegate when the sharer encounters an error.
+ Sent to the delegate when the sharer encounters an error.
  @param sharer The FBSDKSharing that completed.
  @param error The error.
  */
 - (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error;
 
 /**
-  Sent to the delegate when the sharer is cancelled.
+ Sent to the delegate when the sharer is cancelled.
  @param sharer The FBSDKSharing that completed.
  */
 - (void)sharerDidCancel:(id<FBSDKSharing>)sharer;

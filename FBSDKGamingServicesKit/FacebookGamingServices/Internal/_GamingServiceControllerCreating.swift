@@ -16,10 +16,9 @@ import Foundation
  */
 @objc(FBSDKGamingServiceControllerCreating)
 public protocol _GamingServiceControllerCreating {
-  @objc(createWithServiceType:completion:pendingResult:)
   func create(
-    with serviceType: _GamingServiceType,
-    completion: @escaping GamingServiceResultCompletion,
-    pendingResult: Any?
+    serviceType: _GamingServiceType,
+    pendingResult: [String: Any]?,
+    completion: @escaping GamingServiceResultCompletion
   ) -> _GamingServiceControllerProtocol
 }

@@ -38,7 +38,7 @@ class GamingImageUploaderTests: XCTestCase {
 
   func testDefaultDependencies() {
     XCTAssertTrue(
-      GamingImageUploader.shared.factory is GamingServiceControllerFactory,
+      GamingImageUploader.shared.factory is _GamingServiceControllerFactory,
       "Should use the expected default gaming service controller factory"
     )
     XCTAssertTrue(

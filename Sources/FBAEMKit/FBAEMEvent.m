@@ -69,8 +69,13 @@ static NSString *const AMOUNT_KEY = @"amount";
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
+  NSSet<Class> *classes = [NSSet setWithArray:@[
+    NSDictionary.class,
+    NSNumber.class,
+    NSString.class,
+                           ]];
   NSString *eventName = [decoder decodeObjectOfClass:NSString.class forKey:EVENT_NAME_KEY];
-  NSDictionary<NSString *, NSNumber *> *values = [decoder decodeObjectOfClass:NSDictionary.class forKey:VALUES_KEY];
+  NSDictionary<NSString *, NSNumber *> *values = [decoder decodeObjectOfClasses:classes forKey:VALUES_KEY];
   return [self initWithEventName:eventName values:values];
 }
 

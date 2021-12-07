@@ -6,16 +6,32 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Deprecated
+
+
+- Starting with v12.2.0 apps no longer need to embed numerous custom URL schemes in `LSApplicationQueriesSchemes` for their `Info.plist`.  Only the `fbapi` and `fb-messenger-share-api` custom URL schemes are needed.  With the change to iOS 15 that limits `LSApplicationQueriesSchemes` to 50 schemes, this should relieve some pressure that apps may face when running up against this limit. As part of this change the following symbols are deprecated:
+  - `URLScheme.facebookApp`
+  - `URLScheme.facebookShareExtension`
+  - `URLScheme.masqueradePlayer`
+
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.0...HEAD)
+
+## 12.2.0
+
 ### Fixed
 
+- Fixed NSKeyedUnarchiver validateAllowedClass Warnings in Xcode Console. Fixes #1941 and #1930
 - An implementation bug in `ApplicationDelegate` where added application observers were notified twice for `application:didFinishLaunchingWithOptions:`.
 The return type of `ApplicationDelegate.application:didFinishLaunchingWithOptions:` was also incorrectly stated as, "YES if the url was intended for the Facebook SDK, NO if not". In actuality, the method returns whether there are any application observers that themselves return true from calling their implementation of `application:didFinishLaunchingWithOptions:`.
 This fix means that application observers will now only be notified once per app launch, however, if `ApplicationDelegate.application:didFinishLaunchingWithOptions:` is called after calling `ApplicationDelegate.initializeSDK` then the return type will always be false regardless of any application observers.
+- Using share dialogs via share sheet mode fails to show the dialog (Issue #1938)
+- Fixed: aem_conversion_configs should contain an explicit "fields" parameter (Issue #1933)
 
 ### Deprecated
 - The class-based interface of `AppEvents` has been deprecated. Please use the instance properties and methods on `AppEvents.shared` instead.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.1.0...HEAD)
+[2021-12-01](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.1.0...v12.2.0)
 
 ## 12.1.0
 

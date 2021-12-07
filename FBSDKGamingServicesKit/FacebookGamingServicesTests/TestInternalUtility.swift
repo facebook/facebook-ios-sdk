@@ -26,7 +26,7 @@ class TestInternalUtility: InternalUtilityProtocol {
     returnUrlComponents.host = host
     returnUrlComponents.path = path
 
-    return returnUrlComponents.url ?? URL(string: "www.facebook.com")!// swiftlint:disable:this force_unwrapping
+    return returnUrlComponents.url ?? URL(string: "www.facebook.com")! // swiftlint:disable:this force_unwrapping
   }
 
   func registerTransientObject(_ object: Any) {}
