@@ -11,8 +11,6 @@
 import FBSDKCoreKit
 import XCTest
 
-// swiftformat:disable indent // Will be fixed in 0.49.0
-
 final class ErrorFactoryTests: XCTestCase {
 
   // MARK: - Test Assumptions

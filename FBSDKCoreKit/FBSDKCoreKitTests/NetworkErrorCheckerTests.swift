@@ -13,7 +13,6 @@ final class NetworkErrorCheckerTests: XCTestCase {
   // MARK: - Test Assumptions
 
   private enum Assumptions {
-    // swiftformat:disable indent // Will be fixed in 0.49.0
     static let isNonNetworkErrorByCode = """
       An error without a network error code and no underlying network error is \
       not a network error
@@ -32,7 +31,6 @@ final class NetworkErrorCheckerTests: XCTestCase {
       An error with an underlying error that is a network error is itself a \
       network error
       """
-    // swiftformat:enable indent
   }
 
   // MARK: - Error Codes

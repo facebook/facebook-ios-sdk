@@ -49,7 +49,8 @@ class ContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNotNil(
       FBSDKContextDialogPresenter.switchContextDialog(
         withContent: content,
-        delegate: self)
+        delegate: self
+      )
     )
   }
 
@@ -58,7 +59,8 @@ class ContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNil(
       FBSDKContextDialogPresenter.showSwitchContextDialog(
         withContent: content,
-        delegate: self)
+        delegate: self
+      )
     )
   }
 
@@ -67,7 +69,8 @@ class ContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNotNil(
       FBSDKContextDialogPresenter.showChooseContextDialog(
         withContent: content,
-        delegate: self)
+        delegate: self
+      )
     )
   }
 
