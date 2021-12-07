@@ -213,7 +213,7 @@ class FeatureExtractorTests: XCTestCase {
     )! // swiftlint:disable:this force_unwrapping
 
     var denseFeatureArray: [Int] = []
-    for feature in 0..<30 {
+    for feature in 0 ..< 30 {
       denseFeatureArray.append(Int(denseFeature[feature]))
     }
     XCTAssertEqual(
@@ -223,7 +223,7 @@ class FeatureExtractorTests: XCTestCase {
   }
 
   func testGetDenseFeatureParsing() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       FeatureExtractor.getDenseFeatures(
         Fuzzer.randomize(json: self.viewHierarchy) as! [String: Any] // swiftlint:disable:this force_cast
       )
@@ -271,7 +271,7 @@ class FeatureExtractorTests: XCTestCase {
     )
 
     var nonParseFeatureArray: [Int] = []
-    for idx in 0..<30 {
+    for idx in 0 ..< 30 {
       nonParseFeatureArray.append(Int(nonParseFeature[idx]))
     }
     XCTAssertEqual(
@@ -286,7 +286,7 @@ class FeatureExtractorTests: XCTestCase {
     let parseFeature = FeatureExtractor.parseFeatures(node)
 
     var parseFeatureArray: [Int] = []
-    for idx in 0..<30 {
+    for idx in 0 ..< 30 {
       parseFeatureArray.append(Int(parseFeature[idx]))
     }
 

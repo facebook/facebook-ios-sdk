@@ -209,7 +209,7 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
 
   func testParseShuffledRules() throws {
     let data: NSMutableArray = []
-    for conv in 0...10 {
+    for conv in 0 ... 10 {
       data.add([
         "conversion_value": conv,
         "events": [
@@ -219,8 +219,8 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
         ]
       ])
     }
-    let expectedConvs = [Int](0...10)
-    for _ in 0...1000 {
+    let expectedConvs = [Int](0 ... 10)
+    for _ in 0 ... 1000 {
       let res = try XCTUnwrap(SKAdNetworkConversionConfiguration.parseRules(data.shuffled()))
       var convs: [Int] = []
       for item in res {

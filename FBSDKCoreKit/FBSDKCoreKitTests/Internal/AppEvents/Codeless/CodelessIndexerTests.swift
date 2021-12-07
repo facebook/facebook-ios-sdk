@@ -631,7 +631,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithInvalidResults() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    (1...20).forEach { _ in
+    (1 ... 20).forEach { _ in
       graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, Fuzzer.random, nil)
 
       XCTAssertNil(

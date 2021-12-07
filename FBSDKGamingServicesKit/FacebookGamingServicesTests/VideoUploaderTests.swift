@@ -192,7 +192,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   }
 
   func testExtractOffsetsWithFuzzer() {
-    for _ in 0...100 {
+    for _ in 0 ... 100 {
       let result = [startOffset: Fuzzer.random, endOffset: Fuzzer.random]
       videoUploader._extractOffsets(fromResultDictionary: result)
     }

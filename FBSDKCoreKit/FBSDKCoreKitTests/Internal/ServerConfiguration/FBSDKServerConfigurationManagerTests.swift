@@ -160,7 +160,7 @@ class FBSDKServerConfigurationManagerTests: XCTestCase {
   }
 
   func testParsingResponses() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       ServerConfigurationManager.shared.processLoadRequestResponse(
         RawServerConfigurationResponseFixtures.random,
         error: nil,
