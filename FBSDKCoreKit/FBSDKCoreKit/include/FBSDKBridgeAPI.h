@@ -47,10 +47,6 @@ NS_SWIFT_NAME(shared);
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (void)openURL:(NSURL *)url
-         sender:(nullable id<FBSDKURLOpening>)sender
-        handler:(FBSDKSuccessBlock)handler;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -404,7 +404,7 @@ class BridgeAPITests: XCTestCase {
 
   func testDidFinishLaunchingWithLaunchedUrlWithSourceApplication() {
     let options: [UIApplication.LaunchOptionsKey: Any] = [
-      UIApplication.LaunchOptionsKey.url: self.sampleURL,
+      UIApplication.LaunchOptionsKey.url: sampleURL,
       UIApplication.LaunchOptionsKey.sourceApplication: sampleSource,
       UIApplication.LaunchOptionsKey.annotation: sampleAnnotation
     ]
@@ -431,5 +431,119 @@ class BridgeAPITests: XCTestCase {
       sampleAnnotation,
       "Should pass the annotation to the login manager"
     )
+  }
+
+  // MARK: - Open Url
+
+  func testOpenUrlWithMissingSender() {
+    api.open(
+      sampleURL,
+      sender: nil
+    ) { _, _ in }
+
+    XCTAssertTrue(
+      api.expectingBackground,
+      "Should set expecting background to true when opening a URL"
+    )
+    XCTAssertNil(
+      api.pendingURLOpen,
+      "Should not set the pending url opener if there is no sender"
+    )
+  }
+
+  func testOpenUrlWithSender() {
+    let urlOpener = FBSDKLoginManager()
+    api.open(
+      sampleURL,
+      sender: urlOpener
+    ) { _, _ in }
+
+    XCTAssertTrue(api.expectingBackground, "Should set expecting background to true when opening a URL")
+    XCTAssertTrue(
+      api.pendingURLOpen === urlOpener,
+      "Should set the pending url opener to the sender"
+    )
+  }
+
+  func testOpenUrlWithVersionBelow10WhenApplicationOpens() {
+    processInfo.stubbedOperatingSystemCheckResult = false
+    urlOpener.stubOpen(url: sampleURL, success: true)
+
+    var capturedSuccess = false
+    var capturedError: Error?
+    api.open(
+      sampleURL,
+      sender: nil
+    ) { success, error in
+      capturedSuccess = success
+      capturedError = error
+    }
+
+    XCTAssertTrue(
+      capturedSuccess,
+      "Should call the completion handler with the expected value"
+    )
+    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
+  }
+
+  func testOpenUrlWithVersionBelow10WhenApplicationDoesNotOpen() {
+    processInfo.stubbedOperatingSystemCheckResult = false
+    urlOpener.stubOpen(url: sampleURL, success: false)
+
+    var capturedSuccess = true
+    var capturedError: Error?
+    api.open(
+      sampleURL,
+      sender: nil
+    ) { success, error in
+      capturedSuccess = success
+      capturedError = error
+    }
+
+    XCTAssertFalse(
+      capturedSuccess,
+      "Should call the completion handler with the expected value"
+    )
+    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
+  }
+
+  func testOpenUrlWhenApplicationOpens() {
+    var capturedSuccess = false
+    var capturedError: Error?
+    api.open(
+      sampleURL,
+      sender: nil
+    ) { success, error in
+      capturedSuccess = success
+      capturedError = error
+    }
+
+    urlOpener.capturedOpenUrlCompletion?(true)
+
+    XCTAssertTrue(
+      capturedSuccess,
+      "Should call the completion handler with the expected value"
+    )
+    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
+  }
+
+  func testOpenUrlWhenApplicationDoesNotOpen() {
+    var capturedSuccess = true
+    var capturedError: Error?
+    api.open(
+      sampleURL,
+      sender: nil
+    ) { success, error in
+      capturedSuccess = success
+      capturedError = error
+    }
+
+    urlOpener.capturedOpenUrlCompletion?(false)
+
+    XCTAssertFalse(
+      capturedSuccess,
+      "Should call the completion handler with the expected value"
+    )
+    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
   }
 }
