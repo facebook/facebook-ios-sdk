@@ -68,7 +68,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 - (void)enable
 {
   @try {
-    if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
+    if ([FBSDKAppEventsUtility.shared shouldDropAppEvents]) {
       return;
     }
 

@@ -63,7 +63,7 @@
 {
   [super setUp];
 
-  [FBSDKAppEvents reset];
+  [FBSDKAppEvents.shared reset];
 }
 
 - (void)setUp
@@ -119,7 +119,7 @@
 - (void)tearDown
 {
   [FBSDKSettings.sharedSettings reset];
-  [FBSDKAppEvents reset];
+  [FBSDKAppEvents.shared reset];
   [TestGateKeeperManager reset];
   [self resetTestHelpers];
 
@@ -515,16 +515,16 @@
 - (void)testApplicationTerminatingPersistingStates
 {
   [FBSDKAppEvents.shared setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:nil
-                       isImplicitlyLogged:NO
-                              accessToken:SampleAccessTokens.validToken];
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:nil
-                       isImplicitlyLogged:NO
-                              accessToken:SampleAccessTokens.validToken];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:nil
+               isImplicitlyLogged:NO
+                      accessToken:SampleAccessTokens.validToken];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:nil
+               isImplicitlyLogged:NO
+                      accessToken:SampleAccessTokens.validToken];
   [FBSDKAppEvents.shared applicationMovingFromActiveStateOrTerminating];
 
   XCTAssertTrue(
@@ -540,7 +540,7 @@
 - (void)testUsingAppEventsWithUninitializedSDK
 {
   NSString *foo = @"foo";
-  [FBSDKAppEvents reset];
+  [FBSDKAppEvents.shared reset];
   FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                                     flushPeriodInSeconds:0];
   XCTAssertThrows([FBSDKAppEvents.shared setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
@@ -630,14 +630,14 @@
                                     parameters:nil];
 }
 
-- (void)testInstanceLogEventFilteringOutDeactivatedParameters
+- (void)testLogEventFilteringOutDeactivatedParameters
 {
   NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:parameters
-                       isImplicitlyLogged:NO
-                              accessToken:nil];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:parameters
+               isImplicitlyLogged:NO
+                      accessToken:nil];
   XCTAssertEqualObjects(
     self.eventDeactivationParameterProcessor.capturedEventName,
     self.eventName,
@@ -654,14 +654,14 @@
                                     parameters:parameters];
 }
 
-- (void)testInstanceLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor
+- (void)testLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor
 {
   NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:parameters
-                       isImplicitlyLogged:NO
-                              accessToken:nil];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:parameters
+               isImplicitlyLogged:NO
+                      accessToken:nil];
   XCTAssertEqualObjects(
     self.restrictiveDataFilterParameterProcessor.capturedEventName,
     self.eventName,
@@ -891,11 +891,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:nil
-                       isImplicitlyLogged:NO
-                              accessToken:nil];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:nil
+               isImplicitlyLogged:NO
+                      accessToken:nil];
 
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -915,11 +915,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:YES];
 
-  [FBSDKAppEvents.shared instanceLogEvent:self.eventName
-                               valueToSum:@(self.purchaseAmount)
-                               parameters:nil
-                       isImplicitlyLogged:NO
-                              accessToken:nil];
+  [FBSDKAppEvents.shared logEvent:self.eventName
+                       valueToSum:@(self.purchaseAmount)
+                       parameters:nil
+               isImplicitlyLogged:NO
+                      accessToken:nil];
 
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
   XCTAssertFalse(
@@ -986,7 +986,7 @@
                                     parameters:@{}];
 }
 
-- (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
+- (void)testLogEventWhenAutoLogAppEventsDisabled
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
   [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
