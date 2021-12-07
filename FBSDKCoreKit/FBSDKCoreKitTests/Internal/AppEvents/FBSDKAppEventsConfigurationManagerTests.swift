@@ -106,7 +106,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   // MARK: - Parsing
 
   func testParsingResponses() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       AppEventsConfigurationManager.shared._processResponse(
         RawAppEventsConfigurationResponseFixtures.random,
         error: nil
