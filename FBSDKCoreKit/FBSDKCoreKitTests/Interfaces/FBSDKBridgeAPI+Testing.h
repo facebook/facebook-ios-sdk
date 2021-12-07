@@ -70,7 +70,7 @@ NS_SWIFT_NAME(AuthenticationSession);
 @property (nullable, nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler;
 @property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
 @property (nonatomic) BOOL expectingBackground;
-@property (nonatomic) SFSafariViewController *safariViewController;
+@property (nullable, nonatomic) SFSafariViewController *safariViewController;
 @property (nonatomic) BOOL isDismissingSafariViewController;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
