@@ -121,7 +121,7 @@ class GamingImageUploaderTests: XCTestCase {
     var wasCompletionInvoked = false
     uploader.uploadImage(with: configuration) { success, result, error in
       XCTAssertTrue(success)
-      XCTAssertEqual((error as NSError?), expectedError)
+      XCTAssertEqual(error as NSError?, expectedError)
       XCTAssertEqual(result as? [String: String], expectedDialogResult)
       wasCompletionInvoked = true
     }

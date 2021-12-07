@@ -36,6 +36,7 @@
 --rules redundantLet
 --rules redundantNilInit
 --rules redundantObjc
+--rules redundantParens
 --rules redundantPattern
 --rules redundantReturn
 --rules redundantType

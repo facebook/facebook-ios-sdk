@@ -102,13 +102,13 @@ class CrashShieldTests: XCTestCase {
   func testGetClassNameForClassMethod() {
     let entry1 = "+[FBSDKRestrictiveDataFilterManager crash]+84"
     let className1 = CrashShield._getClassName(entry1)
-    XCTAssertTrue((className1 == "FBSDKRestrictiveDataFilterManager"))
+    XCTAssertTrue(className1 == "FBSDKRestrictiveDataFilterManager")
   }
 
   func testGetClassNameForInstanceMethod() {
     let entry2 = "-[FBSDKRestrictiveDataFilterManager crash]+84"
     let className2 = CrashShield._getClassName(entry2)
-    XCTAssertTrue((className2 == "FBSDKRestrictiveDataFilterManager"))
+    XCTAssertTrue(className2 == "FBSDKRestrictiveDataFilterManager")
   }
 
   func testGetClassNameForIneligibleFormat() {

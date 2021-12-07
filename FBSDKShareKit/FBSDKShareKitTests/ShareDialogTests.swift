@@ -542,7 +542,7 @@ class ShareDialogTests: XCTestCase {
     _ line: UInt = #line
   ) {
     internalURLOpener.computeCanOpenURL = { url in
-      (url.absoluteString != nonSupportedScheme)
+      url.absoluteString != nonSupportedScheme
     }
     settings.appID = "AppID"
     let stubbedRequest = TestBridgeAPIRequest(
@@ -604,7 +604,7 @@ class ShareDialogTests: XCTestCase {
     line: UInt = #line
   ) {
     internalURLOpener.computeCanOpenURL = { url in
-      (url.absoluteString != nonSupportedScheme)
+      url.absoluteString != nonSupportedScheme
     }
 
     let viewController = UIViewController()
