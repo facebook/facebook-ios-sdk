@@ -23,6 +23,7 @@
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKSharePhoto.h"
+#import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingValidation.h"
