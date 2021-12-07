@@ -27,6 +27,7 @@
 --rules linebreakAtEndOfFile
 --rules linebreaks
 --rules preferKeyPath
+--rules redundantBackticks
 --rules redundantBreak
 --rules redundantExtensionACL
 --rules redundantFileprivate
