@@ -55,41 +55,41 @@ class FBSDKMessageDialogTests: XCTestCase {
     appAvailabilityChecker.isMessengerAppInstalled = true
     XCTAssertTrue(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertTrue(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertTrue(dialog.canShow)
 
     appAvailabilityChecker.isMessengerAppInstalled = false
     XCTAssertFalse(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertFalse(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertFalse(dialog.canShow)
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertFalse(dialog.canShow)
   }
 
   func testValidate() {
     dialog = MessageDialog()
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate(), Assumptions.contentValidation)
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     XCTAssertNoThrow(try dialog.validate(), Assumptions.contentValidation)
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertNoThrow(try dialog.validate(), Assumptions.contentValidation)
 
-    dialog.shareContent = ShareModelTestUtility.cameraEffectContent()
+    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
     XCTAssertNil(
       try? dialog.validate(),
       "Should not successfully validate share content that is known to be missing content"
@@ -127,7 +127,7 @@ class FBSDKMessageDialogTests: XCTestCase {
 
   func testShowInvokesDelegateWhenCannotValidate() {
     dialog = MessageDialog(
-      content: ShareModelTestUtility.cameraEffectContent(),
+      content: ShareModelTestUtility.cameraEffectContent,
       delegate: delegate,
       appAvailabilityChecker: appAvailabilityChecker,
       shareDialogConfiguration: shareDialogConfiguration

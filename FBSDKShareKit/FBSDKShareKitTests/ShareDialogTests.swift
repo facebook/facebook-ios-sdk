@@ -119,7 +119,7 @@ class ShareDialogTests: XCTestCase {
   func testCanShowNativeLinkContent() {
     let dialog = createEmptyDialog()
     dialog.mode = .native
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with valid link content should be showable on a native dialog"
@@ -129,7 +129,7 @@ class ShareDialogTests: XCTestCase {
   func testCanShowNativePhotoContent() {
     let dialog = createEmptyDialog()
     dialog.mode = .native
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     TestShareUtility.stubbedValidateShareShouldThrow = true
 
     XCTAssertFalse(
@@ -141,7 +141,7 @@ class ShareDialogTests: XCTestCase {
   func testCanShowNativePhotoContentWithFileURL() {
     let dialog = createEmptyDialog()
     dialog.mode = .native
-    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
     XCTAssertTrue(
       dialog.canShow,
       "Photo content with photos that have file urls should be showable on a native dialog"
@@ -152,7 +152,7 @@ class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.mode = .native
     internalURLOpener.canOpenURL = true
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
 
     XCTAssertTrue(
       dialog.canShow,
@@ -173,7 +173,7 @@ class ShareDialogTests: XCTestCase {
   func testShowNativeDoesValidate() {
     let dialog = createEmptyDialog()
     dialog.mode = .native
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     internalURLOpener.canOpenURL = true
 
     XCTAssertFalse(dialog.show())
@@ -183,25 +183,25 @@ class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.mode = .shareSheet
 
-    dialog.shareContent = ShareModelTestUtility.linkContentWithoutQuote()
+    dialog.shareContent = ShareModelTestUtility.linkContentWithoutQuote
     XCTAssertNoThrow(
       try dialog.validate(),
       "Should not throw an error when validating link content without quotes"
     )
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     XCTAssertNoThrow(
       try dialog.validate(),
       "Should not throw an error when validating photo content with images"
     )
 
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertThrowsError(
       try dialog.validate(),
       "Should throw an error when validating photo content on a share sheet"
     )
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertThrowsError(
       try dialog.validate(),
       "Should throw an error when validating video content without a preview photo on a share sheet"
@@ -216,20 +216,20 @@ class ShareDialogTests: XCTestCase {
       "A dialog without share content should be showable in a browser"
     )
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with link content should be showable in a browser"
     )
 
     AccessToken.current = SampleAccessTokens.validToken
-    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with photo content with file urls should be showable in a browser when there is a current access token"
     )
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with video content without a preview photo should be showable in a browser when there is a current access token" // swiftlint:disable:this line_length
@@ -240,10 +240,10 @@ class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.mode = .browser
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     AccessToken.current = SampleAccessTokens.validToken
     XCTAssertNoThrow(try dialog.validate())
     AccessToken.current = nil
@@ -254,7 +254,7 @@ class ShareDialogTests: XCTestCase {
     TestShareUtility.reset()
 
     TestShareUtility.stubbedTestShareContainsVideos = true
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertThrowsError(try dialog.validate())
   }
 
@@ -266,7 +266,7 @@ class ShareDialogTests: XCTestCase {
       "A dialog without share content should be showable on web"
     )
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with link content should be showable on web"
@@ -275,14 +275,14 @@ class ShareDialogTests: XCTestCase {
     AccessToken.current = SampleAccessTokens.validToken
     TestShareUtility.stubbedTestShareContainsPhotos = true
     TestShareUtility.stubbedValidateShareShouldThrow = true
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertFalse(
       dialog.canShow,
       "A dialog with photos should not be showable on web"
     )
     TestShareUtility.reset()
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     TestShareUtility.stubbedTestShareContainsMedia = true
     XCTAssertFalse(
       dialog.canShow,
@@ -294,11 +294,11 @@ class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.mode = .web
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
     AccessToken.current = SampleAccessTokens.validToken
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     TestShareUtility.stubbedValidateShareShouldThrow = true
     XCTAssertThrowsError(
       try dialog.validate(),
@@ -306,7 +306,7 @@ class ShareDialogTests: XCTestCase {
     )
     TestShareUtility.reset()
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     TestShareUtility.stubbedTestShareContainsPhotos = true
     XCTAssertThrowsError(
       try dialog.validate(),
@@ -314,7 +314,7 @@ class ShareDialogTests: XCTestCase {
     )
     TestShareUtility.reset()
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
     TestShareUtility.stubbedTestShareContainsPhotos = true
     XCTAssertThrowsError(
       try dialog.validate(),
@@ -322,7 +322,7 @@ class ShareDialogTests: XCTestCase {
     )
     TestShareUtility.reset()
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     TestShareUtility.stubbedTestShareContainsMedia = true
     XCTAssertThrowsError(
       try dialog.validate(),
@@ -347,19 +347,19 @@ class ShareDialogTests: XCTestCase {
       "A dialog without content should be showable in a browser feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with link content should be showable in a browser feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertFalse(
       dialog.canShow,
       "A dialog with photo content should not be showable in a browser feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertFalse(
       dialog.canShow,
       "A dialog with video content that has no preview photo should not be showable in a browser feed"
@@ -369,13 +369,13 @@ class ShareDialogTests: XCTestCase {
   func testValidateFeedBrowser() throws {
     let dialog = createEmptyDialog()
     dialog.mode = .feedBrowser
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertThrowsError(try dialog.validate())
   }
 
@@ -388,19 +388,19 @@ class ShareDialogTests: XCTestCase {
       "A dialog without content should be showable in a web feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with link content should be showable in a web feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.photoContent()
+    dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertFalse(
       dialog.canShow,
       "A dialog with photo content should not be showable in a web feed"
     )
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertFalse(
       dialog.canShow,
       "A dialog with video content and no preview photo should not be showable in a web feed"
@@ -410,19 +410,19 @@ class ShareDialogTests: XCTestCase {
   func testValidateFeedWeb() throws {
     let dialog = createEmptyDialog()
     dialog.mode = .feedWeb
-    dialog.shareContent = ShareModelTestUtility.linkContent()
+    dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages()
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertThrowsError(try dialog.validate())
   }
 
   func testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable() {
     let dialog = createEmptyDialog()
-    let content = ShareModelTestUtility.linkContent()
+    let content = ShareModelTestUtility.linkContent
     content.hashtag = Hashtag("#hashtag")
     TestShareUtility.stubbedHashtagString = "#hashtag"
     content.quote = "a quote"
@@ -445,7 +445,7 @@ class ShareDialogTests: XCTestCase {
 
   func testCameraShareModesWhenNativeAvailable() throws {
     let dialog = createEmptyDialog()
-    dialog.shareContent = ShareModelTestUtility.cameraEffectContent()
+    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
     internalURLOpener.canOpenURL = true
     internalUtility.isFacebookAppInstalled = true
 
@@ -475,7 +475,7 @@ class ShareDialogTests: XCTestCase {
 
   func testCameraShareModesWhenNativeUnavailable() {
     let dialog = createEmptyDialog()
-    dialog.shareContent = ShareModelTestUtility.cameraEffectContent()
+    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
 
     dialog.mode = .automatic
     XCTAssertThrowsError(try dialog.validate())
@@ -485,7 +485,7 @@ class ShareDialogTests: XCTestCase {
     internalUtility.isFacebookAppInstalled = true
 
     validate(
-      shareContent: ShareModelTestUtility.linkContent(),
+      shareContent: ShareModelTestUtility.linkContent,
       expectValid: true,
       expectShow: true,
       mode: .shareSheet,
@@ -497,7 +497,7 @@ class ShareDialogTests: XCTestCase {
     TestShareUtility.stubbedValidateShareShouldThrow = true
 
     validate(
-      shareContent: ShareModelTestUtility.mediaContent(),
+      shareContent: ShareModelTestUtility.mediaContent,
       expectValid: false,
       expectShow: false,
       mode: .shareSheet,
@@ -509,7 +509,7 @@ class ShareDialogTests: XCTestCase {
     internalUtility.isFacebookAppInstalled = true
 
     validate(
-      shareContent: ShareModelTestUtility.mediaContent(),
+      shareContent: ShareModelTestUtility.mediaContent,
       expectValid: true,
       expectShow: true,
       mode: .shareSheet,
@@ -519,7 +519,7 @@ class ShareDialogTests: XCTestCase {
 
   func testThatValidateWithErrorReturnsFalseForMMPWithMoreThan1Video() {
     validate(
-      shareContent: ShareModelTestUtility.multiVideoMediaContent(),
+      shareContent: ShareModelTestUtility.multiVideoMediaContent,
       expectValid: false,
       expectShow: false,
       mode: .shareSheet,

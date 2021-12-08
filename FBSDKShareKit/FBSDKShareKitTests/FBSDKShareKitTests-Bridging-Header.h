@@ -22,7 +22,6 @@
 #import "FBSDKShareInternalURLOpening.h"
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareLinkContent.h"
-#import "FBSDKShareModelTestUtility.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareUtility.h"

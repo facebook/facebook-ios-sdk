@@ -11,13 +11,13 @@ import XCTest
 final class CameraEffectArgumentsTests: XCTestCase {
 
   func testCopy() {
-    let arguments = ShareModelTestUtility.cameraEffectArguments()
+    let arguments = ShareModelTestUtility.cameraEffectArguments
     XCTAssertEqual(arguments.copy() as? CameraEffectArguments, arguments)
   }
 
   @available(iOS 11.0, *)
   func testCoding() throws {
-    let arguments = ShareModelTestUtility.cameraEffectArguments()
+    let arguments = ShareModelTestUtility.cameraEffectArguments
     let data = NSKeyedArchiver.archivedData(withRootObject: arguments)
 
     let unarchivedArguments = try NSKeyedUnarchiver.unarchivedObject(ofClass: CameraEffectArguments.self, from: data)

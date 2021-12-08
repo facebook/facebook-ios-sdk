@@ -11,32 +11,32 @@ import XCTest
 class SharePhotoTests: XCTestCase {
 
   func testImageProperties() {
-    let photo = ShareModelTestUtility.photoWithImage()
-    XCTAssertEqual(photo.image, ShareModelTestUtility.photoImage())
+    let photo = ShareModelTestUtility.photoWithImage
+    XCTAssertEqual(photo.image, ShareModelTestUtility.photoImage)
     XCTAssertNil(photo.imageURL)
-    XCTAssertEqual(photo.isUserGenerated, ShareModelTestUtility.photoUserGenerated())
+    XCTAssertEqual(photo.isUserGenerated, ShareModelTestUtility.isPhotoUserGenerated)
   }
 
   func testImageURLProperties() {
-    let photo = ShareModelTestUtility.photoWithImageURL()
+    let photo = ShareModelTestUtility.photoWithImageURL
     XCTAssertNil(photo.image)
-    XCTAssertEqual(photo.imageURL, ShareModelTestUtility.photoImageURL())
-    XCTAssertEqual(photo.isUserGenerated, ShareModelTestUtility.photoUserGenerated())
+    XCTAssertEqual(photo.imageURL, ShareModelTestUtility.photoImageURL)
+    XCTAssertEqual(photo.isUserGenerated, ShareModelTestUtility.isPhotoUserGenerated)
   }
 
   func testImageCopy() {
-    let photo = ShareModelTestUtility.photoWithImage()
+    let photo = ShareModelTestUtility.photoWithImage
     XCTAssertEqual(photo.copy() as? SharePhoto, photo)
   }
 
   func testImageURLCopy() {
-    let photo = ShareModelTestUtility.photoWithImageURL()
+    let photo = ShareModelTestUtility.photoWithImageURL
     XCTAssertEqual(photo.copy() as? SharePhoto, photo)
   }
 
   func testInequality() throws {
-    let photo1 = ShareModelTestUtility.photoWithImage()
-    let photo2 = ShareModelTestUtility.photoWithImageURL()
+    let photo1 = ShareModelTestUtility.photoWithImage
+    let photo2 = ShareModelTestUtility.photoWithImageURL
     XCTAssertNotEqual(photo1.hash, photo2.hash)
     XCTAssertNotEqual(photo1, photo2)
 
@@ -49,7 +49,7 @@ class SharePhotoTests: XCTestCase {
   }
 
   func testCoding() throws {
-    let photo = ShareModelTestUtility.photoWithImageURL()
+    let photo = ShareModelTestUtility.photoWithImageURL
     let data = NSKeyedArchiver.archivedData(withRootObject: photo)
     let unarchivedPhoto: SharePhoto
     if #available(iOS 11.0, *) {

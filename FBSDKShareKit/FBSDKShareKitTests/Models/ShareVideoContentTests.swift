@@ -20,7 +20,7 @@ class ShareVideoContentTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    content = ShareModelTestUtility.videoContentWithoutPreviewPhoto()
+    content = ShareModelTestUtility.videoContentWithoutPreviewPhoto
   }
 
   override func tearDown() {
@@ -30,17 +30,17 @@ class ShareVideoContentTests: XCTestCase {
   }
 
   func testProperties() {
-    let content = ShareModelTestUtility.videoContentWithPreviewPhoto()
-    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL())
-    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs())
-    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID())
-    XCTAssertEqual(content.ref, ShareModelTestUtility.ref())
-    XCTAssertEqual(content.video, ShareModelTestUtility.videoWithPreviewPhoto())
-    XCTAssertEqual(content.video.previewPhoto, ShareModelTestUtility.videoWithPreviewPhoto().previewPhoto)
+    let content = ShareModelTestUtility.videoContentWithPreviewPhoto
+    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL)
+    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs)
+    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID)
+    XCTAssertEqual(content.ref, ShareModelTestUtility.ref)
+    XCTAssertEqual(content.video, ShareModelTestUtility.videoWithPreviewPhoto)
+    XCTAssertEqual(content.video.previewPhoto, ShareModelTestUtility.videoWithPreviewPhoto.previewPhoto)
   }
 
   func testCopy() {
-    let content = ShareModelTestUtility.videoContentWithPreviewPhoto()
+    let content = ShareModelTestUtility.videoContentWithPreviewPhoto
     XCTAssertEqual(content.copy() as? ShareVideoContent, content)
   }
 
@@ -113,7 +113,7 @@ class ShareVideoContentTests: XCTestCase {
   func testValidationWithNonVideoURL() {
     content = ShareVideoContent()
     content.video = ShareVideo()
-    content.video.videoURL = ShareModelTestUtility.photoImageURL()
+    content.video.videoURL = ShareModelTestUtility.photoImageURL
     XCTAssertNotNil(content)
 
     XCTAssertThrowsError(
@@ -131,7 +131,7 @@ class ShareVideoContentTests: XCTestCase {
   }
 
   func testValidationWithNetworkVideoURL() {
-    let video = ShareVideo(videoURL: ShareModelTestUtility.videoURL())
+    let video = ShareVideo(videoURL: ShareModelTestUtility.videoURL)
     content.video = video
     XCTAssertNoThrow(try ShareUtility.validateShare(content, bridgeOptions: []))
   }
