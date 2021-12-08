@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 - Duplicate symbol error when using Swift Package Manager with the `ObjC` linker flag (issue #1972)
+- Issue using SPM for tvOS projects (issue #1936)
 
 [2021-12-08](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.2.1) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.0...v12.2.1)
