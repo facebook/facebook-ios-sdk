@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <UIKit/UIKit.h>
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
+ #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,3 +25,5 @@ NS_SWIFT_NAME(AEMSettings)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif
