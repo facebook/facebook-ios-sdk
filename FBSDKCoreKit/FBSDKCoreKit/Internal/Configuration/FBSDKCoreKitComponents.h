@@ -82,6 +82,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
+@property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
 @property (nonatomic, readonly) id applicationActivationNotifier;
 @property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
@@ -155,6 +156,7 @@ NS_SWIFT_NAME(CoreKitComponents)
             appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
                     appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+                          appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
              applicationActivationNotifier:(id)applicationActivationNotifier
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet

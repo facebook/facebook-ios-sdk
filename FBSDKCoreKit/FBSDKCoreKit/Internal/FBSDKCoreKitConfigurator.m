@@ -122,7 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
                                     atePublisherFactory:self.components.atePublisherFactory
                                  appEventsStateProvider:self.components.appEventsStateProvider
                                    advertiserIDProvider:self.components.advertiserIDProvider
-                                          userDataStore:self.components.userDataStore];
+                                          userDataStore:self.components.userDataStore
+                                       appEventsUtility:self.components.appEventsUtility];
 }
 
 - (void)configureAppEventsConfigurationManager

@@ -175,6 +175,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.userDataStore,
       "AppEvents should not have a user data store by default"
     )
+    XCTAssertNil(
+      AppEvents.shared.appEventsUtility,
+      "AppEvents should not have an app events utility by default"
+    )
 
     configurator.configureTargets()
 
@@ -245,6 +249,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.userDataStore === components.userDataStore,
       "AppEvents should be configured with the user data store"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.appEventsUtility === components.appEventsUtility,
+      "AppEvents should be configured with the app events utility"
     )
   }
 

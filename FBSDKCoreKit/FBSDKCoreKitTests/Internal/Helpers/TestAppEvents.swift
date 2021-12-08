@@ -60,6 +60,8 @@ class TestAppEvents: TestEventLogger,
   var capturedSKAdNetworkReporter: AppEventsReporter?
   var capturedUserDataStore: UserDataPersisting?
   var capturedAEMReporter: AEMReporterProtocol.Type?
+  // swiftlint:disable:next line_length
+  var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
 
   // swiftlint:disable function_parameter_count
   func configure(
@@ -79,7 +81,9 @@ class TestAppEvents: TestEventLogger,
     atePublisherFactory: ATEPublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
     advertiserIDProvider: AdvertiserIDProviding,
-    userDataStore: UserDataPersisting
+    userDataStore: UserDataPersisting,
+    // swiftlint:disable:next line_length
+    appEventsUtility: AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -98,6 +102,7 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedAdvertiserIDProvider = advertiserIDProvider
     capturedUserDataStore = userDataStore
+    capturedAppEventsUtility = appEventsUtility
   }
 
   func configureNonTVComponentsWith(

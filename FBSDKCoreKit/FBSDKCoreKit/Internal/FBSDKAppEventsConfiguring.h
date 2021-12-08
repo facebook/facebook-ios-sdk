@@ -27,6 +27,9 @@
 @protocol FBSDKAppEventsStateProviding;
 @protocol FBSDKAdvertiserIDProviding;
 @protocol FBSDKUserDataPersisting;
+@protocol FBSDKLoggingNotifying;
+@protocol FBSDKAppEventsUtility;
+@protocol FBSDKAppEventDropDetermining;
 
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
@@ -57,7 +60,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                       atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
-                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore;
+                            userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+                         appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility;
 
 #if !TARGET_OS_TV
 

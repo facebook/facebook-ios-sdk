@@ -1154,6 +1154,10 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       appEvents.capturedUserDataStore is UserDataStore,
       "Initializing the SDK should set the expected concrete user data store"
     )
+    XCTAssertTrue(
+      appEvents.capturedAppEventsUtility === AppEventsUtility.shared,
+      "Initializing the SDK should set concrete app events utility"
+    )
   }
 
   // TEMP: added to configurator tests

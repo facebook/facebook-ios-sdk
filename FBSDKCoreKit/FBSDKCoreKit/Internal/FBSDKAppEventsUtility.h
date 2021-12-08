@@ -13,15 +13,14 @@
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKAppEventsUtilityProtocol.h"
 #import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKLoggingNotifying.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FBSDKAccessToken;
-
 NS_SWIFT_NAME(AppEventsUtility)
-@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKLoggingNotifying>
+@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>
 
 #if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
@@ -30,7 +29,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 
 @property (class, nonatomic) FBSDKAppEventsUtility *shared;
 @property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
-@property (nonatomic, readonly) NSTimeInterval unixTimeNow;
 @property (nonatomic, readonly) BOOL isDebugBuild;
 @property (nonatomic, readonly) BOOL shouldDropAppEvents;
 @property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
@@ -41,14 +39,8 @@ NS_SWIFT_NAME(AppEventsUtility)
                                                                        userID:(nullable NSString *)userID
                                                                      userData:(nullable NSString *)userData;
 
-- (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
-- (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
-- (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
-                      loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
-- (BOOL)validateIdentifier:(nullable NSString *)identifier;
 - (BOOL)isSensitiveUserData:(NSString *)text;
 - (BOOL)isStandardEvent:(nullable NSString *)event;
-- (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
 
 #if DEBUG && FBTEST
 - (void)reset;

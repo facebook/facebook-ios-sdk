@@ -16,7 +16,6 @@
 #import "FBSDKAppEvents+Testing.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitTests-Swift.h"
@@ -54,6 +53,7 @@
 @property (nonnull, nonatomic) TestAppEventsReporter *skAdNetworkReporter;
 @property (nonnull, nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
 @property (nonnull, nonatomic) TestUserDataStore *userDataStore;
+@property (nonnull, nonatomic) TestAppEventsUtility *appEventsUtility;
 
 @end
 
@@ -106,6 +106,8 @@
   self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
                                       initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   self.userDataStore = [TestUserDataStore new];
+  self.appEventsUtility = [TestAppEventsUtility new];
+  self.appEventsUtility.stubbedIsIdentifierValid = YES;
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestATEPublisher new];
@@ -152,7 +154,8 @@
                                     atePublisherFactory:self.atePublisherFactory
                                  appEventsStateProvider:self.appEventsStateProvider
                                    advertiserIDProvider:self.advertiserIDProvider
-                                          userDataStore:self.userDataStore];
+                                          userDataStore:self.userDataStore
+                                       appEventsUtility:self.appEventsUtility];
 
   [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                             metadataIndexer:self.metadataIndexer
@@ -822,6 +825,7 @@
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
   self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
+  self.appEventsUtility.stubbedTokenStringToUse = token.tokenString;
 
   FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
 
@@ -846,6 +850,7 @@
   self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
+  self.appEventsUtility.stubbedTokenStringToUse = token.tokenString;
 
   [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
