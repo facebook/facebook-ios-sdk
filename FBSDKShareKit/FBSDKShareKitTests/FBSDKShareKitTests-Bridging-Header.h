@@ -20,7 +20,6 @@
 #import "FBSDKShareDialog+Testing.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareInternalURLOpening.h"
-#import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
