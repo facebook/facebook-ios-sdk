@@ -17,6 +17,7 @@ enum TestCoreKitComponents {
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       appEventsStateProvider: TestAppEventsStateProvider(),
       appEventsStateStore: TestAppEventsStateStore(),
+      appEventsUtility: TestAppEventsUtility(),
       applicationActivationNotifier: UninhabitedObject(),
       atePublisherFactory: TestATEPublisherFactory(),
       authenticationTokenWallet: TestAuthenticationTokenWallet.self,

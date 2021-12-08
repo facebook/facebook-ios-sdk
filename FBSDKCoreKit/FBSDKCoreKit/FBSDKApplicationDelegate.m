@@ -745,7 +745,8 @@ static UIApplicationState _applicationState;
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                             advertiserIDProvider:FBSDKAppEventsUtility.shared
-                                   userDataStore:self.userDataStore]; // TEMP: added to configurator
+                                   userDataStore:self.userDataStore
+                                appEventsUtility:FBSDKAppEventsUtility.shared]; // TEMP: added to configurator
 
   FBSDKImpressionLoggerFactory *impressionLoggerFactory = [[FBSDKImpressionLoggerFactory alloc] initWithGraphRequestFactory:graphRequestFactory
                                                                                                                 eventLogger:FBSDKAppEvents.shared

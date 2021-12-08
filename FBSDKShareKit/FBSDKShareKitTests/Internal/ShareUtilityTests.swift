@@ -17,17 +17,17 @@ class ShareUtilityTests: XCTestCase {
 
   func testShareLinkContentValidationWithValidValues() throws {
     let content = ShareLinkContent()
-    content.contentURL = ShareModelTestUtility.contentURL()
+    content.contentURL = ShareModelTestUtility.contentURL
     content.peopleIDs = []
-    content.placeID = ShareModelTestUtility.placeID()
-    content.ref = ShareModelTestUtility.ref()
+    content.placeID = ShareModelTestUtility.placeID
+    content.ref = ShareModelTestUtility.ref
     XCTAssertNotNil(content.shareUUID)
     XCTAssertNoThrow(try content.validate(options: []))
   }
 
   func testShareLinkContentParameters() {
     let content = ShareLinkContent()
-    content.contentURL = ShareModelTestUtility.contentURL()
+    content.contentURL = ShareModelTestUtility.contentURL
     XCTAssertNotNil(content.shareUUID)
     let parameters = ShareUtility.parameters(forShare: content, bridgeOptions: [], shouldFailOnDataError: true)
     XCTAssertEqual(

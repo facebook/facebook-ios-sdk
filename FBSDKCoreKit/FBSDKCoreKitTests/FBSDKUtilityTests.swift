@@ -38,7 +38,7 @@ class FBSDKUtilityTests: XCTestCase {
 
   @available(iOS, deprecated: 9.0)
   func testNewEncodeWorksLikeLegacy() {
-    for num in 0..<256 {
+    for num in 0 ..< 256 {
       let str = String(Character(UnicodeScalar(num)!)) // swiftlint:disable:this force_unwrapping
       if str == "{" || str == "}" {
         continue // Curly braces were not included in legacy URL encode

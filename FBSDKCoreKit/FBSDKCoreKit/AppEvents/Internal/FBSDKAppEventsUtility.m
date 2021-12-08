@@ -72,7 +72,7 @@ static FBSDKAppEventsUtility *_shared;
 
 + (instancetype)shared
 {
-  @synchronized(_shared) {
+  @synchronized(self) {
     if (!_shared) {
       _shared = [self new];
     }

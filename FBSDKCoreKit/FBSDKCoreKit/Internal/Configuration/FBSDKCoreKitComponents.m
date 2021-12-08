@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
             appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
                     appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+                          appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
              applicationActivationNotifier:(id)applicationActivationNotifier
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
@@ -92,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
     _appEventsConfigurationProvider = appEventsConfigurationProvider;
     _appEventsStateProvider = appEventsStateProvider;
     _appEventsStateStore = appEventsStateStore;
+    _appEventsUtility = appEventsUtility;
     _applicationActivationNotifier = applicationActivationNotifier;
     _atePublisherFactory = atePublisherFactory;
     _authenticationTokenWallet = authenticationTokenWallet;

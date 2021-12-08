@@ -70,7 +70,8 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
       atePublisherFactory: TestATEPublisherFactory(),
       appEventsStateProvider: appEventsStateProvider,
       advertiserIDProvider: appEventsUtility,
-      userDataStore: TestUserDataStore()
+      userDataStore: TestUserDataStore(),
+      appEventsUtility: appEventsUtility
     )
   }
 

@@ -197,7 +197,7 @@ class AuthenticationStatusUtilityTests: XCTestCase {
   }
 
   func testHandleResponseWithFuzzyData() {
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       let header = [
         "fb-s": Fuzzer.random.description,
         "some_header_key": Fuzzer.random.description,

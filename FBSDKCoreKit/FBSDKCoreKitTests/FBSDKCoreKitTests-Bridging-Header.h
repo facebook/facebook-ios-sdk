@@ -50,6 +50,7 @@
 #import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppEventsUtility+Testing.h"
+#import "FBSDKAppEventsUtilityProtocol.h"
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkFactory.h"

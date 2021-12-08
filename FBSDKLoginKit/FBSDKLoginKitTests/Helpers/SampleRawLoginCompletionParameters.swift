@@ -28,7 +28,7 @@ enum SampleRawLoginCompletionParameters {
     "user_id": "123",
     "expires": expirationDate,
     "expires_at": expirationDate,
-    "expires_in": (secondsInDay * 60),
+    "expires_in": secondsInDay * 60,
     "data_access_expiration_time": dataExpirationDate,
     "state": "{\"challenge\":\"\(fakeChallenge)\"}",
     "graph_domain": "facebook",

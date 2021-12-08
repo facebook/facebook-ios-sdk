@@ -12,8 +12,8 @@ import XCTest
 class ShareMediaContentTests: XCTestCase {
 
   func testProperties() {
-    let mediaContentMedia = ShareModelTestUtility.mediaContent().media
-    let media = ShareModelTestUtility.media() as? [ShareMedia] ?? []
+    let mediaContentMedia = ShareModelTestUtility.mediaContent.media
+    let media = ShareModelTestUtility.media
 
     for (item1, item2) in zip(media, mediaContentMedia) {
       if let photo1 = item1 as? SharePhoto, let photo2 = item2 as? SharePhoto {
@@ -27,7 +27,7 @@ class ShareMediaContentTests: XCTestCase {
   }
 
   func testCopy() {
-    let content = ShareModelTestUtility.mediaContent()
+    let content = ShareModelTestUtility.mediaContent
     guard let contentCopy = content.copy() as? ShareMediaContent else {
       XCTFail("Unable to make a copy or casting to 'ShareMediaContent' failed")
       return
@@ -38,7 +38,7 @@ class ShareMediaContentTests: XCTestCase {
 
   func testCoding() throws {
     guard
-      let content = ShareModelTestUtility.mediaContent().media.first as? ShareVideo
+      let content = ShareModelTestUtility.mediaContent.media.first as? ShareVideo
     else {
       XCTFail("unable to get an item or casting to 'ShareVideo' failed")
       return

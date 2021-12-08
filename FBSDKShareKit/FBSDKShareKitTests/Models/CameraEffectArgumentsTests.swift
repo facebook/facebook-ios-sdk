@@ -11,13 +11,13 @@ import XCTest
 final class CameraEffectArgumentsTests: XCTestCase {
 
   func testCopy() {
-    let arguments = ShareModelTestUtility.cameraEffectArguments()
+    let arguments = ShareModelTestUtility.cameraEffectArguments
     XCTAssertEqual(arguments.copy() as? CameraEffectArguments, arguments)
   }
 
   @available(iOS 11.0, *)
   func testCoding() throws {
-    let arguments = ShareModelTestUtility.cameraEffectArguments()
+    let arguments = ShareModelTestUtility.cameraEffectArguments
     let data = NSKeyedArchiver.archivedData(withRootObject: arguments)
 
     let unarchivedArguments = try NSKeyedUnarchiver.unarchivedObject(ofClass: CameraEffectArguments.self, from: data)
@@ -31,7 +31,7 @@ final class CameraEffectArgumentsTests: XCTestCase {
     arguments.set("1234", forKey: "string")
     XCTAssertEqual(arguments.string(forKey: "string"), "1234")
     arguments.set(["a", "b", "c"], forKey: "string_array")
-    XCTAssertEqual(arguments.array(forKey: "string_array"), (["a", "b", "c"]))
+    XCTAssertEqual(arguments.array(forKey: "string_array"), ["a", "b", "c"])
     arguments.set([], forKey: "empty_array")
     XCTAssertEqual(arguments.array(forKey: "empty_array"), [])
     assertThrowsSpecificNamed(NSExceptionName.invalidArgumentException) {

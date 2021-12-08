@@ -12,17 +12,17 @@ import XCTest
 class ShareLinkContentTests: XCTestCase {
 
   func testProperties() {
-    let content = ShareModelTestUtility.linkContent()
-    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL())
-    XCTAssertEqual(content.hashtag, ShareModelTestUtility.hashtag())
-    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs())
-    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID())
-    XCTAssertEqual(content.ref, ShareModelTestUtility.ref())
-    XCTAssertEqual(content.quote, ShareModelTestUtility.quote())
+    let content = ShareModelTestUtility.linkContent
+    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL)
+    XCTAssertEqual(content.hashtag, ShareModelTestUtility.hashtag)
+    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs)
+    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID)
+    XCTAssertEqual(content.ref, ShareModelTestUtility.ref)
+    XCTAssertEqual(content.quote, ShareModelTestUtility.quote)
   }
 
   func testCopy() throws {
-    let content = ShareModelTestUtility.linkContent()
+    let content = ShareModelTestUtility.linkContent
     let contentCopy = try XCTUnwrap(
       content.copy() as? ShareLinkContent,
       "Unable to make a copy or casting to 'ShareLinkContent' failed"
@@ -32,7 +32,7 @@ class ShareLinkContentTests: XCTestCase {
   }
 
   func testCoding() {
-    let content = ShareModelTestUtility.linkContent()
+    let content = ShareModelTestUtility.linkContent
     let data = NSKeyedArchiver.archivedData(withRootObject: content)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
@@ -46,7 +46,7 @@ class ShareLinkContentTests: XCTestCase {
   func testValidationWithValidContent() {
     XCTAssertNoThrow(
       try ShareUtility.validateShare(
-        ShareModelTestUtility.linkContent(),
+        ShareModelTestUtility.linkContent,
         bridgeOptions: []
       )
     )

@@ -12,17 +12,17 @@ import XCTest
 class SharePhotoContentTests: XCTestCase {
 
   func testProperties() {
-    let content = ShareModelTestUtility.photoContent()
+    let content = ShareModelTestUtility.photoContent
 
-    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL())
-    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs())
-    XCTAssertEqual(content.photos, ShareModelTestUtility.photos() as? [SharePhoto])
-    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID())
-    XCTAssertEqual(content.ref, ShareModelTestUtility.ref())
+    XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL)
+    XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs)
+    XCTAssertEqual(content.photos, ShareModelTestUtility.photos)
+    XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID)
+    XCTAssertEqual(content.ref, ShareModelTestUtility.ref)
   }
 
   func testCopy() throws {
-    let content = ShareModelTestUtility.photoContent()
+    let content = ShareModelTestUtility.photoContent
     let contentCopy = try XCTUnwrap(
       content.copy() as? SharePhotoContent,
       "Unable to make a copy or casting to 'SharePhotoContent' failed"
@@ -32,7 +32,7 @@ class SharePhotoContentTests: XCTestCase {
   }
 
   func testCoding() {
-    let content = ShareModelTestUtility.photoContent()
+    let content = ShareModelTestUtility.photoContent
     let data = NSKeyedArchiver.archivedData(withRootObject: content)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
@@ -45,11 +45,11 @@ class SharePhotoContentTests: XCTestCase {
 
   func testValidationWithValidContent() {
     let content = SharePhotoContent()
-    content.contentURL = ShareModelTestUtility.contentURL()
-    content.peopleIDs = ShareModelTestUtility.peopleIDs()
-    content.photos = [ShareModelTestUtility.photoWithImage()]
-    content.placeID = ShareModelTestUtility.placeID()
-    content.ref = ShareModelTestUtility.ref()
+    content.contentURL = ShareModelTestUtility.contentURL
+    content.peopleIDs = ShareModelTestUtility.peopleIDs
+    content.photos = [ShareModelTestUtility.photoWithImage]
+    content.placeID = ShareModelTestUtility.placeID
+    content.ref = ShareModelTestUtility.ref
 
     XCTAssertNoThrow(try ShareUtility.validateShare(content, bridgeOptions: []))
   }

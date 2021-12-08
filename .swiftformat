@@ -36,7 +36,9 @@
 --rules redundantLet
 --rules redundantNilInit
 --rules redundantObjc
+--rules redundantParens
 --rules redundantPattern
+--rules redundantReturn
 --rules redundantType
 --rules redundantVoidReturnType
 --rules semicolons
@@ -67,11 +69,10 @@
 
 
 # Options
---swiftversion 5
---indent 2
---ifdef no-indent
---xcodeindentation enabled
---ranges no-space
---importgrouping  "testable-first"
 --header "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
+--ifdef no-indent
+--importgrouping  "testable-first"
+--indent 2
 --indentstrings true
+--swiftversion 5
+--xcodeindentation enabled

@@ -42,7 +42,7 @@ class FBSDKGraphErrorRecoveryProcessorTests: XCTestCase {
   private let attempter = TestErrorRecoveryAttempter()
 
   func testProcessingRandomErrorCategories() {
-    (1..<100).forEach { _ in
+    (1 ..< 100).forEach { _ in
       let error = NSError(domain: "test", code: 0, userInfo: [Keys.errorKey: Fuzzer.random])
       processor.processError(error, request: TestGraphRequest(), delegate: delegate)
     }

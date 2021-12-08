@@ -18,7 +18,6 @@ class TestCrashHandler: NSObject, CrashHandlerProtocol {
   func addObserver(_ observer: CrashObserving) {
     wasAddObserverCalled = true
     self.observer = observer
-    return
   }
 
   func clearCrashReportFiles() {

@@ -67,7 +67,8 @@ class AppEventsPublishATETests: XCTestCase {
       atePublisherFactory: factory,
       appEventsStateProvider: TestAppEventsStateProvider(),
       advertiserIDProvider: TestAdvertiserIDProvider(),
-      userDataStore: TestUserDataStore()
+      userDataStore: TestUserDataStore(),
+      appEventsUtility: TestAppEventsUtility()
     )
 
     appEvents.publishATE()

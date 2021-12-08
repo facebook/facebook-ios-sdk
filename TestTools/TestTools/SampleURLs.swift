@@ -12,6 +12,7 @@ import Foundation
 public enum SampleURLs {
   public static let valid = URL(string: "https://www.example.com")!
   public static let validApp = URL(string: "fb://test.com")!
+  public static let validPNG = URL(string: "https://www.example.com/babyamnimal.png")!
 
   public static func valid(path: String) -> URL {
     valid.appendingPathComponent(path)
