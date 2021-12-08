@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import "FBAEMSettings.h"
 
 static NSString *const APPID_KEY = @"FacebookAppID";
@@ -18,3 +20,5 @@ static NSString *const APPID_KEY = @"FacebookAppID";
 }
 
 @end
+
+#endif
