@@ -6,8 +6,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-### Deprecated
+### Fixed
 
+- Duplicate symbol error when using Swift Package Manager with the `ObjC` linker flag (issue #1972)
+
+### Deprecated
 
 - Starting with v12.2.0 apps no longer need to embed numerous custom URL schemes in `LSApplicationQueriesSchemes` for their `Info.plist`.  Only the `fbapi` and `fb-messenger-share-api` custom URL schemes are needed.  With the change to iOS 15 that limits `LSApplicationQueriesSchemes` to 50 schemes, this should relieve some pressure that apps may face when running up against this limit. As part of this change the following symbols are deprecated:
   - `URLScheme.facebookApp`
@@ -17,6 +20,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.0...HEAD)
 
 ## 12.2.0
+
+Note: There is a known issue with using the `ObjC` linker flag with this version. We are working on a patch fix. If you rely on the `ObjC` linker flag, you will want to wait for the patch fix before upgrading.
 
 ### Fixed
 
