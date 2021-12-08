@@ -65,6 +65,51 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
+  FBAEMKit_TV-Static:
+    type: framework
+    platform: tvOS
+    productName: FBAEMKit
+    sources:
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
+        link: false
+    configFiles:
+      Debug: Configurations/FBAEMKit-tvOS-Static.xcconfig
+      Release: Configurations/FBAEMKit-tvOS-Static.xcconfig
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+  FBAEMKit_TV-Dynamic:
+    type: framework
+    platform: tvOS
+    productName: FBAEMKit
+    sources:
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    configFiles:
+      Debug: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
   FBAEMKitTests:
     type: bundle.unit-test
     platform: iOS
@@ -91,3 +136,11 @@ schemes:
       targets: [FBAEMKitTests]
       coverageTargets:
         - FBAEMKit-Dynamic
+  FBAEMKit_TV-Static:
+    build:
+      targets:
+        FBAEMKit_TV-Static: all
+  FBAEMKit_TV-Dynamic:
+    build:
+      targets:
+        FBAEMKit_TV-Dynamic: all
