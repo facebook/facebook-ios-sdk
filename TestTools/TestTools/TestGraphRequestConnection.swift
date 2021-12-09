@@ -11,7 +11,7 @@ import FBSDKCoreKit
 @objcMembers
 public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
 
-  public typealias Completion = @convention(block) (GraphRequestConnecting, AnyObject?, Error?) -> Void
+  public typealias Completion = @convention(block) (GraphRequestConnecting, Any?, Error?) -> Void
 
   public struct Request {
     public let request: GraphRequestProtocol
