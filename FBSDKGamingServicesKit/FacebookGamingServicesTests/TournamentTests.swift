@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable untyped_error_in_catch
-
 @testable import FacebookGamingServices
 import XCTest
 

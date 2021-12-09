@@ -151,7 +151,6 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testWithFromViewControllerMissingTransitionCoordinator() {
     let spy = ViewControllerSpy.makeDefaultSpy()
     loginManager.stubbedIsAuthenticationUrl = false
@@ -209,7 +208,6 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     XCTAssertTrue(didInvokeHandler)
   }
 
-  // swiftlint:disable:next function_body_length
   func testWithFromViewControllerWithTransitionCoordinator() {
     let spy = ViewControllerSpy.makeDefaultSpy()
     let coordinator = TestViewControllerTransitionCoordinator()

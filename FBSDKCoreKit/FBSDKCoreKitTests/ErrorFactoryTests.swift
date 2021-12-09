@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable file_length
-
 import FBSDKCoreKit
 import XCTest
 

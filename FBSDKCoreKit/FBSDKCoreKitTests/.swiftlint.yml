@@ -1,9 +1,18 @@
 # Overrides for FBSDKCoreKitTests
 
-# Use double the defaults for type_body_length since test classes can get long
+# Use 10x the defaults for these to essentially disable these rules
+# Can't disable in disabled_rules since disabled_rules can't be used alongside opt_in_rules
 type_body_length:
-  warning: 400 # default 200
-  error: 700 # default 350
+  warning: 2000 # default 200
+  error: 3500 # default 350
+
+file_length:
+  warning: 4000 # default 400
+  error: 10000 # default 1000
+
+function_body_length:
+  warning: 400 # default 40
+  error: 1000 # default 100
 
 # Duplicating some settings from the base .swiftlint.yml since nested configurations don't work recursively
 # See: https://github.com/realm/SwiftLint#nested-configurations

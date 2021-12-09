@@ -8,7 +8,7 @@
 
 import Foundation
 
-// swiftlint:disable identifier_name file_length function_parameter_count line_length
+// swiftlint:disable identifier_name function_parameter_count line_length
 
 extension BridgeAPITests {
 
@@ -427,7 +427,7 @@ extension BridgeAPITests {
     )
   }
 
-  // swiftlint:disable:next function_parameter_count function_body_length
+  // swiftlint:disable:next function_parameter_count
   func verifyOpen(
     pendingUrlCanOpenUrl: Bool,
     hasSafariViewController: Bool,

@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_length
+class CodelessIndexerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let dataStore = UserDefaultsSpy()
@@ -811,4 +811,4 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       ]
     )
   }
-} // swiftlint:disable:this file_length
+}

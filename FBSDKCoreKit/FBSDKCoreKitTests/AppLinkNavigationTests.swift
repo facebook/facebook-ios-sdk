@@ -602,4 +602,4 @@ class AppLinkNavigationTests: XCTestCase {
 
     return payload
   }
-} // swiftlint:disable:this file_length
+}

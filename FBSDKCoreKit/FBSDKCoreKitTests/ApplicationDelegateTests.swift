@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body_length
+class ApplicationDelegateTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var notificationCenter: TestNotificationCenter!
@@ -1072,7 +1072,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   // TEMP: added to configurator tests
-  func testInitializingSdkConfiguresAppEvents() throws { // swiftlint:disable:this function_body_length
+  func testInitializingSdkConfiguresAppEvents() throws {
     AppEvents.shared.reset()
     delegate.initializeSDK()
 
@@ -1613,4 +1613,4 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
       "Should inform observers when the application will resign active status"
     )
   }
-} // swiftlint:disable:this file_length
+}

@@ -10,7 +10,7 @@ import TestTools
 import XCTest
 
 @available(iOS 12.2, *)
-class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_body_length
+class PaymentProductRequestorTests: XCTestCase {
 
   var transaction = TestPaymentTransaction(state: .deferred)
   var graphRequestFactory = TestProductsRequestFactory()
@@ -705,4 +705,4 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   }
 
   struct MissingEventParametersError: Error {}
-} // swiftlint:disable:this file_length
+}

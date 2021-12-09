@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
+class ProfileTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var dataStore: UserDefaultsSpy!
   var notificationCenter: TestNotificationCenter!
@@ -893,7 +893,6 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   // MARK: Storage
 
-  // swiftlint:disable:next function_body_length
   func testEncoding() {
     let coder = TestCoder()
     let profile = SampleUserProfiles.validLimited
@@ -981,7 +980,6 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
   }
 
-  // swiftlint:disable:next function_body_length
   func testDecodingEntryWithMethodName() {
     let coder = TestCoder()
     _ = Profile(coder: coder)
@@ -1226,4 +1224,3 @@ class ProfileTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
   }
 }
-// swiftlint:disable:this file_length

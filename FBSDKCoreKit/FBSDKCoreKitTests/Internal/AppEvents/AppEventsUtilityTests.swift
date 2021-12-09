@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_length
+class AppEventsUtilityTests: XCTestCase {
 
   // This test temporarily captures the shared `AppEventsUtility` instance before
   // any tests are run and then replaces it after all tests have completed.
@@ -153,7 +153,7 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
     )
   }
 
-  func testActivityParametersWithUserData() throws { // swiftlint:disable:this function_body_length
+  func testActivityParametersWithUserData() throws {
     let testEmail = "apptest@fb.com"
     let testFirstName = "test_fn"
     let testLastName = "test_ln"
@@ -1029,4 +1029,4 @@ class AppEventsUtilityTests: XCTestCase { // swiftlint:disable:this type_body_le
       "Should provide the information from the device information provider"
     )
   }
-} // swiftlint:disable:this file_length
+}

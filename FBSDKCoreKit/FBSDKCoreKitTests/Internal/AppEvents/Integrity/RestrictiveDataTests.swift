@@ -78,7 +78,7 @@ class RestrictiveDataTests: XCTestCase {
     )
   }
 
-  func testServerResponseWithExtraFields() { // swiftlint:disable:this function_body_length
+  func testServerResponseWithExtraFields() {
     let serverResponse = [
       testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
@@ -403,4 +403,4 @@ class RestrictiveDataTests: XCTestCase {
       )
     }
   }
-} // swiftlint:disable:this file_length
+}

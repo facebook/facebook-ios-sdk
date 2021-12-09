@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ServerConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class ServerConfigurationTests: XCTestCase {
 
   var config = Fixtures.defaultConfig
 
@@ -510,7 +510,7 @@ class ServerConfigurationTests: XCTestCase { // swiftlint:disable:this type_body
     )
   }
 
-  func testEncoding() { // swiftlint:disable:this function_body_length
+  func testEncoding() {
     let coder = TestCoder()
     let errorConfig = ErrorConfiguration(dictionary: nil)
 
@@ -575,7 +575,7 @@ class ServerConfigurationTests: XCTestCase { // swiftlint:disable:this type_body
     XCTAssertEqualDicts(coder.encodedObject["suggestedEventsSetting"] as? [String: Any], config.suggestedEventsSetting)
   }
 
-  func testDecoding() throws { // swiftlint:disable:this function_body_length
+  func testDecoding() throws {
     let decoder = TestCoder()
     config = try XCTUnwrap(ServerConfiguration(coder: decoder))
 
@@ -2089,4 +2089,4 @@ class ServerConfigurationTests: XCTestCase { // swiftlint:disable:this type_body
       XCTFail("RHS Dict is nil", file: file, line: line)
     }
   }
-} // swiftlint:disable:this file_length
+}

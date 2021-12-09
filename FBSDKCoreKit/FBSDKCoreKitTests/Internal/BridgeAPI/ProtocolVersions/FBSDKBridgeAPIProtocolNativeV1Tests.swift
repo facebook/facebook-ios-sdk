@@ -9,7 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-// swiftlint:disable type_body_length
 class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
   let actionID = UUID().uuidString
   let scheme = UUID().uuidString
@@ -585,4 +584,4 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     let data = stubData(with: image)
     return stubDataSerialized(data, tag: "png")
   }
-} // swiftlint:disable:this file_length
+}

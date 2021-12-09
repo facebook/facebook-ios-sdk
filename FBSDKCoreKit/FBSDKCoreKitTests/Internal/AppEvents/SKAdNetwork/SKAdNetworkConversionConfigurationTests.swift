@@ -66,7 +66,7 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
     XCTAssertEqual(1000, config?.timerInterval ?? 0, accuracy: 0.001)
   }
 
-  func testParseRules() throws { // swiftlint:disable:this function_body_length
+  func testParseRules() throws {
     let rules = [
       [
         "conversion_value": 2,

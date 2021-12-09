@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable file_length type_body_length function_body_length
-
 import XCTest
 
 final class CoreKitConfiguratorTests: XCTestCase {

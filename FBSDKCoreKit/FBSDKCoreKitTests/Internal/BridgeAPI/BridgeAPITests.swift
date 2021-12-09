@@ -9,7 +9,6 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable file_length type_body_length
 class BridgeAPITests: XCTestCase {
 
   let sampleSource = "com.example"

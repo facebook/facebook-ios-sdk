@@ -7,7 +7,7 @@
  */
 
 enum TestCoreKitComponents {
-  // swiftlint:disable:next function_body_length
+
   static func makeComponents() -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: TestAccessTokenExpirer(),

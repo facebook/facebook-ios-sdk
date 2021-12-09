@@ -23,7 +23,7 @@ class DynamicFrameworkLoaderTests: XCTestCase {
   let expectedOSStatus = errSecMissingEntitlement
   #endif
 
-  func testLoadingSecureConstants() { // swiftlint:disable:this function_body_length
+  func testLoadingSecureConstants() {
     XCTAssertTrue(
       CFEqual(
         DynamicFrameworkLoader.loadkSecClass().takeRetainedValue(),

@@ -25,7 +25,7 @@ class ErrorConfigurationTests: XCTestCase {
     ],
   ]
 
-  func testErrorConfigurationDefaults() { // swiftlint:disable:this function_body_length
+  func testErrorConfigurationDefaults() {
     let configuration = ErrorConfiguration(dictionary: nil)
 
     XCTAssertEqual(
@@ -100,7 +100,7 @@ class ErrorConfigurationTests: XCTestCase {
     )
   }
 
-  func testErrorConfigurationAdditonalArray() throws { // swiftlint:disable:this function_body_length
+  func testErrorConfigurationAdditonalArray() throws {
     let intermediaryConfiguration = ErrorConfiguration(dictionary: nil)
     intermediaryConfiguration.update(with: rawErrorCodeConfiguration)
     let data = NSKeyedArchiver.archivedData(

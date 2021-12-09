@@ -520,4 +520,4 @@ class AppEventsStateTests: XCTestCase {
       "Should submit events to event processors"
     )
   }
-} // swiftlint:disable:this file_length
+}

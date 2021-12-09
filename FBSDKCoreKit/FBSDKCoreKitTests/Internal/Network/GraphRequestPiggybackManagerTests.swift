@@ -9,8 +9,6 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable function_body_length file_length
-
 class GraphRequestPiggybackManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

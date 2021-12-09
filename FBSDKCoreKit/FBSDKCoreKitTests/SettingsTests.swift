@@ -9,7 +9,6 @@
 import FBSDKCoreKit
 import XCTest
 
-// swiftlint:disable:next type_body_length
 class SettingsTests: XCTestCase {
   let logger = TestEventLogger()
   let appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
@@ -1702,4 +1701,4 @@ class SettingsTests: XCTestCase {
     bundle = TestBundle()
     userDefaultsSpy = UserDefaultsSpy()
   }
-} // swiftlint:disable:this file_length
+}

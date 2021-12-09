@@ -59,7 +59,6 @@ final class PermissionTests: XCTestCase {
     PermissionMapping(permission: .custom("test_permission"), name: "test_permission")
   ]
 
-  // swiftlint:disable:next function_body_length
   func testCases() {
     for mapping in mappings {
       switch mapping.permission {

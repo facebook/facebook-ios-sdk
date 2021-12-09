@@ -9,7 +9,6 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length
 class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
   // swiftlint:disable implicitly_unwrapped_optional
@@ -715,4 +714,4 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       line: line
     )
   }
-} // swiftlint:disable:this file_length
+}
