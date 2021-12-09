@@ -12,7 +12,7 @@ NS_SWIFT_NAME(DeviceInformationProviding)
 @protocol FBSDKDeviceInformationProviding
 
 @property (nonatomic, readonly) NSString *storageKey;
-@property (nonatomic, readonly) NSString *encodedDeviceInfo;
+@property (nullable, nonatomic, readonly) NSString *encodedDeviceInfo;
 
 @end
 
