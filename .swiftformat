@@ -26,6 +26,7 @@
 --rules leadingDelimiters
 --rules linebreakAtEndOfFile
 --rules linebreaks
+--rules modifierOrder
 --rules preferKeyPath
 --rules redundantBackticks
 --rules redundantBreak
@@ -74,5 +75,6 @@
 --importgrouping  "testable-first"
 --indent 2
 --indentstrings true
+--modifierorder open, override
 --swiftversion 5
 --xcodeindentation enabled
