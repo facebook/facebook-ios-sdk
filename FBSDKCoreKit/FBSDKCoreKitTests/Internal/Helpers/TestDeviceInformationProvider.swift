@@ -8,14 +8,14 @@
 
 class TestDeviceInformationProvider: DeviceInformationProviding {
   var storageKey = "storageKey"
-  var stubbedEncodedDeviceInfo: String
+  var stubbedEncodedDeviceInfo: String?
   var encodedDeviceInfoWasCalled = false
 
-  init(stubbedEncodedDeviceInfo: String = "") {
+  init(stubbedEncodedDeviceInfo: String? = nil) {
     self.stubbedEncodedDeviceInfo = stubbedEncodedDeviceInfo
   }
 
-  var encodedDeviceInfo: String {
+  var encodedDeviceInfo: String? {
     encodedDeviceInfoWasCalled = true
 
     return stubbedEncodedDeviceInfo

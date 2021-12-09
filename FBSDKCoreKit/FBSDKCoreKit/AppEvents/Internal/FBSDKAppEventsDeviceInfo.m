@@ -60,7 +60,6 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 // Other state
 @property (nonatomic) long lastGroup1CheckTime;
 @property (nonatomic) BOOL isEncodingDirty;
-@property (nonatomic) NSString *encodedDeviceInfo;
 
 // Dependencies
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
@@ -97,7 +96,7 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
 
 #pragma mark - Internal Methods
 
-- (NSString *)encodedDeviceInfo
+- (nullable NSString *)encodedDeviceInfo
 {
   @synchronized(self) {
     BOOL isGroup1Expired = [self _isGroup1Expired];
@@ -113,20 +112,11 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
     }
 
     if (_isEncodingDirty) {
-      self.encodedDeviceInfo = [self _generateEncoding];
+      _encodedDeviceInfo = [self _generateEncoding];
       _isEncodingDirty = NO;
     }
 
     return _encodedDeviceInfo;
-  }
-}
-
-- (void)setEncodedDeviceInfo:(NSString *)encodedDeviceInfo
-{
-  @synchronized(self) {
-    if (![_encodedDeviceInfo isEqualToString:encodedDeviceInfo]) {
-      _encodedDeviceInfo = [encodedDeviceInfo copy];
-    }
   }
 }
 
@@ -201,7 +191,7 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   self.lastGroup1CheckTime = [self unixTimeNow];
 }
 
-- (NSString *)_generateEncoding
+- (nullable NSString *)_generateEncoding
 {
   // Keep a bit of precision on density as it's the most likely to become non-integer.
   NSString *densityString = _density ? [NSString stringWithFormat:@"%.02f", _density] : @"";
@@ -225,7 +215,9 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
     self.timeZoneName ?: @""
   ];
 
-  return [FBSDKBasicUtility JSONStringForObject:arr error:NULL invalidObjectHandler:NULL];
+  return [FBSDKBasicUtility JSONStringForObject:arr
+                                          error:NULL
+                           invalidObjectHandler:NULL];
 }
 
 - (NSTimeInterval)unixTimeNow
