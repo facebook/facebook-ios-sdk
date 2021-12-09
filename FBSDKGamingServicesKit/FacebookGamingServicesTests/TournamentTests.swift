@@ -37,7 +37,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data that is missing an ID")
-    } catch let error {
+    } catch {
       XCTAssert(
         error is DecodingError,
         "Should not decode a tournament from data that is missing an ID"
@@ -56,7 +56,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data with an invalid ID")
-    } catch let error {
+    } catch {
       XCTAssert(error is DecodingError)
     }
   }
@@ -71,7 +71,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data that is missing the ent time")
-    } catch let error {
+    } catch {
       XCTAssert(error is DecodingError)
     }
   }
@@ -87,7 +87,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data with an invalid end time")
-    } catch let error {
+    } catch {
       XCTAssert(error is DecodingError)
     }
   }
@@ -102,7 +102,7 @@ class TournamentTests: XCTestCase {
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
       XCTAssertNotNil(tournament, "Should be able to create a tournament with a missing title")
-    } catch let error {
+    } catch {
       XCTFail("Unexpected error received: \(error)")
     }
   }
@@ -118,7 +118,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data with an invalid title")
-    } catch let error {
+    } catch {
       XCTAssert(error is DecodingError)
     }
   }
@@ -133,7 +133,7 @@ class TournamentTests: XCTestCase {
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
       XCTAssertNotNil(tournament, "Should be able to create a tournament with a missing payload")
-    } catch let error {
+    } catch {
       XCTFail("Unexpected error received: \(error)")
     }
   }
@@ -149,7 +149,7 @@ class TournamentTests: XCTestCase {
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
       XCTFail("Should not create a tournament from data with an invalid payload")
-    } catch let error {
+    } catch {
       XCTAssert(error is DecodingError)
     }
   }
@@ -165,7 +165,7 @@ class TournamentTests: XCTestCase {
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
       XCTAssertNotNil(tournament)
-    } catch let error {
+    } catch {
       XCTFail("Unexpected error received: \(error)")
     }
   }

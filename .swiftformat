@@ -35,6 +35,7 @@
 --rules redundantGet
 --rules redundantInit
 --rules redundantLet
+--rules redundantLetError
 --rules redundantNilInit
 --rules redundantObjc
 --rules redundantParens
