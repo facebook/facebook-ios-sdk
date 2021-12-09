@@ -40,6 +40,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   // MARK: Nonce
+
   func testDefaultNonce() {
     XCTAssertNil(FBLoginButton().nonce, "Should not have a default nonce")
   }

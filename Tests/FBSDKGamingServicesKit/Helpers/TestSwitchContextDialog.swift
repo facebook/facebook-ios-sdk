@@ -11,6 +11,7 @@
 class TestSwitchContextDialog: SwitchContextDialogProtocol {
 
   // MARK: Test Evidence
+
   var wasDidCompleteWithResultsCalled = false
   var wasDidFailWithErrorCalled = false
   var wasDidCancelCalled = false
@@ -19,6 +20,7 @@ class TestSwitchContextDialog: SwitchContextDialogProtocol {
   var wasCreateWebDialogCalled = false
 
   // MARK: Protocol Conformance
+
   var delegate: ContextDialogDelegate?
   var dialogContent: ValidatableProtocol?
   var currentWebDialog: WebDialog?

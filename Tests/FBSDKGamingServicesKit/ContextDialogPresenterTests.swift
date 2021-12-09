@@ -75,6 +75,7 @@ class ContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
   }
 
   // MARK: - FBSDKContextDialogDelegate methods
+
   func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {}
 
   func contextDialog(_ contextDialog: ContextWebDialog, didFailWithError error: Error) {}

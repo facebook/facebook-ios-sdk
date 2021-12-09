@@ -1009,6 +1009,7 @@ class LoginManagerTests: XCTestCase {
   }
 
   // MARK: Permissions
+
   func testRecentlyGrantedPermissionsWithoutPreviouslyGrantedOrRequestedPermissions() throws {
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])

@@ -48,6 +48,7 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
   }
 
   // MARK: Observing
+
   func removeObserver(_ observer: Any) {
     capturedRemovedObservers.append(observer)
   }

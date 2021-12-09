@@ -4,7 +4,7 @@
 
 # How to automatically run swiftformat to "Live Test" a change to this config
 # brew install entr
-# ls .swiftformat | entr -c sh -c "git add .swiftformat && git checkout . && swiftformat . && git -P diff"
+# ls .swiftformat | entr -c sh -c "git add .swiftformat && git checkout . && swiftformat . && git -P diff && swiftlint --quiet"
 
 --exclude samples,testing,ads,internal # dirs
 --exclude Package.swift # files
@@ -12,6 +12,7 @@
 # Rules to run
 
 --rules anyObjectProtocol
+--rules blankLinesAroundMark
 --rules blankLinesAtEndOfScope
 --rules braces
 --rules consecutiveBlankLines

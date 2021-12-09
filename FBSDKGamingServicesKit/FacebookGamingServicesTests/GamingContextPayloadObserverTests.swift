@@ -14,6 +14,7 @@ class GamingContextPayloadObserverTests: XCTestCase {
   lazy var gamingContextObserver = GamingPayloadObserver(delegate: gamingContextDelegate)
 
   // MARK: - GamingContextObserver
+
   func testCreatingGamingContextObserver() {
     XCTAssertTrue(
       gamingContextObserver.delegate === gamingContextDelegate,

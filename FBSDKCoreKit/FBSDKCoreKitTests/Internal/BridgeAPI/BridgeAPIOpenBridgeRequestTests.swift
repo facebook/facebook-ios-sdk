@@ -250,6 +250,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   }
 
   // MARK: - Helpers
+
   func assertPendingPropertiesNotSet() {
     XCTAssertNil(
       api.pendingRequest,

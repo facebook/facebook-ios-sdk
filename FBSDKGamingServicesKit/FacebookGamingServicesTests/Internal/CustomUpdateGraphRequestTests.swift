@@ -51,6 +51,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
       "Should be able to create with a custom graph request factory"
     )
   }
+
   // MARK: - CustomUpdateContentMedia
 
   func testPerformRequest() throws {
