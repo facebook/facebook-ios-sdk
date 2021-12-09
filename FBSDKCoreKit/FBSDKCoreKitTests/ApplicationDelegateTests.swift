@@ -347,7 +347,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testDidFinishLaunchingWithAutoLogEnabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = true
+    settings.isAutoLogAppEventsEnabled = true
     userDataStore.set(1, forKey: bitmaskKey)
 
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
@@ -360,7 +360,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testDidFinishLaunchingWithAutoLogDisabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = false
+    settings.isAutoLogAppEventsEnabled = false
     userDataStore.set(1, forKey: bitmaskKey)
 
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
@@ -402,7 +402,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testAppEventsEnabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = true
+    settings.isAutoLogAppEventsEnabled = true
 
     let notification = Notification(
       name: UIApplication.didBecomeActiveNotification,
@@ -423,7 +423,7 @@ class ApplicationDelegateTests: XCTestCase { // swiftlint:disable:this type_body
   }
 
   func testAppEventsDisabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = false
+    settings.isAutoLogAppEventsEnabled = false
 
     let notification = Notification(
       name: UIApplication.didBecomeActiveNotification,

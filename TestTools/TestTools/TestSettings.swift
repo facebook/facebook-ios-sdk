@@ -24,14 +24,13 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var appURLSchemeSuffix: String?
   public var graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
   public var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
-  public var stubbedIsDataProcessingRestricted = false
-  public var stubbedIsAutoLogAppEventsEnabled = false
-  public var stubbedInstallTimestamp: Date?
-  // swiftlint:disable:next identifier_name
-  public var stubbedSetAdvertiserTrackingEnabledTimestamp: Date?
-  public var stubbedIsSetATETimeExceedsInstallTime = false
-  public var stubbedIsSKAdNetworkReportEnabled = false
-  public var stubbedLimitEventAndDataUsage = false
+  public var isDataProcessingRestricted = false
+  public var isAutoLogAppEventsEnabled = false
+  public var installTimestamp: Date?
+  public var advertiserTrackingEnabledTimestamp: Date?
+  public var isSetATETimeExceedsInstallTime = false
+  public var isSKAdNetworkReportEnabled = false
+  public var shouldLimitEventAndDataUsage = false
   public var shouldUseTokenOptimizations = true
   public var isGraphErrorRecoveryEnabled = false
   public var graphAPIDebugParamValue: String?
@@ -39,34 +38,6 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var loggingBehaviors = Set<LoggingBehavior>()
   public var isCodelessDebugLogEnabled = false
   public static var loggingBehaviors = Set<LoggingBehavior>()
-
-  public var isDataProcessingRestricted: Bool {
-    stubbedIsDataProcessingRestricted
-  }
-
-  public var isAutoLogAppEventsEnabled: Bool {
-    stubbedIsAutoLogAppEventsEnabled
-  }
-
-  public var isSetATETimeExceedsInstallTime: Bool {
-    stubbedIsSetATETimeExceedsInstallTime
-  }
-
-  public var isSKAdNetworkReportEnabled: Bool {
-    stubbedIsSKAdNetworkReportEnabled
-  }
-
-  public var shouldLimitEventAndDataUsage: Bool {
-    stubbedLimitEventAndDataUsage
-  }
-
-  public var installTimestamp: Date? {
-    stubbedInstallTimestamp
-  }
-
-  public var advertiserTrackingEnabledTimestamp: Date? {
-    stubbedSetAdvertiserTrackingEnabledTimestamp
-  }
 
   public func logWarnings() {
     logWarningsCallCount += 1

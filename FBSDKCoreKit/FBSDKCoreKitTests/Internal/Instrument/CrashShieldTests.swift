@@ -135,7 +135,7 @@ class CrashShieldTests: XCTestCase {
   // MARK: - Analyze: Disabling Features
 
   func testDisablingCoreKitFeatureWithDataProcessingRestricted() {
-    settings.stubbedIsDataProcessingRestricted = true
+    settings.isDataProcessingRestricted = true
     CrashShield.analyze(coreKitCrashLogs)
 
     XCTAssertTrue(
@@ -145,7 +145,7 @@ class CrashShieldTests: XCTestCase {
   }
 
   func testDisablingNonCoreKitFeatureWithDataProcessingRestricted() {
-    settings.stubbedIsDataProcessingRestricted = true
+    settings.isDataProcessingRestricted = true
     CrashShield.analyze(nonCoreKitCrashLogs)
 
     XCTAssertFalse(
@@ -155,7 +155,7 @@ class CrashShieldTests: XCTestCase {
   }
 
   func testDisablingCoreKitFeatureWithDataProcessingUnrestricted() {
-    settings.stubbedIsDataProcessingRestricted = false
+    settings.isDataProcessingRestricted = false
 
     CrashShield.analyze(coreKitCrashLogs)
 
@@ -166,7 +166,7 @@ class CrashShieldTests: XCTestCase {
   }
 
   func testDisablingNonCoreKitFeatureWithDataProcessingUnrestricted() {
-    settings.stubbedIsDataProcessingRestricted = false
+    settings.isDataProcessingRestricted = false
     CrashShield.analyze(nonCoreKitCrashLogs)
 
     XCTAssertFalse(
@@ -209,13 +209,13 @@ class CrashShieldTests: XCTestCase {
   // MARK: - Analyze: Posting Crash Logs
 
   func testPostingCoreKitCrashLogsWithDataProcessingRestricted() {
-    settings.stubbedIsDataProcessingRestricted = true
+    settings.isDataProcessingRestricted = true
     CrashShield.analyze(coreKitCrashLogs)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)
   }
 
   func testPostingNonCoreKitCrashLogsWithDataProcessingRestricted() {
-    settings.stubbedIsDataProcessingRestricted = true
+    settings.isDataProcessingRestricted = true
 
     CrashShield.analyze(nonCoreKitCrashLogs)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)
@@ -223,7 +223,7 @@ class CrashShieldTests: XCTestCase {
 
   func testPostingCoreKitCrashLogsWithDataProcessingUnrestricted() {
     // Setup
-    settings.stubbedIsDataProcessingRestricted = false
+    settings.isDataProcessingRestricted = false
     settings.appID = "appID"
 
     // Act
@@ -232,7 +232,7 @@ class CrashShieldTests: XCTestCase {
   }
 
   func testPostingNonCoreKitCrashLogsWithDataProcessingUnrestricted() {
-    settings.stubbedIsDataProcessingRestricted = false
+    settings.isDataProcessingRestricted = false
     settings.appID = "appID"
     CrashShield.analyze(nonCoreKitCrashLogs)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)

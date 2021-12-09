@@ -76,7 +76,7 @@
 
   [self resetTestHelpers];
   self.settings = [TestSettings new];
-  self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
+  self.settings.isAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
   self.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
   self.onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
@@ -993,7 +993,7 @@
 
 - (void)testLogEventWhenAutoLogAppEventsDisabled
 {
-  self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
+  self.settings.isAutoLogAppEventsEnabled = NO;
   [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
@@ -1189,7 +1189,7 @@
 
 - (void)testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed
 {
-  self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
+  self.settings.isAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
@@ -1206,7 +1206,7 @@
 
 - (void)testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed
 {
-  self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
+  self.settings.isAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
@@ -1223,7 +1223,7 @@
 
 - (void)testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled
 {
-  self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
+  self.settings.isAutoLogAppEventsEnabled = NO;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
@@ -1240,7 +1240,7 @@
 
 - (void)testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled
 {
-  self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  self.settings.isSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
@@ -1252,7 +1252,7 @@
 
 - (void)testFetchingConfigurationEnablesSKAdNetworkReporterWhenSKAdNetworkReportAndConversionValueEnabled
 {
-  self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  self.settings.isSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
@@ -1270,7 +1270,7 @@
 
 - (void)testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled
 {
-  self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  self.settings.isSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
@@ -1288,7 +1288,7 @@
 
 - (void)testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled
 {
-  self.settings.stubbedIsSKAdNetworkReportEnabled = NO;
+  self.settings.isSKAdNetworkReportEnabled = NO;
   [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);

@@ -65,7 +65,7 @@ class InstrumentManagerTests: XCTestCase {
   }
 
   func testEnablingWithBothEnabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = true
+    settings.isAutoLogAppEventsEnabled = true
 
     manager.enable()
 
@@ -78,7 +78,7 @@ class InstrumentManagerTests: XCTestCase {
   }
 
   func testEnablingWithAutoLoggingEnabledAndFeaturesDisabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = true
+    settings.isAutoLogAppEventsEnabled = true
 
     manager.enable()
 
@@ -91,7 +91,7 @@ class InstrumentManagerTests: XCTestCase {
   }
 
   func testEnablingWithAutoLoggingDisabledAndFeaturesEnabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = false
+    settings.isAutoLogAppEventsEnabled = false
 
     manager.enable()
 
@@ -104,7 +104,7 @@ class InstrumentManagerTests: XCTestCase {
   }
 
   func testEnablingWithBothDisabled() {
-    settings.stubbedIsAutoLogAppEventsEnabled = false
+    settings.isAutoLogAppEventsEnabled = false
 
     manager.enable()
 

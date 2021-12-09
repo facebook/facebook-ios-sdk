@@ -101,7 +101,7 @@ class ErrorReporterTests: XCTestCase {
   // MARK: - Enabling
 
   func testEnablingWithDataProcessingRestricted() {
-    settings.stubbedIsDataProcessingRestricted = true
+    settings.isDataProcessingRestricted = true
     reporter.enable()
 
     XCTAssertTrue(
