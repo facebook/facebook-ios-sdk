@@ -455,15 +455,15 @@ final class ErrorFactoryTests: XCTestCase {
 
     var name: String {
       switch self {
-      case .invalid(name: let name, _),
-           .required(name: let name): // swiftlint:disable:this indentation_width
+      case let .invalid(name: name, _),
+           let .required(name: name): // swiftlint:disable:this indentation_width
         return name
       }
     }
 
     var value: String? {
       switch self {
-      case .invalid(_, value: let value):
+      case let .invalid(_, value: value):
         return value
       case .required:
         return nil

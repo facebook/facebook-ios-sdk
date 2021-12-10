@@ -95,7 +95,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
@@ -116,7 +116,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail(
             "Expected a decoding error, instead received: \(error)"
@@ -140,11 +140,11 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
     try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead receieved: \(error)"
         )
-      case .success(let succeed):
+      case let .success(succeed):
         didSucceed = succeed
       }
       completionWasInvoked = true
@@ -163,11 +163,11 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
     try requester.request(content: CustomUpdateContentObjects.mediaContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead receieved: \(error)"
         )
-      case .success(let succeed):
+      case let .success(succeed):
         didSucceed = succeed
       }
       completionWasInvoked = true
@@ -223,7 +223,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
@@ -244,7 +244,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
     var completionWasInvoked = false
     try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail(
             "Expected a decoding error, instead received: \(error)"
@@ -268,11 +268,11 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
     try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead receieved: \(error)"
         )
-      case .success(let succeed):
+      case let .success(succeed):
         didSucceed = succeed
       }
       completionWasInvoked = true
@@ -291,11 +291,11 @@ class CustomUpdateGraphRequestTests: XCTestCase {
 
     try requester.request(content: CustomUpdateContentObjects.imageContentValid) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead receieved: \(error)"
         )
-      case .success(let succeed):
+      case let .success(succeed):
         didSucceed = succeed
       }
       completionWasInvoked = true

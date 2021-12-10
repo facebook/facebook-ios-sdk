@@ -47,7 +47,7 @@ enum URLConstants {
     switch self {
     case .mSite:
       return "/dialog/choosecontext/"
-    case .appSwitch(let appID):
+    case let .appSwitch(appID):
       return String(format: "/dialog/choosecontext/%@/", appID)
     }
   }

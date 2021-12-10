@@ -60,14 +60,14 @@ internal enum ShareTournamentDialogURLBuilder {
     components.host = Constants.host
     components.path = "\(Constants.path)\(appID)"
 
-    if case .update(let tournament) = self {
+    if case let .update(tournament) = self {
       components.queryItems = [
         URLQueryItem(name: QueryKeys.tournamentID, value: tournament.identifier),
         URLQueryItem(name: QueryKeys.score, value: "\(score)"),
         URLQueryItem(name: QueryKeys.payload, value: tournament.payload)
       ]
     }
-    if case .create(let config) = self {
+    if case let .create(config) = self {
       components.queryItems = queryItems(for: config, score: score)
     }
 

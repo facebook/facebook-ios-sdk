@@ -93,7 +93,7 @@ class TournamentFetcherTests: XCTestCase {
     AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .invalidAuthToken = error else {
           return XCTFail("Was expecting invalid auth token error, instead recieved:\(error)")
         }
@@ -113,7 +113,7 @@ class TournamentFetcherTests: XCTestCase {
     AccessToken.current = nil
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .invalidAccessToken = error else {
           return XCTFail("Was expecting invalid access token error, instead recieved:\(error)")
         }
@@ -131,7 +131,7 @@ class TournamentFetcherTests: XCTestCase {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
@@ -153,7 +153,7 @@ class TournamentFetcherTests: XCTestCase {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail(
             "An graph response should complete with a decoding error, instead received: \(error)"
@@ -175,7 +175,7 @@ class TournamentFetcherTests: XCTestCase {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
@@ -197,7 +197,7 @@ class TournamentFetcherTests: XCTestCase {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail(
             "An invalid result should complete with a decoding error, instead received: \(error)"
@@ -227,9 +227,9 @@ class TournamentFetcherTests: XCTestCase {
     var completionWasInvoked = false
     fetcher.fetchTournaments { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         XCTFail("Unexpected error received: \(error)")
-      case .success(let tournaments):
+      case let .success(tournaments):
         guard let tournament = tournaments.first else {
           return XCTFail("Tournaments array was empty")
         }

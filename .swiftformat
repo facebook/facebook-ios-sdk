@@ -22,6 +22,7 @@
 --rules enumNamespaces
 --rules extensionAccessControl
 --rules fileHeader
+--rules hoistPatternLet
 --rules indent
 --rules initCoderUnavailable
 --rules leadingDelimiters

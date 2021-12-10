@@ -81,7 +81,7 @@ class TournamentUpdaterTest: XCTestCase {
     AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "notGaming")
     updater.update(tournament: tournament, score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .invalidAuthToken = error else {
           return XCTFail("Should fail with invalid auth token error but instead failed with: \(error)")
         }
@@ -98,7 +98,7 @@ class TournamentUpdaterTest: XCTestCase {
     var completionWasInvoked = false
     updater.update(tournament: tournament, score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
@@ -120,7 +120,7 @@ class TournamentUpdaterTest: XCTestCase {
     var completionWasInvoked = false
     updater.update(tournament: tournament, score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail("Should fail with decoding error but instead failed with: \(error)")
         }
@@ -140,7 +140,7 @@ class TournamentUpdaterTest: XCTestCase {
     var completionWasInvoked = false
     updater.update(tournament: tournament, score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .decoding = error else {
           return XCTFail("Should fail with decoding error but instead failed with: \(error)")
         }
@@ -161,7 +161,7 @@ class TournamentUpdaterTest: XCTestCase {
     var didSucceed = false
     updater.update(tournament: tournament, score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead received: \(error)"
         )
@@ -184,7 +184,7 @@ class TournamentUpdaterTest: XCTestCase {
     var completionWasInvoked = false
     updater.update(tournamentID: "", score: 1) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         guard case .invalidTournamentID = error else {
           return XCTFail("Should receive invalidTournamentID error but instead received: \(error)")
         }
@@ -202,7 +202,7 @@ class TournamentUpdaterTest: XCTestCase {
     var didSucceed = false
     updater.update(tournamentID: "12345", score: score) { result in
       switch result {
-      case .failure(let error):
+      case let .failure(error):
         return XCTFail(
           "Expecting the request to succeed instead received: \(error)"
         )

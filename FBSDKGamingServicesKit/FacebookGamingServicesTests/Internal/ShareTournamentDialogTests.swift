@@ -106,7 +106,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
     XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
     XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
-    guard case .bridgeError(let error) = dialogError, error is SampleError else {
+    guard case let .bridgeError(error) = dialogError, error is SampleError else {
       if let error = dialogError {
         XCTFail("Expecting bridge error but instead received:  \(error)) ")
       }
@@ -174,7 +174,7 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
     XCTAssertFalse(dialogDidCompleteSuccessfully, "Dialog should not complete")
     XCTAssertFalse(dialogDidCancel, "Dialog should not cancel")
-    guard case .bridgeError(let error) = dialogError, error is SampleError else {
+    guard case let .bridgeError(error) = dialogError, error is SampleError else {
       return XCTFail("Expecting bridge error but instead received: \(String(describing: dialogError)) ")
     }
   }
