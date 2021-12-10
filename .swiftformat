@@ -25,6 +25,7 @@
 --rules hoistPatternLet
 --rules indent
 --rules initCoderUnavailable
+--rules isEmpty  # opt-in rule
 --rules leadingDelimiters
 --rules linebreakAtEndOfFile
 --rules linebreaks

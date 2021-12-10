@@ -274,8 +274,9 @@ class FBAEMReporterTests: XCTestCase {
     )
     AEMReporter.handle(url)
     let invocations = AEMReporter.invocations
-    XCTAssertTrue(
-      invocations.count > 0, // swiftlint:disable:this empty_count
+    XCTAssertGreaterThan(
+      invocations.count,
+      0,
       "Handling a url that contains invocations should set the invocations on the reporter"
     )
   }
