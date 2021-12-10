@@ -1,71 +1,127 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#if BUCK
-import FacebookCore
-#endif
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import TestTools
 import XCTest
 
 class AccessTokenTests: XCTestCase {
 
+  // swiftlint:disable implicitly_unwrapped_optional
+  var tokenCache: TestTokenCache!
+  var connection: TestGraphRequestConnection!
+  var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
+  var graphRequestPiggybackManagerProvider: TestGraphRequestPiggybackManagerProvider!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    AccessToken.resetClassDependencies()
+    TestGraphRequestPiggybackManager.reset()
+
+    tokenCache = TestTokenCache()
+    connection = TestGraphRequestConnection()
+    graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    graphRequestPiggybackManagerProvider = TestGraphRequestPiggybackManagerProvider()
+
+    AccessToken.configure(
+      withTokenCache: tokenCache,
+      graphRequestConnectionFactory: graphRequestConnectionFactory,
+      graphRequestPiggybackManagerProvider: graphRequestPiggybackManagerProvider
+    )
+  }
+
   override func tearDown() {
     super.tearDown()
 
     AccessToken.current = nil
-    AccessToken.connectionFactory = nil
-    AccessToken.resetTokenCache()
+    AccessToken.resetClassDependencies()
+    TestGraphRequestPiggybackManager.reset()
   }
 
-  func testAccessTokenCacheIsNilByDefault() {
-    AccessToken.resetTokenCache()
-    XCTAssertNil(AccessToken.tokenCache, "Access token cache should be nil by default")
+  func testDefaultClassDependencies() {
+    AccessToken.resetClassDependencies()
+
+    XCTAssertNil(
+      AccessToken.tokenCache,
+      "Should not have a token cache by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestConnectionFactory,
+      "Should not have a graph request connection factory by default"
+    )
+    XCTAssertNil(
+      AccessToken.graphRequestPiggybackManagerProvider,
+      "Should not have a graph request piggyback manager provider by default"
+    )
   }
 
-  func testSetTokenCache() {
+  func testSettingTokenCache() {
     let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
     AccessToken.tokenCache = cache
     XCTAssertTrue(AccessToken.tokenCache === cache, "Access token cache should be settable")
   }
 
   func testRetrievingCurrentToken() {
-    let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
-    let testToken = SampleAccessTokens.validToken
+    AccessToken.current = SampleAccessTokens.validToken
 
-    AccessToken.tokenCache = cache
-    AccessToken.current = testToken
-
-    XCTAssertTrue(cache.accessToken === testToken, "Setting the global access token should invoke the cache")
+    XCTAssertTrue(
+      tokenCache.accessToken === SampleAccessTokens.validToken,
+      "Setting the global access token should invoke the cache"
+    )
   }
 
-  func testRefreshTokenThroughTestGraphRequestConnection() {
-    let testConnection = TestGraphRequestConnection()
-    let factory = TestGraphRequestConnectionFactory.create(withStubbedConnection: testConnection)
-    AccessToken.connectionFactory = factory
-
+  func testRefreshCurrentAccessTokenWithNilToken() {
     AccessToken.current = nil
     AccessToken.refreshCurrentAccessToken(completion: nil)
-    XCTAssertEqual(testConnection.startCallCount, 0, "Should not start connection if no current access token available")
+    XCTAssertEqual(connection.startCallCount, 0, "Should not start connection if no current access token available")
+  }
 
+  func testRefreshingNilTokenError() throws {
+    AccessToken.current = nil
+
+    var didInvokeCompletion = false
+    var connection: GraphRequestConnecting?
+    var data: Any?
+    var error: Error?
+    AccessToken.refreshCurrentAccessToken { potentialConnection, potentialData, potentialError in
+      didInvokeCompletion = true
+      connection = potentialConnection
+      data = potentialData
+      error = potentialError
+    }
+    XCTAssertNil(
+      connection,
+      "Shouldn't create a connection is there is no token to refresh"
+    )
+    XCTAssertNil(
+      data,
+      "Should not call back with data if there is no token to refresh"
+    )
+
+    let unwrappedError = try XCTUnwrap(error, "Should error when attempting to refresh a nil access token")
+    XCTAssertEqual(
+      (unwrappedError as NSError).code,
+      CoreError.errorAccessTokenRequired.rawValue,
+      "Should return a known error"
+    )
+    XCTAssertTrue(didInvokeCompletion)
+  }
+
+  func testRefreshCurrentAccessTokenWithNonNilToken() {
     AccessToken.current = SampleAccessTokens.validToken
     AccessToken.refreshCurrentAccessToken(completion: nil)
-    XCTAssertEqual(testConnection.startCallCount, 1, "Should start one connection for refreshing")
+    XCTAssertEqual(connection.startCallCount, 1, "Should start one connection for refreshing")
+
+    XCTAssertTrue(
+      TestGraphRequestPiggybackManager.addRefreshPiggybackWasCalled,
+      "Refreshing an access token should add a refresh piggyback"
+    )
   }
 
   func testIsDataAccessExpired() {
@@ -218,27 +274,5 @@ class AccessTokenTests: XCTestCase {
   func testGrantedPermissions() {
     let token = SampleAccessTokens.create(withPermissions: [name])
     XCTAssertTrue(token.hasGranted(Permission(stringLiteral: name)))
-  }
-
-  func testRefreshingNilToken() {
-    AccessToken.current = nil
-    AccessToken.refreshCurrentAccessToken { potentialConnection, potentialData, potentialError in
-      XCTAssertNil(
-        potentialConnection,
-        "Shouldn't create a connection is there is no token to refresh"
-      )
-      XCTAssertNil(
-        potentialData,
-        "Should not call back with data if there is no token to refresh"
-      )
-      guard let error = potentialError else {
-        return XCTFail("Should error when attempting to refresh a nil access token")
-      }
-      XCTAssertEqual(
-        (error as NSError).code,
-        CoreError.errorAccessTokenRequired.rawValue,
-        "Should return a known error"
-      )
-    }
   }
 }

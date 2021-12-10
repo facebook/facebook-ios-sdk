@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <UIKit/UIKit.h>
 
@@ -24,16 +14,15 @@
 
 @interface FBLoginButton : UIView
 
-@property (copy, nonatomic) NSArray<NSString *> *permissions;
+@property (nonatomic, copy) NSArray<NSString *> *permissions;
 
 @end
 
 #else
 
-#import "FBSDKCoreKitImport.h"
-
-#import "FBSDKLoginManager.h"
-#import "FBSDKTooltipView.h"
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
+ #import <FBSDKLoginKit/FBSDKTooltipView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,8 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
   Indicates the desired login tooltip behavior.
  */
-typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
-{
+typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior) {
   /** The default behavior. The tooltip will only be displayed if
    the app is eligible (determined by possible server round trip) */
   FBSDKLoginButtonTooltipBehaviorAutomatic = 0,
@@ -52,7 +40,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
   FBSDKLoginButtonTooltipBehaviorForceDisplay = 1,
   /** Force disable. In this case you can still exert more refined
    control by manually constructing a `FBSDKLoginTooltipView` instance. */
-  FBSDKLoginButtonTooltipBehaviorDisable = 2
+  FBSDKLoginButtonTooltipBehaviorDisable = 2,
 } NS_SWIFT_NAME(FBLoginButton.TooltipBehavior);
 
 /**
@@ -74,11 +62,11 @@ NS_SWIFT_NAME(FBLoginButton)
 /**
   The default audience to use, if publish permissions are requested at login time.
  */
-@property (assign, nonatomic) FBSDKDefaultAudience defaultAudience;
+@property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
 /**
   Gets or sets the delegate.
  */
-@property (weak, nonatomic) IBOutlet id<FBSDKLoginButtonDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<FBSDKLoginButtonDelegate> delegate;
 /*!
  @abstract The permissions to request.
  @discussion To provide the best experience, you should minimize the number of permissions you request, and only ask for them when needed.
@@ -89,32 +77,32 @@ NS_SWIFT_NAME(FBLoginButton)
 
  See [the permissions guide]( https://developers.facebook.com/docs/facebook-login/permissions/ ) for more details.
  */
-@property (copy, nonatomic) NSArray<NSString *> *permissions;
+@property (nonatomic, copy) NSArray<NSString *> *permissions;
 /**
   Gets or sets the desired tooltip behavior.
  */
-@property (assign, nonatomic) FBSDKLoginButtonTooltipBehavior tooltipBehavior;
+@property (nonatomic, assign) FBSDKLoginButtonTooltipBehavior tooltipBehavior;
 /**
   Gets or sets the desired tooltip color style.
  */
-@property (assign, nonatomic) FBSDKTooltipColorStyle tooltipColorStyle;
+@property (nonatomic, assign) FBSDKTooltipColorStyle tooltipColorStyle;
 /**
   Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
  */
-@property (assign, nonatomic) FBSDKLoginTracking loginTracking;
+@property (nonatomic, assign) FBSDKLoginTracking loginTracking;
 /**
   Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
  An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
  */
-@property (copy, nonatomic, nullable) NSString *nonce;
+@property (nullable, nonatomic, copy) NSString *nonce;
 /**
   Gets or sets an optional page id to use for login attempts.
  */
-@property (copy, nonatomic, nullable) NSString *messengerPageId;
+@property (nullable, nonatomic, copy) NSString *messengerPageId;
 /**
   Gets or sets the auth_type to use in the login request. Defaults to rerequest.
  */
-@property (nonatomic, nullable) FBSDKLoginAuthType authType;
+@property (nullable, nonatomic) FBSDKLoginAuthType authType;
 
 @end
 
@@ -132,9 +120,9 @@ NS_SWIFT_NAME(LoginButtonDelegate)
  @param result The results of the login
  @param error The error (if any) from the login
  */
-- (void)loginButton:(FBSDKLoginButton *)loginButton
-didCompleteWithResult:(nullable FBSDKLoginManagerLoginResult *)result
-                error:(nullable NSError *)error;
+- (void)    loginButton:(FBSDKLoginButton *)loginButton
+  didCompleteWithResult:(nullable FBSDKLoginManagerLoginResult *)result
+                  error:(nullable NSError *)error;
 
 /**
   Sent to the delegate when the button was used to logout.

@@ -1,36 +1,21 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKAppLinkNavigation.h"
+#import "FBSDKAppLinkNavigation+Internal.h"
 
- #import "FBSDKAppLinkEventPosting.h"
- #import "FBSDKAppLink_Internal.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKMeasurementEvent+AppLinkEventPosting.h"
- #import "FBSDKMeasurementEvent_Internal.h"
- #import "FBSDKSettings.h"
- #import "FBSDKURLOpener.h"
- #import "FBSDKWebViewAppLinkResolver.h"
- #import "UIApplication+URLOpener.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAppLink+Internal.h"
+#import "FBSDKAppLinkEventPosting.h"
+#import "FBSDKMeasurementEventNames.h"
+#import "FBSDKWebViewAppLinkResolver.h"
 
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
@@ -41,26 +26,100 @@ FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
 
-static id<FBSDKAppLinkResolving> defaultResolver;
-
 @interface FBSDKAppLinkNavigation ()
 
 @property (nonatomic, copy) NSDictionary<NSString *, id> *extras;
 @property (nonatomic, copy) NSDictionary<NSString *, id> *appLinkData;
 @property (nonatomic, strong) FBSDKAppLink *appLink;
+@property (nonnull, nonatomic) id<FBSDKSettings> settings;
 
 @end
 
 @implementation FBSDKAppLinkNavigation
 
+static id<FBSDKSettings> _settings;
+static id<FBSDKInternalURLOpener> _urlOpener;
+static id<FBSDKAppLinkEventPosting> _appLinkEventPoster;
+static id<FBSDKAppLinkResolving> _appLinkResolver;
+
++ (void)configureWithSettings:(nonnull id<FBSDKSettings>)settings
+                    urlOpener:(nonnull id<FBSDKInternalURLOpener>)urlOpener
+           appLinkEventPoster:(nonnull id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+              appLinkResolver:(nonnull id<FBSDKAppLinkResolving>)appLinkResolver
+{
+  self.settings = settings;
+  self.urlOpener = urlOpener;
+  self.appLinkEventPoster = appLinkEventPoster;
+  self.appLinkResolver = appLinkResolver;
+}
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
++ (nullable id<FBSDKInternalURLOpener>)urlOpener
+{
+  return _urlOpener;
+}
+
++ (void)setUrlOpener:(nullable id<FBSDKInternalURLOpener>)urlOpener
+{
+  _urlOpener = urlOpener;
+}
+
++ (nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  return _appLinkEventPoster;
+}
+
++ (void)setAppLinkEventPoster:(nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  _appLinkEventPoster = appLinkEventPoster;
+}
+
++ (id<FBSDKAppLinkResolving>)appLinkResolver
+{
+  return _appLinkResolver;
+}
+
++ (void)setAppLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
+{
+  _appLinkResolver = appLinkResolver;
+}
+
++ (id<FBSDKAppLinkResolving>)defaultResolver
+{
+  return self.appLinkResolver ?: FBSDKWebViewAppLinkResolver.sharedInstance;
+}
+
++ (void)setDefaultResolver:(id<FBSDKAppLinkResolving>)resolver
+{
+  self.appLinkResolver = resolver;
+}
+
 + (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
                                extras:(NSDictionary<NSString *, id> *)extras
                           appLinkData:(NSDictionary<NSString *, id> *)appLinkData
+{
+  return [self navigationWithAppLink:appLink extras:extras appLinkData:appLinkData settings:self.settings];
+}
+
++ (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
+                               extras:(NSDictionary<NSString *, id> *)extras
+                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData
+                             settings:(nonnull id<FBSDKSettings>)settings
 {
   FBSDKAppLinkNavigation *navigation = [self new];
   navigation.appLink = appLink;
   navigation.extras = extras;
   navigation.appLinkData = appLinkData;
+  navigation.settings = settings;
   return navigation;
 }
 
@@ -72,17 +131,17 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 - (NSString *)stringByEscapingQueryString:(NSString *)string
 {
-  return [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  return [string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
 }
 
-- (NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error
+- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error
 {
   NSMutableDictionary<NSString *, id> *appLinkData =
   [NSMutableDictionary dictionaryWithDictionary:self.appLinkData ?: @{}];
 
   // Add applink protocol data
   if (!appLinkData[FBSDKAppLinkUserAgentKeyName]) {
-    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", FBSDKSettings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
+    [FBSDKTypeUtility dictionary:appLinkData setObject:[NSString stringWithFormat:@"FBSDK %@", self.settings.sdkVersion] forKey:FBSDKAppLinkUserAgentKeyName];
   }
   if (!appLinkData[FBSDKAppLinkVersionKeyName]) {
     [FBSDKTypeUtility dictionary:appLinkData setObject:FBSDKAppLinkVersion forKey:FBSDKAppLinkVersionKeyName];
@@ -118,12 +177,12 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 - (FBSDKAppLinkNavigationType)navigate:(NSError **)error
 {
-  return [self navigateWithUrlOpener:UIApplication.sharedApplication
-                         eventPoster:[FBSDKMeasurementEvent new]
+  return [self navigateWithUrlOpener:self.class.urlOpener
+                         eventPoster:self.class.appLinkEventPoster
                                error:error];
 }
 
-- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKURLOpener>)urlOpener
+- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKInternalURLOpener>)urlOpener
                                         eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
                                               error:(NSError *__autoreleasing *)error
 {
@@ -177,7 +236,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   [self postAppLinkNavigateEventNotificationWithTargetURL:outputURL
                                                     error:error
                                                      type:type
-                                              eventPoster:[FBSDKMeasurementEvent new]];
+                                              eventPoster:self.class.appLinkEventPoster];
 }
 
 - (void)postAppLinkNavigateEventNotificationWithTargetURL:(NSURL *)outputURL
@@ -255,12 +314,16 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 + (void)resolveAppLink:(NSURL *)destination handler:(FBSDKAppLinkBlock)handler
 {
-  [self resolveAppLink:destination resolver:[self defaultResolver] handler:handler];
+  if (self.appLinkResolver) {
+    [self resolveAppLink:destination resolver:self.appLinkResolver handler:handler];
+  }
 }
 
 + (void)navigateToURL:(NSURL *)destination handler:(FBSDKAppLinkNavigationBlock)handler
 {
-  [self navigateToURL:destination resolver:[self defaultResolver] handler:handler];
+  if (self.appLinkResolver) {
+    [self navigateToURL:destination resolver:self.appLinkResolver handler:handler];
+  }
 }
 
 + (void)navigateToURL:(NSURL *)destination
@@ -287,21 +350,22 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 {
   return [[FBSDKAppLinkNavigation navigationWithAppLink:link
                                                  extras:@{}
-                                            appLinkData:@{}] navigate:error];
+                                            appLinkData:@{}
+                                               settings:self.settings] navigate:error];
 }
 
 + (FBSDKAppLinkNavigationType)navigationTypeForLink:(FBSDKAppLink *)link
 {
-  return [[self navigationWithAppLink:link extras:@{} appLinkData:@{}] navigationType];
+  return [[self navigationWithAppLink:link extras:@{} appLinkData:@{} settings:self.settings] navigationType];
 }
 
 - (FBSDKAppLinkNavigationType)navigationType
 {
-  return [self navigationTypeForTargets:self.appLink.targets urlOpener:UIApplication.sharedApplication];
+  return [self navigationTypeForTargets:self.appLink.targets urlOpener:self.class.urlOpener];
 }
 
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(nonnull NSArray<FBSDKAppLinkTarget *> *)targets
-                                             urlOpener:(nonnull id<FBSDKURLOpener>)urlOpener
+- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(nonnull NSArray<id<FBSDKAppLinkTarget>> *)targets
+                                             urlOpener:(nullable id<FBSDKInternalURLOpener>)urlOpener
 {
   FBSDKAppLinkTarget *eligibleTarget = nil;
   for (FBSDKAppLinkTarget *target in self.appLink.targets) {
@@ -332,29 +396,17 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   return FBSDKAppLinkNavigationTypeFailure;
 }
 
-+ (id<FBSDKAppLinkResolving>)defaultResolver
-{
-  if (defaultResolver) {
-    return defaultResolver;
-  }
-  return [FBSDKWebViewAppLinkResolver sharedInstance];
-}
-
-+ (void)setDefaultResolver:(id<FBSDKAppLinkResolving>)resolver
-{
-  defaultResolver = resolver;
-}
-
- #if DEBUG
-  #if FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
-  defaultResolver = nil;
+  self.settings = nil;
+  self.urlOpener = nil;
+  self.appLinkEventPoster = nil;
+  self.appLinkResolver = nil;
 }
 
-  #endif
- #endif
+#endif
 
 @end
 

@@ -1,30 +1,16 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKSharePhoto.h"
 
 #import <Photos/Photos.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKHasher.h"
 #import "FBSDKShareConstants.h"
 
 NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
@@ -95,7 +81,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     _caption.hash,
     (_userGenerated ? 1u : 0u)
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -103,7 +89,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if (![object isKindOfClass:FBSDKSharePhoto.class]) {
     return NO;
   }
   return [self isEqualToSharePhoto:(FBSDKSharePhoto *)object];
@@ -113,10 +99,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 {
   return (photo
     && (_userGenerated == photo.userGenerated)
-    && [FBSDKInternalUtility object:_image isEqualToObject:photo.image]
-    && [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL]
-    && [FBSDKInternalUtility object:_photoAsset isEqualToObject:photo.photoAsset]
-    && [FBSDKInternalUtility object:_caption isEqualToObject:photo.caption]);
+    && [FBSDKInternalUtility.sharedUtility object:_image isEqualToObject:photo.image]
+    && [FBSDKInternalUtility.sharedUtility object:_imageURL isEqualToObject:photo.imageURL]
+    && [FBSDKInternalUtility.sharedUtility object:_photoAsset isEqualToObject:photo.photoAsset]
+    && [FBSDKInternalUtility.sharedUtility object:_caption isEqualToObject:photo.caption]);
 }
 
 #pragma mark - FBSDKSharingValidation
@@ -196,14 +182,14 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _image = [decoder decodeObjectOfClass:[UIImage class] forKey:kFBSDKSharePhotoImageKey];
-    _imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:kFBSDKSharePhotoImageURLKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoAssetKey];
+    _image = [decoder decodeObjectOfClass:UIImage.class forKey:kFBSDKSharePhotoImageKey];
+    _imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKSharePhotoImageURLKey];
+    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoAssetKey];
     if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
       _photoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
     }
     _userGenerated = [decoder decodeBoolForKey:kFBSDKSharePhotoUserGeneratedKey];
-    _caption = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoCaptionKey];
+    _caption = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoCaptionKey];
   }
   return self;
 }

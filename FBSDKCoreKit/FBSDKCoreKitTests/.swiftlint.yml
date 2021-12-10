@@ -1,0 +1,17 @@
+# Overrides for FBSDKCoreKitTests
+
+# Use double the defaults for type_body_length since test classes can get long
+type_body_length:
+  warning: 400 # default 200
+  error: 700 # default 350
+
+# Duplicating some settings from the base .swiftlint.yml since nested configurations don't work recursively
+# See: https://github.com/realm/SwiftLint#nested-configurations
+
+modifier_order:
+  preferred_modifier_order:
+    [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
+
+# This is a fix for: Found a configuration for 'modifier_order' rule, but it is not enabled on 'opt_in_rules'
+opt_in_rules:
+  - modifier_order

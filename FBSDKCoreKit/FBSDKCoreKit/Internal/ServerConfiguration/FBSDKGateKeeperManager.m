@@ -1,38 +1,26 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKGateKeeperManager.h"
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY @"com.facebook.sdk:GateKeepers%@"
@@ -49,32 +37,32 @@ static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
 static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
-static id<FBSDKGraphRequestProviding> _requestProvider;
-static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
-static Class<FBSDKSettings> _settings;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
+static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
+static id<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
 
 #pragma mark - Public Class Methods
 + (void)initialize
 {
-  if (self == [FBSDKGateKeeperManager class]) {
+  if (self == FBSDKGateKeeperManager.class) {
     _completionBlocks = [NSMutableArray array];
     _store = nil;
-    _requestProvider = nil;
-    _connectionProvider = nil;
+    _graphRequestFactory = nil;
+    _graphRequestConnectionFactory = nil;
     _settings = nil;
     _canLoadGateKeepers = NO;
   }
 }
 
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                        store:(id<FBSDKDataPersisting>)store
++ (void)  configureWithSettings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                          store:(id<FBSDKDataPersisting>)store
 {
   _settings = settings;
-  _requestProvider = requestProvider;
-  _connectionProvider = connectionProvider;
+  _graphRequestFactory = graphRequestFactory;
+  _graphRequestConnectionFactory = graphRequestConnectionFactory;
   _store = store;
   _canLoadGateKeepers = YES;
 }
@@ -86,7 +74,7 @@ static id<FBSDKDataPersisting> _store;
   return _gateKeepers[key] != nil ? [_gateKeepers[key] boolValue] : defaultValue;
 }
 
-+ (void)loadGateKeepers:(FBSDKGKManagerBlock)completionBlock
++ (void)loadGateKeepers:(nullable FBSDKGKManagerBlock)completionBlock
 {
   @try {
     @synchronized(self) {
@@ -97,7 +85,7 @@ static id<FBSDKDataPersisting> _store;
         return;
       }
 
-      NSString *appID = [self.settings appID];
+      NSString *appID = _settings.appID;
       if (!appID) {
         _gateKeepers = nil;
         if (completionBlock != NULL) {
@@ -111,7 +99,7 @@ static id<FBSDKDataPersisting> _store;
         NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
                                 appID];
         NSData *data = [self.store objectForKey:defaultKey];
-        if ([data isKindOfClass:[NSData class]]) {
+        if ([data isKindOfClass:NSData.class]) {
           id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
           @try {
             _gateKeepers = [FBSDKTypeUtility dictionaryValue:
@@ -133,10 +121,10 @@ static id<FBSDKDataPersisting> _store;
         [FBSDKTypeUtility array:_completionBlocks addObject:completionBlock];
         if (!_loadingGateKeepers) {
           _loadingGateKeepers = YES;
-          id<FBSDKGraphRequest> request = [[self class] requestToLoadGateKeepers];
+          id<FBSDKGraphRequest> request = [self.class requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
-          id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
+          id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
           requestConnection.timeout = kTimeout;
           [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
             _requeryFinishedForAppStart = YES;
@@ -155,19 +143,17 @@ static id<FBSDKDataPersisting> _store;
 {
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[self.settings sdkVersion] forKey:@"sdk_version"];
+  [FBSDKTypeUtility dictionary:parameters setObject:_settings.sdkVersion forKey:@"sdk_version"];
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
   [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
 
-  return [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
-                                                    parameters:parameters
-                                                   tokenString:nil
-                                                    HTTPMethod:nil
-                                                         flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+  return [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                    _settings.appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
+                                                        parameters:parameters
+                                                       tokenString:nil
+                                                        HTTPMethod:nil
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
-
-#pragma mark - Helper Class Methods
 
 + (void)processLoadRequestResponse:(id)result error:(NSError *)error
 {
@@ -200,7 +186,7 @@ static id<FBSDKDataPersisting> _store;
       }
       // update the cached copy in user defaults
       NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
-                              [self.settings appID]];
+                              _settings.appID];
 
     #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:gateKeeper requiringSecureCoding:NO error:NULL];
@@ -240,22 +226,22 @@ static id<FBSDKDataPersisting> _store;
   return NO;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
-+ (Class<FBSDKSettings>)settings
++ (id<FBSDKSettings>)settings
 {
   return _settings;
 }
 
-+ (id<FBSDKGraphRequestConnectionProviding>)connectionProvider
++ (id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
-  return _connectionProvider;
+  return _graphRequestConnectionFactory;
 }
 
-+ (NSDictionary *)gateKeepers
++ (NSDictionary<NSString *, id> *)gateKeepers
 {
   return _gateKeepers;
 }
@@ -274,7 +260,7 @@ static id<FBSDKDataPersisting> _store;
   return _canLoadGateKeepers;
 }
 
-+ (void)setGateKeepers:(NSDictionary *)gateKeepers
++ (void)setGateKeepers:(NSDictionary<NSString *, id> *)gateKeepers
 {
   _gateKeepers = gateKeepers;
 }
@@ -301,10 +287,10 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)reset
 {
-  _requestProvider = nil;
+  _graphRequestFactory = nil;
   _gateKeepers = nil;
   _settings = nil;
-  _connectionProvider = nil;
+  _graphRequestConnectionFactory = nil;
   _store = nil;
   _timestamp = nil;
   _requeryFinishedForAppStart = NO;

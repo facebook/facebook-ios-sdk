@@ -1,41 +1,46 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIProtocol.h"
- #import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIProtocol.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKInternalURLOpener.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKSettings.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPIRequest ()
 
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
-  NS_DESIGNATED_INITIALIZER;
+@property (class, nullable, nonatomic) id<FBSDKInternalURLOpener> internalURLOpener;
+@property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 
-@property (nonatomic, readwrite, strong) id<FBSDKBridgeAPIProtocol> protocol;
+@property (nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
+
++ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings;
+
+// UNCRUSTIFY_FORMAT_OFF
+- (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
+                             protocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                   scheme:(FBSDKURLScheme)scheme
+                               methodName:(nullable NSString *)methodName
+                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
+NS_DESIGNATED_INITIALIZER
+NS_SWIFT_NAME(init(protocol:protocolType:scheme:methodName:parameters:userInfo:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
@@ -25,100 +15,35 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSessionProxyFactory.h"
 
-typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
-  kStateCreated,
-  kStateSerialized,
-  kStateStarted,
-  kStateCompleted,
-  kStateCancelled,
-};
-
-@interface FBSDKGraphRequestConnection (Testing)
-
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
-@property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
-@property (nonatomic, strong) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
-@property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
-@property (nonatomic, strong) Class<FBSDKSettings> settings;
-@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
-@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
-@property (nonatomic, strong) FBSDKLogger *logger;
-
-+ (BOOL)canMakeRequests;
-+ (void)resetCanMakeRequests;
-+ (void)resetDefaultConnectionTimeout;
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                      piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-                                      settings:(id<FBSDKSettings>)settings
-                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
-                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
-                operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                       macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator;
-- (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
-                                  timeout:(NSTimeInterval)timeout;
-- (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
-           toBatch:(NSMutableArray *)batch
-       attachments:(NSMutableDictionary *)attachments
-        batchToken:(NSString *)batchToken;
-- (void)appendAttachments:(NSDictionary *)attachments
-                   toBody:(FBSDKGraphRequestBody *)body
-              addFormData:(BOOL)addFormData
-                   logger:(FBSDKLogger *)logger;
-- (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request;
-- (NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request;
-- (NSString *)_overrideVersionPart;
-- (NSArray *)parseJSONResponse:(NSData *)data
-                         error:(NSError **)error
-                    statusCode:(NSInteger)statusCode;
-- (void)processResultBody:(NSDictionary *)body
-                    error:(NSError *)error
-                 metadata:(FBSDKGraphRequestMetadata *)metadata
-        canNotifyDelegate:(BOOL)canNotifyDelegate;
-- (void)logRequest:(NSMutableURLRequest *)request
-        bodyLength:(NSUInteger)bodyLength
-        bodyLogger:(FBSDKLogger *)bodyLogger
-  attachmentLogger:(FBSDKLogger *)attachmentLogger;
-- (void)        URLSession:(NSURLSession *)session
-                      task:(NSURLSessionTask *)task
-           didSendBodyData:(int64_t)bytesSent
-            totalBytesSent:(int64_t)totalBytesSent
-  totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
-@end
-
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
 
-@property (nonatomic, strong) NSString *appID;
-@property (nonatomic, strong) TestURLSessionProxy *session;
-@property (nonatomic, strong) TestURLSessionProxyFactory *sessionFactory;
-@property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
-@property (nonatomic, strong) TestErrorConfigurationProvider *errorConfigurationProvider;
-@property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
-@property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
-@property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
-@property (nonatomic, strong) TestSettings *settings;
-@property (nonatomic, strong) TestGraphRequestConnectionFactory *connectionFactory;
-@property (nonatomic, strong) TestEventLogger *eventLogger;
-@property (nonatomic, strong) TestProcessInfo *processInfo;
-@property (nonatomic, strong) TestMacCatalystDeterminator *macCatalystDeterminator;
-@property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
+@property (nonatomic) NSString *appID;
+@property (nonatomic) TestURLSessionProxy *session;
+@property (nonatomic) TestURLSessionProxy *secondSession;
+@property (nonatomic) TestURLSessionProxyFactory *sessionFactory;
+@property (nonatomic) TestErrorConfiguration *errorConfiguration;
+@property (nonatomic) TestErrorConfigurationProvider *errorConfigurationProvider;
+@property (nonatomic) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
+@property (nonatomic) TestGraphRequestPiggybackManager *piggybackManager;
+@property (nonatomic) TestGraphRequestPiggybackManagerProvider *graphRequestPiggybackManagerProvider;
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
+@property (nonatomic) TestEventLogger *eventLogger;
+@property (nonatomic) TestProcessInfo *processInfo;
+@property (nonatomic) TestMacCatalystDeterminator *macCatalystDeterminator;
+@property (nonatomic) TestLogger *logger;
+@property (nonatomic) FBSDKGraphRequestConnection *connection;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(id<FBSDKGraphRequestConnecting> connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(id<FBSDKGraphRequestConnecting> connection, NSError *error);
 @property (nonatomic) BOOL didInvokeDelegateRequestConnectionDidSendBodyData;
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                        graphDomain:(NSString *)graphDomain;
+@property (nonatomic) FBSDKGraphRequestMetadata *metadata;
 
 @end
 
@@ -128,41 +53,51 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [super setUp];
 
+  self.metadata = [self createSampleMetadata];
+  [TestAccessTokenWallet reset];
   [FBSDKGraphRequestConnection setCanMakeRequests];
 
   self.appID = @"appid";
   self.session = [TestURLSessionProxy new];
-  self.sessionFactory = [TestURLSessionProxyFactory createWith:self.session];
+  self.secondSession = [TestURLSessionProxy new];
+  self.sessionFactory = [TestURLSessionProxyFactory createWithSessions:@[self.session, self.secondSession]];
   self.errorRecoveryConfiguration = self.nonTransientErrorRecoveryConfiguration;
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
   self.piggybackManager = [TestGraphRequestPiggybackManager new];
-  self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
-  TestSettings.appID = self.appID;
-  self.settings = TestSettings.self;
-  self.connectionFactory = [TestGraphRequestConnectionFactory new];
+  self.graphRequestPiggybackManagerProvider = [TestGraphRequestPiggybackManagerProvider new];
+  self.settings = [TestSettings new];
+  self.settings.appID = self.appID;
+  self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
   self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
-  self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                             errorConfigurationProvider:self.errorConfigurationProvider
-                                                               piggybackManagerProvider:self.piggybackManagerProvider
-                                                                               settings:self.settings
-                                                                      connectionFactory:self.connectionFactory
-                                                                            eventLogger:self.eventLogger
-                                                         operatingSystemVersionComparer:self.processInfo
-                                                                macCatalystDeterminator:self.macCatalystDeterminator];
-  self.connectionFactory.stubbedConnection = self.connection;
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  self.errorFactory = [TestErrorFactory new];
+  [FBSDKGraphRequestConnection configureWithURLSessionProxyFactory:self.sessionFactory
+                                        errorConfigurationProvider:self.errorConfigurationProvider
+                                          piggybackManagerProvider:self.graphRequestPiggybackManagerProvider
+                                                          settings:self.settings
+                                     graphRequestConnectionFactory:self.graphRequestConnectionFactory
+                                                       eventLogger:self.eventLogger
+                                    operatingSystemVersionComparer:self.processInfo
+                                           macCatalystDeterminator:self.macCatalystDeterminator
+                                               accessTokenProvider:TestAccessTokenWallet.class
+                                                 accessTokenSetter:TestAccessTokenWallet.class
+                                                      errorFactory:self.errorFactory
+                                       authenticationTokenProvider:TestAuthenticationTokenWallet.class];
+  self.connection = [FBSDKGraphRequestConnection new];
+  self.graphRequestConnectionFactory.stubbedConnection = self.connection;
 }
 
 - (void)tearDown
 {
+  [FBSDKGraphRequestConnection resetClassDependencies];
   [FBSDKGraphRequestConnection resetDefaultConnectionTimeout];
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   [TestGraphRequestPiggybackManager reset];
   [TestLogger reset];
-  [TestSettings reset];
-  [TestAccessTokenWallet reset];
+  [self.settings reset];
 
   [super tearDown];
 }
@@ -203,146 +138,126 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 // MARK: - Dependencies
 
-- (void)testCreatingWithDefaultUrlSessionProxyFactory
+- (void)testDefaultDependencies
 {
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
-  XCTAssertEqualObjects(
-    sessionProvider.class,
-    FBSDKURLSessionProxyFactory.class,
-    "A graph request connection should have the correct concrete session provider by default"
+  [FBSDKGraphRequestConnection resetClassDependencies];
+
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.sessionProxyFactory,
+    @"A graph request connection should not have a session provider by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.errorConfigurationProvider,
+    @"A graph request connection should not have a error configuration provider by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.piggybackManagerProvider,
+    @"A graph request connection should not have a piggyback manager provider by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.settings,
+    @"A graph request connection should not have a settings type by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.graphRequestConnectionFactory,
+    @"A graph request connection should not have a connection factory by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.eventLogger,
+    @"A graph request connection should not have an events logger by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.operatingSystemVersionComparer,
+    @"A graph request connection should not have an operating system version comparer by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.macCatalystDeterminator,
+    @"A graph request connection should not have a Mac Catalyst determinator by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.accessTokenProvider,
+    @"A graph request connection should not an access token provider by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.accessTokenSetter,
+    @"A graph request connection should not have an access token setter by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.errorFactory,
+    @"A graph request connection should not have an error factory by default"
+  );
+  XCTAssertNil(
+    FBSDKGraphRequestConnection.authenticationTokenProvider,
+    @"A graph request connection should not have an authentication token provider by default"
   );
 }
 
-- (void)testCreatingWithCustomUrlSessionProxyFactory
+- (void)testCreatingWithCustomDependencies
 {
-  NSObject *sessionProvider = (NSObject *)self.connection.sessionProxyFactory;
-
   XCTAssertEqualObjects(
-    sessionProvider.class,
-    TestURLSessionProxyFactory.class,
-    "A graph request connection should persist the session provider it was created with"
+    FBSDKGraphRequestConnection.sessionProxyFactory,
+    self.sessionFactory,
+    @"A graph request connection should persist the session provider it was created with"
   );
-}
-
-- (void)testDerivingSessionFromSessionProvider
-{
-  NSObject *session = (NSObject *)self.connection.session;
-
   XCTAssertEqualObjects(
-    session,
+    self.connection.session,
     self.session,
-    "A graph request connection should derive sessions from the session provider"
+    @"A graph request connection should derive sessions from the session provider"
   );
-}
-
-- (void)testCreatingWithDefaultErrorConfigurationProvider
-{
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *errorConfigurationProvider = (NSObject *)connection.errorConfigurationProvider;
   XCTAssertEqualObjects(
-    errorConfigurationProvider.class,
-    FBSDKErrorConfigurationProvider.class,
-    "A graph request connection should have the correct error configuration provider by default"
+    FBSDKGraphRequestConnection.errorConfigurationProvider,
+    self.errorConfigurationProvider,
+    @"A graph request connection should persist the error configuration provider it was created with"
   );
-}
-
-- (void)testCreatingWithCustomErrorConfigurationProvider
-{
-  NSObject *errorConfigurationProvider = (NSObject *)self.connection.errorConfigurationProvider;
-
   XCTAssertEqualObjects(
-    errorConfigurationProvider.class,
-    TestErrorConfigurationProvider.class,
-    "A graph request connection should persist the error configuration provider it was created with"
+    FBSDKGraphRequestConnection.piggybackManagerProvider,
+    self.graphRequestPiggybackManagerProvider,
+    @"A graph request connection should persist the piggyback manager provider it was created with"
   );
-}
-
-- (void)testCreatingWithDefaultPiggybackManagerProvider
-{
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *piggybackManager = (NSObject *)connection.piggybackManagerProvider;
   XCTAssertEqualObjects(
-    piggybackManager.class,
-    FBSDKGraphRequestPiggybackManagerProvider.class,
-    "A graph request connection should have the correct piggyback manager provider by default"
-  );
-}
-
-- (void)testCreatingWithCustomPiggybackManager
-{
-  NSObject *provider = (NSObject *)self.connection.piggybackManagerProvider;
-
-  XCTAssertEqualObjects(
-    provider,
-    self.piggybackManagerProvider,
-    "A graph request connection should persist the piggyback manager provider it was created with"
-  );
-}
-
-- (void)testCreatingWithDefaultSettings
-{
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *settings = (NSObject *)connection.settings;
-  XCTAssertEqualObjects(
-    settings.class,
-    FBSDKSettings.class,
-    "A graph request connection should have the correct settings type by default"
-  );
-}
-
-- (void)testCreatingWithCustomSettings
-{
-  NSObject *settings = (NSObject *)self.connection.settings;
-
-  XCTAssertEqualObjects(
-    settings,
+    FBSDKGraphRequestConnection.settings,
     self.settings,
-    "A graph request connection should persist the settings it was created with"
+    @"A graph request connection should persist the settings it was created with"
   );
-}
-
-- (void)testCreatingWithDefaultConnectionFactory
-{
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *factory = (NSObject *)connection.connectionFactory;
   XCTAssertEqualObjects(
-    factory.class,
-    FBSDKGraphRequestConnectionFactory.class,
-    "A graph request connection should have the correct connection factory by default"
+    FBSDKGraphRequestConnection.graphRequestConnectionFactory,
+    self.graphRequestConnectionFactory,
+    @"A graph request connection should persist the connection factory it was created with"
   );
-}
-
-- (void)testCreatingWithCustomConnectionFactory
-{
-  NSObject *factory = (NSObject *)self.connection.connectionFactory;
-
   XCTAssertEqualObjects(
-    factory,
-    self.connectionFactory,
-    "A graph request connection should persist the connection factory it was created with"
-  );
-}
-
-- (void)testCreatingWithDefaultEventsLogger
-{
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  NSObject *logger = (NSObject *)connection.eventLogger;
-  XCTAssertEqualObjects(
-    logger,
-    FBSDKAppEvents.singleton,
-    "A graph request connection should have the correct events logger by default"
-  );
-}
-
-- (void)testCreatingWithCustomEventsLogger
-{
-  NSObject *logger = (NSObject *)self.connection.eventLogger;
-
-  XCTAssertEqualObjects(
-    logger,
+    FBSDKGraphRequestConnection.eventLogger,
     self.eventLogger,
-    "A graph request connection should persist the events logger it was created with"
+    @"A graph request connection should persist the events logger it was created with"
+  );
+  XCTAssertEqualObjects(
+    FBSDKGraphRequestConnection.operatingSystemVersionComparer,
+    self.processInfo,
+    @"A graph request connection should persist the operating system comparer it was created with"
+  );
+  XCTAssertEqualObjects(
+    FBSDKGraphRequestConnection.macCatalystDeterminator,
+    self.macCatalystDeterminator,
+    @"A graph request connection should persist the Mac Catalyst determinator it was created with"
+  );
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.accessTokenProvider,
+    TestAccessTokenWallet.class,
+    @"A graph request connection should persist the access token provider it was created with"
+  );
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.accessTokenSetter,
+    TestAccessTokenWallet.class,
+    @"A graph request connection should persist the access token setter it was created with"
+  );
+  XCTAssertEqualObjects(
+    FBSDKGraphRequestConnection.errorFactory,
+    self.errorFactory,
+    @"A graph request connection should persist the error factory it was created with"
+  );
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.authenticationTokenProvider,
+    TestAuthenticationTokenWallet.class,
+    @"A graph request connection should persist the authentication token provider it was created with"
   );
 }
 
@@ -359,7 +274,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testOverridingDefaultConnectionTimeoutWithInvalidTimeout
 {
-  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:-1];
+  FBSDKGraphRequestConnection.defaultConnectionTimeout = -1;
   XCTAssertEqual(
     FBSDKGraphRequestConnection.defaultConnectionTimeout,
     60,
@@ -369,7 +284,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testOverridingDefaultConnectionTimeoutWithValidTimeout
 {
-  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:100];
+  FBSDKGraphRequestConnection.defaultConnectionTimeout = 100;
   XCTAssertEqual(
     FBSDKGraphRequestConnection.defaultConnectionTimeout,
     100,
@@ -380,7 +295,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testDefaultOverriddenVersionPart
 {
   XCTAssertNil(
-    [self.connection _overrideVersionPart],
+    self.connection.overriddenVersionPart,
     "There should not be an overridden version part by default"
   );
 }
@@ -391,7 +306,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   for (NSString *string in strings) {
     [self.connection overrideGraphAPIVersion:string];
     XCTAssertEqualObjects(
-      [self.connection _overrideVersionPart],
+      self.connection.overriddenVersionPart,
       string,
       "Should not be able to override the graph api version with %@ but you can",
       string
@@ -405,7 +320,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   for (NSString *string in strings) {
     [self.connection overrideGraphAPIVersion:string];
     XCTAssertEqualObjects(
-      [self.connection _overrideVersionPart],
+      self.connection.overriddenVersionPart,
       string,
       "Should be able to override the graph api version with a valid version string"
     );
@@ -420,7 +335,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   XCTAssertNotEqual(
     version,
-    [self.connection _overrideVersionPart],
+    self.connection.overriddenVersionPart,
     "Should copy the version so that changes to the original string do not affect the stored value"
   );
 }
@@ -484,7 +399,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                          name:@"foo"
                    completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
-  NSDictionary *expectedParameters = @{ @"name" : @"foo" };
+  NSDictionary<NSString *, id> *expectedParameters = @{ @"name" : @"foo" };
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertEqualObjects(
     metadata.batchParameters,
@@ -521,7 +436,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testAddingRequestToBatchWithBatchParameters
 {
-  NSDictionary *batchParameters = @{
+  NSDictionary<NSString *, id> *batchParameters = @{
     self.name : @"Foo",
     @"Bar" : @"Baz"
   };
@@ -534,7 +449,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                   attachments:[NSMutableDictionary dictionary]
                    batchToken:nil];
 
-  NSDictionary *first = batch.firstObject;
+  NSDictionary<NSString *, id> *first = batch.firstObject;
   XCTAssertEqualObjects(
     first[self.name],
     @"Foo",
@@ -597,7 +512,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   FBSDKGraphRequestMetadata *metadata2 = [self metadataWithRequest:request2];
 
   NSMutableArray *batch = [NSMutableArray array];
-  NSMutableDictionary *attachments = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *attachments = [NSMutableDictionary dictionary];
   [self.connection addRequest:metadata1
                       toBatch:batch
                   attachments:attachments
@@ -614,7 +529,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       "Should store retrieval keys for the attachments taken from the graph requests"
     );
   }];
-  NSDictionary *expectedAttachments = @{
+  NSDictionary<NSString *, id> *expectedAttachments = @{
     @"file0" : data,
     @"file1" : data2
   };
@@ -633,7 +548,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : @"foo" }
                               toBody:body
                          addFormData:NO
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertNil(
     body.capturedKey,
     "Should not append strings if the attachment type is not form data"
@@ -650,7 +565,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : @"foo" }
                               toBody:body
                          addFormData:YES
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedKey,
     self.name,
@@ -666,7 +581,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : image }
                               toBody:body
                          addFormData:NO
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedImage,
     image,
@@ -677,7 +592,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : image }
                               toBody:body
                          addFormData:YES
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedImage,
     image,
@@ -692,7 +607,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : data }
                               toBody:body
                          addFormData:NO
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedData,
     data,
@@ -703,7 +618,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : data }
                               toBody:body
                          addFormData:YES
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedData,
     data,
@@ -721,7 +636,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : attachment }
                               toBody:body
                          addFormData:NO
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedAttachment,
     attachment,
@@ -732,22 +647,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection appendAttachments:@{ self.name : attachment }
                               toBody:body
                          addFormData:YES
-                              logger:nil];
+                              logger:self.logger];
   XCTAssertEqualObjects(
     body.capturedAttachment,
     attachment,
     "Should always append data attachments"
   );
-}
-
-- (void)testAppendingUnknownAttachmentTypeWithoutLogger
-{
-  TestGraphRequestBody *body = [TestGraphRequestBody new];
-  [self.connection appendAttachments:@{ self.name : UIColor.grayColor }
-                              toBody:body
-                         addFormData:NO
-                              logger:nil];
-  // Expect a noop
 }
 
 - (void)testAppendingUnknownAttachmentTypeWithLogger
@@ -801,23 +706,28 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testStartingConnectionWithUninitializedSDK
 {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
-  NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
-  NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
   self.connection.logger = [self createLogger];
 
+  NSString *expectedMessage = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
   [self.connection addRequest:self.sampleRequest
                    completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                     TestSDKError *testError = (TestSDKError *)error;
+                     XCTAssertEqual(
+                       testError.type,
+                       ErrorTypeUnknown,
+                       @"Starting a graph request before the SDK is initialized should return an unknown-type error"
+                     );
                      XCTAssertEqualObjects(
-                       error,
-                       expectedError,
-                       "Starting a graph request before the SDK is initialized should return an error"
+                       testError.message,
+                       expectedMessage,
+                       @"Starting a graph request before the SDK is initialized should return an error with the appropriate mesage"
                      );
                      XCTAssertEqual(
                        weakSelf.connection.state,
                        kStateCancelled,
-                       "Starting a graph request before the SDK is initialized should update the connection state"
+                       @"Starting a graph request before the SDK is initialized should update the connection state"
                      );
                      completionWasCalled = YES;
                    }];
@@ -825,7 +735,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   XCTAssertEqualObjects(
     TestLogger.capturedLogEntry,
-    msg,
+    expectedMessage,
     "Starting a graph request before the SDK is initialized should log a warning"
   );
   XCTAssertEqual(
@@ -945,7 +855,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testErrorFromResultWithMissingErrorInInputBody
 {
-  NSDictionary *result = @{
+  NSDictionary<NSString *, id> *result = @{
     @"body" : @{}
   };
 
@@ -1002,14 +912,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testErrorFromResultMessagePriority
 {
-  NSDictionary *response = @{
+  NSDictionary<NSString *, id> *response = @{
     @"body" : @{
       @"error" : @{ @"error_msg" : @"error_msg" }
     }
   };
-  NSError *error = [self.connection errorFromResult:response request:self.sampleRequest];
+  TestSDKError *error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"error_msg",
     "Should use the 'error_msg' if it's the only message available"
   );
@@ -1021,9 +931,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       }
     }
   };
-  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"error_reason",
     "Should prefer the 'error_reason' to the 'error_msg'"
   );
@@ -1037,9 +947,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       }
     }
   };
-  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  error = (TestSDKError *)[self.connection errorFromResult:response request:self.sampleRequest];
   XCTAssertEqualObjects(
-    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    error.message,
     @"message",
     "Should prefer the 'message' key to other error message keys"
   );
@@ -1060,7 +970,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                    }];
   [self.connection start];
 
-  NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *data = [@"{\"error\": {\"message\": \"Token is broken\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
@@ -1079,7 +989,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
   [self waitForExpectations:@[expectation] timeout:1];
@@ -1112,7 +1022,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
   NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
   NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1145,7 +1055,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
   NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1172,19 +1082,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testUnsettingAccessToken
 {
-  __block int tokenChangeCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                                                                         object:nil
-                                                                        handler:^BOOL (NSNotification *notification) {
-                                                                          if (++tokenChangeCount == 2) {
-                                                                            XCTAssertNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                                                                            XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeOldKey]);
-                                                                            return YES;
-                                                                          }
-                                                                          return NO;
-                                                                        }];
-
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -1194,36 +1092,31 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
   TestAccessTokenWallet.currentAccessToken = accessToken;
 
   [self.connection addRequest:[self requestWithTokenString:accessToken.tokenString]
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
                      XCTAssertNil(result);
-                     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+                     TestSDKError *testError = (TestSDKError *)error;
+                     XCTAssertEqualObjects(@"Token is broken", testError.message);
+                     XCTAssertNil(
+                       TestAccessTokenWallet.currentAccessToken,
+                       "Should clear the current stored access token"
+                     );
                      [expectation fulfill];
                    }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
-  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
-
-  XCTAssertNil([FBSDKAccessToken currentAccessToken]);
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testUnsettingAccessTokenSkipped
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                                                                         object:nil
-                                                                        handler:^BOOL (NSNotification *notification) {
-                                                                          XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                                                                          return YES;
-                                                                        }];
-
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -1234,36 +1127,30 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
 
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  TestAccessTokenWallet.currentAccessToken = accessToken;
 
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me"
                                                                    parameters:@{@"fields" : @""}
                                                                   tokenString:@"notCurrentToken"];
   [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
-    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    TestSDKError *testError = (TestSDKError *)error;
+    XCTAssertEqualObjects(@"Token is broken", testError.message);
+    XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken);
     [expectation fulfill];
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
-  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
-
-  XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testUnsettingAccessTokenFlag
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                                                                         object:nil
-                                                                        handler:^BOOL (NSNotification *notification) {
-                                                                          XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                                                                          return YES;
-                                                                        }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -1273,29 +1160,28 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  TestAccessTokenWallet.currentAccessToken = accessToken;
 
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
   [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
-    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    TestSDKError *testError = (TestSDKError *)error;
+    XCTAssertEqualObjects(@"Token is broken", testError.message);
+    XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken);
     [expectation fulfill];
   }];
   [self.connection start];
 
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(self.missingTokenData, response, nil);
 
-  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
-
-  XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testRequestWithUserAgentSuffix
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = @"UnitTest.1.0.0";
+  self.settings.userAgentSuffix = @"UnitTest.1.0.0";
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1307,8 +1193,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithoutUserAgentSuffix
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = nil;
+  self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1321,8 +1206,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithMacCatalystUserAgent
 {
   self.macCatalystDeterminator.stubbedIsMacCatalystApp = YES;
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  TestSettings.userAgentSuffix = nil;
+  self.settings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
@@ -1344,7 +1228,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection start];
 
   NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:200 HTTPVersion:nil headerFields:nil];
 
   self.session.capturedCompletion(data, response, nil);
 
@@ -1367,7 +1251,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithBatchConstructionWithSinglePostRequest
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     @"first_key" : @"first_value",
   };
   id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
@@ -1428,7 +1312,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   self.connection.logger = [self createLogger];
   NSString *clientToken = @"client_token";
-  TestSettings.clientToken = clientToken;
+  self.settings.clientToken = clientToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
@@ -1443,17 +1327,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAccessTokenWithRequestWithGamingClientToken
 {
   NSString *clientToken = @"client_token";
-  TestSettings.clientToken = clientToken;
+  self.settings.clientToken = clientToken;
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+  TestAuthenticationTokenWallet.currentAuthenticationToken = authToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
 
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
+  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
 }
 
 #pragma mark - Error recovery.
@@ -1462,23 +1346,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  FBSDKSettings.graphErrorRecoveryEnabled = YES;
-
-  TestURLSessionProxy *fakeSession = [TestURLSessionProxy new];
-  TestURLSessionProxyFactory *fakeProxyFactory = [TestURLSessionProxyFactory createWithSessions:@[fakeSession]];
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = YES;
 
   self.errorRecoveryConfiguration = self.transientErrorRecoveryConfiguration;
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider.configuration = self.errorConfiguration;
-  id<FBSDKGraphRequestConnecting> retryConnection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory
-                                                                                             errorConfigurationProvider:self.errorConfigurationProvider
-                                                                                               piggybackManagerProvider:self.piggybackManagerProvider
-                                                                                                               settings:self.settings
-                                                                                                      connectionFactory:self.connectionFactory
-                                                                                                            eventLogger:self.eventLogger
-                                                                                         operatingSystemVersionComparer:self.processInfo
-                                                                                                macCatalystDeterminator:self.macCatalystDeterminator];
-  self.connectionFactory.stubbedConnection = retryConnection;
+  id<FBSDKGraphRequestConnecting> retryConnection = [FBSDKGraphRequestConnection new];
+  self.graphRequestConnectionFactory.stubbedConnection = retryConnection;
+
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
                    completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
@@ -1495,7 +1370,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   // The first captured completion will be invoked and cause the retry
   self.session.capturedCompletion(data, response, nil);
@@ -1503,7 +1378,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   // It's necessary to dispatch async to avoid the completion from being invoked before it is captured
   dispatch_async(dispatch_get_main_queue(), ^{
     NSData *secondData = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-    fakeSession.capturedCompletion(secondData, response, nil);
+    self.secondSession.capturedCompletion(secondData, response, nil);
   });
 
   [self waitForExpectations:@[expectation] timeout:1];
@@ -1511,7 +1386,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRetryDisabled
 {
-  FBSDKSettings.graphErrorRecoveryEnabled = NO;
+  FBSDKSettings.sharedSettings.isGraphErrorRecoveryEnabled = NO;
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
@@ -1532,7 +1407,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   // The first captured completion will be invoked and cause the retry
   self.session.capturedCompletion(data, response, nil);
@@ -1567,7 +1442,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     @"message1 Link: link1",
     @"message2 Link: link2"
   ];
-  [self.connection processResultBody:self.debugResponse error:nil metadata:nil canNotifyDelegate:NO];
+  [self.connection processResultBody:self.debugResponse error:nil metadata:self.metadata canNotifyDelegate:NO];
   XCTAssertEqualObjects(
     TestLogger.capturedLogEntries,
     entries,
@@ -1578,8 +1453,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testProcessingResultBodyWithRandomizedDebugDictionary
 {
   for (int i = 1; i < 100; i++) {
-    NSDictionary *body = [Fuzzer randomizeWithJson:self.debugResponse];
-    [self.connection processResultBody:body error:nil metadata:nil canNotifyDelegate:NO];
+    NSDictionary<NSString *, id> *body = [Fuzzer randomizeWithJson:self.debugResponse];
+    [self.connection processResultBody:body error:nil metadata:self.metadata canNotifyDelegate:NO];
   }
 }
 
@@ -1599,6 +1474,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testLogRequestWithActiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
+  [request addValue:@"user agent" forHTTPHeaderField:@"User-Agent"];
+  [request addValue:@"content type" forHTTPHeaderField:@"Content-Type"];
   TestLogger *logger = [self createLogger];
   TestLogger *bodyLogger = [self createLogger];
   TestLogger *attachmentLogger = [self createLogger];
@@ -1624,8 +1501,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSArray *expectedValues = @[
     @"https://example.com",
     @"GET",
-    @"",
-    @"",
+    @"user agent",
+    @"content type",
     @"1 kB",
     @"bodyContents",
     @"attachmentLoggerContents"
@@ -1646,7 +1523,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testInvokesDelegate
 {
   self.connection.delegate = self;
-  [self.connection URLSession:nil task:nil didSendBodyData:0 totalBytesSent:0 totalBytesExpectedToSend:0];
+  [self.connection URLSession:NSURLSession.sharedSession
+                         task:[NSURLSessionDataTask new]
+              didSendBodyData:0
+               totalBytesSent:0
+     totalBytesExpectedToSend:0];
+
   XCTAssertTrue(
     self.didInvokeDelegateRequestConnectionDidSendBodyData,
     "The url session data delegate should pass through to the graph request connection delegate"
@@ -1665,7 +1547,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   return self.requestForMeWithEmptyFields;
 }
 
-- (id<FBSDKGraphRequest>)sampleRequestWithParameters:(NSDictionary *)parameters
+- (id<FBSDKGraphRequest>)sampleRequestWithParameters:(NSDictionary<NSString *, id> *)parameters
 {
   return [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:parameters];
 }
@@ -1698,10 +1580,10 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (NSData *)missingTokenData
 {
-  return [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  return [@"{\"error\": {\"message\": \"Token is broken\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSDictionary *)sampleErrorDictionary
+- (NSDictionary<NSString *, id> *)sampleErrorDictionary
 {
   return @{
     @"code" : @200,
@@ -1736,7 +1618,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                            recoveryActionName:@"Recovery Action"];
 }
 
-- (NSDictionary *)debugResponse
+- (NSDictionary<NSString *, id> *)debugResponse
 {
   return @{
     @"__debug__" : @{
@@ -1759,6 +1641,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (NSURL *)sampleUrl
 {
   return [NSURL URLWithString:@"https://example.com"];
+}
+
+- (FBSDKGraphRequestMetadata *)createSampleMetadata
+{
+  return [[FBSDKGraphRequestMetadata alloc] initWithRequest:self.sampleRequest
+                                          completionHandler:nil
+                                            batchParameters:nil];
 }
 
 @end

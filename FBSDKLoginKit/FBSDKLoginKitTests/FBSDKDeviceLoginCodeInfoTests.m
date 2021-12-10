@@ -1,29 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to
-// use, copy, modify, and distribute this software in source code or binary form
-// for use in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
-#else
- #import "FBSDKDeviceLoginCodeInfo.h"
-#endif
+#import "FBSDKDeviceLoginCodeInfo.h"
+#import "FBSDKDeviceLoginCodeInfo+Testing.h"
 
 static NSString *const _validIdentifier = @"abcd";
 static NSString *const _validIdentifier2 = @"123";
@@ -33,17 +19,7 @@ static NSString *const _validLoginCode2 = @"123";
 static NSString *const _validLoginCode3 = @"123abc";
 static NSURL *_validVerifictationURL;
 static NSDate *_validexpirationDate;
-static NSUInteger *const _validPollingInterval = 1;
-
-@interface FBSDKDeviceLoginCodeInfo (Testing)
-
-- (instancetype)initWithIdentifier:(NSString *)identifier
-                         loginCode:(NSString *)loginCode
-                   verificationURL:(NSURL *)verificationURL
-                    expirationDate:(NSDate *)expirationDate
-                   pollingInterval:(NSUInteger *)pollingInterval;
-
-@end
+static NSUInteger const _validPollingInterval = 10;
 
 @interface FBSDKDeviceLoginCodeInfoTests : XCTestCase
 
@@ -74,6 +50,16 @@ static NSUInteger *const _validPollingInterval = 1;
   NSString *stringCastLoginCode = (NSString *)@123;
   [self assertCreationSucceedWithIdentifier:stringCastIdentifier
                                   loginCode:stringCastLoginCode];
+}
+
+- (void)testMinimumPollingInterval
+{
+  FBSDKDeviceLoginCodeInfo *deviceLoginCodeInfo = [[FBSDKDeviceLoginCodeInfo alloc] initWithIdentifier:_validIdentifier
+                                                                                             loginCode:_validLoginCode
+                                                                                       verificationURL:_validVerifictationURL
+                                                                                        expirationDate:_validexpirationDate
+                                                                                       pollingInterval:4];
+  XCTAssertEqual(deviceLoginCodeInfo.pollingInterval, 5);
 }
 
 - (void)assertCreationSucceedWithIdentifier:(NSString *)identifier loginCode:(NSString *)loginCode

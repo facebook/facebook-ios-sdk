@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import XCTest
 
@@ -37,7 +27,6 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     static let methodName = "open"
     static let methodVersion = "v1"
     static let redirectURI = "fb://bridge/open?bridge_args=%7B%22action_id%22%3A%22123%22%7D"
-    static let scheme = "https"
     static let touch = "touch"
     static let unknownErrorCode = 12345
   }
@@ -68,53 +57,49 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     }
   }
 
-  let bridge = BridgeAPIProtocolWebV1()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var errorFactory: ErrorCreating!
+  var bridge: BridgeAPIProtocolWebV1!
+  // swiftlint:enable implicitly_unwrapped_optional
 
-  func testCreatingURLWithoutInputs() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: nil,
-        scheme: nil,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil
-      ),
-      "Should not create a url without a method name or an action ID"
+  override func setUp() {
+    super.setUp()
+
+    errorFactory = TestErrorFactory()
+    bridge = BridgeAPIProtocolWebV1(errorFactory: errorFactory)
+  }
+
+  override func tearDown() {
+    errorFactory = nil
+    bridge = nil
+
+    super.tearDown()
+  }
+
+  func testInitialization() {
+    XCTAssertTrue(
+      bridge.errorFactory === errorFactory,
+      "Should be able to create an instance with an error factory"
     )
   }
 
-  func testCreatingURLWithoutActionID() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: nil,
-        scheme: Values.scheme,
-        methodName: Values.methodName,
-        methodVersion: Values.methodVersion,
-        parameters: QueryParameters.withEmptyBridgeArgs
-      ),
-      "Should not create a url without action ID"
+  func testDefaultDependencies() throws {
+    bridge = BridgeAPIProtocolWebV1()
+    let factory = try XCTUnwrap(
+      bridge.errorFactory as? ErrorFactory,
+      "The class should have an error factory by default"
     )
-  }
-
-  func testCreatingURLWithoutMethodName() {
-    XCTAssertNil(
-      try? bridge.requestURL(
-        withActionID: Values.actionID,
-        scheme: Values.scheme,
-        methodName: nil,
-        methodVersion: Values.methodVersion,
-        parameters: QueryParameters.withEmptyBridgeArgs
-      ),
-      "Should not create a url without a method name"
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "The default factory should use the shared error reporter"
     )
   }
 
   func testCreatingURLWithAllFields() throws {
     let url = try bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: QueryParameters.valid
     )
     let expectedGraphVersion = try XCTUnwrap(Settings.shared.graphAPIVersion)

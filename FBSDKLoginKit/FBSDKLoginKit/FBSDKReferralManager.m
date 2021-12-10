@@ -1,37 +1,20 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKReferralManager+Internal.h"
+#import "FBSDKReferralManager+Internal.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKLoginConstants.h"
- #import "FBSDKReferralManagerLogger.h"
- #import "FBSDKReferralManagerResult.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKReferralManagerLogger.h"
+#import "FBSDKReferralManagerResult.h"
 
 static NSString *const FBSDKReferralPath = @"/dialog/share_referral";
 static NSString *const ReferralCodesKey = @"fb_referral_codes";
@@ -40,16 +23,34 @@ static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentica
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 static int const FBClientStateChallengeLength = 20;
 
+@interface FBSDKReferralManager ()
+@property (nonatomic) NSString *expectedChallenge;
+@property (nonatomic) UIViewController *viewController;
+@property (nonatomic) FBSDKReferralManagerResultBlock handler;
+@property (nonatomic) FBSDKReferralManagerLogger *logger;
+@property (nonatomic) BOOL isPerformingReferral;
+@end
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKReferralManager
+
+static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
+
+- (id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
 {
-  UIViewController *_viewController;
-  FBSDKReferralManagerResultBlock _handler;
-  FBSDKReferralManagerLogger *_logger;
-  BOOL _isPerformingReferral;
-  NSString *_expectedChallenge;
+  if (!_bridgeAPIRequestOpener) {
+    _bridgeAPIRequestOpener = FBSDKBridgeAPI.sharedInstance;
+  }
+  return _bridgeAPIRequestOpener;
 }
 
-- (instancetype)initWithViewController:(UIViewController *)viewController
++ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
+}
+
+- (instancetype)initWithViewController:(nullable UIViewController *)viewController
 {
   self = [super init];
   if (self) {
@@ -67,7 +68,7 @@ static int const FBClientStateChallengeLength = 20;
   [_logger logReferralStart];
 
   @try {
-    [FBSDKInternalUtility validateURLSchemes];
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes];
   } @catch (NSException *exception) {
     NSError *error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown
                                        message:[NSString stringWithFormat:@"%@: %@", exception.name, exception.reason]];
@@ -81,32 +82,32 @@ static int const FBClientStateChallengeLength = 20;
       [self handleOpenURLComplete:didOpen error:error];
     };
 
-    [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:referralURL
-                                                              sender:self
-                                                  fromViewController:_viewController
-                                                             handler:completionHandler];
+    [self.bridgeAPIRequestOpener openURLWithSafariViewController:referralURL
+                                                          sender:self
+                                              fromViewController:_viewController
+                                                         handler:completionHandler];
   }
 }
 
-- (NSURL *)referralURL
+- (nullable NSURL *)referralURL
 {
   NSError *error;
   NSURL *url;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
 
-  [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.appID forKey:@"app_id"];
+  [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.sharedSettings.appID forKey:@"app_id"];
 
   _expectedChallenge = [self stringForChallenge];
   [FBSDKTypeUtility dictionary:params setObject:_expectedChallenge forKey:@"state"];
 
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     [FBSDKTypeUtility dictionary:params setObject:redirectURL forKey:@"redirect_uri"];
 
-    url = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                     path:FBSDKReferralPath
-                                          queryParameters:params
-                                                    error:&error];
+    url = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                   path:FBSDKReferralPath
+                                                        queryParameters:params
+                                                                  error:&error];
   }
 
   if (error || !url) {
@@ -125,7 +126,7 @@ static int const FBClientStateChallengeLength = 20;
   return [challenge stringByReplacingOccurrencesOfString:@"+" withString:@"="];
 }
 
-- (void)invokeHandler:(FBSDKReferralManagerResult *)result error:(NSError *)error
+- (void)invokeHandler:(nullable FBSDKReferralManagerResult *)result error:(NSError *)error
 {
   _isPerformingReferral = NO;
   [_logger logReferralEnd:result error:error];
@@ -174,7 +175,7 @@ static int const FBClientStateChallengeLength = 20;
   return challengeValid;
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -185,7 +186,7 @@ static int const FBClientStateChallengeLength = 20;
 
   if (isFacebookURL) {
     NSError *error;
-    NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
+    NSDictionary<NSString *, id> *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
     if (![self validateChallenge:params[ChalllengeKey]]) {
       error = [FBSDKError errorWithCode:FBSDKLoginErrorBadChallengeString
@@ -218,12 +219,12 @@ static int const FBClientStateChallengeLength = 20;
 }
 
 - (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+     forApplication:(nullable UIApplication *)application
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
 {
   // verify the URL is intended as a callback for the SDK's referral request
-  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.appID]]
+  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"authorize"];
 }
 
@@ -238,5 +239,6 @@ static int const FBClientStateChallengeLength = 20;
 }
 
 @end
+#pragma clang diagnostic pop
 
 #endif

@@ -1,31 +1,32 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
+
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
 
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 
 #define FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
 
+@protocol FBSDKGraphRequestFactory;
+
+NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ServerConfigurationManager)
 @interface FBSDKServerConfigurationManager : NSObject
+
+@property (class, readonly) FBSDKServerConfigurationManager *shared;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
   Returns the locally cached configuration.
@@ -33,13 +34,19 @@ NS_SWIFT_NAME(ServerConfigurationManager)
  The result will be valid for the appID from FBSDKSettings, but may be expired. A network request will be
  initiated to update the configuration if a valid and unexpired configuration is not available.
  */
-+ (FBSDKServerConfiguration *)cachedServerConfiguration;
+- (FBSDKServerConfiguration *)cachedServerConfiguration;
 
 /**
   Executes the completionBlock with a valid and current configuration when it is available.
 
  This method will use a cached configuration if it is valid and not expired.
  */
-+ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock;
+- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
+
+- (void)configureWithGraphRequestFactory     :(id<FBSDKGraphRequestFactory>)graphRequestFactory
+           graphRequestConnectionFactory     :(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+  NS_SWIFT_NAME(configure(graphRequestFactory:graphRequestConnectionFactory:));
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,0 +1,100 @@
+name: Bug Report
+description: Report an issue that you're running into
+labels: bug,needs-triage
+body:
+- type: checkboxes
+  attributes:
+    label: Checklist before submitting a bug report
+    options:
+    - label: "I've updated to the latest released version of the SDK"
+      required: false
+    - label: "I've searched for existing [GitHub issues](https://github.com/facebook/facebook-ios-sdk/issues)"
+      required: true
+    - label: "I've looked for existing answers on [Stack Overflow](https://facebook.stackoverflow.com), the [Facebook Developer Community Forum](https://developers.facebook.com/community/) and the [Facebook Developers Group](https://www.facebook.com/groups/fbdevelopers)"
+      required: true
+    - label: "I've read the [Code of Conduct](https://github.com/facebook/facebook-ios-sdk/blob/main/CODE_OF_CONDUCT.md)"
+      required: true
+    - label: This issue is not security related and can safely be disclosed publicly on GitHub
+      required: true
+- type: input
+  id: xcode-version
+  attributes:
+    label: Xcode version
+    description: "Which Xcode version are you using?"
+    placeholder: "X.X.X"
+  validations:
+    required: true
+- type: input
+  id: fbsdk-version
+  attributes:
+    label: Facebook iOS SDK version
+    description: "Which version of the Facebook iOS SDK are you using when you find the bug?"
+    placeholder: "X.X.X"
+  validations:
+    required: true
+- type: dropdown
+  id: dependency-manager
+  attributes:
+    label: Dependency Manager
+    description: "Which dependency manager are you using to include the SDK?"
+    options:
+      - SPM
+      - CocoaPods
+      - Carthage
+      - Prebuilt Binaries
+      - Building from Source
+      - Other / I don't know
+  validations:
+    required: true
+- type: dropdown
+  id: package
+  attributes:
+    label: SDK Framework
+    description: "In which framework of the Facebook iOS SDK did you find the bug?"
+    options:
+      - Core
+      - Login
+      - Share
+      - Gaming Services
+      - TVOS
+      - Other / I don't know
+  validations:
+    required: true
+- type: textarea
+  id: goals
+  attributes:
+    label: Goals
+    description: "What do you want to achieve?"
+  validations:
+    required: true
+- type: textarea
+  id: expected
+  attributes:
+    label: Expected results
+    description: "What do you expect to happen?"
+  validations:
+    required: true
+- type: textarea
+  id: actual
+  attributes:
+    label: Actual results
+    description: "What actually happened? Can you provide a stack trace?"
+  validations:
+    required: true
+- type: textarea
+  id: steps-to-reproduce
+  attributes:
+    label: Steps to reproduce
+    description: "What are the steps necessary to reproduce the bug?"
+- type: textarea
+  id: code-samples
+  attributes:
+    label: Code samples & details
+    description: "Please provide a code sample, as well as any additional details, to help us track down the issue. If you can provide a link to a test project that allows us to reproduce the issue, this helps us immensely in both the speed and quality of the fix.
+    **Note:** Remember to format your code for readability.
+    "
+    value: "// INSERT YOUR CODE HERE
+
+    var example = \"Example code\"
+    "
+    render: swift

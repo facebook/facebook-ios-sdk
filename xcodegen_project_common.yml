@@ -1,0 +1,17 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+options:
+  deploymentTarget:
+    iOS: '10.0'
+  usesTabs: false
+  tabWidth: 2
+  indentWidth: 2
+  defaultConfig: Debug
+  xcodeVersion: '13.0'
+
+attributes:
+  ORGANIZATIONNAME: Facebook

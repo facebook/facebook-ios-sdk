@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKErrorRecoveryAttempter.h"
 
@@ -25,7 +15,7 @@
 
 @implementation FBSDKTemporaryErrorRecoveryAttempter
 
-- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
+- (void)attemptRecoveryFromError:(NSError *)error completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   @try {
     completionHandler(YES);
@@ -38,7 +28,7 @@
 
 @implementation FBSDKErrorRecoveryAttempter
 
-+ (instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration
++ (nullable instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration
 {
   if (configuration.errorCategory == FBSDKGraphRequestErrorTransient) {
     return [FBSDKTemporaryErrorRecoveryAttempter new];
@@ -46,7 +36,7 @@
     return nil;
   }
   if ([configuration.recoveryActionName isEqualToString:@"login"]) {
-    Class loginRecoveryAttmpterClass = NSClassFromString(@"_FBSDKLoginRecoveryAttempter");
+    Class loginRecoveryAttmpterClass = NSClassFromString(@"FBSDKLoginRecoveryAttempter");
     if (loginRecoveryAttmpterClass) {
       return [loginRecoveryAttmpterClass new];
     }
@@ -54,7 +44,7 @@
   return nil;
 }
 
-- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
+- (void)attemptRecoveryFromError:(NSError *)error completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   // should be implemented by subclasses.
 }

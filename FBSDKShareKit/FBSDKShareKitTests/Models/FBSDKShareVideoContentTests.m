@@ -1,29 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
@@ -56,8 +42,8 @@
   FBSDKShareVideoContent *content = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
-  FBSDKShareVideoContent *unarchivedObject = [unarchiver decodeObjectOfClass:[FBSDKShareVideoContent class]
+  unarchiver.requiresSecureCoding = YES;
+  FBSDKShareVideoContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKShareVideoContent.class
                                                                       forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);
 }
@@ -151,7 +137,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsDefault
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
@@ -169,7 +155,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsVideoData
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];

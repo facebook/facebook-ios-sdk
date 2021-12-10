@@ -1,0 +1,247 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: FBSDKLoginKit
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
+options:
+  deploymentTarget:
+    tvOS: '10.0'
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    ENABLE_NS_ASSERTIONS: YES
+
+targets:
+  FBSDKLoginKit-Static:
+    type: framework
+    platform: iOS
+    productName: FBSDKLoginKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKLoginKit/Internal
+      - path: FBSDKLoginKit
+        headerVisibility: public
+        excludes:
+          - Internal
+          - Info.plist
+          - Swift
+      - path: FBSDKLoginKit/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+      - path: FBSDKLoginKit/Swift
+        excludes:
+          - Exports.swift
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKLoginKit-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-Static.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
+  FBSDKLoginKit-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FBSDKLoginKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKLoginKit/Internal
+      - path: FBSDKLoginKit
+        headerVisibility: public
+        excludes:
+          - Internal
+          - Info.plist
+          - Swift
+      - path: FBSDKLoginKit/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+      - path: FBSDKLoginKit/Swift
+        excludes:
+          - Exports.swift
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKLoginKit-Dynamic.xcconfig
+      Release: Configurations/FBSDKLoginKit-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
+  FBSDKLoginKit_TV-Static:
+    type: framework
+    platform: tvOS
+    productName: FBSDKLoginKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKLoginKit/Internal
+      - path: FBSDKLoginKit
+        headerVisibility: public
+        excludes:
+          - FBSDKLoginConfiguration.[h,m]
+          - FBSDKReferral*
+          - FBSDKLoginButton*
+          - FBSDKLoginConfiguration
+          - FBSDKLoginManager.[h,m]
+          - FBSDKLoginManagerLoginResult*
+          - FBSDKLoginTooltipView*
+          - FBSDKTooltipView*
+          - Internal
+          - Info.plist
+          - Swift/*.swift
+      - path: FBSDKLoginKit/Internal
+        headerVisibility: project
+        excludes:
+          - FBSDKAuthenticationToken*
+          - _FBSDKLoginRecoveryAttempter*
+          - FBSDKLoginCompletion*
+          - FBSDKLoginError*
+          - FBSDKLoginManagerLogger*
+          - FBSDKLoginUtility*
+          - FBSDKMonotonicTime*
+          - FBSDKPermission*
+          - FBSDKProfileFactory*
+          - FBSDKReferral*
+          - FBSDKProfileCreating*
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
+  FBSDKLoginKit_TV-Dynamic:
+    type: framework
+    platform: tvOS
+    productName: FBSDKLoginKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKLoginKit/Internal
+      - path: FBSDKLoginKit
+        headerVisibility: public
+        excludes:
+          - FBSDKLoginConfiguration.[h,m]
+          - FBSDKReferral*
+          - FBSDKLoginButton*
+          - FBSDKLoginConfiguration
+          - FBSDKLoginManager.[h,m]
+          - FBSDKLoginManagerLoginResult*
+          - FBSDKLoginTooltipView*
+          - FBSDKTooltipView*
+          - Internal
+          - Info.plist
+          - Swift/*.swift
+      - path: FBSDKLoginKit/Internal
+        headerVisibility: project
+        excludes:
+          - FBSDKAuthenticationToken*
+          - _FBSDKLoginRecoveryAttempter*
+          - FBSDKLoginCompletion*
+          - FBSDKLoginError*
+          - FBSDKLoginManagerLogger*
+          - FBSDKLoginUtility*
+          - FBSDKMonotonicTime*
+          - FBSDKPermission*
+          - FBSDKProfileFactory*
+          - FBSDKReferral*
+          - FBSDKProfileCreating*
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKLoginKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKLoginKit-tvOS-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
+  FBSDKLoginKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBSDKLoginKitTests
+    configFiles:
+      Debug: Configurations/FBSDKLoginKitTests.xcconfig
+      Release: Configurations/FBSDKLoginKitTests.xcconfig
+    dependencies:
+      - target: FBSDKLoginKit-Dynamic
+        embed: false
+      - target: TestTools/TestTools
+        embed: false
+    settings:
+      GCC_WARN_UNUSED_FUNCTION: NO
+
+schemes:
+  FBSDKLoginKit-Static:
+    build:
+      targets:
+        FBSDKLoginKit-Static: all
+  FBSDKLoginKit-Dynamic:
+    build:
+      targets:
+        FBSDKLoginKit-Dynamic: all
+    test:
+      targets:
+        - FBSDKLoginKitTests
+      coverageTargets:
+        - FBSDKLoginKit-Dynamic
+  FBSDKLoginKit_TV-Static:
+    build:
+      targets:
+        FBSDKLoginKit_TV-Static: all
+  FBSDKLoginKit_TV-Dynamic:
+    build:
+      targets:
+        FBSDKLoginKit_TV-Dynamic: all

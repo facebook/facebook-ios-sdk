@@ -1,28 +1,20 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKAppEventsConfigurationManager.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
-#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestConnectionFactory.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKSettingsProtocol.h"
 
 static NSString *const FBSDKAppEventsConfigurationKey = @"com.facebook.sdk:FBSDKAppEventsConfiguration";
@@ -33,9 +25,9 @@ static const NSTimeInterval kTimeout = 4.0;
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
-@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> requestFactory;
-@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
-@property (nonnull, nonatomic) FBSDKAppEventsConfiguration *configuration;
+@property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
@@ -62,8 +54,8 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 + (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
-            graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
-  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   [self.shared configureWithStore:store
                          settings:settings
@@ -75,13 +67,13 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
-            graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
-  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
 {
   self.store = store;
   self.settings = settings;
-  self.requestFactory = graphRequestFactory;
-  self.connectionFactory = graphRequestConnectionFactory;
+  self.graphRequestFactory = graphRequestFactory;
+  self.graphRequestConnectionFactory = graphRequestConnectionFactory;
   id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
   if ([data isKindOfClass:NSData.class]) {
     if (@available(iOS 11.0, tvOS 11.0, *)) {
@@ -99,19 +91,9 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 #pragma clang diagnostic pop
 
-+ (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration
-{
-  return self.shared.cachedAppEventsConfiguration;
-}
-
-- (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration
+- (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration
 {
   return self.configuration;
-}
-
-+ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block
-{
-  [self.shared loadAppEventsConfigurationWithBlock:block];
 }
 
 - (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block
@@ -130,11 +112,11 @@ static dispatch_once_t sharedConfigurationManagerNonce;
       return;
     }
     self.isLoadingConfiguration = true;
-    id<FBSDKGraphRequest> request = [self.requestFactory createGraphRequestWithGraphPath:appID
-                                                                              parameters:@{
+    id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:appID
+                                                                                   parameters:@{
                                        @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", [UIDevice currentDevice].systemVersion]
                                      }];
-    id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionFactory createGraphRequestConnection];
+    id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;
     [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self _processResponse:result error:error];
@@ -145,12 +127,6 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)_processResponse:(id)response
-                   error:(NSError *)error
-{
-  [self.shared _processResponse:response error:error];
-}
-
 - (void)_processResponse:(id)response
                    error:(NSError *)error
 {
@@ -159,6 +135,10 @@ static dispatch_once_t sharedConfigurationManagerNonce;
     self.isLoadingConfiguration = NO;
     self.hasRequeryFinishedForAppStart = YES;
     if (error) {
+      for (FBSDKAppEventsConfigurationManagerBlock completionBlock in self.completionBlocks) {
+        completionBlock();
+      }
+      [self.completionBlocks removeAllObjects];
       return;
     }
     self.configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:response];
@@ -180,15 +160,9 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   return self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < 3600;
 }
 
-#if DEBUG
- #if FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)reset
-{
-  [self.shared reset];
-}
-
-- (void)reset
 {
   // Reset the nonce so that a new instance will be created.
   if (sharedConfigurationManagerNonce) {
@@ -196,7 +170,6 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   }
 }
 
- #endif
 #endif
 
 @end

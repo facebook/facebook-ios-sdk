@@ -1,92 +1,33 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKAuthenticationTokenCreating.h"
+#import "FBSDKAuthenticationTokenFactory.h"
+#import "FBSDKAuthenticationTokenFactory+Testing.h"
+#import "FBSDKAuthenticationTokenHeader.h"
+#import "FBSDKAuthenticationTokenHeader+Testing.h"
+#import "FBSDKDevicePoller.h"
+#import "FBSDKDevicePolling.h"
+#import "FBSDKLoginCompletion+Internal.h"
+#import "FBSDKLoginProviding.h"
+#import "FBSDKNonceUtility.h"
+#import "FBSDKPermission.h"
+#import "FBSDKProfileFactory.h"
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenCreating.h>
- #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenFactory.h>
- #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenHeader.h>
- #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
- #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
- #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
- #import <FBSDKLoginKit+Internal/FBSDKProfileFactory.h>
-#else
- #import "FBSDKAuthenticationTokenCreating.h"
- #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKAuthenticationTokenHeader.h"
- #import "FBSDKLoginCompletion+Internal.h"
- #import "FBSDKNonceUtility.h"
- #import "FBSDKPermission.h"
- #import "FBSDKProfileFactory.h"
-#endif
-
-@class FBSDKAuthenticationTokenClaims;
-
-NS_ASSUME_NONNULL_BEGIN
-
-// Categories needed to expose private methods to Swift
-
-@interface FBSDKLoginButton (Testing)
-
-- (FBSDKLoginConfiguration *)loginConfiguration;
-- (BOOL)_isAuthenticated;
-- (void)_fetchAndSetContent;
-- (void)_initializeContent;
-- (void)_updateContentForAccessToken;
-- (void)_updateContentForUserProfile:(nullable FBSDKProfile *)profile;
-- (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
-- (void)_profileDidChangeNotification:(NSNotification *)notification;
-- (nullable NSString *)userName;
-- (nullable NSString *)userID;
-
-@end
-
-@interface FBSDKAccessToken (Testing)
-
-+ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
-          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
-
-@end
-
-@interface FBSDKProfile (Testing)
-
-+ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
-   shouldPostNotification:(BOOL)shouldPostNotification;
-
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
-+ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token;
-
-@end
-
-@interface FBSDKDeviceLoginManagerResult (Testing)
-
-- (instancetype)initWithToken:(nullable FBSDKAccessToken *)token
-                  isCancelled:(BOOL)cancelled;
-
-@end
-
-NS_ASSUME_NONNULL_END
+// +Testing.h files
+#import "FBSDKAccessToken+Testing.h"
+#import "FBSDKDeviceLoginCodeInfo+Testing.h"
+#import "FBSDKDeviceLoginManager+Testing.h"
+#import "FBSDKDeviceLoginManagerResult+Testing.h"
+#import "FBSDKInternalUtility+Testing.h"
+#import "FBSDKLoginButton+Testing.h"
+#import "FBSDKLoginManager+Testing.h"
+#import "FBSDKProfile+Testing.h"
+#import "FBSDKSettings+Testing.h"

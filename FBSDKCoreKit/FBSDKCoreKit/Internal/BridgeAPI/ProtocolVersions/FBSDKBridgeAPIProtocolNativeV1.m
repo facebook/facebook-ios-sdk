@@ -1,46 +1,36 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolNativeV1.h"
 
- #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 
- #import "FBSDKApplicationLifecycleNotifications.h"
- #import "FBSDKBridgeAPIRequest.h"
- #import "FBSDKConstants.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKError.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKPasteboard.h"
- #import "FBSDKSettings.h"
- #import "UIPasteboard+Pasteboard.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
+#import "FBSDKApplicationLifecycleNotifications.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKConstants.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKPasteboard.h"
+#import "FBSDKSettings.h"
+#import "UIPasteboard+Pasteboard.h"
+
+#define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
 
 const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys =
 {
   .bridgeArgs = @"bridge_args",
   .methodArgs = @"method_args",
-  .methodVersion = @"version",
 };
 
 const FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys =
@@ -101,45 +91,46 @@ static const struct {
 
 @implementation FBSDKBridgeAPIProtocolNativeV1
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
-- (instancetype)initWithAppScheme:(NSString *)appScheme
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme
 {
+  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
   return [self initWithAppScheme:appScheme
                       pasteboard:[UIPasteboard generalPasteboard]
              dataLengthThreshold:FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold
-                  includeAppIcon:YES];
+                  includeAppIcon:YES
+                    errorFactory:errorFactory];
 }
 
-- (instancetype)initWithAppScheme:(NSString *)appScheme
-                       pasteboard:(id<FBSDKPasteboard>)pasteboard
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme
+                       pasteboard:(nullable id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
+                     errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   if ((self = [super init])) {
     _appScheme = [appScheme copy];
     _pasteboard = pasteboard;
     _dataLengthThreshold = dataLengthThreshold;
     _includeAppIcon = includeAppIcon;
+    _errorFactory = errorFactory;
   }
   return self;
 }
 
- #pragma mark - FBSDKBridgeAPIProtocol
+#pragma mark - FBSDKBridgeAPIProtocol
 
-- (NSURL *)requestURLWithActionID:(NSString *)actionID
-                           scheme:(NSString *)scheme
-                       methodName:(NSString *)methodName
-                    methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
-                            error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
+                                    scheme:(NSString *)scheme
+                                methodName:(NSString *)methodName
+                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                     error:(NSError *__autoreleasing *)errorRef
 {
   NSString *const host = @"dialog";
   NSString *const path = [@"/" stringByAppendingString:methodName];
 
   NSMutableDictionary<NSString *, id> *const queryParameters = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:methodVersion
-                        forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
   if (parameters.count) {
     NSString *const parametersString = [self _JSONStringForObject:parameters enablePasteboard:YES error:errorRef];
@@ -170,17 +161,17 @@ static const struct {
                      setObject:bridgeParametersString
                         forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.bridgeArgs];
 
-  return [FBSDKInternalUtility URLWithScheme:self.appScheme
-                                        host:host
-                                        path:path
-                             queryParameters:queryParameters
-                                       error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility URLWithScheme:self.appScheme
+                                                      host:host
+                                                      path:path
+                                           queryParameters:queryParameters
+                                                     error:errorRef];
 }
 
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef
+- (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                               cancelled:(BOOL *)cancelledRef
+                                                                   error:(NSError *__autoreleasing *)errorRef
 {
   if (cancelledRef != NULL) {
     *cancelledRef = NO;
@@ -194,10 +185,10 @@ static const struct {
   bridgeParameters = [FBSDKTypeUtility dictionaryValue:bridgeParameters];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
-                                                     value:bridgeParametersJSON
-                                                   message:@"Invalid bridge_args."
-                                           underlyingError:error];
+      *errorRef = [self.errorFactory invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
+                                                            value:bridgeParametersJSON
+                                                          message:@"Invalid bridge_args."
+                                                  underlyingError:error];
     }
     return nil;
   }
@@ -206,7 +197,7 @@ static const struct {
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
-  NSDictionary *errorDictionary = bridgeParameters[FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.error];
+  NSDictionary<NSString *, id> *errorDictionary = bridgeParameters[FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.error];
   errorDictionary = [FBSDKTypeUtility dictionaryValue:errorDictionary];
   if (errorDictionary) {
     error = [self _errorWithDictionary:errorDictionary];
@@ -219,10 +210,10 @@ static const struct {
   NSDictionary<id, id> *resultParameters = [FBSDKBasicUtility objectForJSONString:resultParametersJSON error:&error];
   if (!resultParameters) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
-                                                     value:resultParametersJSON
-                                                   message:@"Invalid method_results."
-                                           underlyingError:error];
+      *errorRef = [self.errorFactory invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
+                                                            value:resultParametersJSON
+                                                          message:@"Invalid method_results."
+                                                  underlyingError:error];
     }
     return nil;
   }
@@ -233,14 +224,12 @@ static const struct {
   return resultParameters;
 }
 
- #pragma mark - Helper Methods
-
-- (UIImage *)_appIcon
+- (nullable UIImage *)_appIcon
 {
   if (!_includeAppIcon) {
     return nil;
   }
-  NSArray *files = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIcons"]
+  NSArray *files = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleIcons"]
   [@"CFBundlePrimaryIcon"]
   [@"CFBundleIconFiles"];
   if (!files.count) {
@@ -249,21 +238,21 @@ static const struct {
   return [UIImage imageNamed:[FBSDKTypeUtility array:files objectAtIndex:0]];
 }
 
-- (NSDictionary *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
+- (NSDictionary<NSString *, id> *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
 {
-  NSMutableDictionary *bridgeParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *bridgeParameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:actionID
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.actionID];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:[self _appIcon]
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appIcon];
-  [FBSDKTypeUtility dictionary:bridgeParameters setObject:[FBSDKSettings displayName]
+  [FBSDKTypeUtility dictionary:bridgeParameters setObject:FBSDKSettings.sharedSettings.displayName
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appName];
-  [FBSDKTypeUtility dictionary:bridgeParameters setObject:[FBSDKSettings sdkVersion]
+  [FBSDKTypeUtility dictionary:bridgeParameters setObject:FBSDKSettings.sharedSettings.sdkVersion
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.sdkVersion];
   return bridgeParameters;
 }
 
-- (NSError *)_errorWithDictionary:(NSDictionary *)dictionary
+- (nullable NSError *)_errorWithDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (!dictionary) {
     return nil;
@@ -272,8 +261,12 @@ static const struct {
   ?: FBSDKErrorDomain;
   NSInteger code = [FBSDKTypeUtility integerValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.code]]
   ?: FBSDKErrorUnknown;
-  NSDictionary *userInfo = [FBSDKTypeUtility dictionaryValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.userInfo]];
-  return [NSError errorWithDomain:domain code:code userInfo:userInfo];
+  NSDictionary<NSString *, id> *userInfo = [FBSDKTypeUtility dictionaryValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.userInfo]];
+  return [self.errorFactory errorWithDomain:domain
+                                       code:code
+                                   userInfo:userInfo
+                                    message:nil
+                            underlyingError:nil];
 }
 
 - (NSString *)_JSONStringForObject:(id)object enablePasteboard:(BOOL)enablePasteboard error:(NSError **)errorRef
@@ -281,15 +274,15 @@ static const struct {
   __block BOOL didAddToPasteboard = NO;
   return [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:^id (id invalidObject, BOOL *stop) {
     NSString *dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.data;
-    if ([invalidObject isKindOfClass:[UIImage class]]) {
+    if ([invalidObject isKindOfClass:UIImage.class]) {
       UIImage *image = (UIImage *)invalidObject;
       // due to backward compatibility, we must send UIImage as NSData even though UIPasteboard can handle UIImage
-      invalidObject = UIImageJPEGRepresentation(image, [FBSDKSettings JPEGCompressionQuality]);
+      invalidObject = UIImageJPEGRepresentation(image, FBSDKSettings.sharedSettings.JPEGCompressionQuality);
       dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.image;
     }
-    if ([invalidObject isKindOfClass:[NSData class]]) {
+    if ([invalidObject isKindOfClass:NSData.class]) {
       NSData *data = (NSData *)invalidObject;
-      NSMutableDictionary *dictionary = [NSMutableDictionary new];
+      NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
       if (didAddToPasteboard || !enablePasteboard || !self->_pasteboard || (data.length < self->_dataLengthThreshold)) {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];
@@ -307,12 +300,12 @@ static const struct {
         // if we are adding this to the general pasteboard, then we want to remove it when we are done with the share.
         // the Facebook app will not clear the value with this version of the protocol, so we should do it when the app
         // becomes active again
-        if (self->_pasteboard._isGeneralPasteboard || self->_pasteboard._isFindPasteboard) {
-          [[self class] clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
+        if (self->_pasteboard._isGeneralPasteboard) {
+          [self.class clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
         }
       }
       return dictionary;
-    } else if ([invalidObject isKindOfClass:[NSURL class]]) {
+    } else if ([invalidObject isKindOfClass:NSURL.class]) {
       return ((NSURL *)invalidObject).absoluteString;
     }
     return invalidObject;
@@ -330,10 +323,10 @@ static const struct {
       [pasteboard setData:[NSData data] forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     }
   };
-  [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
-                                                    object:nil
-                                                     queue:nil
-                                                usingBlock:notificationBlock];
+  [NSNotificationCenter.defaultCenter addObserverForName:FBSDKApplicationDidBecomeActiveNotification
+                                                  object:nil
+                                                   queue:nil
+                                              usingBlock:notificationBlock];
 }
 
 @end

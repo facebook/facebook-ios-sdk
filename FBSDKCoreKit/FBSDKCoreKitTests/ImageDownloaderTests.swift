@@ -1,50 +1,35 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
 import TestTools
 import XCTest
 
-// swiftlint:disable implicitly_unwrapped_optional force_unwrapping
+// swiftlint:disable force_unwrapping
 class ImageDownloaderTests: XCTestCase {
 
   let expectedCacheMemory = 1024 * 1024 * 8
   let expectedCacheCapacity = 1024 * 1024 * 100
   let defaultTTL = 60.0
   let provider = TestSessionProvider()
-  var downloader: ImageDownloader!
-  var image: UIImage!
-  var imageData: Data!
-  var url: URL!
-  var request: URLRequest!
+  lazy var downloader = ImageDownloader(sessionProvider: provider)
+  lazy var url = SampleURLs.valid(path: name)
+  lazy var request = URLRequest(url: url)
+  let (image, imageData): (UIImage, Data) = {
+    UIGraphicsBeginImageContextWithOptions(CGSize(width: 36, height: 36), false, 1)
+    let image = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext()
+    let imageData = image.pngData()!
+    return (image, imageData)
+  }()
 
   override func setUp() {
     super.setUp()
-
-    UIGraphicsBeginImageContextWithOptions(CGSize(width: 36, height: 36), false, 1)
-    image = UIGraphicsGetImageFromCurrentImageContext()!
-    UIGraphicsEndImageContext()
-    imageData = image.pngData()!
-
-    url = SampleUrls.valid(path: name)
-    request = URLRequest(url: url)
-
-    downloader = ImageDownloader(sessionProvider: provider)
 
     downloader.urlCache.removeAllCachedResponses()
   }
@@ -315,7 +300,7 @@ class ImageDownloaderTests: XCTestCase {
     var completionInvoked = false
     var image: UIImage?
     downloader.downloadImage(
-      with: SampleUrls.valid,
+      with: SampleURLs.valid,
       ttl: 0
     ) { potentialImage in
       image = potentialImage

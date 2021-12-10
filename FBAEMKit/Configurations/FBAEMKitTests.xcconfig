@@ -1,0 +1,26 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
+// All rights reserved.
+//
+// This source code is licensed under the license found in the
+// LICENSE file in the root directory of this source tree.
+
+#include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/LogicTests.xcconfig"
+
+PRODUCT_NAME = FBAEMKitTests
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBAEMKitTests
+
+INFOPLIST_FILE = $(SRCROOT)/FBAEMKitTests/Info.plist
+
+HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+
+SWIFT_OBJC_BRIDGING_HEADER = FBAEMKitTests/FBAEMKitTests-Bridging-Header.h
+
+// These were overridden at the project level. Keeping them
+// here until we know if we need them specified this way.
+CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+CLANG_ENABLE_MODULES = YES
+SWIFT_OPTIMIZATION_LEVEL = -Onone

@@ -1,0 +1,17 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
+// All rights reserved.
+//
+// This source code is licensed under the license found in the
+// LICENSE file in the root directory of this source tree.
+
+#include "Shared/Platform/tvOS.xcconfig"
+#include "Shared/Target/StaticFramework.xcconfig"
+#include "Shared/Version.xcconfig"
+
+PRODUCT_NAME = FBSDKCoreKit_Basics
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitBasics
+
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
+
+INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKit_Basics/Info.plist
+MODULEMAP_FILE = $(SRCROOT)/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.modulemap

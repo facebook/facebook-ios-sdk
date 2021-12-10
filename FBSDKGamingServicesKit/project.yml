@@ -1,0 +1,64 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: FBSDKGamingServicesKit
+
+include:
+  - ../xcodegen_project_common.yml
+  - static.yml
+  - dynamic.yml
+  - tests.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  FBSDKShareKit:
+    path: ../FBSDKShareKit/FBSDKShareKit.xcodeproj
+
+options:
+  deploymentTarget:
+    tvOS: '10.0'
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    ENABLE_NS_ASSERTIONS: YES
+
+schemes:
+  FacebookGamingServices-Static:
+    build:
+      targets:
+        FacebookGamingServices-Static: all
+  FacebookGamingServices-Dynamic:
+    build:
+      targets:
+        FacebookGamingServices-Dynamic: all
+  FBSDKGamingServicesKit-Static:
+    build:
+      targets:
+        FBSDKGamingServicesKit-Static: all
+  FBSDKGamingServicesKit-Dynamic:
+    build:
+      targets:
+        FBSDKGamingServicesKit-Dynamic: all
+    test:
+      gatherCoverageData: true
+      targets:
+        - FacebookGamingServicesTests
+        - FBSDKGamingServicesKitTests
+      coverageTargets:
+        - FacebookGamingServices-Dynamic
+        - FBSDKGamingServicesKit-Dynamic

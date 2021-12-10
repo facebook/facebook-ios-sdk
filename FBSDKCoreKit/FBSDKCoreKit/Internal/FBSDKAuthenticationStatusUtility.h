@@ -1,25 +1,40 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 /* FBSDKAuthenticationTokenStatusChecker_h */
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKProfileProtocols.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(AuthenticationStatusUtility)
 @interface FBSDKAuthenticationStatusUtility : NSObject
+
+@property (class, nullable, nonatomic) Class<FBSDKProfileProviding> profileSetter;
+@property (class, nullable, nonatomic) id<FBSDKSessionProviding> sessionDataTaskProvider;
+@property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> accessTokenWallet;
+@property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+
+/**
+ Sets dependencies. This must be called during SDK initialization.
+ */
++ (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
+           sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+                 accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationWallet;
 
 /**
   Fetches the latest authentication status from server. This will invalidate
@@ -27,4 +42,14 @@
  */
 + (void)checkAuthenticationStatus;
 
+#if FBTEST && DEBUG
+
++ (void)resetClassDependencies;
+
+#endif
+
 @end
+
+NS_ASSUME_NONNULL_END
+
+#endif

@@ -1,22 +1,13 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class InternalUtilityTests: XCTestCase {
@@ -27,20 +18,32 @@ class InternalUtilityTests: XCTestCase {
     InternalUtility.reset()
   }
 
-  func testDefaultInfoDictionaryProvider() {
+  func testDefaultDependencies() {
     XCTAssertNil(
-      InternalUtility.infoDictionaryProvider,
+      InternalUtility.shared.infoDictionaryProvider,
       "Should not have an info dictionary provider by default"
+    )
+    XCTAssertNil(
+      InternalUtility.shared.loggerFactory,
+      "Should not have a logger factory by default"
     )
   }
 
-  func testConfiguringWithInfoDictionaryProvider() {
+  func testConfiguringWithDependencies() {
     let bundle = TestBundle()
-    InternalUtility.configure(withInfoDictionaryProvider: bundle)
+    let loggerFactory = TestLoggerFactory()
+    InternalUtility.shared.configure(
+      withInfoDictionaryProvider: bundle,
+      loggerFactory: loggerFactory
+    )
 
     XCTAssertTrue(
-      InternalUtility.infoDictionaryProvider === bundle,
+      InternalUtility.shared.infoDictionaryProvider === bundle,
       "Should be able to provide an info dictionary provider"
+    )
+    XCTAssertTrue(
+      InternalUtility.shared.loggerFactory === loggerFactory,
+      "The shared instance should use the provided logger factory"
     )
   }
 }

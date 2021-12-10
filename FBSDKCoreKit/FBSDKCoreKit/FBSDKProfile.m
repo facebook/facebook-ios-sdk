@@ -1,41 +1,29 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "FBSDKNotificationProtocols.h"
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKProfile+Internal.h"
+#import "FBSDKProfile+Internal.h"
 
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKLocation.h"
- #import "FBSDKUserAgeRange.h"
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#import "FBSDKAccessToken.h"
+#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKLocation.h"
+#import "FBSDKMath.h"
+#import "FBSDKNotificationProtocols.h"
+#import "FBSDKProfileCodingKey.h"
+#import "FBSDKURLHosting.h"
+#import "FBSDKUnarchiverProvider.h"
+#import "FBSDKUserAgeRange.h"
 
 NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
-
- #else
-
-NSString *const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
-
- #endif
 
 NSString *const FBSDKProfileChangeOldKey = @"FBSDKProfileOld";
 NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
@@ -43,40 +31,37 @@ static NSString *const FBSDKProfileUserDefaultsKey = @"com.facebook.sdk.FBSDKPro
 static FBSDKProfile *g_currentProfile;
 static NSDateFormatter *_dateFormatter;
 
- #define FBSDKPROFILE_USERID_KEY @"userID"
- #define FBSDKPROFILE_FIRSTNAME_KEY @"firstName"
- #define FBSDKPROFILE_MIDDLENAME_KEY @"middleName"
- #define FBSDKPROFILE_LASTNAME_KEY @"lastName"
- #define FBSDKPROFILE_NAME_KEY @"name"
- #define FBSDKPROFILE_LINKURL_KEY @"linkURL"
- #define FBSDKPROFILE_REFRESHDATE_KEY @"refreshDate"
- #define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
- #define FBSDKPROFILE_EMAIL_KEY @"email"
- #define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
- #define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
- #define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
- #define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
- #define FBSDKPROFILE_HOMETOWN_KEY @"hometown"
- #define FBSDKPROFILE_LOCATION_KEY @"location"
- #define FBSDKPROFILE_GENDER_KEY @"gender"
-
 // Once a day
- #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
+#define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
 
 @interface FBSDKProfile ()
 
 @property (nonatomic, assign) BOOL isLimited;
-
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKURLHosting> urlHoster;
 @end
 
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
+static id<FBSDKDataPersisting> _store;
+static id<FBSDKSettings> _settings;
+static id<FBSDKURLHosting> _urlHoster;
 
 + (Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   return _accessTokenProvider;
+}
+
++ (id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(id<FBSDKSettings>)settings
+{
+  _settings = settings;
 }
 
 + (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
@@ -84,13 +69,23 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   return _notificationCenter;
 }
 
++ (id<FBSDKURLHosting>)urlHoster
+{
+  return _urlHoster;
+}
+
++ (void)setUrlHoster:(id<FBSDKURLHosting>)urlHoster
+{
+  _urlHoster = urlHoster;
+}
+
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
 {
   return [self initWithUserID:userID
                     firstName:firstName
@@ -110,12 +105,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
 {
@@ -137,12 +132,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -165,12 +160,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -195,12 +190,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -227,20 +222,20 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
-                      imageURL:(NSURL *)imageURL
-                         email:(NSString *)email
-                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
-                      birthday:(NSDate *)birthday
-                      ageRange:(FBSDKUserAgeRange *)ageRange
-                      hometown:(FBSDKLocation *)hometown
-                      location:(FBSDKLocation *)location
-                        gender:(NSString *)gender
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
+                      imageURL:(nullable NSURL *)imageURL
+                         email:(nullable NSString *)email
+                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(nullable NSDate *)birthday
+                      ageRange:(nullable FBSDKUserAgeRange *)ageRange
+                      hometown:(nullable FBSDKLocation *)hometown
+                      location:(nullable FBSDKLocation *)location
+                        gender:(nullable NSString *)gender
                      isLimited:(BOOL)isLimited
 {
   self = [self initWithUserID:userID
@@ -264,12 +259,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(NSString *)firstName
-                    middleName:(NSString *)middleName
-                      lastName:(NSString *)lastName
-                          name:(NSString *)name
-                       linkURL:(NSURL *)linkURL
-                   refreshDate:(NSDate *)refreshDate
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
@@ -314,8 +309,8 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
    shouldPostNotification:(BOOL)shouldPostNotification
 {
   if (profile != g_currentProfile && ![profile isEqualToProfile:g_currentProfile]) {
-    [[self class] cacheProfile:profile];
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [self.class cacheProfile:profile];
+    NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
 
     [FBSDKTypeUtility dictionary:userInfo setObject:profile forKey:FBSDKProfileChangeNewKey];
     [FBSDKTypeUtility dictionary:userInfo setObject:g_currentProfile forKey:FBSDKProfileChangeOldKey];
@@ -323,13 +318,13 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 
     if (shouldPostNotification) {
       [_notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
-                                         object:[self class]
+                                         object:self.class
                                        userInfo:userInfo];
     }
   }
 }
 
-- (NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
+- (nullable NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 {
   return [FBSDKProfile imageURLForProfileID:_userID PictureMode:mode size:size];
 }
@@ -346,12 +341,12 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   }
 }
 
-+ (void)loadCurrentProfileWithCompletion:(FBSDKProfileBlock)completion
++ (void)loadCurrentProfileWithCompletion:(nullable FBSDKProfileBlock)completion
 {
   [self loadProfileWithToken:[self.accessTokenProvider currentAccessToken] completion:completion];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone
 {
@@ -359,7 +354,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   return self;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -389,7 +384,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKProfile class]]) {
+  if (![object isKindOfClass:FBSDKProfile.class]) {
     return NO;
   }
   return [self isEqualToProfile:object];
@@ -415,7 +410,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
     && [_gender isEqual:profile.gender]);
 }
 
- #pragma mark NSCoding
+#pragma mark NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -424,22 +419,22 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  FBSDKUserIdentifier *userID = [decoder decodeObjectOfClass:[FBSDKUserIdentifier class] forKey:FBSDKPROFILE_USERID_KEY];
-  NSString *firstName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_FIRSTNAME_KEY];
-  NSString *middleName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_MIDDLENAME_KEY];
-  NSString *lastName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_LASTNAME_KEY];
-  NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_NAME_KEY];
-  NSURL *linkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_LINKURL_KEY];
-  NSDate *refreshDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_REFRESHDATE_KEY];
-  NSURL *imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_IMAGEURL_KEY];
-  NSString *email = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_EMAIL_KEY];
-  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDKPROFILE_FRIENDIDS_KEY];
-  BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
-  NSDate *birthday = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_BIRTHDAY_KEY];
-  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:[FBSDKUserAgeRange class] forKey:FBSDKPROFILE_AGERANGE_KEY];
-  FBSDKLocation *hometown = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_HOMETOWN_KEY];
-  FBSDKLocation *location = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_LOCATION_KEY];
-  NSString *gender = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_GENDER_KEY];
+  FBSDKUserIdentifier *userID = [decoder decodeObjectOfClass:[FBSDKUserIdentifier class] forKey:FBSDKProfileCodingKeyUserID];
+  NSString *firstName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyFirstName];
+  NSString *middleName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyMiddleName];
+  NSString *lastName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyLastName];
+  NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyName];
+  NSURL *linkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKProfileCodingKeyLinkURL];
+  NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKProfileCodingKeyRefreshDate];
+  NSURL *imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKProfileCodingKeyImageURL];
+  NSString *email = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyEmail];
+  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDKProfileCodingKeyFriendIDs];
+  BOOL isLimited = [decoder decodeBoolForKey:FBSDKProfileCodingKeyIsLimited];
+  NSDate *birthday = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKProfileCodingKeyBirthday];
+  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:FBSDKUserAgeRange.class forKey:FBSDKProfileCodingKeyAgeRange];
+  FBSDKLocation *hometown = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKProfileCodingKeyHometown];
+  FBSDKLocation *location = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKProfileCodingKeyLocation];
+  NSString *gender = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKProfileCodingKeyGender];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -460,43 +455,45 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [encoder encodeObject:self.userID forKey:FBSDKPROFILE_USERID_KEY];
-  [encoder encodeObject:self.firstName forKey:FBSDKPROFILE_FIRSTNAME_KEY];
-  [encoder encodeObject:self.middleName forKey:FBSDKPROFILE_MIDDLENAME_KEY];
-  [encoder encodeObject:self.lastName forKey:FBSDKPROFILE_LASTNAME_KEY];
-  [encoder encodeObject:self.name forKey:FBSDKPROFILE_NAME_KEY];
-  [encoder encodeObject:self.linkURL forKey:FBSDKPROFILE_LINKURL_KEY];
-  [encoder encodeObject:self.refreshDate forKey:FBSDKPROFILE_REFRESHDATE_KEY];
-  [encoder encodeObject:self.imageURL forKey:FBSDKPROFILE_IMAGEURL_KEY];
-  [encoder encodeObject:self.email forKey:FBSDKPROFILE_EMAIL_KEY];
-  [encoder encodeObject:self.friendIDs forKey:FBSDKPROFILE_FRIENDIDS_KEY];
-  [encoder encodeBool:self.isLimited forKey:FBSDKPROFILE_IS_LIMITED_KEY];
-  [encoder encodeObject:self.birthday forKey:FBSDKPROFILE_BIRTHDAY_KEY];
-  [encoder encodeObject:self.ageRange forKey:FBSDKPROFILE_AGERANGE_KEY];
-  [encoder encodeObject:self.hometown forKey:FBSDKPROFILE_HOMETOWN_KEY];
-  [encoder encodeObject:self.location forKey:FBSDKPROFILE_LOCATION_KEY];
-  [encoder encodeObject:self.gender forKey:FBSDKPROFILE_GENDER_KEY];
+  [encoder encodeObject:self.userID forKey:FBSDKProfileCodingKeyUserID];
+  [encoder encodeObject:self.firstName forKey:FBSDKProfileCodingKeyFirstName];
+  [encoder encodeObject:self.middleName forKey:FBSDKProfileCodingKeyMiddleName];
+  [encoder encodeObject:self.lastName forKey:FBSDKProfileCodingKeyLastName];
+  [encoder encodeObject:self.name forKey:FBSDKProfileCodingKeyName];
+  [encoder encodeObject:self.linkURL forKey:FBSDKProfileCodingKeyLinkURL];
+  [encoder encodeObject:self.refreshDate forKey:FBSDKProfileCodingKeyRefreshDate];
+  [encoder encodeObject:self.imageURL forKey:FBSDKProfileCodingKeyImageURL];
+  [encoder encodeObject:self.email forKey:FBSDKProfileCodingKeyEmail];
+  [encoder encodeObject:self.friendIDs forKey:FBSDKProfileCodingKeyFriendIDs];
+  [encoder encodeBool:self.isLimited forKey:FBSDKProfileCodingKeyIsLimited];
+  [encoder encodeObject:self.birthday forKey:FBSDKProfileCodingKeyBirthday];
+  [encoder encodeObject:self.ageRange forKey:FBSDKProfileCodingKeyAgeRange];
+  [encoder encodeObject:self.hometown forKey:FBSDKProfileCodingKeyHometown];
+  [encoder encodeObject:self.location forKey:FBSDKProfileCodingKeyLocation];
+  [encoder encodeObject:self.gender forKey:FBSDKProfileCodingKeyGender];
 }
 
 @end
 
 @implementation FBSDKProfile (Internal)
 
-static id <FBSDKDataPersisting> _store;
-
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                  settings:(id<FBSDKSettings>)settings
+                 urlHoster:(id<FBSDKURLHosting>)urlHoster
 {
-  if (self == [FBSDKProfile class]) {
+  if (self == FBSDKProfile.class) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
     _notificationCenter = notificationCenter;
+    self.urlHoster = urlHoster;
+    self.settings = settings;
   }
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)cacheProfile:(FBSDKProfile *)profile
 {
   if (profile) {
@@ -507,14 +504,14 @@ static id <FBSDKDataPersisting> _store;
   }
 }
 
-+ (FBSDKProfile *)fetchCachedProfile
++ (nullable FBSDKProfile *)fetchCachedProfile
 {
   NSData *data = [_store objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
 
     @try {
-      return [unarchiver decodeObjectOfClass:[FBSDKProfile class] forKey:NSKeyedArchiveRootObjectKey];
+      return [unarchiver decodeObjectOfClass:FBSDKProfile.class forKey:NSKeyedArchiveRootObjectKey];
     } @catch (NSException *exception) {
       // Ignore decode error
     }
@@ -541,7 +538,7 @@ static id <FBSDKDataPersisting> _store;
     default: type = @"normal";
   }
 
-  NSMutableDictionary *queryParameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *queryParameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:queryParameters setObject:type forKey:pictureModeKey];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];
@@ -549,18 +546,18 @@ static id <FBSDKDataPersisting> _store;
   if ([self.accessTokenProvider currentAccessToken]) {
     [FBSDKTypeUtility dictionary:queryParameters setObject:[[self.accessTokenProvider currentAccessToken] tokenString]
                           forKey:accessTokenKey];
-  } else if (FBSDKSettings.clientToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.clientToken forKey:accessTokenKey];
+  } else if (self.settings.clientToken) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:self.settings.clientToken forKey:accessTokenKey];
   } else {
     NSLog(@"As of Graph API v8.0, profile images may not be retrieved without an access token. This can be the current access token from logging in with Facebook or it can be set via the plist or in code. Providing neither will cause this call to return a silhouette image.");
   }
 
   NSString *path = [NSString stringWithFormat:@"%@/picture", profileId];
 
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
-                                                    path:path
-                                         queryParameters:queryParameters
-                                                   error:NULL];
+  return [self.urlHoster facebookURLWithHostPrefix:@"graph"
+                                              path:path
+                                   queryParameters:queryParameters
+                                             error:NULL];
 }
 
 + (NSString *)graphPathForToken:(FBSDKAccessToken *)token
@@ -603,16 +600,16 @@ static id <FBSDKDataPersisting> _store;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
 {
-  NSString *graphPath = [[self class] graphPathForToken:token];
+  NSString *graphPath = [self.class graphPathForToken:token];
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [[self class] loadProfileWithToken:token completion:completion graphRequest:request];
+  [self.class loadProfileWithToken:token graphRequest:request completion:completion];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
 {
   FBSDKParseProfileBlock parseBlock = ^void (id result, FBSDKProfile **profileRef) {
     if (profileRef == NULL
@@ -654,15 +651,15 @@ static id <FBSDKDataPersisting> _store;
                                                           gender:gender];
     *profileRef = [profile copy];
   };
-  [[self class] loadProfileWithToken:token
-                          completion:completion
-                        graphRequest:request
-                          parseBlock:parseBlock];
+  [self.class loadProfileWithToken:token
+                      graphRequest:request
+                        completion:completion
+                        parseBlock:parseBlock];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 {
   static id<FBSDKGraphRequestConnecting> executingRequestConnection = nil;
@@ -685,7 +682,7 @@ static id <FBSDKDataPersisting> _store;
       if (!error) {
         parseBlock(result, &profile);
       }
-      [[self class] setCurrentProfile:profile];
+      [self.class setCurrentProfile:profile];
       if (completion != NULL) {
         completion(profile, error);
       }
@@ -701,12 +698,12 @@ static id <FBSDKDataPersisting> _store;
   [self loadProfileWithToken:token completion:NULL];
 }
 
-+ (NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
++ (nullable NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
 {
   NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
-  NSMutableArray *friendIDs = NSMutableArray.new;
+  NSMutableArray *friendIDs = [NSMutableArray new];
 
-  for (NSDictionary *rawFriend in rawFriends) {
+  for (NSDictionary<NSString *, id> *rawFriend in rawFriends) {
     if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {
       FBSDKUserIdentifier *friendID = [FBSDKTypeUtility coercedToStringValue:rawFriend[@"id"]];
       [FBSDKTypeUtility array:friendIDs addObject:friendID];
@@ -722,15 +719,15 @@ static id <FBSDKDataPersisting> _store;
 + (NSDateFormatter *)dateFormatter
 {
   if (!_dateFormatter) {
-    _dateFormatter = NSDateFormatter.new;
+    // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+    _dateFormatter = [NSDateFormatter new];
   }
   return _dateFormatter;
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
- #if DEBUG
-  #if FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)resetCurrentProfileCache
 {
@@ -752,10 +749,11 @@ static id <FBSDKDataPersisting> _store;
   _store = nil;
   _accessTokenProvider = nil;
   _notificationCenter = nil;
+  self.urlHoster = nil;
+  self.settings = nil;
 }
 
-  #endif
- #endif
+#endif
 
 @end
 

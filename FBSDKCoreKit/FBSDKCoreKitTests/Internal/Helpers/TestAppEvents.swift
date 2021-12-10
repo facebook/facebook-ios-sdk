@@ -1,30 +1,22 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import UIKit
 
+// swiftformat:disable indent
 @objcMembers
 class TestAppEvents: TestEventLogger,
-                     SourceApplicationTracking,
+                     SourceApplicationTracking, // swiftlint:disable:this indentation_width
                      AppEventsConfiguring,
                      ApplicationActivating,
                      ApplicationLifecycleObserving,
                      ApplicationStateSetting {
+  // swiftformat:enable indent
   // swiftlint:disable identifier_name
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
@@ -32,6 +24,7 @@ class TestAppEvents: TestEventLogger,
   var wasRegisterAutoResetSourceApplicationCalled = false
   var capturedSetSourceApplication: String?
   var capturedSetSourceApplicationURL: URL?
+  var capturedCodelessIndexer: CodelessIndexing.Type?
 
   func activateApp() {
     wasActivateAppCalled = true
@@ -46,9 +39,9 @@ class TestAppEvents: TestEventLogger,
   }
 
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
-  var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
-  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding.Type?
-  var capturedConfigureGraphRequestProvider: GraphRequestProviding?
+  var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding?
+  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
+  var capturedConfigureGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedConfigureFeatureChecker: FeatureChecking?
   var capturedConfigureStore: DataPersisting?
   var capturedConfigureLogger: Logging.Type?
@@ -61,13 +54,18 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureAtePublisherFactory: AtePublisherCreating?
   var capturedConfigureAppEventsStateProvider: AppEventsStateProviding?
   var capturedConfigureSwizzler: Swizzling.Type?
+  var capturedAdvertiserIDProvider: AdvertiserIDProviding?
+  var capturedOnDeviceMLModelManager: EventProcessing?
+  var capturedMetadataIndexer: MetadataIndexing?
+  var capturedSKAdNetworkReporter: AppEventsReporter?
+  var capturedUserDataStore: UserDataPersisting?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
-    appEventsConfigurationProvider: AppEventsConfigurationProviding.Type,
-    serverConfigurationProvider: ServerConfigurationProviding.Type,
-    graphRequestProvider provider: GraphRequestProviding,
+    appEventsConfigurationProvider: AppEventsConfigurationProviding,
+    serverConfigurationProvider: ServerConfigurationProviding,
+    graphRequestFactory: GraphRequestFactoryProtocol,
     featureChecker: FeatureChecking,
     store: DataPersisting,
     logger: Logging.Type,
@@ -79,12 +77,14 @@ class TestAppEvents: TestEventLogger,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
     atePublisherFactory: AtePublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
-    swizzler: Swizzling.Type
+    swizzler: Swizzling.Type,
+    advertiserIDProvider: AdvertiserIDProviding,
+    userDataStore: UserDataPersisting
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
     capturedConfigureServerConfigurationProvider = serverConfigurationProvider
-    capturedConfigureGraphRequestProvider = provider
+    capturedConfigureGraphRequestFactory = graphRequestFactory
     capturedConfigureFeatureChecker = featureChecker
     capturedConfigureStore = store
     capturedConfigureLogger = logger
@@ -97,6 +97,20 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAtePublisherFactory = atePublisherFactory
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedConfigureSwizzler = swizzler
+    capturedAdvertiserIDProvider = advertiserIDProvider
+    capturedUserDataStore = userDataStore
+  }
+
+  func configureNonTVComponentsWith(
+    onDeviceMLModelManager modelManager: EventProcessing,
+    metadataIndexer: MetadataIndexing,
+    skAdNetworkReporter: AppEventsReporter?,
+    codelessIndexer: CodelessIndexing.Type
+  ) {
+    capturedOnDeviceMLModelManager = modelManager
+    capturedMetadataIndexer = metadataIndexer
+    capturedSKAdNetworkReporter = skAdNetworkReporter
+    capturedCodelessIndexer = codelessIndexer
   }
 
   // MARK: - Source Application Tracking

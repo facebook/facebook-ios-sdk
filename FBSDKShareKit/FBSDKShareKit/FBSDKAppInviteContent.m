@@ -1,39 +1,23 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKAppInviteContent.h"
+#import "FBSDKAppInviteContent.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
- #import "FBSDKShareUtility.h"
+#import "FBSDKHasher.h"
+#import "FBSDKShareUtility.h"
 
- #define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
- #define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
- #define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
- #define FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY @"promoText"
- #define FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY @"destination"
+#define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
+#define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
+#define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
+#define FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY @"promoText"
+#define FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY @"destination"
 
 @implementation FBSDKAppInviteContent
 
@@ -47,7 +31,7 @@
   self.appInvitePreviewImageURL = previewImageURL;
 }
 
- #pragma mark - FBSDKSharingValidation
+#pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
@@ -60,8 +44,8 @@
 - (BOOL)_validatePromoCodeWithError:(NSError *__autoreleasing *)errorRef
 {
   if (_promotionText.length > 0 || _promotionCode.length > 0) {
-    NSMutableCharacterSet *alphanumericWithSpaces = [NSMutableCharacterSet alphanumericCharacterSet];
-    [alphanumericWithSpaces formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSMutableCharacterSet *alphanumericWithSpaces = NSMutableCharacterSet.alphanumericCharacterSet;
+    [alphanumericWithSpaces formUnionWithCharacterSet:NSCharacterSet.whitespaceCharacterSet];
 
     // Check for validity of promo text and promo code.
     if (!(_promotionText.length > 0 && _promotionText.length <= 80)) {
@@ -100,7 +84,7 @@
   return YES;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -110,7 +94,7 @@
     _promotionCode.hash,
     _promotionText.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -118,7 +102,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKAppInviteContent class]]) {
+  if (![object isKindOfClass:FBSDKAppInviteContent.class]) {
     return NO;
   }
   return [self isEqualToAppInviteContent:(FBSDKAppInviteContent *)object];
@@ -127,15 +111,15 @@
 - (BOOL)isEqualToAppInviteContent:(FBSDKAppInviteContent *)content
 {
   return (content
-    && [FBSDKInternalUtility object:_appLinkURL isEqualToObject:content.appLinkURL]
-    && [FBSDKInternalUtility object:_appInvitePreviewImageURL isEqualToObject:content.appInvitePreviewImageURL]
-    && [FBSDKInternalUtility object:_promotionText isEqualToObject:content.promotionText]
-    && [FBSDKInternalUtility object:_promotionCode isEqualToObject:content.promotionText]
+    && [FBSDKInternalUtility.sharedUtility object:_appLinkURL isEqualToObject:content.appLinkURL]
+    && [FBSDKInternalUtility.sharedUtility object:_appInvitePreviewImageURL isEqualToObject:content.appInvitePreviewImageURL]
+    && [FBSDKInternalUtility.sharedUtility object:_promotionText isEqualToObject:content.promotionText]
+    && [FBSDKInternalUtility.sharedUtility object:_promotionCode isEqualToObject:content.promotionText]
     && _destination == content.destination
   );
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -145,11 +129,11 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _appLinkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
-    _appInvitePreviewImageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
-    _promotionCode = [decoder decodeObjectOfClass:[NSString class] forKey:
+    _appLinkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
+    _appInvitePreviewImageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
+    _promotionCode = [decoder decodeObjectOfClass:NSString.class forKey:
                       FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY];
-    _promotionText = [decoder decodeObjectOfClass:[NSString class] forKey:
+    _promotionText = [decoder decodeObjectOfClass:NSString.class forKey:
                       FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY];
     _destination = [decoder decodeIntegerForKey:
                     FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
@@ -166,7 +150,7 @@
   [encoder encodeInt:(int)_destination forKey:FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

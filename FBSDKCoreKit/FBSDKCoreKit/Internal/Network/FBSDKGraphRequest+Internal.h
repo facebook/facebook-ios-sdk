@@ -1,74 +1,47 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequest.h"
- #import "FBSDKGraphRequestFlags.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequest.h>
- #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
-#endif
-
-#import "FBSDKGraphRequestConnectionProviding.h"
-
-@protocol FBSDKCurrentAccessTokenStringProviding;
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Internal)
 
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) Class<FBSDKTokenStringProviding> accessTokenProvider;
+
 @property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
 @property (nonatomic, readonly) BOOL hasAttachments;
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(nullable NSDictionary *)parameters
-                            flags:(FBSDKGraphRequestFlags)flags;
-
-- (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(nullable NSDictionary *)parameters
-                      tokenString:(nullable NSString *)tokenString
-                       HTTPMethod:(nullable NSString *)HTTPMethod
-                            flags:(FBSDKGraphRequestFlags)flags;
-
-- (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(nullable NSDictionary *)parameters
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
                       tokenString:(nullable NSString *)tokenString
                        HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
                           version:(NSString *)version
                             flags:(FBSDKGraphRequestFlags)flags
-                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
 
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
-                    params:(nullable NSDictionary *)params
+                    params:(nullable NSDictionary<NSString *, id> *)params
                 httpMethod:(nullable NSString *)httpMethod
                   forBatch:(BOOL)forBatch;
-
-+ (void)setCurrentAccessTokenStringProvider:(Class<FBSDKCurrentAccessTokenStringProviding>)provider;
 
 @end
 

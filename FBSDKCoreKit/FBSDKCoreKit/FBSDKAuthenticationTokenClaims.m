@@ -1,52 +1,107 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-#import "FBSDKAuthenticationTokenClaims.h"
+#import "FBSDKAuthenticationTokenClaims+Internal.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKSettings.h"
 
 static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
+@interface FBSDKAuthenticationTokenClaims ()
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
+@end
+
 @implementation FBSDKAuthenticationTokenClaims
 
-- (instancetype)initWithJti:(NSString *)jti
-                        iss:(NSString *)iss
-                        aud:(NSString *)aud
-                      nonce:(NSString *)nonce
-                        exp:(NSTimeInterval)exp
-                        iat:(NSTimeInterval)iat
-                        sub:(NSString *)sub
-                       name:(nullable NSString *)name
-                  givenName:(nullable NSString *)givenName
-                 middleName:(nullable NSString *)middleName
-                 familyName:(nullable NSString *)familyName
-                      email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends
-               userBirthday:(nullable NSString *)userBirthday
-               userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange
-               userHometown:(nullable NSDictionary<NSString *, NSString *> *)userHometown
-               userLocation:(nullable NSDictionary<NSString *, NSString *> *)userLocation
-                 userGender:(nullable NSString *)userGender
-                   userLink:(nullable NSString *)userLink
+#pragma mark - Class Properties
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
 {
-  if (self = [super init]) {
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKSettings> _settings;
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+#pragma mark - Class Configuration
+
++ (void)configureWithSettings:(nonnull id<FBSDKSettings>)settings
+{
+  self.settings = settings;
+}
+
++ (void)configureClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithSettings:FBSDKSettings.sharedSettings];
+
+  self.hasBeenConfigured = YES;
+}
+
+#if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.settings = nil;
+  self.hasBeenConfigured = NO;
+}
+
+#endif
+
+#pragma mark - Creating Claims
+
+- (nullable instancetype)initWithJti:(nonnull NSString *)jti
+                                 iss:(nonnull NSString *)iss
+                                 aud:(nonnull NSString *)aud
+                               nonce:(nonnull NSString *)nonce
+                                 exp:(NSTimeInterval)exp
+                                 iat:(NSTimeInterval)iat
+                                 sub:(nonnull NSString *)sub
+                                name:(nullable NSString *)name
+                           givenName:(nullable NSString *)givenName
+                          middleName:(nullable NSString *)middleName
+                          familyName:(nullable NSString *)familyName
+                               email:(nullable NSString *)email
+                             picture:(nullable NSString *)picture
+                         userFriends:(nullable NSArray<NSString *> *)userFriends
+                        userBirthday:(nullable NSString *)userBirthday
+                        userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange
+                        userHometown:(nullable NSDictionary<NSString *, NSString *> *)userHometown
+                        userLocation:(nullable NSDictionary<NSString *, NSString *> *)userLocation
+                          userGender:(nullable NSString *)userGender
+                            userLink:(nullable NSString *)userLink
+{
+  if ((self = [super init])) {
     _jti = jti;
     _iss = iss;
     _aud = aud;
@@ -72,13 +127,16 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return self;
 }
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
+                                                               nonce:(nonnull NSString *)expectedNonce
 {
+  [self configureClassDependencies];
+
   NSError *error;
   NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedClaims]];
 
   if (claimsData) {
-    NSDictionary *claimsDict = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
+    NSDictionary<NSString *, id> *claimsDict = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
     if (!error) {
       NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
 
@@ -87,10 +145,11 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       BOOL hasJti = jti.length > 0;
 
       NSString *iss = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"iss"]];
-      BOOL isFacebook = iss.length > 0 && [[[NSURL URLWithString:iss] host] isEqualToString:@"facebook.com"];
+      NSURL *issuer = [NSURL URLWithString:iss];
+      BOOL isFacebook = issuer != nil && ([issuer.host isEqualToString:@"facebook.com"] || [issuer.host hasSuffix:@".facebook.com"]);
 
       NSString *aud = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"aud"]];
-      BOOL audMatched = [aud isEqualToString:[FBSDKSettings appID]];
+      BOOL audMatched = [aud isEqualToString:self.class.settings.appID];
 
       NSNumber *expValue = [FBSDKTypeUtility numberValue:claimsDict[@"exp"]];
       NSTimeInterval exp = [expValue doubleValue];
@@ -115,9 +174,9 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       NSString *userBirthday = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"user_birthday"]];
 
       NSMutableDictionary<NSString *, NSNumber *> *userAgeRange;
-      NSDictionary *rawUserAgeRange = [FBSDKTypeUtility dictionaryValue:claimsDict[@"user_age_range"]];
+      NSDictionary<NSString *, id> *rawUserAgeRange = [FBSDKTypeUtility dictionaryValue:claimsDict[@"user_age_range"]];
       if (rawUserAgeRange.count > 0) {
-        userAgeRange = NSMutableDictionary.new;
+        userAgeRange = [NSMutableDictionary new];
         for (NSString *key in rawUserAgeRange) {
           NSNumber *value = [FBSDKTypeUtility dictionary:rawUserAgeRange objectForKey:key ofType:NSNumber.class];
           if (value == nil) {
@@ -171,12 +230,12 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return nil;
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSString *> *)extractLocationDictFromClaims:(NSDictionary *)claimsDict key:(NSString *)keyName
++ (nullable NSMutableDictionary<NSString *, NSString *> *)extractLocationDictFromClaims:(NSDictionary<NSString *, id> *)claimsDict key:(NSString *)keyName
 {
-  NSDictionary *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
+  NSDictionary<NSString *, id> *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
   NSMutableDictionary<NSString *, NSString *> *location;
   if (rawLocationData.count > 0) {
-    location = NSMutableDictionary.new;
+    location = [NSMutableDictionary new];
     for (NSString *key in rawLocationData) {
       NSString *value = [FBSDKTypeUtility dictionary:rawLocationData
                                         objectForKey:key
@@ -223,7 +282,7 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     return YES;
   }
 
-  if (![object isKindOfClass:[FBSDKAuthenticationTokenClaims class]]) {
+  if (![object isKindOfClass:FBSDKAuthenticationTokenClaims.class]) {
     return NO;
   }
 

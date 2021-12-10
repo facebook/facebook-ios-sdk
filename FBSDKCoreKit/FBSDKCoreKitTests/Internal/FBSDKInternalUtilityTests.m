@@ -1,54 +1,24 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKInternalUtility.h"
-
-@interface FBSDKInternalUtility (Testing)
-
-+ (BOOL)_canOpenURLScheme:(NSString *)scheme;
-+ (void)resetQuerySchemesCache;
-+ (void)resetDidCheckRegisteredCanOpenUrlSchemes;
-+ (void)resetIsFacebookAppInstalledCache;
-+ (void)resetDidCheckIfMessengerAppInstalledCache;
-+ (void)resetDidCheckIfMSQRDAppInstalledCache;
-+ (void)resetDidCheckOperatingSystemVersion;
-+ (void)resetFetchingUrlSchemes;
-
-@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
-
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                        graphDomain:(NSString *)graphDomain;
-
-@end
+#import "FBSDKInternalUtility+Internal.h"
 
 @interface FBSDKInternalUtilityTests : XCTestCase
 
 @property (nonatomic) TestBundle *bundle;
+@property (nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
+@property (nonatomic) TestLoggerFactory *loggerFactory;
+@property (nonatomic) TestLogger *logger;
 
 @end
 
@@ -59,23 +29,27 @@
   [super setUp];
 
   self.bundle = [TestBundle new];
+  self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
+  self.loggerFactory = [TestLoggerFactory new];
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  self.loggerFactory.logger = self.logger;
 
-  [FBSDKSettings reset];
+  [FBSDKSettings.sharedSettings reset];
   [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
-     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+     appEventsConfigurationProvider:self.appEventsConfigurationProvider
              infoDictionaryProvider:self.bundle
                         eventLogger:[TestAppEvents new]];
 
+  [FBSDKInternalUtility.sharedUtility deleteFacebookCookies];
   [FBSDKInternalUtility reset];
-  [FBSDKInternalUtility deleteFacebookCookies];
-  FBSDKInternalUtility.loggerType = TestLogger.class;
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 }
 
 - (void)tearDown
 {
-  [FBSDKSettings reset];
-  [TestLogger reset];
-  FBSDKInternalUtility.loggerType = FBSDKLogger.class;
+  [FBSDKSettings.sharedSettings reset];
+  [FBSDKInternalUtility reset];
 
   [super tearDown];
 }
@@ -84,160 +58,159 @@
 
 - (void)testFacebookURL
 {
-  FBSDKSettings.facebookDomainPart = @"";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"";
   NSString *URLString;
-  NSString *tier = [FBSDKSettings facebookDomainPart];
+  NSString *tier = FBSDKSettings.sharedSettings.facebookDomainPart;
 
-  URLString = [FBSDKInternalUtility
+  URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@""
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
-  URLString = [FBSDKInternalUtility
+  URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"m."
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
-  URLString = [FBSDKInternalUtility
+  URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"m"
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/dialog/share"
-                                              queryParameters:@{}
-                                                        error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/dialog/share"
+                                                            queryParameters:@{}
+                                                                      error:NULL].absoluteString;
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"dialog/share"
-                                              queryParameters:@{}
-                                                        error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"dialog/share"
+                                                            queryParameters:@{}
+                                                                      error:NULL].absoluteString;
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"dialog/share"
-                                              queryParameters:@{ @"key" : @"value" }
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"dialog/share"
+                                                            queryParameters:@{ @"key" : @"value" }
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(
     URLString,
-    @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share?key=value"
+    @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share?key=value"
   );
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v1.0/dialog/share"
-                                              queryParameters:@{}
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v1.0/dialog/share"
+                                                            queryParameters:@{}
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v1.0/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@"v2.0"
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@"v2.0"
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v1.0/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@"v2.0"
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v1.0/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@"v2.0"
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v1.0/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v987654321.2/dialog/share"
-                                              queryParameters:@{}
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v987654321.2/dialog/share"
+                                                            queryParameters:@{}
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v987654321.2/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v.1/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@"v2.0"
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v.1/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@"v2.0"
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v.1/dialog/share");
 
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v1/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@"v2.0"
-                                                        error:NULL].absoluteString;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v1/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@"v2.0"
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v1/dialog/share");
-  [FBSDKSettings setFacebookDomainPart:tier];
-
-  FBSDKSettings.graphAPIVersion = @"v3.3";
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/v1/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@""
-                                                        error:NULL].absoluteString;
+  FBSDKSettings.sharedSettings.facebookDomainPart = tier;
+  FBSDKSettings.sharedSettings.graphAPIVersion = @"v3.3";
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/v1/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@""
+                                                                      error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v3.3/v1/dialog/share");
-  FBSDKSettings.graphAPIVersion = nil;
-  URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                         path:@"/dialog/share"
-                                              queryParameters:@{}
-                                               defaultVersion:@""
-                                                        error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  FBSDKSettings.sharedSettings.graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION;
+  URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                       path:@"/dialog/share"
+                                                            queryParameters:@{}
+                                                             defaultVersion:@""
+                                                                      error:NULL].absoluteString;
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 }
 
 - (void)testFacebookGamingURL
 {
-  FBSDKSettings.facebookDomainPart = @"";
+  FBSDKSettings.sharedSettings.facebookDomainPart = @"";
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
   NSString *URLString;
 
-  URLString = [FBSDKInternalUtility
+  URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"graph"
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://graph.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://graph.fb.gg/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
-  URLString = [FBSDKInternalUtility
+  URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"graph-video"
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://graph-video.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://graph-video.fb.gg/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 }
 
 // MARK: - Extracting Permissions
 
 - (void)testParsingPermissionsWithFuzzyValues
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
   // A lack of a runtime crash is considered a success here.
   for (int i = 0; i < 100; i++) {
-    [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.randomValues
-                                      grantedPermissions:grantedPermissions
-                                     declinedPermissions:declinedPermissions
-                                      expiredPermissions:expiredPermissions];
+    [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.randomValues
+                                                    grantedPermissions:grantedPermissions
+                                                   declinedPermissions:declinedPermissions
+                                                    expiredPermissions:expiredPermissions];
   }
 }
 
 - (void)testExtractingPermissionsFromResponseWithInvalidTopLevelKey
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingTopLevelKey
-                                    grantedPermissions:grantedPermissions
-                                   declinedPermissions:declinedPermissions
-                                    expiredPermissions:expiredPermissions];
+  [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingTopLevelKey
+                                                  grantedPermissions:grantedPermissions
+                                                 declinedPermissions:declinedPermissions
+                                                  expiredPermissions:expiredPermissions];
   XCTAssertEqual(grantedPermissions.count, 0, "Should not add granted permissions if top level key is missing");
   XCTAssertEqual(declinedPermissions.count, 0, "Should not add declined permissions if top level key is missing");
   XCTAssertEqual(expiredPermissions.count, 0, "Should not add expired permissions if top level key is missing");
@@ -245,14 +218,14 @@
 
 - (void)testExtractingPermissionsFromResponseWithMissingPermissions
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingPermissions
-                                    grantedPermissions:grantedPermissions
-                                   declinedPermissions:declinedPermissions
-                                    expiredPermissions:expiredPermissions];
+  [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingPermissions
+                                                  grantedPermissions:grantedPermissions
+                                                 declinedPermissions:declinedPermissions
+                                                  expiredPermissions:expiredPermissions];
   XCTAssertEqual(grantedPermissions.count, 0, "Should not add missing granted permissions");
   XCTAssertEqual(declinedPermissions.count, 0, "Should not add missing declined permissions");
   XCTAssertEqual(expiredPermissions.count, 0, "Should not add missing expired permissions");
@@ -260,14 +233,14 @@
 
 - (void)testExtractingPermissionsFromResponseWithMissingStatus
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingStatus
-                                    grantedPermissions:grantedPermissions
-                                   declinedPermissions:declinedPermissions
-                                    expiredPermissions:expiredPermissions];
+  [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingStatus
+                                                  grantedPermissions:grantedPermissions
+                                                 declinedPermissions:declinedPermissions
+                                                  expiredPermissions:expiredPermissions];
   XCTAssertEqual(grantedPermissions.count, 0, "Should not add a permission with a missing status");
   XCTAssertEqual(declinedPermissions.count, 0, "Should not add a permission with a missing status");
   XCTAssertEqual(expiredPermissions.count, 0, "Should not add a permission with a missing status");
@@ -275,14 +248,14 @@
 
 - (void)testExtractingPermissionsFromResponseWithValidPermissions
 {
-  NSMutableSet *grantedPermissions = [NSMutableSet set];
-  NSMutableSet *declinedPermissions = [NSMutableSet set];
-  NSMutableSet *expiredPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *grantedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
+  NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.validAllStatuses
-                                    grantedPermissions:grantedPermissions
-                                   declinedPermissions:declinedPermissions
-                                    expiredPermissions:expiredPermissions];
+  [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.validAllStatuses
+                                                  grantedPermissions:grantedPermissions
+                                                 declinedPermissions:declinedPermissions
+                                                  expiredPermissions:expiredPermissions];
   XCTAssertEqual(grantedPermissions.count, 1, "Should add granted permissions when available");
   XCTAssertTrue([grantedPermissions containsObject:@"email"], "Should add the correct permission to granted permissions");
 
@@ -298,11 +271,11 @@
 - (void)testCanOpenUrlSchemeWithMissingScheme
 {
   XCTAssertFalse(
-    [FBSDKInternalUtility _canOpenURLScheme:nil],
+    [FBSDKInternalUtility.sharedUtility _canOpenURLScheme:nil],
     "Should not be able to open a missing scheme"
   );
 
-  XCTAssertNil(TestLogger.capturedLogEntry, "A developer error should not be logged for a nil scheme");
+  XCTAssertNil(self.logger.capturedContents, "A developer error should not be logged for a nil scheme");
 }
 
 - (void)testCanOpenUrlSchemeWithInvalidSchemes
@@ -318,7 +291,7 @@
   ];
 
   for (NSString *scheme in invalidSchemes) {
-    [FBSDKInternalUtility _canOpenURLScheme:scheme];
+    [FBSDKInternalUtility.sharedUtility _canOpenURLScheme:scheme];
 
     [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:[NSString stringWithFormat:@"Invalid URL scheme provided: %@", scheme]];
@@ -336,9 +309,9 @@
   ];
 
   for (NSString *scheme in validSchemes) {
-    [FBSDKInternalUtility _canOpenURLScheme:scheme];
+    [FBSDKInternalUtility.sharedUtility _canOpenURLScheme:scheme];
 
-    XCTAssertNil(TestLogger.capturedLogEntry, "A developer error should not be logged for valid schemes");
+    XCTAssertNil(self.logger.capturedContents, "A developer error should not be logged for valid schemes");
   }
 }
 
@@ -346,11 +319,11 @@
 
 - (void)testAppURLSchemeWithMissingAppIdMissingSuffix
 {
-  FBSDKSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     @"fb",
     "Should return an app url scheme derived from the app id and app url scheme suffix"
   );
@@ -358,11 +331,11 @@
 
 - (void)testAppURLSchemeWithMissingAppIdInvalidSuffix
 {
-  FBSDKSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = @"   ";
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"   ";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     @"fb   ",
     "Should return an app url scheme derived from the app id and app url scheme suffix"
   );
@@ -370,11 +343,11 @@
 
 - (void)testAppURLSchemeWithMissingAppIdValidSuffix
 {
-  FBSDKSettings.appID = nil;
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     @"fbfoo",
     "Should return an app url scheme derived from the app id and app url scheme suffix"
   );
@@ -382,13 +355,13 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdMissingSuffix
 {
-  FBSDKSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = nil;
-  NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
+  FBSDKSettings.sharedSettings.appID = @" ";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
+  NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -396,13 +369,13 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdInvalidSuffix
 {
-  FBSDKSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = @" ";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appID = @" ";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @" ";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -410,13 +383,13 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdValidSuffix
 {
-  FBSDKSettings.appID = @" ";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
-  NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appID = @" ";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -424,12 +397,12 @@
 
 - (void)testAppURLSchemeWithValidAppIdMissingSuffix
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
-  NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
+  NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID];
 
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -437,13 +410,13 @@
 
 - (void)testAppURLSchemeWithValidAppIdInvalidSuffix
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"   ";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"   ";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -451,12 +424,12 @@
 
 - (void)testAppURLSchemeWithValidAppIdValidSuffix
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
-  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
+  NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix];
 
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility appURLScheme],
+    [FBSDKInternalUtility.sharedUtility appURLScheme],
     expected,
     "Should return an app url scheme derived app id and app url scheme suffix defined in settings"
   );
@@ -466,20 +439,20 @@
 
 - (void)testAppUrlWithEmptyHost
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
-  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
+  NSURL *url = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
 
   XCTAssertNil(url.host, "Should not set an empty host.");
 }
 
 - (void)testAppUrlWithValidHost
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = @"foo";
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = @"foo";
 
-  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
+  NSURL *url = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
 
   XCTAssertEqualObjects(url.host, @"facebook", "Should set the expected host.");
 }
@@ -490,7 +463,7 @@
 {
   NSString *scheme = @"foo";
 
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
+  [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:scheme];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:@"foo is missing from your Info.plist under LSApplicationQueriesSchemes and is required."];
@@ -500,16 +473,16 @@
 {
   NSString *scheme = @"foo";
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
+  XCTAssertEqual(self.logger.logEntryCallCount, 0, @"There should not be developer errors logged initially");
 
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
+  [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:scheme];
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"One developer error should be logged");
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:@"foo is missing from your Info.plist under LSApplicationQueriesSchemes and is required."];
 
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
+  [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:scheme];
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
 }
 
 // MARK: - Dictionary from FBURL
@@ -517,7 +490,7 @@
 - (void)testWithAuthorizeHostNoParameters
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -529,7 +502,7 @@
 - (void)testWithAuthorizeHostNoFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize?foo=bar"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -541,8 +514,8 @@
 - (void)testWithAuthorizeHostAndFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize?foo=bar#param1=value1&param2=value2"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
-  NSDictionary *expectedParameters = @{
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *expectedParameters = @{
     @"foo" : @"bar",
     @"param1" : @"value1",
     @"param2" : @"value2"
@@ -558,7 +531,7 @@
 - (void)testWithoutAuthorizeHostNoParameters
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -570,7 +543,7 @@
 - (void)testWithoutAuthorizeHostNoFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example?foo=bar"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -582,8 +555,8 @@
 - (void)testWithoutAuthorizeHostWithFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example?foo=bar#param1=value1&param2=value2"];
-  NSDictionary *parameters = [FBSDKInternalUtility parametersFromFBURL:url];
-  NSDictionary *expectedParameters = @{ @"foo" : @"bar" };
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *expectedParameters = @{ @"foo" : @"bar" };
 
   XCTAssertEqualObjects(
     parameters,
@@ -607,7 +580,7 @@
 
   XCTAssertEqualObjects(cookies, expectedCookies, "Sanity check that there are cookies to delete");
 
-  [FBSDKInternalUtility deleteFacebookCookies];
+  [FBSDKInternalUtility.sharedUtility deleteFacebookCookies];
   XCTAssertEqual(
     [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:self.dialogUrl],
     @[],
@@ -623,7 +596,7 @@
   NSArray *cookies = [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:self.nonDialogUrl];
   XCTAssertEqualObjects(cookies, @[cookie], "Sanity check that there are cookies to delete");
 
-  [FBSDKInternalUtility deleteFacebookCookies];
+  [FBSDKInternalUtility.sharedUtility deleteFacebookCookies];
   XCTAssertEqualObjects(
     [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:self.nonDialogUrl],
     @[cookie],
@@ -639,7 +612,7 @@
   [NSHTTPCookieStorage.sharedHTTPCookieStorage setCookie:dialogCookie];
   [NSHTTPCookieStorage.sharedHTTPCookieStorage setCookie:nonDialogCookie];
 
-  [FBSDKInternalUtility deleteFacebookCookies];
+  [FBSDKInternalUtility.sharedUtility deleteFacebookCookies];
 
   XCTAssertEqualObjects(
     [NSHTTPCookieStorage.sharedHTTPCookieStorage cookiesForURL:self.dialogUrl],
@@ -659,10 +632,11 @@
 {
   NSArray *querySchemes = @[];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertFalse(
-    [FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name],
+    [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:self.name],
     "Should not be consider a scheme to be registered if it's missing from the application query schemes"
   );
 }
@@ -671,10 +645,11 @@
 {
   NSArray *querySchemes = @[self.name];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertTrue(
-    [FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name],
+    [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:self.name],
     "Should consider a scheme to be registered if it exists in the application query schemes"
   );
 }
@@ -683,21 +658,23 @@
 {
   NSArray *querySchemes = @[self.name];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  XCTAssertTrue([FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name], "Sanity check");
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:self.name], "Sanity check");
 
   [self.bundle setInfoDictionary:@{}];
 
-  XCTAssertTrue([FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name], "Should return the cached value of the main bundle and not the updated values");
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:self.name], "Should return the cached value of the main bundle and not the updated values");
 }
 
 - (void)testFacebookAppInstalledMissingQuerySchemes
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:facebookUrlSchemeMissingMessage];
@@ -707,9 +684,10 @@
 {
   NSArray *querySchemes = @[];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:facebookUrlSchemeMissingMessage];
@@ -719,9 +697,10 @@
 {
   NSArray *querySchemes = @[@"Foo"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:facebookUrlSchemeMissingMessage];
@@ -731,9 +710,10 @@
 {
   NSArray *querySchemes = @[@"fbauth2"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 
   XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
@@ -741,27 +721,29 @@
 - (void)testFacebookAppInstalledCache
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
+  XCTAssertEqual(self.logger.logEntryCallCount, 0, @"There should not be developer errors logged initially");
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"One developer error should be logged");
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:facebookUrlSchemeMissingMessage];
 
   // Calling it again should not result in an additional call to the singleShotLogEntry method
-  [FBSDKInternalUtility isFacebookAppInstalled];
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
+  [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
 }
 
 - (void)testMessengerAppInstalledMissingQuerySchemes
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:messengerUrlSchemeMissingMessage];
@@ -771,9 +753,10 @@
 {
   NSArray *querySchemes = @[];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:messengerUrlSchemeMissingMessage];
@@ -783,9 +766,10 @@
 {
   NSArray *querySchemes = @[@"Foo"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:messengerUrlSchemeMissingMessage];
@@ -795,9 +779,10 @@
 {
   NSArray *querySchemes = @[@"fb-messenger-share-api"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
 
   XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
@@ -805,27 +790,29 @@
 - (void)testMessengerAppInstalledCache
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"One developer error should be logged");
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:messengerUrlSchemeMissingMessage];
 
   // Calling it again should not result in an additional call to the singleShotLogEntry method
-  [FBSDKInternalUtility isMessengerAppInstalled];
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
+  [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled];
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
 }
 
 - (void)testMSQRDPlayerAppInstalledMissingQuerySchemes
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:msqrdPlayerUrlSchemeMissingMessage];
@@ -835,9 +822,10 @@
 {
   NSArray *querySchemes = @[];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:msqrdPlayerUrlSchemeMissingMessage];
@@ -847,9 +835,10 @@
 {
   NSArray *querySchemes = @[@"Foo"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
 
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:msqrdPlayerUrlSchemeMissingMessage];
@@ -859,9 +848,10 @@
 {
   NSArray *querySchemes = @[@"msqrdplayer"];
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
 
   XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
@@ -869,27 +859,29 @@
 - (void)testMSQRDPlayerAppInstalledCache
 {
   self.bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
 
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"One developer error should be logged");
+
   [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:msqrdPlayerUrlSchemeMissingMessage];
 
   // Calling it again should not result in an additional call to the singleShotLogEntry method
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
-  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
+  [FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled];
+  XCTAssertEqual(self.logger.logEntryCallCount, 1, @"Additional errors should not be logged for the same error");
 }
 
 // MARK: - Random Utility Methods
 
 - (void)verifyTestLoggerLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior logEntry:(NSString *)logEntry
 {
-  XCTAssertEqual(TestLogger.capturedLoggingBehavior, loggingBehavior);
-  XCTAssertEqualObjects(TestLogger.capturedLogEntry, logEntry);
+  XCTAssertEqual(self.loggerFactory.capturedLoggingBehavior, loggingBehavior);
+  XCTAssertEqualObjects(self.logger.capturedContents, logEntry);
 }
 
 - (void)testIsBrowserURLWithNonBrowserURL
@@ -900,7 +892,7 @@
   ];
 
   for (NSURL *url in urls) {
-    XCTAssertFalse([FBSDKInternalUtility isBrowserURL:url], "%@ should not be considered a browser url", url.absoluteString);
+    XCTAssertFalse([FBSDKInternalUtility.sharedUtility isBrowserURL:url], "%@ should not be considered a browser url", url.absoluteString);
   }
 }
 
@@ -914,7 +906,7 @@
   ];
 
   for (NSURL *url in urls) {
-    XCTAssertTrue([FBSDKInternalUtility isBrowserURL:url], "%@ should be considered a browser url", url.absoluteString);
+    XCTAssertTrue([FBSDKInternalUtility.sharedUtility isBrowserURL:url], "%@ should be considered a browser url", url.absoluteString);
   }
 }
 
@@ -928,7 +920,7 @@
   ];
 
   for (NSString *identifier in identifiers) {
-    XCTAssertFalse([FBSDKInternalUtility isFacebookBundleIdentifier:identifier], "%@ should not be considered a facebook bundle indentifier", identifier);
+    XCTAssertFalse([FBSDKInternalUtility.sharedUtility isFacebookBundleIdentifier:identifier], "%@ should not be considered a facebook bundle indentifier", identifier);
   }
 }
 
@@ -942,7 +934,7 @@
   ];
 
   for (NSString *identifier in identifiers) {
-    XCTAssertTrue([FBSDKInternalUtility isFacebookBundleIdentifier:identifier], "%@ should be considered a facebook bundle indentifier", identifier);
+    XCTAssertTrue([FBSDKInternalUtility.sharedUtility isFacebookBundleIdentifier:identifier], "%@ should be considered a facebook bundle indentifier", identifier);
   }
 }
 
@@ -956,7 +948,7 @@
 
   for (NSString *identifier in identifiers) {
     XCTAssertFalse(
-      [FBSDKInternalUtility isSafariBundleIdentifier:identifier],
+      [FBSDKInternalUtility.sharedUtility isSafariBundleIdentifier:identifier],
       "%@ should not be considered a safari bundle identifier",
       identifier
     );
@@ -972,7 +964,7 @@
 
   for (NSString *identifier in identifiers) {
     XCTAssertTrue(
-      [FBSDKInternalUtility isSafariBundleIdentifier:identifier],
+      [FBSDKInternalUtility.sharedUtility isSafariBundleIdentifier:identifier],
       "%@ should be considered a safari bundle identifier",
       identifier
     );
@@ -981,44 +973,49 @@
 
 - (void)testValidatingAppIDWhenUninitialized
 {
-  FBSDKSettings.appID = @"abc";
+  [FBSDKInternalUtility reset];
+  FBSDKSettings.sharedSettings.appID = @"abc";
 
-  XCTAssertThrows([FBSDKInternalUtility validateAppID]);
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateAppID]);
 }
 
 - (void)testValidatingAppID
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = nil;
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = nil;
 
-  XCTAssertThrows([FBSDKInternalUtility validateAppID]);
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateAppID]);
 }
 
 - (void)testValidateClientAccessTokenWhenUninitialized
 {
-  FBSDKSettings.appID = @"abc";
-  FBSDKSettings.clientToken = @"123";
+  [FBSDKInternalUtility reset];
+  FBSDKSettings.sharedSettings.appID = @"abc";
+  FBSDKSettings.sharedSettings.clientToken = @"123";
 
-  XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]);
 }
 
 - (void)testValidateClientAccessTokenWithoutClientTokenWithoutAppID
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = nil;
-  FBSDKSettings.clientToken = nil;
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = nil;
 
-  XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]);
 }
 
 - (void)testValidateClientAccessTokenWithClientTokenWithoutAppID
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = nil;
-  FBSDKSettings.clientToken = @"client123";
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = nil;
+  FBSDKSettings.sharedSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility validateRequiredClientAccessToken],
+    [FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken],
     @"(null)|client123",
     "A valid client-access token should include the app identifier and the client token"
   );
@@ -1026,12 +1023,13 @@
 
 - (void)testValidateClientAccessTokenWithClientTokenWithAppID
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.clientToken = @"client123";
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
-    [FBSDKInternalUtility validateRequiredClientAccessToken],
+    [FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken],
     @"appid|client123",
     "A valid client-access token should include the app identifier and the client token"
   );
@@ -1039,34 +1037,37 @@
 
 - (void)testValidateClientAccessTokenWithoutClientTokenWithAppID
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.clientToken = nil;
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.clientToken = nil;
 
-  XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]);
 }
 
 - (void)testIsRegisteredUrlSchemeWithRegisteredScheme
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"com.foo.bar"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  XCTAssertTrue([FBSDKInternalUtility isRegisteredURLScheme:@"com.foo.bar"], "Schemes in the bundle should be considered registered");
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:@"com.foo.bar"], "Schemes in the bundle should be considered registered");
 }
 
 - (void)testIsRegisteredUrlSchemeWithoutRegisteredScheme
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"com.foo.bar"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  XCTAssertFalse([FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"], "Schemes absent from the bundle should not be considered registered");
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:@"com.facebook"], "Schemes absent from the bundle should not be considered registered");
 }
 
 - (void)testIsRegisteredUrlSchemeCaching
 {
   self.bundle = [TestBundle new];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
-  [FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"];
+  [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:@"com.facebook"];
 
   XCTAssertTrue(
     self.bundle.didAccessInfoDictionary,
@@ -1074,7 +1075,7 @@
   );
   [self.bundle reset];
 
-  [FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"];
+  [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:@"com.facebook"];
 
   XCTAssertFalse(
     self.bundle.didAccessInfoDictionary,
@@ -1084,11 +1085,12 @@
 
 - (void)testValidatingUrlSchemesWithoutAppID
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = nil;
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = nil;
 
   XCTAssertThrows(
-    [FBSDKInternalUtility validateURLSchemes],
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes],
     "Cannot validate url schemes without an app identifier"
   );
 }
@@ -1096,36 +1098,39 @@
 - (void)testValidatingUrlSchemesWhenNotConfigured
 {
   XCTAssertThrows(
-    [FBSDKInternalUtility validateURLSchemes],
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes],
     "Cannot validate url schemes before configuring"
   );
 }
 
 - (void)testValidatingUrlSchemesWithAppIdMatchingBundleEntry
 {
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
 
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbappid"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertNoThrow(
-    [FBSDKInternalUtility validateURLSchemes],
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes],
     "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
   );
 }
 
 - (void)testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry
 {
-  FBSDKSettings.appID = @"appid";
-  FBSDKSettings.appURLSchemeSuffix = nil;
+  FBSDKSettings.sharedSettings.appID = @"appid";
+  FBSDKSettings.sharedSettings.appURLSchemeSuffix = nil;
 
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb123"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
 
   XCTAssertThrows(
-    [FBSDKInternalUtility validateURLSchemes],
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes],
     "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
   );
 }
@@ -1134,32 +1139,59 @@
 - (void)testValidatingFacebookUrlSchemes_auth
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbauth2"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbauth2 is present in the bundle url schemes");
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbauth2 is present in the bundle url schemes");
 }
 
 // We can't loop through these because of how stubbing works.
 - (void)testValidatingFacebookUrlSchemes_api
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbapi"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbapi is present in the bundle url schemes");
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbapi is present in the bundle url schemes");
 }
 
 // We can't loop through these because of how stubbing works.
 - (void)testValidatingFacebookUrlSchemes_messenger
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb-messenger-share-api"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fb-messenger-share-api is present in the bundle url schemes");
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fb-messenger-share-api is present in the bundle url schemes");
 }
 
 // We can't loop through these because of how stubbing works.
 - (void)testValidatingFacebookUrlSchemes_shareextension
 {
   self.bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbshareextension"]];
-  [FBSDKInternalUtility configureWithInfoDictionaryProvider:self.bundle];
-  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbshareextension is present in the bundle url schemes");
+  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.bundle
+                                                            loggerFactory:self.loggerFactory];
+  XCTAssertThrows([FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes], "Should throw an error if fbshareextension is present in the bundle url schemes");
+}
+
+- (void)testExtendDictionaryWithDefaultDataProcessingOptions
+{
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
+
+  XCTAssertEqualObjects(parameters, @{}, "Parameters should not change with default data processing options");
+}
+
+- (void)testExtendDictionaryWithDataProcessingOptions
+{
+  [FBSDKSettings.sharedSettings setDataProcessingOptions:@[@"LDU"] country:10 state:100];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
+
+  NSDictionary *expectedParameters = @{
+    @"data_processing_options" : @"[\"LDU\"]",
+    @"data_processing_options_country" : @(10),
+    @"data_processing_options_state" : @(100)
+  };
+
+  XCTAssertEqualObjects(parameters, expectedParameters, "Parameters is not extended with expected data processing options");
 }
 
 - (void)testIsPublishPermission
@@ -1174,7 +1206,7 @@
     @"rsvp_event"
   ];
   for (NSString *permission in publishPermissions) {
-    XCTAssertTrue([FBSDKInternalUtility isPublishPermission:permission]);
+    XCTAssertTrue([FBSDKInternalUtility.sharedUtility isPublishPermission:permission]);
   }
 
   NSArray *nonPublishPermissions = @[
@@ -1183,37 +1215,37 @@
     @"_publish"
   ];
   for (NSString *permission in nonPublishPermissions) {
-    XCTAssertFalse([FBSDKInternalUtility isPublishPermission:permission]);
+    XCTAssertFalse([FBSDKInternalUtility.sharedUtility isPublishPermission:permission]);
   }
 }
 
 - (void)testIsUnityWithMissingSuffix
 {
-  FBSDKSettings.userAgentSuffix = nil;
-  XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+  FBSDKSettings.sharedSettings.userAgentSuffix = nil;
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility isUnity], "User agent should determine whether an app is Unity");
 }
 
 - (void)testIsUnityWithNonUnitySuffix
 {
-  FBSDKSettings.userAgentSuffix = @"Foo";
-  XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+  FBSDKSettings.sharedSettings.userAgentSuffix = @"Foo";
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility isUnity], "User agent should determine whether an app is Unity");
 }
 
 - (void)testIsUnityWithUnitySuffix
 {
-  FBSDKSettings.userAgentSuffix = @"__Unity__";
-  XCTAssertTrue([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+  FBSDKSettings.sharedSettings.userAgentSuffix = @"__Unity__";
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility isUnity], "User agent should determine whether an app is Unity");
 }
 
 - (void)testHexadecimalStringFromData
 {
-  XCTAssertNil([FBSDKInternalUtility hexadecimalStringFromData:NSData.data]);
+  XCTAssertNil([FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:NSData.data]);
 
   NSString *foo = @"foo";
   NSData *stringData = [foo dataUsingEncoding:NSUTF8StringEncoding];
   NSString *expected = @"666f6f";
 
-  XCTAssertEqualObjects([FBSDKInternalUtility hexadecimalStringFromData:stringData], expected);
+  XCTAssertEqualObjects([FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:stringData], expected);
 }
 
 - (void)testObjectIsEqualToObject
@@ -1222,20 +1254,20 @@
   id obj2 = @"foo";
   id obj3 = @"bar";
 
-  XCTAssertTrue([FBSDKInternalUtility object:obj1 isEqualToObject:obj1]);
-  XCTAssertTrue([FBSDKInternalUtility object:obj1 isEqualToObject:obj2]);
-  XCTAssertFalse([FBSDKInternalUtility object:obj1 isEqualToObject:obj3]);
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility object:obj1 isEqualToObject:obj1]);
+  XCTAssertTrue([FBSDKInternalUtility.sharedUtility object:obj1 isEqualToObject:obj2]);
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility object:obj1 isEqualToObject:obj3]);
 
   obj1 = nil;
-  XCTAssertFalse([FBSDKInternalUtility object:obj1 isEqualToObject:obj2]);
-  XCTAssertFalse([FBSDKInternalUtility object:obj2 isEqualToObject:obj1]);
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility object:obj1 isEqualToObject:obj2]);
+  XCTAssertFalse([FBSDKInternalUtility.sharedUtility object:obj2 isEqualToObject:obj1]);
 }
 
 - (void)testCreatingUrlWithUnknownError // InvalidQueryString
 {
   NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
 
-  [FBSDKInternalUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@"a date" : NSDate.date} error:&error];
+  [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDKURLSchemeHTTPS host:@"example" path:@"/foo" queryParameters:@{@"a date" : NSDate.date} error:&error];
 
   XCTAssertEqualObjects(
     error.domain,
@@ -1258,7 +1290,7 @@
 {
   NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
 
-  [FBSDKInternalUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@[] : @"foo"} error:&error];
+  [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDKURLSchemeHTTPS host:@"example" path:@"/foo" queryParameters:(id) @{@[] : @"foo"} error:&error];
 
   XCTAssertEqualObjects(
     error.domain,
@@ -1281,18 +1313,18 @@
 
 - (NSURL *)dialogUrl
 {
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                    path:@"/dialog/"
-                                         queryParameters:@{}
-                                                   error:NULL];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                  path:@"/dialog/"
+                                                       queryParameters:@{}
+                                                                 error:NULL];
 }
 
 - (NSURL *)nonDialogUrl
 {
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                    path:@"/foo/"
-                                         queryParameters:@{}
-                                                   error:NULL];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                  path:@"/foo/"
+                                                       queryParameters:@{}
+                                                                 error:NULL];
 }
 
 - (NSHTTPCookie *)cookieForUrl:(NSURL *)url name:(NSString *)name
@@ -1310,7 +1342,7 @@
   return [self cookieForUrl:url name:@"MyCookie"];
 }
 
-- (NSDictionary *)validParameters
+- (NSDictionary<NSString *, id> *)validParameters
 {
   return @{@"foo" : @"bar"};
 }

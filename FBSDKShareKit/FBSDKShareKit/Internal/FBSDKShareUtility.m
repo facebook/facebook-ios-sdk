@@ -1,32 +1,16 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKShareUtility.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKHashtag.h"
-
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
-#import "FBSDKCoreKitBasicsImportForShareKit.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 
@@ -71,12 +55,12 @@
 
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *__autoreleasing *)methodNameRef
-                  parameters:(NSDictionary *__autoreleasing *)parametersRef
+                  parameters:(NSDictionary<NSString *, id> *__autoreleasing *)parametersRef
                        error:(NSError *__autoreleasing *)errorRef
 {
   NSString *methodName = @"share";
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([content isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *const linkContent = (FBSDKShareLinkContent *)content;
     if (linkContent.contentURL != nil) {
       parameters = [NSMutableDictionary new];
@@ -102,7 +86,7 @@
   return YES;
 }
 
-+ (NSString *)buildWebShareTags:(NSArray<NSString *> *)peopleIDs
++ (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs
 {
   if (peopleIDs.count > 0) {
     NSMutableString *tags = [NSMutableString new];
@@ -146,7 +130,7 @@
 + (NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content
 {
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([content isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
     parameters = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
@@ -159,7 +143,7 @@
   return [parameters copy];
 }
 
-+ (NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag
++ (nullable NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag
 {
   if (!hashtag) {
     return nil;
@@ -174,9 +158,9 @@
   }
 }
 
-+ (UIImage *)imageWithCircleColor:(UIColor *)color
-                       canvasSize:(CGSize)canvasSize
-                       circleSize:(CGSize)circleSize
++ (nullable UIImage *)imageWithCircleColor:(nullable UIColor *)color
+                                canvasSize:(CGSize)canvasSize
+                                circleSize:(CGSize)circleSize
 {
   CGRect circleFrame = CGRectMake(
     (canvasSize.width - circleSize.width) / 2.0,
@@ -235,20 +219,20 @@
   BOOL containsMedia = NO;
   BOOL containsPhotos = NO;
   BOOL containsVideos = NO;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     containsMedia = NO;
     containsPhotos = NO;
     containsVideos = NO;
-  } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     containsMedia = YES;
     containsVideos = YES;
     containsPhotos = NO;
-  } else if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     [self _testObject:((FBSDKSharePhotoContent *)shareContent).photos
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
        containsVideos:&containsVideos];
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     [self _testObject:((FBSDKShareMediaContent *)shareContent).media
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
@@ -293,13 +277,11 @@
   return containsVideos && containsPhotos;
 }
 
-#pragma mark - Helper Methods
-
 + (id)_convertObject:(id)object
 {
-  if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if ([object isKindOfClass:FBSDKSharePhoto.class]) {
     object = [self convertPhoto:(FBSDKSharePhoto *)object];
-  } else if ([object isKindOfClass:[NSArray class]]) {
+  } else if ([object isKindOfClass:NSArray.class]) {
     NSMutableArray *array = [NSMutableArray new];
     for (id item in (NSArray *)object) {
       [FBSDKTypeUtility array:array addObject:[self _convertObject:item]];
@@ -309,7 +291,7 @@
   return object;
 }
 
-+ (NSDictionary<NSString *, id> *)convertPhoto:(FBSDKSharePhoto *)photo
++ (nullable NSDictionary<NSString *, id> *)convertPhoto:(nullable FBSDKSharePhoto *)photo
 {
   if (!photo) {
     return nil;
@@ -330,7 +312,7 @@
   for (FBSDKSharePhoto *photo in content.photos) {
     if (photo.image != nil) {
       dispatch_group_enter(group);
-      NSDictionary *stagingParameters = @{
+      NSDictionary<NSString *, id> *stagingParameters = @{
         @"file" : photo.image,
       };
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
@@ -359,13 +341,13 @@
   BOOL containsMedia = NO;
   BOOL containsPhotos = NO;
   BOOL containsVideos = NO;
-  if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if ([object isKindOfClass:FBSDKSharePhoto.class]) {
     containsMedia = (((FBSDKSharePhoto *)object).image != nil);
     containsPhotos = YES;
-  } else if ([object isKindOfClass:[FBSDKShareVideo class]]) {
+  } else if ([object isKindOfClass:FBSDKShareVideo.class]) {
     containsMedia = YES;
     containsVideos = YES;
-  } else if ([object isKindOfClass:[NSArray class]]) {
+  } else if ([object isKindOfClass:NSArray.class]) {
     for (id item in (NSArray *)object) {
       BOOL itemContainsMedia = NO;
       BOOL itemContainsPhotos = NO;
@@ -457,7 +439,7 @@
 
 + (BOOL)validateNetworkURL:(NSURL *)URL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
-  if (!URL || [FBSDKInternalUtility isBrowserURL:URL]) {
+  if (!URL || [FBSDKInternalUtility.sharedUtility isBrowserURL:URL]) {
     if (errorRef != NULL) {
       *errorRef = nil;
     }
@@ -476,9 +458,9 @@
 + (BOOL)validateRequiredValue:(id)value name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
   if (!value
-      || ([value isKindOfClass:[NSString class]] && !((NSString *)value).length)
-      || ([value isKindOfClass:[NSArray class]] && !((NSArray *)value).count)
-      || ([value isKindOfClass:[NSDictionary class]] && !((NSDictionary *)value).count)) {
+      || ([value isKindOfClass:NSString.class] && !((NSString *)value).length)
+      || ([value isKindOfClass:NSArray.class] && !((NSArray *)value).count)
+      || ([value isKindOfClass:[NSDictionary<NSString *, id> class]] && !((NSDictionary<NSString *, id> *)value).count)) {
     if (errorRef != NULL) {
       *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                          name:name
@@ -512,24 +494,6 @@
                                                    message:nil];
   }
   return NO;
-}
-
-+ (BOOL)_validateAssetLibraryVideoURL:(NSURL *)videoURL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
-{
-  if (!videoURL || [videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
-    if (errorRef != NULL) {
-      *errorRef = nil;
-    }
-    return YES;
-  } else {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:videoURL
-                                                     message:nil];
-    }
-    return NO;
-  }
 }
 
 @end

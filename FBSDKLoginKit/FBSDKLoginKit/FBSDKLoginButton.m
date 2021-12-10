@@ -1,36 +1,21 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginButton.h"
+#import "FBSDKLoginButton.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKNonceUtility.h"
+#import "FBSDKLoginAppEventName.h"
+#import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginTooltipView.h"
+#import "FBSDKNonceUtility.h"
 
 static const CGFloat kFBLogoSize = 16.0;
 static const CGFloat kFBLogoLeftMargin = 6.0;
@@ -38,50 +23,34 @@ static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
-FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
+@interface FBSDKLoginButton ()
+
+@property (nonatomic) BOOL hasShownTooltipBubble;
+@property (nonatomic) id<FBSDKLoginProviding> loginProvider;
+@property (nonatomic) NSString *userID;
+@property (nonatomic) NSString *userName;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+
+@end
 
 @implementation FBSDKLoginButton
-{
-  BOOL _hasShownTooltipBubble;
-  FBSDKLoginManager *_loginManager;
-  NSString *_userID;
-  NSString *_userName;
-}
 
- #pragma mark - Object Lifecycle
-
-- (void)dealloc
-{
-  [self _unsubscribeFromNotifications];
-}
-
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (FBSDKDefaultAudience)defaultAudience
 {
-  return _loginManager.defaultAudience;
+  return _loginProvider.defaultAudience;
 }
 
 - (void)setDefaultAudience:(FBSDKDefaultAudience)defaultAudience
 {
-  _loginManager.defaultAudience = defaultAudience;
+  _loginProvider.defaultAudience = defaultAudience;
 }
 
 - (void)setLoginTracking:(FBSDKLoginTracking)loginTracking
 {
   _loginTracking = loginTracking;
   [self _updateNotificationObservers];
-}
-
-- (UIFont *)defaultFont
-{
-  CGFloat size = 15;
-
-  if (@available(iOS 8.2, *)) {
-    return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
-  } else {
-    return [UIFont boldSystemFontOfSize:size];
-  }
 }
 
 - (void)setNonce:(NSString *)nonce
@@ -96,7 +65,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
 }
 
- #pragma mark - UIView
+#pragma mark - UIView
 
 - (void)didMoveToWindow
 {
@@ -109,7 +78,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
 }
 
- #pragma mark - Layout
+#pragma mark - Layout
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
 {
@@ -151,10 +120,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   }
   UIFont *font = self.titleLabel.font;
 
-  CGSize selectedSize = FBSDKTextSize([self _logOutTitle], font, size, self.titleLabel.lineBreakMode);
-  CGSize normalSize = FBSDKTextSize([self _longLogInTitle], font, size, self.titleLabel.lineBreakMode);
+  CGSize selectedSize = [self textSizeForText:[self _logOutTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
+  CGSize normalSize = [self textSizeForText:[self _longLogInTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
+
   if (normalSize.width > size.width) {
-    normalSize = FBSDKTextSize([self _shortLogInTitle], font, size, self.titleLabel.lineBreakMode);
+    normalSize = [self textSizeForText:[self _shortLogInTitle] font:font constrainedSize:size lineBreakMode:self.titleLabel.lineBreakMode];
   }
 
   CGFloat titleWidth = MAX(normalSize.width, selectedSize.width);
@@ -162,11 +132,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (void)configureButton
 {
-  _loginManager = [FBSDKLoginManager new];
+  _loginProvider = [FBSDKLoginManager new];
 
   NSString *logInTitle = [self _shortLogInTitle];
   NSString *logOutTitle = [self _logOutTitle];
@@ -194,23 +164,16 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   [self _updateNotificationObservers];
 }
 
- #pragma mark - Helper Methods
-
-- (void)_unsubscribeFromNotifications
-{
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)_updateNotificationObservers
 {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_profileDidChangeNotification:)
-                                               name:FBSDKProfileDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_accessTokenDidChangeNotification:)
-                                               name:FBSDKAccessTokenDidChangeNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_profileDidChangeNotification:)
+                                             name:FBSDKProfileDidChangeNotification
+                                           object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_accessTokenDidChangeNotification:)
+                                             name:FBSDKAccessTokenDidChangeNotification
+                                           object:nil];
 }
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
@@ -239,7 +202,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedInAs",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in as %@",
         @"The format string for the FBSDKLoginButton label when the user is logged in"
       );
@@ -249,7 +212,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedIn",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in using Facebook",
         @"The fallback string for the FBSDKLoginButton label when the user name is not available yet"
       );
@@ -259,7 +222,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.CancelLogout",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Cancel",
       @"The label for the FBSDKLoginButton action sheet to cancel logging out"
     );
@@ -267,7 +230,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.ConfirmLogOut",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Log Out",
       @"The label for the FBSDKLoginButton action sheet to confirm logging out"
     );
@@ -282,12 +245,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     UIAlertAction *logout = [UIAlertAction actionWithTitle:logOutTitle
                                                      style:UIAlertActionStyleDestructive
                                                    handler:^(UIAlertAction *_Nonnull action) {
-                                                     [self->_loginManager logOut];
-                                                     [self.delegate loginButtonDidLogOut:self];
+                                                     [self _logout];
                                                    }];
     [alertController addAction:cancel];
     [alertController addAction:logout];
-    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
     [topMostViewController presentViewController:alertController
                                         animated:YES
                                       completion:nil];
@@ -310,9 +272,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
     }
 
-    [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
-                             configuration:loginConfig
-                                completion:handler];
+    [_loginProvider logInFromViewController:[FBSDKInternalUtility.sharedUtility viewControllerForView:self]
+                              configuration:loginConfig
+                                 completion:handler];
   }
 }
 
@@ -337,7 +299,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogOut",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log out",
     @"The label for the FBSDKLoginButton when the user is currently logged in"
   );
@@ -348,7 +310,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogInContinue",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Continue with Facebook",
     @"The long label for the FBSDKLoginButton when the user is currently logged out"
   );
@@ -359,7 +321,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogIn",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log in",
     @"The short label for the FBSDKLoginButton when the user is currently logged out"
   );
@@ -410,13 +372,13 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 - (void)_fetchAndSetContent
 {
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
-                                                                 parameters:nil
-                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [[self graphRequestFactory] createGraphRequestWithGraphPath:@"me"
+                                                                                   parameters:@{@"fields" : @"id,name"}
+                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    NSString *userID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
+    NSString *userID = [FBSDKTypeUtility dictionary:result objectForKey:@"id" ofType:NSString.class];
     if (!error && [FBSDKAccessToken.currentAccessToken.userID isEqualToString:userID]) {
-      self->_userName = [FBSDKTypeUtility coercedToStringValue:result[@"name"]];
+      self->_userName = [FBSDKTypeUtility dictionary:result objectForKey:@"name" ofType:NSString.class];
       self->_userID = userID;
     }
   }];
@@ -451,23 +413,19 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return self;
 }
 
-// MARK: - Testability
-
- #if DEBUG
-  #if FBSDKTEST
-
-- (NSString *)userName
+- (void)_logout
 {
-  return _userName;
+  [self->_loginProvider logOut];
+  [self.delegate loginButtonDidLogOut:self];
 }
 
-- (NSString *)userID
+- (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _userID;
+  if (!_graphRequestFactory) {
+    _graphRequestFactory = [FBSDKGraphRequestFactory new];
+  }
+  return _graphRequestFactory;
 }
-
-  #endif
- #endif
 
 @end
 

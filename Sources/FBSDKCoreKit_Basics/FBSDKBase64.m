@@ -1,22 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKBase64.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKBase64
 
@@ -27,28 +19,28 @@ static FBSDKBase64 *_encoder;
 
 + (void)initialize
 {
-  if (self == [FBSDKBase64 class]) {
+  if (self == FBSDKBase64.class) {
     _decoder = [FBSDKBase64 new];
     _encoder = [FBSDKBase64 new];
   }
 }
 
-+ (NSData *)decodeAsData:(NSString *)string
++ (nullable NSData *)decodeAsData:(nullable NSString *)string
 {
   return [_decoder decodeAsData:string];
 }
 
-+ (NSString *)decodeAsString:(NSString *)string
++ (nullable NSString *)decodeAsString:(nullable NSString *)string
 {
   return [_decoder decodeAsString:string];
 }
 
-+ (NSString *)encodeData:(NSData *)data
++ (nullable NSString *)encodeData:(nullable NSData *)data
 {
   return [_encoder encodeData:data];
 }
 
-+ (NSString *)encodeString:(NSString *)string
++ (nullable NSString *)encodeString:(nullable NSString *)string
 {
   return [_encoder encodeString:string];
 }
@@ -65,7 +57,7 @@ static FBSDKBase64 *_encoder;
 
 #pragma mark - Implementation Methods
 
-- (NSData *)decodeAsData:(NSString *)string
+- (nullable NSData *)decodeAsData:(nullable NSString *)string
 {
   if (!string) {
     return nil;
@@ -81,7 +73,7 @@ static FBSDKBase64 *_encoder;
   return [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
-- (NSString *)decodeAsString:(NSString *)string
+- (nullable NSString *)decodeAsString:(nullable NSString *)string
 {
   NSData *data = [self decodeAsData:string];
   if (!data) {
@@ -90,7 +82,7 @@ static FBSDKBase64 *_encoder;
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)encodeData:(NSData *)data
+- (nullable NSString *)encodeData:(nullable NSData *)data
 {
   if (!data) {
     return nil;
@@ -99,9 +91,11 @@ static FBSDKBase64 *_encoder;
   return [data base64EncodedStringWithOptions:0];
 }
 
-- (NSString *)encodeString:(NSString *)string
+- (nullable NSString *)encodeString:(nullable NSString *)string
 {
   return [self encodeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

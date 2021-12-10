@@ -1,62 +1,37 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
- #import <FBSDKLoginKit/FBSDKLoginManager.h>
-#else
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLogger.h"
-#endif
+#import "FBSDKLoginKitTests-Swift.h"
+#import "FBSDKLoginManager.h"
+#import "FBSDKLoginManagerLogger.h"
 
 @interface FBSDKLoginManagerLoggerTests : XCTestCase
 @end
 
 @implementation FBSDKLoginManagerLoggerTests
-{
-  id _appEventsMock;
-  id _settingsMock;
-  id _loginManagerMock;
-}
 
 - (void)setUp
 {
   [super setUp];
-  _loginManagerMock = OCMClassMock(FBSDKLoginManager.class);
-  _settingsMock = OCMClassMock(FBSDKSettings.class);
-  OCMStub([_settingsMock isAutoLogAppEventsEnabled]).andReturn(YES);
-  // Set up AppEvents class mock
-  _appEventsMock = OCMClassMock(FBSDKAppEvents.class);
+
+  [FBSDKSettings.sharedSettings reset];
 }
 
 - (void)tearDown
 {
   [super tearDown];
-  [_loginManagerMock stopMocking];
-  _loginManagerMock = nil;
-  [_appEventsMock stopMocking];
-  _appEventsMock = nil;
+
+  [FBSDKSettings.sharedSettings reset];
 }
 
 - (void)testCreatingWithMissingParametersWithTrackingEnabled
@@ -167,30 +142,7 @@
   );
 }
 
-- (void)testExtrasForAddSingleLoggingExtra
-{
-  FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:nil
-                                                                                 tracking:FBSDKLoginTrackingEnabled];
-  BOOL (^verifyParameterContents)(NSDictionary *) = ^BOOL (NSDictionary *parameters) {
-    NSString *extras = [FBSDKTypeUtility dictionary:parameters objectForKey:@"6_extras" ofType:NSString.class];
-    NSDictionary *extrasDictionary = [FBSDKBasicUtility objectForJSONString:extras error:nil];
-    XCTAssertEqualObjects([FBSDKTypeUtility dictionary:extrasDictionary objectForKey:@"test_extra_key" ofType:NSString.class], @"test_extra_value");
-    return YES;
-  };
-
-  [logger addSingleLoggingExtra:@"test_extra_value" forKey:@"test_extra_key"];
-  [logger startSessionForLoginManager:_loginManagerMock];
-
-  OCMVerify(
-    ClassMethod(
-      [_appEventsMock logInternalEvent:OCMArg.any
-                            parameters:[OCMArg checkWithBlock:verifyParameterContents]
-                    isImplicitlyLogged:OCMArg.any]
-    )
-  );
-}
-
-- (NSDictionary *)validParameters
+- (NSDictionary<NSString *, id> *)validParameters
 {
   return @{@"state" : @"{\"challenge\":\"ibUuyvhzJW36TvC7BBYpasPHrXk%3D\",\"0_auth_logger_id\":\"A48F8D79-F2DF-4E04-B893-B29879A9A37B\",\"com.facebook.sdk_client_state\":true,\"3_method\":\"sfvc_auth\"}"};
 }

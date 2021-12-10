@@ -1,28 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 #import "FBSDKAppInviteContent.h"
 
@@ -33,31 +19,31 @@
 
 - (void)testProperties
 {
-  FBSDKAppInviteContent *content = [[self class] _content];
-  XCTAssertEqualObjects(content.appLinkURL, [[self class] _appLinkURL]);
-  XCTAssertEqualObjects(content.appInvitePreviewImageURL, [[self class] _appInvitePreviewImageURL]);
+  FBSDKAppInviteContent *content = [self.class _content];
+  XCTAssertEqualObjects(content.appLinkURL, [self.class _appLinkURL]);
+  XCTAssertEqualObjects(content.appInvitePreviewImageURL, [self.class _appInvitePreviewImageURL]);
 }
 
 - (void)testCopy
 {
-  FBSDKAppInviteContent *content = [[self class] _content];
+  FBSDKAppInviteContent *content = [self.class _content];
   XCTAssertEqualObjects([content copy], content);
 }
 
 - (void)testCoding
 {
-  FBSDKAppInviteContent *content = [[self class] _content];
+  FBSDKAppInviteContent *content = [self.class _content];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
-  FBSDKAppInviteContent *unarchivedObject = [unarchiver decodeObjectOfClass:[FBSDKAppInviteContent class]
+  unarchiver.requiresSecureCoding = YES;
+  FBSDKAppInviteContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKAppInviteContent.class
                                                                      forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);
 }
 
 - (void)testValidationWithValidContent
 {
-  FBSDKAppInviteContent *content = [[self class] _content];
+  FBSDKAppInviteContent *content = [self.class _content];
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
@@ -68,7 +54,7 @@
 - (void)testValidationWithNilAppLinkURL
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appInvitePreviewImageURL = [[self class] _appInvitePreviewImageURL];
+  content.appInvitePreviewImageURL = [self.class _appInvitePreviewImageURL];
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
@@ -81,7 +67,7 @@
 - (void)testValidationWithNilPreviewImageURL
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
@@ -92,7 +78,7 @@
 - (void)testValidationWithNilPromotionTextNilPromotionCode
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
@@ -103,7 +89,7 @@
 - (void)testValidationWithValidPromotionCodeNilPromotionText
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   content.promotionCode = @"XSKSK";
   NSError *error;
   XCTAssertNotNil(content);
@@ -117,7 +103,7 @@
 - (void)testValidationWithValidPromotionTextNilPromotionCode
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   content.promotionText = @"Some Promo Text";
   NSError *error;
   XCTAssertNotNil(content);
@@ -129,7 +115,7 @@
 - (void)testValidationWithInvalidPromotionText
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   content.promotionText = @"_Invalid_promotionText";
   NSError *error;
   XCTAssertNotNil(content);
@@ -143,7 +129,7 @@
 - (void)testValidationWithInvalidPromotionCode
 {
   FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
-  content.appLinkURL = [[self class] _appLinkURL];
+  content.appLinkURL = [self.class _appLinkURL];
   content.promotionText = @"Some promo text";
   content.promotionCode = @"_invalid promo_code";
   NSError *error;
@@ -154,8 +140,6 @@
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionCode");
 }
-
-#pragma mark - Helper Methods
 
 + (FBSDKAppInviteContent *)_content
 {

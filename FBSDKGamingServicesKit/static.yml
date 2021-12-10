@@ -1,0 +1,50 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+targets:
+  FacebookGamingServices-Static:
+    type: framework
+    platform: iOS
+    productName: FacebookGamingServices
+    sources:
+      - path: FacebookGamingServices
+        headerVisibility: public
+        excludes:
+          - Internal
+      - path: FacebookGamingServices/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FacebookGamingServices-Static.xcconfig
+      Release: Configurations/FacebookGamingServices-Static.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
+      - target: FBSDKShareKit/FBSDKShareKit-Static
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
+  FBSDKGamingServicesKit-Static:
+    type: framework
+    platform: iOS
+    productName: FBSDKGamingServicesKit
+    sources:
+      - path: ../Sources/FBSDKGamingServicesKit
+        group: Sources
+    configFiles:
+      Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
+      Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
+    dependencies:
+      - target: FacebookGamingServices-Static
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h

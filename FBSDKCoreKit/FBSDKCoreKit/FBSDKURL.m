@@ -1,133 +1,180 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKAppLinkTarget.h"
- #import "FBSDKAppLink_Internal.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKMeasurementEvent_Internal.h"
- #import "FBSDKSettings.h"
- #import "FBSDKURL_Internal.h"
+#import "FBSDKURL+Internal.h"
+
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAppLinkCreating.h"
+#import "FBSDKAppLinkTargetCreating.h"
+#import "FBSDKAppLinkURLKeys.h"
+#import "FBSDKMeasurementEvent+Internal.h"
+#import "FBSDKMeasurementEventNames.h"
+#import "FBSDKSettingsProtocol.h"
 
 NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 
 @implementation FBSDKURL
 
-- (instancetype)initWithURL:(NSURL *)url forOpenInboundURL:(BOOL)forOpenURLEvent sourceApplication:(NSString *)sourceApplication forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
+// MARK: Dependencies
+
+static id<FBSDKSettings> _settings;
+static id<FBSDKAppLinkCreating> _appLinkFactory;
+static id<FBSDKAppLinkTargetCreating> _appLinkTargetFactory;
+static id<FBSDKAppLinkEventPosting> _appLinkEventPoster;
+
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+               appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+         appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
 {
-  self = [super init];
-  if (!self) {
-    return nil;
-  }
+  self.settings = settings;
+  self.appLinkFactory = appLinkFactory;
+  self.appLinkTargetFactory = appLinkTargetFactory;
+  self.appLinkEventPoster = appLinkEventPoster;
+}
 
-  _inputURL = url;
-  _targetURL = url;
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
 
-  // Parse the query string parameters for the base URL
-  NSDictionary<NSString *, id> *baseQuery = [FBSDKURL queryParametersForURL:url];
-  _inputQueryParameters = baseQuery;
-  _targetQueryParameters = baseQuery;
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
 
-  // Check for applink_data
-  NSString *appLinkDataString = baseQuery[FBSDKAppLinkDataParameterName];
-  if (appLinkDataString) {
-    // Try to parse the JSON
-    NSError *error = nil;
-    NSDictionary<NSString *, id> *applinkData =
-    [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
-                                 options:0
-                                   error:&error];
-    if (!error && [applinkData isKindOfClass:[NSDictionary class]]) {
-      // If the version is not specified, assume it is 1.
-      NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
-      NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
-      if ([version isKindOfClass:[NSString class]]
-          && [version isEqual:FBSDKAppLinkVersion]) {
-        // There's applink data!  The target should actually be the applink target.
-        _appLinkData = applinkData;
-        id applinkExtras = applinkData[FBSDKAppLinkExtrasKeyName];
-        if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary class]]) {
-          _appLinkExtras = applinkExtras;
-        }
-        _targetURL = ([target isKindOfClass:[NSString class]] ? [NSURL URLWithString:target] : url);
-        _targetQueryParameters = [FBSDKURL queryParametersForURL:_targetURL];
++ (nullable id<FBSDKAppLinkCreating>)appLinkFactory
+{
+  return _appLinkFactory;
+}
 
-        NSDictionary<NSString *, id> *refererAppLink = _appLinkData[FBSDKAppLinkRefererAppLink];
-        NSString *refererURLString = refererAppLink[FBSDKAppLinkRefererUrl];
-        NSString *refererAppName = refererAppLink[FBSDKAppLinkRefererAppName];
++ (void)setAppLinkFactory:(nullable id<FBSDKAppLinkCreating>)appLinkFactory
+{
+  _appLinkFactory = appLinkFactory;
+}
 
-        if (refererURLString && refererAppName) {
-          FBSDKAppLinkTarget *appLinkTarget = [FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:refererURLString]
-                                                                            appStoreId:nil
-                                                                               appName:refererAppName];
-          _appLinkReferer = [FBSDKAppLink appLinkWithSourceURL:[NSURL URLWithString:refererURLString]
-                                                       targets:@[appLinkTarget]
-                                                        webURL:nil
-                                              isBackToReferrer:YES];
-        }
++ (nullable id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+{
+  return _appLinkTargetFactory;
+}
 
-        // Raise Measurement Event
-        NSString *const EVENT_YES_VAL = @"1";
-        NSString *const EVENT_NO_VAL = @"0";
-        NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
-        [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
-        if (refererURLString) {
-          [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];
-        }
-        if (refererAppName) {
-          [FBSDKTypeUtility dictionary:logData setObject:refererAppName forKey:@"refererAppName"];
-        }
-        if (sourceApplication) {
-          [FBSDKTypeUtility dictionary:logData setObject:sourceApplication forKey:@"sourceApplication"];
-        }
-        if (_targetURL.absoluteString) {
-          [FBSDKTypeUtility dictionary:logData setObject:_targetURL.absoluteString forKey:@"targetURL"];
-        }
-        if (_inputURL.absoluteString) {
-          [FBSDKTypeUtility dictionary:logData setObject:_inputURL.absoluteString forKey:@"inputURL"];
-        }
-        if (_inputURL.scheme) {
-          [FBSDKTypeUtility dictionary:logData setObject:_inputURL.scheme forKey:@"inputURLScheme"];
-        }
-        [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
-        [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
-        [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
-        if (forOpenURLEvent) {
-          [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
++ (void)setAppLinkTargetFactory:(nullable id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+{
+  _appLinkTargetFactory = appLinkTargetFactory;
+}
+
++ (nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  return _appLinkEventPoster;
+}
+
++ (void)setAppLinkEventPoster:(nullable id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+{
+  _appLinkEventPoster = appLinkEventPoster;
+}
+
+// MARK: Initializers
+
+- (instancetype) initWithURL:(NSURL *)url
+           forOpenInboundURL:(BOOL)forOpenURLEvent
+           sourceApplication:(NSString *)sourceApplication
+  forRenderBackToReferrerBar:(BOOL)forRenderBackToReferrerBar
+{
+  if ((self = [super init])) {
+    _inputURL = url;
+    _targetURL = url;
+
+    // Parse the query string parameters for the base URL
+    NSDictionary<NSString *, id> *baseQuery = [FBSDKURL queryParametersForURL:url];
+    _inputQueryParameters = baseQuery;
+    _targetQueryParameters = baseQuery;
+
+    // Check for applink_data
+    NSString *appLinkDataString = baseQuery[FBSDKAppLinkDataParameterName];
+    if (appLinkDataString) {
+      // Try to parse the JSON
+      NSError *error = nil;
+      NSDictionary<NSString *, id> *applinkData =
+      [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
+                                   options:0
+                                     error:&error];
+      if (!error && [applinkData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+        // If the version is not specified, assume it is 1.
+        NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
+        NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
+        if ([version isKindOfClass:NSString.class]
+            && [version isEqual:FBSDKAppLinkVersion]) {
+          // There's applink data!  The target should actually be the applink target.
+          _appLinkData = applinkData;
+          id applinkExtras = applinkData[FBSDKAppLinkExtrasKeyName];
+          if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+            _appLinkExtras = applinkExtras;
+          }
+          // Use the url derived from FBSDKAppLinkTargetKeyName if possible
+          if ([target isKindOfClass:NSString.class]) {
+            NSURL *appLinkTargetURL = [NSURL URLWithString:target];
+            if (appLinkTargetURL) {
+              _targetURL = appLinkTargetURL;
+            }
+          }
+          _targetQueryParameters = [FBSDKURL queryParametersForURL:_targetURL];
+
+          NSDictionary<NSString *, id> *refererAppLink = _appLinkData[FBSDKAppLinkRefererAppLink];
+          NSString *refererURLString = refererAppLink[FBSDKAppLinkRefererUrl];
+          NSString *refererAppName = refererAppLink[FBSDKAppLinkRefererAppName];
+
+          if (refererURLString && refererAppName) {
+            id<FBSDKAppLinkTarget> appLinkTarget = [self.class.appLinkTargetFactory createAppLinkTargetWithURL:[NSURL URLWithString:refererURLString]
+                                                                                                    appStoreId:nil
+                                                                                                       appName:refererAppName];
+            _appLinkReferer = [self.class.appLinkFactory createAppLinkWithSourceURL:[NSURL URLWithString:refererURLString]
+                                                                            targets:@[appLinkTarget]
+                                                                             webURL:nil
+                                                                   isBackToReferrer:YES];
+          }
+
+          // Raise Measurement Event
+          NSString *const EVENT_YES_VAL = @"1";
+          NSString *const EVENT_NO_VAL = @"0";
+          NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
+          [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
+          if (refererURLString) {
+            [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];
+          }
+          if (refererAppName) {
+            [FBSDKTypeUtility dictionary:logData setObject:refererAppName forKey:@"refererAppName"];
+          }
+          if (sourceApplication) {
+            [FBSDKTypeUtility dictionary:logData setObject:sourceApplication forKey:@"sourceApplication"];
+          }
+          if (_targetURL.absoluteString) {
+            [FBSDKTypeUtility dictionary:logData setObject:_targetURL.absoluteString forKey:@"targetURL"];
+          }
+          if (_inputURL.absoluteString) {
+            [FBSDKTypeUtility dictionary:logData setObject:_inputURL.absoluteString forKey:@"inputURL"];
+          }
+          if (_inputURL.scheme) {
+            [FBSDKTypeUtility dictionary:logData setObject:_inputURL.scheme forKey:@"inputURLScheme"];
+          }
+          [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
+          [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
+          [self.class.appLinkEventPoster postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
+          if (forOpenURLEvent) {
+            [self.class.appLinkEventPoster postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
+          }
         }
       }
     }
   }
-
   return self;
-}
-
-- (BOOL)isAutoAppLink
-{
-  NSString *host = self.targetURL.host;
-  NSString *scheme = self.targetURL.scheme;
-  NSString *expectedHost = @"applinks";
-  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
-  BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
-  return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
 }
 
 + (instancetype)URLWithURL:(NSURL *)url
@@ -143,6 +190,18 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 + (instancetype)URLForRenderBackToReferrerBarURL:(NSURL *)url
 {
   return [[FBSDKURL alloc] initWithURL:url forOpenInboundURL:NO sourceApplication:nil forRenderBackToReferrerBar:YES];
+}
+
+// MARK: Methods
+
+- (BOOL)isAutoAppLink
+{
+  NSString *host = self.targetURL.host;
+  NSString *scheme = self.targetURL.scheme;
+  NSString *expectedHost = @"applinks";
+  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKURL.settings.appID];
+  BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
+  return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
 }
 
 + (NSDictionary<NSString *, id> *)queryParametersForURL:(NSURL *)url
@@ -164,8 +223,20 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
       [FBSDKTypeUtility dictionary:parameters setObject:value forKey:key];
     }
   }
-  return [NSDictionary dictionaryWithDictionary:parameters];
+  return [NSDictionary<NSString *, id> dictionaryWithDictionary:parameters];
 }
+
+#if DEBUG && FBTEST
+
++ (void)reset
+{
+  self.settings = nil;
+  self.appLinkFactory = nil;
+  self.appLinkTargetFactory = nil;
+  self.appLinkEventPoster = nil;
+}
+
+#endif
 
 @end
 

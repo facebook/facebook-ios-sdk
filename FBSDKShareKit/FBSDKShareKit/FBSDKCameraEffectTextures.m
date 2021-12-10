@@ -1,44 +1,28 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKCameraEffectTextures.h"
+#import "FBSDKCameraEffectTextures.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKShareUtility.h"
 
 static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
-@implementation FBSDKCameraEffectTextures
-{
-  NSMutableDictionary<NSString *, UIImage *> *_textures;
-}
+@interface FBSDKCameraEffectTextures ()
+@property (nonatomic) NSMutableDictionary<NSString *, UIImage *> *textures;
+@end
 
- #pragma mark - Object Lifecycle
+@implementation FBSDKCameraEffectTextures
+
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -48,14 +32,14 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return self;
 }
 
-- (void)setImage:(UIImage *)image forKey:(NSString *)key
+- (void)setImage:(nullable UIImage *)image forKey:(NSString *)key
 {
   [self _setValue:image forKey:key];
 }
 
-- (UIImage *)imageForKey:(NSString *)key
+- (nullable UIImage *)imageForKey:(NSString *)key
 {
-  return [self _valueOfClass:[UIImage class] forKey:key];
+  return [self _valueOfClass:UIImage.class forKey:key];
 }
 
 - (NSDictionary<NSString *, UIImage *> *)allTextures
@@ -63,7 +47,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return _textures;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -75,7 +59,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCameraEffectTextures class]]) {
+  if (![object isKindOfClass:FBSDKCameraEffectTextures.class]) {
     return NO;
   }
   return [self isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object];
@@ -83,10 +67,10 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (BOOL)isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object
 {
-  return [FBSDKInternalUtility object:_textures isEqualToObject:[object allTextures]];
+  return [FBSDKInternalUtility.sharedUtility object:_textures isEqualToObject:[object allTextures]];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -96,7 +80,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _textures = [decoder decodeObjectOfClass:[NSMutableDictionary class]
+    _textures = [decoder decodeObjectOfClass:NSMutableDictionary.class
                                       forKey:FBSDKCameraEffectTexturesTexturesKey];
   }
   return self;
@@ -107,7 +91,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   [encoder encodeObject:_textures forKey:FBSDKCameraEffectTexturesTexturesKey];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -115,8 +99,6 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   copy->_textures = [_textures copy];
   return copy;
 }
-
- #pragma mark - Helper Methods
 
 - (void)_setValue:(id)value forKey:(NSString *)key
 {

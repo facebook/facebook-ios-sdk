@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Facebook Developer Support
+    url: https://developers.facebook.com/support/
+    about: This issue tracker is not for support questions and platform bugs. Please go to Facebook Developer Support for rasing these questions.

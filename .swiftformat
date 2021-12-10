@@ -1,0 +1,21 @@
+# SwiftFormat Config
+
+# https://github.com/nicklockwood/SwiftFormat
+
+# Version: 0.48.11
+
+--exclude samples,testing,ads,internal # dirs
+--exclude Package.swift # files
+
+# Rules to run
+--rules indent
+--rules spaceAroundOperators
+--rules spaceAroundParens
+--rules wrapArguments
+
+# Options
+--swiftversion 5
+--indent 2
+--ifdef no-indent
+--xcodeindentation enabled
+--ranges no-space

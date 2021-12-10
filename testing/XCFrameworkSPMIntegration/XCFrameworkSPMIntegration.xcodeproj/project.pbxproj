@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F4E8E3B32721B91600046A49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8E3B22721B91600046A49 /* AppDelegate.swift */; };
+		F4E8E3B52721B91600046A49 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8E3B42721B91600046A49 /* SceneDelegate.swift */; };
+		F4E8E3B72721B91600046A49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8E3B62721B91600046A49 /* ViewController.swift */; };
+		F4E8E3BA2721B91600046A49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4E8E3B82721B91600046A49 /* Main.storyboard */; };
+		F4E8E3BC2721B91700046A49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4E8E3BB2721B91700046A49 /* Assets.xcassets */; };
+		F4E8E3BF2721B91700046A49 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4E8E3BD2721B91700046A49 /* LaunchScreen.storyboard */; };
+		F4E8E3C92721B94300046A49 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3C82721B94300046A49 /* FacebookAEM */; };
+		F4E8E3CB2721B94300046A49 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3CA2721B94300046A49 /* FacebookBasics */; };
+		F4E8E3CD2721B94300046A49 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3CC2721B94300046A49 /* FacebookCore */; };
+		F4E8E3CF2721B94300046A49 /* FacebookGamingServices in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3CE2721B94300046A49 /* FacebookGamingServices */; };
+		F4E8E3D12721B94300046A49 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3D02721B94300046A49 /* FacebookLogin */; };
+		F4E8E3D32721B94300046A49 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4E8E3D22721B94300046A49 /* FacebookShare */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F4E8E3AF2721B91600046A49 /* XCFrameworkSPMIntegration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCFrameworkSPMIntegration.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4E8E3B22721B91600046A49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F4E8E3B42721B91600046A49 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F4E8E3B62721B91600046A49 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F4E8E3B92721B91600046A49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F4E8E3BB2721B91700046A49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4E8E3BE2721B91700046A49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F4E8E3C02721B91700046A49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4E8E3C62721B92000046A49 /* ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "ios-sdk"; path = ../..; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F4E8E3AC2721B91600046A49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4E8E3D12721B94300046A49 /* FacebookLogin in Frameworks */,
+				F4E8E3C92721B94300046A49 /* FacebookAEM in Frameworks */,
+				F4E8E3D32721B94300046A49 /* FacebookShare in Frameworks */,
+				F4E8E3CD2721B94300046A49 /* FacebookCore in Frameworks */,
+				F4E8E3CB2721B94300046A49 /* FacebookBasics in Frameworks */,
+				F4E8E3CF2721B94300046A49 /* FacebookGamingServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F4E8E3A62721B91600046A49 = {
+			isa = PBXGroup;
+			children = (
+				F4E8E3C62721B92000046A49 /* ios-sdk */,
+				F4E8E3B12721B91600046A49 /* XCFrameworkSPMIntegration */,
+				F4E8E3B02721B91600046A49 /* Products */,
+				F4E8E3C72721B94300046A49 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F4E8E3B02721B91600046A49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8E3AF2721B91600046A49 /* XCFrameworkSPMIntegration.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4E8E3B12721B91600046A49 /* XCFrameworkSPMIntegration */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8E3B22721B91600046A49 /* AppDelegate.swift */,
+				F4E8E3B42721B91600046A49 /* SceneDelegate.swift */,
+				F4E8E3B62721B91600046A49 /* ViewController.swift */,
+				F4E8E3B82721B91600046A49 /* Main.storyboard */,
+				F4E8E3BB2721B91700046A49 /* Assets.xcassets */,
+				F4E8E3BD2721B91700046A49 /* LaunchScreen.storyboard */,
+				F4E8E3C02721B91700046A49 /* Info.plist */,
+			);
+			path = XCFrameworkSPMIntegration;
+			sourceTree = "<group>";
+		};
+		F4E8E3C72721B94300046A49 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F4E8E3AE2721B91600046A49 /* XCFrameworkSPMIntegration */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4E8E3C32721B91700046A49 /* Build configuration list for PBXNativeTarget "XCFrameworkSPMIntegration" */;
+			buildPhases = (
+				F4E8E3AB2721B91600046A49 /* Sources */,
+				F4E8E3AC2721B91600046A49 /* Frameworks */,
+				F4E8E3AD2721B91600046A49 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = XCFrameworkSPMIntegration;
+			packageProductDependencies = (
+				F4E8E3C82721B94300046A49 /* FacebookAEM */,
+				F4E8E3CA2721B94300046A49 /* FacebookBasics */,
+				F4E8E3CC2721B94300046A49 /* FacebookCore */,
+				F4E8E3CE2721B94300046A49 /* FacebookGamingServices */,
+				F4E8E3D02721B94300046A49 /* FacebookLogin */,
+				F4E8E3D22721B94300046A49 /* FacebookShare */,
+			);
+			productName = XCFrameworkSPMIntegration;
+			productReference = F4E8E3AF2721B91600046A49 /* XCFrameworkSPMIntegration.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4E8E3A72721B91600046A49 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					F4E8E3AE2721B91600046A49 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+				};
+			};
+			buildConfigurationList = F4E8E3AA2721B91600046A49 /* Build configuration list for PBXProject "XCFrameworkSPMIntegration" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F4E8E3A62721B91600046A49;
+			productRefGroup = F4E8E3B02721B91600046A49 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F4E8E3AE2721B91600046A49 /* XCFrameworkSPMIntegration */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4E8E3AD2721B91600046A49 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4E8E3BF2721B91700046A49 /* LaunchScreen.storyboard in Resources */,
+				F4E8E3BC2721B91700046A49 /* Assets.xcassets in Resources */,
+				F4E8E3BA2721B91600046A49 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F4E8E3AB2721B91600046A49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4E8E3B72721B91600046A49 /* ViewController.swift in Sources */,
+				F4E8E3B32721B91600046A49 /* AppDelegate.swift in Sources */,
+				F4E8E3B52721B91600046A49 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F4E8E3B82721B91600046A49 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4E8E3B92721B91600046A49 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F4E8E3BD2721B91700046A49 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4E8E3BE2721B91700046A49 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F4E8E3C12721B91700046A49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F4E8E3C22721B91700046A49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F4E8E3C42721B91700046A49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				INFOPLIST_FILE = XCFrameworkSPMIntegration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.XCFrameworkSPMIntegration.localDevelopment;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "XCFrameworkSPMIntegration Local Development";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4E8E3C52721B91700046A49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				INFOPLIST_FILE = XCFrameworkSPMIntegration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.XCFrameworkSPMIntegration.localDevelopment;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "XCFrameworkSPMIntegration Local Development";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F4E8E3AA2721B91600046A49 /* Build configuration list for PBXProject "XCFrameworkSPMIntegration" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4E8E3C12721B91700046A49 /* Debug */,
+				F4E8E3C22721B91700046A49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4E8E3C32721B91700046A49 /* Build configuration list for PBXNativeTarget "XCFrameworkSPMIntegration" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4E8E3C42721B91700046A49 /* Debug */,
+				F4E8E3C52721B91700046A49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F4E8E3C82721B94300046A49 /* FacebookAEM */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookAEM;
+		};
+		F4E8E3CA2721B94300046A49 /* FacebookBasics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookBasics;
+		};
+		F4E8E3CC2721B94300046A49 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookCore;
+		};
+		F4E8E3CE2721B94300046A49 /* FacebookGamingServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookGamingServices;
+		};
+		F4E8E3D02721B94300046A49 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookLogin;
+		};
+		F4E8E3D22721B94300046A49 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FacebookShare;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = F4E8E3A72721B91600046A49 /* Project object */;
+}

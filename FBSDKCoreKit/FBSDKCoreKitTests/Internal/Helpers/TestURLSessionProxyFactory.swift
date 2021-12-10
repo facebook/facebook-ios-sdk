@@ -1,30 +1,16 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 @objcMembers
 class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   private var stubbedSessions: [TestURLSessionProxy]
 
-  init(session: TestURLSessionProxy) {
-    self.stubbedSessions = [session]
-  }
-
-  init(sessions: [TestURLSessionProxy]) {
+  init(sessions: [TestURLSessionProxy] = []) {
     self.stubbedSessions = sessions
   }
 
@@ -33,7 +19,7 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   /// If you provide a single session, all calls to `createSessionProxy` will return the same
   /// session instance
   static func create(with session: TestURLSessionProxy) -> TestURLSessionProxyFactory {
-    TestURLSessionProxyFactory(session: session)
+    TestURLSessionProxyFactory(sessions: [session])
   }
 
   /// Creates a new provider stubbed with the `FakeURLSessionProxy`
@@ -46,6 +32,6 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   // MARK: - UrlSessionProxyProviding
 
   func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> URLSessionProxying {
-    return stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
+    stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
   }
 }

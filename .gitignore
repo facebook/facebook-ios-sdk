@@ -6,7 +6,16 @@
 build/
 DerivedData/
 *-Focused.xcworkspace/
-*-Focused.xcodeproj/
+
+## Ignore generated project files.
+## Eventually ignore all project files once they are all generated.
+FBAEMKit/FBAEMKit.xcodeproj
+FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+FBSDKLoginKit/FBSDKLoginKit.xcodeproj
+FBSDKShareKit/FBSDKShareKit.xcodeproj
+FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj
+TestTools/TestTools.xcodeproj
 
 ## Various settings
 *.pbxuser
@@ -38,12 +47,6 @@ xcuserdata/
 #
 
 Pods/
-
-# Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-
-Carthage/
 
 # fastlane
 #
@@ -88,3 +91,6 @@ buck-out/
 .buckd/
 
 infer-out
+
+# Swift Package Manager
+scripts/Runner/Package.resolved

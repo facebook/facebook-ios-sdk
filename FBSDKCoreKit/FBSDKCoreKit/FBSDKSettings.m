@@ -1,32 +1,23 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKSettings+Internal.h"
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
-#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, PROPERTY_NAME, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
   + (TYPE *)PROPERTY_NAME \
@@ -60,9 +51,6 @@
     [self logIfSDKSettingsChanged]; \
   }
 
-#define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(TYPE, PROPERTY_NAME, SETTER) \
-  @property (nullable, nonatomic, getter = PROPERTY_NAME, setter = SETTER:, copy) TYPE *PROPERTY_NAME;
-
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(TYPE, PROPERTY_NAME) \
   TYPE *_ ## PROPERTY_NAME;
 
@@ -77,7 +65,6 @@ FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugWarning = @"graph_api_debu
 FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugInfo = @"graph_api_debug_info";
 FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 
-static NSMutableSet<FBSDKLoggingBehavior> *g_loggingBehaviors;
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
 static NSString *const FBSDKSettingsBitmask = @"com.facebook.sdk:FBSDKSettingsBitmask";
 static NSString *const FBSDKSettingsDataProcessingOptions = @"com.facebook.sdk:FBSDKSettingsDataProcessingOptions";
@@ -86,9 +73,7 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
 static NSString *const FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp = @"com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp";
 static NSString *const FBSDKSettingsUseCachedValuesForExpensiveMetadata = @"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata";
 static NSString *const FBSDKSettingsUseTokenOptimizations = @"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations";
-static BOOL g_disableErrorRecovery;
-static NSString *g_userAgentSuffix;
-static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
+static NSString *const FacebookSKAdNetworkReportEnabled = @"FacebookSKAdNetworkReportEnabled";
 
 //
 // Warning messages for App Event Flags
@@ -109,43 +94,43 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @interface FBSDKSettings ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) Class<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
 @property (nonatomic) BOOL isConfigured;
-@property (nonatomic) NSString *graphAPIVersion;
-
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, appID, setAppID);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, appURLSchemeSuffix, setAppURLSchemeSuffix);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, clientToken, setClientToken);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, displayName, setDisplayName);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, facebookDomainPart, setFacebookDomainPart);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _JPEGCompressionQualityNumber, _setJPEGCompressionQualityNumber);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _instrumentEnabled, _setInstrumentEnabled);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _SKAdNetworkReportEnabled, _setSKAdNetworkReportEnabled);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _codelessDebugLogEnabled, _setCodelessDebugLogEnabled);
-
+@property (nullable, nonatomic) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
 @end
 
 @implementation FBSDKSettings
 {
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, appID);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, appURLSchemeSuffix);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, clientToken);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, displayName);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSString, facebookDomainPart);
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _JPEGCompressionQualityNumber);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _instrumentEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _autoLogAppEventsEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _advertiserIDCollectionEnabled);
-  FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _SKAdNetworkReportEnabled);
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _codelessDebugLogEnabled);
+  NSMutableSet<FBSDKLoggingBehavior> *_loggingBehaviors;
+  NSNumber *_SKAdNetworkReportEnabled;
 }
 
+@synthesize userAgentSuffix = _userAgentSuffix;
+@synthesize appID = _appID;
+@synthesize JPEGCompressionQuality = _JPEGCompressionQuality;
+@synthesize loggingBehaviors = _loggingBehaviors;
 static dispatch_once_t sharedSettingsNonce;
+
+- (instancetype)init
+{
+  if ((self = [super init])) {
+    _isGraphErrorRecoveryEnabled = YES;
+    _graphAPIVersion = [self defaultGraphAPIVersion];
+  }
+
+  return self;
+}
 
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
@@ -165,7 +150,7 @@ static dispatch_once_t sharedSettingsNonce;
 }
 
 - (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
@@ -178,7 +163,7 @@ static dispatch_once_t sharedSettingsNonce;
 }
 
 + (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                      eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
@@ -193,11 +178,6 @@ static dispatch_once_t sharedSettingsNonce;
   return self.sharedSettings.store;
 }
 
-+ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-{
-  return self.sharedSettings.appEventsConfigurationProvider;
-}
-
 + (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
   return self.sharedSettings.infoDictionaryProvider;
@@ -210,16 +190,13 @@ static dispatch_once_t sharedSettingsNonce;
 
 #pragma mark - Plist Configuration Settings
 
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookAppID, appID, setAppID, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookUrlSchemeSuffix, appURLSchemeSuffix, setAppURLSchemeSuffix, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookClientToken, clientToken, setClientToken, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDisplayName, displayName, setDisplayName, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDomainPart, facebookDomainPart, setFacebookDomainPart, nil, NO);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompressionQuality, _JPEGCompressionQualityNumber, _setJPEGCompressionQualityNumber, @0.9, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookInstrumentEnabled, _instrumentEnabled, _setInstrumentEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEventsEnabled, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled, @1, YES);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookSKAdNetworkReportEnabled, _SKAdNetworkReportEnabled, _setSKAdNetworkReportEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   NSNumber,
   FacebookCodelessDebugLogEnabled,
@@ -229,24 +206,66 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   YES
 );
 
+- (NSString *)appID
+{
+  if (!_appID) {
+    _appID = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
+  }
+  return _appID;
+}
+
+- (void)setAppID:(NSString *)appID
+{
+  [self validateConfiguration];
+  _appID = [appID copy];
+  [self logIfSDKSettingsChanged];
+}
+
+- (CGFloat)JPEGCompressionQuality
+{
+  if (!_JPEGCompressionQuality) {
+    NSNumber *compressionQuality = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
+    _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:compressionQuality.floatValue ?: 0.9];
+  }
+  return _JPEGCompressionQuality;
+}
+
+- (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
+{
+  [self validateConfiguration];
+
+  _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:JPEGCompressionQuality];
+  [self logIfSDKSettingsChanged];
+}
+
++ (NSString *)appID
+{
+  return self.sharedSettings.appID;
+}
+
++ (void)setAppID:(NSString *)appID
+{
+  self.sharedSettings.appID = appID;
+}
+
 + (BOOL)isGraphErrorRecoveryEnabled
 {
-  return !g_disableErrorRecovery;
+  return self.sharedSettings.isGraphErrorRecoveryEnabled;
 }
 
 + (void)setGraphErrorRecoveryEnabled:(BOOL)graphErrorRecoveryEnabled
 {
-  g_disableErrorRecovery = !graphErrorRecoveryEnabled;
+  [self.sharedSettings setIsGraphErrorRecoveryEnabled:graphErrorRecoveryEnabled];
 }
 
 + (CGFloat)JPEGCompressionQuality
 {
-  return self.sharedSettings._JPEGCompressionQualityNumber.floatValue;
+  return self.sharedSettings.JPEGCompressionQuality;
 }
 
 + (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
 {
-  [self.sharedSettings _setJPEGCompressionQualityNumber:@(JPEGCompressionQuality)];
+  [self.sharedSettings setJPEGCompressionQuality:JPEGCompressionQuality];
 }
 
 + (BOOL)isInstrumentEnabled
@@ -264,9 +283,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return self.sharedSettings._codelessDebugLogEnabled.boolValue;
 }
 
+- (BOOL)isCodelessDebugLogEnabled
+{
+  return self._codelessDebugLogEnabled.boolValue;
+}
+
 + (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
 {
-  [self.sharedSettings _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
+  [self.sharedSettings setCodelessDebugLogEnabled:codelessDebugLogEnabled];
+}
+
+- (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
+{
+  [self _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
 }
 
 + (BOOL)isAutoLogAppEventsEnabled
@@ -281,17 +310,32 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
 {
-  [self.sharedSettings _setAutoLogAppEventsEnabled:@(autoLogAppEventsEnabled)];
+  [self.sharedSettings setAutoLogAppEventsEnabled:autoLogAppEventsEnabled];
+}
+
+- (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
+{
+  [self _setAutoLogAppEventsEnabled:@(autoLogAppEventsEnabled)];
 }
 
 + (BOOL)isAdvertiserIDCollectionEnabled
 {
-  return self.sharedSettings._advertiserIDCollectionEnabled.boolValue;
+  return self.sharedSettings.isAdvertiserIDCollectionEnabled;
+}
+
+- (BOOL)isAdvertiserIDCollectionEnabled
+{
+  return self._advertiserIDCollectionEnabled.boolValue;
 }
 
 + (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
 {
-  [self.sharedSettings _setAdvertiserIDCollectionEnabled:@(advertiserIDCollectionEnabled)];
+  [self.sharedSettings setAdvertiserIDCollectionEnabled:advertiserIDCollectionEnabled];
+}
+
+- (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
+{
+  [self _setAdvertiserIDCollectionEnabled:@(advertiserIDCollectionEnabled)];
 }
 
 + (BOOL)isAdvertiserTrackingEnabled
@@ -306,17 +350,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)setAdvertiserTrackingEnabled:(BOOL)enabled;
 {
-  return [self.sharedSettings setAdvertiserTrackingEnabled:enabled];
-}
-
-- (BOOL)setAdvertiserTrackingEnabled:(BOOL)enabled;
-{
   if (@available(iOS 14.0, *)) {
-    [self setAdvertiserTrackingStatus:enabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed];
-    [self recordSetAdvertiserTrackingEnabled];
+    [self.sharedSettings setAdvertiserTrackingEnabled:enabled];
     return YES;
   } else {
     return NO;
+  }
+}
+
+- (void)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
+{
+  if (@available(iOS 14.0, *)) {
+    [self setAdvertiserTrackingStatus:advertiserTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed];
+    [self recordSetAdvertiserTrackingEnabled];
   }
 }
 
@@ -359,20 +405,36 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isSKAdNetworkReportEnabled
 {
-  return [self _SKAdNetworkReportEnabled].boolValue;
+  if (_SKAdNetworkReportEnabled == nil) {
+    _SKAdNetworkReportEnabled = [[self.store objectForKey:FacebookSKAdNetworkReportEnabled] copy];
+  }
+
+  if (_SKAdNetworkReportEnabled == nil) {
+    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
+  }
+
+  return _SKAdNetworkReportEnabled.boolValue;
+}
+
+- (void)setSkAdNetworkReportEnabled:(BOOL)skAdNetworkReportEnabled
+{
+  [self validateConfiguration];
+  _SKAdNetworkReportEnabled = @(skAdNetworkReportEnabled);
+  [self.store setObject:@(skAdNetworkReportEnabled) forKey:FacebookSKAdNetworkReportEnabled];
+  [self logIfSDKSettingsChanged];
 }
 
 + (void)setSKAdNetworkReportEnabled:(BOOL)SKAdNetworkReportEnabled
 {
-  [self _setSKAdNetworkReportEnabled:@(SKAdNetworkReportEnabled)];
+  [self.sharedSettings setSkAdNetworkReportEnabled:SKAdNetworkReportEnabled];
 }
 
 + (BOOL)shouldLimitEventAndDataUsage
 {
-  return self.sharedSettings.shouldLimitEventAndDataUsage;
+  return self.sharedSettings.isEventDataUsageLimited;
 }
 
-- (BOOL)shouldLimitEventAndDataUsage
+- (BOOL)isEventDataUsageLimited
 {
   NSNumber *storedValue = [FBSDKSettings.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
@@ -383,15 +445,25 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
 {
-  [self.sharedSettings setLimitEventAndDataUsage:limitEventAndDataUsage];
+  [self.sharedSettings setIsEventDataUsageLimited:limitEventAndDataUsage];
 }
 
-- (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
+- (void)setIsEventDataUsageLimited:(BOOL)isEventDataUsageLimited
 {
-  [_store setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
+  [_store setObject:@(isEventDataUsageLimited) forKey:FBSDKSettingsLimitEventAndDataUsage];
 }
 
 + (BOOL)shouldUseCachedValuesForExpensiveMetadata
+{
+  return [self.sharedSettings shouldUseCachedValuesForExpensiveMetadata];
+}
+
++ (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
+{
+  [self setShouldUseCachedValuesForExpensiveMetadata:shouldUseCachedValuesForExpensiveMetadata];
+}
+
+- (BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
   NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
   if (storedValue == nil) {
@@ -400,7 +472,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return storedValue.boolValue;
 }
 
-+ (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
+- (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
   [self.store setObject:@(shouldUseCachedValuesForExpensiveMetadata) forKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
 }
@@ -421,32 +493,58 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
-  if (!g_loggingBehaviors) {
-    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.sharedSettings.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
-    if (bundleLoggingBehaviors) {
-      g_loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
-    } else {
-      // Establish set of default enabled logging behaviors.  You can completely disable logging by
-      // specifying an empty array for FacebookLoggingBehavior in your Info.plist.
-      g_loggingBehaviors = [[NSMutableSet alloc] initWithObjects:FBSDKLoggingBehaviorDeveloperErrors, nil];
-    }
+  return [self.sharedSettings loggingBehaviors];
+}
+
++ (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
+{
+  [self.sharedSettings setLoggingBehaviors:loggingBehaviors];
+}
+
+- (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
+{
+  if (![_loggingBehaviors isEqualToSet:loggingBehaviors]) {
+    _loggingBehaviors = [loggingBehaviors mutableCopy];
+
+    [self updateGraphAPIDebugBehavior];
   }
-  return [g_loggingBehaviors copy];
 }
 
 - (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
-  return [self.class loggingBehaviors];
+  if (!_loggingBehaviors) {
+    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
+    if (bundleLoggingBehaviors) {
+      _loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
+    } else {
+      // Establish set of default enabled logging behaviors.  You can completely disable logging by
+      // specifying an empty array for FacebookLoggingBehavior in your Info.plist.
+      _loggingBehaviors = [[NSMutableSet alloc] initWithObjects:FBSDKLoggingBehaviorDeveloperErrors, nil];
+    }
+  }
+  return [_loggingBehaviors copy];
 }
 
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
 {
-  [FBSDKSettings setDataProcessingOptions:options country:0 state:0];
+  [self.sharedSettings setDataProcessingOptions:options];
+}
+
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+{
+  [self setDataProcessingOptions:options country:0 state:0];
+}
+
++ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state
+{
+  [self.sharedSettings setDataProcessingOptions:options country:country state:state];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state
 {
@@ -455,8 +553,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     DATA_PROCESSING_OPTIONS_COUNTRY : @(country),
     DATA_PROCESSING_OPTIONS_STATE : @(state),
   };
-  g_dataProcessingOptions = json;
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:g_dataProcessingOptions];
+  self.persistableDataProcessingOptions = json;
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json];
   if (data) {
     [self.store setObject:data
                    forKey:FBSDKSettingsDataProcessingOptions];
@@ -465,38 +563,51 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma clang diagnostic pop
 
-+ (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
-{
-  if (![g_loggingBehaviors isEqualToSet:loggingBehaviors]) {
-    g_loggingBehaviors = [loggingBehaviors mutableCopy];
-
-    [self updateGraphAPIDebugBehavior];
-  }
-}
-
 + (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
 {
-  if (!g_loggingBehaviors) {
-    [self loggingBehaviors];
-  }
-  [g_loggingBehaviors addObject:loggingBehavior];
-  [self updateGraphAPIDebugBehavior];
+  [self.sharedSettings enableLoggingBehavior:loggingBehavior];
 }
 
 + (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
 {
-  if (!g_loggingBehaviors) {
+  [self.sharedSettings disableLoggingBehavior:loggingBehavior];
+}
+
+- (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+{
+  if (!self.loggingBehaviors) {
     [self loggingBehaviors];
   }
-  [g_loggingBehaviors removeObject:loggingBehavior];
+  [_loggingBehaviors addObject:loggingBehavior];
   [self updateGraphAPIDebugBehavior];
+}
+
+- (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
+{
+  if (!self.loggingBehaviors) {
+    [self loggingBehaviors];
+  }
+  [_loggingBehaviors removeObject:loggingBehavior];
+  [self updateGraphAPIDebugBehavior];
+}
+
+// MARK: - Helper methods
+
+- (CGFloat)_validateJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
+{
+  return MIN(MAX(0, JPEGCompressionQuality), 1);
 }
 
 #pragma mark - Readonly Configuration Settings
 
-+ (NSString *)sdkVersion
+- (NSString *)sdkVersion
 {
   return FBSDK_VERSION_STRING;
+}
+
++ (NSString *)sdkVersion
+{
+  return self.sharedSettings.sdkVersion;
 }
 
 #pragma mark - Configuration Validation
@@ -507,7 +618,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (!self.isConfigured) {
     static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
     "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method."
-    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+    "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 #endif
@@ -515,51 +627,37 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal
 
-+ (NSString *)userAgentSuffix
-{
-  return g_userAgentSuffix;
-}
-
-+ (void)setUserAgentSuffix:(NSString *)suffix
-{
-  if (![g_userAgentSuffix isEqualToString:suffix]) {
-    g_userAgentSuffix = suffix;
-  }
-}
-
 + (void)setGraphAPIVersion:(NSString *)version
 {
-  if (![self.sharedSettings.graphAPIVersion isEqualToString:version]) {
-    self.sharedSettings.graphAPIVersion = version;
-  }
+  self.sharedSettings.graphAPIVersion = version ?: self.sharedSettings.defaultGraphAPIVersion;
 }
 
 + (NSString *)defaultGraphAPIVersion
 {
-  return FBSDK_TARGET_PLATFORM_VERSION;
+  return self.sharedSettings.defaultGraphAPIVersion;
+}
+
+- (NSString *)defaultGraphAPIVersion
+{
+  return FBSDK_DEFAULT_GRAPH_API_VERSION;
 }
 
 + (NSString *)graphAPIVersion
 {
-  return [self.sharedSettings graphAPIVersion];
-}
-
-- (NSString *)graphAPIVersion
-{
-  return _graphAPIVersion ?: FBSDKSettings.defaultGraphAPIVersion;
+  return self.sharedSettings.graphAPIVersion;
 }
 
 + (NSNumber *)appEventSettingsForPlistKey:(NSString *)plistKey
                              defaultValue:(NSNumber *)defaultValue
 {
-  return [[[NSBundle mainBundle] objectForInfoDictionaryKey:plistKey] copy] ?: defaultValue;
+  return [[NSBundle.mainBundle objectForInfoDictionaryKey:plistKey] copy] ?: defaultValue;
 }
 
 + (NSNumber *)appEventSettingsForUserDefaultsKey:(NSString *)userDefaultsKey
                                     defaultValue:(NSNumber *)defaultValue
 {
   NSData *data = [self.store objectForKey:userDefaultsKey];
-  if ([data isKindOfClass:[NSNumber class]]) {
+  if ([data isKindOfClass:NSNumber.class]) {
     return (NSNumber *)data;
   }
   return defaultValue;
@@ -567,22 +665,22 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (NSDictionary<NSString *, id> *)dataProcessingOptions
+- (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
 {
-  if (!g_dataProcessingOptions) {
+  if (!_persistableDataProcessingOptions) {
     NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
-    if ([data isKindOfClass:[NSData class]]) {
+    if (data && [data isKindOfClass:NSData.class]) {
       if (@available(iOS 11.0, tvOS 11.0, *)) {
-        g_dataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
+        _persistableDataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
       } else {
-        NSDictionary<NSString *, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary class]]) {
-          g_dataProcessingOptions = dataProcessingOptions;
+        NSDictionary<NSString *, id> *persistableDataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (persistableDataProcessingOptions && [persistableDataProcessingOptions isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+          _persistableDataProcessingOptions = persistableDataProcessingOptions;
         }
       }
     }
   }
-  return g_dataProcessingOptions;
+  return _persistableDataProcessingOptions;
 }
 
 #pragma clang diagnostic pop
@@ -594,7 +692,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isDataProcessingRestricted
 {
-  NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:[FBSDKSettings dataProcessingOptions]
+  NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:self.persistableDataProcessingOptions ?: @{}
                                                  objectForKey:DATA_PROCESSING_OPTIONS
                                                        ofType:NSArray.class];
   for (NSString *option in options) {
@@ -714,39 +812,34 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal - Graph API Debug
 
-+ (void)updateGraphAPIDebugBehavior
+- (void)updateGraphAPIDebugBehavior
 {
   // Enable Warnings everytime Info is enabled
-  if ([g_loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]
-      && ![g_loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
-    [g_loggingBehaviors addObject:FBSDKLoggingBehaviorGraphAPIDebugWarning];
+  if ([self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]
+      && ![self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
+    [_loggingBehaviors addObject:FBSDKLoggingBehaviorGraphAPIDebugWarning];
   }
 }
 
-+ (NSString *)graphAPIDebugParamValue
++ (nullable NSString *)graphAPIDebugParamValue
 {
-  if ([[self loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
+  if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
     return @"info";
-  } else if ([[self loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
+  } else if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
     return @"warning";
   }
 
   return nil;
 }
 
+- (NSString *)graphAPIDebugParamValue
+{
+  return [self.class graphAPIDebugParamValue];
+}
+
 #pragma mark - Testability
 
-#if DEBUG
- #if FBSDKTEST
-
-+ (void)reset
-{
-  [self.sharedSettings reset];
-
-  g_loggingBehaviors = nil;
-  g_userAgentSuffix = nil;
-  g_dataProcessingOptions = nil;
-}
+#if DEBUG && FBTEST
 
 - (void)reset
 {
@@ -754,6 +847,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (sharedSettingsNonce) {
     sharedSettingsNonce = 0;
   }
+  _loggingBehaviors = nil;
+  self.persistableDataProcessingOptions = nil;
 }
 
 + (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
@@ -761,7 +856,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   self.sharedSettings.infoDictionaryProvider = provider;
 }
 
- #endif
 #endif
 
 @end

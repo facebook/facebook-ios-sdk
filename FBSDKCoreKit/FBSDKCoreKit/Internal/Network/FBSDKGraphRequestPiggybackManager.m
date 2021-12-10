@@ -1,30 +1,26 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKAccessToken.h"
+#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
+#import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestMetadata.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKServerConfigurationLoading.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
-#import "FBSDKSettings+SettingsLogging.h"
-#import "FBSDKSettings+SettingsProtocols.h"
+#import "FBSDKSettings+Internal.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
@@ -34,8 +30,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
-static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
-static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
@@ -47,26 +43,26 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   return _settings;
 }
 
-+ (Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
++ (id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
 {
   return _serverConfiguration;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
-                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+             serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  if (self == [FBSDKGraphRequestPiggybackManager class]) {
+  if (self == FBSDKGraphRequestPiggybackManager.class) {
     _tokenWallet = tokenWallet;
     _settings = settings;
     _serverConfiguration = serverConfiguration;
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
   }
 }
 
@@ -83,21 +79,21 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       }
     }
     if (safeForPiggyback) {
-      [[self class] addRefreshPiggybackIfStale:connection];
-      [[self class] addServerConfigurationPiggyback:connection];
+      [self.class addRefreshPiggybackIfStale:connection];
+      [self.class addServerConfigurationPiggyback:connection];
     }
   }
 }
 
-+ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestCompletion)permissionHandler
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(nullable FBSDKGraphRequestCompletion)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [self.tokenWallet currentAccessToken];
   if (!expectedToken) {
     return;
   }
-  __block NSMutableSet *permissions = nil;
-  __block NSMutableSet *declinedPermissions = nil;
-  __block NSMutableSet *expiredPermissions = nil;
+  __block NSMutableSet<NSString *> *permissions = nil;
+  __block NSMutableSet<NSString *> *declinedPermissions = nil;
+  __block NSMutableSet<NSString *> *expiredPermissions = nil;
   __block NSString *tokenString = nil;
   __block NSNumber *expirationDateNumber = nil;
   __block NSNumber *dataAccessExpirationDateNumber = nil;
@@ -110,17 +106,15 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       if (expirationDateNumber != nil) {
         expirationDate = (expirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
       NSDate *dataExpirationDate = currentToken.dataAccessExpirationDate;
       if (dataAccessExpirationDateNumber != nil) {
         dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
 
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
@@ -129,20 +123,18 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                              dataAccessExpirationDate:dataExpirationDate
-                                                                           graphDomain:graphDomain ?: currentToken.graphDomain];
-      #pragma clange diagnostic pop
+                                                              dataAccessExpirationDate:dataExpirationDate];
 
       if (expectedToken == currentToken) {
         [self.tokenWallet setCurrentAccessToken:refreshedToken];
       }
     }
   };
-  id<FBSDKGraphRequest> extendRequest = [self.requestProvider createGraphRequestWithGraphPath:@"oauth/access_token"
-                                                                                   parameters:@{@"grant_type" : @"fb_extend_sso_token",
-                                                                                                @"fields" : @"",
-                                                                                                @"client_id" : expectedToken.appID}
-                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> extendRequest = [self.graphRequestFactory createGraphRequestWithGraphPath:@"oauth/access_token"
+                                                                                       parameters:@{@"grant_type" : @"fb_extend_sso_token",
+                                                                                                    @"fields" : @"",
+                                                                                                    @"client_id" : expectedToken.appID}
+                                                                                            flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
@@ -151,9 +143,9 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
     graphDomain = [FBSDKTypeUtility dictionary:result objectForKey:@"graph_domain" ofType:NSString.class];
     expectingCallbackComplete();
   }];
-  id<FBSDKGraphRequest> permissionsRequest = [self.requestProvider createGraphRequestWithGraphPath:@"me/permissions"
-                                                                                        parameters:@{@"fields" : @""}
-                                                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> permissionsRequest = [self.graphRequestFactory createGraphRequestWithGraphPath:@"me/permissions"
+                                                                                            parameters:@{@"fields" : @""}
+                                                                                                 flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:permissionsRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     if (!error) {
@@ -161,10 +153,10 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       declinedPermissions = [NSMutableSet set];
       expiredPermissions = [NSMutableSet set];
 
-      [FBSDKInternalUtility extractPermissionsFromResponse:result
-                                        grantedPermissions:permissions
-                                       declinedPermissions:declinedPermissions
-                                        expiredPermissions:expiredPermissions];
+      [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:result
+                                                      grantedPermissions:permissions
+                                                     declinedPermissions:declinedPermissions
+                                                      expiredPermissions:expiredPermissions];
     }
     expectingCallbackComplete();
     if (permissionHandler) {
@@ -205,7 +197,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
-  BOOL isVersionSafe = [request.version isEqualToString:[self.settings graphAPIVersion]];
+  BOOL isVersionSafe = [request.version isEqualToString:self.settings.graphAPIVersion];
   BOOL hasAttachments = [(id<FBSDKGraphRequest>)request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }
@@ -223,7 +215,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (NSDate *)_lastRefreshTry
 {
   if (!_lastRefreshTry) {
-    _lastRefreshTry = [NSDate distantPast];
+    _lastRefreshTry = NSDate.distantPast;
   }
   return _lastRefreshTry;
 }
@@ -233,8 +225,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   _lastRefreshTry = date;
 }
 
-#if DEBUG
- #if FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)setTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
@@ -247,7 +238,6 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   _lastRefreshTry = nil;
 }
 
- #endif
 #endif
 
 @end

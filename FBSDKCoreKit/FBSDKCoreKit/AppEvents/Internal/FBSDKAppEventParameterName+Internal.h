@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#import "FBSDKAppEventParameterName.h"
+
+// MARK: - General
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameImplicitlyLogged;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameInBackground;
+
+// MARK: - Push Notifications
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNamePushCampaign;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNamePushAction;
+
+// MARK: - E-Commerce
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameImplicitlyLoggedPurchase;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameInAppPurchaseType;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameProductTitle;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTransactionID;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTransactionDate;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSubscriptionPeriod;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameIsStartTrial;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameHasFreeTrial;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPeriod;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPrice;
+
+// MARK: - Time Spent
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionInterruptions;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTimeBetweenSessions;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionID;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource;

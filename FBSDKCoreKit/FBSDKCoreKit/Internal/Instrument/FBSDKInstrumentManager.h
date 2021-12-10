@@ -1,29 +1,37 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKFeatureChecking;
+@protocol FBSDKSettings;
+@protocol FBSDKCrashObserving;
+@protocol FBSDKErrorReporting;
+@protocol FBSDKCrashHandler;
+
 NS_SWIFT_NAME(InstrumentManager)
 @interface FBSDKInstrumentManager : NSObject
 
 @property (class, nonatomic, readonly) FBSDKInstrumentManager *shared;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+// UNCRUSTIFY_FORMAT_OFF
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                           settings:(id<FBSDKSettings>)settings
+                      crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                      errorReporter:(id<FBSDKErrorReporting>)errorReporter
+                       crashHandler:(id<FBSDKCrashHandler>)crashHandler
+NS_SWIFT_NAME(configure(featureChecker:settings:crashObserver:errorReporter:crashHandler:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)enable;
 

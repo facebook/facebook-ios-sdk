@@ -1,30 +1,20 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKAuthenticationTokenFactory.h"
 
 #import <Security/Security.h>
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenHeader.h"
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
-#import "FBSDKCoreKitImport.h"
 
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end
@@ -46,19 +36,19 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenClaims (Internal)
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
+                                                               nonce:(nonnull NSString *)expectedNonce;
 
 @end
 
 @interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
 
+@property (nonatomic) NSString *cert;
+@property (nonatomic) id<FBSDKSessionProviding> sessionProvider;
+
 @end
 
 @implementation FBSDKAuthenticationTokenFactory
-{
-  NSString *_cert;
-  id<FBSDKSessionProviding> _sessionProvider;
-}
 
 - (instancetype)init
 {
@@ -139,7 +129,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
              completion:(FBSDKVerifySignatureCompletionBlock)completion
 {
 #if DEBUG
-#if FBSDKTEST
+#if FBTEST
   // skip signature checking for tests
   if (_skipSignatureVerification && completion) {
     completion(YES);
@@ -188,10 +178,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
                      if (cert) {
                        SecPolicyRef policy = SecPolicyCreateBasicX509();
-                       OSStatus status = -1;
                        SecTrustRef trust;
 
-                       status = SecTrustCreateWithCertificates(cert, policy, &trust);
+                       OSStatus status = SecTrustCreateWithCertificates(cert, policy, &trust);
 
                        if (status == errSecSuccess && trust) {
                          publicKey = SecTrustCopyPublicKey(trust);
@@ -215,7 +204,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                            return completion(nil);
                          }
 
-                         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                         if ([response isKindOfClass:NSHTTPURLResponse.class]) {
                            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                            if (httpResponse.statusCode != 200) {
                              return completion(nil);
@@ -223,7 +212,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                          }
 
                          SecCertificateRef result = NULL;
-                         NSDictionary *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+                         NSDictionary<NSString *, id> *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
                          NSString *certString = [FBSDKTypeUtility dictionary:certs objectForKey:certificateKey ofType:NSString.class];
                          if (!certString) {
                            return completion(nil);
@@ -251,8 +240,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 #pragma mark - Test methods
 
-#if DEBUG
- #if FBSDKTEST
+#if DEBUG && FBTEST
 
 static BOOL _skipSignatureVerification;
 
@@ -271,7 +259,6 @@ static BOOL _skipSignatureVerification;
   _cert = certificate;
 }
 
- #endif
 #endif
 
 @end

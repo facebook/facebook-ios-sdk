@@ -1,83 +1,99 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKMessageDialog.h"
+#import "FBSDKMessageDialog.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKShareAppEventNames.h"
- #import "FBSDKShareCameraEffectContent.h"
- #import "FBSDKShareConstants.h"
- #import "FBSDKShareDefines.h"
- #import "FBSDKShareUtility.h"
- #import "FBSDKShareVideoContent.h"
+#import "FBSDKShareAppEventName.h"
+#import "FBSDKShareAppEventParameters.h"
+#import "FBSDKShareDefines.h"
+#import "FBSDKShareDialogConfiguration+Internal.h"
+#import "FBSDKShareDialogConfigurationProtocol.h"
+#import "FBSDKShareUtility.h"
+#import "FBSDKShareVideoContent.h"
 
- #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
+#define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
+
+@interface FBSDKMessageDialog ()
+
+@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+@property (nonatomic) id<FBSDKShareDialogConfiguration> shareDialogConfiguration;
+
+@end
 
 @implementation FBSDKMessageDialog
 
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow = @"fb_messenger_dialog_share_show";
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult = @"fb_messenger_dialog_share_result";
 NSString *const FBSDKAppEventParameterDialogShareContentPageID = @"fb_dialog_share_content_page_id";
 NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share_content_uuid";
 
- #pragma mark - Class Methods
+#pragma mark - Class Methods
 
 + (void)initialize
 {
-  if ([FBSDKMessageDialog class] == self) {
-    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  if (FBSDKMessageDialog.class == self) {
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
   }
 }
 
-+ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
-                         delegate:(nullable id<FBSDKSharingDelegate>)delegate
+- (instancetype)init
 {
-  FBSDKMessageDialog *dialog = [self new];
-  dialog.shareContent = content;
-  dialog.delegate = delegate;
-  return dialog;
+  return [self initWithContent:nil delegate:nil];
 }
 
-+ (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKMessageDialog *dialog = [self dialogWithContent:content delegate:delegate];
+  return [self initWithContent:content
+                          delegate:delegate
+            appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
+          shareDialogConfiguration:[FBSDKShareDialogConfiguration new]];
+}
+
+- (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
+         appAvailabilityChecker:(nonnull id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+       shareDialogConfiguration:(nonnull id<FBSDKShareDialogConfiguration>)shareDialogConfiguration
+{
+  if ((self = [super init])) {
+    _shareContent = content;
+    _delegate = delegate;
+    _appAvailabilityChecker = appAvailabilityChecker;
+    _shareDialogConfiguration = shareDialogConfiguration;
+  }
+
+  return self;
+}
+
++ (instancetype)dialogWithContent:(nullable id<FBSDKSharingContent>)content
+                         delegate:(nullable id<FBSDKSharingDelegate>)delegate
+{
+  return [[self alloc] initWithContent:content delegate:delegate];
+}
+
++ (instancetype)showWithContent:(nullable id<FBSDKSharingContent>)content
+                       delegate:(nullable id<FBSDKSharingDelegate>)delegate
+{
+  FBSDKMessageDialog *dialog = [[self alloc] initWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
 }
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -100,9 +116,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   }
 
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
-                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                    shouldFailOnDataError:self.shouldFailOnDataError];
+  NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
+                                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                                                    shouldFailOnDataError:self.shouldFailOnDataError];
   NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]
     ? FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME
     : FBSDK_SHARE_METHOD_NAME);
@@ -110,31 +126,30 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                              scheme:FBSDK_MESSAGE_DIALOG_APP_SCHEME
                                                          methodName:methodName
-                                                      methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
+  BOOL useSafariViewController = [[FBSDKShareDialogConfiguration new]
+                                  shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
-    [FBSDKInternalUtility unregisterTransientObject:self];
+    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
   };
-  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                useSafariViewController:useSafariViewController
-                                     fromViewController:nil
-                                        completionBlock:completionBlock];
+  [FBSDKBridgeAPI.sharedInstance openBridgeAPIRequest:request
+                              useSafariViewController:useSafariViewController
+                                   fromViewController:nil
+                                      completionBlock:completionBlock];
 
   [self _logDialogShow];
-  [FBSDKInternalUtility registerTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   return YES;
 }
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {} else {
+    if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]
+        || [self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]
+        || [self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {} else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
                              NSStringFromClass(self.shareContent.class)];
@@ -150,16 +165,15 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                            error:errorRef];
 }
 
- #pragma mark - Helper Methods
-
 - (BOOL)_canShowNative
 {
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
-  return (useNativeDialog && [FBSDKInternalUtility isMessengerAppInstalled]);
+  BOOL useNativeDialog = [self.shareDialogConfiguration
+                          shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
+
+  return (useNativeDialog && [self.appAvailabilityChecker isMessengerAppInstalled]);
 }
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response
+- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results response:(FBSDKBridgeAPIResponse *)response
 {
   NSString *completionGesture = results[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
   if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]
@@ -174,14 +188,14 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   if (!_delegate) {
     return;
@@ -190,16 +204,16 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   [_delegate sharerDidCancel:self];
 }
 
-- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary *)results
+- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 
   if (!_delegate) {
     return;
@@ -210,14 +224,14 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (void)_invokeDelegateDidFailWithError:(NSError *)error
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:FBSDKAppEventsDialogOutcomeValue_Failed, FBSDKAppEventParameterDialogOutcome, nil];
+  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
 
-    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
-                          parameters:parameters
-                  isImplicitlyLogged:YES
-                         accessToken:[FBSDKAccessToken currentAccessToken]];
+    [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
+                                 parameters:parameters
+                         isImplicitlyLogged:YES
+                                accessToken:FBSDKAccessToken.currentAccessToken];
 
     if (!_delegate) {
       return;
@@ -230,24 +244,24 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 - (void)_logDialogShow
 {
   NSString *contentType;
-  if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
-  } else if ([self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary *parameters = @{FBSDKAppEventParameterDialogShareContentType : contentType,
-                               FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
-                               FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
+  NSDictionary<NSString *, id> *parameters = @{FBSDKAppEventParameterDialogShareContentType : contentType,
+                                               FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
+                                               FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogShow
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
+                               parameters:parameters
+                       isImplicitlyLogged:YES
+                              accessToken:FBSDKAccessToken.currentAccessToken];
 }
 
 @end

@@ -1,83 +1,53 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKInstrumentManager.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKCrashObserver.h"
-#import "FBSDKErrorReport+ErrorReporting.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureManager+FeatureChecking.h"
-#import "FBSDKSettings+Internal.h"
-
-#if defined FBSDK_SWIFT_PACKAGE
- #import "FBSDKSettingsProtocol.h"
-#else
- #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-#endif
-
-#import "FBSDKSettings+SettingsProtocols.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
+#import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKInstrumentManager ()
 
 @property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
-@property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
+@property (nonatomic, strong) id<FBSDKErrorReporting> errorReporter;
 @property (nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
 @end
 
 @implementation FBSDKInstrumentManager
 
-- (instancetype)init
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                           settings:(id<FBSDKSettings>)settings
+                      crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                      errorReporter:(id<FBSDKErrorReporting>)errorReporter
+                       crashHandler:(id<FBSDKCrashHandler>)crashHandler
 {
-  return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.shared
-                                     settings:FBSDKSettings.sharedSettings
-                                crashObserver:FBSDKCrashObserver.shared
-                                  errorReport:FBSDKErrorReport.shared
-                                 crashHandler:FBSDKCrashHandler.shared];
+  _featureChecker = featureChecker;
+  _settings = settings;
+  _crashObserver = crashObserver;
+  _errorReporter = errorReporter;
+  _crashHandler = crashHandler;
 }
 
-- (instancetype)initWithFeatureCheckerProvider:(id<FBSDKFeatureChecking>)featureChecker
-                                      settings:(id<FBSDKSettings>)settings
-                                 crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                                   errorReport:(id<FBSDKErrorReporting>)errorReport
-                                  crashHandler:(id<FBSDKCrashHandler>)crashHandler
-{
-  if ((self = [super init])) {
-    _featureChecker = featureChecker;
-    _settings = settings;
-    _crashObserver = crashObserver;
-    _errorReport = errorReport;
-    _crashHandler = crashHandler;
-  }
-  return self;
-}
-
+static FBSDKInstrumentManager *sharedInstance;
+static dispatch_once_t sharedInstanceNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
-  static id instance;
-  dispatch_once(&nonce, ^{
-    instance = [self new];
+  dispatch_once(&sharedInstanceNonce, ^{
+    sharedInstance = [self new];
   });
-  return instance;
+  return sharedInstance;
 }
 
 - (void)enable
@@ -93,9 +63,21 @@
   }];
   [self.featureChecker checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [self.errorReport enable];
+      [self.errorReporter enable];
     }
   }];
 }
+
+#if DEBUG && FBTEST
+
++ (void)reset
+{
+  // Reset the shared instance nonce.
+  if (sharedInstanceNonce) {
+    sharedInstanceNonce = 0;
+  }
+}
+
+#endif
 
 @end

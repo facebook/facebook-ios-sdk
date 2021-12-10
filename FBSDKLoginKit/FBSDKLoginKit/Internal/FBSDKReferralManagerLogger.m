@@ -1,30 +1,20 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKReferralManagerLogger.h"
+#import "FBSDKReferralManagerLogger.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKLoginConstants.h"
- #import "FBSDKReferralManagerResult.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKLoginAppEventName.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKReferralManagerResult.h"
 
 static NSString *const FBSDKReferralManagerLoggerParamIdentifierKey = @"0_logger_id";
 static NSString *const FBSDKReferralManagerLoggerParamTimestampKey = @"1_timestamp_ms";
@@ -40,25 +30,20 @@ static NSString *const FBSDKReferralManagerLoggerResultSuccessString = @"success
 static NSString *const FBSDKReferralManagerLoggerResultCancelString = @"cancelled";
 static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
 
-/** Use to log the start of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
+@interface FBSDKReferralManagerLogger ()
 
-/** Use to log the end of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *extras;
+@property (nonatomic) NSString *loggingToken;
+
+@end
 
 @implementation FBSDKReferralManagerLogger
-{
-  @private
-  NSString *_identifier;
-  NSMutableDictionary *_extras;
-  NSString *_loggingToken;
-}
 
 - (instancetype)init
 {
   if (self = [super init]) {
-    FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-    NSString *loggingToken = serverConfiguration.loggingToken;
+    NSString *loggingToken = [FBSDKServerConfigurationProvider new].loggingToken;
     _identifier = [NSUUID UUID].UUIDString;
     _extras = [NSMutableDictionary dictionary];
     _loggingToken = [loggingToken copy];
@@ -71,7 +56,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   [self logEvent:FBSDKAppEventNameFBReferralStart params:[self _parametersForNewEvent]];
 }
 
-- (void)logReferralEnd:(FBSDKReferralManagerResult *)result error:(NSError *)error
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+- (void)logReferralEnd:(nullable FBSDKReferralManagerResult *)result error:(nullable NSError *)error
 {
   NSString *resultString = FBSDKReferralManagerLoggerValueEmpty;
 
@@ -83,7 +70,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
     resultString = FBSDKReferralManagerLoggerResultSuccessString;
   }
 
-  NSMutableDictionary *params = [self _parametersForNewEvent];
+  NSMutableDictionary<NSString *, id> *params = [self _parametersForNewEvent];
   [FBSDKTypeUtility dictionary:params setObject:resultString forKey:FBSDKReferralManagerLoggerParamResultKey];
 
   if ([error.domain isEqualToString:FBSDKErrorDomain] || [error.domain isEqualToString:FBSDKLoginErrorDomain]) {
@@ -121,9 +108,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   [self logEvent:FBSDKAppEventNameFBReferralEnd params:params];
 }
 
-- (NSMutableDictionary *)_parametersForNewEvent
+#pragma clange diagnostic pop
+
+- (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters
@@ -151,7 +140,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
+- (void)logEvent:(FBSDKAppEventName)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras
@@ -164,9 +153,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
     }
     [_extras removeAllObjects];
 
-    [FBSDKAppEvents logInternalEvent:eventName
-                          parameters:params
-                  isImplicitlyLogged:YES];
+    [FBSDKAppEvents.shared logInternalEvent:eventName
+                                 parameters:params
+                         isImplicitlyLogged:YES];
   }
 }
 

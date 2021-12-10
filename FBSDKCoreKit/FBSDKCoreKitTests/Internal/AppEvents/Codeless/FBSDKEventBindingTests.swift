@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+import TestTools
 import XCTest
 
-// swiftlint:disable implicitly_unwrapped_optional
 class FBSDKEventBindingTests: XCTestCase {
 
   let window = UIWindow()
@@ -28,9 +18,9 @@ class FBSDKEventBindingTests: XCTestCase {
     swizzler: TestSwizzler.self,
     eventLogger: eventLogger
   )
-  var buyButton: UIButton!
-  var confirmButton: UIButton!
-  var stepper: UIStepper!
+  let buyButton = UIButton(type: .custom)
+  let confirmButton = UIButton(type: .custom)
+  let stepper = UIStepper()
 
   override func setUp() {
     super.setUp()
@@ -47,7 +37,6 @@ class FBSDKEventBindingTests: XCTestCase {
     let secondStackView = UIStackView()
     firstStackView.addSubview(secondStackView)
 
-    buyButton = UIButton(type: .custom)
     buyButton.setTitle("Buy", for: .normal)
     firstStackView.addSubview(buyButton)
 
@@ -55,7 +44,6 @@ class FBSDKEventBindingTests: XCTestCase {
     firstStackPriceLabel.text = "$2.0"
     firstStackView.addSubview(firstStackPriceLabel)
 
-    confirmButton = UIButton(type: .custom)
     confirmButton.setTitle("Confirm", for: .normal)
     firstStackView.addSubview(confirmButton)
 
@@ -63,7 +51,6 @@ class FBSDKEventBindingTests: XCTestCase {
     secondStackPriceLabel.text = "$3.0"
     secondStackView.addSubview(secondStackPriceLabel)
 
-    stepper = UIStepper()
     secondStackView.addSubview(stepper)
   }
 
@@ -77,37 +64,10 @@ class FBSDKEventBindingTests: XCTestCase {
   func testCreatingWithDependencies() {
     let binding = EventBinding(json: [:], eventLogger: eventLogger)
     XCTAssertEqual(
-      binding?.eventLogger as? TestEventLogger,
+      binding.eventLogger as? TestEventLogger,
       eventLogger,
       "Should store the provided event logger"
     )
-  }
-
-  func testMatching() throws {
-    let remoteEventBindings = try XCTUnwrap(SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as? [Any])
-    let bindings = eventBindingManager.parseArray(remoteEventBindings)
-    var binding = bindings[0]
-
-    XCTAssertTrue(EventBinding.isViewMatchPath(stepper, path: binding.path))
-
-    binding = bindings[1]
-    var component = binding.parameters[0]
-    XCTAssertTrue(EventBinding.isViewMatchPath(buyButton, path: binding.path))
-    var price = EventBinding.findParameter(ofPath: component.path, pathType: component.pathType, sourceView: buyButton)
-    XCTAssertEqual(price, "$2.0")
-
-    binding = bindings[2]
-    component = binding.parameters[0]
-    XCTAssertTrue(EventBinding.isViewMatchPath(confirmButton, path: binding.path))
-    price = EventBinding.findParameter(ofPath: component.path, pathType: component.pathType, sourceView: confirmButton)
-    XCTAssertEqual(price, "$3.0")
-    component = binding.parameters[1]
-    let action = EventBinding.findParameter(
-      ofPath: component.path,
-      pathType: component.pathType,
-      sourceView: confirmButton
-    )
-    XCTAssertEqual(action, "Confirm")
   }
 
   func testEventBindingEquation() throws {
@@ -118,7 +78,7 @@ class FBSDKEventBindingTests: XCTestCase {
   }
 
   func testParsing() {
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       let sampleData = SampleRawRemoteEventBindings.sampleDictionary
       eventBindingManager.parseArray(Fuzzer.randomize(json: sampleData) as? Array ?? [])
     }
@@ -131,7 +91,7 @@ class FBSDKEventBindingTests: XCTestCase {
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      "Quantity Changed",
+      AppEvents.Name("Quantity Changed"),
       "Tracking events should log the event name"
     )
     XCTAssertEqual(
@@ -148,7 +108,7 @@ class FBSDKEventBindingTests: XCTestCase {
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      "Add To Cart",
+      AppEvents.Name("Add To Cart"),
       "Tracking events should log the event name"
     )
     XCTAssertEqual(

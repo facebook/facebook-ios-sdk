@@ -1,41 +1,29 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKErrorCreating.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKPasteboard;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *bridgeArgs;
   __unsafe_unretained NSString *methodArgs;
-  __unsafe_unretained NSString *methodVersion;
 } FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *actionID;
   __unsafe_unretained NSString *appIcon;
   __unsafe_unretained NSString *appName;
@@ -43,15 +31,13 @@ typedef struct
 } FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *bridgeArgs;
   __unsafe_unretained NSString *methodResults;
 } FBSDKBridgeAPIProtocolNativeV1InputKeysStruct;
 FOUNDATION_EXPORT const FBSDKBridgeAPIProtocolNativeV1InputKeysStruct FBSDKBridgeAPIProtocolNativeV1InputKeys;
 
-typedef struct
-{
+typedef struct {
   __unsafe_unretained NSString *actionID;
   __unsafe_unretained NSString *error;
 } FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeysStruct;
@@ -63,18 +49,22 @@ NS_SWIFT_NAME(BridgeAPIProtocolNativeV1)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithAppScheme:(NSString *)appScheme;
-- (instancetype)initWithAppScheme:(NSString *)appScheme
-                       pasteboard:(id<FBSDKPasteboard>)pasteboard
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme;
+- (instancetype)initWithAppScheme:(nullable NSString *)appScheme
+                       pasteboard:(nullable id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
-NS_DESIGNATED_INITIALIZER;
+                     errorFactory:(id<FBSDKErrorCreating>)errorFactory
+  NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, copy, readonly) NSString *appScheme;
-@property (nonatomic, assign, readonly) NSUInteger dataLengthThreshold;
-@property (nonatomic, assign, readonly, getter=shouldIncludeAppIcon) BOOL includeAppIcon;
-@property (nonatomic, strong, readonly) id<FBSDKPasteboard> pasteboard;
+@property (nullable, nonatomic, readonly, copy) NSString *appScheme;
+@property (nonatomic, readonly, assign) NSUInteger dataLengthThreshold;
+@property (nonatomic, readonly, getter = shouldIncludeAppIcon, assign) BOOL includeAppIcon;
+@property (nullable, nonatomic, readonly, strong) id<FBSDKPasteboard> pasteboard;
+@property (nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 @end
 
 #endif
+
+NS_ASSUME_NONNULL_END

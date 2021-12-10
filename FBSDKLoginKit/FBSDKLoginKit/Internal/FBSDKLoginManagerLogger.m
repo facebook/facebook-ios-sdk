@@ -1,32 +1,23 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginManagerLogger.h"
+#import "FBSDKLoginManagerLogger.h"
 
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKLoginError.h"
- #import "FBSDKLoginManagerLoginResult+Internal.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKMonotonicTime.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKLoginAppEventName.h"
+#import "FBSDKLoginError.h"
+#import "FBSDKLoginManagerLoginResult+Internal.h"
+#import "FBSDKLoginUtility.h"
+#import "FBSDKMonotonicTime.h"
 
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Native = @"fb_application_web_auth";
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser = @"browser_auth";
@@ -55,44 +46,26 @@ static NSString *const FBSDKLoginManagerLoggerResultSkippedString = @"skipped";
 static NSString *const FBSDKLoginManagerLoggerTryNative = @"tryFBAppAuth";
 static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 
-/** Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */
-FBSDKAppEventName const FBSDKAppEventNameFBSessionFASLoginDialogResult = @"fb_mobile_login_fas_dialog_result";
+@interface FBSDKLoginManagerLogger ()
 
-/** Use to log the start of an auth request that cannot be fulfilled by the token cache */
-FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthStart = @"fb_mobile_login_start";
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *extras;
+@property (nonatomic) NSString *lastResult;
+@property (nonatomic) NSError *lastError;
+@property (nonatomic) NSString *authMethod;
+@property (nonatomic) NSString *loggingToken;
 
-/** Use to log the end of an auth request that was not fulfilled by the token cache */
-FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthEnd = @"fb_mobile_login_complete";
-
-/** Use to log the start of a specific auth method as part of an auth request */
-FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthMethodStart = @"fb_mobile_login_method_start";
-
-/** Use to log the end of the last tried auth method as part of an auth request */
-FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthMethodEnd = @"fb_mobile_login_method_complete";
-
-/** Use to log the post-login heartbeat event after  the end of an auth request*/
-FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_login_heartbeat";
+@end
 
 @implementation FBSDKLoginManagerLogger
-{
-  @private
-  NSString *_identifier;
-  NSMutableDictionary *_extras;
 
-  NSString *_lastResult;
-  NSError *_lastError;
-
-  NSString *_authMethod;
-  NSString *_loggingToken;
-}
-
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
-                                         tracking:(FBSDKLoginTracking)tracking
++ (nullable FBSDKLoginManagerLogger *)loggerFromParameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                  tracking:(FBSDKLoginTracking)tracking
 {
   NSDictionary<id, id> *clientState = [FBSDKBasicUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
 
   id isClientState = clientState[FBSDKLoginManagerLoggingClientStateIsClientState];
-  if ([isClientState isKindOfClass:[NSNumber class]] && [isClientState boolValue]) {
+  if ([isClientState isKindOfClass:NSNumber.class] && [isClientState boolValue]) {
     FBSDKLoginManagerLogger *logger = [[self alloc] initWithLoggingToken:nil tracking:tracking];
     if (logger != nil) {
       logger->_identifier = clientState[FBSDKLoginManagerLoggerParamIdentifierKey];
@@ -104,8 +77,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return nil;
 }
 
-- (instancetype)initWithLoggingToken:(NSString *)loggingToken
-                            tracking:(FBSDKLoginTracking)tracking
+- (nullable instancetype)initWithLoggingToken:(NSString *)loggingToken
+                                     tracking:(FBSDKLoginTracking)tracking
 {
   switch (tracking) {
     case FBSDKLoginTrackingEnabled:
@@ -114,7 +87,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
       return nil;
   }
 
-  if ((self = [super init]) != nil) {
+  if ((self = [super init])) {
     _identifier = [NSUUID UUID].UUIDString;
     _extras = [NSMutableDictionary dictionary];
     _loggingToken = [loggingToken copy];
@@ -124,7 +97,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager
 {
-  BOOL isReauthorize = ([FBSDKAccessToken currentAccessToken] != nil);
+  BOOL isReauthorize = (FBSDKAccessToken.currentAccessToken != nil);
   BOOL willTryNative = NO;
   BOOL willTryBrowser = YES;
   NSString *behaviorString = @"FBSDKLoginBehaviorBrowser";
@@ -144,8 +117,8 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 - (void)endSession
 {
   [self logEvent:FBSDKAppEventNameFBSessionAuthEnd result:_lastResult error:_lastError];
-  if (FBSDKAppEvents.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [FBSDKAppEvents flush];
+  if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+    [FBSDKAppEvents.shared flush];
   }
 }
 
@@ -155,7 +128,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   [self logEvent:FBSDKAppEventNameFBSessionAuthMethodStart params:[self _parametersForNewEvent]];
 }
 
-- (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error
+- (void)endLoginWithResult:(nullable FBSDKLoginManagerLoginResult *)result error:(nullable NSError *)error
 {
   NSString *resultString = @"";
 
@@ -189,11 +162,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   [self logEvent:FBSDKAppEventNameFBSessionAuthHeartbeat result:_lastResult error:_lastError];
 }
 
-+ (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams
-                                          forAuthMethod:(NSString *)authMethod
-                                                 logger:(FBSDKLoginManagerLogger *)logger
++ (NSDictionary<NSString *, id> *)parametersWithTimeStampAndClientState:(NSDictionary<NSString *, id> *)loginParams
+                                                          forAuthMethod:(NSString *)authMethod
+                                                                 logger:(FBSDKLoginManagerLogger *)logger
 {
-  NSMutableDictionary *params = [loginParams mutableCopy];
+  NSMutableDictionary<NSString *, id> *params = [loginParams mutableCopy];
 
   NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
   NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
@@ -212,11 +185,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 
 - (void)willAttemptAppSwitchingBehavior
 {
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", [FBSDKSettings appID], [FBSDKSettings appURLSchemeSuffix] ?: @""];
-  BOOL isURLSchemeRegistered = [FBSDKInternalUtility isRegisteredURLScheme:defaultUrlScheme];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
+  BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:defaultUrlScheme];
 
-  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility isRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-  BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility isRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+  BOOL isFacebookAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookApp];
+  BOOL isMessengerAppCanOpenURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
 
   [_extras addEntriesFromDictionary:@{
      @"isURLSchemeRegistered" : @(isURLSchemeRegistered),
@@ -235,30 +208,25 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   }
 }
 
-- (void)addSingleLoggingExtra:(id)extra forKey:(NSString *)key
-{
-  [FBSDKTypeUtility dictionary:_extras setObject:extra forKey:key];
-}
-
- #pragma mark - Private
+#pragma mark - Private
 
 - (NSString *)identifier
 {
   return _identifier;
 }
 
-+ (NSString *)clientStateForAuthMethod:(NSString *)authMethod
-                      andExistingState:(NSDictionary *)existingState
-                                logger:(FBSDKLoginManagerLogger *)logger
++ (nullable NSString *)clientStateForAuthMethod:(nullable NSString *)authMethod
+                               andExistingState:(nullable NSDictionary<NSString *, id> *)existingState
+                                         logger:(nullable FBSDKLoginManagerLogger *)logger
 {
-  NSDictionary *clientState = @{
+  NSDictionary<NSString *, id> *clientState = @{
     FBSDKLoginManagerLoggerParamAuthMethodKey : authMethod ?: @"",
     FBSDKLoginManagerLoggerParamIdentifierKey : logger.identifier ?: NSUUID.UUID.UUIDString,
     FBSDKLoginManagerLoggingClientStateIsClientState : @YES,
   };
 
   if (existingState) {
-    NSMutableDictionary *mutableState = [clientState mutableCopy];
+    NSMutableDictionary<NSString *, id> *mutableState = [clientState mutableCopy];
     [mutableState addEntriesFromDictionary:existingState];
     clientState = mutableState;
   }
@@ -266,9 +234,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return [FBSDKBasicUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }
 
-- (NSMutableDictionary *)_parametersForNewEvent
+- (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters setObject:_identifier ?: FBSDKLoginManagerLoggerValueEmpty forKey:FBSDKLoginManagerLoggerParamIdentifierKey];
@@ -283,7 +251,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
+- (void)logEvent:(FBSDKAppEventName)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras
@@ -294,15 +262,15 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
     }
     [_extras removeAllObjects];
 
-    [FBSDKAppEvents logInternalEvent:eventName
-                          parameters:params
-                  isImplicitlyLogged:YES];
+    [FBSDKAppEvents.shared logInternalEvent:eventName
+                                 parameters:params
+                         isImplicitlyLogged:YES];
   }
 }
 
-- (void)logEvent:(NSString *)eventName result:(NSString *)result error:(NSError *)error
+- (void)logEvent:(FBSDKAppEventName)eventName result:(NSString *)result error:(NSError *)error
 {
-  NSMutableDictionary *params = [self _parametersForNewEvent];
+  NSMutableDictionary<NSString *, id> *params = [self _parametersForNewEvent];
 
   [FBSDKTypeUtility dictionary:params setObject:result forKey:FBSDKLoginManagerLoggerParamResultKey];
 

@@ -1,58 +1,57 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKFeatureExtractor.h"
+#import "FBSDKFeatureExtractor.h"
 
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKModelManager.h"
- #import "FBSDKRulesFromKeyProvider.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #define REGEX_CR_PASSWORD_FIELD @"password"
- #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
- #define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
- #define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
+#import "FBSDKModelManager.h"
+#import "FBSDKRulesFromKeyProvider.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
+
+#define REGEX_CR_PASSWORD_FIELD @"password"
+#define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
+#define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
+#define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
   @"(?i)(sign.*(up|now)|registration|" \
   @"register|(create|apply).*(profile|account)|open.*account|" \
   @"account.*(open|creation|application)|enroll|join.*now)"
- #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
- #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
+#define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
+#define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
 
-static NSDictionary *_languageInfo;
-static NSDictionary *_eventInfo;
-static NSDictionary *_textTypeInfo;
-static NSDictionary *_rules;
+static NSDictionary<NSString *, id> *_languageInfo;
+static NSDictionary<NSString *, id> *_eventInfo;
+static NSDictionary<NSString *, id> *_textTypeInfo;
+static NSDictionary<NSString *, id> *_rules;
 
 void sum(float *val0, float *val1);
 
 @implementation FBSDKFeatureExtractor
 
-static id<FBSDKRulesFromKeyProvider> _keyProvider;
+static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 
-+ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)keyProvider
++ (nullable id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
+{
+  return _rulesFromKeyProvider;
+}
+
++ (void)setRulesFromKeyProvider:(nullable id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
+{
+  _rulesFromKeyProvider = rulesFromKeyProvider;
+}
+
++ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
 {
   if (self == FBSDKFeatureExtractor.class) {
-    _keyProvider = keyProvider;
+    self.rulesFromKeyProvider = rulesFromKeyProvider;
   }
 }
 
@@ -87,7 +86,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
 {
   BOOL isValid = [useCaseKey isKindOfClass:NSString.class];
   if (isValid) {
-    _rules = [_keyProvider getRulesForKey:useCaseKey];
+    _rules = [self.rulesFromKeyProvider getRulesForKey:useCaseKey];
   }
 }
 
@@ -95,11 +94,11 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
               withScreenName:(NSString *)screenName
 {
   // use "|" and "," to separate different text based on the rule of how text processed during training
-  NSString *appName = [FBSDKTypeUtility dictionary:[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
+  NSString *appName = [FBSDKTypeUtility dictionary:[NSBundle.mainBundle infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
   return [[NSString stringWithFormat:@"%@ | %@, %@", appName, screenName, text] lowercaseString];
 }
 
-+ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy
 {
   if (!_rules) {
     return nil;
@@ -133,8 +132,8 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return result;
 }
 
- #pragma mark - Helper functions
-+ (BOOL)pruneTree:(NSMutableDictionary *)node siblings:(NSMutableArray *)siblings
+#pragma mark - Helper functions
++ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node siblings:(NSMutableArray *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
   BOOL isInteracted = [[FBSDKTypeUtility dictionary:node
@@ -175,7 +174,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return isDescendantInteracted;
 }
 
-+ (float *)nonparseFeatures:(NSMutableDictionary *)node
++ (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
                    siblings:(NSMutableArray *)siblings
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
@@ -233,7 +232,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return densefeat;
 }
 
-+ (float *)parseFeatures:(NSMutableDictionary *)node
++ (float *)parseFeatures:(NSMutableDictionary<NSString *, id> *)node
 {
   float *densefeat = (float *)calloc(30, sizeof(float));
 
@@ -312,15 +311,19 @@ void sum(float *val0, float *val1)
   }
 }
 
-+ (BOOL)isButton:(NSDictionary *)node
++ (BOOL)isButton:(NSDictionary<NSString *, id> *)node
 {
-  int classtypebitmask = [[FBSDKTypeUtility dictionary:node
+  NSDictionary<NSString *, id> *dictionary = node;
+  if (!dictionary) {
+    dictionary = [NSMutableDictionary new];
+  }
+  int classtypebitmask = [[FBSDKTypeUtility dictionary:dictionary
                                           objectForKey:VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY
                                                 ofType:NSString.class] intValue];
   return (classtypebitmask & FBCodelessClassBitmaskUIButton) > 0;
 }
 
-+ (void)update:(NSDictionary *)node
++ (void)update:(NSDictionary<NSString *, id> *)node
           text:(NSMutableString *)buttonTextString
           hint:(NSMutableString *)buttonHintString
 {
@@ -385,21 +388,14 @@ void sum(float *val0, float *val1)
   return [self regextMatch:pattern text:matchText];
 }
 
- #if DEBUG
-  #if FBSDKTEST
-
-+ (id<FBSDKRulesFromKeyProvider>)keyProvider
-{
-  return _keyProvider;
-}
+#if DEBUG && FBTEST
 
 + (void)reset
 {
-  _keyProvider = nil;
+  self.rulesFromKeyProvider = nil;
 }
 
-  #endif
- #endif
+#endif
 
 @end
 

@@ -1,41 +1,23 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKDeviceLoginViewController.h"
 
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+@interface FBSDKDeviceLoginViewController () <FBSDKDeviceLoginManagerDelegate>
 
-@interface FBSDKDeviceLoginViewController () <
-  FBSDKDeviceLoginManagerDelegate
->
+@property (nonatomic) FBSDKDeviceLoginManager *loginManager;
+@property (nonatomic) BOOL isRetry;
+
 @end
 
 @implementation FBSDKDeviceLoginViewController
-{
-  FBSDKDeviceLoginManager *_loginManager;
-  BOOL _isRetry;
-}
 
 - (void)viewDidDisappear:(BOOL)animated
 {
@@ -70,8 +52,11 @@
   id<FBSDKDeviceLoginViewControllerDelegate> delegate = self.delegate;
   self.delegate = nil;
 
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
+  NSUInteger smartLoginRequireConfirmation = 1 << 1;
   FBSDKAccessToken *token = result.accessToken;
-  BOOL requireConfirm = (([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation)
+  BOOL requireConfirm = ((smartLoginOptions & smartLoginRequireConfirmation)
     && (token != nil)
     && !_isRetry);
   if (requireConfirm) {
@@ -91,7 +76,7 @@
     NSString *networkErrorMessage = NSLocalizedStringWithDefaultValue(
       @"LoginError.SystemAccount.Network",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Unable to connect to Facebook. Check your network connection and try again.",
       @"The user facing error message when the Accounts framework encounters a network error."
     );
@@ -99,7 +84,7 @@
     NSString *localizedOK = NSLocalizedStringWithDefaultValue(
       @"ErrorRecovery.Alert.OK",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"OK",
       @"The title of the label to dismiss the alert when presenting user facing error messages"
     );
@@ -152,7 +137,7 @@
 - (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
                             token:(FBSDKAccessToken *)token
 {
-  [FBSDKAccessToken setCurrentAccessToken:token];
+  FBSDKAccessToken.currentAccessToken = token;
   [delegate deviceLoginViewControllerDidFinish:self];
 }
 
@@ -164,7 +149,7 @@
   NSLocalizedStringWithDefaultValue(
     @"SmartLogin.ConfirmationTitle",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Confirm Login",
     @"The title for the alert when smart login requires confirmation"
   );
@@ -172,7 +157,7 @@
   NSLocalizedStringWithDefaultValue(
     @"SmartLogin.NotYou",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Not you?",
     @"The cancel label for the alert when smart login requires confirmation"
   );
@@ -180,7 +165,7 @@
   NSLocalizedStringWithDefaultValue(
     @"SmartLogin.Continue",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Continue as %@",
     @"The format string to continue as <name> for the alert when smart login requires confirmation"
   );
@@ -216,9 +201,11 @@
   _loginManager.delegate = nil;
   [_loginManager cancel];
   _loginManager = nil;
-
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
+  NSUInteger smartLoginRequireConfirmation = 1 << 0;
   BOOL enableSmartLogin = (!_isRetry
-    && ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
+    && (smartLoginOptions & smartLoginRequireConfirmation));
   _loginManager = [[FBSDKDeviceLoginManager alloc] initWithPermissions:_permissions
                                                       enableSmartLogin:enableSmartLogin];
   _loginManager.delegate = self;

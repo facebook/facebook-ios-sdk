@@ -1,26 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKPaymentProductRequestor.h"
 
 @protocol FBSDKProductsRequest;
 @protocol FBSDKProductsRequestCreating;
-@class SKPaymentQueue;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,13 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (nonatomic, readonly) id<FBSDKLoggingCreating> loggerFactory;
+@property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
 
 - (NSData *)fetchDeviceReceipt;
-- (void)logImplicitTransactionEvent:(NSString *)eventName
+- (void)logImplicitTransactionEvent:(FBSDKAppEventName)eventName
                          valueToSum:(double)valueToSum
-                         parameters:(NSDictionary<NSString *, id> *)parameters;
+                         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 - (BOOL)isSubscription:(SKProduct *)product;
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct:(nullable SKProduct *)product
                                                      withTransaction:(SKPaymentTransaction *)transaction;

@@ -1,46 +1,32 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import TestTools
 import XCTest
 
 class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_length
 
-  let requestFactory = TestGraphRequestFactory()
+  let graphRequestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
-  let connection: TestGraphRequestConnection = TestGraphRequestConnection()
-  lazy var connectionFactory: TestGraphRequestConnectionFactory = {
+  let connection = TestGraphRequestConnection()
+  lazy var graphRequestConnectionFactory: TestGraphRequestConnectionFactory = {
     TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   }()
   let settings = TestSettings()
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"
-  let enabledConfiguration = ServerConfigurationFixtures.config(with: ["codelessEventsEnabled": true])
-  var codelessSettingStorageKey: String! // swiftlint:disable:this implicitly_unwrapped_optional
+  let enabledConfiguration = ServerConfigurationFixtures.config(withDictionary: ["codelessEventsEnabled": true])
+  let serverConfigurationProvider = TestServerConfigurationProvider()
+  lazy var codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
   var capturedIsEnabled = false
   var capturedError: Error?
-  let frame = CGRect(
-    origin: CGPoint(x: 20, y: 20),
-    size: CGSize(width: 36, height: 36)
-  )
-  lazy var view = {
-    return UIView(frame: frame)
-  }()
+  let frame = CGRect(x: 20, y: 20, width: 36, height: 36)
+  lazy var view = UIView(frame: frame)
   let autoEventSetupEnabled = "auto_event_setup_enabled"
 
   enum Keys {
@@ -57,13 +43,12 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexerTests.reset()
 
     settings.appID = name
-    codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
 
     CodelessIndexer.configure(
-      withRequestProvider: requestFactory,
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      with: graphRequestFactory,
+      serverConfigurationProvider: serverConfigurationProvider,
       store: store,
-      connectionProvider: connectionFactory,
+      graphRequestConnectionFactory: graphRequestConnectionFactory,
       swizzler: TestSwizzler.self,
       settings: settings,
       advertiserIDProvider: advertiserIDProvider
@@ -79,7 +64,6 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   class func reset() {
     CodelessIndexer.reset()
     TestSwizzler.reset()
-    TestServerConfigurationProvider.reset()
   }
 
   // MARK: - Dependencies
@@ -88,7 +72,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.reset()
 
     XCTAssertNil(
-      CodelessIndexer.requestProvider,
+      CodelessIndexer.graphRequestFactory,
       "Should not have a request provider by default"
     )
     XCTAssertNil(
@@ -100,7 +84,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should not have a persistent data store by default"
     )
     XCTAssertNil(
-      CodelessIndexer.connectionProvider,
+      CodelessIndexer.graphRequestConnectionFactory,
       "Should not have a connection provider by default"
     )
     XCTAssertNil(
@@ -119,12 +103,12 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testConfiguringWithDependencies() {
     XCTAssertEqual(
-      CodelessIndexer.requestProvider as? TestGraphRequestFactory,
-      requestFactory,
+      CodelessIndexer.graphRequestFactory as? TestGraphRequestFactory,
+      graphRequestFactory,
       "Should be able to configure with a request provider"
     )
     XCTAssertTrue(
-      CodelessIndexer.serverConfigurationProvider is TestServerConfigurationProvider.Type,
+      CodelessIndexer.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to configure with a server configuration provider"
     )
     XCTAssertEqual(
@@ -133,8 +117,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should be able to configure with a persistent data store"
     )
     XCTAssertEqual(
-      CodelessIndexer.connectionProvider as? TestGraphRequestConnectionFactory,
-      connectionFactory,
+      CodelessIndexer.graphRequestConnectionFactory as? TestGraphRequestConnectionFactory,
+      graphRequestConnectionFactory,
       "Should be able to configure with a connection provider"
     )
     XCTAssertTrue(
@@ -170,25 +154,25 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       Keys.advertiserID: name
     ]
     XCTAssertEqual(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       appID,
       "Should create a request using the app identifier as the path"
     )
     XCTAssertEqual(
-      requestFactory.capturedParameters as? [String: String],
+      graphRequestFactory.capturedParameters as? [String: String],
       expectedParameters,
       "Should create a request with the expected parameters"
     )
     XCTAssertNil(
-      requestFactory.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "Should not include a token string in the request"
     )
     XCTAssertNil(
-      requestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       "Should not specify an http method when creating the request"
     )
     XCTAssertEqual(
-      requestFactory.capturedFlags,
+      graphRequestFactory.capturedFlags,
       [.skipClientToken, .disableErrorRecovery],
       "Should create a request with the expected flags"
     )
@@ -226,7 +210,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not load a codeless setting without an app identifier")
     }
     XCTAssertFalse(
-      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
+      serverConfigurationProvider.loadServerConfigurationWasCalled,
       "Should not load the server configuration if the app identifier is missing"
     )
   }
@@ -235,8 +219,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not load a codeless setting when codeless events are disabled")
     }
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.defaultConfig(),
+    serverConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.defaultConfig,
       nil
     )
     XCTAssertNil(
@@ -253,7 +237,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertEqual(
       store.capturedObjectRetrievalKey,
@@ -277,7 +261,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertNil(
       connection.capturedRequest,
@@ -293,7 +277,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     XCTAssertNotNil(
       connection.capturedRequest,
@@ -314,7 +298,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not invoke the completion if the network call completes with an error")
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, nil, SampleError())
   }
@@ -327,7 +311,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, nil, nil)
 
@@ -349,7 +333,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, ["foo": "bar"], nil)
 
@@ -371,7 +355,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
@@ -396,7 +380,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       self.capturedError = potentialError
     }
 
-    TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
+    serverConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
     connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
@@ -424,7 +408,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.empty)
 
     XCTAssertNotNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create an upload request without an app identifier but it will"
     )
   }
@@ -433,7 +417,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.uploadIndexing(nil)
 
     XCTAssertNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create an upload request without a view hierarchy"
     )
   }
@@ -442,7 +426,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.empty)
 
     XCTAssertNotNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create an upload request with an empty view hierarchy but it will"
     )
   }
@@ -451,11 +435,11 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
     // Reset the test evidence to be able to check that the second call
     // does not create a graph request
-    requestFactory.capturedGraphPath = nil
+    graphRequestFactory.capturedGraphPath = nil
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
     XCTAssertNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create an upload request if an upload is in progress"
     )
   }
@@ -466,11 +450,11 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.resetIsCodelessIndexing()
     // Reset the test evidence to be able to check that the second call
     // does not create a graph request
-    requestFactory.capturedGraphPath = nil
+    graphRequestFactory.capturedGraphPath = nil
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
     XCTAssertNil(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create an upload request for a hierarchy that is identical to one that was previously uploaded"
     )
   }
@@ -479,27 +463,20 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
     XCTAssertEqual(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(settings.appID!)/app_indexing", // swiftlint:disable:this force_unwrapping
       "Should create a request with the expected graph path"
     )
     XCTAssertEqual(
-      requestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       .post,
       "Should create a request with the expected http method"
     )
 
-    // Temporary override for Xcode 13 Beta / iOS 15 Beta
-    let appVersion: String
-    if #available(iOS 15.0, *) {
-      // Not sure why this returns 13.0. Investigate further if it doesn't change by Xcode 13 GM release
-      appVersion = "13.0"
-    } else {
-      appVersion = ""
-    }
+    let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 
     XCTAssertEqual(
-      requestFactory.capturedParameters as? [String: String],
+      graphRequestFactory.capturedParameters as? [String: String],
       [
         "app_version": appVersion,
         Keys.deviceSessionID: CodelessIndexer.currentSessionDeviceID!,  // swiftlint:disable:this force_unwrapping
@@ -509,7 +486,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should create a request with the expected parameters"
     )
     XCTAssertEqual(
-      requestFactory.capturedFlags,
+      graphRequestFactory.capturedFlags,
       [],
       "Should create a request with the expected flags"
     )
@@ -519,7 +496,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
+    guard let completion = graphRequestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, nil, nil)
@@ -535,7 +512,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
+    guard let completion = graphRequestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, nil, SampleError())
@@ -551,7 +528,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
+    guard let completion = graphRequestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, [Keys.codelessEnabled: true], nil)
@@ -567,7 +544,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
+    guard let completion = graphRequestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, [Keys.codelessEnabled: false], nil)
@@ -586,11 +563,11 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testCheckingIndexingSessionWhileIndexing() {
     CodelessIndexer.checkCodelessIndexingSession()
-    requestFactory.capturedRequests.first?.capturedCompletionHandler = nil
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler = nil
     CodelessIndexer.checkCodelessIndexingSession()
 
     XCTAssertNil(
-      requestFactory.capturedRequests.first?.capturedCompletionHandler,
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler,
       "Should not create a second request to cehck the indexing status if the first is incomplete"
     )
   }
@@ -608,17 +585,17 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     ]
 
     XCTAssertEqual(
-      requestFactory.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(name)/app_indexing_session",
       "Should request the session with the expected graph path"
     )
     XCTAssertEqual(
-      requestFactory.capturedParameters as? [String: String],
+      graphRequestFactory.capturedParameters as? [String: String],
       expectedParameters,
       "Should request the session with the expected parameters"
     )
     XCTAssertEqual(
-      requestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       .post,
       "Should request the session with the expected http method"
     )
@@ -627,7 +604,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithNoInput() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, nil)
 
     XCTAssertFalse(
       CodelessIndexer.isCheckingSession,
@@ -642,7 +619,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithErrorOnly() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNil(
@@ -654,8 +631,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithInvalidResults() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    (1 ... 20).forEach { _ in
-      requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, Fuzzer.random, nil)
+    (1...20).forEach { _ in
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, Fuzzer.random, nil)
 
       XCTAssertNil(
         CodelessIndexer.appIndexingTimer,
@@ -667,7 +644,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompletingCheckingIndexingWithCodelessEnabledResult() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: true], nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: true], nil)
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNotNil(
@@ -682,7 +659,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionIdentifier = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.checkCodelessIndexingSession()
 
-    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: false], nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: false], nil)
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNil(
@@ -702,7 +679,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertEqual(
       CodelessIndexer.extInfo,
       """
-      ["x86_64","\(AppEventsUtility.shared.advertiserID ?? "")","1","1","en_US"]
+      ["x86_64","","1","1","en_US"]
       """,
       "Should be able to provide extra info as a string representation of an array of strings"
     )

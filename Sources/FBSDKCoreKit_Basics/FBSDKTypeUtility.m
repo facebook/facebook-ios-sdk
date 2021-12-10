@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKTypeUtility.h"
 
@@ -22,21 +12,21 @@
 
 #pragma mark - Class Methods
 
-+ (NSArray *)arrayValue:(id)object
++ (nullable NSArray *)arrayValue:(id)object
 {
-  return (NSArray *)[self _objectValue:object ofClass:[NSArray class]];
+  return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
 }
 
 + (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
 {
   if ([self arrayValue:array] && index < array.count) {
-    return [array objectAtIndex:index];
+    return array[index];
   }
 
   return nil;
 }
 
-+ (void)array:(NSMutableArray *)array addObject:(id)object
++ (void)array:(NSMutableArray *)array addObject:(nullable id)object
 {
   if (object && [array isKindOfClass:NSMutableArray.class]) {
     [array addObject:object];
@@ -56,10 +46,10 @@
 
 + (BOOL)boolValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     // @0 or @NO returns NO, otherwise YES
     return ((NSNumber *)object).boolValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     // Returns YES on encountering one of "Y", "y", "T", "t", or a digit 1-9, otherwise NO
     return ((NSString *)object).boolValue;
   } else {
@@ -67,14 +57,14 @@
   }
 }
 
-+ (NSDictionary *)dictionaryValue:(id)object
++ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
-  return (NSDictionary *)[self _objectValue:object ofClass:[NSDictionary class]];
+  return (NSDictionary<NSString *, id> *)[self _objectValue: object ofClass:[NSDictionary<NSString *, id> class]];
 }
 
-+ (id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type
++ (nullable id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
 {
-  id potentialValue = [[self dictionaryValue:dictionary] objectForKey:key];
+  id potentialValue = [self dictionaryValue:dictionary][key];
 
   if ([potentialValue isKindOfClass:type]) {
     return potentialValue;
@@ -83,16 +73,18 @@
   }
 }
 
-+ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
++ (void)dictionary:(NSMutableDictionary *)dictionary
+         setObject:(nullable id)object
+            forKey:(nullable id<NSCopying>)key
 {
   if (object && key) {
     dictionary[key] = object;
   }
 }
 
-+ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
++ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
 {
-  NSDictionary *validDictionary = [self dictionaryValue:dictionary];
+  NSDictionary<NSString *, id> *validDictionary = [self dictionaryValue:dictionary];
   if (validDictionary) {
     [validDictionary enumerateKeysAndObjectsUsingBlock:block];
   }
@@ -105,10 +97,21 @@
 
 + (NSInteger)integerValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).integerValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return ((NSString *)object).integerValue;
+  } else {
+    return 0;
+  }
+}
+
++ (double)doubleValue:(id)object
+{
+  if ([object isKindOfClass:NSNumber.class]) {
+    return ((NSNumber *)object).doubleValue;
+  } else if ([object isKindOfClass:NSString.class]) {
+    return ((NSString *)object).doubleValue;
   } else {
     return 0;
   }
@@ -119,18 +122,18 @@
   return [self _objectValue:object ofClass:NSString.class];
 }
 
-+ (id)objectValue:(id)object
++ (nullable id)objectValue:(id)object
 {
-  return ([object isKindOfClass:[NSNull class]] ? nil : object);
+  return ([object isKindOfClass:NSNull.class] ? nil : object);
 }
 
-+ (NSString *)coercedToStringValue:(id)object
++ (nullable NSString *)coercedToStringValue:(id)object
 {
-  if ([object isKindOfClass:[NSString class]]) {
+  if ([object isKindOfClass:NSString.class]) {
     return (NSString *)object;
-  } else if ([object isKindOfClass:[NSNumber class]]) {
+  } else if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).stringValue;
-  } else if ([object isKindOfClass:[NSURL class]]) {
+  } else if ([object isKindOfClass:NSURL.class]) {
     return ((NSURL *)object).absoluteString;
   } else {
     return nil;
@@ -139,9 +142,9 @@
 
 + (NSTimeInterval)timeIntervalValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).doubleValue;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return ((NSString *)object).doubleValue;
   } else {
     return 0;
@@ -150,7 +153,7 @@
 
 + (NSUInteger)unsignedIntegerValue:(id)object
 {
-  if ([object isKindOfClass:[NSNumber class]]) {
+  if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).unsignedIntegerValue;
   } else {
     // there is no direct support for strings containing unsigned values > NSIntegerMax - not worth writing ourselves
@@ -163,11 +166,11 @@
   }
 }
 
-+ (NSURL *)URLValue:(id)object
++ (nullable NSURL *)URLValue:(id)object
 {
-  if ([object isKindOfClass:[NSURL class]]) {
+  if ([object isKindOfClass:NSURL.class]) {
     return (NSURL *)object;
-  } else if ([object isKindOfClass:[NSString class]]) {
+  } else if ([object isKindOfClass:NSString.class]) {
     return [NSURL URLWithString:(NSString *)object];
   } else {
     return nil;
@@ -191,7 +194,7 @@
   return data;
 }
 
-+ (id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
++ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
 {
   if (![data isKindOfClass:NSData.class]) {
     return nil;
@@ -205,8 +208,6 @@
   }
   return object;
 }
-
-#pragma mark - Helper Methods
 
 + (id)_objectValue:(id)object ofClass:(Class)expectedClass
 {

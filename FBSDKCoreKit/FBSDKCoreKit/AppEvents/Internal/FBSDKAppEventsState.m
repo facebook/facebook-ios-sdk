@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKAppEventsState.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #define FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY @"isImplicit"
 
@@ -33,10 +23,13 @@
 
 static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
+@interface FBSDKAppEventsState ()
+
+@property (nonatomic) NSMutableArray *mutableEvents;
+
+@end
+
 @implementation FBSDKAppEventsState
-{
-  NSMutableArray *_mutableEvents;
-}
 
 + (void)configureWithEventProcessors:(nonnull NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {
@@ -70,14 +63,14 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APPEVENTSSTATE_APPID_KEY];
-  NSString *tokenString = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APPEVENTSSTATE_TOKENSTRING_KEY];
+  NSString *appID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APPEVENTSSTATE_APPID_KEY];
+  NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APPEVENTSSTATE_TOKENSTRING_KEY];
   NSArray *events = [FBSDKTypeUtility arrayValue:[decoder decodeObjectOfClasses:
                                                   [NSSet setWithArray:@[NSArray.class, NSDictionary.class]]
                                                                          forKey:FBSDK_APPEVENTSSTATE_EVENTS_KEY]];
-  NSUInteger numSkipped = [[decoder decodeObjectOfClass:[NSNumber class] forKey:FBSDK_APPEVENTSSTATE_NUMSKIPPED_KEY] unsignedIntegerValue];
+  NSUInteger numSkipped = [[decoder decodeObjectOfClass:NSNumber.class forKey:FBSDK_APPEVENTSSTATE_NUMSKIPPED_KEY] unsignedIntegerValue];
 
   if ((self = [self initWithToken:tokenString appID:appID])) {
     _mutableEvents = [NSMutableArray arrayWithArray:events];
@@ -114,7 +107,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   [_mutableEvents addObjectsFromArray:toAdd];
 }
 
-- (void)addEvent:(NSDictionary *)eventDictionary
+- (void)addEvent:(NSDictionary<NSString *, id> *)eventDictionary
       isImplicit:(BOOL)isImplicit
 {
   if (_mutableEvents.count >= FBSDK_APPEVENTSSTATE_MAX_EVENTS) {
@@ -131,8 +124,8 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 {
   NSMutableString *receipts_string = [NSMutableString string];
   NSInteger transactionId = 1;
-  for (NSMutableDictionary *events in _mutableEvents) {
-    NSMutableDictionary *event = events[@"event"];
+  for (NSMutableDictionary<NSString *, id> *events in _mutableEvents) {
+    NSMutableDictionary<NSString *, id> *event = events[@"event"];
 
     NSString *receipt = event[@"receipt_data"];
     // Add receipt id as the identifier for receipt data in event parameter.
@@ -150,7 +143,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 - (BOOL)areAllEventsImplicit
 {
-  for (NSDictionary *event in _mutableEvents) {
+  for (NSDictionary<NSString *, id> *event in _mutableEvents) {
     if (![[event valueForKey:FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue]) {
       return NO;
     }
@@ -158,7 +151,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   return YES;
 }
 
-- (BOOL)isCompatibleWithAppEventsState:(FBSDKAppEventsState *)appEventsState
+- (BOOL)isCompatibleWithAppEventsState:(nullable FBSDKAppEventsState *)appEventsState
 {
   return ([self isCompatibleWithTokenString:appEventsState.tokenString appID:appEventsState.appID]);
 }
@@ -180,12 +173,12 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
     }
   }
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
-  for (NSDictionary *eventAndImplicitFlag in _mutableEvents) {
+  for (NSDictionary<NSString *, id> *eventAndImplicitFlag in _mutableEvents) {
     const BOOL isImplicitEvent = [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue];
     if (!includeImplicitEvents && isImplicitEvent) {
       continue;
     }
-    NSMutableDictionary *event = eventAndImplicitFlag[@"event"];
+    NSMutableDictionary<NSString *, id> *event = eventAndImplicitFlag[@"event"];
     NSAssert(event != nil, @"event cannot be nil");
     [event removeObjectForKey:FBSDK_APPEVENTSTATE_RECEIPTDATA_KEY];
 
@@ -195,8 +188,8 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   return [FBSDKBasicUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
 }
 
-#ifdef DEBUG
- #ifdef FBSDKTEST
+#if DEBUG
+ #if FBTEST
 + (NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {
   return _eventProcessors;

@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 @import TestTools;
 #import <XCTest/XCTest.h>
@@ -22,71 +12,21 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#ifdef BUCK
- #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
- #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
-#else
- #import "FBSDKPermission.h"
-#endif
+#import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
+#import "FBSDKLoginURLCompleter+Testing.h"
+#import "FBSDKPermission.h"
 
 static NSString *const _fakeAppID = @"1234567";
 static NSString *const _fakeChallence = @"some_challenge";
 
-@interface FBSDKLoginURLCompleter (Testing)
-
-@property (class, nonatomic, assign) id<FBSDKProfileCreating> profileFactory;
-
-- (FBSDKLoginCompletionParameters *)parameters;
-
-+ (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
-
-+ (void)reset;
-
-+ (NSDateFormatter *)dateFormatter;
-
-@end
-
-@interface FBSDKAuthenticationTokenClaims (Testing)
-
-- (instancetype)initWithJti:(NSString *)jti
-                        iss:(NSString *)iss
-                        aud:(NSString *)aud
-                      nonce:(NSString *)nonce
-                        exp:(NSTimeInterval)exp
-                        iat:(NSTimeInterval)iat
-                        sub:(NSString *)sub
-                       name:(nullable NSString *)name
-                  givenName:(nullable NSString *)givenName
-                 middleName:(nullable NSString *)middleName
-                 familyName:(nullable NSString *)familyName
-                      email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends
-               userBirthday:(nullable NSString *)userBirthday
-               userAgeRange:(nullable NSDictionary *)userAgeRange
-               userHometown:(nullable NSDictionary *)userHometown
-               userLocation:(nullable NSDictionary *)userLocation
-                 userGender:(nullable NSString *)userGender
-                   userLink:(nullable NSString *)userLink;
-
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
-@end
-
 @interface FBSDKLoginCompletionTests : XCTestCase
-{
-  NSDictionary *_parameters;
-}
 
-@property TestGraphRequestConnection *graphConnection;
+@property (nonatomic) NSDictionary<NSString *, id> *parameters;
 
-@property TestAuthenticationTokenFactory *authenticationTokenFactory;
+@property (nonatomic) TestGraphRequestConnection *graphConnection;
+
+@property (nonatomic) TestAuthenticationTokenFactory *authenticationTokenFactory;
 
 @end
 
@@ -107,18 +47,18 @@ static NSString *const _fakeChallence = @"some_challenge";
     @"denied_scopes" : @"email",
     @"signed_request" : @"some_signed_request",
     @"user_id" : @"123",
-    @"expires" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 60) stringValue],
-    @"expires_at" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 60) stringValue],
-    @"expires_in" : [@(secInDay * 60) stringValue],
-    @"data_access_expiration_time" : [@(NSDate.date.timeIntervalSince1970 + secInDay * 90) stringValue],
+    @"expires" : @(NSDate.date.timeIntervalSince1970 + secInDay * 60),
+    @"expires_at" : @(NSDate.date.timeIntervalSince1970 + secInDay * 60),
+    @"expires_in" : @(secInDay * 60),
+    @"data_access_expiration_time" : @(NSDate.date.timeIntervalSince1970 + secInDay * 90),
     @"state" : [NSString stringWithFormat:@"{\"challenge\":\"%@\"}", _fakeChallence],
     @"graph_domain" : @"facebook",
     @"error" : @"some_error",
     @"error_message" : @"some_error_message",
   };
 
-  _graphConnection = TestGraphRequestConnection.new;
-  _authenticationTokenFactory = TestAuthenticationTokenFactory.new;
+  _graphConnection = [TestGraphRequestConnection new];
+  _authenticationTokenFactory = [TestAuthenticationTokenFactory new];
 }
 
 - (void)tearDown
@@ -154,40 +94,48 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithAccessTokenWithIDToken
 {
-  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [self.parametersWithIDtoken mutableCopy];
   [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithAccessToken
 {
-  NSDictionary *parameters = self.parametersWithAccessToken;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithAccessToken;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithNonce
 {
-  NSDictionary *parameters = self.parametersWithNonce;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithNonce;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithIDToken
 {
-  NSDictionary *parameters = self.parametersWithIDtoken;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithIDtoken;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
-  [self verifyParameters:completer.parameters urlParameter:parameters];
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
+}
+
+- (void)testInitWithStringExpirations
+{
+  NSDictionary<NSString *, id> *parameters = self.parametersWithStringExpirations;
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
+
+  [self verifyParameters:completer.parameters expectedParameters:parameters];
 }
 
 - (void)testInitWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
-  NSDictionary *parameters = self.parametersWithoutAccessTokenWithoutIDTokenWithoutNonce;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithoutAccessTokenWithoutIDTokenWithoutNonce;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyEmptyParameters:completer.parameters];
@@ -195,7 +143,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
-  NSDictionary *parameters = self.parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyEmptyParameters:completer.parameters];
@@ -210,7 +158,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithIDTokenAndNonce
 {
-  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [self.parametersWithIDtoken mutableCopy];
   [parameters addEntriesFromDictionary:self.parametersWithNonce];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
@@ -219,7 +167,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithError
 {
-  NSDictionary *parameters = self.parametersWithError;
+  NSDictionary<NSString *, id> *parameters = self.parametersWithError;
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   XCTAssertNotNil(completer.parameters.error);
@@ -228,7 +176,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithFuzzyParameters
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *parameters = [Fuzzer randomizeWithJson:_parameters];
+    NSDictionary<NSString *, id> *parameters = [Fuzzer randomizeWithJson:_parameters];
     FBSDKLoginURLCompleter *_completer __unused = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
   }
 }
@@ -342,7 +290,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testNonceExchangeCompletionWithAccessTokenString
 {
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
-  NSDictionary *stubbedResult = @{ @"access_token" : self.name };
+  NSDictionary<NSString *, id> *stubbedResult = @{ @"access_token" : self.name };
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -369,7 +317,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
   NSString *nonce = @"some_nonce";
   NSString *id_token = @"some_id_token";
-  NSDictionary *stubbedResult = @{
+  NSDictionary<NSString *, id> *stubbedResult = @{
     @"access_token" : self.name,
     @"id_token" : id_token
   };
@@ -406,7 +354,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
 
-  NSDictionary *stubbedResult = @{
+  NSDictionary<NSString *, id> *stubbedResult = @{
     @"access_token" : self.name,
     @"expires_in" : @"10000",
     @"data_access_expiration_time" : @1
@@ -421,8 +369,8 @@ static NSString *const _fakeChallence = @"some_challenge";
   [completer completeLoginWithHandler:handler];
 
   for (int i = 0; i < 100; i++) {
-    NSDictionary *params = [stubbedResult copy];
-    NSDictionary *parameters = [Fuzzer randomizeWithJson:params];
+    NSDictionary<NSString *, id> *params = [stubbedResult copy];
+    NSDictionary<NSString *, id> *parameters = [Fuzzer randomizeWithJson:params];
     _graphConnection.capturedCompletion(nil, parameters, nil);
     XCTAssertTrue(completionWasInvoked);
     completionWasInvoked = NO;
@@ -512,7 +460,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   __block BOOL wasCalled = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
     wasCalled = YES;
-    [self verifyParameters:parameters urlParameter:self.parametersWithAccessToken];
+    [self verifyParameters:parameters expectedParameters:self.parametersWithAccessToken];
   };
 
   [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
@@ -607,8 +555,9 @@ static NSString *const _fakeChallence = @"some_challenge";
     claim.userFriends,
     "Should request a profile using the friend identifiers from the claims"
   );
-  NSDateFormatter *formatter = NSDateFormatter.new;
-  [formatter setDateFormat:@"MM/dd/yyyy"];
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+  NSDateFormatter *formatter = [NSDateFormatter new];
+  formatter.dateFormat = @"MM/dd/yyyy";
   XCTAssertEqualObjects(
     [formatter stringFromDate:factory.capturedBirthday],
     claim.userBirthday,
@@ -652,44 +601,44 @@ static NSString *const _fakeChallence = @"some_challenge";
   return [NSError errorWithDomain:self.name code:0 userInfo:nil];
 }
 
-- (NSDictionary *)rawParametersWithMissingNonce
+- (NSDictionary<NSString *, id> *)rawParametersWithMissingNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"nonce"]];
   return parameters;
 }
 
-- (NSDictionary *)parametersWithNonce
+- (NSDictionary<NSString *, id> *)parametersWithNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"error", @"error_message"]];
   return parameters;
 }
 
-- (NSDictionary *)parametersWithAccessToken
+- (NSDictionary<NSString *, id> *)parametersWithAccessToken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
-- (NSDictionary *)parametersWithIDtoken
+- (NSDictionary<NSString *, id> *)parametersWithIDtoken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
-- (NSDictionary *)parametersWithoutAccessTokenWithoutIDTokenWithoutNonce
+- (NSDictionary<NSString *, id> *)parametersWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
-- (NSDictionary *)parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
+- (NSDictionary<NSString *, id> *)parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
   [parameters setValue:@"" forKey:@"access_token"];
   [parameters setValue:@"" forKey:@"id_token"];
@@ -697,33 +646,51 @@ static NSString *const _fakeChallence = @"some_challenge";
   return parameters;
 }
 
-- (NSDictionary *)parametersWithError
+- (NSDictionary<NSString *, id> *)parametersWithStringExpirations
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
+  [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
+  [parameters setValue:[_parameters[@"expires"] stringValue] forKey:@"expires"];
+  [parameters setValue:[_parameters[@"expires_at"] stringValue] forKey:@"expires_at"];
+  [parameters setValue:[_parameters[@"expires_in"] stringValue] forKey:@"expires_in"];
+  [parameters setValue:[_parameters[@"data_access_expiration_time"] stringValue] forKey:@"data_access_expiration_time"];
+  return parameters;
+}
+
+- (NSDictionary<NSString *, id> *)parametersWithError
+{
+  NSMutableDictionary<NSString *, id> *parameters = [_parameters mutableCopy];
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce"]];
   return parameters;
 }
 
-- (void)verifyParameters:(FBSDKLoginCompletionParameters *)parameters urlParameter:(NSDictionary *)urlParameters
+- (void)verifyParameters:(FBSDKLoginCompletionParameters *)parameters expectedParameters:(NSDictionary<NSString *, id> *)expectedParameters
 {
-  XCTAssertEqualObjects(parameters.accessTokenString, urlParameters[@"access_token"]);
-  XCTAssertEqualObjects(parameters.authenticationTokenString, urlParameters[@"id_token"]);
+  XCTAssertEqualObjects(parameters.accessTokenString, expectedParameters[@"access_token"]);
+  XCTAssertEqualObjects(parameters.authenticationTokenString, expectedParameters[@"id_token"]);
   XCTAssertEqualObjects(parameters.appID, _fakeAppID);
   XCTAssertEqualObjects(parameters.challenge, _fakeChallence);
-  NSSet *permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"granted_scopes"] componentsSeparatedByString:@","]]];
+  NSSet<FBSDKPermission *> *permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[expectedParameters[@"granted_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.permissions, permissions);
-  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"denied_scopes"] componentsSeparatedByString:@","]]];
+  NSSet<FBSDKPermission *> *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[expectedParameters[@"denied_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.declinedPermissions, declinedPermissions);
-  XCTAssertEqualObjects(parameters.userID, urlParameters[@"user_id"]);
-  XCTAssertEqualObjects(parameters.graphDomain, urlParameters[@"graph_domain"]);
+  XCTAssertEqualObjects(parameters.userID, expectedParameters[@"user_id"]);
+  XCTAssertEqualObjects(parameters.graphDomain, expectedParameters[@"graph_domain"]);
 
-  if (urlParameters[@"expires"] || urlParameters[@"expires_at"] || urlParameters[@"expires_in"]) {
-    XCTAssertNotNil(parameters.expirationDate);
+  if (expectedParameters[@"expires"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires"]], 100);
   }
-  if (urlParameters[@"data_access_expiration_time"]) {
-    XCTAssertNotNil(parameters.dataAccessExpirationDate);
+  if (expectedParameters[@"expires_at"] || expectedParameters[@"expires_in"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires_at"]], 100);
   }
-  XCTAssertEqualObjects(parameters.nonceString, urlParameters[@"nonce"]);
+  if (expectedParameters[@"expires_in"]) {
+    XCTAssertEqualWithAccuracy(parameters.expirationDate.timeIntervalSinceNow, [FBSDKTypeUtility doubleValue:expectedParameters[@"expires_in"]], 100);
+  }
+  if (expectedParameters[@"data_access_expiration_time"]) {
+    XCTAssertEqualWithAccuracy(parameters.dataAccessExpirationDate.timeIntervalSince1970, [FBSDKTypeUtility doubleValue:expectedParameters[@"data_access_expiration_time"]], 100);
+  }
+
+  XCTAssertEqualObjects(parameters.nonceString, expectedParameters[@"nonce"]);
   XCTAssertNil(parameters.error);
 }
 
@@ -743,13 +710,13 @@ static NSString *const _fakeChallence = @"some_challenge";
   XCTAssertNil(parameters.error);
 }
 
-- (FBSDKLoginURLCompleter *)loginCompleterWithParameters:(NSDictionary *)parameters
+- (FBSDKLoginURLCompleter *)loginCompleterWithParameters:(NSDictionary<NSString *, id> *)parameters
                                                    appID:(NSString *)appID
 {
   TestGraphRequestConnectionFactory *graphConnectionFactory = [TestGraphRequestConnectionFactory createWithStubbedConnection:_graphConnection];
   return [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters
                                                          appID:appID
-                                            connectionProvider:graphConnectionFactory
+                                 graphRequestConnectionFactory:graphConnectionFactory
                                     authenticationTokenCreator:_authenticationTokenFactory];
 }
 

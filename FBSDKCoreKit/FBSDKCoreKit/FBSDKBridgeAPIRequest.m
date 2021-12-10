@@ -1,88 +1,164 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKBridgeAPIRequest.h"
- #import "FBSDKBridgeAPIRequest+Private.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIRequest+Private.h"
 
- #import "FBSDKBridgeAPIProtocolNativeV1.h"
- #import "FBSDKBridgeAPIProtocolWebV1.h"
- #import "FBSDKBridgeAPIProtocolWebV2.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKSettings.h"
+#import <UIKit/UIApplication.h>
+
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKBridgeAPIProtocol.h"
+#import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolType.h"
+#import "FBSDKBridgeAPIProtocolWebV1.h"
+#import "FBSDKBridgeAPIProtocolWebV2.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKSettings.h"
+#import "FBSDKURLScheme.h"
+#import "UIApplication+URLOpener.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
 NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
+typedef NSDictionary<NSNumber *, NSDictionary<FBSDKURLScheme, id<FBSDKBridgeAPIProtocol>> *> *FBSDKBridgeAPIProtocolMap;
+
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKBridgeAPIRequest
 
- #pragma mark - Class Methods
+#pragma mark - Class dependencies
 
-+ (instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                                          scheme:(NSString *)scheme
-                                      methodName:(NSString *)methodName
-                                   methodVersion:(NSString *)methodVersion
-                                      parameters:(NSDictionary *)parameters
-                                        userInfo:(NSDictionary *)userInfo
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKInternalURLOpener> _internalURLOpener;
+
++ (nullable id<FBSDKInternalURLOpener>)internalURLOpener
+{
+  return _internalURLOpener;
+}
+
++ (void)setInternalURLOpener:(nullable id<FBSDKInternalURLOpener>)internalURLOpener
+{
+  _internalURLOpener = internalURLOpener;
+}
+
+static _Nullable id<FBSDKInternalUtility> _internalUtility;
+
++ (nullable id<FBSDKInternalUtility>)internalUtility
+{
+  return _internalUtility;
+}
+
++ (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
+{
+  _internalUtility = internalUtility;
+}
+
+static _Nullable id<FBSDKSettings> _settings;
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+#pragma mark - Class Configuration
+
++ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  self.internalURLOpener = internalURLOpener;
+  self.internalUtility = internalUtility;
+  self.settings = settings;
+
+  self.hasBeenConfigured = YES;
+}
+
+#if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.internalURLOpener = nil;
+  self.internalUtility = nil;
+  self.settings = nil;
+
+  self.hasBeenConfigured = NO;
+}
+
+#endif
+
+#pragma mark - Class Methods
+
++ (nullable instancetype)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                                   scheme:(FBSDKURLScheme)scheme
+                                               methodName:(nullable NSString *)methodName
+                                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
   return [[self alloc] initWithProtocol:[self _protocolForType:protocolType scheme:scheme]
                            protocolType:protocolType
                                  scheme:scheme
                              methodName:methodName
-                          methodVersion:methodVersion
                              parameters:parameters
                                userInfo:userInfo];
 }
 
-+ (NSDictionary *)protocolMap
++ (FBSDKBridgeAPIProtocolMap)protocolMap
 {
-  static NSDictionary *_protocolMap;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _protocolMap = @{
+  static FBSDKBridgeAPIProtocolMap map;
+  if (!map) {
+    map = @{
       @(FBSDKBridgeAPIProtocolTypeNative) : @{
-        FBSDK_CANOPENURL_FACEBOOK : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
-        FBSDK_CANOPENURL_MESSENGER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
-        FBSDK_CANOPENURL_MSQRD_PLAYER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
+        FBSDKURLSchemeFacebookApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi"],
+        FBSDKURLSchemeMessengerApp : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-share-api"],
+        FBSDKURLSchemeMasqueradePlayer : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
       },
       @(FBSDKBridgeAPIProtocolTypeWeb) : @{
-        @"https" : [FBSDKBridgeAPIProtocolWebV1 new],
-        @"web" : [FBSDKBridgeAPIProtocolWebV2 new]
+        FBSDKURLSchemeHTTPS : [FBSDKBridgeAPIProtocolWebV1 new],
+        FBSDKURLSchemeWeb : [FBSDKBridgeAPIProtocolWebV2 new]
       },
     };
-  });
-  return _protocolMap;
+  }
+
+  return map;
 }
 
- #pragma mark - Object Lifecycle
+#pragma mark - Object Lifecycle
 
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
+- (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
+                             protocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                   scheme:(FBSDKURLScheme)scheme
+                               methodName:(nullable NSString *)methodName
+                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
   if (!protocol) {
     return nil;
@@ -92,7 +168,6 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
     _protocolType = protocolType;
     _scheme = [scheme copy];
     _methodName = [methodName copy];
-    _methodVersion = [methodVersion copy];
     _parameters = [parameters copy];
     _userInfo = [userInfo copy];
 
@@ -101,44 +176,43 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   return self;
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
-- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)requestURL:(NSError *__autoreleasing *)errorRef
 {
   NSURL *requestURL = [_protocol requestURLWithActionID:self.actionID
                                                  scheme:self.scheme
                                              methodName:self.methodName
-                                          methodVersion:self.methodVersion
                                              parameters:self.parameters
                                                   error:errorRef];
   if (!requestURL) {
     return nil;
   }
 
-  [FBSDKInternalUtility validateURLSchemes];
+  [self.class.internalUtility validateURLSchemes];
 
   NSDictionary<NSString *, NSString *> *requestQueryParameters = [FBSDKBasicUtility dictionaryWithQueryString:requestURL.query];
-  NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:[FBSDKSettings appID] forKey:FBSDKBridgeAPIAppIDKey];
+  NSMutableDictionary<NSString *, id> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:self.class.settings.appID forKey:FBSDKBridgeAPIAppIDKey];
   [FBSDKTypeUtility dictionary:queryParameters
-                     setObject:[FBSDKSettings appURLSchemeSuffix]
+                     setObject:self.class.settings.appURLSchemeSuffix
                         forKey:FBSDKBridgeAPISchemeSuffixKey];
-  requestURL = [FBSDKInternalUtility URLWithScheme:requestURL.scheme
-                                              host:requestURL.host
-                                              path:requestURL.path
-                                   queryParameters:queryParameters
-                                             error:errorRef];
+  requestURL = [self.class.internalUtility URLWithScheme:requestURL.scheme
+                                                    host:requestURL.host
+                                                    path:requestURL.path
+                                         queryParameters:queryParameters
+                                                   error:errorRef];
   return requestURL;
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (id)copyWithZone:(nullable NSZone *)zone
 {
   return self;
 }
 
-+ (id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(NSString *)scheme
++ (nullable id<FBSDKBridgeAPIProtocol>)_protocolForType:(FBSDKBridgeAPIProtocolType)type scheme:(FBSDKURLScheme)scheme
 {
   id<FBSDKBridgeAPIProtocol> protocol = [self protocolMap][@(type)][scheme];
   if (type == FBSDKBridgeAPIProtocolTypeWeb) {
@@ -147,12 +221,14 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = scheme;
   components.path = @"/";
-  if ([[UIApplication sharedApplication] canOpenURL:components.URL]) {
+  if ([self.class.internalURLOpener canOpenURL:components.URL]) {
     return protocol;
   }
   return nil;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

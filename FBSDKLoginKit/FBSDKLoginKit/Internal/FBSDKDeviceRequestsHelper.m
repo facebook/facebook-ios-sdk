@@ -1,34 +1,20 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKDeviceRequestsHelper.h"
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <sys/utsname.h>
 
-#if FBSDK_SWIFT_PACKAGE
- #import <FBSDKCoreKit.h>
-#else
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
-
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import "FBSDKLoginAppEventName.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"
@@ -39,8 +25,6 @@
  #define FBSDK_FLAVOR @"tvos"
 #endif
 #define FBSDK_SERVICE_TYPE @"_fb._tcp."
-
-FBSDKAppEventName FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_login_service";
 
 static NSMapTable *g_mdnsAdvertisementServices;
 
@@ -80,9 +64,9 @@ static NSMapTable *g_mdnsAdvertisementServices;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     // Dots in the version will mess up the bonjour DNS record parsing
-    sdkVersion = [[FBSDKSettings sdkVersion] stringByReplacingOccurrencesOfString:@"." withString:@"|"];
+    sdkVersion = [FBSDKSettings.sharedSettings.sdkVersion stringByReplacingOccurrencesOfString:@"." withString:@"|"];
     if (sdkVersion.length > 10
-        || ![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[sdkVersion characterAtIndex:0]]) {
+        || ![NSCharacterSet.decimalDigitCharacterSet characterIsMember:[sdkVersion characterAtIndex:0]]) {
       sdkVersion = @"dev";
     }
   });
@@ -104,9 +88,9 @@ static NSMapTable *g_mdnsAdvertisementServices;
                                             port:0];
   mdnsAdvertisementService.delegate = delegate;
   [mdnsAdvertisementService publishWithOptions:NSNetServiceNoAutoRename | NSNetServiceListenForConnections];
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKSmartLoginService
-                        parameters:@{}
-                isImplicitlyLogged:YES];
+  [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameFBSDKSmartLoginService
+                               parameters:@{}
+                       isImplicitlyLogged:YES];
   [g_mdnsAdvertisementServices setObject:mdnsAdvertisementService forKey:delegate];
 
   return YES;

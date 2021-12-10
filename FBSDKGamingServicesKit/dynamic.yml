@@ -1,0 +1,56 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+targets:
+  FacebookGamingServices-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FacebookGamingServices
+    sources:
+      - path: FacebookGamingServices
+        headerVisibility: public
+        excludes:
+          - Internal
+      - path: FacebookGamingServices/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FacebookGamingServices-Dynamic.xcconfig
+      Release: Configurations/FacebookGamingServices-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+      - target: FBSDKShareKit/FBSDKShareKit-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
+    transitivelyLinkDependencies: true
+  FBSDKGamingServicesKit-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FBSDKGamingServicesKit
+    sources:
+      - path: ../Sources/FBSDKGamingServicesKit
+        group: Sources
+    configFiles:
+      Debug: Configurations/FBSDKGamingServicesKit-Dynamic.xcconfig
+      Release: Configurations/FBSDKGamingServicesKit-Dynamic.xcconfig
+    dependencies:
+      - target: FacebookGamingServices-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit FacebookGamingServicesTests
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FacebookGamingServices/Internal/FBSDKGamingServicesKit-Prefix-Header.h
+    transitivelyLinkDependencies: true

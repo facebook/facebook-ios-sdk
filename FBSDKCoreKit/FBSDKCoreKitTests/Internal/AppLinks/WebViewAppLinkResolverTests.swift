@@ -1,55 +1,55 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
 import TestTools
 import XCTest
 
 // swiftlint:disable force_unwrapping
-class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_body_length
+class WebViewAppLinkResolverTests: XCTestCase {
 
-  var result: [AnyHashable: Any]?
+  var result: [String: Any]?
   var error: Error?
   let data = "foo".data(using: .utf8)!
-  var resolver: WebViewAppLinkResolver! // swiftlint:disable:this implicitly_unwrapped_optional
-  let provider = TestSessionProvider()
-
-  override func setUp() {
-    super.setUp()
-
-    resolver = WebViewAppLinkResolver(sessionProvider: provider)
-  }
+  let sessionProvider = TestSessionProvider()
+  let errorFactory = TestErrorFactory()
+  lazy var resolver = WebViewAppLinkResolver(
+    sessionProvider: sessionProvider,
+    errorFactory: errorFactory
+  )
 
   // MARK: - Dependencies
 
-  func testCreatingWithDefaults() {
-    XCTAssertEqual(
-      ObjectIdentifier(WebViewAppLinkResolver.shared.sessionProvider),
-      ObjectIdentifier(URLSession.shared),
+  func testDefaultDependencies() throws {
+    resolver = WebViewAppLinkResolver.shared
+    XCTAssertTrue(
+      resolver.sessionProvider === URLSession.shared,
       "Should use the shared system session by default"
+    )
+
+    let factory = try XCTUnwrap(
+      resolver.errorFactory as? ErrorFactory,
+      "Should create an error factory"
+    )
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "Should use the shared error reporter by default"
     )
   }
 
-  func testCreatingWithSession() {
-    XCTAssertEqual(
-      ObjectIdentifier(resolver.sessionProvider),
-      ObjectIdentifier(provider),
+  func testConfiguringDependencies() {
+    XCTAssertTrue(
+      resolver.sessionProvider === sessionProvider,
       "Should be able to create with a session provider"
+    )
+    XCTAssertTrue(
+      resolver.errorFactory === errorFactory,
+      "Should be able to create with an error factory"
     )
   }
 
@@ -57,16 +57,16 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
 
   func testFollowRedirectsURL() {
     let task = TestSessionDataTask()
-    provider.stubbedDataTask = task
-    resolver.followRedirects(SampleUrls.valid) { _, _ in }
+    sessionProvider.stubbedDataTask = task
+    resolver.followRedirects(SampleURLs.valid) { _, _ in }
 
     XCTAssertEqual(
-      provider.capturedRequest?.url,
-      SampleUrls.valid,
+      sessionProvider.capturedRequest?.url,
+      SampleURLs.valid,
       "Should create a url request with the provided url"
     )
     XCTAssertEqual(
-      provider.capturedRequest?.allHTTPHeaderFields?.contains { key, value in
+      sessionProvider.capturedRequest?.allHTTPHeaderFields?.contains { key, value in
         key == "Prefer-Html-Meta-Tags" && value == "al"
       },
       true,
@@ -80,12 +80,12 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   }
 
   func testFollowRedirectsWithErrorOnly() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(nil, nil, SampleError())
+    sessionProvider.capturedCompletion?(nil, nil, SampleError())
 
     XCTAssertNil(
       result,
@@ -97,13 +97,13 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
     )
   }
 
-  func testFollowRedirectWithHTTPResponseOnly() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+  func testFollowRedirectWithHTTPResponseOnly() throws {
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       nil,
       SampleHTTPURLResponses.validStatusCode,
       nil
@@ -113,22 +113,24 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
       result,
       "Should not have a result if there is no response data"
     )
+
+    let assertionMessage = "Should call the completion with an error indicating the missing data"
+    let testError = try XCTUnwrap(error as? TestSDKError, assertionMessage)
+    XCTAssertEqual(testError.type, .unknown, assertionMessage)
     XCTAssertEqual(
-      error as NSError?,
-      SDKError.unknownError(
-        withMessage: "Invalid network response - missing data"
-      ) as NSError,
-      "Should call the completion with an error indicating the missing data"
+      testError.message,
+      "Invalid network response - missing data",
+      assertionMessage
     )
   }
 
   func testFollowRedirectsWithValidHTTPResponse() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       data,
       SampleHTTPURLResponses.validStatusCode,
       nil
@@ -145,20 +147,20 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   func testFollowRedirectsWithRedirectingHTTPResponseMissingLocationURL() {
     // Just testing the upper and lower bounds
     [300, 399].forEach { code in
-      provider.dataTaskCallCount = 0
-      resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+      sessionProvider.dataTaskCallCount = 0
+      resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
         self.result = potentialResult
         self.error = potentialError
       }
 
-      provider.capturedCompletion?(
+      sessionProvider.capturedCompletion?(
         data,
         SampleHTTPURLResponses.valid(statusCode: code),
         nil
       )
 
       XCTAssertEqual(
-        provider.dataTaskCallCount,
+        sessionProvider.dataTaskCallCount,
         2,
         "Should create a second data task for the url redirect"
       )
@@ -166,13 +168,13 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   }
 
   func testFollowRedirectsWithRedirectingHTTPResponseIncludingLocationURL() {
-    let redirectURL = SampleUrls.valid(path: "redirected")
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    let redirectURL = SampleURLs.valid(path: "redirected")
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
 
-    provider.capturedCompletion?(
+    sessionProvider.capturedCompletion?(
       data,
       SampleHTTPURLResponses.valid(
         statusCode: 300,
@@ -182,12 +184,12 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
     )
 
     XCTAssertEqual(
-      provider.dataTaskCallCount,
+      sessionProvider.dataTaskCallCount,
       2,
       "Should create a second data task for the url redirect"
     )
     XCTAssertEqual(
-      provider.capturedRequest?.url,
+      sessionProvider.capturedRequest?.url,
       redirectURL,
       "The second request should be to the redirect url"
     )
@@ -198,16 +200,16 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   func testBuildingLinkFromEmptyData() {
     let link = resolver.appLink(
       fromALData: [:],
-      destination: SampleUrls.valid
+      destination: SampleURLs.valid
     )
     XCTAssertEqual(
       link.sourceURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should use the destination as the source url for the app link"
     )
     XCTAssertEqual(
       link.webURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "The web url should default to the destination"
     )
     XCTAssertTrue(link.targets.isEmpty, "Should not have any targets by default")
@@ -216,16 +218,16 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   func testBuildingLinkWithInvalidAppLinkData() {
     let link = resolver.appLink(
       fromALData: SampleAppLinkResolverData.invalid,
-      destination: SampleUrls.valid
+      destination: SampleURLs.valid
     )
     XCTAssertEqual(
       link.sourceURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should use the destination as the source url for the app link"
     )
     XCTAssertEqual(
       link.webURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "The web url should default to the destination"
     )
     XCTAssertEqual(
@@ -254,11 +256,11 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
     ["no", "false", "0"].forEach { fallbackValue in
       let link = resolver.appLink(
         fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
-        destination: SampleUrls.valid
+        destination: SampleURLs.valid
       )
       XCTAssertEqual(
         link.sourceURL,
-        SampleUrls.valid,
+        SampleURLs.valid,
         "Should use the destination as the source url for the app link"
       )
       XCTAssertNil(
@@ -276,11 +278,11 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
     ["yes", "true", "1"].forEach { fallbackValue in
       let link = resolver.appLink(
         fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
-        destination: SampleUrls.valid
+        destination: SampleURLs.valid
       )
       XCTAssertEqual(
         link.sourceURL,
-        SampleUrls.valid,
+        SampleURLs.valid,
         "Should use the destination as the source url for the app link"
       )
       XCTAssertEqual(
@@ -298,7 +300,7 @@ class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_b
   // MARK: - Helpers
 
   func validateResult(
-    result: [AnyHashable: Any]?,
+    result: [String: Any]?,
     data: Data,
     response: HTTPURLResponse,
     error: Error?,

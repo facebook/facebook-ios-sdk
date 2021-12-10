@@ -1,0 +1,34 @@
+# Made using xcodegen 2.17.0
+
+name: TestTools
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  FBAEMKit:
+    path: ../FBAEMKit/FBAEMKit.xcodeproj
+
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.facebook.TestTools
+
+targets:
+  TestTools:
+    type: framework
+    platform: iOS
+    sources:
+      - path: TestTools
+        headerVisibility: public
+        excludes:
+          - Info.plist
+    dependencies:
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+        link: false
+      - target: FBAEMKit/FBAEMKit-Dynamic
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh

@@ -1,36 +1,26 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if TARGET_OS_TV
 
- #import "FBSDKSmartDeviceDialogView.h"
+#import "FBSDKSmartDeviceDialogView.h"
 
- #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKDeviceUtilities.h"
+#import "FBSDKDeviceUtilities.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLogo.h"
+
+@interface FBSDKSmartDeviceDialogView ()
+@property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) UILabel *confirmationCodeLabel;
+@property (nonatomic) UIImageView *qrImageView;
+@end
 
 @implementation FBSDKSmartDeviceDialogView
-{
-  UIActivityIndicatorView *_spinner;
-  UILabel *_confirmationCodeLabel;
-  UIImageView *_qrImageView;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -40,7 +30,7 @@
   return self;
 }
 
- #pragma mark - Overrides
+#pragma mark - Overrides
 
 - (void)setConfirmationCode:(NSString *)confirmationCode
 {
@@ -64,8 +54,6 @@
 {
   // intentionally blank.
 }
-
- #pragma mark - Helpers
 
 - (UIColor *)_logoColor
 {
@@ -94,7 +82,7 @@
   dialogView.layer.cornerRadius = 3;
   dialogView.translatesAutoresizingMaskIntoConstraints = NO;
   dialogView.clipsToBounds = YES;
-  dialogView.backgroundColor = [UIColor whiteColor];
+  dialogView.backgroundColor = UIColor.whiteColor;
   [self addSubview:dialogView];
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0].active = YES;;
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;
@@ -151,7 +139,7 @@
   NSString *smartInstructionString = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.SmartLogInPrompt",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"To connect your account, open the Facebook app on your mobile device and check for notifications.",
     @"Instructions telling the user to open their Facebook app on a mobile device and check for a login notification."
   );
@@ -182,7 +170,7 @@
   orInstructionLabel.text = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.SmartLogInOrLabel",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"-- OR --",
     @"The 'or' string for smart login instructions"
   );;
@@ -216,7 +204,7 @@
   NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.LogInPrompt",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Visit %@ and enter the code shown above.",
     @"The format string for device login instructions"
   );
@@ -263,7 +251,7 @@
   [button setTitle:NSLocalizedStringWithDefaultValue(
     @"LoginButton.CancelLogout",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Cancel",
     @"The label for the FBSDKLoginButton action sheet to cancel logging out"
   )

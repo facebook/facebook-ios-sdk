@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
 import TestTools
@@ -22,8 +12,9 @@ import XCTest
 
 class FeatureManagerTests: XCTestCase {
 
-  var manager: FeatureManager! // swiftlint:disable:this implicitly_unwrapped_optional
-  var store: UserDefaultsSpy! // swiftlint:disable:this implicitly_unwrapped_optional
+  var manager = FeatureManager.shared
+  var store = UserDefaultsSpy()
+  let settings = TestSettings()
   let userDefaultsPrefix = "com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature"
   let gatekeeperKeyPrefix = "FBSDKFeature"
 
@@ -31,14 +22,15 @@ class FeatureManagerTests: XCTestCase {
     super.setUp()
 
     TestGateKeeperManager.reset()
+    FeatureManager.reset()
   }
 
   override func setUp() {
     super.setUp()
 
-    store = UserDefaultsSpy()
-    manager = FeatureManager(
+    manager.configure(
       gateKeeperManager: TestGateKeeperManager.self,
+      settings: settings,
       store: store
     )
   }
@@ -47,17 +39,21 @@ class FeatureManagerTests: XCTestCase {
     super.tearDown()
 
     TestGateKeeperManager.reset()
+    FeatureManager.reset()
   }
 
   func testCreatingWithDefaults() {
-    XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager is GateKeeperManager.Type,
-      "Should create the shared feature manager with the correct default gatekeeper manager"
+    XCTAssertNil(
+      FeatureManager.shared.gateKeeperManager,
+      "Should not have a gatekeeper manager by default"
     )
-    XCTAssertEqual(
-      FeatureManager.shared.store as? UserDefaults,
-      UserDefaults.standard,
-      "Should use the shared instance of user defaults as a persistent data store"
+    XCTAssertNil(
+      FeatureManager.shared.settings,
+      "Should not have settings by default"
+    )
+    XCTAssertNil(
+      FeatureManager.shared.store,
+      "Should not have a persistent data store by default"
     )
   }
 
@@ -65,6 +61,10 @@ class FeatureManagerTests: XCTestCase {
     XCTAssertTrue(
       manager.gateKeeperManager is TestGateKeeperManager.Type,
       "Should create with the provided gatekeeper manager"
+    )
+    XCTAssertTrue(
+      manager.settings === settings,
+      "Should create with the provided settings"
     )
     XCTAssertEqual(
       manager.store as? UserDefaultsSpy,
@@ -154,9 +154,9 @@ class FeatureManagerTests: XCTestCase {
       XCTAssertTrue(
         TestGateKeeperManager.capturedBoolForGateKeeperKeys.contains(key),
         """
-          Checking if top-level feature: \(data.parentFeatureName) is enabled
-          should check for the feature name: \(data.name) in the loaded gatekeepers
-          """
+        Checking if top-level feature: \(data.parentFeatureName) is enabled
+        should check for the feature name: \(data.name) in the loaded gatekeepers
+        """
       )
       TestGateKeeperManager.reset()
     }
@@ -190,7 +190,7 @@ class FeatureManagerTests: XCTestCase {
         capturedKey = key
         // The existence of the sdk version for a feature key in user defaults
         // is interpreted to mean that the feature is disabled for that version
-        return Settings.sdkVersion
+        return self.settings.sdkVersion
       }
       manager.check(data.feature) { _ in }
 

@@ -1,35 +1,21 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
 
 @class FBSDKAuthenticationToken;
-@class FBSDKAuthenticationTokenClaims;
 @class FBSDKLoginCompletionParameters;
-@class FBSDKLoginManager;
 @class FBSDKPermission;
 @class FBSDKProfile;
 
-@protocol FBSDKGraphRequestConnectionProviding;
+@protocol FBSDKGraphRequestConnectionFactory;
 @protocol FBSDKAuthenticationTokenCreating;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Success Block
  */
-typedef void (^FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
+typedef void (^ FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
 NS_SWIFT_NAME(LoginCompletionParametersBlock);
 
 /**
@@ -54,25 +40,25 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 @property (nullable, nonatomic, readonly) FBSDKAuthenticationToken *authenticationToken;
 @property (nullable, nonatomic, readonly) FBSDKProfile *profile;
 
-@property (nullable, nonatomic, copy, readonly) NSString *accessTokenString;
-@property (nullable, nonatomic, copy, readonly) NSString *nonceString;
-@property (nullable, nonatomic, copy, readonly) NSString *authenticationTokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *accessTokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *nonceString;
+@property (nullable, nonatomic, readonly, copy) NSString *authenticationTokenString;
 
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *permissions;
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *declinedPermissions;
-@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *expiredPermissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *permissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *declinedPermissions;
+@property (nullable, nonatomic, readonly, copy) NSSet<FBSDKPermission *> *expiredPermissions;
 
-@property (nullable, nonatomic, copy, readonly) NSString *appID;
-@property (nullable, nonatomic, copy, readonly) NSString *userID;
+@property (nullable, nonatomic, readonly, copy) NSString *appID;
+@property (nullable, nonatomic, readonly, copy) NSString *userID;
 
-@property (nullable, nonatomic, copy, readonly) NSError *error;
+@property (nullable, nonatomic, readonly, copy) NSError *error;
 
-@property (nullable, nonatomic, copy, readonly) NSDate *expirationDate;
-@property (nullable, nonatomic, copy, readonly) NSDate *dataAccessExpirationDate;
+@property (nullable, nonatomic, readonly, copy) NSDate *expirationDate;
+@property (nullable, nonatomic, readonly, copy) NSDate *dataAccessExpirationDate;
 
-@property (nullable, nonatomic, copy, readonly) NSString *challenge;
+@property (nullable, nonatomic, readonly, copy) NSString *challenge;
 
-@property (nullable, nonatomic, copy, readonly) NSString *graphDomain;
+@property (nullable, nonatomic, readonly, copy) NSString *graphDomain;
 
 @end
 
@@ -90,7 +76,7 @@ NS_SWIFT_NAME(LoginCompleting)
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-    nonce:(nullable NSString *)nonce;
+                           nonce:(nullable NSString *)nonce;
 
 @end
 
@@ -110,9 +96,9 @@ NS_SWIFT_NAME(LoginURLCompleter)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+- (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
-                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator;
 
 @end

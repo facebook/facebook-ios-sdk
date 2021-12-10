@@ -1,37 +1,24 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKCrashShield.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureDisabling.h"
-#import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
-#import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashShield ()
 
-@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKFeatureChecking, FBSDKFeatureDisabling> featureChecking;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 
@@ -39,7 +26,7 @@
 
 @implementation FBSDKCrashShield
 
-static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKFeatureChecking, FBSDKFeatureDisabling> _featureChecking;
 static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
 static NSDictionary<NSString *, NSNumber *> *_featureForStringMap;
@@ -50,9 +37,9 @@ static id<FBSDKSettings> _settings;
   return _settings;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
-  return _requestProvider;
+  return _graphRequestFactory;
 }
 
 + (id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
@@ -61,30 +48,30 @@ static id<FBSDKSettings> _settings;
 }
 
 + (void)configureWithSettings:(id<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+          graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _settings = settings;
-    _requestProvider = requestProvider;
+    _graphRequestFactory = graphRequestFactory;
     _featureChecking = featureChecking;
   }
 }
 
 + (void)initialize
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _featureMapping =
     @{
-      @"AEM" : @ [
-        @"FBSDKAEMConfiguration",
-        @"FBSDKAEMEvent",
-        @"FBSDKAEMInvocation",
-        @"FBSDKAEMReporter",
-        @"FBSDKAEMRule",
-      ],
       @"AAM" : @[
         @"FBSDKMetadataIndexer",
+      ],
+      @"AEM" : @ [
+        @"FBAEMConfiguration",
+        @"FBAEMEvent",
+        @"FBAEMInvocation",
+        @"FBAEMReporter",
+        @"FBAEMRule",
       ],
       @"CodelessEvents" : @[
         @"FBSDKCodelessIndexer",
@@ -169,9 +156,9 @@ static id<FBSDKSettings> _settings;
     if (jsonData) {
       NSString *disabledFeatureReport = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       if (disabledFeatureReport) {
-        id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
-                                                                               parameters:@{@"crash_shield" : disabledFeatureReport}
-                                                                               HTTPMethod:FBSDKHTTPMethodPOST];
+        id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
+                                                                                   parameters:@{@"crash_shield" : disabledFeatureReport}
+                                                                                   HTTPMethod:FBSDKHTTPMethodPOST];
 
         [request startWithCompletion:nil];
       }
@@ -215,17 +202,15 @@ static id<FBSDKSettings> _settings;
   return className;
 }
 
-#if DEBUG
- #if FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {
   _settings = nil;
-  _requestProvider = nil;
+  _graphRequestFactory = nil;
   _featureChecking = nil;
 }
 
- #endif
 #endif
 
 @end

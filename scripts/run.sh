@@ -1,21 +1,9 @@
 #!/bin/sh
-# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
 #
-# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-# copy, modify, and distribute this software in source code or binary form for use
-# in connection with the web services and APIs provided by Facebook.
-#
-# As with any software that integrates with the Facebook platform, your use of
-# this software is subject to the Facebook Developer Principles and Policies
-# [http://developers.facebook.com/policy/]. This copyright notice shall be
-# included in all copies or substantial portions of the software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 # shellcheck disable=SC2039
 # shellcheck disable=SC2005
@@ -55,13 +43,16 @@ main() {
     SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
     CORE_KIT_BASICS="FBSDKCoreKit_Basics"
+    AEM_KIT="FBAEMKit"
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
+    FACEBOOK_GAMING_SERVICES="FacebookGamingServices"
     GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
     SDK_BASE_KITS=(
       "$CORE_KIT_BASICS"
+      "$AEM_KIT"
       "$CORE_KIT"
       "$LOGIN_KIT"
       "$SHARE_KIT"
@@ -69,48 +60,41 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
+      "$FACEBOOK_GAMING_SERVICES"
       "$GAMING_SERVICES_KIT"
       "FBSDKTVOSKit"
     )
 
+    DOCUMENTATION_KITS=(
+      "$CORE_KIT"
+      "$LOGIN_KIT"
+      "$SHARE_KIT"
+      "$GAMING_SERVICES_KIT"
+    )
+
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
+      "Sources/FBAEMKit/FBAEMKitVersions.h"
       "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
-      "FBSDKCoreKit/FBSDKCoreKitTests/FBSDKGraphRequestTests.m"
+      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
+      "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
+      "Sources/FBAEMKit/FBAEMKitVersions.h"
+      "Sources/FBAEMKit/FBAEMNetworker.m"
     )
 
-    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
 
-    SDK_FRAMEWORK_NAME="FacebookSDK"
-
-    SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
+    SDK_POD_SPECS=("${SDK_KITS[@]}")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
 
-    SDK_LINT_POD_SPECS=(
-      "FBSDKCoreKit_Basics.podspec"
-      "FBSDKCoreKit.podspec"
-      "FBSDKLoginKit.podspec"
-      "FBSDKShareKit.podspec"
-      "FBSDKGamingServicesKit.podspec"
-      "FBSDKTVOSKit.podspec"
-    )
-
     SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
-    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
+    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
-
-    SWIFT_PACKAGE_SCHEMES=(
-      "FacebookCore"
-      "FacebookLogin"
-      "FacebookShare"
-      "FacebookGamingServices"
-    )
 
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
@@ -129,8 +113,6 @@ main() {
   "release") release_sdk "$@" ;;
   "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
-  "lint") lint_sdk "$@" ;;
-  "verify-spm-headers") verify_spm_headers "$@" ;;
   "verify-xcode-integration") verify_xcode_integration "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
@@ -149,6 +131,19 @@ setup_sdk() {
     echo "IOS_SDK_TEST_CLIENT_TOKEN = $sdk_test_client_token"
     echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $sdk_machine_unique_user_key"
   } >>"$SDK_DIR"/Configurations/TestAppIdAndSecret.xcconfig
+}
+
+grep_for_old_version() {
+  local old_version=${1:-}
+
+  RED='\033[1;31m'
+  RESET='\033[0m'
+
+  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|\bbuild/|\bdocs/)')
+  if [ -n "$FILES_WITH_OLD_VERSION" ]; then
+    echo "${RED}ERROR: Grep found the old $old_version version in ${FILES_WITH_OLD_VERSION}${RESET}" 1>&2;
+    exit 1
+  fi
 }
 
 # Bump Version
@@ -195,6 +190,8 @@ bump_version() {
   done
 
   bump_changelog "$new_version"
+
+  grep_for_old_version "$SDK_CURRENT_VERSION"
 }
 
 # Bump Version
@@ -228,6 +225,8 @@ bump_api_version() {
 
     mv "$temp_file" "$full_file_path"
   done
+
+  grep_for_old_version "$SDK_CURRENT_GRAPH_API_VERSION"
 }
 
 bump_changelog() {
@@ -279,7 +278,6 @@ tag_current_version() {
   fi
 }
 
-# Build
 build_sdk() {
   build_xcode_workspace() {
     xcodebuild build \
@@ -289,214 +287,18 @@ build_sdk() {
       -configuration Debug | xcpretty
   }
 
-  build_carthage() {
-    CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-
-    if [ "${1:-}" == "--archive" ]; then
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output Carthage/Release/
-    fi
-  }
-
-  build_spm() {
-    for scheme in "${SWIFT_PACKAGE_SCHEMES[@]}"; do
-
-    echo "Building Swift Package - $scheme"
-
-    xcodebuild clean build \
-      -workspace .swiftpm/xcode/package.xcworkspace \
-      -scheme "$scheme" \
-      -sdk iphonesimulator \
-      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE" | xcpretty
-    done
-  }
-
-  build_spm_integration() {
-    set +u # Don't fail on undefined variables
-
-    local branch
-
-    if [ -n "$CIRCLE_PULL_REQUEST" ] && [ "$CIRCLE_PULL_REQUEST" != "false" ]; then
-      PR_NUMBER="${CIRCLE_PULL_REQUEST//[!0-9]/}"
-      branch="refs/pull/$PR_NUMBER/merge";
-    elif [ -n "$CIRCLE_BRANCH" ]; then
-      branch="$CIRCLE_BRANCH";
-    else
-      branch="master"
-    fi
-    echo "Using branch: $branch"
-
-    cd "$SDK_DIR"/samples/SmoketestSPM
-
-    echo "Updating project file to point to merge commit at: $branch"
-    /usr/libexec/PlistBuddy \
-        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch $branch" \
-        SmoketestSPM.xcodeproj/project.pbxproj
-
-    xcodebuild build -scheme SmoketestSPM \
-      -sdk iphonesimulator | xcpretty
-
-    set -u # Resume failing on undefined variables
-  }
-
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
-  "carthage") build_carthage "$@" ;;
-  "spm") build_spm "$@" ;;
-  "spm-integration") build_spm_integration ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
 }
 
-# Lint
-lint_sdk() {
-  # Lint Podspecs
-  lint_cocoapods() {
-    pod_lint_failures=()
-
-    for spec in "${SDK_LINT_POD_SPECS[@]}"; do
-      if [ ! -f "$spec" ]; then
-        echo "*** ERROR: unable to lint $spec"
-        continue
-      fi
-
-      local dependent_spec
-
-      set +e
-
-      if [ "$spec" == FBSDKCoreKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDKCoreKit_Basics.podspec"
-      else
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,CoreKit_Basics}.podspec"
-      fi
-
-      if [ "$spec" == FBSDKTVOSKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,LoginKit,CoreKit_Basics}.podspec"
-      fi
-
-      if [ "$spec" == FBSDKGamingServicesKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,CoreKit_Basics}.podspec"
-      fi
-
-      echo ""
-      echo "Running lib lint command:"
-      echo "pod lib lint" "$spec" $dependent_spec "$@"
-
-      # We should not statically lint the FBSDKCoreKit podspec because it does not pass
-      # consistently in Travis
-      local should_lint_spec=true
-      for arg in "$@"; do
-          if [[ $arg == "--use-libraries" ]] && [ "$spec" == FBSDKCoreKit.podspec ]; then
-            should_lint_spec=false
-          fi
-      done
-
-      if [ $should_lint_spec == true ]; then
-        if ! pod lib lint "$spec" $dependent_spec "$@"; then
-          pod_lint_failures+=("$spec")
-        fi
-      else
-        echo "Skipping linting for $spec with arguments: $*"
-      fi
-
-      set -e
-    done
-
-    if [ ${#pod_lint_failures[@]} -ne 0 ]; then
-      echo "Failed lint for: ${pod_lint_failures[*]} with arguments: $*"
-      exit 1
-    fi
-  }
-
-  local lint_type=${1:-}
-  if [ -n "$lint_type" ]; then shift; fi
-
-  case "$lint_type" in
-  "cocoapods") lint_cocoapods --allow-warnings "$@";;
-  *) echo "Unsupported Lint: $lint_type" ;;
-  esac
-}
-
-# Release
-# Builds and stores various build flavors under build/Release
-# where they can be found and uploaded by a travis job
 release_sdk() {
-  # Release github
-  release_github() {
-    mkdir -p build/Release
-    rm -rf build/Release/*
-
-    # Release frameworks in dynamic (mostly for Carthage)
-    release_dynamic() {
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/
-      mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
-    }
-
-    # Release frameworks in static
-    release_static() {
-      xcodebuild clean build \
-       -workspace FacebookSDK.xcworkspace \
-       -scheme BuildAllKits \
-       -configuration Release | xcpretty
-
-      xcodebuild clean build \
-       -workspace FacebookSDK.xcworkspace \
-       -scheme BuildAllKits_TV \
-       -configuration Release | xcpretty
-
-      cd build || exit
-      cp ../LICENSE ./ # LICENSE file
-      zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework LICENSE
-      mv FacebookSDK_Static.zip Release/
-      for kit in "${SDK_KITS[@]}"; do
-        if [ ! -d "$kit".framework ] \
-          && [ ! -d tv/"$kit".framework ]; then
-          continue
-        fi
-
-        mkdir -p Release/"$kit"
-        if [ -d "$kit".framework ]; then
-          mkdir -p Release/"$kit"/iOS
-          mv "$kit".framework Release/"$kit"/iOS
-        fi
-        if [ -d tv/"$kit".framework ]; then
-          mkdir -p Release/"$kit"/tvOS
-          mv tv/"$kit".framework Release/"$kit"/tvOS
-        fi
-        cd Release || exit
-        zip -r -m "$kit".zip "$kit"
-        cd ..
-      done
-      cd ..
-    }
-
-    local release_type=${1:-}
-    if [ -n "$release_type" ]; then shift; fi
-
-    case "$release_type" in
-    "static") release_static "$@" ;;
-    "dynamic") release_dynamic "$@" ;;
-    *) release_dynamic && release_static ;;
-    esac
-  }
-
-  # Release Cocoapods
-  release_cocoapods() {
-    for spec in "$@"; do
-      if [ ! -f "$spec".podspec ]; then
-        echo "*** ERROR: unable to release $spec"
-        continue
-      fi
-
-      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
-    done
-  }
-
   release_docs() {
-    for kit in "${SDK_KITS[@]}"; do
+    for kit in "${DOCUMENTATION_KITS[@]}"; do
       rm -rf "$kit/build" || true
 
       ruby "$SDK_SCRIPTS_DIR"/genDocs.rb "$kit"
@@ -515,8 +317,6 @@ release_sdk() {
   if [ -n "$release_type" ]; then shift; fi
 
   case "$release_type" in
-  "github") release_github "$@" ;;
-  "cocoapods") release_cocoapods "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
@@ -547,13 +347,6 @@ check_release_status() {
   for spec in "${SDK_POD_SPECS[@]}"; do
     if [ ! -f "$spec" ]; then
       echo "*** ERROR: unable to release $spec"
-      continue
-    fi
-
-    # Exclude aggregate pod FacebookSDK.
-    # We release it separately from the CI process
-    # because it contains proprietary MarketingKit source code
-    if [ "$spec"  == "$SDK_FRAMEWORK_NAME.podspec" ]; then
       continue
     fi
 
@@ -611,87 +404,6 @@ verify_xcode_integration() {
     -sdk iphonesimulator \
     -workspace testing/TestXcodeIntegration/TestXcodeIntegration.xcworkspace/ \
     -scheme TestXcodeIntegration
-}
-
-verify_spm_headers() {
-  # Verifies that all public headers exist as symlinks in the 'include' dir
-  # of the SDK they belong to.
-  verify_inclusion() {
-    for kit in "${SDK_BASE_KITS[@]}"; do
-      cd "$kit/$kit"
-
-      echo "Verifying the following public headers are exposed to SPM for $kit:"
-
-      mkdir -p include
-
-      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*")
-      echo "$(basename ${headers} )" | sort >| headers.txt
-
-      cat headers.txt
-
-      symlinks=$(find ./include -name "*.h")
-      echo "$(basename ${symlinks} )" | sort >| symlinks.txt
-
-      comm -23 headers.txt symlinks.txt >| missingHeaders.txt
-
-      if [ -s missingHeaders.txt ] ; then
-        echo ""
-        echo "Verification failed:"
-        echo "Please symlink the following public headers to the 'include' directory in $kit"
-        echo "so that they can be found by projects using Swift Package Manager."
-        cat missingHeaders.txt
-
-        rm headers.txt
-        rm symlinks.txt
-        rm missingHeaders.txt
-
-        exit 1;
-      fi
-      rm headers.txt
-      rm symlinks.txt
-      rm missingHeaders.txt
-
-      echo ""
-      cd .. || exit
-      cd .. || exit
-    done
-
-    echo "Success! All of your public headers are visible to users of SPM!"
-  }
-
-  # Verifies that existing symlinks are valid since it is easy to break them by moving the
-  # original file
-  verify_validity() {
-    echo ""
-    echo "Verifying that the symlinks used for exposing public headers to SPM are pointing to valid source files."
-
-    for kit in "${SDK_BASE_KITS[@]}"; do
-      cd "$kit"
-
-      find . -type l ! -exec test -e {} \; -print >| ../BadSymlinks.txt
-      cd .. || exit
-    done
-
-    if [ -s BadSymlinks.txt ] ; then
-      echo ""
-      echo "Bad symlinks found: "
-      cat BadSymlinks.txt
-      echo "Please fix these by recreating the symlink(s) from the include directory with: "
-      echo "ln -s <path_to_source_file(s)> ."
-      echo "run ./scripts/run.sh verify-spm-headers to verify that these are fixed."
-
-      rm BadSymlinks.txt
-
-      exit 1;
-    fi
-
-    rm BadSymlinks.txt
-
-    echo "Success! All of the public header symlinks are valid!"
-  }
-
-  verify_inclusion
-  verify_validity
 }
 
 # --------------

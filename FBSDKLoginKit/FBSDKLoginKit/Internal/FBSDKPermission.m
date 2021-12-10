@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKPermission.h"
 
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKPermission
 
@@ -40,9 +30,9 @@
   return self;
 }
 
-+ (NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions
++ (nullable NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions
 {
-  NSMutableSet *permissions = NSMutableSet.new;
+  NSMutableSet<FBSDKPermission *> *permissions = [NSMutableSet new];
 
   for (NSString *rawPermission in rawPermissions) {
     FBSDKPermission *permission = [[FBSDKPermission alloc] initWithString:rawPermission];
@@ -57,7 +47,7 @@
 
 + (NSSet<NSString *> *)rawPermissionsFromPermissions:(NSSet<FBSDKPermission *> *)permissions
 {
-  NSMutableSet *rawPermissions = NSMutableSet.new;
+  NSMutableSet<NSString *> *rawPermissions = [NSMutableSet new];
 
   for (FBSDKPermission *permission in permissions) {
     [rawPermissions addObject:permission.value];
@@ -66,13 +56,17 @@
   return rawPermissions;
 }
 
-- (BOOL)isEqual:(id)obj
+- (BOOL)isEqual:(id)object
 {
-  if (![obj isKindOfClass:[FBSDKPermission class]]) {
+  if (self == object) {
+    return YES;
+  }
+
+  if (![object isKindOfClass:FBSDKPermission.class]) {
     return NO;
   }
 
-  FBSDKPermission *other = (FBSDKPermission *)obj;
+  FBSDKPermission *other = (FBSDKPermission *)object;
   return [self.value isEqualToString:other.value];
 }
 

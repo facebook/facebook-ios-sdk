@@ -1,46 +1,28 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginManager+Internal.h"
 
- #import "FBSDKLoginManagerLoginResult+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #ifdef SWIFT_PACKAGE
-  #import "FBSDKAccessToken.h"
-  #import "FBSDKSettings.h"
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
-
- #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKCoreKitBasicsImportForLoginKit.h"
- #import "FBSDKLoginCompletion.h"
- #import "FBSDKLoginConstants.h"
- #import "FBSDKLoginError.h"
- #import "FBSDKLoginManagerLogger.h"
- #import "FBSDKLoginUtility.h"
- #import "FBSDKMonotonicTime.h"
- #import "FBSDKPermission.h"
- #import "_FBSDKLoginRecoveryAttempter.h"
+#import "FBSDKAuthenticationTokenFactory.h"
+#import "FBSDKLoginCompletion.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKLoginError.h"
+#import "FBSDKLoginManagerLogger.h"
+#import "FBSDKLoginManagerLoginResult+Internal.h"
+#import "FBSDKLoginRecoveryAttempter.h"
+#import "FBSDKLoginUtility.h"
+#import "FBSDKMonotonicTime.h"
+#import "FBSDKPermission.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
@@ -49,30 +31,62 @@ static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 
+@interface FBSDKLoginManager ()
+
+@property (nonatomic) FBSDKLoginManagerLoginResultBlock handler;
+@property (nonatomic) FBSDKLoginConfiguration *configuration;
+@property (nonatomic) id<FBSDKKeychainStore> keychainStore;
+@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+@property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
+@property (nonatomic) Class<FBSDKProfileProviding> profile;
+@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
+@property (nonatomic) id<FBSDKURLOpener> urlOpener;
+
+@end
+
 @implementation FBSDKLoginManager
-{
-  FBSDKLoginManagerLoginResultBlock _handler;
-  FBSDKLoginManagerLogger *_logger;
-  FBSDKLoginManagerState _state;
-  FBSDKKeychainStore *_keychainStore;
-  FBSDKLoginConfiguration *_configuration;
-  BOOL _usedSFAuthSession;
-}
 
 + (void)initialize
 {
   if (self == [FBSDKLoginManager class]) {
-    [_FBSDKLoginRecoveryAttempter class];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+    [FBSDKLoginRecoveryAttempter class];
+    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+    [provider loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
 - (instancetype)init
 {
-  self = [super init];
-  if (self) {
-    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
-    _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
+  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility
+                   keychainStoreFactory:[FBSDKKeychainStoreFactory new]
+                            tokenWallet:FBSDKAccessToken.class
+          graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
+                    authenticationToken:FBSDKAuthenticationToken.class
+                                profile:FBSDKProfile.class
+                              urlOpener:FBSDKBridgeAPI.sharedInstance
+  ];
+}
+
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+                   keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
+                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
+                                profile:(Class<FBSDKProfileProviding>)profile
+                              urlOpener:(id<FBSDKURLOpener>)urlOpener
+{
+  if ((self = [super init])) {
+    _internalUtility = internalUtility;
+    _tokenWallet = tokenWallet;
+    _graphRequestConnectionFactory = graphRequestConnectionFactory;
+    _authenticationToken = authenticationToken;
+    _profile = profile;
+    _urlOpener = urlOpener;
+    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", NSBundle.mainBundle.bundleIdentifier];
+
+    _keychainStore = [keychainStoreFactory createKeychainStoreWithService:keyChainServiceIdentifier
+                                                              accessGroup:nil];
   }
   return self;
 }
@@ -123,13 +137,14 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                      completion:handler];
 }
 
-- (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)reauthorizeDataAccess:(UIViewController *)fromViewController
+                      handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;
   }
 
-  if (!FBSDKAccessToken.currentAccessToken) {
+  if (![self.tokenWallet currentAccessToken]) {
     NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
     NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
                                             code:FBSDKLoginErrorMissingAccessToken
@@ -148,35 +163,35 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)logOut
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
-  [FBSDKProfile setCurrentProfile:nil];
+  [self.tokenWallet setCurrentAccessToken:nil];
+  [self.authenticationToken setCurrentAuthenticationToken:nil];
+  [self.profile setCurrentProfile:nil];
 }
 
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:provider.loggingToken
                                                          tracking:FBSDKLoginTrackingEnabled];
   _handler = [handler copy];
 
   [_logger startSessionForLoginManager:self];
   [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
 
-  NSDictionary *params = [self logInParametersFromURL:url];
+  NSDictionary<NSString *, id> *params = [self logInParametersFromURL:url];
   if (params) {
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params
-                                                                                         appID:FBSDKSettings.appID
-                                                                            connectionProvider:FBSDKGraphRequestConnectionFactory.new
-                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
+                                                                                         appID:FBSDKSettings.sharedSettings.appID
+                                                                 graphRequestConnectionFactory:self.graphRequestConnectionFactory
+                                                                    authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
       [self completeAuthentication:parameters expectChallenge:NO];
     }];
   }
 }
 
- #pragma mark - Private
+#pragma mark - Private
 
 - (void)handleImplicitCancelOfLogIn
 {
@@ -239,8 +254,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     if (!cancelled) {
       result = [self successResultFromParameters:parameters];
 
-      if (result.token && FBSDKAccessToken.currentAccessToken) {
-        [self validateReauthentication:FBSDKAccessToken.currentAccessToken withResult:result];
+      if (result.token && [self.tokenWallet currentAccessToken]) {
+        [self validateReauthentication:[self.tokenWallet currentAccessToken] withResult:result];
         // in a reauth, short circuit and let the login handler be called when the validation finishes.
         return;
       }
@@ -274,18 +289,18 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                           accessToken:(FBSDKAccessToken *_Nullable)accessToken
                               profile:(FBSDKProfile *_Nullable)profile
 {
-  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
-  FBSDKAccessToken.currentAccessToken = accessToken;
-  FBSDKProfile.currentProfile = profile;
+  [self.authenticationToken setCurrentAuthenticationToken:authToken];
+  [self.tokenWallet setCurrentAccessToken:accessToken];
+  [self.profile setCurrentProfile:profile];
 }
 
 /// Returns an error if a stored challenge cannot be obtained from the completion parameters
-- (NSError *)_verifyChallengeWithCompletionParameters:(FBSDKLoginCompletionParameters *)parameters
+- (nullable NSError *)_verifyChallengeWithCompletionParameters:(FBSDKLoginCompletionParameters *)parameters
 {
   NSString *challengeReceived = parameters.challenge;
   NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
   if (![challengeExpected isEqualToString:challengeReceived]) {
-    return [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
+    return [FBSDKLoginErrorFactory fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
   } else {
     return nil;
   }
@@ -313,20 +328,20 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
-- (NSString *)loadExpectedChallenge
+- (nullable NSString *)loadExpectedChallenge
 {
-  return [_keychainStore stringForKey:FBSDKExpectedChallengeKey];
+  return [self.keychainStore stringForKey:FBSDKExpectedChallengeKey];
 }
 
-- (NSString *)loadExpectedNonce
+- (nullable NSString *)loadExpectedNonce
 {
-  return [_keychainStore stringForKey:FBSDKExpectedNonceKey];
+  return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
-- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
-                                            logger:(FBSDKLoginManagerLogger *)logger
-                                        authMethod:(NSString *)authMethod
+- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                                                               loggingToken:(NSString *)loggingToken
+                                                                     logger:(FBSDKLoginManagerLogger *)logger
+                                                                 authMethod:(NSString *)authMethod
 {
   // Making sure configuration is not nil in case this method gets called
   // internally without specifying a cofiguration.
@@ -337,24 +352,24 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     return nil;
   }
 
-  [FBSDKInternalUtility validateURLSchemes];
+  [FBSDKInternalUtility.sharedUtility validateURLSchemes];
 
-  NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
+  NSMutableDictionary<NSString *, id> *loginParams = [NSMutableDictionary dictionary];
+  [FBSDKTypeUtility dictionary:loginParams setObject:FBSDKSettings.sharedSettings.appID forKey:@"client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
-  [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.authType forKey:@"auth_type"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:serverConfiguration.loggingToken forKey:@"logging_token"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@(FBSDKSettings.sharedSettings.isAutoLogAppEventsEnabled) forKey:@"ies"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:FBSDKSettings.sharedSettings.appURLSchemeSuffix forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 
-  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc]initWithString:@"openid"]];
+  NSSet<FBSDKPermission *> *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc] initWithString:@"openid"]];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   if (configuration.messengerPageId) {
@@ -362,7 +377,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   NSError *error;
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     [FBSDKTypeUtility dictionary:loginParams
                        setObject:redirectURL.absoluteString
@@ -370,7 +385,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
-  NSDictionary *state = @{@"challenge" : [FBSDKUtility URLEncode:expectedChallenge]};
+  NSDictionary<NSString *, id> *state = @{@"challenge" : [FBSDKUtility URLEncode:expectedChallenge]};
   NSString *clientState = [FBSDKLoginManagerLogger clientStateForAuthMethod:authMethod andExistingState:state logger:logger];
   [FBSDKTypeUtility dictionary:loginParams setObject:clientState forKey:@"state"];
   [self storeExpectedChallenge:expectedChallenge];
@@ -392,7 +407,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [FBSDKTypeUtility dictionary:loginParams setObject:tp forKey:@"tp"];
 
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.nonce forKey:@"nonce"];
-  [self storeExpectedNonce:configuration.nonce keychainStore:_keychainStore];
+  [self storeExpectedNonce:configuration.nonce];
 
   NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
   NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
@@ -403,12 +418,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return loginParams;
 }
 
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)logInWithPermissions:(NSSet<FBSDKPermission *> *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-
   if (_configuration) {
-    _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+    _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:provider.loggingToken
                                                            tracking:_configuration.tracking];
   }
   _handler = [handler copy];
@@ -418,11 +432,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [self logIn];
 }
 
-- (NSDictionary *)logInParametersFromURL:(NSURL *)url
+- (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url
 {
   NSError *error = nil;
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
-  NSDictionary *extras = parsedUrl.appLinkExtras;
+  NSDictionary<NSString *, id> *extras = parsedUrl.appLinkExtras;
 
   if (extras) {
     NSString *fbLoginDataString = extras[@"fb_login"];
@@ -462,16 +476,16 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)storeExpectedChallenge:(NSString *)challengeExpected
 {
-  [_keychainStore setString:challengeExpected
-                     forKey:FBSDKExpectedChallengeKey
-              accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  [self.keychainStore setString:challengeExpected
+                         forKey:FBSDKExpectedChallengeKey
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
-- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore
+- (void)storeExpectedNonce:(NSString *)nonceExpected
 {
-  [keychainStore setString:nonceExpected
-                    forKey:FBSDKExpectedNonceKey
-             accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+  [self.keychainStore setString:nonceExpected
+                         forKey:FBSDKExpectedNonceKey
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 + (NSString *)stringForChallenge
@@ -481,15 +495,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [challenge stringByReplacingOccurrencesOfString:@"+" withString:@"="];
 }
 
-- (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult
-{
-  id<FBSDKGraphRequestConnectionProviding> provider = [FBSDKGraphRequestConnectionFactory new];
-  [self validateReauthenticationWithGraphRequestConnectionProvider:provider withToken:currentToken withResult:loginResult];
-}
-
-- (void)validateReauthenticationWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                                                         withToken:(FBSDKAccessToken *)currentToken
-                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult
+- (void)validateReauthentication:(FBSDKAccessToken *)currentToken
+                      withResult:(FBSDKLoginManagerLoginResult *)loginResult
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
                                                                  parameters:@{@"fields" : @""}
@@ -499,10 +506,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   FBSDKGraphRequestCompletion handler = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     NSString *actualID = result[@"id"];
     if ([currentToken.userID isEqualToString:actualID]) {
-      [FBSDKAccessToken setCurrentAccessToken:loginResult.token];
+      [self->_tokenWallet setCurrentAccessToken:loginResult.token];
       [self invokeHandler:loginResult error:nil];
     } else {
-      NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+      NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
       [FBSDKTypeUtility dictionary:userInfo setObject:error forKey:NSUnderlyingErrorKey];
       NSError *resultError = [NSError errorWithDomain:FBSDKLoginErrorDomain
                                                  code:FBSDKLoginErrorUserMismatch
@@ -511,7 +518,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     }
   };
 
-  id<FBSDKGraphRequestConnecting> connection = [connectionProvider createGraphRequestConnection];
+  id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
   [connection addRequest:request completion:handler];
   [connection start];
 }
@@ -520,19 +527,18 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (void)performBrowserLogInWithHandler:(FBSDKBrowserLoginSuccessBlock)handler
 {
   [_logger willAttemptAppSwitchingBehavior];
-
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  BOOL useSafariViewController = [serverConfiguration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
+  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
+  BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:@"login"];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
-  NSDictionary *loginParams = [self logInParametersWithConfiguration:_configuration
-                                                 serverConfiguration:serverConfiguration
-                                                              logger:_logger
-                                                          authMethod:authMethod];
+  NSDictionary<NSString *, id> *loginParams = [self logInParametersWithConfiguration:_configuration
+                                                                        loggingToken:provider.loggingToken
+                                                                              logger:_logger
+                                                                          authMethod:authMethod];
   NSError *error;
   NSURL *authURL = nil;
   if (loginParams[@"redirect_uri"]) {
-    authURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
+    authURL = [self.internalUtility facebookURLWithHostPrefix:@"m."
                                                          path:FBSDKOauthPath
                                               queryParameters:loginParams
                                                         error:&error];
@@ -550,12 +556,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     if (useSafariViewController) {
       // Note based on above, authURL must be a http scheme. If that changes, add a guard, otherwise SFVC can throw
       self->_usedSFAuthSession = YES;
-      [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:authURL
-                                                                sender:self
-                                                    fromViewController:self.fromViewController
-                                                               handler:handlerWrapper];
+      [self.urlOpener openURLWithSafariViewController:authURL
+                                               sender:self
+                                   fromViewController:self.fromViewController
+                                              handler:handlerWrapper];
     } else {
-      [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:handlerWrapper];
+      [self.urlOpener openURL:authURL sender:self handler:handlerWrapper];
     }
   } else {
     error = error ?: [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Failed to construct oauth browser url"];
@@ -567,8 +573,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (FBSDKLoginManagerLoginResult *)cancelledResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
 {
-  NSSet *declinedPermissions = nil;
-  if (FBSDKAccessToken.currentAccessToken != nil) {
+  NSSet<NSString *> *declinedPermissions = [NSSet set];
+  if ([self.tokenWallet currentAccessToken] != nil) {
     // Always include the list of declined permissions from this login request
     // if an access token is already cached by the SDK
     declinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:parameters.declinedPermissions];
@@ -577,7 +583,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
                                          authenticationToken:nil
                                                  isCancelled:YES
-                                          grantedPermissions:NSSet.set
+                                          grantedPermissions:[NSSet set]
                                          declinedPermissions:declinedPermissions];
 }
 
@@ -602,8 +608,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
     FBSDKAccessToken *token;
     if (parameters.accessTokenString) {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       token = [[FBSDKAccessToken alloc] initWithTokenString:parameters.accessTokenString
                                                 permissions:rawGrantedPermissions.allObjects
                                         declinedPermissions:rawDeclinedPermissions.allObjects
@@ -612,9 +616,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                                                      userID:parameters.userID
                                              expirationDate:parameters.expirationDate
                                                 refreshDate:[NSDate date]
-                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate
-                                                graphDomain:parameters.graphDomain];
-      #pragma clange diagnostic pop
+                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate];
     }
 
     return [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
@@ -627,12 +629,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
- #pragma mark - Permissions Helpers
+#pragma mark - Permissions Helpers
 
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
-  NSMutableSet *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
-  NSSet *previouslyGrantedPermissions = FBSDKAccessToken.currentAccessToken.permissions;
+  NSMutableSet<FBSDKPermission *> *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
+  NSSet<NSString *> *previouslyGrantedPermissions = [[self.tokenWallet currentAccessToken] permissions];
 
   // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
   // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.
@@ -645,12 +647,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions
 {
-  NSMutableSet *recentlyDeclinedPermissions = _requestedPermissions.mutableCopy;
+  NSMutableSet<FBSDKPermission *> *recentlyDeclinedPermissions = _requestedPermissions.mutableCopy;
   [recentlyDeclinedPermissions intersectSet:declinedPermissions];
   return recentlyDeclinedPermissions;
 }
 
- #pragma mark - Test Methods
+#pragma mark - Test Methods
 
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
 {
@@ -667,7 +669,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return _configuration;
 }
 
- #pragma mark - FBSDKURLOpening
+#pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
   BOOL isFacebookURL = [self canOpenURL:url forApplication:application sourceApplication:sourceApplication annotation:annotation];
@@ -677,11 +679,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   if (isFacebookURL) {
-    NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
+    NSDictionary<NSString *, id> *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
-                                                                                         appID:FBSDKSettings.appID
-                                                                            connectionProvider:FBSDKGraphRequestConnectionFactory.new
-                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
+                                                                                         appID:FBSDKSettings.sharedSettings.appID
+                                                                 graphRequestConnectionFactory:self.graphRequestConnectionFactory
+                                                                    authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]];
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
@@ -691,19 +693,19 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                  }
                  [self completeAuthentication:parameters expectChallenge:YES];
                } nonce:[self loadExpectedNonce]];
-    [self storeExpectedNonce:nil keychainStore:_keychainStore];
+    [self storeExpectedNonce:nil];
   }
 
   return isFacebookURL;
 }
 
 - (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+     forApplication:(nullable UIApplication *)application
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
 {
   // verify the URL is intended as a callback for the SDK's log in
-  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"authorize"];
 }
 
@@ -722,7 +724,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (BOOL)shouldStopPropagationOfURL:(NSURL *)url
 {
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.sharedSettings.appID]]
   && [url.host isEqualToString:@"no-op"];
 }
 

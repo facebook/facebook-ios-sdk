@@ -1,47 +1,26 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKSendButton.h"
+#import "FBSDKSendButton.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
- #import "FBSDKMessageDialog.h"
- #import "FBSDKMessengerIcon.h"
+#import "FBSDKMessageDialog.h"
+#import "FBSDKMessengerIcon.h"
+#import "FBSDKShareAppEventName.h"
 
-FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_impression";
-FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
-
-@interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
+@interface FBSDKSendButton () <FBSDKButtonImpressionLogging>
+@property (nonatomic) FBSDKMessageDialog *dialog;
 @end
 
 @implementation FBSDKSendButton
-{
-  FBSDKMessageDialog *_dialog;
-}
 
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (id<FBSDKSharingContent>)shareContent
 {
@@ -54,16 +33,16 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   [self checkImplicitlyDisabled];
 }
 
- #pragma mark - FBSDKButtonImpressionTracking
+#pragma mark - FBSDKButtonImpressionTracking
 
-- (NSDictionary *)analyticsParameters
+- (nullable NSDictionary<NSString *, id> *)analyticsParameters
 {
   return nil;
 }
 
-- (NSString *)impressionTrackingEventName
+- (FBSDKAppEventName)impressionTrackingEventName
 {
-  return FBSDKAppEventNameFBSDKSendButtonImpression;
+  return FBSDKAppEventNameSendButtonImpression;
 }
 
 - (NSString *)impressionTrackingIdentifier
@@ -71,7 +50,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   return @"send";
 }
 
- #pragma mark - FBSDKButton
+#pragma mark - FBSDKButton
 
 - (void)configureButton
 {
@@ -79,7 +58,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   NSLocalizedStringWithDefaultValue(
     @"SendButton.Send",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Send",
     @"The label for FBSDKSendButton"
   );
@@ -101,11 +80,9 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   return !_dialog.canShow || ![_dialog validateWithError:NULL];
 }
 
- #pragma mark - Helper Methods
-
 - (void)_share:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
+  [self logTapEventWithEventName:FBSDKAppEventNameSendButtonDidTap parameters:self.analyticsParameters];
   [_dialog show];
 }
 

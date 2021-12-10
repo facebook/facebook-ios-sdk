@@ -1,67 +1,42 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKMetadataIndexer.h"
-
-@interface FBSDKMetadataIndexer ()
-@property (nonnull, nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;
-
-- (void)constructRules:(NSDictionary<NSString *, id> *)rules;
-
-- (void)initStore;
-
-- (BOOL)checkSecureTextEntry:(UIView *)view;
-
-- (UIKeyboardType)getKeyboardType:(UIView *)view;
-
-- (void)getMetadataWithText:(NSString *)text
-                placeholder:(NSString *)placeholder
-                     labels:(NSArray<NSString *> *)labels
-            secureTextEntry:(BOOL)secureTextEntry
-                  inputType:(UIKeyboardType)inputType;
-
-- (void)checkAndAppendData:(NSString *)data forKey:(NSString *)key;
-
-@end
+#import "FBSDKMetadataIndexer+Testing.h"
 
 @interface FBSDKMetadataIndexerTests : XCTestCase
-{
-  FBSDKMetadataIndexer *_metadataIndexer;
-  UITextField *_emailField;
-  UITextView *_emailView;
-  UITextField *_phoneField;
-  UITextView *_phoneView;
-  UITextField *_pwdField;
-  UITextView *_pwdView;
-}
+
+@property (nonatomic) FBSDKMetadataIndexer *metadataIndexer;
+@property (nonatomic) UITextField *emailField;
+@property (nonatomic) UITextView *emailView;
+@property (nonatomic) UITextField *phoneField;
+@property (nonatomic) UITextView *phoneView;
+@property (nonatomic) UITextField *pwdField;
+@property (nonatomic) UITextView *pwdView;
+@property (nonatomic) TestUserDataStore *userDataStore;
+@property (nonatomic) NSDictionary<NSString *, id> *rules;
+
 @end
 
 @implementation FBSDKMetadataIndexerTests
 
 - (void)setUp
 {
-  _metadataIndexer = [FBSDKMetadataIndexer new];
-  NSDictionary<NSString *, id> *rules = @{
+  self.userDataStore = [TestUserDataStore new];
+  self.metadataIndexer = [[FBSDKMetadataIndexer alloc] initWithUserDataStore:self.userDataStore
+                                                                    swizzler:TestSwizzler.class];
+  self.rules = @{
     @"r1" : @{
       @"k" : @"email,e-mail,em,electronicmail",
       @"v" : @"^([A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})$",
@@ -95,31 +70,134 @@
       @"v" : @"",
     },
   };
-  [_metadataIndexer constructRules:rules];
-  [_metadataIndexer initStore];
+  [self.metadataIndexer constructRules:self.rules];
+  [self.metadataIndexer initStore];
 
   // clear store
-  for (NSString *key in rules) {
-    [FBSDKTypeUtility dictionary:_metadataIndexer.store setObject:[NSMutableArray new] forKey:key];
+  for (NSString *key in self.rules) {
+    [FBSDKTypeUtility dictionary:self.metadataIndexer.store setObject:[NSMutableArray new] forKey:key];
   }
 
-  _emailField = [UITextField new];
-  _emailField.placeholder = NSLocalizedString(@"Enter your email", nil);
-  _emailField.keyboardType = UIKeyboardTypeEmailAddress;
+  self.emailField = [UITextField new];
+  self.emailField.placeholder = NSLocalizedString(@"Enter your email", nil);
+  self.emailField.keyboardType = UIKeyboardTypeEmailAddress;
 
-  _emailView = [UITextView new];
-  _emailView.keyboardType = UIKeyboardTypeEmailAddress;
+  self.emailView = [UITextView new];
+  self.emailView.keyboardType = UIKeyboardTypeEmailAddress;
 
-  _phoneField = [UITextField new];
-  _phoneField.placeholder = NSLocalizedString(@"Enter your phone", nil);
-  _phoneField.keyboardType = UIKeyboardTypePhonePad;
+  self.phoneField = [UITextField new];
+  self.phoneField.placeholder = NSLocalizedString(@"Enter your phone", nil);
+  self.phoneField.keyboardType = UIKeyboardTypePhonePad;
 
-  _pwdField = [UITextField new];
-  _pwdField.placeholder = NSLocalizedString(@"Enter your password", nil);
-  _pwdField.secureTextEntry = YES;
+  self.pwdField = [UITextField new];
+  self.pwdField.placeholder = NSLocalizedString(@"Enter your password", nil);
+  self.pwdField.secureTextEntry = YES;
 
-  _pwdView = [UITextView new];
-  _pwdView.secureTextEntry = YES;
+  self.pwdView = [UITextView new];
+  self.pwdView.secureTextEntry = YES;
+}
+
+- (void)tearDown
+{
+  [TestSwizzler reset];
+
+  [super tearDown];
+}
+
+- (void)testCreatingWithDependencies
+{
+  XCTAssertEqualObjects(
+    self.metadataIndexer.userDataStore,
+    self.userDataStore,
+    "Should use the provided user data store"
+  );
+  XCTAssertEqualObjects(
+    self.metadataIndexer.swizzler,
+    TestSwizzler.class,
+    "Should use the provided swizzler"
+  );
+}
+
+- (void)testInitStore
+{
+  XCTAssertEqual(
+    self.userDataStore.getInternalHashedDataForTypeCallCount,
+    self.rules.count,
+    "Should request the internal hashed data for each rule"
+  );
+}
+
+- (void)testSetupWithMissingRules
+{
+  [self.metadataIndexer setupWithRules:nil];
+
+  XCTAssertNil(
+    self.userDataStore.capturedEnableRules,
+    "Should not invoke the user data store when there are missing rules"
+  );
+}
+
+- (void)testSetupWithEmptyRules
+{
+  [self.metadataIndexer setupWithRules:@{}];
+
+  XCTAssertNil(
+    self.userDataStore.capturedEnableRules,
+    "Should not invoke the user data store when there are empty rules"
+  );
+}
+
+- (void)testSetupWithRules
+{
+  [self.metadataIndexer setupWithRules:self.rules];
+
+  XCTAssertEqualObjects(
+    self.userDataStore.capturedEnableRules,
+    self.rules.allKeys,
+    "Should enable all of the rules passed to the setup"
+  );
+}
+
+- (void)testCheckAndAppendDataForKeyWithUnknownKey
+{
+  [self.metadataIndexer checkAndAppendData:self.name forKey:@"foo"];
+
+  XCTAssertNil(
+    self.userDataStore.capturedInternalHashedDataForTypeData,
+    "Should not set data for a key that is not in the known rules"
+  );
+  XCTAssertNil(
+    self.userDataStore.capturedInternalHashedDataForTypeType,
+    "Should not set data for a key that is not in the known rules"
+  );
+}
+
+- (void)testCheckAndAppendDataForKeyWithKeyMatchingRule
+{
+  /* Assumes the indexer is set up with the rule:
+   @"r1" : @{
+     @"k" : @"email,e-mail,em,electronicmail",
+     @"v" : @"^([A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})$",
+   },
+   */
+  NSString *expected = [FBSDKBasicUtility SHA256Hash:self.name];
+  [self.metadataIndexer checkAndAppendData:self.name forKey:@"r1"];
+
+  XCTAssertEqualObjects(
+    self.userDataStore.capturedInternalHashedDataForTypeData,
+    expected,
+    "Should hash and set the provided data"
+  );
+}
+
+- (void)testCheckAndAppendDataForKeyWithEmptyData
+{
+  [self.metadataIndexer checkAndAppendData:@"" forKey:@"key"];
+
+  XCTAssertNil(
+    self.userDataStore.capturedInternalHashedDataForTypeData,
+    "Shouldn't set empty hashed data"
+  );
 }
 
 // test for geting secure text entry in UITextField
@@ -127,13 +205,13 @@
 {
   // without secure text
   XCTAssertFalse(
-    [_metadataIndexer checkSecureTextEntry:_emailField],
+    [self.metadataIndexer checkSecureTextEntry:self.emailField],
     @"test for UITextField without secure text"
   );
 
   // with secure text
   XCTAssertTrue(
-    [_metadataIndexer checkSecureTextEntry:_pwdField],
+    [self.metadataIndexer checkSecureTextEntry:self.pwdField],
     @"test for UITextField with secure text"
   );
 }
@@ -143,20 +221,20 @@
 {
   // without secure text
   XCTAssertFalse(
-    [_metadataIndexer checkSecureTextEntry:_emailView],
+    [self.metadataIndexer checkSecureTextEntry:self.emailView],
     @"test for UITextView without secure text"
   );
 
   // with secure text
-  XCTAssertTrue([_metadataIndexer checkSecureTextEntry:_pwdView], @"test for UITextView with secure text");
+  XCTAssertTrue([self.metadataIndexer checkSecureTextEntry:self.pwdView], @"test for UITextView with secure text");
 }
 
 // test for geting keyboard type from UITextField
 - (void)testGetKeyboardTypeOfTextField
 {
   XCTAssertEqual(
-    _emailField.keyboardType,
-    [_metadataIndexer getKeyboardType:_emailField],
+    self.emailField.keyboardType,
+    [self.metadataIndexer getKeyboardType:self.emailField],
     @"test for geting keyboard type from UITextField"
   );
 }
@@ -165,8 +243,8 @@
 - (void)testGetKeyboardTypeOfTextView
 {
   XCTAssertEqual(
-    _emailView.keyboardType,
-    [_metadataIndexer getKeyboardType:_emailView],
+    self.emailView.keyboardType,
+    [self.metadataIndexer getKeyboardType:self.emailView],
     @"test for geting keyboard type from UITextView"
   );
 }
@@ -175,18 +253,18 @@
 - (void)testGetMetadataWithEmail
 {
   NSString *text = @"test@fb.com";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Email"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Email"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r1"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r1"] firstObject],
     [FBSDKUtility SHA256Hash:text],
     "Getting metadata with a valid email should check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with a valid email should not check rules related to phone numbers."
   );
@@ -196,18 +274,18 @@
 - (void)testGetMetadataWithPhoneNumber
 {
   NSString *text = @"1112223333";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Phone Number"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Phone Number"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r2"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r2"] firstObject],
     [FBSDKUtility SHA256Hash:text],
     "Getting metadata with a valid phone number should check rules related to phone numbers."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with a valid phone number should not check rules related to emails."
   );
@@ -217,18 +295,18 @@
 - (void)testGetMetadataWithPhoneNumberWithLabels
 {
   NSString *text = @"11122";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@""
-                                 labels:@[@"phone", @"zipcode"]
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@""
+                                     labels:@[@"phone", @"zipcode"]
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r2"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r2"] firstObject],
     [FBSDKUtility SHA256Hash:text],
     "Getting metadata with a phone number or zipcode with label should check rules related to phone numbers."
   );
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r6"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r6"] firstObject],
     [FBSDKUtility SHA256Hash:text],
     "Getting metadata with a phone number or zipcode with label should check rules related to zipcodes."
   );
@@ -238,18 +316,18 @@
 - (void)testGetMetadataWithSecureText
 {
   NSString *text = @"dfjald1314";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Pass-word"
-                                 labels:nil
-                        secureTextEntry:YES
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Pass-word"
+                                     labels:nil
+                            secureTextEntry:YES
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with a secret text should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with a secret text should not check rules related to phone numbers."
   );
@@ -259,18 +337,18 @@
 - (void)testGetMetadataWithInvalidEmail
 {
   NSString *text = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Email"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Email"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with an invalid email should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with an invalid email should not check rules related to phone numbers."
   );
@@ -280,18 +358,18 @@
 - (void)testGetMetadataWithInvalidEmailPlaceholder
 {
   NSString *text = @"test@fb.com";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with an invalid email placeholder should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with an invalid email placeholder should not check rules related to phone numbers."
   );
@@ -301,17 +379,17 @@
 - (void)testGetMetadataWithValidPhoneNumberWithPunctuations
 {
   NSString *text = @"+1(222)-333-444";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Phone Number"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Phone Number"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertTrue(
-    [[_metadataIndexer.store valueForKey:@"r2"] containsObject:[FBSDKUtility SHA256Hash:@"1222333444"]],
+    [[self.metadataIndexer.store valueForKey:@"r2"] containsObject:[FBSDKUtility SHA256Hash:@"1222333444"]],
     "Getting metadata with a phone number with punctuations should check rules related to phone numbers with pure numbers."
   );
   XCTAssertFalse(
-    [[_metadataIndexer.store valueForKey:@"r2"] containsObject:[FBSDKUtility SHA256Hash:text]],
+    [[self.metadataIndexer.store valueForKey:@"r2"] containsObject:[FBSDKUtility SHA256Hash:text]],
     "Getting metadata with a phone number with punctuations should not check rules related to phone numbers with the original text."
   );
 }
@@ -319,19 +397,19 @@
 // test for geting metadata with invalid phone number
 - (void)testGetMetadataWithInvalidPhoneNumber
 {
-  [_metadataIndexer getMetadataWithText:@"1234"
-                            placeholder:@"Enter your Phone Number"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:@"1234"
+                                placeholder:@"Enter your Phone Number"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
 
-  [_metadataIndexer getMetadataWithText:@"1234567891011121314"
-                            placeholder:@"Mobile Number"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:@"1234567891011121314"
+                                placeholder:@"Mobile Number"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with an invalid phone number should not check rules related to phone numbers."
   );
@@ -341,18 +419,18 @@
 - (void)testGetMetadataWithInvalidPhoneNumberPlaceholder
 {
   NSString *text = @"1112223333";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with an invalid phone number placeholder should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with an invalid phone number placeholder should not check rules related to phone numbers."
   );
@@ -362,18 +440,18 @@
 - (void)testGetMetadataWithTextNotEmailAndPhone
 {
   NSString *text = @"facebook";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Name"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeAlphabet];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Name"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeAlphabet];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with a plain text (not email nor phone number) should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with a plain text (not email nor phone number) should not check rules related to phone numbers."
   );
@@ -383,18 +461,18 @@
 - (void)testGetMetadataWithNoText
 {
   NSString *text = @"";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Email"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Email"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with an empty string should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with an empty string should not check rules related to phone numbers."
   );
@@ -404,18 +482,18 @@
 - (void)testGetMetadataWithTooLongText
 {
   NSString *text = [NSString stringWithFormat:@"%@%@", [@"" stringByPaddingToLength:1000 withString:@"a" startingAtIndex:0], @"@fb.com"];
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@"Enter your Email"
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@"Enter your Email"
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with a too long text should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with a too long text should not check rules related to phone numbers."
   );
@@ -426,18 +504,18 @@
 {
   NSString *text = @"test@fb.com";
   NSString *indicator = [NSString stringWithFormat:@"%@", [@"" stringByPaddingToLength:1000 withString:@"enter your email " startingAtIndex:0]];
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeEmailAddress];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeEmailAddress];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r1"] count],
+    [[self.metadataIndexer.store valueForKey:@"r1"] count],
     0,
     "Getting metadata with a too long placeholder should not check rules related to emails."
   );
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r2"] count],
+    [[self.metadataIndexer.store valueForKey:@"r2"] count],
     0,
     "Getting metadata with a too long placeholder should not check rules related to phone numbers."
   );
@@ -448,13 +526,13 @@
 {
   NSString *text = @"male";
   NSString *indicator = @"gender";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r3"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r3"] firstObject],
     [FBSDKUtility SHA256Hash:@"m"],
     "Getting metadata with a valid gender should check rules related genders."
   );
@@ -464,13 +542,13 @@
 {
   NSString *text = @"test";
   NSString *indicator = @"gender";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r3"] count],
+    [[self.metadataIndexer.store valueForKey:@"r3"] count],
     0,
     "Getting metadata with an invalid gender should not check rules related to genders."
   );
@@ -480,13 +558,13 @@
 {
   NSString *text = @"female";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r3"] count],
+    [[self.metadataIndexer.store valueForKey:@"r3"] count],
     0,
     "Getting metadata with an invalid gender indicator should not check rules related to genders."
   );
@@ -497,13 +575,13 @@
 {
   NSString *text = @"Menlo Park";
   NSString *indicator = @"city";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r4"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r4"] firstObject],
     [FBSDKUtility SHA256Hash:@"menlopark"],
     "Getting metadata with a valid city name should check rules related cities."
   );
@@ -514,13 +592,13 @@
   // Although rule_V for city is @"", but should not accept empty text case
   NSString *text = @"";
   NSString *indicator = @"city";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r4"] count],
+    [[self.metadataIndexer.store valueForKey:@"r4"] count],
     0,
     "Getting metadata with an invalid city name should not check rules related to cities."
   );
@@ -530,13 +608,13 @@
 {
   NSString *text = @"Menlo Park";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r4"] count],
+    [[self.metadataIndexer.store valueForKey:@"r4"] count],
     0,
     "Getting metadata with an invalid city indicator should not check rules related to cities."
   );
@@ -547,13 +625,13 @@
 {
   NSString *text = @"CA";
   NSString *indicator = @"province";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r5"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r5"] firstObject],
     [FBSDKUtility SHA256Hash:@"ca"],
     "Getting metadata with a valid state/province name should check rules related to states."
   );
@@ -564,13 +642,13 @@
   // Although rule_V for state is @"", but should not accept empty text case
   NSString *text = @"";
   NSString *indicator = @"state";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r5"] count],
+    [[self.metadataIndexer.store valueForKey:@"r5"] count],
     0,
     "Getting metadata with an invalid state/province name should not check rules related to states."
   );
@@ -580,13 +658,13 @@
 {
   NSString *text = @"CA";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r5"] count],
+    [[self.metadataIndexer.store valueForKey:@"r5"] count],
     0,
     "Getting metadata with an invalid state/province indicator should not check rules related to states."
   );
@@ -597,13 +675,13 @@
 {
   NSString *text = @"94025";
   NSString *indicator = @"zcode";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r6"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r6"] firstObject],
     [FBSDKUtility SHA256Hash:text],
     "Getting metadata with a valid zipcode should check rules related to zipcodes."
   );
@@ -613,23 +691,23 @@
 - (void)testGetMetadataWithValidZipWithPunctuations
 {
   NSString *text = @"94025-1234";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@""
-                                 labels:@[@"zcode", @"phone"]
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypePhonePad];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@""
+                                     labels:@[@"zcode", @"phone"]
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r6"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r6"] firstObject],
     [FBSDKUtility SHA256Hash:@"94025"],
     "Getting metadata with a valid zipcode with punctuations should check rules related to zipcodes."
   );
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r2"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r2"] firstObject],
     [FBSDKUtility SHA256Hash:@"940251234"],
     "Getting metadata with a valid zipcode with punctuations should check rules related to phone numbers."
   );
   XCTAssertFalse(
-    [[_metadataIndexer.store valueForKey:@"r6"] containsObject:[FBSDKUtility SHA256Hash:text]],
+    [[self.metadataIndexer.store valueForKey:@"r6"] containsObject:[FBSDKUtility SHA256Hash:text]],
     "Getting metadata with a valid zipcode with punctuations should not check rules related related to zipcodes with original text."
   );
 }
@@ -639,13 +717,13 @@
   // the rule for zip code should be 5-digit number
   NSString *text = @"9402";
   NSString *indicator = @"zcode";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r6"] count],
+    [[self.metadataIndexer.store valueForKey:@"r6"] count],
     0,
     "Getting metadata with an invalid zipcode should not check rules related to zipcodes."
   );
@@ -655,13 +733,13 @@
 {
   NSString *text = @"94025";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r6"] count],
+    [[self.metadataIndexer.store valueForKey:@"r6"] count],
     0,
     "Getting metadata with an invalid zipcode indicator should not check rules related to zipcodes."
   );
@@ -672,13 +750,13 @@
 {
   NSString *text = @"David";
   NSString *indicator = @"fn";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r7"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r7"] firstObject],
     [FBSDKUtility SHA256Hash:@"david"],
     "Getting metadata with a valid first name should check rules related to first names."
   );
@@ -689,13 +767,13 @@
   // Although rule_V for first name is @"", but should not accept empty text case
   NSString *text = @"";
   NSString *indicator = @"fn";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r7"] count],
+    [[self.metadataIndexer.store valueForKey:@"r7"] count],
     0,
     "Getting metadata with an empty string should check rules related to first names."
   );
@@ -705,13 +783,13 @@
 {
   NSString *text = @"David";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r7"] count],
+    [[self.metadataIndexer.store valueForKey:@"r7"] count],
     0,
     "Getting metadata with an invalid first name indicator should check rules related to first names."
   );
@@ -722,13 +800,13 @@
 {
   NSString *text = @"Taylor";
   NSString *indicator = @"ln";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqualObjects(
-    [[_metadataIndexer.store valueForKey:@"r8"] firstObject],
+    [[self.metadataIndexer.store valueForKey:@"r8"] firstObject],
     [FBSDKUtility SHA256Hash:@"taylor"],
     "Getting metadata with a valid last name should check rules related to last names."
   );
@@ -739,13 +817,13 @@
   // Although rule_V for last name is @"", but should not accept empty text case
   NSString *text = @"";
   NSString *indicator = @"ln";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r8"] count],
+    [[self.metadataIndexer.store valueForKey:@"r8"] count],
     0,
     "Getting metadata with an invalid last name should check rules related to last names."
   );
@@ -755,13 +833,13 @@
 {
   NSString *text = @"Taylor";
   NSString *indicator = @"test";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:indicator
-                                 labels:nil
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:indicator
+                                     labels:nil
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertEqual(
-    [[_metadataIndexer.store valueForKey:@"r8"] count],
+    [[self.metadataIndexer.store valueForKey:@"r8"] count],
     0,
     "Getting metadata with an invalid last name indicator should check rules related to last names."
   );
@@ -771,25 +849,25 @@
 - (void)testGetMetadataWithFirstNameWithLabels
 {
   NSString *text = @"Taylor";
-  [_metadataIndexer getMetadataWithText:text
-                            placeholder:@""
-                                 labels:@[@"fn", @"ln", @"state", @"city"]
-                        secureTextEntry:NO
-                              inputType:UIKeyboardTypeDefault];
+  [self.metadataIndexer getMetadataWithText:text
+                                placeholder:@""
+                                     labels:@[@"fn", @"ln", @"state", @"city"]
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
   XCTAssertTrue(
-    [[_metadataIndexer.store valueForKey:@"r4"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
+    [[self.metadataIndexer.store valueForKey:@"r4"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
     "Getting metadata with a first name with city label should check rules related to cities."
   );
   XCTAssertTrue(
-    [[_metadataIndexer.store valueForKey:@"r5"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
+    [[self.metadataIndexer.store valueForKey:@"r5"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
     "Getting metadata with a first name with state label should check rules related to states."
   );
   XCTAssertTrue(
-    [[_metadataIndexer.store valueForKey:@"r7"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
+    [[self.metadataIndexer.store valueForKey:@"r7"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
     "Getting metadata with a first name with fn label should check rules related to first names."
   );
   XCTAssertTrue(
-    [[_metadataIndexer.store valueForKey:@"r8"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
+    [[self.metadataIndexer.store valueForKey:@"r8"] containsObject:[FBSDKUtility SHA256Hash:@"taylor"]],
     "Getting metadata with a first name with ln label should check rules related to last names."
   );
 }

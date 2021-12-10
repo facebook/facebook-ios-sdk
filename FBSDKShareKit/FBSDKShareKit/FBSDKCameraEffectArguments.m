@@ -1,44 +1,28 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKCameraEffectArguments.h"
+#import "FBSDKCameraEffectArguments.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBSDKCoreKitBasicsImportForShareKit.h"
- #import "FBSDKShareUtility.h"
+#import "FBSDKShareUtility.h"
 
 static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
-@implementation FBSDKCameraEffectArguments
-{
-  NSMutableDictionary<NSString *, id> *_arguments;
-}
+@interface FBSDKCameraEffectArguments ()
+@property (nonatomic) NSMutableDictionary<NSString *, id> *arguments;
+@end
 
- #pragma mark - Object Lifecycle
+@implementation FBSDKCameraEffectArguments
+
+#pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -48,24 +32,24 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return self;
 }
 
-- (void)setString:(NSString *)string forKey:(NSString *)key
+- (void)setString:(nullable NSString *)string forKey:(NSString *)key
 {
   [self _setValue:[string copy] forKey:key];
 }
 
-- (NSString *)stringForKey:(NSString *)key
+- (nullable NSString *)stringForKey:(NSString *)key
 {
-  return [self _valueOfClass:[NSString class] forKey:key];
+  return [self _valueOfClass:NSString.class forKey:key];
 }
 
-- (void)setArray:(NSArray<NSString *> *)array forKey:(NSString *)key
+- (void)setArray:(nullable NSArray<NSString *> *)array forKey:(NSString *)key
 {
   [self _setValue:[array copy] forKey:key];
 }
 
-- (NSArray<NSString *> *)arrayForKey:(NSString *)key
+- (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key
 {
-  return [self _valueOfClass:[NSArray class] forKey:key];
+  return [self _valueOfClass:NSArray.class forKey:key];
 }
 
 - (NSDictionary<NSString *, id> *)allArguments;
@@ -73,7 +57,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return _arguments;
 }
 
- #pragma mark - Equality
+#pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -85,7 +69,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCameraEffectArguments class]]) {
+  if (![object isKindOfClass:FBSDKCameraEffectArguments.class]) {
     return NO;
   }
   return [self isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object];
@@ -93,10 +77,10 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 - (BOOL)isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object
 {
-  return [FBSDKInternalUtility object:_arguments isEqualToObject:[object allArguments]];
+  return [FBSDKInternalUtility.sharedUtility object:_arguments isEqualToObject:[object allArguments]];
 }
 
- #pragma mark - NSCoding
+#pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -106,7 +90,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _arguments = [decoder decodeObjectOfClass:[NSMutableDictionary class]
+    _arguments = [decoder decodeObjectOfClass:NSMutableDictionary.class
                                        forKey:FBSDKCameraEffectArgumentsArgumentsKey];
   }
   return self;
@@ -117,7 +101,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   [encoder encodeObject:_arguments forKey:FBSDKCameraEffectArgumentsArgumentsKey];
 }
 
- #pragma mark - NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -125,8 +109,6 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   copy->_arguments = [_arguments copy];
   return copy;
 }
-
- #pragma mark - Helper Methods
 
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
@@ -153,7 +135,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 + (void)assertKey:(id)key
 {
-  if ([key isKindOfClass:[NSString class]]) {
+  if ([key isKindOfClass:NSString.class]) {
     return;
   }
   NSString *reason = [NSString stringWithFormat:@"Invalid key found in CameraEffectArguments: %@", key];
@@ -163,12 +145,12 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 + (void)assertValue:(id)value
 {
   BOOL isInvalid = NO;
-  if ([value isKindOfClass:[NSString class]]) {
+  if ([value isKindOfClass:NSString.class]) {
     // Strings are always valid.
-  } else if ([value isKindOfClass:[NSArray class]]) {
+  } else if ([value isKindOfClass:NSArray.class]) {
     // Allow only string arrays.
     for (id subValue in (NSArray *)value) {
-      if (![subValue isKindOfClass:[NSString class]]) {
+      if (![subValue isKindOfClass:NSString.class]) {
         isInvalid = YES;
         break;
       }

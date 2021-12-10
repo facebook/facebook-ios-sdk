@@ -1,22 +1,13 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
+
 #import "FBSDKGateKeeperManaging.h"
 
 #define FBSDK_GATEKEEPER_MANAGER_CACHE_TIMEOUT (60 * 60)
@@ -24,17 +15,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettings;
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKGraphRequestConnectionProviding;
+@protocol FBSDKGraphRequestFactory;
+@protocol FBSDKGraphRequestConnectionFactory;
 @protocol FBSDKDataPersisting;
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
-typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error)
+typedef void (^ FBSDKGKManagerBlock)(NSError *_Nullable error)
 NS_SWIFT_NAME(GKManagerBlock);
 
 NS_SWIFT_NAME(GateKeeperManager)
-@interface FBSDKGateKeeperManager : NSObject<FBSDKGateKeeperManaging>
+@interface FBSDKGateKeeperManager : NSObject <FBSDKGateKeeperManaging>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -42,10 +33,10 @@ NS_SWIFT_NAME(GateKeeperManager)
 /**
  Configures the manager with various dependencies that are required to load the gate keepers
  */
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                        store:(id<FBSDKDataPersisting>)store;
++ (void)  configureWithSettings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                          store:(id<FBSDKDataPersisting>)store;
 
 /**
  Returns the locally cached configuration.

@@ -1,25 +1,18 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#import <SafariServices/SafariServices.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <SafariServices/SafariServices.h>
-#import "FBSDKBridgeAPI.h"
+
+#import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKContainerViewController.h"
+#import "FBSDKErrorCreating.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "NSProcessInfo+Protocols.h"
 
@@ -62,22 +55,22 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @interface FBSDKBridgeAPI (Testing)
 
-@property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
+@property (nonatomic, readonly, assign) id<FBSDKOperatingSystemVersionComparing> processInfo;
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
-
-- (id<FBSDKAuthenticationSession>)authenticationSession;
-- (FBSDKAuthenticationSession)authenticationSessionState;
-- (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler;
-- (BOOL)expectingBackground;
-- (id<FBSDKURLOpening>)pendingUrlOpen;
-- (SFSafariViewController *)safariViewController;
-- (BOOL)isDismissingSafariViewController;
-- (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest;
-- (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;
+@property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+@property (nullable, nonatomic) NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
+@property (nullable, nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
+@property (nullable, nonatomic) id<FBSDKURLOpening> pendingURLOpen;
+@property (nullable, nonatomic) id<FBSDKAuthenticationSession> authenticationSession;
+@property (nullable, nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler;
+@property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
+@property (nonatomic) BOOL expectingBackground;
+@property (nonatomic) SFSafariViewController *safariViewController;
+@property (nonatomic) BOOL isDismissingSafariViewController;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationDidBecomeActive:(UIApplication *)application;
@@ -90,39 +83,29 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nullable id)annotation;
 
-- (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session;
-- (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state;
-- (void)setAuthenticationSessionCompletionHandler:(nullable FBSDKAuthenticationCompletionHandler)handler;
 - (void)setActive:(BOOL)isActive;
-- (void)setExpectingBackground:(BOOL)isExpectingBackground;
-- (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening;
-- (void)setSafariViewController:(nullable UIViewController *)controller;
-- (void)setIsDismissingSafariViewController:(BOOL)isDismissing;
-- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)newValue;
-- (void)setPendingRequestCompletionBlock:(nullable FBSDKBridgeAPIResponseBlock)newValue;
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
-- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-                                                                               completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
+- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+                                                      completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
 - (void)_cancelBridgeRequest;
 
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
-- (void)openURLWithAuthenticationSession:(NSURL *)url;
 - (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
 
 @end
 
 @interface FBSDKBridgeAPIResponse (Testing)
 
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                           responseURL:(NSURL *)responseURL
                                     sourceApplication:(NSString *)sourceApplication
                                     osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
                                                 error:(NSError *__autoreleasing *)errorRef;
 
-- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-             responseParameters:(NSDictionary *)responseParameters
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(nullable NSError *)error;
 

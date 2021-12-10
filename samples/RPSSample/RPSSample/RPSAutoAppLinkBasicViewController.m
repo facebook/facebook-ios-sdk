@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "RPSAutoAppLinkBasicViewController.h"
 
@@ -33,21 +23,21 @@ static const int paddingLen = 10;
 {
   [super viewDidLoad];
 
-  self.view.backgroundColor = [UIColor whiteColor];
+  self.view.backgroundColor = UIColor.whiteColor;
   UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
   int stdWidth = scrollView.frame.size.width - paddingLen * 2;
 
   UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, stdWidth, 30)];
   nameLabel.font = [UIFont boldSystemFontOfSize:24];
-  nameLabel.textColor = [UIColor grayColor];
+  nameLabel.textColor = UIColor.grayColor;
 
   UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 90, stdWidth, 20)];
   descLabel.font = [UIFont systemFontOfSize:14];
-  descLabel.textColor = [UIColor lightGrayColor];
+  descLabel.textColor = UIColor.lightGrayColor;
 
   UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 130, stdWidth, 20)];
   priceLabel.font = [UIFont systemFontOfSize:20];
-  priceLabel.textColor = [UIColor blackColor];
+  priceLabel.textColor = UIColor.blackColor;
 
   if (self.product == nil) {
     self.product = [[Coffee alloc] initWithName:@"Coffee" desc:@"I am just a coffee" price:1];
@@ -63,7 +53,7 @@ static const int paddingLen = 10;
   if (self.data != nil) {
     UILabel *dataLabel = [[UILabel alloc] init];
     dataLabel.font = [UIFont systemFontOfSize:20];
-    dataLabel.textColor = [UIColor blueColor];
+    dataLabel.textColor = UIColor.blueColor;
     dataLabel.text = [NSString stringWithFormat:@"data is: %@", self.data];
     dataLabel.numberOfLines = 0;
     CGSize size = [dataLabel.text boundingRectWithSize:CGSizeMake(stdWidth, 1000)

@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKLoginConfiguration.h"
+#import <FBSDKLoginKit/FBSDKLoginConfiguration.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,26 +26,28 @@ NS_ASSUME_NONNULL_BEGIN
 @class LoginManagerLoginResult;
 @class FBSDKLoginConfiguration;
 
-typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser };
-typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends };
+typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser, };
+typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends, };
 
 typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable result,
                                              NSError *_Nullable error);
 
 @interface LoginManager : NSObject
 
-@property (assign, nonatomic) LoginBehavior loginBehavior;
-@property (assign, nonatomic) DefaultAudience defaultAudience;
+@property (nonatomic, assign) LoginBehavior loginBehavior;
+@property (nonatomic, assign) DefaultAudience defaultAudience;
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
-              fromViewController:(nullable UIViewController *)fromViewController
-                         handler:(nullable LoginManagerLoginResultBlock)handler
+          fromViewController:(nullable UIViewController *)fromViewController
+                     handler:(nullable LoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(LoginManagerLoginResultBlock)completion
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -68,10 +60,9 @@ NS_REFINED_FOR_SWIFT;
  @param result the result of the authorization
  @param error the authorization error, if any.
  */
-typedef void (^FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
-                                                  NSError *_Nullable error)
+typedef void (^ FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
+  NSError *_Nullable error)
 NS_SWIFT_NAME(LoginManagerLoginResultBlock);
-
 
 /**
  FBSDKDefaultAudience enum
@@ -83,8 +74,7 @@ NS_SWIFT_NAME(LoginManagerLoginResultBlock);
  publication ceiling for the application. This enumerated value allows the application to select which
  audience to ask the user to grant publish permission for.
  */
-typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
-{
+typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
   /** Indicates that the user's friends are able to see posts made by the application */
   FBSDKDefaultAudienceFriends = 0,
   /** Indicates that only the user is able to see posts made by the application */
@@ -114,7 +104,7 @@ NS_SWIFT_NAME(LoginManager)
 
  you should set this if you intend to ask for publish permissions.
  */
-@property (assign, nonatomic) FBSDKDefaultAudience defaultAudience;
+@property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
 
 /**
  Logs the user in or authorizes additional permissions.
@@ -135,10 +125,13 @@ NS_SWIFT_NAME(LoginManager)
  on a previous login attempt will result in an error.
  @warning This method will present a UI to the user and thus should be called on the main thread.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(nullable UIViewController *)fromViewController
                      handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Logs the user in or authorizes additional permissions.
@@ -162,7 +155,7 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(FBSDKLoginManagerLoginResultBlock)completion
-NS_REFINED_FOR_SWIFT;
+  NS_REFINED_FOR_SWIFT;
 
 /**
  Logs the user in with the given deep link url. Will only log user in if the given url contains valid login data.
@@ -174,9 +167,12 @@ This method should be called with the url from the openURL method.
 
  @warning This method will present a UI to the user and thus should be called on the main thread.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(url:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
  Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
@@ -194,9 +190,12 @@ user based on any declined permissions.
  @warning This method will reauthorize using a `LoginConfiguration` with `FBSDKLoginTracking` set to `.enabled`.
  @warning This method will present UI the user. You typically should call this if `AccessToken.isDataAccessExpired` is true.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController
                       handler:(FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
+// UNCRUSTIFY_FORMAT_ON
 
 /**
   Logs the user out

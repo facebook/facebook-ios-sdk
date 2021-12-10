@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKBridgeAPITests.h"
 
@@ -28,7 +18,7 @@
   [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:YES];
   urlOpener.stubbedCanOpenUrl = YES;
 
-  self.api.pendingUrlOpen = urlOpener;
+  self.api.pendingURLOpen = urlOpener;
 
   BOOL returnValue = [self.api application:UIApplication.sharedApplication
                                    openURL:self.sampleUrl
@@ -494,11 +484,11 @@
   [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:NO];
   urlOpener.stubbedCanOpenUrl = pendingUrlCanOpenUrl;
 
-  self.api.pendingUrlOpen = urlOpener;
+  self.api.pendingURLOpen = urlOpener;
 
   if (hasSafariViewController) {
     ViewControllerSpy *viewControllerSpy = ViewControllerSpy.makeDefaultSpy;
-    self.api.safariViewController = viewControllerSpy;
+    self.api.safariViewController = (id)viewControllerSpy;
   }
   self.api.isDismissingSafariViewController = isDismissingSafariViewController;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionNone;
@@ -526,7 +516,7 @@
   };
 
   if (canHandleBridgeApiResponse) {
-    self.appURLSchemeProvider.stubbedScheme = @"http";
+    self.appURLSchemeProvider.stubbedScheme = FBSDKURLSchemeHTTP;
     self.api.pendingRequestCompletionBlock = nil;
   } else {
     self.appURLSchemeProvider.stubbedScheme = @"foo";
@@ -608,9 +598,9 @@
     XCTAssertNil(self.api.pendingRequestCompletionBlock, "The pending request completion block should be nil");
   }
   if (expectedPendingUrlOpenExists) {
-    XCTAssertNotNil(self.api.pendingUrlOpen, "The reference to the url opener should not be nil");
+    XCTAssertNotNil(self.api.pendingURLOpen, "The reference to the url opener should not be nil");
   } else {
-    XCTAssertNil(self.api.pendingUrlOpen, "The reference to the url opener should be nil");
+    XCTAssertNil(self.api.pendingURLOpen, "The reference to the url opener should be nil");
   }
   if (expectedSafariVcExists) {
     XCTAssertNotNil(self.api.safariViewController, "Safari view controller should not be nil");
@@ -636,9 +626,8 @@
 - (FBSDKBridgeAPIRequest *)sampleBridgeApiRequest
 {
   return [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                          scheme:@"https"
+                                                          scheme:FBSDKURLSchemeHTTPS
                                                       methodName:nil
-                                                   methodVersion:nil
                                                       parameters:nil
                                                         userInfo:nil];
 }
@@ -649,10 +638,10 @@
   NSString *errorMessage = [[NSString alloc]
                             initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
                             url];
-  return [[NSError alloc]
-          initWithDomain:FBSDKErrorDomain
-          code:FBSDKErrorBridgeAPIInterruption
-          userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}];
+  return [self.errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                 userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}
+                                  message:errorMessage
+                          underlyingError:nil];
 }
 
 static inline NSString *StringFromBool(BOOL value)

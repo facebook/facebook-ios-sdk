@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKBridgeAPITests.h"
 
@@ -26,10 +16,11 @@
 
   [FBSDKLoginManager resetTestEvidence];
 
-  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
-  self.logger = [TestLogger new];
-  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  self.appURLSchemeProvider = [TestInternalUtility new];
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
+  self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
+  self.errorFactory = [TestErrorFactory new];
 
   [self configureSDK];
 
@@ -38,7 +29,8 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
 }
 
 - (void)tearDown
@@ -53,16 +45,19 @@
 {
   TestBackgroundEventLogger *backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
                                                                                                            eventLogger:[TestAppEvents new]];
+  TestServerConfigurationProvider *serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
+                                                                  initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
                                                                                         tokenWallet:TestAccessTokenWallet.class
                                                                                            settings:[TestSettings new]
                                                                                      featureChecker:[TestFeatureManager new]
                                                                                           appEvents:[TestAppEvents new]
-                                                                        serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                        serverConfigurationProvider:serverConfigurationProvider
                                                                                               store:[UserDefaultsSpy new]
                                                                           authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                                     profileProvider:TestProfileProvider.class
-                                                                              backgroundEventLogger:backgroundEventLogger];
+                                                                              backgroundEventLogger:backgroundEventLogger
+                                                                                    paymentObserver:[TestPaymentObserver new]];
   [delegate initializeSDKWithLaunchOptions:@{}];
 }
 
@@ -282,7 +277,7 @@
 
 - (void)testDidFinishLaunchingWithoutLaunchedUrlWithSourceApplication
 {
-  NSDictionary *options = @{ UIApplicationLaunchOptionsSourceApplicationKey : @"com.example" };
+  NSDictionary<NSString *, id> *options = @{ UIApplicationLaunchOptionsSourceApplicationKey : @"com.example" };
   XCTAssertFalse(
     [self.api application:UIApplication.sharedApplication didFinishLaunchingWithOptions:options],
     "Should not consider it a successful launch if there is no launch url"
@@ -291,7 +286,7 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithoutSourceApplication
 {
-  NSDictionary *options = @{ UIApplicationLaunchOptionsURLKey : self.sampleUrl };
+  NSDictionary<NSString *, id> *options = @{ UIApplicationLaunchOptionsURLKey : self.sampleUrl };
   XCTAssertFalse(
     [self.api application:UIApplication.sharedApplication didFinishLaunchingWithOptions:options],
     "Should not consider it a successful launch if there is no source application"
@@ -300,7 +295,7 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithSourceApplication
 {
-  NSDictionary *options = @{
+  NSDictionary<NSString *, id> *options = @{
     UIApplicationLaunchOptionsURLKey : self.sampleUrl,
     UIApplicationLaunchOptionsSourceApplicationKey : sampleSource,
     UIApplicationLaunchOptionsAnnotationKey : sampleAnnotation
@@ -327,7 +322,7 @@
             handler:^(BOOL _success, NSError *_Nullable error) {}];
 
   XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
-  XCTAssertNil(self.api.pendingUrlOpen, "Should not set the pending url opener if there is no sender");
+  XCTAssertNil(self.api.pendingURLOpen, "Should not set the pending url opener if there is no sender");
 }
 
 - (void)testOpenUrlWithSender
@@ -338,7 +333,7 @@
             handler:^(BOOL _success, NSError *_Nullable error) {}];
 
   XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
-  XCTAssertEqual(self.api.pendingUrlOpen, urlOpener, "Should set the pending url opener to the sender");
+  XCTAssertEqual(self.api.pendingURLOpen, urlOpener, "Should set the pending url opener to the sender");
 }
 
 - (void)testOpenUrlWithVersionBelow10WhenApplicationOpens
@@ -352,7 +347,8 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
 
   BOOL applicationOpensSuccessfully = YES;
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
@@ -383,7 +379,9 @@
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
+
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
@@ -440,7 +438,7 @@
 
 - (void)testRequestCompletionBlockCalledWithSuccess
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
     XCTFail("Should not call the response block when the request completion is called with success");
   };
@@ -460,18 +458,29 @@
 
 - (void)testRequestCompletionBlockWithNonHttpRequestCalledWithoutSuccess
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl scheme:@"file"];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:@"file"];
+
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
-    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqualObjects(
+      response.request,
+      request,
+      @"The response should contain the original request"
+    );
+    TestSDKError *error = (TestSDKError *)response.error;
     XCTAssertEqual(
-      response.error.code,
+      error.type,
+      ErrorTypeGeneral,
+      @"The response should contain a general error"
+    );
+    XCTAssertEqual(
+      error.code,
       FBSDKErrorAppVersionUnsupported,
-      "The response should contain the expected error code"
+      @"The error should use an app version unsupported error code"
     );
     XCTAssertEqualObjects(
-      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      error.message,
       @"the app switch failed because the destination app is out of date",
-      "The response should contain the expected error message"
+      @"The error should use an appropriate error message"
     );
   };
   self.api.pendingRequest = request;
@@ -490,18 +499,28 @@
 
 - (void)testRequestCompletionBlockWithHttpRequestCalledWithoutSuccess
 {
-  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl scheme:@"https"];
+  TestBridgeAPIRequest *request = [TestBridgeAPIRequest requestWithURL:self.sampleUrl scheme:FBSDKURLSchemeHTTPS];
   FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
-    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqualObjects(
+      response.request,
+      request,
+      @"The response should contain the original request"
+    );
+    TestSDKError *error = (TestSDKError *)response.error;
     XCTAssertEqual(
-      response.error.code,
+      error.type,
+      ErrorTypeGeneral,
+      @"The response should contain a general error"
+    );
+    XCTAssertEqual(
+      error.code,
       FBSDKErrorBrowserUnavailable,
-      "The response should contain the expected error code"
+      @"The error should use a browser unavailable error code"
     );
     XCTAssertEqualObjects(
-      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      error.message,
       @"the app switch failed because the browser is unavailable",
-      "The response should contain the expected error message"
+      @"The response should use an appropriate error message"
     );
   };
   self.api.pendingRequest = request;
@@ -523,17 +542,17 @@
 - (void)testSafariVcDidFinishWithPendingUrlOpener
 {
   FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
-  self.api.pendingUrlOpen = urlOpener;
-  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+  self.api.pendingURLOpen = urlOpener;
+  self.api.safariViewController = (SFSafariViewController *)ViewControllerSpy.makeDefaultSpy;
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
-  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+  self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
 
   // Funny enough there's no check that the safari view controller from the delegate
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
 
-  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should remove the reference to the pending url opener");
   XCTAssertNil(
     self.api.safariViewController,
     "Should remove the reference to the safari view controller when the delegate method is called"
@@ -548,16 +567,16 @@
 
 - (void)testSafariVcDidFinishWithoutPendingUrlOpener
 {
-  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+  self.api.safariViewController = (id)ViewControllerSpy.makeDefaultSpy;
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
-  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+  self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
 
   // Funny enough there's no check that the safari view controller from the delegate
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
 
-  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should remove the reference to the pending url opener");
   XCTAssertNil(
     self.api.safariViewController,
     "Should remove the reference to the safari view controller when the delegate method is called"
@@ -574,11 +593,11 @@
 - (void)testViewControllerDidDisappearWithSafariViewController
 {
   UIViewController *viewControllerSpy = ViewControllerSpy.makeDefaultSpy;
-  self.api.safariViewController = viewControllerSpy;
+  self.api.safariViewController = (SFSafariViewController *)viewControllerSpy;
   FBSDKContainerViewController *container = [FBSDKContainerViewController new];
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
-  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+  self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
 
   [self.api viewControllerDidDisappear:container animated:NO];
 
@@ -591,12 +610,12 @@
   FBSDKContainerViewController *container = [FBSDKContainerViewController new];
 
   // Setting a pending request so we can assert that it's nilled out upon cancellation
-  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+  self.api.pendingRequest = self.sampleTestBridgeAPIRequest;
 
   [self.api viewControllerDidDisappear:container animated:NO];
 
   XCTAssertNotNil(self.api.pendingRequest, "Should not cancel the request");
-  XCTAssertEqualObjects(_logger.capturedContents, @"", @"Expected nothing to be logged");
+  XCTAssertNil(_logger.capturedContents, @"Expected nothing to be logged");
 }
 
 // MARK: - Bridge Response Url Handling
@@ -638,7 +657,7 @@
 {
   [self stubBridgeApiResponseWithUrlCreation];
   self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
-  self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequest = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
 
   BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
 
@@ -648,13 +667,13 @@
 
 - (void)testHandlingBridgeResponseWithBridgeResponse
 {
-  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeApiRequest requestWithURL:self.sampleUrl]
+  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeAPIRequest requestWithURL:self.sampleUrl]
                                                                   responseParameters:@{}
                                                                            cancelled:NO
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
   self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
-  self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequest = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
   };
@@ -667,13 +686,13 @@
 
 - (void)testHandlingBridgeResponseWithBridgeError
 {
-  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeApiRequest requestWithURL:self.sampleUrl]
+  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeAPIRequest requestWithURL:self.sampleUrl]
                                                                   responseParameters:@{}
                                                                            cancelled:NO
                                                                                error:self.sampleError];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
   self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
-  self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequest = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
   };
@@ -686,14 +705,14 @@
 
 - (void)testHandlingBridgeResponseWithMissingResponseMissingError
 {
-  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeApiRequest requestWithURL:self.sampleUrl]
+  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeAPIRequest requestWithURL:self.sampleUrl]
                                                                   responseParameters:@{}
                                                                            cancelled:NO
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
   self.bridgeAPIResponseFactory.shouldFailCreation = YES;
   self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
-  self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequest = [TestBridgeAPIRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTFail("Should not invoke pending completion handler");
   };
@@ -731,18 +750,18 @@
 
 - (void)stubBridgeApiResponseWithUrlCreation
 {
-  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeApiRequest requestWithURL:self.sampleUrl]
+  FBSDKBridgeAPIResponse *response = [[FBSDKBridgeAPIResponse alloc] initWithRequest:[TestBridgeAPIRequest requestWithURL:self.sampleUrl]
                                                                   responseParameters:@{}
                                                                            cancelled:NO
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
 }
 
-- (TestBridgeApiRequest *)sampleTestBridgeApiRequest
+- (TestBridgeAPIRequest *)sampleTestBridgeAPIRequest
 {
-  return [[TestBridgeApiRequest alloc] initWithUrl:self.sampleUrl
+  return [[TestBridgeAPIRequest alloc] initWithUrl:self.sampleUrl
                                       protocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                            scheme:nil];
+                                            scheme:@"1"];
 }
 
 - (NSURL *)sampleUrl

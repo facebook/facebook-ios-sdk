@@ -1,28 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <XCTest/XCTest.h>
 
-#ifdef BUCK
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
 @import FBSDKCoreKit;
-#endif
 
 #import "FBSDKGameRequestContent.h"
 #import "FBSDKShareUtility.h"
@@ -34,42 +20,42 @@
 
 - (void)testProperties
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithAllProperties];
-  XCTAssertEqualObjects(content.recipients, [[self class] _recipients]);
-  XCTAssertEqualObjects(content.message, [[self class] _message]);
-  XCTAssertEqual(content.actionType, [[self class] _actionType]);
-  XCTAssertEqualObjects(content.objectID, [[self class] _objectID]);
-  XCTAssertEqual(content.filters, [[self class] _filters]);
-  XCTAssertEqualObjects(content.recipientSuggestions, [[self class] _recipientSuggestions]);
-  XCTAssertEqualObjects(content.data, [[self class] _data]);
-  XCTAssertEqualObjects(content.title, [[self class] _title]);
+  FBSDKGameRequestContent *content = [self.class _contentWithAllProperties];
+  XCTAssertEqualObjects(content.recipients, [self.class _recipients]);
+  XCTAssertEqualObjects(content.message, [self.class _message]);
+  XCTAssertEqual(content.actionType, [self.class _actionType]);
+  XCTAssertEqualObjects(content.objectID, [self.class _objectID]);
+  XCTAssertEqual(content.filters, [self.class _filters]);
+  XCTAssertEqualObjects(content.recipientSuggestions, [self.class _recipientSuggestions]);
+  XCTAssertEqualObjects(content.data, [self.class _data]);
+  XCTAssertEqualObjects(content.title, [self.class _title]);
 }
 
 - (void)testCopy
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithAllProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithAllProperties];
   XCTAssertEqualObjects([content copy], content);
 }
 
 - (void)testCoding
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithAllProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithAllProperties];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  [unarchiver setRequiresSecureCoding:YES];
-  FBSDKGameRequestContent *unarchivedObject = [unarchiver decodeObjectOfClass:[FBSDKGameRequestContent class]
+  unarchiver.requiresSecureCoding = YES;
+  FBSDKGameRequestContent *unarchivedObject = [unarchiver decodeObjectOfClass:FBSDKGameRequestContent.class
                                                                        forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);
 }
 
 - (void)testValidationWithMinimalProperties
 {
-  return [self _testValidationWithContent:[[self class] _contentWithMinimalProperties]];
+  return [self _testValidationWithContent:[self.class _contentWithMinimalProperties]];
 }
 
 - (void)testValidationWithManyProperties
 {
-  return [self _testValidationWithContent:[[self class] _contentWithManyProperties]];
+  return [self _testValidationWithContent:[self.class _contentWithManyProperties]];
 }
 
 - (void)testValidationWithNoProperties
@@ -80,111 +66,109 @@
 
 - (void)testValidationWithTo
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.recipients = [[self class] _recipients];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
+  content.recipients = [self.class _recipients];
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithActionTypeSend
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeSend;
   [self _testValidationWithContent:content errorArgumentName:@"objectID"];
 }
 
 - (void)testValidationWithActionTypeSendAndobjectID
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeSend;
-  content.objectID = [[self class] _objectID];
+  content.objectID = [self.class _objectID];
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithActionTypeAskFor
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeAskFor;
   [self _testValidationWithContent:content errorArgumentName:@"objectID"];
 }
 
 - (void)testValidationWithActionTypeAskForAndobjectID
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeAskFor;
-  content.objectID = [[self class] _objectID];
+  content.objectID = [self.class _objectID];
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithActionTypeTurn
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeTurn;
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithActionTypeTurnAndobjectID
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.actionType = FBSDKGameRequestActionTypeTurn;
-  content.objectID = [[self class] _objectID];
+  content.objectID = [self.class _objectID];
   [self _testValidationWithContent:content errorArgumentName:@"objectID"];
 }
 
 - (void)testValidationWithFilterAppUsers
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.filters = FBSDKGameRequestFilterAppUsers;
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithFilterAppNonUsers
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.filters = FBSDKGameRequestFilterAppNonUsers;
   [self _testValidationWithContent:content];
 }
 
 - (void)testValidationWithToAndFilters
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.recipients = [[self class] _recipients];
-  content.filters = [[self class] _filters];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
+  content.recipients = [self.class _recipients];
+  content.filters = [self.class _filters];
   [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithToAndSuggestions
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.recipients = [[self class] _recipients];
-  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
+  content.recipients = [self.class _recipients];
+  content.recipientSuggestions = [self.class _recipientSuggestions];
   [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithFiltersAndSuggestions
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.filters = [[self class] _filters];
-  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
+  content.filters = [self.class _filters];
+  content.recipientSuggestions = [self.class _recipientSuggestions];
   [self _testValidationWithContent:content errorArgumentName:@"recipientSuggestions"];
 }
 
 - (void)testValidationWithToAndFiltersAndSuggestions
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.recipients = [[self class] _recipients];
-  content.filters = [[self class] _filters];
-  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
+  content.recipients = [self.class _recipients];
+  content.filters = [self.class _filters];
+  content.recipientSuggestions = [self.class _recipientSuggestions];
   [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithLongData
 {
-  FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
+  FBSDKGameRequestContent *content = [self.class _contentWithMinimalProperties];
   content.data = [NSString stringWithFormat:@"%.254f", 1.f]; // 256 characters
   [self _testValidationWithContent:content errorArgumentName:@"data"];
 }
-
-#pragma mark - Helper Methods
 
 - (void)_testValidationWithContent:(FBSDKGameRequestContent *)content
 {

@@ -1,62 +1,59 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#if defined FBSDK_SWIFT_PACKAGE
- #import "FBSDKAccessTokenProtocols.h"
-#else
- #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-#endif
-
-#import "FBSDKDataPersisting.h"
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKCoreKit+Internal.h"
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKProfile.h>
+
+#import "FBSDKDataPersisting.h"
+
+#if FBSDK_SWIFT_PACKAGE
+ #import "FBSDKGraphRequest.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKNotificationPosting;
 @protocol FBSDKNotificationObserving;
+@protocol FBSDKSettings;
+@protocol FBSDKURLHosting;
 
 typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nullable profileRef);
 
 @interface FBSDKProfile (Internal)
 
 + (void)cacheProfile:(nullable FBSDKProfile *)profile;
-+ (nullable FBSDKProfile *)fetchCachedProfile;
++ (nullable FBSDKProfile *)fetchCachedProfile NS_SWIFT_NAME(fetchCachedProfile());
 
 + (NSURL *)imageURLForProfileID:(NSString *)profileId
                     PictureMode:(FBSDKProfilePictureMode)mode
                            size:(CGSize)size;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request
+                  completion:(FBSDKProfileBlock)completion
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
 
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification;
+
+// UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
-NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:));
+        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                  settings:(id<FBSDKSettings>)settings
+                 urlHoster:(id<FBSDKURLHosting>)urlHoster
+NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:settings:urlHoster:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

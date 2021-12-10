@@ -1,38 +1,121 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-@class FBSDKGraphRequestBody;
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
+#import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import "FBSDKErrorConfigurationProviding.h"
+#import "FBSDKErrorCreating.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKGraphErrorRecoveryProcessor.h"
+#import "FBSDKGraphRequestBody.h"
+#import "FBSDKGraphRequestMetadata.h"
+#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKMacCatalystDetermining.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKURLSessionProxyProviding.h"
+#import "FBSDKURLSessionProxying.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+// ----------------------------------------------------------------------------
+// FBSDKGraphRequestConnectionState
+
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
+  kStateCreated,
+  kStateSerialized,
+  kStateStarted,
+  kStateCompleted,
+  kStateCancelled,
+};
+
+@interface FBSDKGraphRequestConnection ()
+
+@property (class, nullable, nonatomic) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (class, nullable, nonatomic) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (class, nullable, nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
+@property (class, nullable, nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
+@property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
+@property (class, nullable, nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
+@property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenProvider;
+@property (nonatomic) FBSDKLogger *logger;
+@property (nonatomic) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
+@property (nonatomic) FBSDKGraphRequestConnectionState state;
+@property (nonatomic) uint64_t requestStartTime;
+@property (nonatomic) id<FBSDKURLSessionProxying> session;
+@property (nullable, nonatomic) NSString *overriddenVersionPart;
+@property (nonatomic) NSUInteger expectingResults;
+#if !TARGET_OS_TV
+@property (nullable, nonatomic) FBSDKGraphRequestMetadata *recoveringRequestMetadata;
+@property (nullable, nonatomic) FBSDKGraphErrorRecoveryProcessor *errorRecoveryProcessor;
 #endif
 
-#import "FBSDKGraphRequestMetadata.h"
-
-@interface FBSDKGraphRequestConnection (Internal)
-
-@property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
-
++ (BOOL)canMakeRequests;
 + (void)setCanMakeRequests;
+
++ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
+                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                   piggybackManagerProvider:(nonnull id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                   settings:(nonnull id<FBSDKSettings>)settings
+              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
+                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
+                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider;
+
+- (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
+                                  timeout:(NSTimeInterval)timeout;
+
+- (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
+           toBatch:(NSMutableArray<id> *)batch
+       attachments:(NSMutableDictionary<NSString *, id> *)attachments
+        batchToken:(nullable NSString *)batchToken;
+
+- (void)appendAttachments:(NSDictionary<NSString *, id> *)attachments
+                   toBody:(FBSDKGraphRequestBody *)body
+              addFormData:(BOOL)addFormData
+                   logger:(FBSDKLogger *)logger;
+
+- (nullable NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request;
+
+- (nullable NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request;
+
+- (NSArray<id> *)parseJSONResponse:(NSData *)data
+                             error:(NSError **)error
+                        statusCode:(NSInteger)statusCode;
+
+- (void)processResultBody:(nullable NSDictionary<NSString *, id> *)body
+                    error:(nullable NSError *)error
+                 metadata:(FBSDKGraphRequestMetadata *)metadata
+        canNotifyDelegate:(BOOL)canNotifyDelegate;
+
+- (void)logRequest:(NSMutableURLRequest *)request
+        bodyLength:(NSUInteger)bodyLength
+        bodyLogger:(nullable FBSDKLogger *)bodyLogger
+  attachmentLogger:(nullable FBSDKLogger *)attachmentLogger;
+
+- (void)        URLSession:(NSURLSession *)session
+                      task:(NSURLSessionTask *)task
+           didSendBodyData:(int64_t)bytesSent
+            totalBytesSent:(int64_t)totalBytesSent
+  totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
 
 /**
  Get the graph request url for a single graph request
@@ -48,4 +131,10 @@
  */
 - (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
 
+#if DEBUG && FBTEST
++ (void)resetClassDependencies;
+#endif
+
 @end
+
+NS_ASSUME_NONNULL_END

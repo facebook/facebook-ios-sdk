@@ -1,21 +1,9 @@
 #!/bin/sh
-# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
 #
-# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-# copy, modify, and distribute this software in source code or binary form for use
-# in connection with the web services and APIs provided by Facebook.
-#
-# As with any software that integrates with the Facebook platform, your use of
-# this software is subject to the Facebook Developer Principles and Policies
-# [http://developers.facebook.com/policy/]. This copyright notice shall be
-# included in all copies or substantial portions of the software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
 
 # shellcheck disable=SC2039
 # shellcheck source=./run.sh
@@ -108,7 +96,7 @@ test_main_setup() {
   test_current_version=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
 
   local test_sdk_current_graph_api_version
-  test_sdk_current_graph_api_version=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
+  test_sdk_current_graph_api_version=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
 
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"

@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKAuthenticationTokenHeader.h"
 
-#import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKAuthenticationTokenHeader
 
@@ -26,7 +16,7 @@
                         typ:(NSString *)typ
                         kid:(NSString *)kid
 {
-  if (self = [super init]) {
+  if ((self = [super init])) {
     _alg = alg;
     _typ = typ;
     _kid = kid;
@@ -41,7 +31,7 @@
   NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];
 
   if (headerData) {
-    NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
+    NSDictionary<NSString *, id> *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
     NSString *alg = [FBSDKTypeUtility dictionary:header objectForKey:@"alg" ofType:NSString.class];
     NSString *typ = [FBSDKTypeUtility dictionary:header objectForKey:@"typ" ofType:NSString.class];
     NSString *kid = [FBSDKTypeUtility dictionary:header objectForKey:@"kid" ofType:NSString.class];
@@ -66,7 +56,7 @@
     return YES;
   }
 
-  if (![object isKindOfClass:[FBSDKAuthenticationTokenHeader class]]) {
+  if (![object isKindOfClass:FBSDKAuthenticationTokenHeader.class]) {
     return NO;
   }
 

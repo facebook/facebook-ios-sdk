@@ -1,35 +1,167 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
-// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// @lint-ignore-every LICENSELINT
+
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import PackageDescription
+import Foundation
 
-let conditionalCompilationFlag = "FBSDK_SWIFT_PACKAGE"
+#if os(Linux)
+import Glibc
+#else
+import Darwin.C
+#endif
+
+enum BinarySource {
+    case local, remote
+
+    static var current: Self {
+        if getenv("USE_LOCAL_FB_BINARIES") != nil {
+            return .local
+        } else {
+            return .remote
+        }
+    }
+}
+
+struct BinaryTargets {
+    let source: BinarySource
+
+    var aem: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBAEMKit",
+                path: "build/XCFrameworks/Static/FBAEMKit.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBAEMKit",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBAEMKit-Static_XCFramework.zip",
+                checksum: "41abd6a96538472de68b09e4e0aa9567f75f2ab3caef8ba1d8e83f18cf17e297"
+            )
+        }
+    }
+
+    var basics: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBSDKCoreKit_Basics",
+                path: "build/XCFrameworks/Static/FBSDKCoreKit_Basics.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBSDKCoreKit_Basics",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKCoreKit_Basics-Static_XCFramework.zip",
+                checksum: "d3fde61b8e3ea778a9abafcda05f4f6b2896b9b628932defc719a02f71bd1b2a"
+            )
+        }
+    }
+
+    var core: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBSDKCoreKit",
+                path: "build/XCFrameworks/Static/FBSDKCoreKit.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBSDKCoreKit",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKCoreKit-Static_XCFramework.zip",
+                checksum: "f10353c07cebbe39518a16eccd2c8fed83f61727fb7d3ea0f59f15df1485be17"
+            )
+        }
+    }
+
+    var login: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBSDKLoginKit",
+                path: "build/XCFrameworks/Static/FBSDKLoginKit.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBSDKLoginKit",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKLoginKit-Static_XCFramework.zip",
+                checksum: "b2d589f1dfeea29d1981a9b4bb716900a27f64f99ec9b37e5775c6a821794eed"
+            )
+        }
+    }
+
+    var share: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBSDKShareKit",
+                path: "build/XCFrameworks/Static/FBSDKShareKit.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBSDKShareKit",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKShareKit-Static_XCFramework.zip",
+                checksum: "178268c9d468f6b72bb07f44c2f26da8aaa5e063d9e5131bf176bbb3e097544b"
+            )
+        }
+    }
+
+    var gamingServices: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FacebookGamingServices",
+                path: "build/XCFrameworks/Static/FacebookGamingServices.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FacebookGamingServices",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FacebookGamingServices-Static_XCFramework.zip",
+                checksum: "d2ffe5a09965e9efa85c61e6ef0746f00eb6fe0a8c1d86f68b15f0501c0b4894"
+            )
+        }
+    }
+
+    var fbsdkGamingServices: Target {
+        switch source {
+        case .local:
+            return .binaryTarget(
+                name: "FBSDKGamingServicesKit",
+                path: "build/XCFrameworks/Static/FBSDKGamingServicesKit.xcframework"
+            )
+        case .remote:
+            return .binaryTarget(
+                name: "FBSDKGamingServicesKit",
+                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.1.0/FBSDKGamingServicesKit-Static_XCFramework.zip",
+                checksum: "9445055e3ae5735c47d3c1d056391e1db68b06d804fddab4c7c7bf17cf3c37ac"
+            )
+        }
+    }
+}
+
+let targets = BinaryTargets(source: .current)
 
 let package = Package(
     name: "Facebook",
     platforms: [
-        .iOS(.v9),
+        .iOS(.v10),
         .tvOS(.v10)
     ],
     products: [
+         // The Kernel of the SDK. Must be included as a runtime dependency.
+        .library(
+            name: "FacebookBasics",
+            targets: ["FBSDKCoreKit_Basics"]
+        ),
 
         /*
           The Core SDK library that provides two importable modules:
@@ -47,208 +179,94 @@ let package = Package(
             targets: ["FacebookCore", "FBSDKCoreKit"]
         ),
 
-        /*
-          The Facebook Login SDK
-        */
+        //  The Facebook Login SDK
         .library(
             name: "FacebookLogin",
             targets: ["FacebookLogin"]
         ),
 
-        /*
-          The Facebook Share SDK
-        */
+        //  The Facebook Share SDK
         .library(
             name: "FacebookShare",
-            targets: ["FacebookShare"]
+            targets: ["FBSDKShareKit", "FacebookShare"]
         ),
 
-        /*
-          The Facebook Gaming Services SDK
-        */
+        //  The Facebook Gaming Services SDK
         .library(
             name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices"]
+            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
+        ),
+
+        // The Facebook AEM Kit
+        .library(
+            name: "FacebookAEM",
+            targets: ["FBAEMKit", "FacebookAEM"]
         )
     ],
     targets: [
+        // The kernel of the SDK
+        targets.basics,
+
         /*
-          The kernel of the SDK
+          The legacy Objective-C implementation that will be converted to Swift.
+          This will not contain interfaces for new features written in Swift.
         */
+        targets.aem,
+
+        // The main AEM module
         .target(
-            name: "FBSDKCoreKit_Basics"
+          name: "FacebookAEM",
+          dependencies: ["FBAEMKit"]
         ),
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
+        targets.core,
+
+        // The main Core SDK module
         .target(
-            name: "LegacyCoreKit",
-            dependencies: ["FBSDKCoreKit_Basics"],
-            path: "FBSDKCoreKit/FBSDKCoreKit",
-            exclude: ["Swift"],
-            cSettings: [
-                .headerSearchPath("AppEvents"),
-                .headerSearchPath("AppEvents/Internal"),
-                .headerSearchPath("AppEvents/Internal/AAM"),
-                .headerSearchPath("AppEvents/Internal/AEM"),
-                .headerSearchPath("AppEvents/Internal/Codeless"),
-                .headerSearchPath("AppEvents/Internal/ViewHierarchy/"),
-                .headerSearchPath("AppEvents/Internal/ML"),
-                .headerSearchPath("AppEvents/Internal/Integrity"),
-                .headerSearchPath("AppEvents/Internal/EventDeactivation"),
-                .headerSearchPath("AppEvents/Internal/SKAdNetwork"),
-                .headerSearchPath("AppEvents/Internal/SuggestedEvents"),
-                .headerSearchPath("AppLink"),
-                .headerSearchPath("AppLink/Internal"),
-                .headerSearchPath("GraphAPI"),
-                .headerSearchPath("Internal"),
-                .headerSearchPath("Internal/Base64"),
-                .headerSearchPath("Internal/BridgeAPI"),
-                .headerSearchPath("Internal/BridgeAPI/ProtocolVersions"),
-                .headerSearchPath("Internal/Cryptography"),
-                .headerSearchPath("Internal/Device"),
-                .headerSearchPath("Internal/ErrorRecovery"),
-                .headerSearchPath("Internal/FeatureManager"),
-                .headerSearchPath("Internal/Instrument"),
-                .headerSearchPath("Internal/Instrument/CrashReport"),
-                .headerSearchPath("Internal/Instrument/ErrorReport"),
-                .headerSearchPath("Internal/Monitoring"),
-                .headerSearchPath("Internal/Network"),
-                .headerSearchPath("Internal/ServerConfiguration"),
-                .headerSearchPath("Internal/TokenCaching"),
-                .headerSearchPath("Internal/UI"),
-                .headerSearchPath("Internal/WebDialog"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ],
+            name: "FacebookCore",
+            dependencies: ["FacebookAEM", "FBSDKCoreKit_Basics", "FBSDKCoreKit"],
             linkerSettings: [
+                .linkedLibrary("c++"),
+                .linkedLibrary("z"),
                 .linkedFramework("Accelerate")
             ]
         ),
 
         /*
-          The main Core SDK module
-        */
-        .target(
-            name: "FacebookCore",
-            dependencies: ["LegacyCoreKit"],
-            cSettings: [
-                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ],
-            swiftSettings: [
-                .define("FBSDK_SWIFT_PACKAGE")
-            ]
-        ),
-
-        /*
-          The legacy Objective-C interface that will be used to maintain
-          backwards compatibility with types that have been converted to Swift.
-
-          This will not contain interfaces for new features written in Swift.
-        */
-        .target(
-            name: "FBSDKCoreKit",
-            dependencies: ["LegacyCoreKit", "FacebookCore"],
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ]
-        ),
-
-        /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
-        .target(
-            name: "FBSDKLoginKit",
-            dependencies: ["FBSDKCoreKit"],
-            path: "FBSDKLoginKit/FBSDKLoginKit",
-            exclude: ["Swift"],
-            cSettings: [
-                .headerSearchPath("Internal"),
-                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define(
-                    conditionalCompilationFlag,
-                    to: nil,
-                    .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil)
-                )
-            ]
-        ),
+        targets.login,
 
-        /*
-          The main Login SDK module
-        */
+        // The main Login SDK module
         .target(
             name: "FacebookLogin",
-            dependencies: ["FacebookCore", "FBSDKLoginKit"],
-            path: "FBSDKLoginKit/FBSDKLoginKit/Swift",
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ],
-            swiftSettings: [.define("TARGET_OS_TV", .when(platforms: [.tvOS], configuration: nil))]
+            dependencies: ["FacebookCore", "FBSDKLoginKit"]
         ),
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
-        .target(
-            name: "FBSDKShareKit",
-            dependencies: ["FBSDKCoreKit"],
-            path: "FBSDKShareKit/FBSDKShareKit",
-            exclude: ["Swift"],
-            cSettings: [
-                .headerSearchPath("Internal"),
-                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ]
-        ),
+        targets.share,
 
-        /*
-          The main Share SDK module
-        */
+        // The main Share SDK module
         .target(
             name: "FacebookShare",
-            dependencies: ["FacebookCore", "FBSDKShareKit"],
-            path: "FBSDKShareKit/FBSDKShareKit/Swift",
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ]
+            dependencies: ["FacebookCore", "FBSDKShareKit"]
         ),
 
-        /*
-          The legacy Objective-C implementation that will be converted to Swift.
-          This will not contain interfaces for new features written in Swift.
-        */
-        .target(
-            name: "FBSDKGamingServicesKit",
-            dependencies: ["FBSDKCoreKit"],
-            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit",
-            exclude: ["Swift"],
-            cSettings: [
-                .headerSearchPath("Internal"),
-                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal"),
-                .define(
-                    conditionalCompilationFlag,
-                    to: nil,
-                    .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil)
-                )
-            ]
-        ),
+        // The main Facebook Gaming Services module
+        targets.gamingServices,
 
         /*
-          The main Gaming Services SDK module
+          Wrappers for backwards compatibility ObjC interfaces.
         */
-        .target(
-            name: "FacebookGamingServices",
-            dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
-            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift",
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ]
-        )
+        targets.fbsdkGamingServices,
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )

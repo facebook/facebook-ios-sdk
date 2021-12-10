@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "RPSGameViewController.h"
 
@@ -76,7 +66,7 @@ typedef void (^RPSBlock)(void);
     self.title = NSLocalizedString(@"You Rock!", @"You Rock!");
     self.tabBarItem.image = [UIImage imageNamed:@"first"];
 
-    BOOL ipad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+    BOOL ipad = ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
     NSString *rockRight = ipad ? @"right-rock-128.png" : @"right-rock-88.png";
     NSString *paperRight = ipad ? @"right-paper-128.png" : @"right-paper-88.png";
@@ -153,14 +143,14 @@ typedef void (^RPSBlock)(void);
     [self.againButton.layer setBorderColor:fontColor.CGColor];
 
     [self.computerHand.layer setCornerRadius:8.0];
-    self.computerHand.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.computerHand.layer.shadowColor = UIColor.blackColor.CGColor;
     self.computerHand.layer.shadowOpacity = 0.5;
     self.computerHand.layer.shadowRadius = 8;
     self.computerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);
     self.computerHand.clipsToBounds = YES;
 
     [self.playerHand.layer setCornerRadius:8.0];
-    self.playerHand.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.playerHand.layer.shadowColor = UIColor.blackColor.CGColor;
     self.playerHand.layer.shadowOpacity = 0.5;
     self.playerHand.layer.shadowRadius = 8;
     self.playerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);
@@ -220,7 +210,7 @@ typedef void (^RPSBlock)(void);
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
   // Return YES for supported orientations
-  if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+  if ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
   } else {
     return YES;
@@ -383,7 +373,7 @@ typedef void (^RPSBlock)(void);
                                             otherButtonTitles:@"Share on Facebook",
                           @"Share on Messenger",
                           @"Friends' Activity",
-                          [FBSDKAccessToken currentAccessToken] ? @"Log out" : @"Log in",
+                          FBSDKAccessToken.currentAccessToken ? @"Log out" : @"Log in",
                           nil];
   // Show the sheet
   [sheet showInView:sender];
@@ -418,7 +408,7 @@ typedef void (^RPSBlock)(void);
     }
     case 2: { // See Friends
       UIViewController *friends;
-      if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+      if ([UIDevice.currentDevice userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         friends = [[RPSFriendsViewController alloc] initWithNibName:@"RPSFriendsViewController_iPhone" bundle:nil];
       } else {
         friends = [[RPSFriendsViewController alloc] initWithNibName:@"RPSFriendsViewController_iPad" bundle:nil];
@@ -428,7 +418,7 @@ typedef void (^RPSBlock)(void);
       break;
     }
     case 3: { // Login and logout
-      if ([FBSDKAccessToken currentAccessToken]) {
+      if (FBSDKAccessToken.currentAccessToken) {
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         [login logOut];
       } else {
@@ -495,7 +485,7 @@ typedef void (^RPSBlock)(void);
                       ok:@"Install or Upgrade Now"
                   cancel:@"Decide Later"
               completion:^{
-                [[UIApplication sharedApplication]
+                [UIApplication.sharedApplication
                  openURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.com/apps/%@", appName]]];
               }];
 }
@@ -544,8 +534,8 @@ typedef void (^RPSBlock)(void);
                           return;
                         }
 
-                        if ([FBSDKAccessToken currentAccessToken]
-                            && [[FBSDKAccessToken currentAccessToken].permissions containsObject:@"publish_actions"]) {
+                        if (FBSDKAccessToken.currentAccessToken
+                            && [FBSDKAccessToken.currentAccessToken.permissions containsObject:@"publish_actions"]) {
                           if (successHandler) {
                             successHandler();
                           }
@@ -588,7 +578,7 @@ typedef void (^RPSBlock)(void);
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
                                                                  parameters:@{@"file" : _imagesToPublish[gesture]}
-                                                                tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                tokenString:FBSDKAccessToken.currentAccessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"POST"];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -605,8 +595,8 @@ typedef void (^RPSBlock)(void);
 - (void)publishResult
 {
   // Check if we have publish permissions and ask for them if we don't
-  if (![FBSDKAccessToken currentAccessToken]
-      || ![[FBSDKAccessToken currentAccessToken].permissions containsObject:@"publish_actions"]) {
+  if (!FBSDKAccessToken.currentAccessToken
+      || ![FBSDKAccessToken.currentAccessToken.permissions containsObject:@"publish_actions"]) {
     NSLog(@"Re-requesting permissions");
     _interestedInImplicitShare = NO;
     [self alertWithMessage:@"Share game activity with your friends?"

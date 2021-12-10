@@ -1,24 +1,14 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length
 class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   enum Keys {
@@ -31,53 +21,73 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   enum Values {
     static let actionID = "123"
     static let methodName = "open"
-    static let methodVersion = "v1"
-    static let scheme = "https"
+    static let scheme = URLScheme.https
   }
 
   let validQueryParameters = ["Foo": "Bar"]
-  var bridge: BridgeAPIProtocolWebV2! // swiftlint:disable:this implicitly_unwrapped_optional
-  var nativeBridge = TestBridgeApiProtocol()
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var serverConfigurationProvider: ServerConfigurationProviding!
+  var nativeBridge: TestBridgeAPIProtocol!
+  var errorFactory: ErrorCreating!
+  var bridge: BridgeAPIProtocolWebV2!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    TestServerConfigurationProvider.reset()
-
+    serverConfigurationProvider = TestServerConfigurationProvider()
+    nativeBridge = TestBridgeAPIProtocol()
+    errorFactory = TestErrorFactory()
     bridge = BridgeAPIProtocolWebV2(
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
-      nativeBridge: nativeBridge
+      serverConfigurationProvider: serverConfigurationProvider,
+      nativeBridge: nativeBridge,
+      errorFactory: errorFactory
     )
   }
 
-  override class func tearDown() {
-    super.tearDown()
+  override func tearDown() {
+    serverConfigurationProvider = nil
+    nativeBridge = nil
+    errorFactory = nil
+    bridge = nil
 
-    TestServerConfigurationProvider.reset()
+    super.tearDown()
   }
 
-  func testDefaultDependencies() {
+  func testInitializing() {
+    XCTAssertTrue(
+      bridge.serverConfigurationProvider is TestServerConfigurationProvider,
+      "Should be able to create with a custom server configuration provider"
+    )
+    XCTAssertTrue(
+      bridge.nativeBridge === nativeBridge,
+      "Should be able to create with a custom native bridge"
+    )
+    XCTAssertTrue(
+      bridge.errorFactory === errorFactory,
+      "Should be able to create with a custom error factory"
+    )
+  }
+
+  func testDefaultDependencies() throws {
     bridge = BridgeAPIProtocolWebV2()
 
     XCTAssertTrue(
-      bridge.serverConfigurationProvider is ServerConfigurationManager.Type,
+      bridge.serverConfigurationProvider is ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertTrue(
       bridge.nativeBridge is BridgeAPIProtocolNativeV1,
       "Should use the expected default native bridge"
     )
-  }
-
-  func testCreatingWithCustomDependencies() {
-    XCTAssertTrue(
-      bridge.serverConfigurationProvider is TestServerConfigurationProvider.Type,
-      "Should be able to create with a custom server configuration provider"
+    let factory = try XCTUnwrap(
+      bridge.errorFactory as? ErrorFactory,
+      "Should use the expected type of error factory by default"
     )
-    XCTAssertEqual(
-      bridge.nativeBridge as? TestBridgeApiProtocol,
-      nativeBridge,
-      "Should be able to create with a custom native bridge"
+    XCTAssertTrue(
+      factory.reporter === ErrorReporter.shared,
+      "The error factory should use the shared error reporter"
     )
   }
 
@@ -86,24 +96,21 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutServerConfiguration() {
     XCTAssertNil(
       try? bridge.requestURL(
-        withActionID: nil,
-        scheme: nil,
-        methodName: nil,
-        methodVersion: nil,
-        parameters: nil
+        withActionID: "",
+        scheme: "",
+        methodName: "",
+        parameters: [:]
       ),
       "Should not create a url without a server configuration"
     )
   }
 
   func testRequestURLWithoutDialog() {
-    TestServerConfigurationProvider.stubbedServerConfiguration = ServerConfigurationFixtures.defaultConfig()
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: "Foo",
-      methodVersion: nil,
-      parameters: nil
+      parameters: [:]
     )
 
     XCTAssertNil(
@@ -115,11 +122,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutMatchingDialogForMethodName() {
     stubServerConfigurationWithDialog(named: "Bar")
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: "Foo",
-      methodVersion: nil,
-      parameters: nil
+      parameters: [:]
     )
 
     XCTAssertNil(
@@ -132,11 +138,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     stubServerConfigurationWithDialog(named: Values.methodName)
     nativeBridge.stubbedRequestURLError = SampleError()
     let url = try? bridge.requestURL(
-      withActionID: nil,
-      scheme: nil,
+      withActionID: "",
+      scheme: "",
       methodName: Values.methodName,
-      methodVersion: nil,
-      parameters: nil
+      parameters: [:]
     )
 
     XCTAssertNil(
@@ -147,7 +152,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestUrlUsesQueryParametersFromNativeBridge() {
     let queryItem = URLQueryItem(name: "somethingUnique", value: UUID().uuidString)
-    let urlWithParams = SampleUrls.valid(queryItems: [queryItem])
+    let urlWithParams = SampleURLs.valid(queryItems: [queryItem])
     nativeBridge.stubbedRequestURL = urlWithParams
     stubServerConfigurationWithDialog(
       named: Values.methodName
@@ -155,9 +160,8 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
     guard let url = try? bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: validQueryParameters
     )
     else {
@@ -175,16 +179,15 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURL() {
-    let expectedURL = SampleUrls.valid(path: "foo")
+    let expectedURL = SampleURLs.valid(path: "foo")
     stubServerConfigurationWithDialog(
       named: Values.methodName,
       url: expectedURL
     )
     guard let url = try? bridge.requestURL(
       withActionID: Values.actionID,
-      scheme: Values.scheme,
+      scheme: Values.scheme.rawValue,
       methodName: Values.methodName,
-      methodVersion: Values.methodVersion,
       parameters: validQueryParameters
     )
     else {
@@ -239,9 +242,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRedirectUrlWithActionIdOnly() {
-    guard let url = try? bridge._redirectURL(withActionID: name, methodName: nil),
-          let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
-          let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
+    guard
+      let url = try? bridge._redirectURL(withActionID: name, methodName: nil),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
@@ -265,9 +269,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRedirectUrlWithMethodNameAndActionID() {
-    guard let url = try? bridge._redirectURL(withActionID: name, methodName: Values.methodName),
-          let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
-          let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
+    guard
+      let url = try? bridge._redirectURL(withActionID: name, methodName: Values.methodName),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
@@ -297,40 +302,29 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   // MARK: - Request URL for DialogConfiguration
 
-  func testRequestURLForDialogConfigurationWithoutScheme() {
-    guard let url = URL(string: "/"),
-          let configuration = DialogConfiguration(
-            name: name,
-            url: url,
-            appVersions: []
-          ),
-          let requestURL = try? bridge._requestURL(for: configuration),
-          let version = Settings.shared.graphAPIVersion
-    else {
-      return XCTFail("Should be able to create a configuration with a url")
-    }
+  func testRequestURLForDialogConfigurationWithoutScheme() throws {
+    let url = try XCTUnwrap(URL(string: "/"))
+    let configuration = DialogConfiguration(name: name, url: url, appVersions: [])
+    let requestURL = try? bridge._requestURL(for: configuration)
 
     XCTAssertEqual(
-      requestURL.absoluteString,
-      "https://m.facebook.com/\(version)/",
+      requestURL?.absoluteString,
+      "https://m.facebook.com/\(Settings.shared.graphAPIVersion)/",
       "Should provide a request url for a dialog configuration without a scheme"
     )
   }
 
   func testRequestURLForDialogConfigurationWithScheme() {
-    guard let configuration = DialogConfiguration(
-            name: name,
-            url: SampleUrls.valid(path: name),
-            appVersions: []
-          ),
-          let requestURL = try? bridge._requestURL(for: configuration)
-    else {
-      return XCTFail("Should be able to create a configuration with a url")
-    }
+    let configuration = DialogConfiguration(
+      name: name,
+      url: SampleURLs.valid(path: name),
+      appVersions: []
+    )
+    let requestURL = try? bridge._requestURL(for: configuration)
 
     XCTAssertEqual(
-      requestURL.absoluteString,
-      SampleUrls.valid(path: name).absoluteString,
+      requestURL?.absoluteString,
+      SampleURLs.valid(path: name).absoluteString,
       "Should use the url from the dialog configuration if it has a scheme"
     )
   }
@@ -349,8 +343,9 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       Values.actionID,
       "Should pass through to the native bridge"
     )
-    guard let parameters = nativeBridge.capturedResponseQueryParameters as? [String: String],
-          parameters == validQueryParameters
+    guard
+      let parameters = nativeBridge.capturedResponseQueryParameters as? [String: String],
+      parameters == validQueryParameters
     else {
       return XCTFail("Should pass through to the native bridge")
     }
@@ -365,15 +360,22 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func stubServerConfigurationWithDialog(
     named name: String,
-    url: URL = SampleUrls.valid
+    url: URL = SampleURLs.valid
   ) {
     let dialogConfiguration = DialogConfiguration(
       name: name,
       url: url,
       appVersions: []
     )
-    let configuration = ServerConfigurationFixtures.config(with: ["dialogConfigurations": [name: dialogConfiguration]])
-    TestServerConfigurationProvider.stubbedServerConfiguration = configuration
+    let configuration = ServerConfigurationFixtures.config(
+      withDictionary: ["dialogConfigurations": [name: dialogConfiguration]]
+    )
+    serverConfigurationProvider = TestServerConfigurationProvider(configuration: configuration)
+    bridge = BridgeAPIProtocolWebV2(
+      serverConfigurationProvider: serverConfigurationProvider,
+      nativeBridge: nativeBridge,
+      errorFactory: errorFactory
+    )
   }
 
   func queryItems(from url: URL) -> [URLQueryItem] {

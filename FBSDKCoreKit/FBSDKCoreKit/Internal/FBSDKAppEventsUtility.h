@@ -1,49 +1,58 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAdvertiserIDProviding.h"
+#import "FBSDKAppEventDropDetermining.h"
+#import "FBSDKAppEventParametersExtracting.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKDeviceInformationProviding.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
 NS_SWIFT_NAME(AppEventsUtility)
-@interface FBSDKAppEventsUtility : NSObject
+@interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 @property (class, nonatomic, readonly) FBSDKAppEventsUtility *shared;
-@property (nonatomic, copy, readonly) NSString *advertiserID;
-@property (class, nonatomic, assign, readonly) NSTimeInterval unixTimeNow;
-@property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
+@property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
+@property (class, nonatomic, readonly, assign) NSTimeInterval unixTimeNow;
+@property (class, nonatomic, readonly, assign) BOOL isDebugBuild;
+@property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (nullable, nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
 
-+ (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
++ (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData;
+
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;
 + (void)logAndNotify:(NSString *)msg;
-+ (NSString *)tokenStringToUseFor:(FBSDKAccessToken *)token;
-+ (BOOL)validateIdentifier:(NSString *)identifier;
++ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
+                      loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
++ (BOOL)validateIdentifier:(nullable NSString *)identifier;
 + (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;
-+ (BOOL)isStandardEvent:(NSString *)event;
-+ (NSTimeInterval)convertToUnixTime:(NSDate *)date;
++ (BOOL)isStandardEvent:(nullable NSString *)event;
++ (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date;
+
+#if DEBUG && FBTEST
++ (void)reset;
+#endif
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,37 +1,28 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length implicitly_unwrapped_optional
+// swiftlint:disable type_body_length
 class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
-  let requestProvider = TestGraphRequestFactory()
-  let settings = TestSettings()
-  let eventLogger = TestEventLogger()
-  var eventProcessor: TestOnDeviceMLModelManager! = TestOnDeviceMLModelManager()
-  let collectionView = TestCollectionView(
-    frame: .zero,
-    collectionViewLayout: UICollectionViewFlowLayout()
-  )
-  let tableView = TestTableView()
-  let button = UIButton()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var graphRequestFactory: TestGraphRequestFactory!
+  var settings: TestSettings!
+  var eventLogger: TestEventLogger!
+  var eventProcessor: TestOnDeviceMLModelManager!
+  var serverConfigurationProvider: TestServerConfigurationProvider!
+  var collectionView: TestCollectionView!
+  var tableView: TestTableView!
+  var button: UIButton!
   var indexer: SuggestedEventsIndexer!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   enum Keys {
     static let productionEvents = "production_events"
@@ -50,7 +41,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     static let unconfirmedEvents = optInEvents.map { $0 + "1" }
     static let buttonText = "Purchase"
     static let denseFeature = "1,2,3"
-    static let processedEvent = "purchase"
+  }
+
+  enum AppEventNames {
+    static let processedEvent = AppEvents.Name("purchase")
   }
 
   override func setUp() {
@@ -58,16 +52,26 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     SuggestedEventsIndexerTests.reset()
 
+    graphRequestFactory = TestGraphRequestFactory()
+    settings = TestSettings()
     settings.appID = name
-
+    eventLogger = TestEventLogger()
+    eventProcessor = TestOnDeviceMLModelManager()
+    serverConfigurationProvider = TestServerConfigurationProvider()
+    collectionView = TestCollectionView(
+      frame: .zero,
+      collectionViewLayout: UICollectionViewFlowLayout()
+    )
+    tableView = TestTableView()
+    button = UIButton()
     indexer = SuggestedEventsIndexer(
-      requestProvider: requestProvider,
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      graphRequestFactory: graphRequestFactory,
+      serverConfigurationProvider: serverConfigurationProvider,
       swizzler: TestSwizzler.self,
       settings: settings,
       eventLogger: eventLogger,
       featureExtractor: TestFeatureExtractor.self,
-      eventProcessor: eventProcessor
+      eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
     )
   }
 
@@ -77,8 +81,21 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     reset()
   }
 
+  override func tearDown() {
+    graphRequestFactory = nil
+    settings = nil
+    eventLogger = nil
+    eventProcessor = nil
+    serverConfigurationProvider = nil
+    collectionView = nil
+    tableView = nil
+    button = nil
+    indexer = nil
+
+    super.tearDown()
+  }
+
   static func reset() {
-    TestServerConfigurationProvider.reset()
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
     SuggestedEventsIndexer.reset()
@@ -91,43 +108,13 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   // MARK: - Dependencies
 
-  func testDefaultDependencies() {
-    indexer = SuggestedEventsIndexer()
-
-    XCTAssertTrue(
-      indexer.requestProvider is GraphRequestFactory,
-      "Should have a request provider of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.serverConfigurationProvider is ServerConfigurationManager.Type,
-      "Should have a server configuration manager of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.swizzler is Swizzler.Type,
-      "Should have a swizzler of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.settings is Settings,
-      "Should have a settings of the expected default type"
-    )
-    XCTAssertEqual(
-      ObjectIdentifier(indexer.eventLogger),
-      ObjectIdentifier(AppEvents.singleton),
-      "Should have an event logger of the expected default type"
-    )
-    XCTAssertTrue(
-      indexer.eventProcessor is ModelManager,
-      "Should have an event processor of the expected default type"
-    )
-  }
-
   func testCustomDependencies() {
     XCTAssertTrue(
-      indexer.requestProvider is TestGraphRequestFactory,
+      indexer.graphRequestFactory is TestGraphRequestFactory,
       "Should be able to create an instance with a custom request provider"
     )
     XCTAssertTrue(
-      indexer.serverConfigurationProvider is TestServerConfigurationProvider.Type,
+      indexer.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to create an instance with a custom server configuration provider"
     )
     XCTAssertTrue(
@@ -163,7 +150,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     indexer.enable()
 
     XCTAssertTrue(
-      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
+      serverConfigurationProvider.loadServerConfigurationWasCalled,
       "Enabling should load a server configuration"
     )
   }
@@ -280,39 +267,40 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   func testLoggingEventWithoutDenseFeature() {
     indexer.logSuggestedEvent(
-      name,
+      AppEvents.Name(name),
       text: Values.buttonText,
       denseFeature: nil
     )
 
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if there is no dense feature"
     )
   }
 
   func testLoggingEventWithDenseFeature() {
     indexer.logSuggestedEvent(
-      name,
+      AppEvents.Name(name),
       text: Values.buttonText,
       denseFeature: Values.denseFeature
     )
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
-    guard let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
-          let data = parameter.data(using: .utf8),
-          let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+    guard
+      let parameter = graphRequestFactory.capturedParameters[Keys.metadata] as? String,
+      let data = parameter.data(using: .utf8),
+      let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
       return XCTFail("Should capture the metadata in the parameters")
     }
 
     XCTAssertEqual(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(name)/suggested_events",
       "Should use the app identifier from the settings"
     )
     XCTAssertEqual(
-      requestProvider.capturedParameters[Keys.eventName] as? String,
+      graphRequestFactory.capturedParameters[Keys.eventName] as? String,
       name,
       "Should capture the event name in the parameters"
     )
@@ -322,16 +310,16 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should request the expected metadata"
     )
     XCTAssertNil(
-      requestProvider.capturedTokenString,
+      graphRequestFactory.capturedTokenString,
       "The request should be tokenless"
     )
     XCTAssertEqual(
-      requestProvider.capturedHttpMethod,
+      graphRequestFactory.capturedHttpMethod,
       .post,
       "Should use the expected http method"
     )
     XCTAssertTrue(
-      requestProvider.capturedFlags.isEmpty,
+      graphRequestFactory.capturedFlags.isEmpty,
       "Should not create the request with explicit request flags"
     )
   }
@@ -354,7 +342,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is too long"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is too long"
     )
   }
@@ -372,7 +360,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is empty"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is empty"
     )
   }
@@ -390,21 +378,22 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log an event if the text is sensitive"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if the text is sensitive"
     )
   }
 
-  func testPredictingEventWithoutEventProcessor() {
+  func testPredictingEventWithProcessedEventOther() {
+    eventProcessor.stubbedProcessedEvents = "other"
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertNil(
       eventLogger.capturedEventName,
-      "Should not log if there is no event processor to process events"
+      "Should not log if the processed event is 'other'"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
-      "Should not create a request if there is no event processor to process events"
+      graphRequestFactory.capturedGraphPath,
+      "Should not log a suggested event if the processed event is 'other'"
     )
   }
 
@@ -427,7 +416,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | no                                  | no                        |
   func testPredictingWithProcessedEventsMatchingNone() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
@@ -445,10 +434,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | no                        |
   func testPredictingWithProcessedEventsMatchingOptinEvent() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
-      optInEvents: [Values.processedEvent],
+      optInEvents: [AppEventNames.processedEvent.rawValue],
       unconfirmedEvents: Values.unconfirmedEvents
     )
 
@@ -456,7 +445,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.processedEvent,
+      AppEventNames.processedEvent,
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertEqual(
@@ -472,11 +461,11 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | processed event | matches optin | matches unconfirmed | dense data |
   // | yes             | no            | yes                 | null       |
   func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
-      unconfirmedEvents: [Values.processedEvent]
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
@@ -486,7 +475,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log unconfirmed events"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "Should not create a request if there is no dense data"
     )
   }
@@ -498,11 +487,11 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
 
     TestFeatureExtractor.stub(denseFeatures: pointer)
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
       optInEvents: Values.optInEvents,
-      unconfirmedEvents: [Values.processedEvent]
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
@@ -512,7 +501,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should not log unconfirmed events"
     )
     XCTAssertEqual(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       "\(name)/suggested_events",
       "Should create a request for an unconfirmed event when there is dense data"
     )
@@ -521,22 +510,22 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | yes                       |
   func testPredictingWithProcessedEventMatchingBoth() {
-    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = AppEventNames.processedEvent.rawValue
 
     enable(
-      optInEvents: [Values.processedEvent],
-      unconfirmedEvents: [Values.processedEvent]
+      optInEvents: [AppEventNames.processedEvent.rawValue],
+      unconfirmedEvents: [AppEventNames.processedEvent.rawValue]
     )
 
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
-      Values.processedEvent,
+      AppEventNames.processedEvent,
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertNil(
-      requestProvider.capturedGraphPath,
+      graphRequestFactory.capturedGraphPath,
       """
       Should not create a request when there are matching unconfirmed events if
       there are also matching opt-in events
@@ -660,8 +649,8 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       unconfirmedEvents: unconfirmedEvents
     )
     indexer.enable()
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(with: setting),
+    serverConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.config(withDictionary: setting),
       error
     )
   }

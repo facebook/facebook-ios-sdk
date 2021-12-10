@@ -14,4 +14,4 @@ More information on the Apache License can be found [here](http://www.apache.org
 
 Setup:
 
-We use Carthage to manage our dependencies. You will need to run `carthage bootstrap` before you will be able to build the project.
+Run `./generate-projects.sh && open FacebookSDK.xcworkspace`. This will generate the Xcode projects and open the workspace.

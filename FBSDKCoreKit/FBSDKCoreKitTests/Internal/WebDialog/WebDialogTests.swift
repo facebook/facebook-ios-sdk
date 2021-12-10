@@ -1,35 +1,70 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
+
+// swiftlint:disable implicitly_unwrapped_optional
 
 class WebDialogTests: XCTestCase, WebDialogDelegate {
 
-  let windowFinder = TestWindowFinder()
+  var windowFinder: WindowFinding!
+  var dialogView: FBWebDialogView!
+  var errorFactory: ErrorCreating!
   var webDialogDidCancelWasCalled = false
   var webDialogDidFailWasCalled = false
   var capturedDidCompleteResults: [String: String]?
   var capturedError: Error?
   var parameters = ["foo": "bar"]
 
+  override func setUp() {
+    errorFactory = TestErrorFactory()
+    WebDialog.configure(errorFactory: errorFactory)
+
+    windowFinder = TestWindowFinder()
+    dialogView = FBWebDialogView()
+
+    super.setUp()
+  }
+
+  override func tearDown() {
+    windowFinder = nil
+    dialogView = nil
+    errorFactory = nil
+
+    WebDialog.resetClassDependencies()
+
+    super.tearDown()
+  }
+
+  func testClassDependencies() {
+    XCTAssertTrue(
+      WebDialog.errorFactory === errorFactory,
+      "Should be able to configure the web dialog class with an error factory"
+    )
+  }
+  func testDefaultClassDependencies() throws {
+    WebDialog.resetClassDependencies()
+    _ = WebDialog(name: "test", delegate: self)
+
+    let errorFactory = try XCTUnwrap(
+      WebDialog.errorFactory as? ErrorFactory,
+      "The web dialog class should use a standard error factory by default"
+    )
+    XCTAssertTrue(
+      errorFactory.reporter === ErrorReporter.shared,
+      "The error factory should use the shared error reporter"
+    )
+  }
+
   func testShowWithInvalidUrlFromParameters() {
-    let dialog = createAndShowDialog(name: name, windowFinder: windowFinder)
+    let dialog = createAndShowDialog(name: name)
 
     XCTAssertEqual(
       dialog.name,
@@ -52,20 +87,11 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   }
 
   func testShowWithValidUrlFromParametersWithoutWindow() {
-    createAndShowDialog(windowFinder: windowFinder)
+    createAndShowDialog()
 
     XCTAssertTrue(
       self.webDialogDidFailWasCalled,
       "Should fail to show if it cannot locate a window to present in"
-    )
-  }
-
-  func testShowWithValidUrlFromParametersWithWindow() {
-    createAndShowDialog()
-
-    XCTAssertFalse(
-      self.webDialogDidFailWasCalled,
-      "Should not fail to show if it can locate a window to present in"
     )
   }
 
@@ -77,7 +103,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     }
     let results = ["foo": name]
 
-    dialog.webDialogView(nil, didCompleteWithResults: results)
+    dialog.webDialogView(dialogView, didCompleteWithResults: results)
 
     XCTAssertEqual(
       capturedDidCompleteResults,
@@ -91,7 +117,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       return XCTFail("Web dialog should be a web dialog view delegate")
     }
 
-    dialog.webDialogView(nil, didFailWithError: SampleError())
+    dialog.webDialogView(dialogView, didFailWithError: SampleError())
 
     XCTAssertTrue(
       capturedError is SampleError,
@@ -104,7 +130,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       return XCTFail("Web dialog should be a web dialog view delegate")
     }
 
-    dialog.webDialogViewDidCancel(nil)
+    dialog.webDialogViewDidCancel(dialogView)
 
     XCTAssertTrue(
       webDialogDidCancelWasCalled,
@@ -118,18 +144,18 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   func createAndShowDialog(
     name: String = "example",
     parameters: [String: String]? = nil,
-    windowFinder: TestWindowFinder = TestWindowFinder(stubbedWindow: UIWindow()),
     delegate: WebDialogDelegate? = nil
   ) -> WebDialog {
-    WebDialog.show(
-      withName: name,
+    WebDialog.createAndShow(
+      name: name,
       parameters: parameters ?? self.parameters,
-      windowFinder: windowFinder,
-      delegate: delegate ?? self
+      frame: .zero,
+      delegate: delegate ?? self,
+      windowFinder: windowFinder
     )
   }
 
-  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [AnyHashable: Any]) {
+  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
     capturedDidCompleteResults = results as? [String: String]
   }
 

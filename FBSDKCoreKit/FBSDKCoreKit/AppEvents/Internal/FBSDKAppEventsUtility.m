@@ -1,39 +1,29 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKAppEventsUtility.h"
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
+#import <FBSDKCoreKit/FBSDKConstants.h>
+#import <FBSDKCoreKit/FBSDKError.h>
+#import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAppEvents.h"
+#import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsConfigurationManager.h"
-#import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKConstants.h"
-#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings+Internal.h"
 
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME @"com-facebook-sdk-PersistedAnonymousID.json"
@@ -78,71 +68,73 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 // from a type-based interface to an instance-based interface.
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
+static dispatch_once_t singletonNonce;
 + (instancetype)shared
 {
-  static dispatch_once_t nonce;
   static id instance;
-  dispatch_once(&nonce, ^{
+  dispatch_once(&singletonNonce, ^{
     instance = [self new];
   });
   return instance;
 }
 
-+ (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
++ (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+  return [self.shared activityParametersDictionaryForEvent:eventCategory
+                                 shouldAccessAdvertisingID:shouldAccessAdvertisingID
+                                                    userID:userID
+                                                  userData:userData];
+}
+
+- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                       userID:(nullable NSString *)userID
+                                                                     userData:(nullable NSString *)userData
+{
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
   if (shouldAccessAdvertisingID) {
-    NSString *advertiserID = [self.shared advertiserID];
-    [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
+    [FBSDKTypeUtility dictionary:parameters setObject:self.advertiserID forKey:@"advertiser_id"];
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [FBSDKSettings advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
-    [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKSettings isAdvertiserTrackingEnabled]).stringValue forKey:@"advertiser_tracking_enabled"];
+    [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
-  NSString *userData = [FBSDKAppEvents getUserData];
   if (userData) {
     [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
+  } else {
+    // Preserving existing behavior which was to pass a hashed version of an empty
+    // dictionary. This is just in case anyone is relying on that parameter to be a string
+    // and not nil.
+    [FBSDKTypeUtility dictionary:parameters setObject:@"{}" forKey:@"ud"];
   }
 
-  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.sharedSettings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
-  NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
 
-  NSDictionary<NSString *, id> *dataProcessingOptions = [FBSDKSettings dataProcessingOptions];
-  if (dataProcessingOptions) {
-    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
-    if (options && [options isKindOfClass:NSArray.class]) {
-      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
-      [FBSDKTypeUtility dictionary:parameters
-                         setObject:optionsString
-                            forKey:DATA_PROCESSING_OPTIONS];
-    }
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
-                          forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE]
-                          forKey:DATA_PROCESSING_OPTIONS_STATE];
-  }
+  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
 
-  [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:self.deviceInformationProvider.encodedDeviceInfo
+                        forKey:self.deviceInformationProvider.storageKey];
 
   static dispatch_once_t fetchBundleOnce;
   static NSMutableArray *urlSchemes;
 
   dispatch_once(&fetchBundleOnce, ^{
-    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSBundle *mainBundle = NSBundle.mainBundle;
     urlSchemes = [NSMutableArray new];
     for (NSDictionary<NSString *, id> *fields in [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
       NSArray<NSString *> *schemesForType = fields[@"CFBundleURLSchemes"];
@@ -159,23 +151,23 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return parameters;
 }
 
-- (NSString *)advertiserID
+- (nullable NSString *)advertiserID
 {
-  BOOL shouldUseCachedManagerIfAvailable = [FBSDKSettings shouldUseCachedValuesForExpensiveMetadata];
+  BOOL shouldUseCachedManagerIfAvailable = FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata;
   id<FBSDKDynamicFrameworkResolving> dynamicFrameworkResolver = FBSDKDynamicFrameworkLoader.shared;
   return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver
                                   shouldUseCachedManager:shouldUseCachedManagerIfAvailable];
 }
 
-- (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
-                                 shouldUseCachedManager:(BOOL)shouldUseCachedManager
+- (nullable NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
+                                          shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
-  if (!FBSDKSettings.isAdvertiserIDCollectionEnabled) {
+  if (!FBSDKSettings.sharedSettings.isAdvertiserIDCollectionEnabled) {
     return nil;
   }
 
   if (@available(iOS 14.0, *)) {
-    if (![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].advertiserIDCollectionEnabled) {
+    if (!self.appEventsConfigurationProvider.cachedAppEventsConfiguration.advertiserIDCollectionEnabled) {
       return nil;
     }
   }
@@ -214,21 +206,21 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (void)clearLibraryFiles
 {
-  [[NSFileManager defaultManager] removeItemAtPath:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
-                                             error:NULL];
-  [[NSFileManager defaultManager] removeItemAtPath:[[self class] persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
-                                             error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
+                                           error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
+                                           error:NULL];
 }
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
-  FBSDKConditionalLog(
-    [NSThread isMainThread],
-    FBSDKLoggingBehaviorDeveloperErrors,
-    @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
-    methodName,
-    className
-  );
+  if (!NSThread.isMainThread) {
+    NSString *message = [NSString stringWithFormat:@"*** <%@, %@> is not called on the main thread. This can lead to errors.",
+                         methodName,
+                         className];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:message];
+  }
 }
 
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
@@ -259,14 +251,14 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (void)logAndNotify:(NSString *)msg
 {
-  [[self class] logAndNotify:msg allowLogAsDeveloperError:YES];
+  [self.class logAndNotify:msg allowLogAsDeveloperError:YES];
 }
 
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError
 {
   NSString *behaviorToLog = FBSDKLoggingBehaviorAppEvents;
   if (allowLogAsDeveloperError) {
-    if ([FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
+    if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
       // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
       behaviorToLog = FBSDKLoggingBehaviorDeveloperErrors;
     }
@@ -274,7 +266,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   [FBSDKLogger singleShotLogEntry:behaviorToLog logEntry:msg];
   NSError *error = [FBSDKError errorWithCode:FBSDKErrorAppEventsFlush message:msg];
-  [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
+  [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
 + (BOOL)       matchString:(NSString *)string
@@ -304,9 +296,9 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static NSCharacterSet *firstCharacterSet;
   static NSCharacterSet *restOfStringCharacterSet;
   static dispatch_once_t onceToken;
-  static NSMutableSet *cachedIdentifiers;
+  static NSMutableSet<NSString *> *cachedIdentifiers;
   dispatch_once(&onceToken, ^{
-    NSMutableCharacterSet *mutableSet = [NSMutableCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet *mutableSet = NSMutableCharacterSet.alphanumericCharacterSet;
     [mutableSet addCharactersInString:@"_"];
     firstCharacterSet = [mutableSet copy];
 
@@ -329,11 +321,11 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return YES;
 }
 
-+ (BOOL)validateIdentifier:(NSString *)identifier
++ (BOOL)validateIdentifier:(nullable NSString *)identifier
 {
-  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![[self class] regexValidateIdentifier:identifier]) {
-    [[self class] logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
-                                identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
+  if (identifier == nil || identifier.length == 0 || identifier.length > FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH || ![self.class regexValidateIdentifier:identifier]) {
+    [self.class logAndNotify:[NSString stringWithFormat:@"Invalid identifier: '%@'.  Must be between 1 and %d characters, and must be contain only alphanumerics, _, - or spaces, starting with alphanumeric or _.",
+                              identifier, FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH]];
     return NO;
   }
 
@@ -342,17 +334,16 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 // Given a candidate token (which may be nil), find the real token to string to use.
 // Precedence: 1) provided token, 2) current token, 3) app | client token, 4) fully anonymous session.
-+ (NSString *)tokenStringToUseFor:(FBSDKAccessToken *)token
++ (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
+                      loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID
 {
   if (!token) {
-    token = [FBSDKAccessToken currentAccessToken];
+    token = FBSDKAccessToken.currentAccessToken;
   }
 
-  NSString *loggingOverrideAppID = [FBSDKAppEvents loggingOverrideAppID];
-
-  NSString *appID = loggingOverrideAppID ?: token.appID ?: [FBSDKSettings appID];
+  NSString *appID = loggingOverrideAppID ?: token.appID ?: FBSDKSettings.sharedSettings.appID;
   NSString *tokenString = token.tokenString;
-  NSString *clientTokenString = [FBSDKSettings clientToken];
+  NSString *clientTokenString = FBSDKSettings.sharedSettings.clientToken;
 
   if (![appID isEqualToString:token.appID]) {
     // If there's a logging override app id present
@@ -375,7 +366,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return round([NSDate date].timeIntervalSince1970);
 }
 
-+ (NSTimeInterval)convertToUnixTime:(NSDate *)date
++ (NSTimeInterval)convertToUnixTime:(nullable NSDate *)date
 {
   return round([date timeIntervalSince1970]);
 }
@@ -410,8 +401,13 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (BOOL)shouldDropAppEvent
 {
+  return [self.shared shouldDropAppEvents];
+}
+
+- (BOOL)shouldDropAppEvents
+{
   if (@available(iOS 14.0, *)) {
-    if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && ![FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].eventCollectionEnabled) {
+    if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
       return YES;
     }
   }
@@ -471,8 +467,15 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return matches > 0;
 }
 
-#if DEBUG
- #if FBSDKTEST
+#if DEBUG && FBTEST
+
+// Reset the nonce so that a new instance will be created.
++ (void)reset
+{
+  if (singletonNonce) {
+    singletonNonce = 0;
+  }
+}
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager
 {
@@ -484,7 +487,6 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   _cachedAdvertiserIdentifierManager = manager;
 }
 
- #endif
 #endif
 
 @end

@@ -1,34 +1,18 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKTooltipView.h"
+#import "FBSDKTooltipView.h"
 
- #import <CoreText/CoreText.h>
+#import <CoreText/CoreText.h>
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
@@ -47,39 +31,43 @@ static const CGFloat kNUXCrossGlyphSize = 11;
 static CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius);
 
- #pragma mark -
+#pragma mark -
+
+@interface FBSDKTooltipView ()
+
+@property (nonatomic) CGPoint positionInView;
+@property (nonatomic) CFAbsoluteTime displayTime;
+@property (nonatomic) CFTimeInterval minimumDisplayDuration;
+@property (nonatomic) UILabel *textLabel;
+@property (nonatomic) UITapGestureRecognizer *insideTapGestureRecognizer;
+@property (nonatomic) CGFloat leftWidth;
+@property (nonatomic) CGFloat rightWidth;
+@property (nonatomic) CGFloat arrowMidpoint;
+@property (nonatomic) BOOL pointingUp;
+@property (nonatomic) BOOL isFadingOut;
+// style
+@property (nonatomic) UIColor *innerStrokeColor;
+@property (nonatomic) CGFloat arrowHeight;
+@property (nonatomic) CGFloat textPadding;
+@property (nonatomic) CGFloat maximumTextWidth;
+@property (nonatomic) CGFloat verticalTextOffset;
+@property (nonatomic) CGFloat verticalCrossOffset;
+@property (nonatomic) NSArray *gradientColors;
+@property (nonatomic) UIColor *crossCloseGlyphColor;
+
+@end
 
 @implementation FBSDKTooltipView
-{
-  CGPoint _positionInView;
-  CFAbsoluteTime _displayTime;
-  CFTimeInterval _minimumDisplayDuration;
-  UILabel *_textLabel;
-  UITapGestureRecognizer *_insideTapGestureRecognizer;
-  CGFloat _leftWidth;
-  CGFloat _rightWidth;
-  CGFloat _arrowMidpoint;
-  BOOL _pointingUp;
-  BOOL _isFadingOut;
-  // style
-  UIColor *_innerStrokeColor;
-  CGFloat _arrowHeight;
-  CGFloat _textPadding;
-  CGFloat _maximumTextWidth;
-  CGFloat _verticalTextOffset;
-  CGFloat _verticalCrossOffset;
-  FBSDKTooltipColorStyle _colorStyle;
-  NSArray *_gradientColors;
-  UIColor *_crossCloseGlyphColor;
-}
 
-- (instancetype)initWithTagline:(NSString *)tagline message:(NSString *)message colorStyle:(FBSDKTooltipColorStyle)colorStyle
+- (instancetype)initWithTagline:(nullable NSString *)tagline
+                        message:(nullable NSString *)message
+                     colorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {
     // Define style
     _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _textLabel.backgroundColor = [UIColor clearColor];
+    _textLabel.backgroundColor = UIColor.clearColor;
     _textLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     _textLabel.numberOfLines = 0;
     _textLabel.font = [UIFont boldSystemFontOfSize:kNUXFontSize];
@@ -101,9 +89,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     [self addGestureRecognizer:_insideTapGestureRecognizer];
 
     self.opaque = NO;
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = UIColor.clearColor;
     self.layer.needsDisplayOnBoundsChange = YES;
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowColor = UIColor.blackColor.CGColor;
     self.layer.shadowOpacity = 0.5f;
     self.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
     self.layer.shadowRadius = 5.0f;
@@ -117,7 +105,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [_insideTapGestureRecognizer removeTarget:self action:NULL];
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (void)setMessage:(NSString *)message
 {
@@ -135,7 +123,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }
 }
 
- #pragma mark Presentation
+#pragma mark Presentation
 
 - (void)presentFromView:(UIView *)anchorView
 {
@@ -160,7 +148,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [self presentInView:superview withArrowPosition:positionInSuperview direction:direction];
 }
 
-- (void)presentInView:(UIView *)view withArrowPosition:(CGPoint)arrowPosition direction:(FBSDKTooltipViewArrowDirection)arrowDirection
+- (void)presentInView:(UIView *)view
+    withArrowPosition:(CGPoint)arrowPosition
+            direction:(FBSDKTooltipViewArrowDirection)arrowDirection
 {
   _pointingUp = arrowDirection == FBSDKTooltipViewArrowDirectionUp;
   _positionInView = arrowPosition;
@@ -196,12 +186,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   }];
 }
 
- #pragma mark Style
-
-- (FBSDKTooltipColorStyle)colorStyle
-{
-  return _colorStyle;
-}
+#pragma mark Style
 
 - (void)setColorStyle:(FBSDKTooltipColorStyle)colorStyle
 {
@@ -227,11 +212,11 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     break;
   }
 
-  _textLabel.textColor = [UIColor whiteColor];
+  _textLabel.textColor = UIColor.whiteColor;
 }
 
- #pragma mark - Private Methods
- #pragma mark Animation
+#pragma mark - Private Methods
+#pragma mark Animation
 
 - (void)animateFadeIn
 {
@@ -243,10 +228,10 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   if (_pointingUp) {
     zoomOffsetY = -zoomOffsetY;
   }
-  self.layer.transform = fbsdkdfl_CATransform3DConcat(
-    fbsdkdfl_CATransform3DMakeScale(kZoomOutScale, kZoomOutScale, kZoomOutScale),
-    fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX, zoomOffsetY, 0)
-  );
+  FBSDKTransformer *transformer = [FBSDKTransformer new];
+  CATransform3D zoomOutScale = [transformer CATransform3DMakeScale:kZoomOutScale sy:kZoomOutScale sz:kZoomOutScale];
+  CATransform3D zoomOffsetTranslation = [transformer CATransform3DMakeTranslation:zoomOffsetX ty:zoomOffsetY tz:0];
+  self.layer.transform = [transformer CATransform3DConcat:zoomOutScale b:zoomOffsetTranslation];
   self.hidden = NO;
 
   // Prepare animation steps
@@ -260,9 +245,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
       newZoomOffsetY = -newZoomOffsetY;
     }
 
-    CATransform3D scale = fbsdkdfl_CATransform3DMakeScale(kZoomInScale, kZoomInScale, kZoomInScale);
-    CATransform3D translate = fbsdkdfl_CATransform3DMakeTranslation(newZoomOffsetX, newZoomOffsetY, 0);
-    self.layer.transform = fbsdkdfl_CATransform3DConcat(scale, translate);
+    CATransform3D zoomInScale = [transformer CATransform3DMakeScale:kZoomInScale sy:kZoomInScale sz:kZoomInScale];
+    CATransform3D newZoomOffsetTranslation = [transformer CATransform3DMakeTranslation:newZoomOffsetX ty:newZoomOffsetY tz:0];
+    self.layer.transform = [transformer CATransform3DConcat:zoomInScale b:newZoomOffsetTranslation];
   };
 
   // 2nd Step.
@@ -273,15 +258,14 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     if (self->_pointingUp) {
       zoomOffsetY2 = -zoomOffsetY2;
     }
-    self.layer.transform = fbsdkdfl_CATransform3DConcat(
-      fbsdkdfl_CATransform3DMakeScale(kZoomBounceScale, kZoomBounceScale, kZoomBounceScale),
-      fbsdkdfl_CATransform3DMakeTranslation(zoomOffsetX2, zoomOffsetY2, 0)
-    );
+    CATransform3D zoomBounceScale = [transformer CATransform3DMakeScale:kZoomBounceScale sy:kZoomBounceScale sz:kZoomBounceScale];
+    CATransform3D bounceOffsetTranslation = [transformer CATransform3DMakeTranslation:zoomOffsetX2 ty:zoomOffsetY2 tz:0];
+    self.layer.transform = [transformer CATransform3DConcat:zoomBounceScale b:bounceOffsetTranslation];
   };
 
   // 3rd Step.
   void (^normalizeZoom)(void) = ^{
-    self.layer.transform = fbsdkdfl_CATransform3DIdentity;
+    self.layer.transform = FBSDKCATransform3DIdentity;
   };
 
   // Animate 3 steps sequentially
@@ -314,7 +298,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
                    }];
 }
 
- #pragma mark Gestures
+#pragma mark Gestures
 
 - (void)onTapInTooltip:(UIGestureRecognizer *)sender
 {
@@ -327,7 +311,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   [self dismiss];
 }
 
- #pragma mark Drawing
+#pragma mark Drawing
 
 CGMutablePathRef _fbsdkCreateUpPointingBubbleWithRect(CGRect rect, CGFloat arrowMidpoint, CGFloat arrowHeight, CGFloat radius)
 {
@@ -498,7 +482,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CFRelease(crossCloseGlyphPath);
 }
 
- #pragma mark Layout
+#pragma mark Layout
 
 - (void)layoutSubviews
 {
@@ -509,13 +493,13 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self layoutSubviewsAndDetermineFrame];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (CGRect)layoutSubviewsAndDetermineFrame
 {
   // Compute the positioning of the arrow.
   CGRect screenBounds = [UIScreen mainScreen].bounds;
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
   if (!UIInterfaceOrientationIsPortrait(orientation)) {
     screenBounds = CGRectMake(0, 0, screenBounds.size.height, screenBounds.size.width);
   }
@@ -580,9 +564,9 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   );
 }
 
- #pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
- #pragma mark Message & Tagline
+#pragma mark Message & Tagline
 
 - (void)setMessage:(NSString *)message tagline:(NSString *)tagline
 {
@@ -601,7 +585,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
   UIFont *font = [UIFont boldSystemFontOfSize:kNUXFontSize];
   [attrString addAttribute:NSFontAttributeName value:font range:fullRange];
-  [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:fullRange];
+  [attrString addAttribute:NSForegroundColorAttributeName value:UIColor.whiteColor range:fullRange];
   if (tagline.length) {
     UIColor *color = [UIColor colorWithRed:(0x6D / 255.0)
                                      green:(0x87 / 255.0)
@@ -618,11 +602,11 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [self setNeedsDisplay];
 }
 
- #pragma mark Auto Dismiss Timeout
+#pragma mark Auto Dismiss Timeout
 
 - (void)scheduleAutomaticFadeout
 {
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
 
   if (_displayDuration > 0.0 && self.superview) {
     CFTimeInterval intervalAlreadyDisplaying = CFAbsoluteTimeGetCurrent() - _displayTime;
@@ -648,8 +632,8 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
 - (void)cancelAllScheduledFadeOutMethods
 {
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
 }
 
 @end

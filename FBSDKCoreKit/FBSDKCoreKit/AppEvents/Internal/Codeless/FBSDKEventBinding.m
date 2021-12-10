@@ -1,40 +1,29 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKEventBinding.h"
+#import "FBSDKEventBinding.h"
 
- #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKEventLogging.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKSwizzler.h"
- #import "FBSDKUtility.h"
- #import "FBSDKViewHierarchy.h"
- #import "FBSDKViewHierarchyMacros.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #define CODELESS_PATH_TYPE_ABSOLUTE  @"absolute"
- #define CODELESS_PATH_TYPE_RELATIVE  @"relative"
- #define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
- #define PARAMETER_NAME_PRICE          @"_valueToSum"
+#import "FBSDKCodelessPathComponent.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKSwizzler.h"
+#import "FBSDKUtility.h"
+#import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
+
+#define CODELESS_PATH_TYPE_ABSOLUTE  @"absolute"
+#define CODELESS_PATH_TYPE_RELATIVE  @"relative"
+#define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
+#define PARAMETER_NAME_PRICE          @"_valueToSum"
 
 @interface FBSDKEventBinding ()
 
@@ -61,7 +50,7 @@ static id<FBSDKNumberParsing> _numberParser;
   _numberParser = [[FBSDKAppEventsNumberParser alloc] initWithLocale:NSLocale.currentLocale];
 }
 
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
+- (FBSDKEventBinding *)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
@@ -74,7 +63,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *pathComponents = dict[CODELESS_MAPPING_PATH_KEY];
     NSMutableArray *mut = [NSMutableArray array];
-    for (NSDictionary *info in pathComponents) {
+    for (NSDictionary<NSString *, id> *info in pathComponents) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
@@ -82,7 +71,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *parameters = dict[CODELESS_MAPPING_PARAMETERS_KEY];
     mut = [NSMutableArray array];
-    for (NSDictionary *info in parameters) {
+    for (NSDictionary<NSString *, id> *info in parameters) {
       FBSDKCodelessParameterComponent *component = [[FBSDKCodelessParameterComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
@@ -91,10 +80,10 @@ static id<FBSDKNumberParsing> _numberParser;
   return self;
 }
 
-- (void)trackEvent:(id)sender
+- (void)trackEvent:(nullable id)sender
 {
-  UIView *sourceView = [sender isKindOfClass:[UIView class]] ? (UIView *)sender : nil;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  UIView *sourceView = [sender isKindOfClass:UIView.class] ? (UIView *)sender : nil;
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:params setObject:@"1" forKey:CODELESS_CODELESS_EVENT_KEY];
   for (FBSDKCodelessParameterComponent *component in self.parameters) {
     NSString *text = component.value;
@@ -130,7 +119,10 @@ static id<FBSDKNumberParsing> _numberParser;
 + (BOOL)  match:(NSObject *)view
   pathComponent:(FBSDKCodelessPathComponent *)component
 {
-  NSString *className = NSStringFromClass([view class]);
+  if (!view) {
+    return NO;
+  }
+  NSString *className = NSStringFromClass(view.class);
   if (![className isEqualToString:component.className]) {
     return NO;
   }
@@ -160,7 +152,7 @@ static id<FBSDKNumberParsing> _numberParser;
   }
 
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldTag) > 0
-      && [view isKindOfClass:[UIView class]]
+      && [view isKindOfClass:UIView.class]
       && component.tag != ((UIView *)view).tag) {
     return NO;
   }
@@ -177,15 +169,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (BOOL)isViewMatchPath:(UIView *)view path:(NSArray *)path
-{
-  NSArray *viewPath = [FBSDKViewHierarchy getPath:view];
-  BOOL isMatch = [self isPath:path matchViewPath:viewPath];
-
-  return isMatch;
-}
-
-+ (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath
++ (BOOL)isPath:(nullable NSArray *)path matchViewPath:(nullable NSArray *)viewPath
 {
   if ((path.count == 0) || (viewPath.count == 0)) {
     return NO;
@@ -236,7 +220,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
++ (nullable NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
 {
   if (level >= path.count) {
     return nil;
@@ -328,9 +312,9 @@ static id<FBSDKNumberParsing> _numberParser;
 }
 
 // MARK: - find event parameters via relative path
-+ (NSString *)findParameterOfPath:(NSArray *)path
-                         pathType:(NSString *)pathType
-                       sourceView:(UIView *)sourceView
++ (nullable NSString *)findParameterOfPath:(NSArray *)path
+                                  pathType:(NSString *)pathType
+                                sourceView:(UIView *)sourceView
 {
   if (0 == path.count) {
     return nil;

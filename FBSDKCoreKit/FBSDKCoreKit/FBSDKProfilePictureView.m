@@ -1,33 +1,21 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKProfilePictureView.h"
- #import "FBSDKProfilePictureView+Internal.h"
+#import "FBSDKProfilePictureView.h"
+#import "FBSDKProfilePictureView+Internal.h"
 
- #import "FBSDKAccessToken.h"
- #import "FBSDKHumanSilhouetteIcon.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKMath.h"
- #import "FBSDKProfile+Internal.h"
+#import "FBSDKAccessToken.h"
+#import "FBSDKHumanSilhouetteIcon.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKMath.h"
+#import "FBSDKProfile+Internal.h"
 
 @interface FBSDKProfilePictureViewState : NSObject
 
@@ -81,7 +69,7 @@
 
 - (BOOL)isEqual:(id)object
 {
-  if (![object isKindOfClass:[FBSDKProfilePictureViewState class]]) {
+  if (![object isKindOfClass:FBSDKProfilePictureViewState.class]) {
     return NO;
   }
   FBSDKProfilePictureViewState *other = (FBSDKProfilePictureViewState *)object;
@@ -100,21 +88,24 @@
   return (other != nil
     && (_imageShouldFit == other->_imageShouldFit)
     && (_pictureMode == other->_pictureMode)
-    && [FBSDKInternalUtility object:_profileID isEqualToObject:other->_profileID]);
+    && [FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:other->_profileID]);
 }
 
 @end
 
-@implementation FBSDKProfilePictureView
-{
-  BOOL _hasProfileImage;
-  UIImageView *_imageView;
-  FBSDKProfilePictureViewState *_lastState;
-  BOOL _needsImageUpdate;
-  BOOL _placeholderImageIsValid;
-}
+@interface FBSDKProfilePictureView ()
 
- #pragma mark - Object Lifecycle
+@property (nonatomic) BOOL hasProfileImage;
+@property (nonatomic) UIImageView *imageView;
+@property (nonatomic) FBSDKProfilePictureViewState *lastState;
+@property (nonatomic) BOOL needsImageUpdate;
+@property (nonatomic) BOOL placeholderImageIsValid;
+
+@end
+
+@implementation FBSDKProfilePictureView
+
+#pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -148,12 +139,7 @@
   return [self initWithFrame:CGRectZero profile:profile];
 }
 
-- (void)dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
- #pragma mark - Properties
+#pragma mark - Properties
 
 - (void)setBounds:(CGRect)bounds
 {
@@ -193,14 +179,14 @@
 
 - (void)setProfileID:(NSString *)profileID
 {
-  if (![FBSDKInternalUtility object:_profileID isEqualToObject:profileID]) {
+  if (![FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:profileID]) {
     _profileID = [profileID copy];
     _placeholderImageIsValid = NO;
     [self setNeedsImageUpdate];
   }
 }
 
- #pragma mark - Public Methods
+#pragma mark - Public Methods
 
 - (void)setNeedsImageUpdate
 {
@@ -224,7 +210,7 @@
   });
 }
 
- #pragma mark - Internal Methods
+#pragma mark - Internal Methods
 
 - (void)configureProfilePictureView
 {
@@ -233,20 +219,20 @@
   [self addSubview:_imageView];
 
   _profileID = @"me";
-  self.backgroundColor = [UIColor whiteColor];
+  self.backgroundColor = UIColor.whiteColor;
   self.contentMode = UIViewContentModeScaleAspectFit;
   self.userInteractionEnabled = NO;
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_accessTokenDidChangeNotification:)
-                                               name:FBSDKAccessTokenDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_profileDidChangeNotification:)
-                                               name:FBSDKProfileDidChangeNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_accessTokenDidChangeNotification:)
+                                             name:FBSDKAccessTokenDidChangeNotification
+                                           object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_profileDidChangeNotification:)
+                                             name:FBSDKProfileDidChangeNotification
+                                           object:nil];
 }
 
- #pragma mark - Notifications
+#pragma mark - Notifications
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
@@ -266,7 +252,7 @@
   [self _updateImageWithProfile];
 }
 
- #pragma mark - Image Update
+#pragma mark - Image Update
 
 - (void)_updateImageWithProfile
 {
@@ -321,7 +307,7 @@
 {
   __weak FBSDKProfilePictureView *weakSelf = self;
   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
-  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSession *session = NSURLSession.sharedSession;
   [[session
     dataTaskWithRequest:request
     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -340,8 +326,6 @@
     [self _updateImageWithProfile];
   }
 }
-
- #pragma mark - Helper Methods
 
 - (BOOL)_imageShouldFit
 {
@@ -447,7 +431,7 @@
   }
 }
 
- #pragma mark - Test Helpers
+#pragma mark - Test Helpers
 
 - (FBSDKProfilePictureViewState *)lastState
 {

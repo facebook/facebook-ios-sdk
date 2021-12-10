@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "RPSAutoAppLinkDebugTool.h"
 
@@ -31,18 +21,18 @@ static const int frameHeight = 30;
 {
   [super viewDidLoad];
 
-  self.view.backgroundColor = [UIColor whiteColor];
+  self.view.backgroundColor = UIColor.whiteColor;
   UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
   int frameWidth = scrollView.frame.size.width - paddingLen * 2;
 
   UILabel *labelName = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, frameWidth, frameHeight)];
   labelName.font = [UIFont boldSystemFontOfSize:24];
-  labelName.textColor = [UIColor grayColor];
+  labelName.textColor = UIColor.grayColor;
   labelName.text = @"Auto Applink Debug Tool";
 
   UILabel *labelDesc = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 100, frameWidth, frameHeight + 10)];
   labelDesc.font = [UIFont systemFontOfSize:14];
-  labelDesc.textColor = [UIColor lightGrayColor];
+  labelDesc.textColor = UIColor.lightGrayColor;
   labelDesc.text = @"Enter your FB App ID and product ID to get your auto applink";
   labelDesc.numberOfLines = 0;
 
@@ -53,7 +43,7 @@ static const int frameHeight = 30;
   self.productIDView.frame = CGRectMake(paddingLen, 200, frameWidth, frameHeight);
 
   UIButton *sendButton = [[UIButton alloc] initWithFrame:CGRectMake(paddingLen, 250, frameWidth, frameHeight + 10)];
-  [sendButton setBackgroundColor:[[UIColor blueColor] colorWithAlphaComponent:0.4]];
+  [sendButton setBackgroundColor:[UIColor.blueColor colorWithAlphaComponent:0.4]];
   [sendButton setTitle:@"Send" forState:UIControlStateNormal];
   [sendButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [sendButton addTarget:self action:@selector(sendAutoAppLink:) forControlEvents:UIControlEventTouchUpInside];
@@ -71,7 +61,7 @@ static const int frameHeight = 30;
 {
   UITextField *textField;
   textField = [[UITextField alloc] init];
-  textField.layer.borderColor = [UIColor lightGrayColor].CGColor;
+  textField.layer.borderColor = UIColor.lightGrayColor.CGColor;
   textField.layer.borderWidth = 1;
   [textField setKeyboardType:type];
   textField.placeholder = text;
@@ -91,7 +81,7 @@ static const int frameHeight = 30;
     NSString *encodeData = [FBSDKUtility URLEncode:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
     NSString *encodeURL = [autoAppLink stringByAppendingString:encodeData];
     NSURL *url = [NSURL URLWithString:encodeURL];
-    if (![[UIApplication sharedApplication] openURL:url]) {
+    if (![UIApplication.sharedApplication openURL:url]) {
       [self showAlert:@"Cannot open the URL!"];
     }
   } else {

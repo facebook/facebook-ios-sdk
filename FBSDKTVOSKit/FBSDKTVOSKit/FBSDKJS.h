@@ -1,23 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,25 +23,28 @@ NS_SWIFT_NAME(JSExports)
 /*!
  @abstract Returns the current access token string, if available.
  */
-@property (class, nonatomic, copy, readonly, nullable) NSString *accessTokenString;
+@property (class, nullable, nonatomic, readonly, copy) NSString *accessTokenString;
 
 /*!
  @abstract returns true if there is a current access token.
  */
-@property (class, nonatomic, assign, readonly, getter=isLoggedIn) BOOL loggedIn;
+@property (class, nonatomic, readonly, getter = isLoggedIn, assign) BOOL loggedIn;
 
 /*!
  @abstract Returns true if there is a current access token and the permission has been granted.
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 + (BOOL)hasGranted:(NSString *)permission
 NS_SWIFT_NAME(hasGranted(permission:));
+// UNCRUSTIFY_FORMAT_ON
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
  @param eventName the event name
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName;
++ (void)logEvent:(FBSDKAppEventName)eventName;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
@@ -57,7 +52,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  @param parameters the parameters (optional).
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters;
++ (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
@@ -76,7 +71,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary<NSString *, id> *)parameters;
+         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 @end
 

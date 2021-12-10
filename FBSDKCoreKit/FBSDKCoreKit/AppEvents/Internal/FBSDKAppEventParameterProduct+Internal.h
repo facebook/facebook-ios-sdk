@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#import "FBSDKAppEventParameterProduct.h"
+
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductItemID;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductAvailability;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCondition;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductDescription;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductImageLink;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductLink;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductTitle;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductGTIN;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductMPN;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductBrand;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductPriceAmount;
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductPriceCurrency;

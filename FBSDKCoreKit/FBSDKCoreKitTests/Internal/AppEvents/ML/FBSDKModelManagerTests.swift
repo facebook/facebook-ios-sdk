@@ -1,32 +1,24 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+import TestTools
 import XCTest
 
 class FBSDKModelManagerTests: XCTestCase {
 
-  let manager = ModelManager()
+  let manager = ModelManager.shared
   let featureChecker = TestFeatureManager()
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"
-  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
+  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
   let store = UserDefaultsSpy()
   let settings = TestSettings()
+  let suggestedEventsIndexer = TestSuggestedEventsIndexer()
 
   enum Keys {
     static let modelInfoPersistence = "com.facebook.sdk:FBSDKModelInfo"
@@ -37,6 +29,7 @@ class FBSDKModelManagerTests: XCTestCase {
     super.setUp()
 
     ModelManager.reset()
+    TestGateKeeperManager.reset()
   }
 
   override func setUp() {
@@ -49,13 +42,18 @@ class FBSDKModelManagerTests: XCTestCase {
       fileManager: fileManager,
       store: store,
       settings: settings,
-      dataExtractor: TestFileDataExtractor.self
+      dataExtractor: TestFileDataExtractor.self,
+      gateKeeperManager: TestGateKeeperManager.self,
+      suggestedEventsIndexer: suggestedEventsIndexer,
+      featureExtractor: TestFeatureExtractor.self
     )
   }
 
   override func tearDown() {
     ModelManager.reset()
     TestFileDataExtractor.reset()
+    TestGateKeeperManager.reset()
+    TestFeatureExtractor.reset()
 
     super.tearDown()
   }
@@ -91,10 +89,10 @@ class FBSDKModelManagerTests: XCTestCase {
     )
   }
 
-  func testEnablingRetrievesCache() throws {
+  func testEnablingRetrievesCache() {
     manager.enable()
 
-    let keys = try XCTUnwrap(store.capturedObjectRetrievalKeys)
+    let keys = store.capturedObjectRetrievalKeys
 
     XCTAssertTrue(
       keys.contains("com.facebook.sdk:FBSDKModelInfo"),
@@ -158,7 +156,7 @@ class FBSDKModelManagerTests: XCTestCase {
       factory.capturedRequests.first?.capturedCompletionHandler
     )
 
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       completion(nil, Fuzzer.randomize(json: RawRemoteModelResponse.valid), nil)
     }
   }
@@ -321,8 +319,8 @@ private enum RawRemoteModelResponse {
   ]
 
   static let eventPredictionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset1").absoluteString,
-    Keys.rulesURI: SampleUrls.valid(path: "rules1").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset1").absoluteString,
+    Keys.rulesURI: SampleURLs.valid(path: "rules1").absoluteString,
     Keys.thresholds: [
       1,
       "0.68",
@@ -335,7 +333,7 @@ private enum RawRemoteModelResponse {
   ]
 
   static let detectionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset2").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset2").absoluteString,
     Keys.thresholds: [
       1,
       "0.85",

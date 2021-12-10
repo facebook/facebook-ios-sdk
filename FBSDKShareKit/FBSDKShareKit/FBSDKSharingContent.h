@@ -1,25 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKSharingValidation.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKShareKit/FBSDKSharingValidation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
   A base interface for content to be shared.
  */
 NS_SWIFT_NAME(SharingContent)
-@protocol FBSDKSharingContent <FBSDKCopying, FBSDKSharingValidation, NSSecureCoding>
+@protocol FBSDKSharingContent <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
 
 /**
   URL for the content being shared.
@@ -44,7 +34,7 @@ NS_SWIFT_NAME(SharingContent)
   Hashtag for the content being shared.
  @return The hashtag for the content being shared.
  */
-@property (nonatomic, copy, nullable) FBSDKHashtag *hashtag;
+@property (nullable, nonatomic, copy) FBSDKHashtag *hashtag;
 
 /**
   List of IDs for taggable people to tag with this content.
@@ -58,25 +48,25 @@ NS_SWIFT_NAME(SharingContent)
   The ID for a place to tag with this content.
  @return The ID for the place to tag
  */
-@property (nonatomic, copy, nullable) NSString *placeID;
+@property (nullable, nonatomic, copy) NSString *placeID;
 
 /**
   A value to be added to the referrer URL when a person follows a link from this shared content on feed.
  @return The ref for the content.
  */
-@property (nonatomic, copy, nullable) NSString *ref;
+@property (nullable, nonatomic, copy) NSString *ref;
 
 /**
  For shares into Messenger, this pageID will be used to map the app to page and attach attribution to the share.
  @return The ID of the Facebook page this share is associated with.
  */
-@property (nonatomic, copy, nullable) NSString *pageID;
+@property (nullable, nonatomic, copy) NSString *pageID;
 
 /**
  A unique identifier for a share involving this content, useful for tracking purposes.
  @return A unique string identifying this share data.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *shareUUID;
+@property (nullable, nonatomic, readonly, copy) NSString *shareUUID;
 
 /**
  Adds content to an existing dictionary as key/value pairs and returns the
@@ -85,9 +75,12 @@ NS_SWIFT_NAME(SharingContent)
  @param bridgeOptions The options for bridging
  @return A new dictionary with the modified contents
  */
+
+// UNCRUSTIFY_FORMAT_OFF
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 NS_SWIFT_NAME(addParameters(_:options:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

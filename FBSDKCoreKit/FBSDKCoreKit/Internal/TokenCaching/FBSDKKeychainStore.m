@@ -1,24 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import "FBSDKKeychainStore.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -28,7 +19,7 @@
 - (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup
 {
   if ((self = [super init])) {
-    _service = service ? [service copy] : [NSBundle mainBundle].bundleIdentifier;
+    _service = service ? [service copy] : NSBundle.mainBundle.bundleIdentifier;
     _accessGroup = [accessGroup copy];
     NSAssert(_service, @"Keychain must be initialized with service");
   }
@@ -38,13 +29,13 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (BOOL)setDictionary:(NSDictionary *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
+- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
   NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value];
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSDictionary *)dictionaryForKey:(NSString *)key
+- (nullable NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {
@@ -69,7 +60,7 @@
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSString *)stringForKey:(NSString *)key
+- (nullable NSString *)stringForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {
@@ -79,7 +70,7 @@
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (BOOL)setData:(NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
+- (BOOL)setData:(nullable NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
   if (!key) {
     return NO;
@@ -88,15 +79,15 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to storing access token in NSUserDefaults because of simulator bug"];
-  [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+  [NSUserDefaults.standardUserDefaults setObject:value forKey:key];
 
-  return [[NSUserDefaults standardUserDefaults] synchronize];
+  return [NSUserDefaults.standardUserDefaults synchronize];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
 
   OSStatus status;
   if (value) {
-    NSMutableDictionary *attributesToUpdate = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *attributesToUpdate = [NSMutableDictionary dictionary];
     [attributesToUpdate setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
     status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
@@ -123,7 +114,7 @@
 #endif
 }
 
-- (NSData *)dataForKey:(NSString *)key
+- (nullable NSData *)dataForKey:(NSString *)key
 {
   if (!key) {
     return nil;
@@ -132,9 +123,9 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to loading access token from NSUserDefaults because of simulator bug"];
-  return [[NSUserDefaults standardUserDefaults] dataForKey:key];
+  return [NSUserDefaults.standardUserDefaults dataForKey:key];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
   [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];
   [query setObject:[FBSDKDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBSDKDynamicFrameworkLoader loadkSecMatchLimit]];
 
@@ -155,9 +146,9 @@
 #endif
 }
 
-- (NSMutableDictionary *)queryForKey:(NSString *)key
+- (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key
 {
-  NSMutableDictionary *query = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *query = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
   [FBSDKTypeUtility dictionary:query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
   [FBSDKTypeUtility dictionary:query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];

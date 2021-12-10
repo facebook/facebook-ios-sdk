@@ -1,71 +1,66 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class InstrumentManagerTests: XCTestCase {
 
-  var manager: InstrumentManager! // swiftlint:disable:this implicitly_unwrapped_optional
+  var manager = InstrumentManager.shared
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
-  let errorReporter = TestErrorReport()
+  let errorReporter = TestErrorReporter()
   let crashHandler = TestCrashHandler()
   let featureManager = TestFeatureManager()
 
+  override class func setUp() {
+    super.setUp()
+    InstrumentManager.reset()
+  }
   override func setUp() {
     super.setUp()
 
-    manager = InstrumentManager(
-      featureCheckerProvider: featureManager,
+    manager.configure(
+      featureChecker: featureManager,
       settings: settings,
       crashObserver: crashObserver,
-      errorReport: errorReporter,
+      errorReporter: errorReporter,
       crashHandler: crashHandler
     )
+  }
+  override func tearDown() {
+    super.tearDown()
+    InstrumentManager.reset()
   }
 
   func testDefaultDependencies() {
     let manager = InstrumentManager.shared
 
-    XCTAssertTrue(
-      manager.featureChecker is FeatureManager,
-      "Should use the expected feature checker type by default"
+    XCTAssertNil(
+      manager.featureChecker,
+      "Should not have a feature checker by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.settings),
-      ObjectIdentifier(Settings.shared),
-      "Should use the shared settings instance by default"
+    XCTAssertNil(
+      manager.settings,
+      "Should not have settings by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.crashObserver),
-      ObjectIdentifier(CrashObserver.shared),
-      "Should use the shared crash observer instance by default"
+    XCTAssertNil(
+      manager.crashObserver,
+      "Should not have a crash observer by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.errorReport),
-      ObjectIdentifier(ErrorReport.shared),
-      "Should use the shared error report instance by default"
+    XCTAssertNil(
+      manager.errorReporter,
+      "Should not have an error reporter by default"
     )
-    XCTAssertEqual(
-      ObjectIdentifier(manager.crashHandler),
-      ObjectIdentifier(CrashHandler.shared),
-      "Should use the shared Crash Handler instance by default"
+    XCTAssertNil(
+      manager.crashHandler,
+      "Should not have a crash handler by default"
     )
   }
 

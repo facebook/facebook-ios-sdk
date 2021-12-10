@@ -1,100 +1,156 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#import "TargetConditionals.h"
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #if !TARGET_OS_TV
 
- #import "FBSDKWebDialog+Internal.h"
+#import "FBSDKWebDialog+Internal.h"
 
- #import "FBSDKAccessToken.h"
- #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKDynamicFrameworkLoader.h"
- #import "FBSDKInternalUtility.h"
- #import "FBSDKInternalUtility+WindowFinding.h"
- #import "FBSDKLogger.h"
- #import "FBSDKSettings.h"
- #import "FBSDKWebDialogView.h"
- #import "FBSDKWindowFinding.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
- #define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
+#import "FBSDKAccessToken.h"
+#import "FBSDKDynamicFrameworkLoader.h"
+#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorReporter.h"
+#import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
+#import "FBSDKWebDialogView.h"
+#import "FBSDKWindowFinding.h"
+
+#define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
+#define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
 
 typedef void (^FBSDKBoolBlock)(BOOL finished);
 
 static FBSDKWebDialog *g_currentDialog = nil;
 
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
+@end
 
-@property (nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
+@interface FBSDKWebDialog ()
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
+@property (nullable, nonatomic) UIView *backgroundView;
+@property (nullable, nonatomic) FBSDKWebDialogView *dialogView;
 
 @end
 
 @implementation FBSDKWebDialog
+
+// MARK: - Class Dependencies
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
 {
-  UIView *_backgroundView;
-  FBSDKWebDialogView *_dialogView;
+  return _hasBeenConfigured;
 }
 
- #pragma mark - Class Methods
-
-+ (instancetype)dialogWithName:(NSString *)name
-                      delegate:(id<FBSDKWebDialogDelegate>)delegate
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
 {
-  FBSDKWebDialog *dialog = [self new];
-  dialog.name = name;
-  dialog.delegate = delegate;
-  return dialog;
+  _hasBeenConfigured = hasBeenConfigured;
 }
 
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
+static id<FBSDKErrorCreating> _errorFactory;
+
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return _errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  _errorFactory = errorFactory;
+}
+
++ (void)configureWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+{
+  self.errorFactory = errorFactory;
+  self.hasBeenConfigured = YES;
+}
+
++ (void)configureDefaultClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithErrorFactory:[[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared]];
+}
+
+#if FBTEST && DEBUG
+
++ (void)resetClassDependencies
+{
+  self.errorFactory = nil;
+  self.hasBeenConfigured = NO;
+}
+
+#endif
+
+// MARK: - Object Lifecycle
+
+- (instancetype)initWithName:(NSString *)name
+                  parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                       frame:(CGRect)frame
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
+                windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
 {
-  return [self showWithName:name
-                 parameters:parameters
-               windowFinder:FBSDKInternalUtility.sharedUtility
-                   delegate:delegate];
-}
+  [self.class configureDefaultClassDependencies];
 
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate
-{
-  FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
-  dialog.windowFinder = windowFinder;
-  dialog.parameters = parameters;
-  [dialog show];
-  return dialog;
-}
+  if ((self = [super init])) {
+    _shouldDeferVisibility = NO;
+    _name = [name copy];
+    _parameters = [parameters copy];
+    _webViewFrame = frame;
+    _delegate = delegate;
+    _windowFinder = windowFinder;
+  }
 
- #pragma mark - Object Lifecycle
+  return self;
+}
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
   _dialogView.delegate = nil;
   [_dialogView removeFromSuperview];
   [_backgroundView removeFromSuperview];
 }
 
- #pragma mark - Public Methods
+// MARK: - Factory Methods
+
++ (instancetype)dialogWithName:(NSString *)name
+                      delegate:(id<FBSDKWebDialogDelegate>)delegate
+{
+  return [[self alloc] initWithName:name
+                         parameters:nil
+                              frame:CGRectZero
+                           delegate:delegate
+                       windowFinder:nil];
+}
+
++ (instancetype)createAndShowWithName:(NSString *)name
+                           parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                frame:(CGRect)frame
+                             delegate:(id<FBSDKWebDialogDelegate>)delegate
+                         windowFinder:(id<FBSDKWindowFinding>)windowFinder
+{
+  FBSDKWebDialog *dialog = [[self alloc] initWithName:name
+                                           parameters:parameters
+                                                frame:CGRectZero
+                                             delegate:delegate
+                                         windowFinder:windowFinder];
+  [dialog show];
+  return dialog;
+}
+
+#pragma mark - Public Methods
 
 - (BOOL)show
 {
@@ -115,12 +171,14 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+                           logEntry:@"There are no valid windows in which to present this web dialog"];
+    error = [self.class.errorFactory unknownErrorWithMessage:@"There are no valid windows in which to present this web dialog"
+                                                    userInfo:nil];
+    [self _failWithError:error];
     return NO;
   }
 
-  CGRect frame = [self _applicationFrameForOrientation];
+  CGRect frame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   _dialogView = [[FBSDKWebDialogView alloc] initWithFrame:frame];
 
   _dialogView.delegate = self;
@@ -133,9 +191,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
   return YES;
 }
 
- #pragma mark - FBSDKWebDialogViewDelegate
+#pragma mark - FBSDKWebDialogViewDelegate
 
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results
+- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   [self _completeWithResults:results];
 }
@@ -162,11 +220,11 @@ static FBSDKWebDialog *g_currentDialog = nil;
   }
 }
 
- #pragma mark - Notifications
+#pragma mark - Notifications
 
 - (void)_addObservers
 {
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  NSNotificationCenter *nc = NSNotificationCenter.defaultCenter;
   [nc addObserver:self
          selector:@selector(_deviceOrientationDidChangeNotification:)
              name:UIDeviceOrientationDidChangeNotification
@@ -187,11 +245,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 - (void)_removeObservers
 {
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  NSNotificationCenter *nc = NSNotificationCenter.defaultCenter;
   [nc removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
-
- #pragma mark - Helper Methods
 
 - (void)_cancel
 {
@@ -200,7 +256,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   [_delegate webDialogDidCancel:dialog];
 }
 
-- (void)_completeWithResults:(NSDictionary *)results
+- (void)_completeWithResults:(NSDictionary<NSString *, id> *)results
 {
   FBSDKWebDialog *dialog = self;
   [self _dismissAnimated:YES]; // may cause the receiver to be released
@@ -235,31 +291,31 @@ static FBSDKWebDialog *g_currentDialog = nil;
 - (void)_failWithError:(NSError *)error
 {
   // defer so that the consumer is guaranteed to have an opportunity to set the delegate before we fail
-#ifndef FBSDKTEST
+#ifndef FBTEST
   dispatch_async(dispatch_get_main_queue(), ^{
 #endif
   [self _dismissAnimated:YES];
   [self->_delegate webDialog:self didFailWithError:error];
-#ifndef FBSDKTEST
+#ifndef FBTEST
 });
 #endif
 }
 
 - (NSURL *)_generateURL:(NSError **)errorRef
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"touch" forKey:@"display"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"ios-%@", [FBSDKSettings sdkVersion]] forKey:@"sdk"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"ios-%@", FBSDKSettings.sharedSettings.sdkVersion] forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:parameters setObject:@"fbconnect://success" forKey:@"redirect_uri"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKSettings appID] forKey:@"app_id"];
+  [FBSDKTypeUtility dictionary:parameters setObject:FBSDKSettings.sharedSettings.appID forKey:@"app_id"];
   [FBSDKTypeUtility dictionary:parameters
-                     setObject:[FBSDKAccessToken currentAccessToken].tokenString
+                     setObject:FBSDKAccessToken.currentAccessToken.tokenString
                         forKey:@"access_token"];
   [parameters addEntriesFromDictionary:self.parameters];
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                    path:[@"/dialog/" stringByAppendingString:self.name]
-                                         queryParameters:parameters
-                                                   error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                  path:[@"/dialog/" stringByAppendingString:self.name]
+                                                       queryParameters:parameters
+                                                                 error:errorRef];
 }
 
 - (BOOL)_showWebView
@@ -267,8 +323,10 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+                           logEntry:@"There are no valid windows in which to present this web dialog"];
+    NSError *error = [self.class.errorFactory unknownErrorWithMessage:@"There are no valid windows in which to present this web dialog"
+                                                             userInfo:nil];
+    [self _failWithError:error];
     return NO;
   }
 
@@ -296,16 +354,14 @@ static FBSDKWebDialog *g_currentDialog = nil;
   CGRect applicationFrame = _dialogView.window.screen.bounds;
 
   UIEdgeInsets insets = UIEdgeInsetsZero;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
   if (@available(iOS 11.0, *)) {
     insets = _dialogView.window.safeAreaInsets;
   }
-#endif
 
   if (insets.top == 0.0) {
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    insets.top = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    insets.top = [UIApplication.sharedApplication statusBarFrame].size.height;
     #pragma clang diagnostic pop
   }
   applicationFrame.origin.x += insets.left;
@@ -322,7 +378,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
                    completion:(FBSDKBoolBlock)completion
 {
   CGAffineTransform transform = _dialogView.transform;
-  CGRect applicationFrame = [self _applicationFrameForOrientation];
+  CGRect applicationFrame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   if (scale == 1.0) {
     _dialogView.transform = CGAffineTransformIdentity;
     _dialogView.frame = applicationFrame;

@@ -1,33 +1,15 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-#import "FBSDKButton.h"
-#import "FBSDKButton+Subclass.h"
+#import "FBSDKButton+Internal.h"
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAccessToken+AccessTokenProtocols.h"
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKLogo.h"
-#import "FBSDKUIUtility.h"
-#import "FBSDKViewImpressionTracker.h"
-#import "NSNotificationCenter+Extensions.h"
 
 #define HEIGHT_TO_FONT_SIZE 0.47
 #define HEIGHT_TO_MARGIN 0.27
@@ -36,27 +18,65 @@
 
 @interface FBSDKButton ()
 
-@property (class, nonatomic) id applicationActivationNotifier;
+@property (nonatomic) BOOL skipIntrinsicContentSizing;
+@property (nonatomic) BOOL isExplicitlyDisabled;
 
 @end
 
 @implementation FBSDKButton
-{
-  BOOL _skipIntrinsicContentSizing;
-  BOOL _isExplicitlyDisabled;
-}
 
 static id _applicationActivationNotifier;
+static id<FBSDKEventLogging> _eventLogger;
+static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
-+ (id)applicationActivationNotifier
++ (nullable id)applicationActivationNotifier
 {
   return _applicationActivationNotifier;
 }
 
-+ (void)setApplicationActivationNotifier:(id)notifier
++ (void)setApplicationActivationNotifier:(nullable id)applicationActivationNotifier
 {
-  _applicationActivationNotifier = notifier;
+  _applicationActivationNotifier = applicationActivationNotifier;
 }
+
++ (nullable id<FBSDKEventLogging>)eventLogger
+{
+  return _eventLogger;
+}
+
++ (void)setEventLogger:(nullable id<FBSDKEventLogging>)eventLogger
+{
+  _eventLogger = eventLogger;
+}
+
++ (nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  return _accessTokenProvider;
+}
+
++ (void)setAccessTokenProvider:(nullable Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
++ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
+                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
+                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  self.applicationActivationNotifier = applicationActivationNotifier;
+  self.eventLogger = eventLogger;
+  self.accessTokenProvider = accessTokenProvider;
+}
+
+#if FBTEST && DEBUG
++ (void)resetClassDependencies
+{
+  self.applicationActivationNotifier = nil;
+  self.eventLogger = nil;
+  self.accessTokenProvider = nil;
+}
+
+#endif
 
 #pragma mark - Object Lifecycle
 
@@ -76,11 +96,12 @@ static id _applicationActivationNotifier;
   _skipIntrinsicContentSizing = YES;
   [self configureButton];
   _skipIntrinsicContentSizing = NO;
-}
 
-- (void)dealloc
-{
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  // Workaround for blank button showing when created in a Storyboard in Xcode 13
+  if ([self respondsToSelector:@selector(setConfiguration:)]) {
+    [self performSelector:@selector(setConfiguration:) withObject:nil];
+  }
+  self.titleLabel.font = [self defaultFont];
 }
 
 #pragma mark - Properties
@@ -152,12 +173,7 @@ static id _applicationActivationNotifier;
       // to keep the text centered in the button without adding extra blank space to the right when unnecessary
       // 1. the text fits centered within the button without colliding with the image (imagePaddingWidth)
       // 2. the text would run into the image, so adjust the insets to effectively left align it (textPaddingWidth)
-      CGSize titleSize = FBSDKTextSize(
-        titleLabel.text,
-        titleLabel.font,
-        titleRect.size,
-        titleLabel.lineBreakMode
-      );
+      CGSize titleSize = [self textSizeForText:titleLabel.text font:titleLabel.font constrainedSize:titleRect.size lineBreakMode:titleLabel.lineBreakMode];
       CGFloat titlePaddingWidth = (CGRectGetWidth(titleRect) - titleSize.width) / 2;
       CGFloat imagePaddingWidth = titleX / 2;
       CGFloat inset = MIN(titlePaddingWidth, imagePaddingWidth);
@@ -170,12 +186,13 @@ static id _applicationActivationNotifier;
 
 #pragma mark - Subclass Methods
 
-- (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+- (void)logTapEventWithEventName:(NSString *)eventName
+                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+  [self.class.eventLogger logInternalEvent:eventName
+                                parameters:parameters
+                        isImplicitlyLogged:YES
+                               accessToken:[self.class.accessTokenProvider currentAccessToken]];
 }
 
 - (void)checkImplicitlyDisabled
@@ -197,10 +214,10 @@ static id _applicationActivationNotifier;
          highlightedColor:[self defaultHighlightedColor]];
 }
 
-- (void)configureWithIcon:(FBSDKIcon *)icon
-                    title:(NSString *)title
-          backgroundColor:(UIColor *)backgroundColor
-         highlightedColor:(UIColor *)highlightedColor
+- (void)configureWithIcon:(nullable FBSDKIcon *)icon
+                    title:(nullable NSString *)title
+          backgroundColor:(nullable UIColor *)backgroundColor
+         highlightedColor:(nullable UIColor *)highlightedColor
 {
   [self _configureWithIcon:icon
                       title:title
@@ -212,14 +229,14 @@ static id _applicationActivationNotifier;
    selectedHighlightedColor:nil];
 }
 
-- (void) configureWithIcon:(FBSDKIcon *)icon
-                     title:(NSString *)title
-           backgroundColor:(UIColor *)backgroundColor
-          highlightedColor:(UIColor *)highlightedColor
-             selectedTitle:(NSString *)selectedTitle
-              selectedIcon:(FBSDKIcon *)selectedIcon
-             selectedColor:(UIColor *)selectedColor
-  selectedHighlightedColor:(UIColor *)selectedHighlightedColor
+- (void) configureWithIcon:(nullable FBSDKIcon *)icon
+                     title:(nullable NSString *)title
+           backgroundColor:(nullable UIColor *)backgroundColor
+          highlightedColor:(nullable UIColor *)highlightedColor
+             selectedTitle:(nullable NSString *)selectedTitle
+              selectedIcon:(nullable FBSDKIcon *)selectedIcon
+             selectedColor:(nullable UIColor *)selectedColor
+  selectedHighlightedColor:(nullable UIColor *)selectedHighlightedColor
 {
   [self _configureWithIcon:icon
                       title:title
@@ -243,7 +260,8 @@ static id _applicationActivationNotifier;
 
 - (UIFont *)defaultFont
 {
-  return [UIFont systemFontOfSize:14];
+  CGFloat size = 15;
+  return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
 }
 
 - (UIColor *)defaultHighlightedColor
@@ -277,18 +295,40 @@ static id _applicationActivationNotifier;
   CGFloat height = [self _heightForFont:font];
 
   UIEdgeInsets contentEdgeInsets = self.contentEdgeInsets;
-
-  CGSize constrainedContentSize = FBSDKEdgeInsetsInsetSize(size, contentEdgeInsets);
-
-  CGSize titleSize = FBSDKTextSize(title, font, constrainedContentSize, self.titleLabel.lineBreakMode);
-
+  CGRect rect = CGRectZero;
+  rect.size = size;
+  CGSize constrainedContentSize = UIEdgeInsetsInsetRect(rect, contentEdgeInsets).size;
+  CGSize titleSize = [self textSizeForText:title font:font constrainedSize:constrainedContentSize lineBreakMode:self.titleLabel.lineBreakMode];
   CGFloat padding = [self _paddingForHeight:height];
   CGFloat textPaddingCorrection = [self _textPaddingCorrectionForHeight:height];
   CGSize contentSize = CGSizeMake(height + padding + titleSize.width - textPaddingCorrection, height);
-  return FBSDKEdgeInsetsOutsetSize(contentSize, contentEdgeInsets);
+
+  return CGSizeMake(
+    contentEdgeInsets.left + contentSize.width + contentEdgeInsets.right,
+    contentEdgeInsets.top + contentSize.height + contentEdgeInsets.bottom
+  );
 }
 
-#pragma mark - Helper Methods
+- (CGSize)textSizeForText:(NSString *)text font:(UIFont *)font constrainedSize:(CGSize)constrainedSize lineBreakMode:(NSLineBreakMode)lineBreakMode
+{
+  if (!text) {
+    return CGSizeZero;
+  }
+
+  NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+  paragraphStyle.lineBreakMode = lineBreakMode;
+  NSDictionary<NSString *, id> *attributes = @{
+    NSFontAttributeName : font,
+    NSParagraphStyleAttributeName : paragraphStyle,
+  };
+  NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+  CGSize size = [attributedString boundingRectWithSize:constrainedSize
+                                               options:(NSStringDrawingUsesDeviceMetrics
+                                                 | NSStringDrawingUsesLineFragmentOrigin
+                                                 | NSStringDrawingUsesFontLeading)
+                                               context:NULL].size;
+  return CGSizeMake(ceilf(size.width), ceilf(size.height));
+}
 
 - (void)_applicationDidBecomeActiveNotification:(NSNotification *)notification
 {
@@ -358,7 +398,7 @@ static id _applicationActivationNotifier;
   self.adjustsImageWhenHighlighted = NO;
   self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
   self.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
-  self.tintColor = [UIColor whiteColor];
+  self.tintColor = UIColor.whiteColor;
 
   BOOL forceSizeToFit = CGRectIsEmpty(self.bounds);
 
@@ -390,7 +430,7 @@ static id _applicationActivationNotifier;
   #endif
   }
 
-  [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+  [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [self setTitleColor:[self highlightedContentColor] forState:UIControlStateHighlighted | UIControlStateSelected];
 
   [self setTitle:title forState:UIControlStateNormal];
@@ -432,10 +472,10 @@ static id _applicationActivationNotifier;
   if (forceSizeToFit) {
     [self sizeToFit];
   }
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_applicationDidBecomeActiveNotification:)
-                                               name:FBSDKApplicationDidBecomeActiveNotification
-                                             object:self.class.applicationActivationNotifier];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_applicationDidBecomeActiveNotification:)
+                                             name:FBSDKApplicationDidBecomeActiveNotification
+                                           object:self.class.applicationActivationNotifier];
 }
 
 - (CGFloat)_fontSizeForHeight:(CGFloat)height

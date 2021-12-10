@@ -1,20 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-//
-// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
-// copy, modify, and distribute this software in source code or binary form for use
-// in connection with the web services and APIs provided by Facebook.
-//
-// As with any software that integrates with the Facebook platform, your use of
-// this software is subject to the Facebook Developer Principles and Policies
-// [http://developers.facebook.com/policy/]. This copyright notice shall be
-// included in all copies or substantial portions of the software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <SafariServices/SFSafariViewController.h>
 #import <XCTest/XCTest.h>
@@ -22,8 +12,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
-#import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : XCTestCase
 
@@ -31,10 +19,11 @@
 @property (nonatomic) TestLogger *logger;
 @property (nonatomic, readonly) NSURL *sampleUrl;
 @property (nonatomic) FBSDKLoginManager *loginManager;
-@property (nonatomic) TestURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestInternalURLOpener *urlOpener;
+@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
+@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @end
 
@@ -45,17 +34,18 @@
   [super setUp];
 
   [FBSDKLoginManager resetTestEvidence];
-  self.logger = [TestLogger new];
-  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  self.logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
+  self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   self.frameworkLoader = [TestDylibResolver new];
-  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  self.appURLSchemeProvider = [TestInternalUtility new];
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
                                          frameworkLoader:self.frameworkLoader
-                                    appURLSchemeProvider:self.appURLSchemeProvider];
+                                    appURLSchemeProvider:self.appURLSchemeProvider
+                                            errorFactory:self.errorFactory];
   self.loginManager = [FBSDKLoginManager new];
 
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
@@ -79,7 +69,7 @@
     "Should try to open a url with a non http scheme"
   );
   XCTAssertTrue(self.api.expectingBackground, "Should not modify whether the background is expected to change");
-  XCTAssertNil(self.api.pendingUrlOpen, "Should not set a pending url opener");
+  XCTAssertNil(self.api.pendingURLOpen, "Should not set a pending url opener");
 }
 
 - (void)testWithAuthenticationURL
@@ -139,7 +129,7 @@
   XCTAssertNil(self.api.authenticationSessionCompletionHandler);
   XCTAssertNil(self.api.authenticationSession);
   XCTAssertEqualObjects(
-    self.api.pendingUrlOpen,
+    self.api.pendingURLOpen,
     self.loginManager,
     "Should set the pending url opener to the passed in sender"
   );
@@ -284,7 +274,7 @@
 - (void)assertExpectingBackgroundAndPendingUrlOpener
 {
   XCTAssertFalse(self.api.expectingBackground, "Should set expecting background to false");
-  XCTAssertEqualObjects(self.api.pendingUrlOpen, self.loginManager, "Should set the pending url opener to the passed in sender");
+  XCTAssertEqualObjects(self.api.pendingURLOpen, self.loginManager, "Should set the pending url opener to the passed in sender");
 }
 
 - (NSURL *)sampleUrl

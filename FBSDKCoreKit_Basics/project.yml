@@ -1,0 +1,133 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: FBSDKCoreKit_Basics
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+targets:
+  FBSDKCoreKit_Basics-Static:
+    type: framework
+    platform: iOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - path: ../Sources/FBSDKCoreKit_Basics/include
+        headerVisibility: public
+      - path: ../Sources/FBSDKCoreKit_Basics
+        headerVisibility: project
+        excludes: include
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
+  FBSDKCoreKit_Basics-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: iOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - path: ../Sources/FBSDKCoreKit_Basics/include
+        headerVisibility: public
+      - path: ../Sources/FBSDKCoreKit_Basics
+        headerVisibility: project
+        excludes: include
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+  FBSDKCoreKit_Basics_TV-Static:
+    type: framework
+    platform: tvOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - path: ../Sources/FBSDKCoreKit_Basics/include
+        headerVisibility: public
+      - path: ../Sources/FBSDKCoreKit_Basics
+        headerVisibility: project
+        excludes: include
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: tvOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - path: ../Sources/FBSDKCoreKit_Basics/include
+        headerVisibility: public
+      - path: ../Sources/FBSDKCoreKit_Basics
+        headerVisibility: project
+        excludes: include
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+    settings:
+      GCC_PREFIX_HEADER: ../Sources/FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
+  FBSDKCoreKit_BasicsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBSDKCoreKit_BasicsTests
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+      Release: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics-Dynamic
+      - target: TestTools/TestTools
+        link: false
+        embed: false
+
+schemes:
+  FBSDKCoreKit_Basics-Static:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Static: all
+  FBSDKCoreKit_Basics-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Dynamic: all
+    test:
+      targets: [FBSDKCoreKit_BasicsTests]
+      coverageTargets:
+        - FBSDKCoreKit_Basics-Dynamic
+  FBSDKCoreKit_Basics_TV-Static:
+    build:
+      targets:
+        FBSDKCoreKit_Basics_TV-Static: all
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics_TV-Dynamic: all
