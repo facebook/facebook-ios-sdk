@@ -8,19 +8,37 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginURLCompleter.h"
+#import "FBSDKLoginCompletion+Internal.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenCreating.h"
-#import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginUtility.h"
 #import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
+
+@implementation FBSDKLoginCompletionParameters
+
+- (instancetype)init
+{
+  return [super init];
+}
+
+- (instancetype)initWithError:(NSError *)error
+{
+  if ((self = [self init])) {
+    self.error = error;
+  }
+  return self;
+}
+
+@end
+
+#pragma mark - Completers
 
 @interface FBSDKLoginURLCompleter ()
 

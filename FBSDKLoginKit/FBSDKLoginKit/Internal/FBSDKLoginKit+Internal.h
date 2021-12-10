@@ -7,7 +7,7 @@
  */
 
 #import "FBSDKAuthenticationTokenFactory.h"
-#import "FBSDKLoginCompletionParameters+Internal.h"
+#import "FBSDKLoginCompletion+Internal.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLogger.h"

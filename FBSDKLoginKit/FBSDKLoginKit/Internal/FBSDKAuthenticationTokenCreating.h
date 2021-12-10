@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^ FBSDKAuthenticationTokenBlock)(FBSDKAuthenticationToken *_Nullable token)

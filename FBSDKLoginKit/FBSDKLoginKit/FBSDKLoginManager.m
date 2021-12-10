@@ -14,12 +14,12 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenFactory.h"
+#import "FBSDKLoginCompletion.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 #import "FBSDKLoginRecoveryAttempter.h"
-#import "FBSDKLoginURLCompleter.h"
 #import "FBSDKLoginUtility.h"
 #import "FBSDKMonotonicTime.h"
 #import "FBSDKPermission.h"

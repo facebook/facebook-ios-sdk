@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginCompletionParameters.h"
+#import "FBSDKLoginCompletion.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
