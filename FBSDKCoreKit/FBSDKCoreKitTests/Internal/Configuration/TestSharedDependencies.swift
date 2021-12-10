@@ -13,7 +13,7 @@ enum TestSharedDependencies {
       accessTokenWallet: TestAccessTokenWallet.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       applicationActivationNotifier: UninhabitedObject(),
-      atePublisherFactory: TestATEPublisherFactory(),
+      atePublisherFactory: TestAtePublisherFactory(),
       authenticationTokenWallet: TestAuthenticationTokenWallet.self,
       crashHandler: TestCrashHandler(),
       crashObserver: TestCrashObserver(),

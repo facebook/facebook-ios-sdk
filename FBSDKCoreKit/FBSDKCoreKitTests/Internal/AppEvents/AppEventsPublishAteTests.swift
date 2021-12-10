@@ -8,7 +8,7 @@
 
 import TestTools
 
-class AppEventsPublishATETests: XCTestCase {
+class AppEventsPublishAteTests: XCTestCase {
 
   let settings = TestSettings()
 
@@ -18,7 +18,7 @@ class AppEventsPublishATETests: XCTestCase {
     AppEvents.setSettings(settings)
   }
 
-  func testDefaultAppEventsATEPublisher() {
+  func testDefaultAppEventsAtePublisher() {
     settings.appID = name
 
     let appEvents = AppEvents(flushBehavior: .auto, flushPeriodInSeconds: 15)
@@ -29,22 +29,22 @@ class AppEventsPublishATETests: XCTestCase {
     )
   }
 
-  func testPublishingATEWithoutPublisher() {
+  func testPublishingAteWithoutPublisher() {
     let appEvents = AppEvents(flushBehavior: .explicitOnly, flushPeriodInSeconds: 0)
 
     // checking that there is no crash
     appEvents.publishATE()
   }
 
-  func testPublishingATEAgainAfterSettingAppID() {
-    let publisher = TestATEPublisher()
-    let factory = TestATEPublisherFactory()
+  func testPublishingAteAgainAfterSettingAppID() {
+    let publisher = TestAtePublisher()
+    let factory = TestAtePublisherFactory()
     factory.stubbedPublisher = publisher
     let appEvents = AppEvents(flushBehavior: .explicitOnly, flushPeriodInSeconds: 0)
     appEvents.publishATE()
 
     XCTAssertFalse(
-      publisher.publishATEWasCalled,
+      publisher.publishAteWasCalled,
       "App events Should not invoke the ATE publisher when there is not App ID"
     )
 
@@ -73,7 +73,7 @@ class AppEventsPublishATETests: XCTestCase {
 
     appEvents.publishATE()
     XCTAssertTrue(
-      publisher.publishATEWasCalled,
+      publisher.publishAteWasCalled,
       "App events should use the ATE publisher created by the configure method"
     )
   }

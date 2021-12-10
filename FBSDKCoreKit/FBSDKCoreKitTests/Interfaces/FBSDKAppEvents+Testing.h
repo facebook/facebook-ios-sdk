@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSwizzling;
-@protocol FBSDKATEPublishing;
+@protocol FBSDKAtePublishing;
 
 @interface FBSDKAppEvents (Testing)
 
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
-@property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
+@property (nullable, nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 

@@ -14,8 +14,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKATEPublisherCreating.h"
-#import "FBSDKATEPublishing.h"
 #import "FBSDKAccessToken.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventName.h"
@@ -33,6 +31,8 @@
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAtePublisherCreating.h"
+#import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDataPersisting.h"
@@ -118,12 +118,12 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) UIApplicationState applicationState;
 @property (nullable, nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic) dispatch_source_t flushTimer;
-@property (nonatomic) id<FBSDKATEPublishing> atePublisher;
+@property (nonatomic) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
-@property (nonatomic) id<FBSDKATEPublisherCreating> atePublisherFactory;
+@property (nonatomic) id<FBSDKAtePublisherCreating> atePublisherFactory;
 @property (nonatomic) id<FBSDKUserDataPersisting> userDataStore;
 @property (nonatomic) BOOL isConfigured;
 
@@ -873,7 +873,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor
-                      atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
+                      atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
@@ -1143,8 +1143,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 {
   if (@available(iOS 14.0, *)) {
     if ([g_settings isSetATETimeExceedsInstallTime]) {
-      NSDate *setATETimestamp = g_settings.advertiserTrackingEnabledTimestamp;
-      [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKAppEventsUtility convertToUnixTime:setATETimestamp]) forKey:@"install_timestamp"];
+      NSDate *setAteTimestamp = g_settings.advertiserTrackingEnabledTimestamp;
+      [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKAppEventsUtility convertToUnixTime:setAteTimestamp]) forKey:@"install_timestamp"];
     } else {
       NSDate *installTimestamp = g_settings.installTimestamp;
       [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKAppEventsUtility convertToUnixTime:installTimestamp]) forKey:@"install_timestamp"];

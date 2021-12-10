@@ -104,7 +104,7 @@ class SettingsTests: XCTestCase {
   // MARK: Advertiser Tracking Status
 
   func testFacebookAdvertiserTrackingStatusDefaultValue() {
-    let configuration = TestAppEventsConfiguration(defaultATEStatus: .disallowed)
+    let configuration = TestAppEventsConfiguration(defaultAteStatus: .disallowed)
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertEqual(

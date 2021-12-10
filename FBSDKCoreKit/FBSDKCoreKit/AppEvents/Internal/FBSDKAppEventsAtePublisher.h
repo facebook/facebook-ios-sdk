@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKATEPublishing.h"
+#import "FBSDKAtePublishing.h"
 #import "FBSDKDeviceInformationProviding.h"
 
 @protocol FBSDKDataPersisting;
@@ -17,8 +17,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsATEPublisher)
-@interface FBSDKAppEventsATEPublisher : NSObject <FBSDKATEPublishing>
+NS_SWIFT_NAME(AppEventsAtePublisher)
+@interface FBSDKAppEventsAtePublisher : NSObject <FBSDKAtePublishing>
 
 @property (nonatomic, readonly) NSString *appIdentifier;
 

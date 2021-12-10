@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKAtePublishing;
+
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ATEPublishing)
-@protocol FBSDKATEPublishing <NSObject>
+NS_SWIFT_NAME(AtePublisherCreating)
+@protocol FBSDKAtePublisherCreating
 
-- (void)publishATE;
+// UNCRUSTIFY_FORMAT_OFF
+- (nullable id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
+NS_SWIFT_NAME(createPublisher(appID:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

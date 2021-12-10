@@ -39,8 +39,8 @@
 @property (nonnull, nonatomic) NSDictionary<NSString *, id> *payload;
 @property (nonatomic) double purchaseAmount;
 @property (nonnull, nonatomic) NSString *currency;
-@property (nonnull, nonatomic) TestATEPublisherFactory *atePublisherFactory;
-@property (nonnull, nonatomic) TestATEPublisher *atePublisher;
+@property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherFactory;
+@property (nonnull, nonatomic) TestAtePublisher *atePublisher;
 @property (nonnull, nonatomic) TestTimeSpentRecorderFactory *timeSpentRecorderFactory;
 @property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
@@ -105,7 +105,7 @@
   self.restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
   self.appEventsConfigurationProvider = [TestAppEventsConfigurationProvider new];
   self.appEventsStateProvider = [TestAppEventsStateProvider new];
-  self.atePublisherFactory = [TestATEPublisherFactory new];
+  self.atePublisherFactory = [TestAtePublisherFactory new];
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
   self.advertiserIDProvider = [TestAdvertiserIDProvider new];
@@ -115,7 +115,7 @@
   self.userDataStore = [TestUserDataStore new];
 
   // Must be stubbed before the configure method is called
-  self.atePublisher = [TestATEPublisher new];
+  self.atePublisher = [TestAtePublisher new];
   self.atePublisherFactory.stubbedPublisher = self.atePublisher;
 
   [self configureAppEventsSingleton];
@@ -176,7 +176,7 @@
   );
 }
 
-- (void)testConfiguringCreatesATEPublisher
+- (void)testConfiguringCreatesAtePublisher
 {
   XCTAssertEqualObjects(
     self.atePublisherFactory.capturedAppID,

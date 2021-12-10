@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsATEPublisher.h"
+#import "FBSDKAppEventsAtePublisher.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppEventsATEPublisher (Testing)
+@interface FBSDKAppEventsAtePublisher (Testing)
 
 @property (nonatomic, strong) id<FBSDKDataPersisting> store;
 @property (nonatomic) BOOL isProcessing;

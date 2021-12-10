@@ -7,11 +7,11 @@
  */
 
 @objcMembers
-class TestATEPublisherFactory: NSObject, ATEPublisherCreating {
-  var stubbedPublisher: ATEPublishing? = TestATEPublisher()
+class TestAtePublisherFactory: NSObject, AtePublisherCreating {
+  var stubbedPublisher: AtePublishing? = TestAtePublisher()
   var capturedAppID: String?
 
-  func createPublisher(appID: String) -> ATEPublishing? {
+  func createPublisher(appID: String) -> AtePublishing? {
     capturedAppID = appID
     return stubbedPublisher
   }

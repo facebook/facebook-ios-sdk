@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKATEPublisherCreating.h"
+#import "FBSDKAtePublisherCreating.h"
 #import "FBSDKDeviceInformationProviding.h"
 
 @protocol FBSDKDataPersisting;
@@ -17,8 +17,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ATEPublisherFactory)
-@interface FBSDKATEPublisherFactory : NSObject <FBSDKATEPublisherCreating>
+NS_SWIFT_NAME(AtePublisherFactory)
+@interface FBSDKAtePublisherFactory : NSObject <FBSDKAtePublisherCreating>
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
