@@ -50,7 +50,7 @@
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKSwizzling.h"
-#import "FBSDKTimeSpentRecorderCreating.h"
+#import "FBSDKTimeSpentRecordingCreating.h"
 #import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 
@@ -869,7 +869,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                                    logger:(Class<FBSDKLogging>)logger
                                  settings:(id<FBSDKSettings>)settings
                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                 timeSpentRecorderFactory:(id<FBSDKTimeSpentRecorderCreating>)timeSpentRecorderFactory
+                 timeSpentRecorderFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecorderFactory
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor

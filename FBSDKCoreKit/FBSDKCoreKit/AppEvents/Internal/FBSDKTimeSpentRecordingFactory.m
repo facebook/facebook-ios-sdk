@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKTimeSpentRecorderFactory.h"
+#import "FBSDKTimeSpentRecordingFactory.h"
 
 #import "FBSDKEventLogging.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -14,14 +14,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTimeSpentRecorderFactory ()
+@interface FBSDKTimeSpentRecordingFactory ()
 
 @property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 
 @end
 
-@implementation FBSDKTimeSpentRecorderFactory
+@implementation FBSDKTimeSpentRecordingFactory
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider

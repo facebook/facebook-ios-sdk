@@ -66,7 +66,7 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKSwizzler+Swizzling.h"
-#import "FBSDKTimeSpentRecorderFactory.h"
+#import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKUserDataStore.h"
@@ -713,9 +713,9 @@ static UIApplicationState _applicationState;
                                                                               graphRequestFactory:graphRequestFactory
                                                                                          settings:sharedSettings
                                                                         deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared];
-  FBSDKTimeSpentRecorderFactory *timeSpentRecordingFactory
-    = [[FBSDKTimeSpentRecorderFactory alloc] initWithEventLogger:self.appEvents
-                                     serverConfigurationProvider:serverConfigurationProvider];
+  FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
+    = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
+                                      serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator

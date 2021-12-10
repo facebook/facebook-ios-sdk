@@ -13,8 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(TimeSpentRecorderCreating)
-@protocol FBSDKTimeSpentRecorderCreating
+NS_SWIFT_NAME(TimeSpentRecordingCreating)
+@protocol FBSDKTimeSpentRecordingCreating
 
 - (id<FBSDKTimeSpentRecording, FBSDKSourceApplicationTracking>)createTimeSpentRecorder;
 

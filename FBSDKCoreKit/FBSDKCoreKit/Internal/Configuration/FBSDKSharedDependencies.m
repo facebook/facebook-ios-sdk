@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
              restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                  settings:(id<FBSDKSettings>)settings
-                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecorderCreating>)timeSpentRecordingFactory
+                timeSpentRecordingFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecordingFactory
                                tokenCache:(id<FBSDKTokenCaching>)tokenCache
                    urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore

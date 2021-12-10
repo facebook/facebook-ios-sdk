@@ -7,7 +7,7 @@
  */
 
 @objcMembers
-class TestTimeSpentRecorderFactory: NSObject, TimeSpentRecorderCreating {
+class TestTimeSpentRecorderFactory: NSObject, TimeSpentRecordingCreating {
   let recorder = TestTimeSpentRecorder()
 
   func createTimeSpentRecorder() -> SourceApplicationTracking & TimeSpentRecording {
