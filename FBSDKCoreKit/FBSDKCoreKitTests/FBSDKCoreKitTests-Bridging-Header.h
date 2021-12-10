@@ -47,6 +47,7 @@
 #import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppEventsUtility+Testing.h"
+#import "FBSDKAppEventsUtilityTests.h"
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkFactory.h"
