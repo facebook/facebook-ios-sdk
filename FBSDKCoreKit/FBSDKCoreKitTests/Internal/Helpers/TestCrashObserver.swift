@@ -15,6 +15,5 @@ class TestCrashObserver: CrashObserving {
     wasEnableCalled = true
   }
 
-  func didReceiveCrashLogs(_ crashLogs: [[String: Any]]) {
-  }
+  func didReceiveCrashLogs(_ crashLogs: [[String: Any]]) {}
 }

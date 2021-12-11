@@ -29,15 +29,13 @@ final class TestShareUtility: NSObject, ShareUtilityProtocol {
   static func buildAsyncWebPhotoContent(
     _ content: SharePhotoContent,
     completionHandler completion: WebPhotoContentBlock
-  ) {
-  }
+  ) {}
 
   static func buildWebShare(
     _ content: SharingContent,
     methodName methodNameRef: AutoreleasingUnsafeMutablePointer<NSString>?,
     parameters parametersRef: AutoreleasingUnsafeMutablePointer<NSDictionary>?
-  ) throws {
-  }
+  ) throws {}
 
   static func hashtagString(from hashtag: Hashtag?) -> String? {
     stubbedHashtagString ?? ""

@@ -35,7 +35,7 @@ public class GamingPayloadObserver: NSObject {
     case gamingPayloadTournamentID = "tournament_id"
   }
 
-  private override init() { }
+  private override init() {}
 
   public convenience init(delegate: GamingPayloadDelegate?) {
     self.init()

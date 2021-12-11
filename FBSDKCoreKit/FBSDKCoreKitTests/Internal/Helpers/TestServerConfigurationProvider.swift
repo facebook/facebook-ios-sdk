@@ -45,8 +45,7 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
     secondCapturedCompletionBlock = nil
   }
 
-  func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {
-  }
+  func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {}
 
   func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
     requestToLoadConfigurationCallWasCalled = true

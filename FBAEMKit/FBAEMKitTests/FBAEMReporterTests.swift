@@ -967,6 +967,6 @@ class FBAEMReporterTests: XCTestCase {
   func removeReportFile() {
     do {
       try FileManager.default.removeItem(at: URL(fileURLWithPath: reportFilePath))
-    } catch _ as NSError { }
+    } catch _ as NSError {}
   }
 } // swiftlint:disable:this file_length

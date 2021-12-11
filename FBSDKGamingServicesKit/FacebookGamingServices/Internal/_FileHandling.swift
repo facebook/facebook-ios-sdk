@@ -21,4 +21,4 @@ public protocol _FileHandling {
   func readData(ofLength length: Int) -> Data
 }
 
-extension FileHandle: _FileHandling { }
+extension FileHandle: _FileHandling {}

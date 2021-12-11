@@ -20,6 +20,7 @@
 --rules consecutiveSpaces
 --rules duplicateImports
 --rules elseOnSameLine
+--rules emptyBraces
 --rules enumNamespaces
 --rules extensionAccessControl
 --rules fileHeader

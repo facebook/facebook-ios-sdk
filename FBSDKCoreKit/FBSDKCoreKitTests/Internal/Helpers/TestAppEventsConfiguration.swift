@@ -24,8 +24,7 @@ class TestAppEventsConfiguration: NSObject, AppEventsConfigurationProtocol {
     self.eventCollectionEnabled = eventCollectionEnabled
   }
 
-  required init(json dict: [String: Any]?) {
-  }
+  required init(json dict: [String: Any]?) {}
 
   static func `default`() -> Self {
     guard let stubbed = stubbedDefaultConfiguration as? Self else {

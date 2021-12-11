@@ -202,6 +202,5 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     isTournamentURL(url: url)
   }
 
-  public func applicationDidBecomeActive(_ application: UIApplication) {
-  }
+  public func applicationDidBecomeActive(_ application: UIApplication) {}
 }

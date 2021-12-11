@@ -11,5 +11,5 @@ public protocol Showable {
   func show() -> Bool
 }
 
-extension ChooseContextDialog: Showable { }
-extension CreateContextDialog: Showable { }
+extension ChooseContextDialog: Showable {}
+extension CreateContextDialog: Showable {}
