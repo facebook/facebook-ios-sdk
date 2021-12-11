@@ -49,7 +49,7 @@ public class GamingPayloadObserver: NSObject {
     let recievedParameters = urlParameters?.filter { expectedParameters.contains($0.key) }
     let containsPayload = recievedParameters?[Keys.gamingPayload.rawValue] != nil
 
-    if containsPayload && recievedParameters?.keys.count ?? 0 > 1 {
+    if containsPayload, recievedParameters?.keys.count ?? 0 > 1 {
       return recievedParameters as? [String: String]
     }
     return [:]

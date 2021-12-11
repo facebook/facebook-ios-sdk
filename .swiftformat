@@ -11,6 +11,7 @@
 
 # Rules to run
 
+--rules andOperator
 --rules anyObjectProtocol
 --rules blankLinesAroundMark
 --rules blankLinesAtEndOfScope
