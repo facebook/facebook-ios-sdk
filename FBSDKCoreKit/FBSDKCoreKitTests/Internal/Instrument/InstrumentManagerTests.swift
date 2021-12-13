@@ -23,6 +23,7 @@ class InstrumentManagerTests: XCTestCase {
     super.setUp()
     InstrumentManager.reset()
   }
+
   override func setUp() {
     super.setUp()
 
@@ -34,6 +35,7 @@ class InstrumentManagerTests: XCTestCase {
       crashHandler: crashHandler
     )
   }
+
   override func tearDown() {
     super.tearDown()
     InstrumentManager.reset()

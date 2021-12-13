@@ -49,6 +49,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       "Should be able to configure the web dialog class with an error factory"
     )
   }
+
   func testDefaultClassDependencies() throws {
     WebDialog.resetClassDependencies()
     _ = WebDialog(name: "test", delegate: self)

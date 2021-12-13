@@ -20,6 +20,7 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
     static func bool(forKey key: String, defaultValue: Bool) -> Bool {
       false
     }
+
     static func loadGateKeepers(_ completionBlock: @escaping GKManagerBlock) {
       // noop
     }

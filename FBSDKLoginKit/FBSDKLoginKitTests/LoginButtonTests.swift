@@ -25,6 +25,7 @@ class LoginButtonTests: XCTestCase {
   var sampleToken: AuthenticationToken {
     AuthenticationToken(tokenString: "abc", nonce: "123")
   }
+
   private let delegate = TestLoginButtonDelegate()
 
   override func setUp() {

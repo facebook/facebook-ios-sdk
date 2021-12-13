@@ -19,6 +19,7 @@ enum SampleRawRemoteGatekeeperList {
       ]
     ]
   }()
+
   static let validHeterogeneous: [String: Any] = {
     [
       "data": [
@@ -31,11 +32,13 @@ enum SampleRawRemoteGatekeeperList {
       ]
     ]
   }()
+
   static let missingGatekeepers: [String: Any] = {
     [
       "data": []
     ]
   }()
+
   static let emptyGatekeepers: [String: Any] = {
     [
       "data": [

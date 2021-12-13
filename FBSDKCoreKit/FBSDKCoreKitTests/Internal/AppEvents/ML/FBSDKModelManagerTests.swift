@@ -302,6 +302,7 @@ private enum RawRemoteModelResponse {
     static let useCase = "use_case"
     static let versionID = "version_id"
   }
+
   enum UseCase {
     static let eventPrediction = "MTML_APP_EVENT_PRED"
     static let detection = "MTML_INTEGRITY_DETECT"

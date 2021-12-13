@@ -24,6 +24,7 @@ public class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenS
       stubbedCurrentAccessToken = newValue
     }
   }
+
   public static var tokenString: String? {
     currentAccessToken?.tokenString
   }

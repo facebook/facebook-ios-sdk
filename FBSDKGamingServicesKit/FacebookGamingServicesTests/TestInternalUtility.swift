@@ -51,6 +51,7 @@ enum URLConstants {
       return String(format: "/dialog/choosecontext/%@/", appID)
     }
   }
+
   static let queryParameterFilter = "filter"
   static let queryParameterMinSize = "min_size"
   static let queryParameterMaxSize = "max_size"

@@ -59,11 +59,13 @@ enum SampleAppLinkResolverData {
       Keys.url: value
     ]
   }
+
   static func appStoreIdField(value: Any) -> [String: Any] {
     [
       Keys.appStoreID: value
     ]
   }
+
   static func appNameField(value: Any) -> [String: Any] {
     [
       Keys.appName: value

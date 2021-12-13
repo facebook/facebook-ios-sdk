@@ -79,6 +79,7 @@ UIViewControllerTransitionCoordinatorContext {
   ) -> UIViewController? {
     nil
   }
+
   func view(
     forKey key: UITransitionContextViewKey
   ) -> UIView? {
