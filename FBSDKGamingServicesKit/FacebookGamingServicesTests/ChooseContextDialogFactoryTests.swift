@@ -43,8 +43,8 @@ class ChooseContextDialogFactoryTests: XCTestCase {
   }
 }
 
-// swiftlint:disable override_in_extension
 extension ChooseContextContent {
+  // swiftlint:disable:next override_in_extension
   open override func isEqual(_ object: Any?) -> Bool {
     guard let other = object as? ChooseContextContent else {
       return false

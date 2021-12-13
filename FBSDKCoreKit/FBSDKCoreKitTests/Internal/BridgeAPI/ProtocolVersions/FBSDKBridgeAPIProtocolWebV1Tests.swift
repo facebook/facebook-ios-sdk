@@ -36,14 +36,12 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     static let withEmptyBridgeArgs: [String: Any] = [Keys.bridgeArgs: ""]
     static let valid = withBridgeArgs(responseActionID: Values.actionID)
 
-    // swiftlint:disable force_try force_unwrapping
     static func jsonString(actionID: String) -> String {
-      let data = try! JSONSerialization.data(
+      let data = try! JSONSerialization.data( // swiftlint:disable:this force_try
         withJSONObject: [Keys.actionID: actionID], options: []
       )
-      return String(data: data, encoding: .utf8)!
+      return String(data: data, encoding: .utf8)! // swiftlint:disable:this force_unwrapping
     }
-    // swiftlint:enable force_try force_unwrapping
 
     static func withBridgeArgs(responseActionID: String) -> [String: Any] {
       [Keys.bridgeArgs: jsonString(actionID: responseActionID)]

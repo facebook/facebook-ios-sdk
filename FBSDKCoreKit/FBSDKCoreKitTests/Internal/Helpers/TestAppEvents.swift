@@ -63,7 +63,7 @@ class TestAppEvents: TestEventLogger,
   // swiftlint:disable:next line_length
   var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
 
-  // swiftlint:disable function_parameter_count
+  // swiftlint:disable:next function_parameter_count
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
     appEventsConfigurationProvider: AppEventsConfigurationProviding,
@@ -105,6 +105,7 @@ class TestAppEvents: TestEventLogger,
     capturedAppEventsUtility = appEventsUtility
   }
 
+  // swiftlint:disable:next function_parameter_count
   func configureNonTVComponentsWith(
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
@@ -120,7 +121,6 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureSwizzler = swizzler
     capturedAEMReporter = aemReporter
   }
-  // swiftlint:enable function_parameter_count
 
   // MARK: - Source Application Tracking
 

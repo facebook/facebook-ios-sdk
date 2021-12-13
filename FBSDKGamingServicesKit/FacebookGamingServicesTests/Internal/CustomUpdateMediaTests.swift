@@ -10,9 +10,8 @@
 import XCTest
 
 class CustomUpdateMediaTests: XCTestCase {
-  // swiftlint:disable force_unwrapping
-  let fakeGIF = FacebookGIF(withUrl: URL(string: "www.test.com")!)
-  let fakeVideo = FacebookVideo(withUrl: URL(string: "www.test.com")!)
+  let fakeGIF = FacebookGIF(withUrl: SampleURLs.valid)
+  let fakeVideo = FacebookVideo(withUrl: SampleURLs.valid)
 
   func testIntilizationWithGif() throws {
     let media = try XCTUnwrap(CustomUpdateMedia(media: fakeGIF))

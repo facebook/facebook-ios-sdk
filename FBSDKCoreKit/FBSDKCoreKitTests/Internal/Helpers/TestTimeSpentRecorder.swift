@@ -9,7 +9,6 @@
 @objcMembers
 class TestTimeSpentRecorder: NSObject, SourceApplicationTracking, TimeSpentRecording {
 
-  // swiftlint:disable identifier_name
   var restoreWasCalled = false
   var suspendWasCalled = false
   var capturedCalledFromActivateApp = false
@@ -17,7 +16,7 @@ class TestTimeSpentRecorder: NSObject, SourceApplicationTracking, TimeSpentRecor
   var capturedSetSourceApplicationURL: URL?
   var capturedSetSourceApplicationFromAppLink: String?
   var capturedIsFromAppLink = false
-  var wasRegisterAutoResetSourceApplicationCalled = false
+  var wasRegisterAutoResetSourceApplicationCalled = false // swiftlint:disable:this identifier_name
 
   func suspend() {
     suspendWasCalled = true

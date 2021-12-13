@@ -10,12 +10,11 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-// swiftlint:disable force_unwrapping
 class WebViewAppLinkResolverTests: XCTestCase {
 
   var result: [String: Any]?
   var error: Error?
-  let data = "foo".data(using: .utf8)!
+  let data = "foo".data(using: .utf8)! // swiftlint:disable:this force_unwrapping
   let sessionProvider = TestSessionProvider()
   let errorFactory = TestErrorFactory()
   lazy var resolver = WebViewAppLinkResolver(
@@ -139,7 +138,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
     validateResult(
       result: result,
       data: data,
-      response: SampleHTTPURLResponses.validStatusCode!,
+      response: SampleHTTPURLResponses.validStatusCode,
       error: error
     )
   }

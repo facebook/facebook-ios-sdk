@@ -55,7 +55,7 @@ enum SampleHTTPURLResponses {
     statusCode: 200,
     httpVersion: nil,
     headerFields: nil
-  )
+  )! // swiftlint:disable:this force_unwrapping
 
   static func valid(
     statusCode: Int,

@@ -10,7 +10,6 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-// swiftlint:disable force_unwrapping
 class ImageDownloaderTests: XCTestCase {
 
   let expectedCacheMemory = 1024 * 1024 * 8
@@ -22,9 +21,9 @@ class ImageDownloaderTests: XCTestCase {
   lazy var request = URLRequest(url: url)
   let (image, imageData): (UIImage, Data) = {
     UIGraphicsBeginImageContextWithOptions(CGSize(width: 36, height: 36), false, 1)
-    let image = UIGraphicsGetImageFromCurrentImageContext()!
+    let image = UIGraphicsGetImageFromCurrentImageContext()! // swiftlint:disable:this force_unwrapping
     UIGraphicsEndImageContext()
-    let imageData = image.pngData()!
+    let imageData = image.pngData()! // swiftlint:disable:this force_unwrapping
     return (image, imageData)
   }()
 
@@ -249,7 +248,7 @@ class ImageDownloaderTests: XCTestCase {
   }
 
   func testFetchingWithSuccessSavesToCache() {
-    let response = SampleHTTPURLResponses.validStatusCode!
+    let response = SampleHTTPURLResponses.validStatusCode
     downloader.downloadImage(with: url, ttl: defaultTTL) { _ in }
 
     provider.capturedCompletion?(imageData, response, nil)
@@ -278,7 +277,7 @@ class ImageDownloaderTests: XCTestCase {
   func seedURLCache(date: Date = Date()) {
     downloader.urlCache.storeCachedResponse(
       CachedURLResponse(
-        response: SampleHTTPURLResponses.validStatusCode!,
+        response: SampleHTTPURLResponses.validStatusCode,
         data: imageData,
         userInfo: ["timestamp": date],
         storagePolicy: URLCache.StoragePolicy.allowed

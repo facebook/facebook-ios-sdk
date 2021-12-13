@@ -39,7 +39,7 @@ public class Fuzzer: NSObject {
     "Foo".data(using: .utf8) ?? Data(),
     Data(count: 100),
 
-    // swiftlint:disable force_try
+    // swiftlint:disable:next force_try
     try! JSONSerialization.data(withJSONObject: ["foo": "bar"], options: .fragmentsAllowed),
     // swiftlint:enable force_try
     // Special Characters
