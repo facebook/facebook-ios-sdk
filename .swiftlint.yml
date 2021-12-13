@@ -14,9 +14,6 @@ file_header:
 identifier_name:
   excluded:
     - ok
-indentation_width:
-  indentation_width: 2
-  include_comments: false
 large_tuple: 3
 line_length:
   warning: 120
@@ -93,7 +90,6 @@ only_rules:
   - implicit_return
   - implicitly_unwrapped_optional
   - inclusive_language
-  - indentation_width
   - inert_defer
   - is_disjoint
   - joined_default_parameter

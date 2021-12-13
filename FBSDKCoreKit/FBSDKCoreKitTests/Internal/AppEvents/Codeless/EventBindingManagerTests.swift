@@ -15,7 +15,7 @@ protocol WindowMoving {
 
 // swiftformat:disable indent
 class EventBindingManagerTests: XCTestCase,
-                                UITableViewDelegate, // swiftlint:disable:this indentation_width
+                                UITableViewDelegate,
                                 UICollectionViewDelegate {
   // swiftformat:enable indent
 
@@ -266,7 +266,6 @@ class EventBindingManagerTests: XCTestCase,
 
   // MARK: - Helpers
 
-  // swiftlint:disable indentation_width
   func registerReactNativeClasses() {
     if objc_lookUpClass("RCTRootView") == nil,
        let touchHandler: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTouchHandler", 0),
@@ -295,7 +294,6 @@ class EventBindingManagerTests: XCTestCase,
       objc_disposeClassPair(view)
     }
   }
-  // swiftlint:enable indentation_width
 
   enum ViewHierarchies {
 

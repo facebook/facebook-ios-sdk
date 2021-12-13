@@ -456,7 +456,7 @@ final class ErrorFactoryTests: XCTestCase {
     var name: String {
       switch self {
       case let .invalid(name: name, _),
-           let .required(name: name): // swiftlint:disable:this indentation_width
+           let .required(name: name):
         return name
       }
     }

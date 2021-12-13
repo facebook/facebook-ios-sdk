@@ -50,7 +50,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertFalse(dialogDidCancel)
     // TODO: Fix tests to have completion handler begin called
     if let nsError = dialogError?.userInfo[NSUnderlyingErrorKey] as? NSError,
-       // swiftlint:disable:next indentation_width
        let errorMessage = nsError.userInfo[ErrorLocalizedDescriptionKey] as? String,
        errorMessage != "Cannot login due to urlOpener being nil" {
       XCTAssertNil(dialogError)
@@ -92,7 +91,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertTrue(dialogDidCancel)
     // TODO: Fix tests to have completion handler begin called
     if let nsError = dialogError?.userInfo[NSUnderlyingErrorKey] as? NSError,
-       // swiftlint:disable:next indentation_width
        let errorMessage = nsError.userInfo[ErrorLocalizedDescriptionKey] as? String,
        errorMessage != "Cannot login due to urlOpener being nil" {
       XCTAssertNil(dialogError)
@@ -154,7 +152,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertFalse(dialogDidCancel)
     // TODO: Fix tests to have completion handler begin called
     if let nsError = dialogError?.userInfo[NSUnderlyingErrorKey] as? NSError,
-       // swiftlint:disable:next indentation_width
        let errorMessage = nsError.userInfo[ErrorLocalizedDescriptionKey] as? String,
        errorMessage != "Cannot login due to urlOpener being nil" {
       XCTAssertNil(dialogError)

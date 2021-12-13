@@ -11,7 +11,7 @@ import UIKit
 // swiftformat:disable indent
 @objcMembers
 class TestAppEvents: TestEventLogger,
-                     SourceApplicationTracking, // swiftlint:disable:this indentation_width
+                     SourceApplicationTracking,
                      AppEventsConfiguring,
                      ApplicationActivating,
                      ApplicationLifecycleObserving,

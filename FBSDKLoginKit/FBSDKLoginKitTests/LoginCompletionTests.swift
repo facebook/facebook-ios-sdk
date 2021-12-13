@@ -607,7 +607,7 @@ class LoginCompletionTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable indentation_width function_body_length
+  // swiftlint:disable function_body_length
   func verifyParameters(
     actual: LoginCompletionParameters,
     expected: [String: Any],
