@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGamingVideoUploader (Testing) <FBSDKVideoUploaderDelegate>
+@interface FBSDKGamingVideoUploader (Testing) <_FBSDKVideoUploaderDelegate>
 
 @property (class, nonatomic, readonly) FBSDKGamingVideoUploader *shared;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;

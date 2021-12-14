@@ -154,9 +154,9 @@ class GamingVideoUploaderTests: XCTestCase {
       wasCompletionCalled = true
     }
 
-    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
     let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
-    delegate.videoUploader(dummyUploader, didFailWithError: SampleError())
+    _ = delegate.videoUploader(dummyUploader, didFailWithError: SampleError())
 
     XCTAssertTrue(wasCompletionCalled)
   }
@@ -172,7 +172,7 @@ class GamingVideoUploaderTests: XCTestCase {
       wasCompletionCalled = true
     }
 
-    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
     let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": false])
 
@@ -187,7 +187,7 @@ class GamingVideoUploaderTests: XCTestCase {
       wasCompletionCalled = true
     }
 
-    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
     let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": "1"])
 
@@ -214,11 +214,11 @@ class GamingVideoUploaderTests: XCTestCase {
       completion: { _, _, _ in },
       andProgressHandler: verifyProgress
     )
-    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
     let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
 
     // Send first chunk of data
-    delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)
+    _ = delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)
 
     // Set expectations
     expectedBytesSent = 500
@@ -228,7 +228,7 @@ class GamingVideoUploaderTests: XCTestCase {
     fileHandle.stubbedReadData = Data(Array(repeating: 1, count: 499))
 
     // Send second chunk of data
-    delegate.videoChunkData(for: dummyUploader, startOffset: 500, endOffset: 999)
+    _ = delegate.videoChunkData(for: dummyUploader, startOffset: 500, endOffset: 999)
 
     // Set expectations
     expectedBytesSent = 499

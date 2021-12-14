@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKVideoUploaderDelegate;
+@protocol _FBSDKVideoUploaderDelegate;
 @protocol FBSDKGraphRequestFactory;
 
 @interface FBSDKVideoUploader (Testing)
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
                        parameters:(NSDictionary<NSString *, id> *)parameters
-                         delegate:(id<FBSDKVideoUploaderDelegate>)delegate
+                         delegate:(id<_FBSDKVideoUploaderDelegate>)delegate
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:graphRequestFactory:));
 // UNCRUSTIFY_FORMAT_ON

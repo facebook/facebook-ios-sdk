@@ -51,7 +51,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
                        parameters:(NSDictionary<NSString *, id> *)parameters
-                         delegate:(id<FBSDKVideoUploaderDelegate>)delegate
+                         delegate:(id<_FBSDKVideoUploaderDelegate>)delegate
 {
   return [self initWithVideoName:videoName
                        videoSize:videoSize
@@ -63,7 +63,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
                        parameters:(NSDictionary<NSString *, id> *)parameters
-                         delegate:(id<FBSDKVideoUploaderDelegate>)delegate
+                         delegate:(id<_FBSDKVideoUploaderDelegate>)delegate
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
   self = [super init];

@@ -14,7 +14,7 @@
 
 #import "FBSDKVideoUploader.h"
 
-@interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
+@interface FBSDKGamingVideoUploader () <_FBSDKVideoUploaderDelegate>
 
 @property (nonatomic) NSUInteger totalBytesSent;
 
@@ -197,7 +197,7 @@
   _progressHandler(bytesSent, _totalBytesSent, _totalBytesExpectedToSend);
 }
 
-#pragma mark - FBSDKVideoUploaderDelegate
+#pragma mark - _FBSDKVideoUploaderDelegate
 
 - (nullable NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader
                                         startOffset:(NSUInteger)startOffset

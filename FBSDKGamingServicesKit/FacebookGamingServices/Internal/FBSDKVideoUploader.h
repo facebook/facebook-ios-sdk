@@ -8,11 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKVideoUploaderDelegate.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKVideoUploaderDelegate;
+@protocol _FBSDKVideoUploaderDelegate;
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -40,7 +38,7 @@ NS_SWIFT_NAME(_VideoUploader)
  @param parameters Optional parameters for video uploads. See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
  @param delegate Receiver's delegate
  */
-- (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary<NSString *, id> *)parameters delegate:(id<FBSDKVideoUploaderDelegate>)delegate;
+- (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary<NSString *, id> *)parameters delegate:(id<_FBSDKVideoUploaderDelegate>)delegate;
 
 /**
  Optional parameters for video uploads.
@@ -56,7 +54,7 @@ NS_SWIFT_NAME(_VideoUploader)
 /**
  Receiver's delegate
  */
-@property (nonatomic, weak) id<FBSDKVideoUploaderDelegate> delegate;
+@property (nonatomic, weak) id<_FBSDKVideoUploaderDelegate> delegate;
 
 /**
  Start the upload process
