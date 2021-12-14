@@ -913,7 +913,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   id parsed = nil;
 
   // Historically, people have passed-in `id` here. So, gotta double-check.
-  NSString *const utf8 = FBSDK_CAST_TO_CLASS_OR_NIL(unsafeString, NSString);
+  NSString *const utf8 = _FBSDKCastToClassOrNilUnsafeInternal(unsafeString, NSString.class);
   if (!(*error) && utf8) {
     parsed = [FBSDKBasicUtility objectForJSONString:utf8 error:error];
     // if we fail parse we attempt a re-parse of a modified input to support results in the form "foo=bar", "true", etc.
@@ -1060,17 +1060,17 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (nullable NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request
 {
-  NSDictionary<NSString *, id> *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
+  NSDictionary<NSString *, id> *const result = _FBSDKCastToClassOrNilUnsafeInternal(untypedParam, NSDictionary.class);
   if (!result) {
     return nil;
   }
 
-  NSDictionary<NSString *, id> *const body = FBSDK_CAST_TO_CLASS_OR_NIL(result[@"body"], NSDictionary);
+  NSDictionary<NSString *, id> *const body = _FBSDKCastToClassOrNilUnsafeInternal(result[@"body"], NSDictionary.class);
   if (!body) {
     return nil;
   }
 
-  NSDictionary<NSString *, id> *const errorDictionary = FBSDK_CAST_TO_CLASS_OR_NIL(body[@"error"], NSDictionary);
+  NSDictionary<NSString *, id> *const errorDictionary = _FBSDKCastToClassOrNilUnsafeInternal(body[@"error"], NSDictionary.class);
   if (!errorDictionary) {
     return nil;
   }
@@ -1128,9 +1128,9 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
   // Getting the message from "message" which is preferred over "error_msg"
   // which is itself preferred over "error_reason".
-  NSString *message = FBSDK_CAST_TO_CLASS_OR_NIL(errorDictionary[@"message"], NSString)
-  ?: FBSDK_CAST_TO_CLASS_OR_NIL(errorDictionary[@"error_reason"], NSString)
-    ?: FBSDK_CAST_TO_CLASS_OR_NIL(errorDictionary[@"error_msg"], NSString);
+  NSString *message = _FBSDKCastToClassOrNilUnsafeInternal(errorDictionary[@"message"], NSString.class)
+  ?: _FBSDKCastToClassOrNilUnsafeInternal(errorDictionary[@"error_reason"], NSString.class)
+    ?: _FBSDKCastToClassOrNilUnsafeInternal(errorDictionary[@"error_msg"], NSString.class);
 
   return [self.class.errorFactory errorWithCode:FBSDKErrorGraphRequestGraphAPI
                                        userInfo:userInfo

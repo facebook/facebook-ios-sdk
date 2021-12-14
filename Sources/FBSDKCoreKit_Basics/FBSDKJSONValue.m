@@ -20,7 +20,7 @@
 
 static NSArray<FBSDKJSONField *> *createArray(id obj)
 {
-  NSArray *const original = FBSDK_CAST_TO_CLASS_OR_NIL(obj, NSArray);
+  NSArray *const original = _FBSDKCastToClassOrNilUnsafeInternal(obj, NSArray.class);
   if (!original) {
     return @[];
   }
@@ -40,7 +40,7 @@ static NSArray<FBSDKJSONField *> *createArray(id obj)
 
 static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 {
-  NSDictionary<NSString *, id> *const original = FBSDK_CAST_TO_CLASS_OR_NIL(obj, NSDictionary);
+  NSDictionary<NSString *, id> *const original = _FBSDKCastToClassOrNilUnsafeInternal(obj, NSDictionary.class);
   if (!original) {
     return @{};
   }

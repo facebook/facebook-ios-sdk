@@ -96,7 +96,7 @@ static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 {
   if ([self.settings appID].length > 0) {
     BOOL safeForPiggyback = YES;
-    id<_FBSDKGraphRequestConnecting> internalConnection = FBSDK_CAST_TO_PROTOCOL_OR_NIL(connection, _FBSDKGraphRequestConnecting);
+    id<_FBSDKGraphRequestConnecting> internalConnection = _FBSDKCastToProtocolOrNilUnsafeInternal(connection, @protocol(_FBSDKGraphRequestConnecting));
 
     for (FBSDKGraphRequestMetadata *metadata in internalConnection.requests) {
       if (![self isRequestSafeForPiggyback:metadata.request]) {

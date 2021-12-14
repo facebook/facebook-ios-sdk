@@ -37,13 +37,13 @@
 {
   ClassA *a = [ClassA new];
   XCTAssertNil(
-    FBSDK_CAST_TO_CLASS_OR_NIL(a, ClassB),
+    _FBSDKCastToClassOrNilUnsafeInternal(a, ClassB.class),
     "Casting from a known class to a non-matching class should fail and return nil"
   );
 
   id idA = a;
   XCTAssertNil(
-    FBSDK_CAST_TO_CLASS_OR_NIL(idA, ClassB),
+    _FBSDKCastToClassOrNilUnsafeInternal(idA, ClassB.class),
     "Casting from an unknown class to a non-matching class should fail and return nil"
   );
 }
@@ -52,14 +52,14 @@
 {
   ClassA *a = [ClassA new];
   XCTAssertEqual(
-    FBSDK_CAST_TO_CLASS_OR_NIL(a, ClassA),
+    _FBSDKCastToClassOrNilUnsafeInternal(a, ClassA.class),
     a,
     "Casting from a known class to a matching class should return the same instance of that class"
   );
 
   id idA = a;
   XCTAssertEqual(
-    FBSDK_CAST_TO_CLASS_OR_NIL(idA, ClassA),
+    _FBSDKCastToClassOrNilUnsafeInternal(idA, ClassA.class),
     idA,
     "Casting from an unknown class to a matching class should return the same instance of that class"
   );
@@ -69,13 +69,13 @@
 {
   id<ProtocolA> a = [ClassA new];
   XCTAssertNil(
-    FBSDK_CAST_TO_PROTOCOL_OR_NIL(a, ProtocolB),
+    _FBSDKCastToProtocolOrNilUnsafeInternal(a, @protocol(ProtocolB)),
     "Should not return an object if it does not conform to the stated protocol"
   );
 
   id idA = a;
   XCTAssertNil(
-    FBSDK_CAST_TO_PROTOCOL_OR_NIL(idA, ProtocolB),
+    _FBSDKCastToProtocolOrNilUnsafeInternal(idA, @protocol(ProtocolB)),
     "Should not return an object if it does not conform to the stated protocol"
   );
 }
@@ -84,13 +84,13 @@
 {
   ClassA *a = [ClassA new];
   XCTAssertNil(
-    FBSDK_CAST_TO_PROTOCOL_OR_NIL(a, ProtocolB),
+    _FBSDKCastToProtocolOrNilUnsafeInternal(a, @protocol(ProtocolB)),
     "Should return an object if it conforms to the stated protocol"
   );
 
   id idA = a;
   XCTAssertNil(
-    FBSDK_CAST_TO_PROTOCOL_OR_NIL(idA, ProtocolB),
+    _FBSDKCastToProtocolOrNilUnsafeInternal(idA, @protocol(ProtocolB)),
     "Should return an object if it conforms to the stated protocol"
   );
 }
@@ -100,7 +100,7 @@
   id foo = @"bar";
   foo = nil;
 
-  XCTAssertNil(FBSDK_CAST_TO_CLASS_OR_NIL(foo, NSString));
+  XCTAssertNil(_FBSDKCastToClassOrNilUnsafeInternal(foo, NSString.class));
 }
 
 @end

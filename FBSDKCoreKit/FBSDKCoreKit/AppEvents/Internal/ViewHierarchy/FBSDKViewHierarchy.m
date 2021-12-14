@@ -374,12 +374,12 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
     text = [formatter stringFromDate:picker.date];
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTTextView")]) {
-    NSTextStorage *const textStorage = FBSDK_CAST_TO_CLASS_OR_NIL(getVariableFromInstance(obj, @"_textStorage"), NSTextStorage);
+    NSTextStorage *const textStorage = _FBSDKCastToClassOrNilUnsafeInternal(getVariableFromInstance(obj, @"_textStorage"), NSTextStorage.class);
     if (textStorage) {
       text = [textStorage string];
     }
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTBaseTextInputView")]) {
-    NSAttributedString *const attributedText = FBSDK_CAST_TO_CLASS_OR_NIL(getVariableFromInstance(obj, @"attributedText"), NSAttributedString);
+    NSAttributedString *const attributedText = _FBSDKCastToClassOrNilUnsafeInternal(getVariableFromInstance(obj, @"attributedText"), NSAttributedString.class);
     if (attributedText) {
       text = [attributedText string];
     }

@@ -64,7 +64,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
 
     // Since we cannot constrain the webview protocol to be a UIView subclass
     // perform a check here to make sure it can be cast to a UIView
-    UIView *webView = FBSDK_CAST_TO_CLASS_OR_NIL(_webView, UIView);
+    UIView *webView = _FBSDKCastToClassOrNilUnsafeInternal(_webView, UIView.class);
     if (!webView) {
       return self;
     }
