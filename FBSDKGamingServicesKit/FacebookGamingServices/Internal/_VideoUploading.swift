@@ -6,11 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
-
-@protocol FBSDKVideoUploaderDelegate;
-
-NS_ASSUME_NONNULL_BEGIN
+import Foundation
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -18,13 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(_VideoUploading)
-@protocol FBSDKVideoUploading
+@objc(_FBSDKVideoUploading)
+public protocol _VideoUploading {
 
-@property (nonatomic, weak) id<FBSDKVideoUploaderDelegate> delegate;
+  weak var delegate: _VideoUploaderDelegate? { get set }
 
-- (void)start;
+  func start()
+}
 
-@end
-
-NS_ASSUME_NONNULL_END
+extension _VideoUploader: _VideoUploading {}

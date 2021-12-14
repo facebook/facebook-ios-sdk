@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKVideoUploading.h"
-
 @protocol FBSDKVideoUploaderDelegate;
+@protocol _FBSDKVideoUploading;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +23,7 @@ NS_SWIFT_NAME(_VideoUploaderCreating)
 @protocol FBSDKVideoUploaderCreating
 
 // UNCRUSTIFY_FORMAT_OFF
-- (id<FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
+- (id<_FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
                                      videoSize:(NSUInteger)videoSize
                                     parameters:(NSDictionary<NSString *, id> *)parameters
                                       delegate:(id<FBSDKVideoUploaderDelegate>)delegate

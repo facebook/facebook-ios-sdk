@@ -156,7 +156,7 @@
 
   [FBSDKInternalUtility.sharedUtility registerTransientObject:uploader];
 
-  id<FBSDKVideoUploading> const videoUploader =
+  id<_FBSDKVideoUploading> const videoUploader =
   [self.videoUploaderFactory
    createWithVideoName:[configuration.videoURL lastPathComponent]
    videoSize:fileSize

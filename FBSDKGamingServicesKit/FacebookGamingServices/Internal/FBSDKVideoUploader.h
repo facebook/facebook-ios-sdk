@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKVideoUploaderDelegate.h"
-#import "FBSDKVideoUploading.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
  See https://developers.facebook.com/docs/graph-api/video-uploads
  */
 NS_SWIFT_NAME(_VideoUploader)
-@interface FBSDKVideoUploader : NSObject <FBSDKVideoUploading>
+@interface FBSDKVideoUploader : NSObject
+// Note: When converting this to Swift the class declaration should be: "class _VideoUploader: NSObject, _VideoUploading {"
+// And the extension on _VideoUploader should be removed from _VideoUploading.swift
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

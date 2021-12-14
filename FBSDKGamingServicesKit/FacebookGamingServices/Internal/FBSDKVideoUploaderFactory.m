@@ -14,7 +14,7 @@
 
 @implementation FBSDKVideoUploaderFactory
 
-- (id<FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
+- (id<_FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
                                      videoSize:(NSUInteger)videoSize
                                     parameters:(NSDictionary<NSString *, id> *)parameters
                                       delegate:(id<FBSDKVideoUploaderDelegate>)delegate
