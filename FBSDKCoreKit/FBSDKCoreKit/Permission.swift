@@ -165,7 +165,7 @@ public enum Permission: Hashable, ExpressibleByStringLiteral {
 private enum StringPermission: String {
   case publicProfile = "public_profile"
   case userFriends = "user_friends"
-  case email = "email"
+  case email
   case userAboutMe = "user_about_me"
   case userActionsBooks = "user_actions.books"
   case userActionsFitness = "user_action.fitness"

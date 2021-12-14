@@ -46,6 +46,7 @@
 --rules redundantObjc
 --rules redundantParens
 --rules redundantPattern
+--rules redundantRawValues
 --rules redundantReturn
 --rules redundantType
 --rules redundantVoidReturnType
