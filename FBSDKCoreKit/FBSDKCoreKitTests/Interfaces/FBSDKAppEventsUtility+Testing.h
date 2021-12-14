@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAppEventsUtility (Testing)
 
-@property (class, nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+@property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
 
 // UNCRUSTIFY_FORMAT_OFF
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable

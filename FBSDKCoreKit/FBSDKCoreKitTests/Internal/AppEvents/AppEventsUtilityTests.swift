@@ -19,12 +19,6 @@ class AppEventsUtilityTests: XCTestCase {
   var appEventsUtility: AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
-  override class func setUp() {
-    super.setUp()
-
-    AppEventsUtility.cachedAdvertiserIdentifierManager = nil
-  }
-
   override func setUp() {
     super.setUp()
 
@@ -49,7 +43,7 @@ class AppEventsUtilityTests: XCTestCase {
     appEventsUtility = nil
 
     TestGateKeeperManager.reset()
-    AppEventsUtility.cachedAdvertiserIdentifierManager = nil
+
     super.tearDown()
   }
 
@@ -243,8 +237,7 @@ class AppEventsUtilityTests: XCTestCase {
 
     let identifier = "68753A44-4D6F-1226-9C60-0050E4C00067"
     let uuid = try XCTUnwrap(UUID(uuidString: identifier))
-    let identifierManager = TestASIdentifierManager(stubbedAdvertisingIdentifier: uuid)
-    AppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager
+    appEventsUtility.cachedAdvertiserIdentifierManager = TestASIdentifierManager(stubbedAdvertisingIdentifier: uuid)
     let parameters = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
@@ -785,7 +778,7 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testIdentifierManagerWithShouldUseCachedManagerWithCachedManager() {
     let cachedManager = ASIdentifierManager()
-    AppEventsUtility.cachedAdvertiserIdentifierManager = cachedManager
+    appEventsUtility.cachedAdvertiserIdentifierManager = cachedManager
     let resolver = TestDylibResolver()
 
     let manager = appEventsUtility.asIdentifierManager(
@@ -807,10 +800,10 @@ class AppEventsUtilityTests: XCTestCase {
   func testIdentifierManagerWithShouldUseCachedManagerWithoutCachedManager() {
     let resolver = TestDylibResolver()
     resolver.stubbedASIdentifierManagerClass = ASIdentifierManager.self
-
-    guard AppEventsUtility.cachedAdvertiserIdentifierManager == nil else {
-      return XCTFail("Should not begin the test with a cached manager")
-    }
+    assert(
+      appEventsUtility.cachedAdvertiserIdentifierManager == nil,
+      "Should not begin the test with a cached manager"
+    )
 
     let manager = appEventsUtility.asIdentifierManager(
       shouldUseCachedManager: true,
@@ -827,14 +820,14 @@ class AppEventsUtilityTests: XCTestCase {
     )
     XCTAssertEqual(
       manager,
-      AppEventsUtility.cachedAdvertiserIdentifierManager,
+      appEventsUtility.cachedAdvertiserIdentifierManager,
       "Should cache the retrieved manager instance"
     )
   }
 
   func testIdentifierManagerWithShouldNotUseCachedManagerWithCachedManager() {
     let cachedManager = ASIdentifierManager()
-    AppEventsUtility.cachedAdvertiserIdentifierManager = cachedManager
+    appEventsUtility.cachedAdvertiserIdentifierManager = cachedManager
     let resolver = TestDylibResolver()
     resolver.stubbedASIdentifierManagerClass = ASIdentifierManager.self
 
@@ -852,7 +845,7 @@ class AppEventsUtilityTests: XCTestCase {
       "Should retrieve a manager instance when a cache is available but caching is declined"
     )
     XCTAssertNil(
-      AppEventsUtility.cachedAdvertiserIdentifierManager,
+      appEventsUtility.cachedAdvertiserIdentifierManager,
       "Should clear the cache when caching is declined"
     )
   }
@@ -860,10 +853,10 @@ class AppEventsUtilityTests: XCTestCase {
   func testIdentifierManagerWithShouldNotUseCachedManagerWithoutCachedManager() {
     let resolver = TestDylibResolver()
     resolver.stubbedASIdentifierManagerClass = ASIdentifierManager.self
-
-    guard AppEventsUtility.cachedAdvertiserIdentifierManager == nil else {
-      return XCTFail("Should not begin the test with a cached manager")
-    }
+    assert(
+      appEventsUtility.cachedAdvertiserIdentifierManager == nil,
+      "Should not begin the test with a cached manager"
+    )
 
     let manager = appEventsUtility.asIdentifierManager(
       shouldUseCachedManager: false,
@@ -879,7 +872,7 @@ class AppEventsUtilityTests: XCTestCase {
       "Should retrieve a manager instance when caching is declined"
     )
     XCTAssertNil(
-      AppEventsUtility.cachedAdvertiserIdentifierManager,
+      appEventsUtility.cachedAdvertiserIdentifierManager,
       "Should clear the cache when caching is declined"
     )
   }
