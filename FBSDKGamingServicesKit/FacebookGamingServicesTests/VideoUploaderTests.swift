@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
+class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   let startOffset = "start_offset"
   let endOffset = "end_offset"
@@ -21,7 +21,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   var videoData: Data?
 
   func videoChunkData(
-    for videoUploader: VideoUploader,
+    for videoUploader: _VideoUploader,
     startOffset: UInt,
     endOffset: UInt
   ) -> Data? {
@@ -30,21 +30,21 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
   }
 
   func videoUploader(
-    _ videoUploader: VideoUploader,
+    _ videoUploader: _VideoUploader,
     didCompleteWithResults results: [String: Any]
   ) {
     uploadDidCompleteSuccessfully = true
   }
 
   func videoUploader(
-    _ videoUploader: VideoUploader,
+    _ videoUploader: _VideoUploader,
     didFailWithError error: Error
   ) {
     uploadError = error as NSError
   }
 
   let graphRequestFactory = TestGraphRequestFactory()
-  lazy var videoUploader = VideoUploader(
+  lazy var videoUploader = _VideoUploader(
     videoName: "Greatest Video",
     videoSize: 1,
     parameters: ["a": 1],
@@ -95,7 +95,7 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
 
   func testGraphRequestFromStartWithVideoSizeZero() {
     let graphRequestFactory = TestGraphRequestFactory()
-    let videoUploader = VideoUploader(
+    let videoUploader = _VideoUploader(
       videoName: "Greatest Video",
       videoSize: 0,
       parameters: ["a": 1],

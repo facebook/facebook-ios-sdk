@@ -39,7 +39,7 @@ class GamingVideoUploaderTests: XCTestCase {
       "Should have the expected file handle factory by default"
     )
     XCTAssertTrue(
-      GamingVideoUploader.shared.videoUploaderFactory is VideoUploaderFactory,
+      GamingVideoUploader.shared.videoUploaderFactory is _VideoUploaderFactory,
       "Should have the expected video uploader factory by default"
     )
   }
@@ -155,7 +155,7 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didFailWithError: SampleError())
 
     XCTAssertTrue(wasCompletionCalled)
@@ -173,7 +173,7 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": false])
 
     XCTAssertTrue(wasCompletionCalled)
@@ -188,7 +188,7 @@ class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": "1"])
 
     XCTAssertTrue(wasCompletionCalled)
@@ -215,7 +215,7 @@ class GamingVideoUploaderTests: XCTestCase {
       andProgressHandler: verifyProgress
     )
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
-    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
 
     // Send first chunk of data
     delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)

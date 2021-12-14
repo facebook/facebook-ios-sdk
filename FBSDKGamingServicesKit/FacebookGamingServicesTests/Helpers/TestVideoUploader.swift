@@ -9,9 +9,9 @@
 import FacebookGamingServices
 import Foundation
 
-class TestVideoUploader: VideoUploading {
+class TestVideoUploader: _VideoUploading {
 
-  var delegate: VideoUploaderDelegate?
+  var delegate: _VideoUploaderDelegate?
   var wasStartCalled = false
 
   func start() {

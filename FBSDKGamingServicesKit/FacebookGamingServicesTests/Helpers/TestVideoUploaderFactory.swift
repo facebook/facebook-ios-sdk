@@ -9,20 +9,20 @@
 import FacebookGamingServices
 import Foundation
 
-class TestVideoUploaderFactory: VideoUploaderCreating {
+class TestVideoUploaderFactory: _VideoUploaderCreating {
 
   var capturedVideoName: String?
   var capturedVideoSize: UInt?
   var capturedParameters = [String: Any]()
-  var capturedDelegate: VideoUploaderDelegate?
+  var capturedDelegate: _VideoUploaderDelegate?
   var stubbedVideoUploader = TestVideoUploader()
 
   func create(
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
-    delegate: VideoUploaderDelegate
-  ) -> VideoUploading {
+    delegate: _VideoUploaderDelegate
+  ) -> _VideoUploading {
     capturedVideoName = videoName
     capturedVideoSize = videoSize
     capturedParameters = parameters

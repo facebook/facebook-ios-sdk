@@ -15,7 +15,7 @@ targets:
         excludes:
           - Internal
       - path: FacebookGamingServices/Internal
-        headerVisibility: project
+        headerVisibility: public
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FacebookGamingServices-Dynamic.xcconfig

@@ -16,12 +16,17 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKVideoUploaderDelegate;
 
 /**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+
  A utility class for uploading through the chunk upload graph API. Using this class requires an access token in
  `[FBSDKAccessToken currentAccessToken]` that has been granted the "publish_actions" permission.
 
  See https://developers.facebook.com/docs/graph-api/video-uploads
  */
-NS_SWIFT_NAME(VideoUploader)
+NS_SWIFT_NAME(_VideoUploader)
 @interface FBSDKVideoUploader : NSObject <FBSDKVideoUploading>
 
 - (instancetype)init NS_UNAVAILABLE;
