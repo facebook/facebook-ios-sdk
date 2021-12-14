@@ -24,5 +24,4 @@
 #import <FacebookGamingServices/FBSDKGamingServicesKit-Prefix-Header.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKVideoUploader.h>
-#import <FacebookGamingServices/FBSDKVideoUploaderCreating.h>
 #import <FacebookGamingServices/FBSDKVideoUploaderDelegate.h>

@@ -20,7 +20,7 @@
 
 @property (nonatomic) id<FBSDKFileHandling> fileHandle;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
-@property (nonatomic) id<FBSDKVideoUploaderCreating> videoUploaderFactory;
+@property (nonatomic) id<_FBSDKVideoUploaderCreating> videoUploaderFactory;
 
 @property (nonatomic) NSUInteger totalBytesExpectedToSend;
 @property (nullable, nonatomic) FBSDKGamingServiceResultCompletion completionHandler;
@@ -51,7 +51,7 @@
 }
 
 - (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
-                     videoUploaderFactory:(id<FBSDKVideoUploaderCreating>)videoUploaderFactory
+                     videoUploaderFactory:(id<_FBSDKVideoUploaderCreating>)videoUploaderFactory
 {
   if ((self = [super init])) {
     _fileHandleFactory = fileHandleFactory;
