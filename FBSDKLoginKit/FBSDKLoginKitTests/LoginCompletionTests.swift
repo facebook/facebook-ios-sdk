@@ -12,7 +12,6 @@ import XCTest
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 
-// swiftlint:disable type_body_length file_length function_body_length
 class LoginCompletionTests: XCTestCase {
 
   enum Keys {
@@ -607,7 +606,6 @@ class LoginCompletionTests: XCTestCase {
     )
   }
 
-  // swiftlint:disable function_body_length
   func verifyParameters(
     actual: LoginCompletionParameters,
     expected: [String: Any],

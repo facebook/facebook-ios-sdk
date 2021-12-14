@@ -11,7 +11,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
   enum Keys {
     static let ruleOperator = "operator"
@@ -165,7 +165,7 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:thi
     )
   }
 
-  func testIsMatchedWithStringComparision() { // swiftlint:disable:this function_body_length
+  func testIsMatchedWithStringComparision() {
     let rule = AEMAdvertiserSingleEntryRule(
       with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content.title",
@@ -253,7 +253,7 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:thi
     )
   }
 
-  func testIsMatchedWithNumberComparision() { // swiftlint:disable:this function_body_length
+  func testIsMatchedWithNumberComparision() {
     let rule = AEMAdvertiserSingleEntryRule(
       with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThan,
       paramKey: "fb_content.title",
@@ -499,4 +499,4 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:thi
   }
 }
 
-#endif // swiftlint:disable:this file_length
+#endif

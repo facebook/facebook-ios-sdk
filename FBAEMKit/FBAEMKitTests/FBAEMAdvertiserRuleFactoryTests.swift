@@ -11,7 +11,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
 
   let factory = AEMAdvertiserRuleFactory()
 
@@ -160,7 +160,7 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
     )
   }
 
-  func testGetOperator() { // swiftlint:disable:this function_body_length
+  func testGetOperator() {
     XCTAssertEqual(
       factory.getOperator(["test_key": "abc"]),
       .Unknown,

@@ -10,7 +10,6 @@ import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
-// swiftlint:disable:next type_body_length
 class FBAEMReporterTests: XCTestCase {
 
   enum Keys {
@@ -188,7 +187,7 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
-  func testClearCache() { // swiftlint:disable:this function_body_length
+  func testClearCache() {
     AEMReporter._addConfigs([SampleAEMData.validConfigData1])
     AEMReporter._addConfigs([SampleAEMData.validConfigData1, SampleAEMData.validConfigData2])
 
@@ -969,4 +968,4 @@ class FBAEMReporterTests: XCTestCase {
       try FileManager.default.removeItem(at: URL(fileURLWithPath: reportFilePath))
     } catch _ as NSError {}
   }
-} // swiftlint:disable:this file_length
+}

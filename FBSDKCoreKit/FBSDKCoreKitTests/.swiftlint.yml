@@ -1,4 +1,12 @@
-# Overrides for FBSDKCoreKitTests
+# Overrides for Tests
+
+# Unfortunately there isn't a way to share this file so it has been symlinked to other Tests directories
+# find . -name .swiftlint.yml | xargs ls -ltr
+# FBSDKCoreKit/FBSDKCoreKitTests/.swiftlint.yml - The actual file
+# FBAEMKit/FBAEMKitTests/.swiftlint.yml -> ../../FBSDKCoreKit/FBSDKCoreKitTests/.swiftlint.yml
+# FBSDKGamingServicesKit/FacebookGamingServicesTests/.swiftlint.yml -> ../../FBSDKCoreKit/FBSDKCoreKitTests/.swiftlint.yml
+# FBSDKLoginKit/FBSDKLoginKitTests/.swiftlint.yml -> ../../FBSDKCoreKit/FBSDKCoreKitTests/.swiftlint.yml
+# FBSDKShareKit/FBSDKShareKitTests/.swiftlint.yml -> ../../FBSDKCoreKit/FBSDKCoreKitTests/.swiftlint.yml
 
 # Use 10x the defaults for these to essentially disable these rules
 # Can't disable in disabled_rules since disabled_rules can't be used alongside opt_in_rules

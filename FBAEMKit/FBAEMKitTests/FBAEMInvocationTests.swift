@@ -9,7 +9,7 @@
 import FBAEMKit
 import XCTest
 
-class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMInvocationTests: XCTestCase {
 
   enum Keys {
     static let campaignID = "campaign_ids"
@@ -753,7 +753,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
-  func testUpdateConversionWithValue() { // swiftlint:disable:this function_body_length
+  func testUpdateConversionWithValue() {
     let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
@@ -1035,7 +1035,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
-  func testEncoding() { // swiftlint:disable:this function_body_length
+  func testEncoding() {
     let coder = TestCoder()
     let invocation: AEMInvocation = self.validInvocation
     invocation.encode(with: coder)
@@ -1122,7 +1122,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
-  func testDecoding() { // swiftlint:disable:this function_body_length
+  func testDecoding() {
     let decoder = TestCoder()
     _ = AEMInvocation(coder: decoder)
 
@@ -1196,4 +1196,4 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       "Should decode the expected type for the has_skan key"
     )
   }
-} // swiftlint:disable:this file_length
+}

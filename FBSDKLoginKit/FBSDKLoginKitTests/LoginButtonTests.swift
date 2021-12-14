@@ -14,8 +14,6 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-// swiftlint:disable type_body_length
-
 class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
@@ -627,4 +625,4 @@ private class TestButton: FBLoginButton {
   override func _fetchAndSetContent() {
     fetchAndSetContentCallCount += 1
   }
-} // swiftlint:disable:this file_length
+}

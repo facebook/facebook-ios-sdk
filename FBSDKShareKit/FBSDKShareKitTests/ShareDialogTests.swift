@@ -11,8 +11,6 @@ import TestTools
 import UIKit
 import XCTest
 
-// swiftlint:disable type_body_length file_length
-
 class ShareDialogTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

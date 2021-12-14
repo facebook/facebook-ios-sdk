@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable file_length type_body_length function_body_length line_length
+// swiftlint:disable line_length
 class LoginManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

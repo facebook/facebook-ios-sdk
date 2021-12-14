@@ -13,7 +13,6 @@ import FacebookCore
 import TestTools
 import XCTest
 
-// swiftlint:disable:next type_body_length
 class DeviceLoginManagerTests: XCTestCase {
 
   let fakeAppID = "123"
@@ -450,4 +449,4 @@ class DeviceLoginManagerTests: XCTestCase {
     XCTAssert(loginResult.isCancelled)
     XCTAssertNil(loginResult.accessToken)
   }
-} // swiftlint:disable:this file_length
+}

@@ -12,7 +12,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class AEMConfigurationTests: XCTestCase {
 
   enum Keys {
     static let defaultCurrency = "default_currency"
@@ -408,4 +408,4 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 }
 
-#endif // swiftlint:disable:this file_length
+#endif
