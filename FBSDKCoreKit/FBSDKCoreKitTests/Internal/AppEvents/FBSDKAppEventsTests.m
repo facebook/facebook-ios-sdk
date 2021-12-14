@@ -25,54 +25,50 @@
 #import "FBSDKLogger.h"
 #import "FBSDKUtility.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKAppEventsTests : XCTestCase
 
-@property (nonnull, nonatomic) NSString *const mockAppID;
-@property (nonnull, nonatomic) NSString *const mockUserID;
-@property (nonnull, nonatomic) NSString *eventName;
-@property (nonnull, nonatomic) NSDictionary<NSString *, id> *payload;
+@property (nonatomic) FBSDKAppEvents *appEvents;
+
+@property (nonatomic) NSString *const mockAppID;
+@property (nonatomic) NSString *const mockUserID;
+@property (nonatomic) NSString *eventName;
+@property (nonatomic) NSDictionary<NSString *, id> *payload;
 @property (nonatomic) double purchaseAmount;
-@property (nonnull, nonatomic) NSString *currency;
-@property (nonnull, nonatomic) TestATEPublisherFactory *atePublisherFactory;
-@property (nonnull, nonatomic) TestATEPublisher *atePublisher;
-@property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
-@property (nonnull, nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
-@property (nonnull, nonatomic) TestGraphRequestFactory *graphRequestFactory;
-@property (nonnull, nonatomic) UserDefaultsSpy *primaryDataStore;
-@property (nonnull, nonatomic) TestFeatureManager *featureManager;
-@property (nonnull, nonatomic) TestSettings *settings;
-@property (nonnull, nonatomic) TestOnDeviceMLModelManager *onDeviceMLModelManager;
-@property (nonnull, nonatomic) TestPaymentObserver *paymentObserver;
-@property (nonnull, nonatomic) TestAppEventsStateStore *appEventsStateStore;
-@property (nonnull, nonatomic) TestMetadataIndexer *metadataIndexer;
-@property (nonnull, nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
-@property (nonnull, nonatomic) TestAppEventsParameterProcessor *eventDeactivationParameterProcessor;
-@property (nonnull, nonatomic) TestAppEventsParameterProcessor *restrictiveDataFilterParameterProcessor;
-@property (nonnull, nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
-@property (nonnull, nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
-@property (nonnull, nonatomic) TestAppEventsReporter *skAdNetworkReporter;
-@property (nonnull, nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
-@property (nonnull, nonatomic) TestUserDataStore *userDataStore;
-@property (nonnull, nonatomic) TestAppEventsUtility *appEventsUtility;
+@property (nonatomic) NSString *currency;
+@property (nonatomic) TestATEPublisherFactory *atePublisherFactory;
+@property (nonatomic) TestATEPublisher *atePublisher;
+@property (nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
+@property (nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
+@property (nonatomic) TestGraphRequestFactory *graphRequestFactory;
+@property (nonatomic) UserDefaultsSpy *primaryDataStore;
+@property (nonatomic) TestFeatureManager *featureManager;
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestOnDeviceMLModelManager *onDeviceMLModelManager;
+@property (nonatomic) TestPaymentObserver *paymentObserver;
+@property (nonatomic) TestAppEventsStateStore *appEventsStateStore;
+@property (nonatomic) TestMetadataIndexer *metadataIndexer;
+@property (nonatomic) TestAppEventsConfigurationProvider *appEventsConfigurationProvider;
+@property (nonatomic) TestAppEventsParameterProcessor *eventDeactivationParameterProcessor;
+@property (nonatomic) TestAppEventsParameterProcessor *restrictiveDataFilterParameterProcessor;
+@property (nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
+@property (nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
+@property (nonatomic) TestAppEventsReporter *skAdNetworkReporter;
+@property (nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
+@property (nonatomic) TestUserDataStore *userDataStore;
+@property (nonatomic) TestAppEventsUtility *appEventsUtility;
 
 @end
 
 @implementation FBSDKAppEventsTests
 
-+ (void)setUp
-{
-  [super setUp];
-
-  [FBSDKAppEvents.shared reset];
-}
-
 - (void)setUp
 {
   [super setUp];
 
-  FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
-                                                       flushPeriodInSeconds:0];
-  FBSDKAppEvents.shared = appEvents;
+  self.appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                            flushPeriodInSeconds:0];
 
   [self resetTestHelpers];
   self.settings = [TestSettings new];
@@ -113,62 +109,57 @@
   self.atePublisher = [TestATEPublisher new];
   self.atePublisherFactory.stubbedPublisher = self.atePublisher;
 
-  [self configureAppEventsSingleton];
-
-  FBSDKAppEvents.shared.loggingOverrideAppID = self.mockAppID;
+  [self configureAppEvents];
+  self.appEvents.loggingOverrideAppID = self.mockAppID;
 }
 
 - (void)tearDown
 {
-  [FBSDKSettings.sharedSettings reset];
-  [FBSDKAppEvents.shared reset];
-  [TestGateKeeperManager reset];
   [self resetTestHelpers];
-
   [super tearDown];
 }
 
 - (void)resetTestHelpers
 {
-  [self.settings reset];
+  [TestGateKeeperManager reset];
   [TestLogger reset];
   [TestCodelessEvents reset];
   [TestAEMReporter reset];
 }
 
-- (void)configureAppEventsSingleton
+- (void)configureAppEvents
 {
-  [FBSDKAppEvents.shared configureWithGateKeeperManager:TestGateKeeperManager.class
-                         appEventsConfigurationProvider:self.appEventsConfigurationProvider
-                            serverConfigurationProvider:self.serverConfigurationProvider
-                                    graphRequestFactory:self.graphRequestFactory
-                                         featureChecker:self.featureManager
-                                       primaryDataStore:self.primaryDataStore
-                                                 logger:TestLogger.class
-                                               settings:self.settings
-                                        paymentObserver:self.paymentObserver
-                                      timeSpentRecorder:self.timeSpentRecorder
-                                    appEventsStateStore:self.appEventsStateStore
-                    eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
-                restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
-                                    atePublisherFactory:self.atePublisherFactory
-                                 appEventsStateProvider:self.appEventsStateProvider
-                                   advertiserIDProvider:self.advertiserIDProvider
-                                          userDataStore:self.userDataStore
-                                       appEventsUtility:self.appEventsUtility];
+  [self.appEvents configureWithGateKeeperManager:TestGateKeeperManager.class
+                  appEventsConfigurationProvider:self.appEventsConfigurationProvider
+                     serverConfigurationProvider:self.serverConfigurationProvider
+                             graphRequestFactory:self.graphRequestFactory
+                                  featureChecker:self.featureManager
+                                primaryDataStore:self.primaryDataStore
+                                          logger:TestLogger.class
+                                        settings:self.settings
+                                 paymentObserver:self.paymentObserver
+                               timeSpentRecorder:self.timeSpentRecorder
+                             appEventsStateStore:self.appEventsStateStore
+             eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
+         restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
+                             atePublisherFactory:self.atePublisherFactory
+                          appEventsStateProvider:self.appEventsStateProvider
+                            advertiserIDProvider:self.advertiserIDProvider
+                                   userDataStore:self.userDataStore
+                                appEventsUtility:self.appEventsUtility];
 
-  [FBSDKAppEvents.shared configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
-                                                            metadataIndexer:self.metadataIndexer
-                                                        skAdNetworkReporter:self.skAdNetworkReporter
-                                                            codelessIndexer:TestCodelessEvents.class
-                                                                   swizzler:TestSwizzler.class
-                                                                aemReporter:TestAEMReporter.class];
+  [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
+                                                     metadataIndexer:self.metadataIndexer
+                                                 skAdNetworkReporter:self.skAdNetworkReporter
+                                                     codelessIndexer:TestCodelessEvents.class
+                                                            swizzler:TestSwizzler.class
+                                                         aemReporter:TestAEMReporter.class];
 }
 
 - (void)testConfiguringSetsSwizzlerDependency
 {
   XCTAssertEqualObjects(
-    FBSDKAppEvents.shared.swizzler,
+    self.appEvents.swizzler,
     TestSwizzler.class,
     "Configuring should set the provided swizzler"
   );
@@ -182,7 +173,7 @@
     "Configuring should create an ate publisher with the expected app id"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.shared.atePublisher,
+    self.appEvents.atePublisher,
     self.atePublisher,
     "Should store the publisher created by the publisher factory"
   );
@@ -190,11 +181,11 @@
 
 - (void)testPublishingATEWithNilPublisher
 {
-  FBSDKAppEvents.shared.atePublisher = nil;
-  [FBSDKAppEvents.shared publishATE];
+  self.appEvents.atePublisher = nil;
+  [self.appEvents publishATE];
 
   XCTAssertEqualObjects(
-    FBSDKAppEvents.shared.atePublisher,
+    self.appEvents.atePublisher,
     self.atePublisher,
     "Should lazily create an ATE publisher when needed"
   );
@@ -202,8 +193,8 @@
 
 - (void)testLogPurchaseFlushesWhenFlushBehaviorIsExplicit
 {
-  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
-  [FBSDKAppEvents.shared logPurchase:self.purchaseAmount currency:self.currency];
+  self.appEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
+  [self.appEvents logPurchase:self.purchaseAmount currency:self.currency];
 
   // Verifying flush
   self.appEventsConfigurationProvider.firstCapturedBlock();
@@ -220,7 +211,7 @@
 
 - (void)testLogPurchase
 {
-  [FBSDKAppEvents.shared logPurchase:self.purchaseAmount currency:self.currency];
+  [self.appEvents logPurchase:self.purchaseAmount currency:self.currency];
 
   XCTAssertEqual(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
@@ -259,8 +250,8 @@
   }];
   XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
 
-  [FBSDKAppEvents.shared logEvent:@"foo"];
-  [FBSDKAppEvents.shared flush];
+  [self.appEvents logEvent:@"foo"];
+  [self.appEvents flush];
 
   [self waitForExpectations:@[expectation] timeout:2];
 
@@ -274,19 +265,19 @@
 
 - (void)testLogProductItemNonNil
 {
-  [FBSDKAppEvents.shared logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
-                           availability:FBSDKProductAvailabilityInStock
-                              condition:FBSDKProductConditionNew
-                            description:@"description"
-                              imageLink:@"https://www.sample.com"
-                                   link:@"https://www.sample.com"
-                                  title:@"title"
-                            priceAmount:1.0
-                               currency:@"USD"
-                                   gtin:@"BLUE MOUNTAIN"
-                                    mpn:@"BLUE MOUNTAIN"
-                                  brand:@"PHILZ"
-                             parameters:@{}];
+  [self.appEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
+                    availability:FBSDKProductAvailabilityInStock
+                       condition:FBSDKProductConditionNew
+                     description:@"description"
+                       imageLink:@"https://www.sample.com"
+                            link:@"https://www.sample.com"
+                           title:@"title"
+                     priceAmount:1.0
+                        currency:@"USD"
+                            gtin:@"BLUE MOUNTAIN"
+                             mpn:@"BLUE MOUNTAIN"
+                           brand:@"PHILZ"
+                      parameters:@{}];
 
   NSDictionary<NSString *, NSString *> *expectedAEMParameters = @{
     @"fb_product_availability" : @"IN_STOCK",
@@ -325,19 +316,19 @@
 
 - (void)testLogProductItemNilGtinMpnBrand
 {
-  [FBSDKAppEvents.shared logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
-                           availability:FBSDKProductAvailabilityInStock
-                              condition:FBSDKProductConditionNew
-                            description:@"description"
-                              imageLink:@"https://www.sample.com"
-                                   link:@"https://www.sample.com"
-                                  title:@"title"
-                            priceAmount:1.0
-                               currency:@"USD"
-                                   gtin:nil
-                                    mpn:nil
-                                  brand:nil
-                             parameters:@{}];
+  [self.appEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
+                    availability:FBSDKProductAvailabilityInStock
+                       condition:FBSDKProductConditionNew
+                     description:@"description"
+                       imageLink:@"https://www.sample.com"
+                            link:@"https://www.sample.com"
+                           title:@"title"
+                     priceAmount:1.0
+                        currency:@"USD"
+                            gtin:nil
+                             mpn:nil
+                           brand:nil
+                      parameters:@{}];
 
   XCTAssertNil(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
@@ -354,7 +345,7 @@
 
 - (void)testGettingUserData
 {
-  [FBSDKAppEvents.shared getUserData];
+  [self.appEvents getUserData];
 
   XCTAssertTrue(
     self.userDataStore.wasGetUserDataCalled,
@@ -376,16 +367,16 @@
   NSString *country = @"test_country";
 
   // Setting
-  [FBSDKAppEvents.shared setUserEmail:email
-                            firstName:firstName
-                             lastName:lastName
-                                phone:phone
-                          dateOfBirth:dateOfBirth
-                               gender:gender
-                                 city:city
-                                state:state
-                                  zip:zip
-                              country:country];
+  [self.appEvents setUserEmail:email
+                     firstName:firstName
+                      lastName:lastName
+                         phone:phone
+                   dateOfBirth:dateOfBirth
+                        gender:gender
+                          city:city
+                         state:state
+                           zip:zip
+                       country:country];
 
   XCTAssertEqualObjects(self.userDataStore.capturedEmail, email);
   XCTAssertEqualObjects(self.userDataStore.capturedFirstName, firstName);
@@ -400,7 +391,7 @@
   XCTAssertNil(self.userDataStore.capturedExternalId);
 
   // Clearing
-  [FBSDKAppEvents.shared clearUserData];
+  [self.appEvents clearUserData];
   XCTAssertTrue(
     self.userDataStore.wasClearUserDataCalled,
     @"Should rely on the underlying store for clearing user data"
@@ -409,7 +400,7 @@
 
 - (void)testSettingUserDataForType
 {
-  [FBSDKAppEvents.shared setUserData:self.name forType:FBSDKAppEventEmail];
+  [self.appEvents setUserData:self.name forType:FBSDKAppEventEmail];
 
   XCTAssertEqualObjects(
     self.userDataStore.capturedSetUserDataForTypeData,
@@ -425,7 +416,7 @@
 
 - (void)testClearingUserDataForType
 {
-  [FBSDKAppEvents.shared clearUserDataForType:FBSDKAppEventEmail];
+  [self.appEvents clearUserDataForType:FBSDKAppEventEmail];
 
   XCTAssertEqualObjects(
     self.userDataStore.capturedClearUserDataForTypeType,
@@ -436,20 +427,17 @@
 
 - (void)testSetAndClearUserID
 {
-  FBSDKAppEvents.shared.userID = self.mockUserID;
-  XCTAssertEqualObjects(FBSDKAppEvents.shared.userID, self.mockUserID);
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [FBSDKAppEvents clearUserID];
-  #pragma clang diagnostic pop
-  XCTAssertNil(FBSDKAppEvents.shared.userID);
+  self.appEvents.userID = self.mockUserID;
+  XCTAssertEqualObjects(self.appEvents.userID, self.mockUserID);
+  self.appEvents.userID = nil;
+  XCTAssertNil(self.appEvents.userID);
 }
 
 - (void)testSetLoggingOverrideAppID
 {
   NSString *mockOverrideAppID = @"2";
-  FBSDKAppEvents.shared.loggingOverrideAppID = mockOverrideAppID;
-  XCTAssertEqualObjects(FBSDKAppEvents.shared.loggingOverrideAppID, mockOverrideAppID);
+  self.appEvents.loggingOverrideAppID = mockOverrideAppID;
+  XCTAssertEqualObjects(self.appEvents.loggingOverrideAppID, mockOverrideAppID);
 }
 
 - (void)testSetPushNotificationsDeviceTokenString
@@ -457,13 +445,13 @@
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
   self.eventName = @"fb_mobile_obtain_push_token";
 
-  FBSDKAppEvents.shared.pushNotificationsDeviceTokenString = mockDeviceTokenString;
+  self.appEvents.pushNotificationsDeviceTokenString = mockDeviceTokenString;
 
   XCTAssertEqualObjects(
     self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
     self.eventName
   );
-  XCTAssertEqualObjects(FBSDKAppEvents.shared.pushNotificationsDeviceTokenString, mockDeviceTokenString);
+  XCTAssertEqualObjects(self.appEvents.pushNotificationsDeviceTokenString, mockDeviceTokenString);
   [self validateAEMReporterCalledWithEventName:self.eventName
                                       currency:nil
                                          value:nil
@@ -472,7 +460,7 @@
 
 - (void)testActivateAppWithInitializedSDK
 {
-  [FBSDKAppEvents.shared activateApp];
+  [self.appEvents activateApp];
 
   XCTAssertTrue(
     self.timeSpentRecorder.restoreWasCalled,
@@ -495,7 +483,7 @@
 
 - (void)testApplicationBecomingActiveRestoresTimeSpentRecording
 {
-  [FBSDKAppEvents.shared applicationDidBecomeActive];
+  [self.appEvents applicationDidBecomeActive];
   XCTAssertTrue(
     self.timeSpentRecorder.restoreWasCalled,
     "When application did become active, the time spent recording should be restored."
@@ -508,7 +496,7 @@
 
 - (void)testApplicationTerminatingSuspendsTimeSpentRecording
 {
-  [FBSDKAppEvents.shared applicationMovingFromActiveStateOrTerminating];
+  [self.appEvents applicationMovingFromActiveStateOrTerminating];
   XCTAssertTrue(
     self.timeSpentRecorder.suspendWasCalled,
     "When application terminates or moves from active state, the time spent recording should be suspended."
@@ -517,18 +505,18 @@
 
 - (void)testApplicationTerminatingPersistingStates
 {
-  [FBSDKAppEvents.shared setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:nil
-               isImplicitlyLogged:NO
-                      accessToken:SampleAccessTokens.validToken];
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:nil
-               isImplicitlyLogged:NO
-                      accessToken:SampleAccessTokens.validToken];
-  [FBSDKAppEvents.shared applicationMovingFromActiveStateOrTerminating];
+  [self.appEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:SampleAccessTokens.validToken];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:SampleAccessTokens.validToken];
+  [self.appEvents applicationMovingFromActiveStateOrTerminating];
 
   XCTAssertTrue(
     self.appEventsStateStore.capturedPersistedState.count > 0,
@@ -543,85 +531,84 @@
 - (void)testUsingAppEventsWithUninitializedSDK
 {
   NSString *foo = @"foo";
-  [FBSDKAppEvents.shared reset];
-  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
-                                                    flushPeriodInSeconds:0];
-  XCTAssertThrows([FBSDKAppEvents.shared setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
-  XCTAssertThrows(FBSDKAppEvents.shared.loggingOverrideAppID = self.name);
-  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched]);
-  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched valueToSum:2]);
-  XCTAssertThrows([FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched parameters:@{}]);
+  self.appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                            flushPeriodInSeconds:0];
+  XCTAssertThrows([self.appEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
+  XCTAssertThrows(self.appEvents.loggingOverrideAppID = self.name);
+  XCTAssertThrows([self.appEvents logEvent:FBSDKAppEventNameSearched]);
+  XCTAssertThrows([self.appEvents logEvent:FBSDKAppEventNameSearched valueToSum:2]);
+  XCTAssertThrows([self.appEvents logEvent:FBSDKAppEventNameSearched parameters:@{}]);
   XCTAssertThrows(
-    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched
-                         valueToSum:2
-                         parameters:@{}]
+    [self.appEvents logEvent:FBSDKAppEventNameSearched
+                  valueToSum:2
+                  parameters:@{}]
   );
   XCTAssertThrows(
-    [FBSDKAppEvents.shared logEvent:FBSDKAppEventNameSearched
-                         valueToSum:@2
-                         parameters:@{}
-                        accessToken:SampleAccessTokens.validToken]
+    [self.appEvents logEvent:FBSDKAppEventNameSearched
+                  valueToSum:@2
+                  parameters:@{}
+                 accessToken:SampleAccessTokens.validToken]
   );
-  XCTAssertThrows([FBSDKAppEvents.shared logPurchase:2 currency:foo]);
+  XCTAssertThrows([self.appEvents logPurchase:2 currency:foo]);
   XCTAssertThrows(
-    [FBSDKAppEvents.shared logPurchase:2
-                              currency:foo
-                            parameters:@{}]
+    [self.appEvents logPurchase:2
+                       currency:foo
+                     parameters:@{}]
   );
   XCTAssertThrows(
-    [FBSDKAppEvents.shared logPurchase:2
-                              currency:foo
-                            parameters:@{}
-                           accessToken:SampleAccessTokens.validToken]
+    [self.appEvents logPurchase:2
+                       currency:foo
+                     parameters:@{}
+                    accessToken:SampleAccessTokens.validToken]
   );
-  XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{}]);
-  XCTAssertThrows([FBSDKAppEvents.shared logPushNotificationOpen:@{} action:foo]);
+  XCTAssertThrows([self.appEvents logPushNotificationOpen:@{}]);
+  XCTAssertThrows([self.appEvents logPushNotificationOpen:@{} action:foo]);
   XCTAssertThrows(
-    [FBSDKAppEvents.shared logProductItem:foo
-                             availability:FBSDKProductAvailabilityInStock
-                                condition:FBSDKProductConditionNew
-                              description:foo
-                                imageLink:foo
-                                     link:foo
-                                    title:foo
-                              priceAmount:1
-                                 currency:foo
-                                     gtin:nil
-                                      mpn:nil
-                                    brand:nil
-                               parameters:@{}]
+    [self.appEvents logProductItem:foo
+                      availability:FBSDKProductAvailabilityInStock
+                         condition:FBSDKProductConditionNew
+                       description:foo
+                         imageLink:foo
+                              link:foo
+                             title:foo
+                       priceAmount:1
+                          currency:foo
+                              gtin:nil
+                               mpn:nil
+                             brand:nil
+                        parameters:@{}]
   );
-  XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceToken:[NSData new]]);
-  XCTAssertThrows([FBSDKAppEvents.shared setPushNotificationsDeviceTokenString:foo]);
-  XCTAssertThrows([FBSDKAppEvents.shared flush]);
-  XCTAssertThrows([FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
-  XCTAssertThrows([FBSDKAppEvents.shared augmentHybridWebView:[WKWebView new]]);
-  XCTAssertThrows([FBSDKAppEvents.shared sendEventBindingsToUnity]);
-  XCTAssertThrows([events activateApp]);
+  XCTAssertThrows([self.appEvents setPushNotificationsDeviceToken:[NSData new]]);
+  XCTAssertThrows([self.appEvents setPushNotificationsDeviceTokenString:foo]);
+  XCTAssertThrows([self.appEvents flush]);
+  XCTAssertThrows([self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
+  XCTAssertThrows([self.appEvents augmentHybridWebView:[WKWebView new]]);
+  XCTAssertThrows([self.appEvents sendEventBindingsToUnity]);
+  XCTAssertThrows([self.appEvents activateApp]);
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   XCTAssertThrows([FBSDKAppEvents clearUserID]);
   #pragma clang diagnostic pop
-  XCTAssertThrows(FBSDKAppEvents.shared.userID);
-  XCTAssertThrows(FBSDKAppEvents.shared.userID = foo);
+  XCTAssertThrows(self.appEvents.userID);
+  XCTAssertThrows(self.appEvents.userID = foo);
 
-  XCTAssertNoThrow([FBSDKAppEvents.shared setIsUnityInitialized:YES]);
-  XCTAssertNoThrow(FBSDKAppEvents.shared.anonymousID);
-  XCTAssertNoThrow([FBSDKAppEvents.shared setUserData:foo forType:foo]);
+  XCTAssertNoThrow([self.appEvents setIsUnityInitialized:YES]);
+  XCTAssertNoThrow(self.appEvents.anonymousID);
+  XCTAssertNoThrow([self.appEvents setUserData:foo forType:foo]);
   XCTAssertNoThrow(
-    [FBSDKAppEvents.shared setUserEmail:nil
-                              firstName:nil
-                               lastName:nil
-                                  phone:nil
-                            dateOfBirth:nil
-                                 gender:nil
-                                   city:nil
-                                  state:nil
-                                    zip:nil
-                                country:nil]
+    [self.appEvents setUserEmail:nil
+                       firstName:nil
+                        lastName:nil
+                           phone:nil
+                     dateOfBirth:nil
+                          gender:nil
+                            city:nil
+                           state:nil
+                             zip:nil
+                         country:nil]
   );
-  XCTAssertNoThrow([FBSDKAppEvents.shared getUserData]);
-  XCTAssertNoThrow([FBSDKAppEvents.shared clearUserDataForType:foo]);
+  XCTAssertNoThrow([self.appEvents getUserData]);
+  XCTAssertNoThrow([self.appEvents clearUserDataForType:foo]);
 
   XCTAssertFalse(
     self.timeSpentRecorder.restoreWasCalled,
@@ -636,11 +623,11 @@
 - (void)testLogEventFilteringOutDeactivatedParameters
 {
   NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:parameters
-               isImplicitlyLogged:NO
-                      accessToken:nil];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:parameters
+        isImplicitlyLogged:NO
+               accessToken:nil];
   XCTAssertEqualObjects(
     self.eventDeactivationParameterProcessor.capturedEventName,
     self.eventName,
@@ -660,11 +647,11 @@
 - (void)testLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor
 {
   NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:parameters
-               isImplicitlyLogged:NO
-                      accessToken:nil];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:parameters
+        isImplicitlyLogged:NO
+               accessToken:nil];
   XCTAssertEqualObjects(
     self.restrictiveDataFilterParameterProcessor.capturedEventName,
     self.eventName,
@@ -688,7 +675,7 @@
     @"fb_push_campaign" : @"testCampaign",
   };
 
-  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload action:@"testAction"];
+  [self.appEvents logPushNotificationOpen:self.payload action:@"testAction"];
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
   XCTAssertEqualObjects(capturedParameters[@"fb_push_action"], @"testAction");
@@ -703,7 +690,7 @@
 {
   self.eventName = @"fb_mobile_push_opened";
 
-  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload];
+  [self.appEvents logPushNotificationOpen:self.payload];
 
   NSDictionary<NSString *, NSString *> *expectedAEMParameters = @{
     @"fb_push_campaign" : @"testCampaign",
@@ -721,7 +708,7 @@
 
 - (void)testLogPushNotificationOpenWithEmptyPayload
 {
-  [FBSDKAppEvents.shared logPushNotificationOpen:@{}];
+  [self.appEvents logPushNotificationOpen:@{}];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
@@ -729,7 +716,7 @@
 - (void)testLogPushNotificationOpenWithEmptyCampaign
 {
   self.payload = @{@"fb_push_payload" : @{@"campaign" : @""}};
-  [FBSDKAppEvents.shared logPushNotificationOpen:self.payload];
+  [self.appEvents logPushNotificationOpen:self.payload];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
   XCTAssertEqual(
@@ -741,19 +728,19 @@
 
 - (void)testSetFlushBehavior
 {
-  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
-  XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, FBSDKAppEvents.shared.flushBehavior);
+  self.appEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, self.appEvents.flushBehavior);
 
-  FBSDKAppEvents.shared.flushBehavior = FBSDKAppEventsFlushBehaviorExplicitOnly;
-  XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.shared.flushBehavior);
+  self.appEvents.flushBehavior = FBSDKAppEventsFlushBehaviorExplicitOnly;
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, self.appEvents.flushBehavior);
 }
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  [FBSDKAppEvents.shared logEvent:FBSDKAppEventNamePurchased
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:@{}
-                      accessToken:nil];
+  [self.appEvents logEvent:FBSDKAppEventNamePurchased
+                valueToSum:@(self.purchaseAmount)
+                parameters:@{}
+               accessToken:nil];
 
   XCTAssertTrue(
     self.appEventsStateStore.retrievePersistedAppEventStatesWasCalled,
@@ -770,11 +757,11 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
+    [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if tracking is disallowed even if there is a current access token"
   );
   XCTAssertNil(
-    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if tracking is disallowed"
   );
 }
@@ -785,11 +772,11 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
+    [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if event and data usage is limited even if there is a current access token"
   );
   XCTAssertNil(
-    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if event and data usage is limited"
   );
 }
@@ -800,7 +787,7 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
-    [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
     "Should not create a request for third party id if there is no access token or advertiser id"
   );
 }
@@ -812,7 +799,7 @@
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.advertiserIDProvider.advertiserID = advertiserID;
 
-  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+  [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedParameters,
     @{ @"udid" : advertiserID },
@@ -826,10 +813,9 @@
   self.settings.isEventDataUsageLimited = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   self.appEventsUtility.stubbedTokenStringToUse = token.tokenString;
+  self.appEvents.loggingOverrideAppID = token.appID;
 
-  FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
-
-  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedTokenString,
     token.tokenString,
@@ -844,7 +830,7 @@
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithAdvertiserID
 {
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
-  FBSDKAppEvents.shared.loggingOverrideAppID = token.appID;
+  self.appEvents.loggingOverrideAppID = token.appID;
   NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", token.appID];
   NSString *advertiserID = @"abc123";
   self.settings.isEventDataUsageLimited = NO;
@@ -852,7 +838,7 @@
   self.advertiserIDProvider.advertiserID = advertiserID;
   self.appEventsUtility.stubbedTokenStringToUse = token.tokenString;
 
-  [FBSDKAppEvents.shared requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [self.appEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedTokenString,
@@ -882,7 +868,7 @@
 
 - (void)testPublishInstall
 {
-  [FBSDKAppEvents.shared publishInstall];
+  [self.appEvents publishInstall];
 
   XCTAssertNotNil(
     self.appEventsConfigurationProvider.firstCapturedBlock,
@@ -896,11 +882,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:nil
-               isImplicitlyLogged:NO
-                      accessToken:nil];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:nil];
 
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -920,11 +906,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:YES];
 
-  [FBSDKAppEvents.shared logEvent:self.eventName
-                       valueToSum:@(self.purchaseAmount)
-                       parameters:nil
-               isImplicitlyLogged:NO
-                      accessToken:nil];
+  [self.appEvents logEvent:self.eventName
+                valueToSum:@(self.purchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:nil];
 
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
   XCTAssertFalse(
@@ -941,7 +927,7 @@
 
 - (void)testLogEventWithValueToSum
 {
-  [FBSDKAppEvents.shared logEvent:self.eventName valueToSum:self.purchaseAmount];
+  [self.appEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -950,7 +936,7 @@
 
 - (void)testLogInternalEvents
 {
-  [FBSDKAppEvents.shared logInternalEvent:self.eventName isImplicitlyLogged:NO];
+  [self.appEvents logInternalEvent:self.eventName isImplicitlyLogged:NO];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -964,7 +950,7 @@
 
 - (void)testLogInternalEventsWithValue
 {
-  [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
+  [self.appEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -978,7 +964,7 @@
 
 - (void)testLogInternalEventWithAccessToken
 {
-  [FBSDKAppEvents.shared logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:SampleAccessTokens.validToken];
+  [self.appEvents logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:SampleAccessTokens.validToken];
 
   XCTAssertEqualObjects(self.appEventsStateProvider.capturedAppID, self.mockAppID);
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
@@ -994,7 +980,7 @@
 - (void)testLogEventWhenAutoLogAppEventsDisabled
 {
   self.settings.isAutoLogAppEventsEnabled = NO;
-  [FBSDKAppEvents.shared logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
+  [self.appEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
@@ -1004,7 +990,7 @@
   self.appEventsUtility.shouldDropAppEvents = YES;
   self.settings.appID = @"123";
 
-  [FBSDKAppEvents.shared logEvent:@"event"];
+  [self.appEvents logEvent:@"event"];
 
   XCTAssertNil(
     self.appEventsStateProvider.state,
@@ -1017,7 +1003,7 @@
   self.appEventsUtility.shouldDropAppEvents = NO;
   self.settings.appID = @"123";
 
-  [FBSDKAppEvents.shared logEvent:@"event"];
+  [self.appEvents logEvent:@"event"];
 
   XCTAssertNotNil(
     self.appEventsStateProvider.state,
@@ -1028,7 +1014,7 @@
 - (void)testLogEventWillRecordAndUpdateWithSKAdNetworkReporter
 {
   if (@available(iOS 11.3, *)) {
-    [FBSDKAppEvents.shared logEvent:self.eventName valueToSum:self.purchaseAmount];
+    [self.appEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
     XCTAssertEqualObjects(
       self.eventName,
       self.skAdNetworkReporter.capturedEvent,
@@ -1048,7 +1034,7 @@
 
 - (void)testLogImplicitEvent
 {
-  [FBSDKAppEvents.shared logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:SampleAccessTokens.validToken];
+  [self.appEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:SampleAccessTokens.validToken];
 
   NSDictionary<NSString *, id> *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
   XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
@@ -1066,7 +1052,7 @@
 {
   self.onDeviceMLModelManager.integrityParametersProcessor = nil;
 
-  [FBSDKAppEvents.shared logEvent:@"event" parameters:@{@"foo" : @"bar"}];
+  [self.appEvents logEvent:@"event" parameters:@{@"foo" : @"bar"}];
 
   XCTAssertTrue(
     [TestLogger.capturedLogEntry containsString:@"foo = bar"],
@@ -1077,7 +1063,7 @@
 - (void)testLoggingEventWithIntegrityParametersProcessor
 {
   NSDictionary<NSString *, id> *parameters = @{@"foo" : @"bar"};
-  [FBSDKAppEvents.shared logEvent:@"event" parameters:parameters];
+  [self.appEvents logEvent:@"event" parameters:parameters];
 
   XCTAssertEqualObjects(
     self.integrityParametersProcessor.capturedParameters,
@@ -1094,7 +1080,7 @@
   self.appEventsConfigurationProvider.stubbedConfiguration = configuration;
 
   __block BOOL didRunCallback = NO;
-  [[FBSDKAppEvents shared] fetchServerConfiguration:^void (void) {
+  [self.appEvents fetchServerConfiguration:^void (void) {
     didRunCallback = YES;
   }];
   XCTAssertNotNil(
@@ -1115,7 +1101,7 @@
 
 - (void)testFetchingConfigurationIncludingCertainFeatures
 {
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
 
@@ -1131,7 +1117,7 @@
 
 - (void)testEnablingCodelessEvents
 {
-  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   TestServerConfiguration *configuration = [[TestServerConfiguration alloc] initWithAppID:self.name];
   configuration.stubbedIsCodelessEventsEnabled = YES;
@@ -1146,7 +1132,7 @@
 
 - (void)testFetchingConfigurationIncludingEventDeactivation
 {
-  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
@@ -1157,7 +1143,7 @@
 
 - (void)testFetchingConfigurationEnablingEventDeactivationParameterProcessorIfEventDeactivationEnabled
 {
-  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureEventDeactivation with:YES];
@@ -1169,7 +1155,7 @@
 
 - (void)testFetchingConfigurationIncludingRestrictiveDataFiltering
 {
-  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
@@ -1180,7 +1166,7 @@
 
 - (void)testFetchingConfigurationEnablingRestrictiveDataFilterParameterProcessorIfRestrictiveDataFilteringEnabled
 {
-  [FBSDKAppEvents.shared fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureRestrictiveDataFiltering with:YES];
@@ -1192,7 +1178,7 @@
 
 - (void)testFetchingConfigurationIncludingAAM
 {
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
@@ -1203,7 +1189,7 @@
 
 - (void)testFetchingConfigurationEnablingMetadataIndexigIfAAMEnabled
 {
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureAAM with:YES];
@@ -1217,7 +1203,7 @@
 {
   self.settings.isAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertTrue(
@@ -1234,7 +1220,7 @@
 {
   self.settings.isAutoLogAppEventsEnabled = YES;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
@@ -1251,7 +1237,7 @@
 {
   self.settings.isAutoLogAppEventsEnabled = NO;
   FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
@@ -1267,7 +1253,7 @@
 - (void)testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled
 {
   self.settings.isSKAdNetworkReportEnabled = YES;
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
@@ -1279,7 +1265,7 @@
 - (void)testFetchingConfigurationEnablesSKAdNetworkReporterWhenSKAdNetworkReportAndConversionValueEnabled
 {
   self.settings.isSKAdNetworkReportEnabled = YES;
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
@@ -1297,7 +1283,7 @@
 - (void)testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled
 {
   self.settings.isSKAdNetworkReportEnabled = YES;
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
@@ -1315,7 +1301,7 @@
 - (void)testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled
 {
   self.settings.isSKAdNetworkReportEnabled = NO;
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertFalse(
@@ -1327,7 +1313,7 @@
 - (void)testFetchingConfigurationIncludingAEM
 {
   if (@available(iOS 14.0, *)) {
-    [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+    [self.appEvents fetchServerConfiguration:nil];
     self.appEventsConfigurationProvider.firstCapturedBlock();
     self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
     XCTAssertTrue(
@@ -1341,7 +1327,7 @@
 {
   if (@available(iOS 14.0, *)) {
     [self.featureManager enableWithFeature:FBSDKFeatureAEMCatalogReport];
-    [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+    [self.appEvents fetchServerConfiguration:nil];
     self.appEventsConfigurationProvider.firstCapturedBlock();
     self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
     [self.featureManager completeCheckForFeature:FBSDKFeatureAEM
@@ -1359,7 +1345,7 @@
 
 - (void)testFetchingConfigurationIncludingPrivacyProtection
 {
-  [[FBSDKAppEvents shared] fetchServerConfiguration:nil];
+  [self.appEvents fetchServerConfiguration:nil];
   self.appEventsConfigurationProvider.firstCapturedBlock();
   self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
@@ -1378,9 +1364,9 @@
 
 - (void)testApplicationStateValues
 {
-  XCTAssertEqual([FBSDKAppEvents.shared applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
-  [FBSDKAppEvents.shared setApplicationState:UIApplicationStateBackground];
-  XCTAssertEqual([FBSDKAppEvents.shared applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
+  XCTAssertEqual(self.appEvents.applicationState, UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
+  self.appEvents.applicationState = UIApplicationStateBackground;
+  XCTAssertEqual(self.appEvents.applicationState, UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
 }
 
 #pragma mark Source Application Tracking
@@ -1388,7 +1374,7 @@
 - (void)testSetSourceApplicationOpenURL
 {
   NSURL *url = [NSURL URLWithString:@"www.example.com"];
-  [FBSDKAppEvents.shared setSourceApplication:self.name openURL:url];
+  [self.appEvents setSourceApplication:self.name openURL:url];
 
   XCTAssertEqualObjects(
     self.timeSpentRecorder.capturedSetSourceApplication,
@@ -1404,7 +1390,7 @@
 
 - (void)testSetSourceApplicationFromAppLink
 {
-  [FBSDKAppEvents.shared setSourceApplication:self.name isFromAppLink:YES];
+  [self.appEvents setSourceApplication:self.name isFromAppLink:YES];
 
   XCTAssertEqualObjects(
     self.timeSpentRecorder.capturedSetSourceApplicationFromAppLink,
@@ -1419,7 +1405,7 @@
 
 - (void)testRegisterAutoResetSourceApplication
 {
-  [FBSDKAppEvents.shared registerAutoResetSourceApplication];
+  [self.appEvents registerAutoResetSourceApplication];
 
   XCTAssertTrue(
     self.timeSpentRecorder.wasRegisterAutoResetSourceApplicationCalled,
@@ -1434,9 +1420,9 @@
 
 // MARK: - Helpers
 
-- (void)validateAEMReporterCalledWithEventName:(NSString *)eventName
+- (void)validateAEMReporterCalledWithEventName:(nullable NSString *)eventName
                                       currency:(nullable NSString *)currency
-                                         value:(NSNumber *)value
+                                         value:(nullable NSNumber *)value
                                     parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   XCTAssertEqualObjects(
@@ -1462,3 +1448,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
