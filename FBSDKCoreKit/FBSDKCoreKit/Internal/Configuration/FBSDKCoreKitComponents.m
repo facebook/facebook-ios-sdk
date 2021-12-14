@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
                        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
                     infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
@@ -69,7 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
                          featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
                               fileManager:(id<FBSDKFileManaging>)fileManager
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
-                          internalUtility:(id<FBSDKInternalUtility>)internalUtility
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
@@ -113,6 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
     _graphRequestFactory = graphRequestFactory;
     _impressionLoggerFactory = impressionLoggerFactory;
     _infoDictionaryProvider = infoDictionaryProvider;
+    _internalUtility = internalUtility;
     _logger = logger;
     _loggerFactory = loggerFactory;
     _macCatalystDeterminator = macCatalystDeterminator;
@@ -143,7 +144,6 @@ NS_ASSUME_NONNULL_BEGIN
     _featureExtractor = featureExtractor;
     _fileManager = fileManager;
     _internalURLOpener = internalURLOpener;
-    _internalUtility = internalUtility;
     _metadataIndexer = metadataIndexer;
     _modelManager = modelManager;
     _notificationCenter = notificationCenter;

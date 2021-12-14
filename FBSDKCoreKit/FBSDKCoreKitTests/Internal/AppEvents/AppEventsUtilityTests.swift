@@ -11,87 +11,45 @@ import XCTest
 
 class AppEventsUtilityTests: XCTestCase {
 
-  // This test temporarily captures the shared `AppEventsUtility` instance before
-  // any tests are run and then replaces it after all tests have completed.
-
   // swiftlint:disable implicitly_unwrapped_optional
-  static var replacedAppEventsUtility: AppEventsUtility!
-  var userDefaultsSpy: UserDefaultsSpy!
-  var bundle: TestBundle!
-  var logger: TestEventLogger!
-  var appEventsStateProvider: TestAppEventsStateProvider!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
+  var deviceInformationProvider: TestDeviceInformationProvider!
+  var settings: TestSettings!
+  var internalUtility: TestInternalUtility!
   var appEventsUtility: AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override class func setUp() {
     super.setUp()
 
-    replacedAppEventsUtility = AppEventsUtility.shared
     AppEventsUtility.cachedAdvertiserIdentifierManager = nil
   }
 
   override func setUp() {
     super.setUp()
 
-    userDefaultsSpy = UserDefaultsSpy()
-    bundle = TestBundle()
-    logger = TestEventLogger()
-    appEventsStateProvider = TestAppEventsStateProvider()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
+    deviceInformationProvider = TestDeviceInformationProvider()
+    settings = TestSettings()
+    internalUtility = TestInternalUtility()
     appEventsUtility = AppEventsUtility()
-    appEventsUtility.appEventsConfigurationProvider = appEventsConfigurationProvider
-    AppEventsUtility.shared = appEventsUtility
-
-    Settings.configure(
-      store: userDefaultsSpy,
+    appEventsUtility.configure(
       appEventsConfigurationProvider: appEventsConfigurationProvider,
-      infoDictionaryProvider: bundle,
-      eventLogger: logger
-    )
-
-    let appEvents = AppEvents(flushBehavior: .explicitOnly, flushPeriodInSeconds: 0)
-    AppEvents.shared = appEvents
-    AppEvents.shared.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
-      serverConfigurationProvider: TestServerConfigurationProvider(),
-      graphRequestFactory: TestGraphRequestFactory(),
-      featureChecker: TestFeatureManager(),
-      primaryDataStore: userDefaultsSpy,
-      logger: TestLogger.self,
-      settings: TestSettings(),
-      paymentObserver: TestPaymentObserver(),
-      timeSpentRecorder: TestTimeSpentRecorder(),
-      appEventsStateStore: TestAppEventsStateStore(),
-      eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
-      restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
-      atePublisherFactory: TestATEPublisherFactory(),
-      appEventsStateProvider: appEventsStateProvider,
-      advertiserIDProvider: appEventsUtility,
-      userDataStore: TestUserDataStore(),
-      appEventsUtility: appEventsUtility
+      deviceInformationProvider: deviceInformationProvider,
+      settings: settings,
+      internalUtility: internalUtility
     )
   }
 
   override func tearDown() {
-    userDefaultsSpy = nil
-    bundle = nil
-    logger = nil
-    appEventsStateProvider = nil
     appEventsConfigurationProvider = nil
+    deviceInformationProvider = nil
+    settings = nil
+    appEventsUtility = nil
 
-    AppEvents.shared.reset()
     TestGateKeeperManager.reset()
     AppEventsUtility.cachedAdvertiserIdentifierManager = nil
-    Settings.shared.reset()
-    super.tearDown()
-  }
-
-  override class func tearDown() {
-    // See note at the top about replacing the shared instance
-    AppEventsUtility.shared = replacedAppEventsUtility
     super.tearDown()
   }
 
@@ -208,7 +166,7 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testParametersDictionaryWithApplicationTrackingEnabled() {
-    Settings.shared.isEventDataUsageLimited = false
+    settings.isEventDataUsageLimited = false
 
     let parameters = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
@@ -225,7 +183,7 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testParametersDictionaryWithApplicationTrackingDisabled() {
-    Settings.shared.isEventDataUsageLimited = true
+    settings.isEventDataUsageLimited = true
 
     let parameters = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
@@ -242,6 +200,8 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testParametersDictionaryWithAccessibleAdvertiserID() {
+    settings.isAdvertiserIDCollectionEnabled = true
+
     let parameters = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
@@ -273,7 +233,8 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testParametersDictionaryWithCachedAdvertiserIDManager() throws {
-    Settings.shared.shouldUseCachedValuesForExpensiveMetadata = true
+    settings.isAdvertiserIDCollectionEnabled = true
+    settings.shouldUseCachedValuesForExpensiveMetadata = true
 
     appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.create(
       advertiserIDCollectionEnabled: true
@@ -300,47 +261,35 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testActivityParametersWithNonEmptyLimitedDataProcessingOptions() {
-    Settings.shared.setDataProcessingOptions(["LDU"], country: 100, state: 1)
-    let parameters = appEventsUtility.activityParametersDictionary(
+    _ = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: false,
       userID: nil,
       userData: nil
     )
 
-    XCTAssertEqual(#"["LDU"]"#, parameters["data_processing_options"] as? String)
-    XCTAssertEqual(
-      parameters["data_processing_options_country"] as? Int,
-      100,
-      "Should use the data processing options from the settings"
-    )
-    XCTAssertEqual(
-      parameters["data_processing_options_state"] as? Int,
-      1,
-      "Should use the data processing options from the settings"
+    XCTAssertNotNil(
+      internalUtility.capturedExtensibleParameters,
+      "Should ask the internal utility to extend the parameters with data processing options"
     )
   }
 
   func testActivityParametersWithEmptyLimitedDataProcessingOptions() {
-    Settings.shared.setDataProcessingOptions([])
-    let parameters = appEventsUtility.activityParametersDictionary(
+    _ = appEventsUtility.activityParametersDictionary(
       forEvent: "event",
       shouldAccessAdvertisingID: true,
       userID: nil,
       userData: nil
     )
-    XCTAssertEqual("[]", parameters["data_processing_options"] as? String)
-    XCTAssertEqual(parameters["data_processing_options_country"] as? Int, 0)
-    XCTAssertEqual(parameters["data_processing_options_state"] as? Int, 0)
-  }
 
-  func testLogImplicitEventsExists() throws {
-    let appEventsClass: AnyClass = try XCTUnwrap(NSClassFromString("FBSDKAppEvents"))
-    let logEventSelector = NSSelectorFromString("logImplicitEvent:valueToSum:parameters:accessToken:")
-    XCTAssertTrue(appEventsClass.instancesRespond(to: logEventSelector))
+    XCTAssertNotNil(
+      internalUtility.capturedExtensibleParameters,
+      "Should ask the internal utility to extend the parameters with data processing options"
+    )
   }
 
   func testGetAdvertiserIDWithCollectionEnabled() {
+    settings.isAdvertiserIDCollectionEnabled = true
     let configuration = SampleAppEventsConfigurations.create(advertiserIDCollectionEnabled: true)
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
@@ -363,7 +312,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Allowed             | N/A                | N/A                 | YES                    | NO       |
   func testShouldDropAppEventWithSettingsATEAllowedEventCollectionEnabled() {
-    Settings.setAdvertiserTrackingStatus(.allowed)
+    settings.advertisingTrackingStatus = .allowed
 
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
@@ -381,7 +330,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Allowed             | N/A                | N/A                 | NO                     | NO       |
   func testShouldDropAppEventWithSettingsATEAllowedEventCollectionDisabled() {
-    Settings.setAdvertiserTrackingStatus(.allowed)
+    settings.advertisingTrackingStatus = .allowed
 
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
@@ -399,7 +348,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Unspecified         | N/A                | N/A                 | YES                    | NO       |
   func testShouldDropAppEventWithSettingsATEUnspecifiedEventCollectionEnabled() {
-    Settings.setAdvertiserTrackingStatus(.unspecified)
+    settings.advertisingTrackingStatus = .unspecified
 
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
@@ -417,7 +366,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Unspecified         | N/A                | N/A                 | NO                     | NO       |
   func testShouldDropAppEventWithSettingsATEUnspecifiedEventCollectionDisabled() {
-    Settings.setAdvertiserTrackingStatus(.allowed)
+    settings.advertisingTrackingStatus = .allowed
 
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
@@ -435,7 +384,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Disallowed          | N/A                | N/A                 | YES                    | NO       |
   func testShouldDropAppEventWithSettingsATEDisallowedEventCollectionEnabled() {
-    Settings.setAdvertiserTrackingStatus(.disallowed)
+    settings.advertisingTrackingStatus = .disallowed
 
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
@@ -453,7 +402,7 @@ class AppEventsUtilityTests: XCTestCase {
   // | Settings ATE status | default ATE status | idCollectionEnabled | eventCollectionEnabled | EXPECTED |
   // | Disallowed          | N/A                | N/A                 | NO                     | YES      |
   func testShouldDropAppEventWithSettingsATEDisallowedEventCollectionDisabled() {
-    Settings.setAdvertiserTrackingStatus(.disallowed)
+    settings.advertisingTrackingStatus = .disallowed
     let configuration = SampleAppEventsConfigurations.create(
       defaultATEStatus: .unspecified,
       advertiserIDCollectionEnabled: true,
@@ -468,131 +417,48 @@ class AppEventsUtilityTests: XCTestCase {
   }
 
   func testAdvertiserTrackingEnabledInAppEventPayload() {
-    let configuration = AppEventsConfiguration(json: [:])
-    let statusList: [AdvertisingTrackingStatus] = [
-      .allowed,
+    [
+      AdvertisingTrackingStatus.allowed,
       .disallowed,
       .unspecified
     ]
-    for defaultATEStatus in statusList {
-      configuration.setDefaultATEStatus(defaultATEStatus)
-      for status in statusList {
-        appEventsConfigurationProvider.stubbedConfiguration = configuration
-        Settings.shared.reset()
-        Settings.configure(
-          store: UserDefaultsSpy(),
-          appEventsConfigurationProvider: appEventsConfigurationProvider,
-          infoDictionaryProvider: TestBundle(),
-          eventLogger: TestEventLogger()
-        )
-        if status != AdvertisingTrackingStatus.unspecified {
-          Settings.setAdvertiserTrackingStatus(status)
-        }
+      .shuffled()
+      .forEach { status in
+        settings.advertisingTrackingStatus = status
+        settings.isAdvertiserTrackingEnabled = (status == .allowed)
 
-        let dict = appEventsUtility.activityParametersDictionary(
+        let parameters = appEventsUtility.activityParametersDictionary(
           forEvent: "event",
           shouldAccessAdvertisingID: true,
           userID: nil,
           userData: nil
         )
 
-        // If status is unspecified, ATE will be defaultATEStatus
-        if status == .unspecified {
-          if defaultATEStatus == .unspecified {
-            XCTAssertNil(
-              dict["advertiser_tracking_enabled"] as? String,
-              "advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified"
-            )
-          } else {
-            let advertiserTrackingEnabled = defaultATEStatus == .allowed
-            print("advertiserTrackingEnabled: \(advertiserTrackingEnabled)", dict)
-            XCTAssertEqual(
-              advertiserTrackingEnabled ? "1" : "0",
-              dict["advertiser_tracking_enabled"] as? String,
-              "advertiser_tracking_enabled should be default value when ATE is not set"
-            )
-          }
-        } else {
-          let advertiserTrackingEnabled = status == .allowed
+        switch status {
+        case .unspecified:
+          XCTAssertNil(
+            parameters["advertiser_tracking_enabled"] as? String,
+            "advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified"
+          )
+
+        case .allowed:
           XCTAssertEqual(
-            advertiserTrackingEnabled ? "1" : "0",
-            dict["advertiser_tracking_enabled"] as? String,
+            "1",
+            parameters["advertiser_tracking_enabled"] as? String,
+            "advertiser_tracking_enabled should be default value when ATE is not set"
+          )
+
+        case .disallowed:
+          XCTAssertEqual(
+            "0",
+            parameters["advertiser_tracking_enabled"] as? String,
             "advertiser_tracking_enabled should be equal to ATE explicitly setted via setAdvertiserTrackingStatus"
           )
+
+        @unknown default:
+          XCTFail("IMPOSSIBLE: Unknown advertiser tracking status -- add a new status to list and new case to switch")
         }
       }
-    }
-  }
-
-  func testDropAppEvent() throws {
-    // shouldDropAppEvent only when: advertisingTrackingStatus == Disallowed
-    // && FBSDKAppEventsConfiguration.eventCollectionEnabled == NO
-    Settings.setAdvertiserTrackingStatus(.disallowed)
-    AppEventsConfigurationManager.shared.configuration = SampleAppEventsConfigurations.create(
-      eventCollectionEnabled: false
-    )
-    Settings.shared.appID = "123"
-    AppEvents.shared.logEvent(AppEvents.Name(rawValue: "event"))
-    XCTAssertNil(
-      appEventsStateProvider.state,
-      "State should be nil when dropping app event"
-    )
-  }
-
-  func testSendAppEventWhenTrackingUnspecified() throws {
-    Settings.setAdvertiserTrackingStatus(.unspecified)
-    AppEventsConfigurationManager.shared.configuration = SampleAppEventsConfigurations.create(
-      eventCollectionEnabled: false
-    )
-    Settings.shared.appID = "123"
-    AppEvents.shared.logEvent(AppEvents.Name(rawValue: "event"))
-
-    let state = try XCTUnwrap(appEventsStateProvider.state)
-    XCTAssertTrue(
-      state.isAddEventCalled,
-      "Should call addEvents on AppEventsState when dropping app event"
-    )
-    XCTAssertFalse(
-      state.capturedIsImplicit,
-      "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
-    )
-  }
-
-  func testSendAppEventWhenTrackingAllowed() throws {
-    Settings.setAdvertiserTrackingStatus(.allowed)
-    AppEventsConfigurationManager.shared.configuration = SampleAppEventsConfigurations.create(
-      eventCollectionEnabled: true
-    )
-    Settings.shared.appID = "123"
-    AppEvents.shared.logEvent(AppEvents.Name(rawValue: "event"))
-
-    let state = try XCTUnwrap(appEventsStateProvider.state)
-    XCTAssertTrue(
-      state.isAddEventCalled,
-      "Should call addEvents on AppEventsState when dropping app event"
-    )
-    XCTAssertFalse(
-      state.capturedIsImplicit,
-      "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
-    )
-  }
-
-  func testSendAppEventWhenEventCollectionEnabled() throws {
-    Settings.setAdvertiserTrackingStatus(.disallowed)
-    appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.create(
-      eventCollectionEnabled: true
-    )
-    Settings.shared.appID = "123"
-    AppEvents.shared.logEvent(AppEvents.Name(rawValue: "event"))
-    let state = try XCTUnwrap(appEventsStateProvider.state)
-    XCTAssertTrue(
-      state.isAddEventCalled,
-      "Should call addEvents on AppEventsState when dropping app event"
-    )
-    XCTAssertFalse(
-      state.capturedIsImplicit,
-      "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
-    )
   }
 
   func testFlushReasonToString() {
@@ -649,8 +515,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithoutAppIdWithoutClientToken() {
     AccessToken.current = nil
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = nil
+    settings.appID = nil
+    settings.clientToken = nil
 
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
 
@@ -662,8 +528,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithoutAppIdWithClientToken() {
     AccessToken.current = nil
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = "toktok"
+    settings.appID = nil
+    settings.clientToken = "toktok"
 
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertNil(
@@ -674,8 +540,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithAppIdWithoutClientToken() {
     AccessToken.current = nil
-    Settings.shared.appID = SampleAccessTokens.validToken.appID
-    Settings.shared.clientToken = nil
+    settings.appID = SampleAccessTokens.validToken.appID
+    settings.clientToken = nil
 
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertNil(
@@ -686,8 +552,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithAppIdWithClientToken() {
     AccessToken.current = nil
-    Settings.shared.appID = "abc"
-    Settings.shared.clientToken = "toktok"
+    settings.appID = "abc"
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
@@ -698,8 +564,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithoutAppIdWithClientToken() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = "toktok"
+    settings.appID = nil
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
 
     XCTAssertEqual(
@@ -711,8 +577,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithoutAppIdWithoutClientToken() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = nil
+    settings.appID = nil
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
@@ -726,8 +592,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithAppIdWithoutClientToken() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = "456"
-    Settings.shared.clientToken = nil
+    settings.appID = "456"
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
@@ -741,8 +607,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithAppIdWithClientToken() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = "456"
-    Settings.shared.clientToken = "toktok"
+    settings.appID = "456"
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
     XCTAssertEqual(
       tokenString,
@@ -753,8 +619,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithoutAppIdWithoutClientTokenWithLoggingAppID() {
     AccessToken.current = nil
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = nil
+    settings.appID = nil
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -764,8 +630,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithoutAppIdWithClientTokenWithLoggingAppID() {
     AccessToken.current = nil
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = "toktok"
+    settings.appID = nil
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -775,8 +641,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithAppIdWithoutClientTokenWithLoggingAppID() {
     AccessToken.current = nil
-    Settings.shared.appID = SampleAccessTokens.validToken.appID
-    Settings.shared.clientToken = nil
+    settings.appID = SampleAccessTokens.validToken.appID
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -786,8 +652,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithoutAccessTokenWithAppIdWithClientTokenWithLoggingAppID() {
     AccessToken.current = nil
-    Settings.shared.appID = SampleAccessTokens.validToken.appID
-    Settings.shared.clientToken = "toktok"
+    settings.appID = SampleAccessTokens.validToken.appID
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -797,8 +663,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithoutAppIdWithClientTokenWithLoggingAppID() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = "toktok"
+    settings.appID = nil
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -808,8 +674,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithoutAppIdWithoutClientTokenWithLoggingAppID() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = nil
+    settings.appID = nil
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -819,8 +685,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithAppIdWithoutClientTokenWithLoggingAppID() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = "456"
-    Settings.shared.clientToken = nil
+    settings.appID = "456"
+    settings.clientToken = nil
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -830,8 +696,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppID() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = "456"
-    Settings.shared.clientToken = "toktok"
+    settings.appID = "456"
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: "789")
     XCTAssertNil(
       tokenString,
@@ -841,8 +707,8 @@ class AppEventsUtilityTests: XCTestCase {
 
   func testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppIDMatching() {
     AccessToken.current = SampleAccessTokens.validToken
-    Settings.shared.appID = "456"
-    Settings.shared.clientToken = "toktok"
+    settings.appID = "456"
+    settings.clientToken = "toktok"
     let tokenString = appEventsUtility.tokenStringToUse(
       for: nil,
       loggingOverrideAppID: SampleAccessTokens.validToken.appID
@@ -867,23 +733,32 @@ class AppEventsUtilityTests: XCTestCase {
       appEventsUtility.deviceInformationProvider,
       "Should not have a device information provider by default"
     )
+    XCTAssertNil(
+      appEventsUtility.settings,
+      "Should not have settings by default"
+    )
+    XCTAssertNil(
+      appEventsUtility.internalUtility,
+      "Should not have an internal utility by default"
+    )
   }
 
   func testCustomDependencies() {
-    let appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
-    appEventsUtility.appEventsConfigurationProvider = appEventsConfigurationProvider
-
     XCTAssertTrue(
       appEventsUtility.appEventsConfigurationProvider === appEventsConfigurationProvider,
       "Should be able to set a custom app events configuration provider"
     )
-
-    let deviceInformationProvider = TestDeviceInformationProvider()
-    appEventsUtility.deviceInformationProvider = deviceInformationProvider
-
     XCTAssertTrue(
       appEventsUtility.deviceInformationProvider === deviceInformationProvider,
       "Should be able to set a custom device information provider"
+    )
+    XCTAssertTrue(
+      appEventsUtility.settings === settings,
+      "Should be able to set custom settings"
+    )
+    XCTAssertTrue(
+      appEventsUtility.internalUtility === internalUtility,
+      "Should be able to set custom internal utility"
     )
   }
 

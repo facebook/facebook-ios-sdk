@@ -999,6 +999,32 @@
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
 
+- (void)testLogEventWhenEventsAreDropped
+{
+  self.appEventsUtility.shouldDropAppEvents = YES;
+  self.settings.appID = @"123";
+
+  [FBSDKAppEvents.shared logEvent:@"event"];
+
+  XCTAssertNil(
+    self.appEventsStateProvider.state,
+    @"State should be nil when dropping app events"
+  );
+}
+
+- (void)testLogEventWhenEventsAreNotDropped
+{
+  self.appEventsUtility.shouldDropAppEvents = NO;
+  self.settings.appID = @"123";
+
+  [FBSDKAppEvents.shared logEvent:@"event"];
+
+  XCTAssertNotNil(
+    self.appEventsStateProvider.state,
+    @"State should not be nil when not dropping app events"
+  );
+}
+
 - (void)testLogEventWillRecordAndUpdateWithSKAdNetworkReporter
 {
   if (@available(iOS 11.3, *)) {

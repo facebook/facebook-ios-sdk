@@ -102,6 +102,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, readonly) id<FBSDKImpressionLoggerFactory> impressionLoggerFactory;
 @property (nonatomic, readonly) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nonatomic, readonly) id<FBSDKInternalUtility> internalUtility;
 @property (nonatomic, readonly) Class<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
@@ -133,7 +134,6 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
 @property (nonatomic, readonly) id<FBSDKFileManaging> fileManager;
 @property (nonatomic, readonly) id<FBSDKInternalURLOpener> internalURLOpener;
-@property (nonatomic, readonly) id<FBSDKInternalUtility> internalUtility;
 @property (nonatomic, readonly) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nonatomic, readonly) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> modelManager;
 @property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
@@ -176,6 +176,7 @@ NS_SWIFT_NAME(CoreKitComponents)
                        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
                     infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
@@ -206,7 +207,6 @@ NS_SWIFT_NAME(CoreKitComponents)
                          featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
                               fileManager:(id<FBSDKFileManaging>)fileManager
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
-                          internalUtility:(id<FBSDKInternalUtility>)internalUtility
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter

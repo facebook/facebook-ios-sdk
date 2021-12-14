@@ -21,6 +21,7 @@ public class TestInternalUtility: NSObject,
   public var isFacebookAppInstalled = false
   public var isMessengerAppInstalled = false
   public var stubbedURL: URL?
+  public var capturedExtensibleParameters: NSMutableDictionary?
 
   public func facebookURL(
     withHostPrefix hostPrefix: String,
@@ -64,5 +65,9 @@ public class TestInternalUtility: NSObject,
 
   public func validateURLSchemes() {
     validateURLSchemesCalled = true
+  }
+
+  public func extendDictionary(withDataProcessingOptions parameters: NSMutableDictionary) {
+    capturedExtensibleParameters = parameters
   }
 }

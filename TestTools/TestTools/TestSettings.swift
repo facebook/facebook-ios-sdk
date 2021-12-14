@@ -51,6 +51,10 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     recordInstallCallCount += 1
   }
 
+  public func setDataProcessingOptions(_ options: [String]?) {}
+
+  public func setDataProcessingOptions(_ options: [String]?, country: Int32, state: Int32) {}
+
   public func reset() {
     appID = nil
     clientToken = nil

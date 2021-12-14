@@ -57,6 +57,11 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
  */
 - (void)validateURLSchemes;
 
+/**
+  add data processing options to the dictionary.
+ */
+- (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters;
+
 @end
 
 NS_ASSUME_NONNULL_END

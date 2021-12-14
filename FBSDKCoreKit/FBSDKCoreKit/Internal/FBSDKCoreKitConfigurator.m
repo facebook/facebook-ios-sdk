@@ -149,8 +149,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureAppEventsUtility
 {
-  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = self.components.appEventsConfigurationProvider;
-  FBSDKAppEventsUtility.shared.deviceInformationProvider = self.components.deviceInformationProvider;
+  [FBSDKAppEventsUtility.shared configureWithAppEventsConfigurationProvider:self.components.appEventsConfigurationProvider
+                                                  deviceInformationProvider:self.components.deviceInformationProvider
+                                                                   settings:self.components.settings
+                                                            internalUtility:self.components.internalUtility];
 }
 
 - (void)configureAuthenticationToken

@@ -917,10 +917,17 @@ class ApplicationDelegateTests: XCTestCase {
       AppEventsUtility.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
       "Should configure with the expected app events configuration provider"
     )
-
     XCTAssertTrue(
       AppEventsUtility.shared.deviceInformationProvider is AppEventsDeviceInfo,
       "Should configure with the expected device information provider"
+    )
+    XCTAssertTrue(
+      AppEventsUtility.shared.settings === Settings.shared,
+      "Should configure with the expected settings"
+    )
+    XCTAssertTrue(
+      AppEventsUtility.shared.internalUtility === InternalUtility.shared,
+      "Should configure with the expected internal utility"
     )
   }
 

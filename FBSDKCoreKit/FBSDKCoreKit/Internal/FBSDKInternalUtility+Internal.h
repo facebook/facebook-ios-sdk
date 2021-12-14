@@ -107,11 +107,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (void)validateFacebookReservedURLSchemes;
 
-/**
-  add data processing options to the dictionary.
- */
-- (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters;
-
 #if !TARGET_OS_TV
 /**
   returns interface orientation for the key window.

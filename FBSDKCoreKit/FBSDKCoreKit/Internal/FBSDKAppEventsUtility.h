@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
@@ -33,6 +35,8 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (nonatomic, readonly) BOOL shouldDropAppEvents;
 @property (nullable, nonatomic) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nullable, nonatomic) id<FBSDKDeviceInformationProviding> deviceInformationProvider;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
@@ -41,6 +45,14 @@ NS_SWIFT_NAME(AppEventsUtility)
 
 - (BOOL)isSensitiveUserData:(NSString *)text;
 - (BOOL)isStandardEvent:(nullable NSString *)event;
+
+// UNCRUSTIFY_FORMAT_OFF
+- (void)configureWithAppEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                          deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
+                                           settings:(id<FBSDKSettings>)settings
+                                    internalUtility:(id<FBSDKInternalUtility>)internalUtility
+NS_SWIFT_NAME(configure(appEventsConfigurationProvider:deviceInformationProvider:settings:internalUtility:));
+// UNCRUSTIFY_FORMAT_ON
 
 #if DEBUG && FBTEST
 - (void)reset;

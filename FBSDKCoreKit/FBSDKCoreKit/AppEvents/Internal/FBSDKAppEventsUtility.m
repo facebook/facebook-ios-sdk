@@ -86,6 +86,17 @@ static FBSDKAppEventsUtility *_shared;
   _shared = shared;
 }
 
+- (void)configureWithAppEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                          deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
+                                           settings:(id<FBSDKSettings>)settings
+                                    internalUtility:(id<FBSDKInternalUtility>)internalUtility
+{
+  self.appEventsConfigurationProvider = appEventsConfigurationProvider;
+  self.deviceInformationProvider = deviceInformationProvider;
+  self.settings = settings;
+  self.internalUtility = internalUtility;
+}
+
 - (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
                                                                        userID:(nullable NSString *)userID
@@ -100,9 +111,9 @@ static FBSDKAppEventsUtility *_shared;
 
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
-  FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [FBSDKSettings advertisingTrackingStatus];
+  FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = self.settings.advertisingTrackingStatus;
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
-    [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
+    [FBSDKTypeUtility dictionary:parameters setObject:@(self.settings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
   if (userData) {
@@ -114,14 +125,14 @@ static FBSDKAppEventsUtility *_shared;
     [FBSDKTypeUtility dictionary:parameters setObject:@"{}" forKey:@"ud"];
   }
 
-  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.sharedSettings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.sharedSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(!self.settings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(self.settings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
 
-  [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
+  [self.internalUtility extendDictionaryWithDataProcessingOptions:parameters];
 
   [FBSDKTypeUtility dictionary:parameters
                      setObject:self.deviceInformationProvider.encodedDeviceInfo
@@ -150,7 +161,7 @@ static FBSDKAppEventsUtility *_shared;
 
 - (nullable NSString *)advertiserID
 {
-  BOOL shouldUseCachedManagerIfAvailable = FBSDKSettings.sharedSettings.shouldUseCachedValuesForExpensiveMetadata;
+  BOOL shouldUseCachedManagerIfAvailable = self.settings.shouldUseCachedValuesForExpensiveMetadata;
   id<FBSDKDynamicFrameworkResolving> dynamicFrameworkResolver = FBSDKDynamicFrameworkLoader.shared;
   return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver
                                   shouldUseCachedManager:shouldUseCachedManagerIfAvailable];
@@ -159,7 +170,7 @@ static FBSDKAppEventsUtility *_shared;
 - (nullable NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
                                           shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
-  if (!FBSDKSettings.sharedSettings.isAdvertiserIDCollectionEnabled) {
+  if (!self.settings.isAdvertiserIDCollectionEnabled) {
     return nil;
   }
 
@@ -255,7 +266,7 @@ static FBSDKAppEventsUtility *_shared;
 {
   NSString *behaviorToLog = FBSDKLoggingBehaviorAppEvents;
   if (allowLogAsDeveloperError) {
-    if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
+    if ([self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
       // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
       behaviorToLog = FBSDKLoggingBehaviorDeveloperErrors;
     }
@@ -338,9 +349,9 @@ static FBSDKAppEventsUtility *_shared;
     token = FBSDKAccessToken.currentAccessToken;
   }
 
-  NSString *appID = loggingOverrideAppID ?: token.appID ?: FBSDKSettings.sharedSettings.appID;
+  NSString *appID = loggingOverrideAppID ?: token.appID ?: self.settings.appID;
   NSString *tokenString = token.tokenString;
-  NSString *clientTokenString = FBSDKSettings.sharedSettings.clientToken;
+  NSString *clientTokenString = self.settings.clientToken;
 
   if (![appID isEqualToString:token.appID]) {
     // If there's a logging override app id present
@@ -399,7 +410,7 @@ static FBSDKAppEventsUtility *_shared;
 - (BOOL)shouldDropAppEvents
 {
   if (@available(iOS 14.0, *)) {
-    if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
+    if ([self.settings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
       return YES;
     }
   }
@@ -465,6 +476,8 @@ static FBSDKAppEventsUtility *_shared;
 {
   self.appEventsConfigurationProvider = nil;
   self.deviceInformationProvider = nil;
+  self.settings = nil;
+  self.internalUtility = nil;
 }
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager

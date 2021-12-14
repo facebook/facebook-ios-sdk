@@ -726,8 +726,10 @@ static UIApplicationState _applicationState;
                                           serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
-  FBSDKAppEventsUtility.shared.appEventsConfigurationProvider = appEventsConfigurationProvider; // TEMP: added to configurator
-  FBSDKAppEventsUtility.shared.deviceInformationProvider = FBSDKAppEventsDeviceInfo.shared; // TEMP: added to configurator
+  [FBSDKAppEventsUtility.shared configureWithAppEventsConfigurationProvider:appEventsConfigurationProvider
+                                                  deviceInformationProvider:FBSDKAppEventsDeviceInfo.shared
+                                                                   settings:FBSDKSettings.sharedSettings
+                                                            internalUtility:FBSDKInternalUtility.sharedUtility]; // TEMP: added to configurator
   FBSDKAppEventsState.eventProcessors = @[eventDeactivationManager, restrictiveDataFilterManager]; // TEMP: added to configurator
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:appEventsConfigurationProvider

@@ -36,6 +36,8 @@ class TestInternalUtility: InternalUtilityProtocol {
   func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 
   func validateURLSchemes() {}
+
+  func extendDictionary(withDataProcessingOptions parameters: NSMutableDictionary) {}
 }
 
 enum URLConstants {

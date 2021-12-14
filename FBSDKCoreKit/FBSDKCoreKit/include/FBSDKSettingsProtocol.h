@@ -40,5 +40,25 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic, getter = isAdvertiserTrackingEnabled) BOOL advertiserTrackingEnabled;
 @property (nonatomic) BOOL shouldUseCachedValuesForExpensiveMetadata;
+
+/**
+ Set the data processing options.
+
+ @param options list of options
+*/
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
+
+/**
+ Set the data processing options.
+
+ @param options list of the options
+ @param country code of the country
+ @param state code of the state
+*/
+- (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state;
+
 @end
+
 NS_ASSUME_NONNULL_END

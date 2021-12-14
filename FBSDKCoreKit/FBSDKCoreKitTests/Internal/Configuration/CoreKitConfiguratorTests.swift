@@ -392,6 +392,14 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEventsUtility.shared.deviceInformationProvider,
       "AppEventsUtility should not have a device information provider by default"
     )
+    XCTAssertNil(
+      AppEventsUtility.shared.settings,
+      "AppEventsUtility should not have settings by default"
+    )
+    XCTAssertNil(
+      AppEventsUtility.shared.internalUtility,
+      "AppEventsUtility should not have an internal utility by default"
+    )
 
     configurator.configureTargets()
 
@@ -399,10 +407,17 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEventsUtility.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
       "AppEventsUtility should be configured with the app events configuration provider"
     )
-
     XCTAssertTrue(
       AppEventsUtility.shared.deviceInformationProvider === components.deviceInformationProvider,
       "AppEventsUtility should be configured with the device information provider"
+    )
+    XCTAssertTrue(
+      AppEventsUtility.shared.settings === components.settings,
+      "AppEventsUtility should be configured with the settings"
+    )
+    XCTAssertTrue(
+      AppEventsUtility.shared.internalUtility === components.internalUtility,
+      "AppEventsUtility should be configured with the internal utility"
     )
   }
 
