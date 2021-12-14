@@ -36,7 +36,13 @@ fi
 
 for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit FBSDKShareKit FBSDKGamingServicesKit; do
     cd $KIT_DIR || exit
-    $XCODEGEN_BINARY generate --use-cache
+    # Set the env var XCODEGEN_USE_CACHE to anything to use the --use-cache flag
+    if [ -n "$XCODEGEN_USE_CACHE" ]; then
+        # Use rm -rf ~/.xcodegen/cache if you need to reset the cache
+        $XCODEGEN_BINARY generate --use-cache
+    else
+        $XCODEGEN_BINARY generate
+    fi
     cd ..
 done
 
