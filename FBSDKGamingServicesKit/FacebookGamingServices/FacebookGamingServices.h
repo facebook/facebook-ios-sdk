@@ -26,4 +26,3 @@
 #import <FacebookGamingServices/FBSDKVideoUploader.h>
 #import <FacebookGamingServices/FBSDKVideoUploaderCreating.h>
 #import <FacebookGamingServices/FBSDKVideoUploaderDelegate.h>
-#import <FacebookGamingServices/FBSDKVideoUploaderFactory.h>

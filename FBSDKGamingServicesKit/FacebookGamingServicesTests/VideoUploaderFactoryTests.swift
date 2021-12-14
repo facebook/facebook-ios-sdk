@@ -9,7 +9,7 @@
 import FacebookGamingServices
 import XCTest
 
-class FBSDKVideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
+class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
 
   func testCreatingVideoUploader() {
     let uploader = _VideoUploaderFactory().create(

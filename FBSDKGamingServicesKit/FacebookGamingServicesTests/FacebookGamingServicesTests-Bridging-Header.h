@@ -18,4 +18,3 @@
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploader+Testing.h"
 #import "FBSDKVideoUploaderCreating.h"
-#import "FBSDKVideoUploaderFactory.h"

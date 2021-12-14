@@ -13,7 +13,6 @@
 #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
 #import "FBSDKVideoUploader.h"
-#import "FBSDKVideoUploaderFactory.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 
@@ -48,7 +47,7 @@
 - (instancetype)init
 {
   return [self initWithFileHandleFactory:[FBSDKFileHandleFactory new]
-                    videoUploaderFactory:[FBSDKVideoUploaderFactory new]];
+                    videoUploaderFactory:[_FBSDKVideoUploaderFactory new]];
 }
 
 - (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
