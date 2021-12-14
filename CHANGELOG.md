@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+|:warning: Be Advised :warning:|
+|:---|
+|<p>We have begun rewriting the iOS SDK in Swift in order to modernize the code base.</p><p>Please monitor the changelog for updates to existing interfaces but keep in mind that some interfaces will be unstable during this process. As such, updating to a minor version may introduce compilation issues related to language interoperability.</p>Please bear with us as we work towards providing an improved experience for integrating with the Facebook platform.|
+
 ## Unreleased
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...HEAD)
