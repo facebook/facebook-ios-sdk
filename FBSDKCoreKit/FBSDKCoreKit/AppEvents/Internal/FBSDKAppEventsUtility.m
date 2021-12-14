@@ -30,8 +30,6 @@
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY @"anon_id"
 #define FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH 40
 
-static NSArray<NSString *> *standardEvents;
-
 @interface FBSDKAppEventsUtility ()
 
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
@@ -39,35 +37,6 @@ static NSArray<NSString *> *standardEvents;
 @end
 
 @implementation FBSDKAppEventsUtility
-
-+ (void)initialize
-{
-  standardEvents = @[
-    FBSDKAppEventNameCompletedRegistration,
-    FBSDKAppEventNameViewedContent,
-    FBSDKAppEventNameSearched,
-    FBSDKAppEventNameRated,
-    FBSDKAppEventNameCompletedTutorial,
-    FBSDKAppEventNameAddedToCart,
-    FBSDKAppEventNameAddedToWishlist,
-    FBSDKAppEventNameInitiatedCheckout,
-    FBSDKAppEventNameAddedPaymentInfo,
-    FBSDKAppEventNamePurchased,
-    FBSDKAppEventNameAchievedLevel,
-    FBSDKAppEventNameUnlockedAchievement,
-    FBSDKAppEventNameSpentCredits,
-    FBSDKAppEventNameContact,
-    FBSDKAppEventNameCustomizeProduct,
-    FBSDKAppEventNameDonate,
-    FBSDKAppEventNameFindLocation,
-    FBSDKAppEventNameSchedule,
-    FBSDKAppEventNameStartTrial,
-    FBSDKAppEventNameSubmitApplication,
-    FBSDKAppEventNameSubscribe,
-    FBSDKAppEventNameAdImpression,
-    FBSDKAppEventNameAdClick
-  ];
-}
 
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
@@ -212,7 +181,36 @@ static FBSDKAppEventsUtility *_shared;
   if (!event) {
     return NO;
   }
-  return [standardEvents containsObject:event];
+  return [[self getStandardEvents] containsObject:event];
+}
+
+- (NSArray<FBSDKAppEventName> *)getStandardEvents
+{
+  return @[
+    FBSDKAppEventNameCompletedRegistration,
+    FBSDKAppEventNameViewedContent,
+    FBSDKAppEventNameSearched,
+    FBSDKAppEventNameRated,
+    FBSDKAppEventNameCompletedTutorial,
+    FBSDKAppEventNameAddedToCart,
+    FBSDKAppEventNameAddedToWishlist,
+    FBSDKAppEventNameInitiatedCheckout,
+    FBSDKAppEventNameAddedPaymentInfo,
+    FBSDKAppEventNamePurchased,
+    FBSDKAppEventNameAchievedLevel,
+    FBSDKAppEventNameUnlockedAchievement,
+    FBSDKAppEventNameSpentCredits,
+    FBSDKAppEventNameContact,
+    FBSDKAppEventNameCustomizeProduct,
+    FBSDKAppEventNameDonate,
+    FBSDKAppEventNameFindLocation,
+    FBSDKAppEventNameSchedule,
+    FBSDKAppEventNameStartTrial,
+    FBSDKAppEventNameSubmitApplication,
+    FBSDKAppEventNameSubscribe,
+    FBSDKAppEventNameAdImpression,
+    FBSDKAppEventNameAdClick
+  ];
 }
 
 #pragma mark - Internal, for testing
