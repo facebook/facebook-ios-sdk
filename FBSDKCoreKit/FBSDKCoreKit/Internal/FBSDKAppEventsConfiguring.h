@@ -61,7 +61,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
-                         appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility;
+                         appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
+                          internalUtility:(id<FBSDKInternalUtility>)internalUtility;
 
 #if !TARGET_OS_TV
 

@@ -1165,6 +1165,10 @@ class ApplicationDelegateTests: XCTestCase {
       appEvents.capturedAppEventsUtility === AppEventsUtility.shared,
       "Initializing the SDK should set concrete app events utility"
     )
+    XCTAssertTrue(
+      appEvents.capturedInternalUtility === InternalUtility.shared,
+      "Initializing the SDK should set concrete internal utility"
+    )
   }
 
   // TEMP: added to configurator tests

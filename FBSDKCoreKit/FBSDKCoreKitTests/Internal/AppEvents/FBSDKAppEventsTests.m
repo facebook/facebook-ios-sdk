@@ -58,6 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
 @property (nonatomic) TestUserDataStore *userDataStore;
 @property (nonatomic) TestAppEventsUtility *appEventsUtility;
+@property (nonatomic) TestInternalUtility *internalUtility;
 
 @end
 
@@ -73,7 +74,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self resetTestHelpers];
   self.settings = [TestSettings new];
   self.settings.isAutoLogAppEventsEnabled = YES;
-  [FBSDKInternalUtility reset];
   self.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
   self.onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
   self.onDeviceMLModelManager.integrityParametersProcessor = self.integrityParametersProcessor;
@@ -146,7 +146,8 @@ NS_ASSUME_NONNULL_BEGIN
                           appEventsStateProvider:self.appEventsStateProvider
                             advertiserIDProvider:self.advertiserIDProvider
                                    userDataStore:self.userDataStore
-                                appEventsUtility:self.appEventsUtility];
+                                appEventsUtility:self.appEventsUtility
+                                 internalUtility:self.internalUtility];
 
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                      metadataIndexer:self.metadataIndexer

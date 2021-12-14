@@ -47,11 +47,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 @property (nonatomic, readonly, assign) NSOperatingSystemVersion operatingSystemVersion;
 
-/*
- Checks if the app is Unity.
- */
-@property (nonatomic, readonly, assign) BOOL isUnity;
-
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                               loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
 
@@ -113,11 +108,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (UIInterfaceOrientation)statusBarOrientation;
 #endif
-
-/**
-  Converts NSData to a hexadecimal UTF8 String.
- */
-- (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
 /*
   Checks if the permission is a publish permission.

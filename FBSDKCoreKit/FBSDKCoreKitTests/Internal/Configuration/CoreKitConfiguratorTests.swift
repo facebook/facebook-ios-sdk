@@ -177,6 +177,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.appEventsUtility,
       "AppEvents should not have an app events utility by default"
     )
+    XCTAssertNil(
+      AppEvents.shared.internalUtility,
+      "AppEvents should not have an internal utility by default"
+    )
 
     configurator.configureTargets()
 
@@ -251,6 +255,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.appEventsUtility === components.appEventsUtility,
       "AppEvents should be configured with the app events utility"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.internalUtility === components.internalUtility,
+      "AppEvents should be configured with the internal utility"
     )
   }
 

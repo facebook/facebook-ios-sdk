@@ -62,6 +62,7 @@ class TestAppEvents: TestEventLogger,
   var capturedAEMReporter: AEMReporterProtocol.Type?
   // swiftlint:disable:next line_length
   var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
+  var capturedInternalUtility: InternalUtilityProtocol?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -83,7 +84,8 @@ class TestAppEvents: TestEventLogger,
     advertiserIDProvider: AdvertiserIDProviding,
     userDataStore: UserDataPersisting,
     // swiftlint:disable:next line_length
-    appEventsUtility: AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying
+    appEventsUtility: AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying,
+    internalUtility: InternalUtilityProtocol
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -103,6 +105,7 @@ class TestAppEvents: TestEventLogger,
     capturedAdvertiserIDProvider = advertiserIDProvider
     capturedUserDataStore = userDataStore
     capturedAppEventsUtility = appEventsUtility
+    capturedInternalUtility = internalUtility
   }
 
   // swiftlint:disable:next function_parameter_count

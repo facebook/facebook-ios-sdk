@@ -14,7 +14,7 @@ class TestInternalUtility: InternalUtilityProtocol {
   var path: String?
   var queryParameters: [String: Any]?
   var isFacebookAppInstalled = false
-  var isMSQRDPlayerAppInstalled = false
+  var isUnity = false
 
   func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: Any]) throws -> URL {
     self.scheme = scheme
@@ -38,6 +38,10 @@ class TestInternalUtility: InternalUtilityProtocol {
   func validateURLSchemes() {}
 
   func extendDictionary(withDataProcessingOptions parameters: NSMutableDictionary) {}
+
+  func hexadecimalString(from data: Data) -> String? {
+    nil
+  }
 }
 
 enum URLConstants {

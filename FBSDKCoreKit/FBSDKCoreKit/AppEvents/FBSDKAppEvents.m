@@ -125,6 +125,7 @@ static BOOL g_explicitEventsLoggedYet;
 @property (nullable, nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nullable, nonatomic) id<FBSDKUserDataPersisting> userDataStore;
 @property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
+@property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -570,7 +571,7 @@ static BOOL g_explicitEventsLoggedYet;
 {
   [self validateConfiguration];
 
-  NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
+  NSString *deviceTokenString = [self.internalUtility hexadecimalStringFromData:deviceToken];
   if (deviceTokenString) {
     self.pushNotificationsDeviceTokenString = deviceTokenString;
   }
@@ -876,6 +877,7 @@ static BOOL g_explicitEventsLoggedYet;
                      advertiserIDProvider:(nonnull id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                             userDataStore:(nonnull id<FBSDKUserDataPersisting>)userDataStore
                          appEventsUtility:(nonnull id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
+                          internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -895,6 +897,7 @@ static BOOL g_explicitEventsLoggedYet;
   self.advertiserIDProvider = advertiserIDProvider;
   self.userDataStore = userDataStore;
   self.appEventsUtility = appEventsUtility;
+  self.internalUtility = internalUtility;
 
   NSString *appID = self.appID;
   if (appID) {
@@ -1145,7 +1148,7 @@ static BOOL g_explicitEventsLoggedYet;
                                                                         eventLogger:self];
     }
 
-    if ([FBSDKInternalUtility.sharedUtility isUnity]) {
+    if (self.internalUtility.isUnity) {
       [self sendEventBindingsToUnity];
     } else {
       FBSDKEventBindingManager *manager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler
@@ -1686,6 +1689,7 @@ static BOOL g_explicitEventsLoggedYet;
   self.advertiserIDProvider = nil;
   self.userDataStore = nil;
   self.appEventsUtility = nil;
+  self.internalUtility = nil;
 
 #if !TARGET_OS_TV
   self.onDeviceMLModelManager = nil;

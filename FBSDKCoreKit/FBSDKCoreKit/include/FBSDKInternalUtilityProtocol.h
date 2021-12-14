@@ -23,6 +23,11 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 
 @property (nonatomic, readonly) BOOL isFacebookAppInstalled;
 
+/*
+ Checks if the app is Unity.
+ */
+@property (nonatomic, readonly) BOOL isUnity;
+
 /**
   Constructs an NSURL.
  @param scheme The scheme for the URL.
@@ -61,6 +66,11 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
   add data processing options to the dictionary.
  */
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters;
+
+/**
+  Converts NSData to a hexadecimal UTF8 String.
+ */
+- (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
 @end
 

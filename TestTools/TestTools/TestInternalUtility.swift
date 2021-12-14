@@ -22,6 +22,7 @@ public class TestInternalUtility: NSObject,
   public var isMessengerAppInstalled = false
   public var stubbedURL: URL?
   public var capturedExtensibleParameters: NSMutableDictionary?
+  public var isUnity = false
 
   public func facebookURL(
     withHostPrefix hostPrefix: String,
@@ -69,5 +70,9 @@ public class TestInternalUtility: NSObject,
 
   public func extendDictionary(withDataProcessingOptions parameters: NSMutableDictionary) {
     capturedExtensibleParameters = parameters
+  }
+
+  public func hexadecimalString(from data: Data) -> String? {
+    nil
   }
 }
