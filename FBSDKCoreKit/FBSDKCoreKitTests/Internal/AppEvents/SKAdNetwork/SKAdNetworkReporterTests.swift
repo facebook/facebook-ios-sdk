@@ -86,7 +86,7 @@ class SKAdNetworkReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithValidCache() {
-    skAdNetworkReporter.serialQueue = DispatchQueue(label: self.name)
+    skAdNetworkReporter.serialQueue = DispatchQueue(label: name)
     skAdNetworkReporter.completionBlocks = []
     skAdNetworkReporter.configRefreshTimestamp = Date()
     userDefaultsSpy.set(
@@ -124,25 +124,25 @@ class SKAdNetworkReporterTests: XCTestCase {
       nil
     )
     XCTAssertEqual(count, 1, "Should expect the execution block to be called once")
-    XCTAssertEqual(self.graphRequestFactory.capturedRequests.count, 1, "Should have graph request without valid cache")
+    XCTAssertEqual(graphRequestFactory.capturedRequests.count, 1, "Should have graph request without valid cache")
     XCTAssertTrue(
       graphRequestFactory.capturedGraphPath?.contains(
         "ios_skadnetwork_conversion_config"
       ) == true,
       "Should have graph request for config without valid cache"
     )
-    XCTAssertNotNil(self.skAdNetworkReporter.config, "Should have expected config")
+    XCTAssertNotNil(skAdNetworkReporter.config, "Should have expected config")
   }
 
   func testLoadConfigurationWithoutValidCacheAndWithNetworkError() {
     skAdNetworkReporter.config = nil
-    skAdNetworkReporter.serialQueue = DispatchQueue(label: self.name)
+    skAdNetworkReporter.serialQueue = DispatchQueue(label: name)
     skAdNetworkReporter.completionBlocks = NSMutableArray()
 
     var count = 0
     skAdNetworkReporter._loadConfiguration { count += 1 }
 
-    let request = self.graphRequestFactory.capturedRequests[0]
+    let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
       SampleSKAdNetworkConversionConfiguration.configJson,

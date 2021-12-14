@@ -433,7 +433,7 @@ class LoginButtonTests: XCTestCase {
     completion(
       nil,
       [
-        "id": self.name,
+        "id": name,
         "name": SampleUserProfiles.defaultName,
       ],
       nil

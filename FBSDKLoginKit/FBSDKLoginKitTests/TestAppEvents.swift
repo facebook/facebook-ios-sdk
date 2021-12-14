@@ -15,6 +15,6 @@ class TestAppEvents: AppEvents {
     parameters: [String: Any]?,
     isImplicitlyLogged: Bool
   ) {
-    self.capturedParameters = parameters
+    capturedParameters = parameters
   }
 }

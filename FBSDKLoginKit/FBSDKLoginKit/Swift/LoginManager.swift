@@ -92,7 +92,7 @@ public extension LoginManager {
     viewController: UIViewController? = nil,
     completion: LoginResultBlock? = nil
   ) {
-    self.logIn(permissions: permissions.map { $0.name }, from: viewController, handler: sdkCompletion(completion))
+    logIn(permissions: permissions.map { $0.name }, from: viewController, handler: sdkCompletion(completion))
   }
 
   /**
@@ -122,7 +122,7 @@ public extension LoginManager {
       let result = LoginResult(result: result, error: error)
       completion(result)
     }
-    self.__logIn(from: viewController, configuration: configuration, completion: legacyCompletion)
+    __logIn(from: viewController, configuration: configuration, completion: legacyCompletion)
   }
 
   /**
@@ -150,7 +150,7 @@ public extension LoginManager {
       let result = LoginResult(result: result, error: error)
       completion(result)
     }
-    self.__logIn(from: nil, configuration: configuration, completion: legacyCompletion)
+    __logIn(from: nil, configuration: configuration, completion: legacyCompletion)
   }
 
   private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {

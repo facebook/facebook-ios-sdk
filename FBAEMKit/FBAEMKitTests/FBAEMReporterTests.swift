@@ -486,7 +486,7 @@ class FBAEMReporterTests: XCTestCase {
       "Should not mark the invocation as aggregated if it is recorded and sent"
     )
     XCTAssertTrue(
-      FileManager.default.fileExists(atPath: self.reportFilePath),
+      FileManager.default.fileExists(atPath: reportFilePath),
       "Should save uploaded events to disk"
     )
     XCTAssertEqual(
@@ -508,7 +508,7 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testRecordAndUpdateEventsWithEmptyEvent() {
-    AEMReporter.timestamp = self.date
+    AEMReporter.timestamp = date
 
     AEMReporter.recordAndUpdate(event: "", currency: Values.USD, value: 100, parameters: nil)
 
@@ -517,7 +517,7 @@ class FBAEMReporterTests: XCTestCase {
       "Should not create a request to fetch the config if the event being recorded is empty"
     )
     XCTAssertFalse(
-      FileManager.default.fileExists(atPath: self.reportFilePath),
+      FileManager.default.fileExists(atPath: reportFilePath),
       "Should not save an empty event to disk"
     )
   }
@@ -771,8 +771,8 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testAttributedInvocationWithDoubleCounting() {
-    self.reporter.cutOff = false
-    self.reporter.reportingEvents = [Values.purchase]
+    reporter.cutOff = false
+    reporter.reportingEvents = [Values.purchase]
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     let configs = [
@@ -804,8 +804,8 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testAttributedInvocationWithoutDoubleCounting() {
-    self.reporter.cutOff = false
-    self.reporter.reportingEvents = [Values.purchase]
+    reporter.cutOff = false
+    reporter.reportingEvents = [Values.purchase]
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
     let configs = [
@@ -827,8 +827,8 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testIsDoubleCounting() {
-    self.reporter.cutOff = false
-    self.reporter.reportingEvents = ["fb_test"]
+    reporter.cutOff = false
+    reporter.reportingEvents = ["fb_test"]
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     XCTAssertTrue(
@@ -842,8 +842,8 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testIsDoubleCountingWithCutOff() {
-    self.reporter.cutOff = true
-    self.reporter.reportingEvents = ["fb_test"]
+    reporter.cutOff = true
+    reporter.reportingEvents = ["fb_test"]
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     XCTAssertFalse(
@@ -853,8 +853,8 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testIsDoubleCountingWithoutSKANClick() {
-    self.reporter.cutOff = false
-    self.reporter.reportingEvents = ["fb_test"]
+    reporter.cutOff = false
+    reporter.reportingEvents = ["fb_test"]
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
     XCTAssertFalse(
@@ -883,14 +883,14 @@ class FBAEMReporterTests: XCTestCase {
       blockCall += 1
     }
     XCTAssertTrue(
-      (self.networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
+      (networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
       "Should start the catalog request"
     )
-    self.networker.capturedCompletionHandler?(nil, SampleAEMError())
+    networker.capturedCompletionHandler?(nil, SampleAEMError())
     XCTAssertEqual(blockCall, 0, "Should not execute the block when there is a network error")
-    self.networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": false]]], nil)
+    networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": false]]], nil)
     XCTAssertEqual(blockCall, 0, "Should not execute the block when content is not optmized")
-    self.networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": true]]], nil)
+    networker.capturedCompletionHandler?(["data": [["content_id_belongs_to_catalog_id": true]]], nil)
     XCTAssertEqual(blockCall, 1, "Should execute the block when content is optmized")
   }
 
@@ -899,8 +899,8 @@ class FBAEMReporterTests: XCTestCase {
 
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: "test_content_id") {}
     for _ in 0 ..< 100 {
-      self.networker.capturedCompletionHandler?(
-        Fuzzer.randomize(json: self.sampleCatalogOptimizationDictionary),
+      networker.capturedCompletionHandler?(
+        Fuzzer.randomize(json: sampleCatalogOptimizationDictionary),
         nil
       )
     }

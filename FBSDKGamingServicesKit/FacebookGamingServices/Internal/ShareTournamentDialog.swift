@@ -33,7 +33,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     urlOpener: BridgeAPIRequestOpening
   ) {
     self.delegate = delegate
-    self.bridgeURLOpener = urlOpener
+    bridgeURLOpener = urlOpener
   }
 
   /**
@@ -59,7 +59,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     guard !tournamentID.isEmpty else {
       throw ShareTournamentDialogError.invalidTournamentID
     }
-    try self.show(score: score, tournament: Tournament(identifier: tournamentID))
+    try show(score: score, tournament: Tournament(identifier: tournamentID))
   }
 
   /**
@@ -165,7 +165,7 @@ public class ShareTournamentDialog: NSObject, URLOpening {
     else {
       return false
     }
-    if let currentConfig = self.currentConfig {
+    if let currentConfig = currentConfig {
       let createdTournament = Tournament(identifier: tournamentID, config: currentConfig)
       delegate?.didComplete(dialog: self, tournament: createdTournament)
     }

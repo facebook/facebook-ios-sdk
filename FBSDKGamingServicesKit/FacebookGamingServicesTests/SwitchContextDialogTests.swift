@@ -26,9 +26,9 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   override func setUp() {
     super.setUp()
 
-    self.dialogDidCompleteSuccessfully = false
-    self.dialogDidCancel = false
-    self.dialogError = nil
+    dialogDidCompleteSuccessfully = false
+    dialogDidCancel = false
+    dialogError = nil
   }
 
   override func tearDown() {

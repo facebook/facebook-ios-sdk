@@ -191,12 +191,12 @@ class FeatureExtractorTests: XCTestCase {
     ) ?? ""
     if !fileURL.isEmpty {
       let data = try XCTUnwrap(NSData(contentsOfFile: fileURL, options: .mappedIfSafe))
-      self.rules = try TypeUtility.jsonObject(
+      rules = try TypeUtility.jsonObject(
         with: data as Data
       ) as! [String: Any] // swiftlint:disable:this force_cast
     }
-    FeatureExtractor.configureWithRules(self.modelManager)
-    self.modelManager.rulesForKey = self.rules
+    FeatureExtractor.configureWithRules(modelManager)
+    modelManager.rulesForKey = rules
 
     FeatureExtractor.loadRules(forKey: "MTML")
   }
@@ -209,7 +209,7 @@ class FeatureExtractorTests: XCTestCase {
 
   func testGetDenseFeature() {
     let denseFeature = FeatureExtractor.getDenseFeatures(
-      self.viewHierarchy
+      viewHierarchy
     )! // swiftlint:disable:this force_unwrapping
 
     var denseFeatureArray: [Int] = []
@@ -225,7 +225,7 @@ class FeatureExtractorTests: XCTestCase {
   func testGetDenseFeatureParsing() {
     for _ in 0 ..< 100 {
       FeatureExtractor.getDenseFeatures(
-        Fuzzer.randomize(json: self.viewHierarchy) as! [String: Any] // swiftlint:disable:this force_cast
+        Fuzzer.randomize(json: viewHierarchy) as! [String: Any] // swiftlint:disable:this force_cast
       )
     }
   }
@@ -242,7 +242,7 @@ class FeatureExtractorTests: XCTestCase {
   }
 
   func testPruneTree() {
-    let viewTree = self.viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
+    let viewTree = viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
     let siblings: NSMutableArray = []
     let node = (viewTree[0] as NSDictionary).mutableCopy() as! NSMutableDictionary // swiftlint:disable:this force_cast
     FeatureExtractor.pruneTree(node, siblings: siblings)
@@ -253,7 +253,7 @@ class FeatureExtractorTests: XCTestCase {
   func testNonparseFeature() throws {
     let viewTreeString = try String(
       data: TypeUtility.data(
-        withJSONObject: self.viewHierarchy["view"] as Any,
+        withJSONObject: viewHierarchy["view"] as Any,
         options: .fragmentsAllowed
       ),
       encoding: .utf8
@@ -266,7 +266,7 @@ class FeatureExtractorTests: XCTestCase {
     let nonParseFeature = FeatureExtractor.nonparseFeatures(
       interactedNode,
       siblings: siblings,
-      screenname: self.viewHierarchy["screenname"] as! String, // swiftlint:disable:this force_cast
+      screenname: viewHierarchy["screenname"] as! String, // swiftlint:disable:this force_cast
       viewTreeString: viewTreeString! as String // swiftlint:disable:this force_unwrapping
     )
 
@@ -281,7 +281,7 @@ class FeatureExtractorTests: XCTestCase {
   }
 
   func testParseFeature() {
-    let viewTree = self.viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
+    let viewTree = viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
     let node = (viewTree[0] as NSDictionary).mutableCopy() as! NSMutableDictionary // swiftlint:disable:this force_cast
     let parseFeature = FeatureExtractor.parseFeatures(node)
 
@@ -303,7 +303,7 @@ class FeatureExtractorTests: XCTestCase {
       "text": "Coffee 5"
     ]
 
-    XCTAssertTrue(FeatureExtractor.isButton(self.interactedNode))
+    XCTAssertTrue(FeatureExtractor.isButton(interactedNode))
     XCTAssertFalse(FeatureExtractor.isButton(labelNode))
   }
 
@@ -311,7 +311,7 @@ class FeatureExtractorTests: XCTestCase {
     let buttonTextString = NSMutableString()
     let buttonHintString = NSMutableString()
 
-    FeatureExtractor.update(self.interactedNode, text: buttonTextString, hint: buttonHintString)
+    FeatureExtractor.update(interactedNode, text: buttonTextString, hint: buttonHintString)
     XCTAssertEqual(buttonTextString, "")
     XCTAssertEqual(buttonHintString, "confirm order ")
   }

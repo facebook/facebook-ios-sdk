@@ -125,7 +125,7 @@ class AEMConfigurationTests: XCTestCase {
   }
 
   func testValidCases() {
-    let config = AEMConfiguration(json: self.sampleData)
+    let config = AEMConfiguration(json: sampleData)
 
     XCTAssertEqual(
       config?.defaultCurrency,
@@ -328,7 +328,7 @@ class AEMConfigurationTests: XCTestCase {
 
   func testEncoding() {
     let coder = TestCoder()
-    let config = AEMConfiguration(json: self.sampleData)
+    let config = AEMConfiguration(json: sampleData)
     config?.encode(with: coder)
 
     XCTAssertEqual(

@@ -19,9 +19,9 @@ public class ContextDialogPresenter {
   private(set) var chooseContextDialogFactory: ChooseContextDialogMaking
 
   public init() {
-    self.createContextDialogFactory = CreateContextDialogFactory(tokenProvider: AccessTokenProvider.self)
-    self.switchContextDialogFactory = SwitchContextDialogFactory(tokenProvider: AccessTokenProvider.self)
-    self.chooseContextDialogFactory = ChooseContextDialogFactory()
+    createContextDialogFactory = CreateContextDialogFactory(tokenProvider: AccessTokenProvider.self)
+    switchContextDialogFactory = SwitchContextDialogFactory(tokenProvider: AccessTokenProvider.self)
+    chooseContextDialogFactory = ChooseContextDialogFactory()
   }
 
   convenience init(

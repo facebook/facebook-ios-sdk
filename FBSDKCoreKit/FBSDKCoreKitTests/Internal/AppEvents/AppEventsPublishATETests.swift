@@ -58,7 +58,7 @@ class AppEventsPublishATETests: XCTestCase {
       featureChecker: TestFeatureManager(),
       primaryDataStore: UserDefaultsSpy(),
       logger: TestLogger.self,
-      settings: self.settings,
+      settings: settings,
       paymentObserver: TestPaymentObserver(),
       timeSpentRecorder: TestTimeSpentRecorder(),
       appEventsStateStore: TestAppEventsStateStore(),

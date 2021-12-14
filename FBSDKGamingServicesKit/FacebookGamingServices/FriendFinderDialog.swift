@@ -22,7 +22,7 @@ public class FriendFinderDialog: NSObject {
   }
 
   init(gamingServiceControllerFactory: _GamingServiceControllerCreating) {
-    self.factory = gamingServiceControllerFactory
+    factory = gamingServiceControllerFactory
   }
 
   @objc(launchFriendFinderDialogWithCompletionHandler:)

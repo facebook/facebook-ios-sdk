@@ -31,7 +31,7 @@ public class CustomUpdateGraphRequest {
   let base64EncodedImageHeader = "data:image/png;base64,"
 
   public init() {
-    self.graphRequestFactory = GraphRequestFactory()
+    graphRequestFactory = GraphRequestFactory()
   }
 
   public init(graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()) {

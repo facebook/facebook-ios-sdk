@@ -22,19 +22,19 @@ let emptyReferralCode = ""
 final class ReferralCodeTests: XCTestCase {
 
   func testCreateValidReferralCodeShouldSucceed() {
-    self.assertCreationSucceedWithString(validReferralCode1)
-    self.assertCreationSucceedWithString(validReferralCode2)
+    assertCreationSucceedWithString(validReferralCode1)
+    assertCreationSucceedWithString(validReferralCode2)
   }
 
   func testCreateInvalidReferralCodeShoudFail() {
-    self.assertCreationFailWithString(invalidReferralCode1)
-    self.assertCreationFailWithString(invalidReferralCode2)
-    self.assertCreationFailWithString(invalidReferralCode3)
-    self.assertCreationFailWithString(invalidReferralCode4)
+    assertCreationFailWithString(invalidReferralCode1)
+    assertCreationFailWithString(invalidReferralCode2)
+    assertCreationFailWithString(invalidReferralCode3)
+    assertCreationFailWithString(invalidReferralCode4)
   }
 
   func testCreateEmptyReferralCodeShoudFail() {
-    self.assertCreationFailWithString(emptyReferralCode)
+    assertCreationFailWithString(emptyReferralCode)
   }
 
   func assertCreationFailWithString(_ string: String, file: StaticString = #file, line: UInt = #line) {

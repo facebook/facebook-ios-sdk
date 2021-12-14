@@ -37,13 +37,13 @@ class CustomUpdateGraphAPIContentRemote: Codable {
       throw CustomUpdateContentError.invalidMedia
     }
 
-    self.contextTokenID = currentContextID
-    self.text = message
-    self.cta = CustomUpdateLocalizedText(
+    contextTokenID = currentContextID
+    text = message
+    cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentMedia.ctaText ?? "",
       localizations: customUpdateContentMedia.ctaLocalization
     )
-    self.data = customUpdateContentMedia.payload
+    data = customUpdateContentMedia.payload
     self.media = customUpdateMedia
   }
 
@@ -65,14 +65,14 @@ class CustomUpdateGraphAPIContentRemote: Codable {
       throw CustomUpdateContentError.invalidImage
     }
 
-    self.contextTokenID = currentContextID
-    self.text = message
-    self.cta = CustomUpdateLocalizedText(
+    contextTokenID = currentContextID
+    text = message
+    cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentImage.ctaText ?? "",
       localizations: customUpdateContentImage.ctaLocalization
     )
-    self.data = customUpdateContentImage.payload
-    self.image = imageData
+    data = customUpdateContentImage.payload
+    image = imageData
   }
 
   enum CodingKeys: String, CodingKey {

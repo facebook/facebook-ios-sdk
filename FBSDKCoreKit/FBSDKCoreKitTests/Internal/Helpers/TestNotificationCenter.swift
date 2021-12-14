@@ -42,9 +42,9 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
     object: Any?,
     userInfo: [String: Any]? = nil
   ) {
-    self.capturedPostNames.append(name)
-    self.capturedPostObjects.append(object as Any)
-    self.capturedPostUserInfos.append(userInfo ?? [:])
+    capturedPostNames.append(name)
+    capturedPostObjects.append(object as Any)
+    capturedPostUserInfos.append(userInfo ?? [:])
   }
 
   // MARK: Observing

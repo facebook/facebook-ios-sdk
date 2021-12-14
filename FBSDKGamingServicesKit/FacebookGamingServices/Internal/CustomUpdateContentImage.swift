@@ -38,7 +38,7 @@ public class CustomUpdateContentImage {
   ) {
     self.message = message
     self.image = image
-    self.ctaText = cta
+    ctaText = cta
     self.payload = payload
     self.messageLocalization = messageLocalization
     self.ctaLocalization = ctaLocalization

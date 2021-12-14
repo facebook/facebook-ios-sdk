@@ -62,7 +62,7 @@ class FBAEMEventTests: XCTestCase {
   ])
 
   func testValidCases() {
-    var event = self.validEventWithoutValues
+    var event = validEventWithoutValues
     XCTAssertEqual(
       event?.eventName,
       Values.purchase,
@@ -72,7 +72,7 @@ class FBAEMEventTests: XCTestCase {
       event?.values,
       "AEM event should not have unexpected values"
     )
-    event = self.validEventWithValues
+    event = validEventWithValues
     XCTAssertEqual(
       event?.eventName,
       Values.purchase,
@@ -152,7 +152,7 @@ class FBAEMEventTests: XCTestCase {
 
   func testEncodingWithValues() {
     let coder = TestCoder()
-    let event = self.validEventWithValues
+    let event = validEventWithValues
     event?.encode(with: coder)
 
     XCTAssertEqual(
@@ -169,7 +169,7 @@ class FBAEMEventTests: XCTestCase {
 
   func testEncodingWithoutValues() {
     let coder = TestCoder()
-    let event = self.validEventWithoutValues
+    let event = validEventWithoutValues
     event?.encode(with: coder)
 
     XCTAssertEqual(

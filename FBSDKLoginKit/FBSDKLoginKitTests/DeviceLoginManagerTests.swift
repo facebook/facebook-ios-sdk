@@ -151,12 +151,12 @@ class DeviceLoginManagerTests: XCTestCase {
     let parameters = request.parameters
     XCTAssertEqual(
       parameters["code"] as? String,
-      self.sampleCodeInfo().identifier,
+      sampleCodeInfo().identifier,
       "Should create a graph request with the expected code"
     )
     XCTAssertEqual(
       request.tokenString,
-      self.fakeAppID + "|" + self.fakeClientToken
+      fakeAppID + "|" + fakeClientToken
     )
   }
 
@@ -165,16 +165,16 @@ class DeviceLoginManagerTests: XCTestCase {
 
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, nil, NSError(domain: "foo", code: 0, userInfo: nil))
-    XCTAssertEqual(self.delegate.capturedLoginManager, manager)
-    XCTAssertNotNil(self.delegate.capturedError)
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(delegate.capturedError)
   }
 
   func testStatusGraphRequestCompleteWithNoToken() throws {
     manager._schedulePoll(sampleCodeInfo().pollingInterval)
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, [], nil)
-    XCTAssertEqual(self.delegate.capturedLoginManager, self.manager)
-    XCTAssertNotNil(self.delegate.capturedError)
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(delegate.capturedError)
   }
 
   func testStatusGraphRequestCompleteWithAccessToken() throws {
@@ -198,14 +198,14 @@ class DeviceLoginManagerTests: XCTestCase {
   func testSchedulePollAfterCancel() throws {
     manager._schedulePoll(sampleCodeInfo().pollingInterval)
 
-    self.manager.cancel()
+    manager.cancel()
     let result: [String: String] = [
       "access_token": SampleAccessTokens.validToken.tokenString,
     ]
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, result, nil)
 
-    XCTAssertNil(self.delegate.capturedError)
+    XCTAssertNil(delegate.capturedError)
     XCTAssertEqual(
       factory.capturedRequests.count,
       1,
@@ -395,7 +395,7 @@ class DeviceLoginManagerTests: XCTestCase {
 
     XCTAssertEqual(delegate.capturedLoginManager, manager)
     XCTAssertNil(factory.capturedRequests.first)
-    self.assertCancelResult()
+    assertCancelResult()
   }
 
   func testProcessErrorAuthorizationDeclined() {
@@ -409,7 +409,7 @@ class DeviceLoginManagerTests: XCTestCase {
 
     XCTAssertEqual(delegate.capturedLoginManager, manager)
     XCTAssertNil(factory.capturedRequests.first)
-    self.assertCancelResult()
+    assertCancelResult()
   }
 
   func testProcessErrorExcessivePolling() throws {

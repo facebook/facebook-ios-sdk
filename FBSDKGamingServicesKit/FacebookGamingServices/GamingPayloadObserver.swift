@@ -58,7 +58,7 @@ public class GamingPayloadObserver: NSObject {
   private func handleDeeplinkURLIntoApp(appLinkUrl: AppLinkURL) -> Bool {
     guard
       let delegate = delegate,
-      let gameEntryData = self.parseURLForPayloadEntryData(appLinkUrl: appLinkUrl),
+      let gameEntryData = parseURLForPayloadEntryData(appLinkUrl: appLinkUrl),
       !gameEntryData.keys.isEmpty
     else {
       return false
@@ -99,6 +99,6 @@ extension GamingPayloadObserver: FBSDKApplicationObserving {
     annotation: Any?
   ) -> Bool {
     let sdkURL = AppLinkURL(url: url)
-    return self.handleDeeplinkURLIntoApp(appLinkUrl: sdkURL)
+    return handleDeeplinkURLIntoApp(appLinkUrl: sdkURL)
   }
 }

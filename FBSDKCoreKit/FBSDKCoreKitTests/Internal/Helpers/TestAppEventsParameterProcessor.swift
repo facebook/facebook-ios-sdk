@@ -27,6 +27,6 @@ class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing, E
   }
 
   func processEvents(_ events: NSMutableArray) {
-    self.capturedEvents = events.copy() as? [[String: Any]]
+    capturedEvents = events.copy() as? [[String: Any]]
   }
 }

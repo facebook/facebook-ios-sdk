@@ -37,7 +37,7 @@ public class CustomUpdateContentMedia {
     ctaLocalization: [String: String] = [:]
   ) {
     self.message = message
-    self.ctaText = cta
+    ctaText = cta
     self.media = media
     self.payload = payload
     self.messageLocalization = messageLocalization

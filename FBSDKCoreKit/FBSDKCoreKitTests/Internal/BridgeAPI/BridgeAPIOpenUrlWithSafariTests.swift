@@ -232,7 +232,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
 
     XCTAssertNil(
-      self.urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenUrl,
       "Should not try to open a url when the request cannot provide one"
     )
 
@@ -252,7 +252,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
     XCTAssertEqual(
       safariVc?.delegate as? BridgeAPI,
-      self.api,
+      api,
       "Should set the safari view controller delegate to the bridge api"
     )
     XCTAssertEqual(

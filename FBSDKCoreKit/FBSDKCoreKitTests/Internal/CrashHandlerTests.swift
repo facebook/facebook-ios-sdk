@@ -129,14 +129,14 @@ class CrashHandlerTests: XCTestCase {
   }
 
   func testSaveCrashLogs() {
-    crashHandler._saveCrashLog(self.processedCrashLogs()[0])
+    crashHandler._saveCrashLog(processedCrashLogs()[0])
     XCTAssertEqual(testBundle.capturedKeys, ["CFBundleShortVersionString", "CFBundleVersion"])
   }
 
   func testFilterCrashLogs() {
     let filteredCrashLogs = crashHandler._filterCrashLogs(
       ["FBSDK", "_FBSDK"],
-      processedCrashLogs: self.processedCrashLogs()
+      processedCrashLogs: processedCrashLogs()
     )
     XCTAssertEqual(1, filteredCrashLogs.count)
   }

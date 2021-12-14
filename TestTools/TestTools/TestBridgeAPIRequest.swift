@@ -20,7 +20,7 @@ public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
     self.url = url
     self.protocolType = protocolType
     self.scheme = scheme
-    self.actionID = "1"
+    actionID = "1"
   }
 
   public func copy(with zone: NSZone? = nil) -> Any {

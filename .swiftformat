@@ -48,6 +48,7 @@
 --rules redundantPattern
 --rules redundantRawValues
 --rules redundantReturn
+--rules redundantSelf
 --rules redundantType
 --rules redundantVoidReturnType
 --rules semicolons

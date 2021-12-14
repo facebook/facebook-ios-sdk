@@ -30,7 +30,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
     self.init()
 
     self.graphPath = graphPath
-    self.httpMethod = HTTPMethod
+    httpMethod = HTTPMethod
   }
 
   public convenience init(
@@ -52,7 +52,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
 
     self.graphPath = graphPath
     self.parameters = parameters
-    self.httpMethod = HTTPMethod
+    httpMethod = HTTPMethod
   }
 
   public convenience init(
@@ -92,7 +92,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
     self.parameters = parameters
     self.tokenString = tokenString
     self.graphPath = graphPath
-    self.httpMethod = HTTPMethod
+    httpMethod = HTTPMethod
     self.flags = flags
   }
 
@@ -108,7 +108,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
     self.parameters = parameters
     self.tokenString = tokenString
     self.graphPath = graphPath
-    self.httpMethod = HTTPMethod
+    httpMethod = HTTPMethod
     self.version = version
   }
 

@@ -38,9 +38,9 @@ class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
   override func setUp() {
     super.setUp()
 
-    self.dialogDidCompleteSuccessfully = false
-    self.dialogDidCancel = false
-    self.dialogError = nil
+    dialogDidCompleteSuccessfully = false
+    dialogDidCancel = false
+    dialogError = nil
     AccessToken.current = SampleAccessTokens.validToken
     AuthenticationToken.current = SampleAuthenticationToken.validToken(withGraphDomain: "gaming")
   }

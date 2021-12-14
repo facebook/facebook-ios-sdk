@@ -121,25 +121,25 @@ class GamingVideoUploaderTests: XCTestCase {
       XCTFail("Should not invoke the completion handler")
     }
     XCTAssertTrue(
-      self.videoUploaderFactory.capturedDelegate is GamingVideoUploader,
+      videoUploaderFactory.capturedDelegate is GamingVideoUploader,
       "Should create an uploader with the expected delegate type"
     )
     XCTAssertEqual(
-      self.videoUploaderFactory.capturedVideoName,
-      self.videoURL.lastPathComponent,
+      videoUploaderFactory.capturedVideoName,
+      videoURL.lastPathComponent,
       "Should use the video url to derive the video name"
     )
     XCTAssertTrue(
-      self.videoUploaderFactory.capturedParameters.isEmpty,
+      videoUploaderFactory.capturedParameters.isEmpty,
       "Should not create an uploader with parameters"
     )
     XCTAssertEqual(
-      self.videoUploaderFactory.capturedVideoSize,
-      UInt(self.fileHandle.seekToEndOfFile()),
+      videoUploaderFactory.capturedVideoSize,
+      UInt(fileHandle.seekToEndOfFile()),
       "Should create an uploader with the size of the video being uploaded"
     )
     XCTAssertTrue(
-      self.videoUploader.wasStartCalled,
+      videoUploader.wasStartCalled,
       "Should start the upload"
     )
   }

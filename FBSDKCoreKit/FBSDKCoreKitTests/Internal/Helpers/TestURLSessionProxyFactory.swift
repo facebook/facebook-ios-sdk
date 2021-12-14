@@ -11,7 +11,7 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   private var stubbedSessions: [TestURLSessionProxy]
 
   init(sessions: [TestURLSessionProxy] = []) {
-    self.stubbedSessions = sessions
+    stubbedSessions = sessions
   }
 
   /// Creates a new provider stubbed with the `FakeURLSessionProxy`

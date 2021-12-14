@@ -35,6 +35,7 @@ class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
   func videoChunkData(for videoUploader: _VideoUploader, startOffset: UInt, endOffset: UInt) -> Data? {
     Data()
   }
+
   func videoUploader(_ videoUploader: _VideoUploader, didCompleteWithResults results: [String: Any]) {}
   func videoUploader(_ videoUploader: _VideoUploader, didFailWithError error: Error) {}
 }

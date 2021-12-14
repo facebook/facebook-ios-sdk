@@ -32,7 +32,7 @@ public class TestBundle: NSObject, InfoDictionaryProviding {
   }
 
   public init(infoDictionary: [String: Any] = [:]) {
-    self.stubbedInfoDictionary = infoDictionary
+    stubbedInfoDictionary = infoDictionary
   }
 
   public func object(forInfoDictionaryKey key: String) -> Any? {

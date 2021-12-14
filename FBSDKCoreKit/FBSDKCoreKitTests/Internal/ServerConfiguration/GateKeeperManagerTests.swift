@@ -143,7 +143,7 @@ class GateKeeperManagerTests: XCTestCase {
 
   func testLoadingGateKeepersWhenValid() {
     settings.appID = name
-    self.updateGateKeeperValidity(isValid: true)
+    updateGateKeeperValidity(isValid: true)
 
     var didInvokeCompletion = false
     GateKeeperManager.loadGateKeepers { potentialError in
@@ -167,7 +167,7 @@ class GateKeeperManagerTests: XCTestCase {
   func testLoadingGateKeepersWhenInvalidWhenNotCurrentlyLoading() {
     settings.appID = name
     GateKeeperManager.gateKeepers = ["foo": "true"]
-    self.updateGateKeeperValidity(isValid: false)
+    updateGateKeeperValidity(isValid: false)
 
     GateKeeperManager.loadGateKeepers { _ in
       XCTFail("Should not invoke completion")
@@ -182,7 +182,7 @@ class GateKeeperManagerTests: XCTestCase {
   func testLoadingGateKeepersWhenInvalidWhenCurrentlyLoading() {
     settings.appID = name
     GateKeeperManager.gateKeepers = ["foo": "true"]
-    self.updateGateKeeperValidity(isValid: false)
+    updateGateKeeperValidity(isValid: false)
 
     var completionCallCount = 0
     GateKeeperManager.loadGateKeepers { _ in

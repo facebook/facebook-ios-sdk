@@ -61,7 +61,7 @@ extension EventBindingManagerTests {
     manager.match(view, delegate: self)
 
     XCTAssertEqual(
-      self.manager.reactBindings?[view.reactTag] as? TestEventBinding,
+      manager.reactBindings?[view.reactTag] as? TestEventBinding,
       binding,
       "Should store the binding for the react tag that corresponds to the view"
     )

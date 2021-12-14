@@ -290,7 +290,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithValidContentAndContentID() {
-    let invocation: AEMInvocation? = self.validInvocation
+    let invocation: AEMInvocation? = validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
     let contentIDs: [String] = ["id123", "id456"]
 
@@ -311,7 +311,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithValidContent() {
-    let invocation: AEMInvocation? = self.validInvocation
+    let invocation: AEMInvocation? = validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
 
     let parameters = invocation?.processedParameters([
@@ -331,7 +331,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithInvalidContent() {
-    let invocation: AEMInvocation? = self.validInvocation
+    let invocation: AEMInvocation? = validInvocation
 
     let parameters = invocation?.processedParameters([
       Keys.content: #"[{"id": ,"quantity": 5}]"#,
@@ -350,7 +350,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testFindConfig() {
-    var invocation: AEMInvocation? = self.validInvocation
+    var invocation: AEMInvocation? = validInvocation
     invocation?.reset()
     invocation?.setConfigID(10)
     XCTAssertNil(
@@ -378,7 +378,7 @@ class FBAEMInvocationTests: XCTestCase {
   func testFindConfigWithBusinessID1() {
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
-    let invocation = self.validInvocation
+    let invocation = validInvocation
     invocation.reset()
     invocation.setConfigID(10000)
 
@@ -400,7 +400,7 @@ class FBAEMInvocationTests: XCTestCase {
   func testFindConfigWithBusinessID2() {
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
-    let invocation = self.validInvocation
+    let invocation = validInvocation
     invocation.reset()
     invocation.setConfigID(10000)
     invocation.setBusinessID("test_advertiserid_123")
@@ -511,7 +511,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventWithValue() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -547,7 +547,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testAttributeUnexpectedEventWithoutValue() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -565,7 +565,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testAttributeExpectedEventWithoutValue() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -711,7 +711,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventWithoutCache() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -729,7 +729,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventAndValueWithoutCache() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -753,8 +753,8 @@ class FBAEMInvocationTests: XCTestCase {
     )
   }
 
-  func testUpdateConversionWithValue() {
-    let invocation: AEMInvocation = self.validInvocation
+  func testUpdateConversionWithValue() { // swiftlint:disable:this function_body_length
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -814,7 +814,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testUpdateConversionWithouValue() {
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config2)
 
@@ -928,7 +928,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testDecodeBase64UrlSafeString() {
-    let decodedString = self.validInvocation
+    let decodedString = validInvocation
       .decodeBase64UrlSafeString(
         "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
       )
@@ -940,7 +940,7 @@ class FBAEMInvocationTests: XCTestCase {
   }
 
   func testDecodeBase64UrlSafeStringWithEmptyString() {
-    let decodedString = self.validInvocation.decodeBase64UrlSafeString("")
+    let decodedString = validInvocation.decodeBase64UrlSafeString("")
     XCTAssertNil(
       decodedString?.base64EncodedString(),
       "Should decode the base64 url safe string as nil with empty string"
@@ -995,7 +995,7 @@ class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithoutCatalogID() {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
     let configs = [
-      Values.defaultMode: [self.config1]
+      Values.defaultMode: [config1]
     ]
 
     XCTAssertFalse(
@@ -1007,7 +1007,7 @@ class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithoutExpectedEvent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
     let configs = [
-      Values.defaultMode: [self.config1]
+      Values.defaultMode: [config1]
     ]
 
     XCTAssertFalse(
@@ -1019,7 +1019,7 @@ class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithExpectedEvent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
     let configs = [
-      Values.defaultMode: [self.config1]
+      Values.defaultMode: [config1]
     ]
 
     XCTAssertTrue(
@@ -1037,7 +1037,7 @@ class FBAEMInvocationTests: XCTestCase {
 
   func testEncoding() {
     let coder = TestCoder()
-    let invocation: AEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = validInvocation
     invocation.encode(with: coder)
 
     XCTAssertEqual(

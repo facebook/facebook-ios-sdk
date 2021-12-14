@@ -82,7 +82,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
       "Should create a dialog with the provided delegate"
     )
     XCTAssertTrue(
-      self.webDialogDidFailWasCalled,
+      webDialogDidFailWasCalled,
       "Should fail to show if it cannot parse a url from the parameters"
     )
   }
@@ -91,7 +91,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     createAndShowDialog()
 
     XCTAssertTrue(
-      self.webDialogDidFailWasCalled,
+      webDialogDidFailWasCalled,
       "Should fail to show if it cannot locate a window to present in"
     )
   }

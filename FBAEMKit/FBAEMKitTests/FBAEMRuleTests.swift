@@ -95,7 +95,7 @@ class FBAEMRuleTests: XCTestCase {
   }
 
   func testValidCase2() {
-    guard let rule = FBAEMRule(json: self.sampleData) else { return XCTFail("Unwraping Error") }
+    guard let rule = FBAEMRule(json: sampleData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(7, rule.priority)
     XCTAssertEqual(1, rule.events.count)
@@ -172,7 +172,7 @@ class FBAEMRuleTests: XCTestCase {
   }
 
   func testContainsEvent() {
-    let rule = self.validRule
+    let rule = validRule
 
     XCTAssertTrue(
       rule.containsEvent(Values.purchase),
@@ -193,7 +193,7 @@ class FBAEMRuleTests: XCTestCase {
 
   func testEncoding() {
     let coder = TestCoder()
-    let rule = self.validRule
+    let rule = validRule
     rule.encode(with: coder)
 
     let encodedConversionValue = coder.encodedObject[Keys.conversionValue] as? NSNumber

@@ -40,7 +40,7 @@ public class _GamingServiceController: NSObject {
     completionHandler completion: @escaping GamingServiceResultCompletion
   ) {
     self.serviceType = serviceType
-    self.completionHandler = completion
+    completionHandler = completion
     self.pendingResult = pendingResult
     self.urlOpener = urlOpener
     self.settings = settings
@@ -57,7 +57,7 @@ public class _GamingServiceController: NSObject {
       )
     )
 
-    self.completionHandler = nil
+    completionHandler = nil
   }
 
   func isValidCallbackURL(_ url: URL, forService service: String) -> Bool {

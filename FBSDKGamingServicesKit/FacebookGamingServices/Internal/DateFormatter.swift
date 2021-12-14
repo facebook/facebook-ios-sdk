@@ -21,6 +21,6 @@ enum DateFormatter {
     if #available(iOS 10.0, *) {
       return self.isoFormatter.date(from: date)
     }
-    return self.formatter.date(from: date)
+    return formatter.date(from: date)
   }
 }

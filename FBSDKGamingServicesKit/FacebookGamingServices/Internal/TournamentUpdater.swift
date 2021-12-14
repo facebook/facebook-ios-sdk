@@ -59,7 +59,7 @@ public class TournamentUpdater {
     guard !tournamentID.isEmpty else {
       return completionHandler(.failure(TournamentUpdaterError.invalidTournamentID))
     }
-    self.update(tournament: Tournament(identifier: tournamentID), score: score, completionHandler: completionHandler)
+    update(tournament: Tournament(identifier: tournamentID), score: score, completionHandler: completionHandler)
   }
 
   /**

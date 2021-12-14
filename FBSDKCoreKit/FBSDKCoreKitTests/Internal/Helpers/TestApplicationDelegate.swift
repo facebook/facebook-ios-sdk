@@ -18,7 +18,7 @@ class TestApplicationDelegate: NSObject, UIApplicationDelegate {
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
-    self.applicationOpenURLCallCount += 1
+    applicationOpenURLCallCount += 1
     return true
   }
 }
