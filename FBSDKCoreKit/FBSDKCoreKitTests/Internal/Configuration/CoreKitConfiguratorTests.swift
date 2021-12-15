@@ -39,7 +39,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AccessToken.resetClassDependencies()
     AppEvents.shared.reset()
     AppEventsConfigurationManager.shared.resetDependencies()
-    AppEventsDeviceInfo.reset()
+    AppEventsDeviceInfo.shared.resetDependencies()
     AppEventsState.eventProcessors = nil
     AppEventsUtility.shared.reset()
     AuthenticationToken.resetTokenCache()

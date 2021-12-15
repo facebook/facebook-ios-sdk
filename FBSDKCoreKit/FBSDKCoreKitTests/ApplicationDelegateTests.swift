@@ -1026,7 +1026,7 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSharedAppEventsDeviceInfo() throws {
-    AppEventsDeviceInfo.reset()
+    AppEventsDeviceInfo.shared.resetDependencies()
 
     delegate.initializeSDK()
 

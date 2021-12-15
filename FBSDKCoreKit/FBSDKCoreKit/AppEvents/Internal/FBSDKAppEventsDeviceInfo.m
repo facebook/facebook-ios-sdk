@@ -266,11 +266,9 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
 #pragma clang diagnostic pop
 
 #if FBTEST && DEBUG
-+ (void)reset
+- (void)resetDependencies
 {
-  if (singletonNonce) {
-    singletonNonce = 0;
-  }
+  self.settings = nil;
 }
 
 #endif

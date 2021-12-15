@@ -19,13 +19,17 @@ NS_SWIFT_NAME(AppEventsDeviceInfo)
 
 @property (class, nonnull, nonatomic, readonly) FBSDKAppEventsDeviceInfo *shared;
 
+@property (nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 - (void)configureWithSettings:(id<FBSDKSettings>)settings;
 
 #if FBTEST && DEBUG
-+ (void)reset;
+- (void)resetDependencies;
 #endif
 
 @end

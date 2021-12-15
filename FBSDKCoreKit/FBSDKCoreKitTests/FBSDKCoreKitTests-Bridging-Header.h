@@ -38,7 +38,7 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsConfiguring.h"
-#import "FBSDKAppEventsDeviceInfo+Testing.h"
+#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsParameterProcessing.h"
