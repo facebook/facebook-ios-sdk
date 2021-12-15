@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Class dependencies
 
-static BOOL _hasBeenConfigured;
+static BOOL _hasBeenConfigured = NO;
 
 + (BOOL)hasBeenConfigured
 {

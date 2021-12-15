@@ -30,13 +30,13 @@
 
 @implementation FBSDKGateKeeperManager
 
-static BOOL _canLoadGateKeepers;
+static BOOL _canLoadGateKeepers = NO;
 static NSDictionary<NSString *, id> *_gateKeepers;
 static NSMutableArray *_completionBlocks;
 static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
-static BOOL _loadingGateKeepers;
-static BOOL _requeryFinishedForAppStart;
+static BOOL _loadingGateKeepers = NO;
+static BOOL _requeryFinishedForAppStart = NO;
 static id<FBSDKGraphRequestFactory> _graphRequestFactory;
 static id<FBSDKGraphRequestConnectionFactory> _graphRequestConnectionFactory;
 static id<FBSDKSettings> _settings;

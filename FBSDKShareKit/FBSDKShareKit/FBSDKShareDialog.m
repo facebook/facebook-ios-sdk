@@ -60,7 +60,7 @@
 
 #pragma mark - Class Properties
 
-static BOOL _hasBeenConfigured;
+static BOOL _hasBeenConfigured = NO;
 
 + (BOOL)hasBeenConfigured
 {
@@ -961,9 +961,9 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     }
     return NO;
   }
-  BOOL containsMedia;
-  BOOL containsPhotos;
-  BOOL containsVideos;
+  BOOL containsMedia = NO;
+  BOOL containsPhotos = NO;
+  BOOL containsVideos = NO;
   [self.class.shareUtility testShareContent:shareContent
                               containsMedia:&containsMedia
                              containsPhotos:&containsPhotos

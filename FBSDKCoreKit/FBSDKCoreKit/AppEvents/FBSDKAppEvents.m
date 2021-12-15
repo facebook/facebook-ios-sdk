@@ -91,7 +91,7 @@ static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
 
 static FBSDKAppEvents *_shared = nil;
 static NSString *g_overrideAppID = nil;
-static BOOL g_explicitEventsLoggedYet;
+static BOOL g_explicitEventsLoggedYet = NO;
 
 @interface FBSDKAppEvents ()
 

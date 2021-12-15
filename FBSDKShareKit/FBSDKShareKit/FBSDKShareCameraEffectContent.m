@@ -53,7 +53,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 #pragma mark - Class Properties
 
-static BOOL _hasBeenConfigured;
+static BOOL _hasBeenConfigured = NO;
 
 + (BOOL)hasBeenConfigured
 {

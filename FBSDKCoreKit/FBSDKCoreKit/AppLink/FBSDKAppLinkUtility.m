@@ -46,7 +46,7 @@ static id<FBSDKAppLinkURLCreating> _appLinkURLFactory;
 static id<FBSDKUserIDProviding> _userIDProvider;
 static id<FBSDKUserDataPersisting> _userDataStore;
 
-static BOOL _isConfigured;
+static BOOL _isConfigured = NO;
 
 + (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                   infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider

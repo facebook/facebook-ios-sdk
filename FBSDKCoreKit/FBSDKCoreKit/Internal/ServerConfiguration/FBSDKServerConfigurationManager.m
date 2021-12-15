@@ -60,7 +60,7 @@ static const NSTimeInterval kTimeout = 4.0;
 @implementation FBSDKServerConfigurationManager
 
 #if DEBUG
-static BOOL _printedUpdateMessage;
+static BOOL _printedUpdateMessage = NO;
 #endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)

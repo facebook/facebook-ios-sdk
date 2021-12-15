@@ -45,7 +45,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 // MARK: - Class Dependencies
 
-static BOOL _hasBeenConfigured;
+static BOOL _hasBeenConfigured = NO;
 
 + (BOOL)hasBeenConfigured
 {

@@ -52,10 +52,10 @@
 
 @implementation FBSDKCodelessIndexer
 
-static BOOL _isCodelessIndexing;
-static BOOL _isCheckingSession;
-static BOOL _isCodelessIndexingEnabled;
-static BOOL _isGestureSet;
+static BOOL _isCodelessIndexing = NO;
+static BOOL _isCheckingSession = NO;
+static BOOL _isCodelessIndexingEnabled = NO;
+static BOOL _isGestureSet = NO;
 
 static NSMutableDictionary<NSString *, id> *_codelessSetting;
 static const NSTimeInterval kTimeout = 4.0;

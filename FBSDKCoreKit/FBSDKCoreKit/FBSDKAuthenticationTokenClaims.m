@@ -26,7 +26,7 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 #pragma mark - Class Properties
 
-static BOOL _hasBeenConfigured;
+static BOOL _hasBeenConfigured = NO;
 
 + (BOOL)hasBeenConfigured
 {
