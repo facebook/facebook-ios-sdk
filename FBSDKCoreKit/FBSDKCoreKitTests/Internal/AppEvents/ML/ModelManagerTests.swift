@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class FBSDKModelManagerTests: XCTestCase {
+class ModelManagerTests: XCTestCase {
 
   let manager = ModelManager.shared
   let featureChecker = TestFeatureManager()

@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
+class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   enum Keys {
     static let actionID = "action_id"

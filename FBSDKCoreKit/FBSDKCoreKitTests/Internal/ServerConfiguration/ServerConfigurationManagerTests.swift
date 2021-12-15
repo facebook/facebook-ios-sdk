@@ -8,7 +8,7 @@
 
 import XCTest
 
-class FBSDKServerConfigurationManagerTests: XCTestCase {
+class ServerConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var connection: TestGraphRequestConnection!

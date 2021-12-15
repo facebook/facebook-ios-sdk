@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import TestTools
 
-class FBSDKAppLinkUtilityTests: XCTestCase {
+class AppLinkUtilityTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   var bundle = TestBundle()

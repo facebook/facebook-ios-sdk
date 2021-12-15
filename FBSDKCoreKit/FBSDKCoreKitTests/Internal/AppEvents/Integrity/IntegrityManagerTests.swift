@@ -8,7 +8,7 @@
 
 import XCTest
 
-class FBSDKIntegrityManagerTests: XCTestCase {
+class IntegrityManagerTests: XCTestCase {
 
   var isGateKeeperEnabled = Bool.random()
   let gatekeeperKey = "FBSDKFeatureIntegritySample"

@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class FBSDKEventBindingTests: XCTestCase {
+class EventBindingTests: XCTestCase {
 
   let window = UIWindow()
   let eventLogger = TestEventLogger()

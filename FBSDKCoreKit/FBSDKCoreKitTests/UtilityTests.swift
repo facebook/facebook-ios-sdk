@@ -8,7 +8,7 @@
 
 import XCTest
 
-class FBSDKUtilityTests: XCTestCase {
+class UtilityTests: XCTestCase {
   func testSHA256Hash() {
     let hashed = Utility.sha256Hash("facebook" as NSObject)
 

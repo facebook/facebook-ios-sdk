@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class FBSDKJSONValueTests: XCTestCase {
+class JSONValueTests: XCTestCase {
 
   func testReturnsNilForBadInputs() throws {
     var error: NSError?

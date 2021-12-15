@@ -13,7 +13,7 @@ import FacebookCore
 import TestTools
 import XCTest
 
-class FBSDKAccessTokenExpirerTests: XCTestCase {
+class AccessTokenExpirerTests: XCTestCase {
 
   let center = TestNotificationCenter()
   lazy var expirer = AccessTokenExpirer(notificationCenter: center)

@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import Foundation
 
-class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
+class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   let actionID = UUID().uuidString
   let scheme = UUID().uuidString
   let methodName = UUID().uuidString

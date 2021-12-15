@@ -8,7 +8,7 @@
 
 import XCTest
 
-class FBSDKAppEventsConfigurationTests: XCTestCase {
+class AppEventsConfigurationTests: XCTestCase {
 
   private var config = SampleAppEventsConfigurations.valid
 

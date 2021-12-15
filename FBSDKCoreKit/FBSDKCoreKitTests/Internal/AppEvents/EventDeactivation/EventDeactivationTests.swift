@@ -8,7 +8,7 @@
 
 import XCTest
 
-class FBSDKEventDeactivationTests: XCTestCase {
+class EventDeactivationTests: XCTestCase {
 
   enum Keys {
     static let ui = "_ui" // swiftlint:disable:this identifier_name

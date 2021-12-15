@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class FBSDKRestrictiveDataFilterTests: XCTestCase {
+class RestrictiveDataFilterTests: XCTestCase {
   var restrictiveDataFilterManager: RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
 
   private static func createTestRestrictiveDataFilterManager() -> RestrictiveDataFilterManager {

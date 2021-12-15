@@ -8,7 +8,7 @@
 
 import TestTools
 
-class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
+class AppEventsConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var manager: AppEventsConfigurationManager!
