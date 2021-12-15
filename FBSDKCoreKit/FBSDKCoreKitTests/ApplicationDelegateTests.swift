@@ -741,7 +741,7 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresFeatureManager() {
-    FeatureManager.reset()
+    FeatureManager.shared.resetDependencies()
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertTrue(

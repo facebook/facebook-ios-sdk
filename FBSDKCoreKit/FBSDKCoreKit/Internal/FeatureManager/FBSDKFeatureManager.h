@@ -23,8 +23,10 @@ NS_SWIFT_NAME(FeatureManager)
 
 @property (class, nonatomic, readonly, strong) FBSDKFeatureManager *shared;
 
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager

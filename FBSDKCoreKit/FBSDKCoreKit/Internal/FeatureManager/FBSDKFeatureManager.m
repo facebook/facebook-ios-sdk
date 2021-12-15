@@ -34,12 +34,14 @@ NS_ASSUME_NONNULL_BEGIN
 // The goal is to move from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
 static FBSDKFeatureManager * sharedInstance;
-static dispatch_once_t sharedInstanceNonce;
+
 + (instancetype)shared
 {
+  static dispatch_once_t sharedInstanceNonce;
   dispatch_once(&sharedInstanceNonce, ^{
     sharedInstance = [self new];
   });
+
   return sharedInstance;
 }
 
@@ -47,9 +49,9 @@ static dispatch_once_t sharedInstanceNonce;
                               settings:(id<FBSDKSettings>)settings
                                  store:(id<FBSDKDataPersisting>)store
 {
-  _gateKeeperManager = gateKeeperManager;
-  _settings = settings;
-  _store = store;
+  self.gateKeeperManager = gateKeeperManager;
+  self.settings = settings;
+  self.store = store;
 }
 
 + (void)checkFeature:(FBSDKFeature)feature
@@ -190,12 +192,11 @@ static dispatch_once_t sharedInstanceNonce;
 
 #if DEBUG && FBTEST
 
-+ (void)reset
+- (void)resetDependencies
 {
-  // Reset the nonce so that a new instance will be created.
-  if (sharedInstanceNonce) {
-    sharedInstanceNonce = 0;
-  }
+  self.gateKeeperManager = nil;
+  self.settings = nil;
+  self.store = nil;
 }
 
 #endif

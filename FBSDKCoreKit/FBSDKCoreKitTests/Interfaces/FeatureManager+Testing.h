@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 
 + (NSString *)featureName:(FBSDKFeature)feature;
-+ (void)reset;
+- (void)resetDependencies;
 
 @end
 

@@ -44,7 +44,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppEventsUtility.shared.reset()
     AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
-    FeatureManager.reset()
+    FeatureManager.shared.resetDependencies()
     GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()

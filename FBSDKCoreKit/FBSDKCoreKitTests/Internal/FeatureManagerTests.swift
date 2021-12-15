@@ -12,22 +12,22 @@ import XCTest
 
 class FeatureManagerTests: XCTestCase {
 
-  var manager = FeatureManager.shared
-  var store = UserDefaultsSpy()
-  let settings = TestSettings()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var manager: FeatureManager!
+  var settings: TestSettings!
+  var store: UserDefaultsSpy!
   let userDefaultsPrefix = "com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature"
   let gatekeeperKeyPrefix = "FBSDKFeature"
-
-  override class func setUp() {
-    super.setUp()
-
-    TestGateKeeperManager.reset()
-    FeatureManager.reset()
-  }
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
+    TestGateKeeperManager.reset()
+    settings = TestSettings()
+    store = UserDefaultsSpy()
+
+    manager = FeatureManager()
     manager.configure(
       gateKeeperManager: TestGateKeeperManager.self,
       settings: settings,
@@ -39,36 +39,39 @@ class FeatureManagerTests: XCTestCase {
     super.tearDown()
 
     TestGateKeeperManager.reset()
-    FeatureManager.reset()
+    settings = nil
+    store = nil
+    manager = nil
   }
 
   func testCreatingWithDefaults() {
+    manager = FeatureManager()
+
     XCTAssertNil(
-      FeatureManager.shared.gateKeeperManager,
+      manager.gateKeeperManager,
       "Should not have a gatekeeper manager by default"
     )
     XCTAssertNil(
-      FeatureManager.shared.settings,
+      manager.settings,
       "Should not have settings by default"
     )
     XCTAssertNil(
-      FeatureManager.shared.store,
+      manager.store,
       "Should not have a persistent data store by default"
     )
   }
 
   func testCreatingWithCustomDependencies() {
     XCTAssertTrue(
-      manager.gateKeeperManager is TestGateKeeperManager.Type,
+      manager.gateKeeperManager === TestGateKeeperManager.self,
       "Should create with the provided gatekeeper manager"
     )
     XCTAssertTrue(
       manager.settings === settings,
       "Should create with the provided settings"
     )
-    XCTAssertEqual(
-      manager.store as? UserDefaultsSpy,
-      store,
+    XCTAssertTrue(
+      manager.store === store,
       "Should create with the provided persistent data store"
     )
   }
