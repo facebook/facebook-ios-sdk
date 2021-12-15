@@ -38,7 +38,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
   private class func resetTargets() {
     AccessToken.resetClassDependencies()
     AppEvents.shared.reset()
-    AppEventsConfigurationManager.reset()
+    AppEventsConfigurationManager.shared.resetDependencies()
     AppEventsDeviceInfo.reset()
     AppEventsState.eventProcessors = nil
     AppEventsUtility.shared.reset()

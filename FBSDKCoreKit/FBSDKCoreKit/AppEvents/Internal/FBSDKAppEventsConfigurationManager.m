@@ -37,34 +37,23 @@ static const NSTimeInterval kTimeout = 4.0;
 
 @implementation FBSDKAppEventsConfigurationManager
 
-static dispatch_once_t sharedConfigurationManagerNonce;
-
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
 // The goal of the refactor is to move callsites from:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
+static FBSDKAppEventsConfigurationManager *_shared;
+
 + (FBSDKAppEventsConfigurationManager *)shared
 {
-  static id instance;
-  dispatch_once(&sharedConfigurationManagerNonce, ^{
-    instance = [self new];
-  });
-  return instance;
+  @synchronized(self) {
+    if (!_shared) {
+      _shared = [self new];
+    }
+  }
+
+  return _shared;
 }
 
-+ (void)     configureWithStore:(id<FBSDKDataPersisting>)store
-                       settings:(id<FBSDKSettings>)settings
-            graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-{
-  [self.shared configureWithStore:store
-                         settings:settings
-              graphRequestFactory:graphRequestFactory
-    graphRequestConnectionFactory:graphRequestConnectionFactory];
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
@@ -75,6 +64,9 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   self.graphRequestFactory = graphRequestFactory;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
   id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
+
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([data isKindOfClass:NSData.class]) {
     if (@available(iOS 11.0, tvOS 11.0, *)) {
       self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
@@ -82,14 +74,14 @@ static dispatch_once_t sharedConfigurationManagerNonce;
       self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
   }
+  #pragma clang diagnostic pop
+
   if (!self.configuration) {
     self.configuration = [FBSDKAppEventsConfiguration defaultConfiguration];
   }
   self.completionBlocks = [NSMutableArray new];
   self.timestamp = [self.store objectForKey:FBSDKAppEventsConfigurationTimestampKey];
 }
-
-#pragma clang diagnostic pop
 
 - (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration
 {
@@ -162,12 +154,12 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 
 #if DEBUG && FBTEST
 
-+ (void)reset
+- (void)resetDependencies
 {
-  // Reset the nonce so that a new instance will be created.
-  if (sharedConfigurationManagerNonce) {
-    sharedConfigurationManagerNonce = 0;
-  }
+  self.store = nil;
+  self.settings = nil;
+  self.graphRequestFactory = nil;
+  self.graphRequestConnectionFactory = nil;
 }
 
 #endif

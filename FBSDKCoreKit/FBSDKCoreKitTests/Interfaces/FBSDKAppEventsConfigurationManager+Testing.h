@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic) id<FBSDKAppEventsConfiguration> configuration;
 
 - (void)_processResponse:(id)response error:(nullable NSError *)error;
-+ (void)reset;
+- (void)resetDependencies;
 
 @end
 

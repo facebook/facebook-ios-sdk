@@ -26,11 +26,13 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 
 @property (nonatomic, readonly) id<FBSDKAppEventsConfiguration> cachedAppEventsConfiguration;
 
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 // UNCRUSTIFY_FORMAT_OFF
-+ (void)     configureWithStore:(id<FBSDKDataPersisting>)store
+- (void)     configureWithStore:(id<FBSDKDataPersisting>)store
                        settings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory

@@ -129,10 +129,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureAppEventsConfigurationManager
 {
-  [FBSDKAppEventsConfigurationManager configureWithStore:self.components.defaultDataStore
-                                                settings:self.components.settings
-                                     graphRequestFactory:self.components.graphRequestFactory
-                           graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
+  [FBSDKAppEventsConfigurationManager.shared configureWithStore:self.components.defaultDataStore
+                                                       settings:self.components.settings
+                                            graphRequestFactory:self.components.graphRequestFactory
+                                  graphRequestConnectionFactory:self.components.graphRequestConnectionFactory];
 }
 
 - (void)configureAppEventsDeviceInfo

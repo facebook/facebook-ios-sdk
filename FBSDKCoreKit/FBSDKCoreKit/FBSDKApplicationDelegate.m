@@ -759,10 +759,10 @@ static UIApplicationState _applicationState;
 
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
                                                             loggerFactory:[FBSDKLoggerFactory new]]; // TEMP: added to configurator
-  [FBSDKAppEventsConfigurationManager configureWithStore:store
-                                                settings:sharedSettings
-                                     graphRequestFactory:graphRequestFactory
-                           graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
+  [FBSDKAppEventsConfigurationManager.shared configureWithStore:store
+                                                       settings:sharedSettings
+                                            graphRequestFactory:graphRequestFactory
+                                  graphRequestConnectionFactory:graphRequestConnectionFactory]; // TEMP: added to configurator
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
                                   serverConfigurationProvider:serverConfigurationProvider

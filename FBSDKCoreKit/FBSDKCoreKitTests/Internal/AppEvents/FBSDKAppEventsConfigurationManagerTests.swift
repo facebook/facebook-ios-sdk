@@ -10,25 +10,28 @@ import TestTools
 
 class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
-  let store = UserDefaultsSpy()
-  let settings = TestSettings()
-  let graphRequestFactory = TestGraphRequestFactory()
-  let connection = TestGraphRequestConnection()
-  lazy var graphRequestConnectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
+  // swiftlint:disable implicitly_unwrapped_optional
+  var manager: AppEventsConfigurationManager!
+  var store: UserDefaultsSpy!
+  var settings: TestSettings!
+  var graphRequestFactory: TestGraphRequestFactory!
+  var connection: TestGraphRequestConnection!
+  var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
   let timestampKey = "com.facebook.sdk:FBSDKAppEventsConfigurationTimestamp"
-
-  override class func setUp() {
-    super.setUp()
-
-    AppEventsConfigurationManager.reset()
-  }
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
+    store = UserDefaultsSpy()
+    settings = TestSettings()
     settings.appID = name
+    graphRequestFactory = TestGraphRequestFactory()
+    connection = TestGraphRequestConnection()
+    graphRequestConnectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
 
-    AppEventsConfigurationManager.configure(
+    manager = AppEventsConfigurationManager()
+    manager.configure(
       store: store,
       settings: settings,
       graphRequestFactory: graphRequestFactory,
@@ -39,49 +42,53 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   override func tearDown() {
     super.tearDown()
 
-    AppEventsConfigurationManager.reset()
+    store = nil
+    settings = nil
+    graphRequestFactory = nil
+    connection = nil
+    manager = nil
   }
 
   // MARK: - Dependencies
 
   func testDefaultDependencies() {
-    AppEventsConfigurationManager.reset()
+    manager.resetDependencies()
 
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.store,
+      manager.store,
       "Should not have a data store by default"
     )
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.settings,
+      manager.settings,
       "Should not have a settings by default"
     )
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.graphRequestFactory,
+      manager.graphRequestFactory,
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.graphRequestConnectionFactory,
+      manager.graphRequestConnectionFactory,
       "Should not have a graph request connection factory by default"
     )
   }
 
   func testConfiguringWithDependencies() {
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.store === store,
+      manager.store === store,
       "Should be able to configure with a persistent data store"
     )
     XCTAssertEqual(
-      AppEventsConfigurationManager.shared.settings as? TestSettings,
+      manager.settings as? TestSettings,
       settings,
       "Should be able to configure with custom settings"
     )
     XCTAssertEqual(
-      AppEventsConfigurationManager.shared.graphRequestFactory as? TestGraphRequestFactory,
+      manager.graphRequestFactory as? TestGraphRequestFactory,
       graphRequestFactory,
       "Should be able to configure with a custom graph request provider"
     )
     XCTAssertEqual(
-      AppEventsConfigurationManager.shared.graphRequestConnectionFactory as? TestGraphRequestConnectionFactory,
+      manager.graphRequestConnectionFactory as? TestGraphRequestConnectionFactory,
       graphRequestConnectionFactory,
       "Should be able to configure with a custom graph request connection provider"
     )
@@ -89,7 +96,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testConfiguringSetsTimestamp() {
     store.set(Date.distantPast, forKey: timestampKey)
-    AppEventsConfigurationManager.configure(
+    manager.configure(
       store: store,
       settings: settings,
       graphRequestFactory: graphRequestFactory,
@@ -97,7 +104,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      AppEventsConfigurationManager.shared.timestamp,
+      manager.timestamp,
       .distantPast,
       "Should set the timestamp to the value in the provided store"
     )
@@ -107,7 +114,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testParsingResponses() {
     for _ in 0 ..< 100 {
-      AppEventsConfigurationManager.shared._processResponse(
+      manager._processResponse(
         RawAppEventsConfigurationResponseFixtures.random,
         error: nil
       )
@@ -117,7 +124,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   // MARK: - Loading Configuration
 
   func testLoadConfigurationRequest() {
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       graphRequestFactory.capturedGraphPath,
@@ -147,7 +154,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   func testLoadingConfigurationWithoutAppID() {
     settings.appID = nil
     var didInvokeCompletion = false
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       didInvokeCompletion = true
     }
 
@@ -163,17 +170,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testEarlyExitFromLoadingInvokesAndClearsPendingCompletions() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
     settings.appID = nil
     var thirdCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       thirdCompletionCallCount += 1
     }
 
@@ -188,11 +195,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompletingFetchInvokesPendingCompletionHandlers() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
@@ -204,11 +211,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompletingFetchClearsPendingCompletionHandlers() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
@@ -216,15 +223,15 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
     // Fetch without app id to early exit and invoke any pending completions
     settings.appID = nil
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
   }
 
   func testLoadingWhileLoadingInProgress() {
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -236,9 +243,9 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
     // Otherwise it won't try to fetch again so we cannot test that the
     // isLoading lock is reset.
-    AppEventsConfigurationManager.shared.hasRequeryFinishedForAppStart = false
+    manager.hasRequeryFinishedForAppStart = false
 
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -248,11 +255,11 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   }
 
   func testLoadingWithFinishedRequeryAndValidTimestamp() {
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
     connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
 
     var completionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       completionCallCount += 1
     }
 
@@ -264,10 +271,10 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
   }
 
   func testLoadingWithFinishedRequeryAndInvalidTimestamp() {
-    AppEventsConfigurationManager.shared.hasRequeryFinishedForAppStart = true
-    AppEventsConfigurationManager.shared.timestamp = .distantPast
+    manager.hasRequeryFinishedForAppStart = true
+    manager.timestamp = .distantPast
 
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(
       connection.startCallCount,
@@ -278,17 +285,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompleteLoadingWithError() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     connection.capturedCompletion?(nil, nil, SampleError())
 
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.hasRequeryFinishedForAppStart,
+      manager.hasRequeryFinishedForAppStart,
       "Completing with an error should indicate that the fetch completed"
     )
     XCTAssertNil(
-      AppEventsConfigurationManager.shared.timestamp,
+      manager.timestamp,
       "Completing with an error should not set a timestamp"
     )
     XCTAssertEqual(
@@ -300,17 +307,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testCompleteLoadingWithoutAppIDClearsExistingCompletions() {
     var firstCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       firstCompletionCallCount += 1
     }
     var secondCompletionCallCount = 0
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {
+    manager.loadAppEventsConfiguration {
       secondCompletionCallCount += 1
     }
 
     // Fetch without app id to early exit and invoke any pending completions
     settings.appID = nil
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
@@ -318,13 +325,15 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   func testUnarchivesStoredCaptureEvents() {
     // Validates unarchival from store
-    AppEventsConfigurationManager.shared.loadAppEventsConfiguration {}
+    manager.loadAppEventsConfiguration {}
 
     // Confirm default state
-    XCTAssertTrue(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
-    XCTAssertFalse(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.eventCollectionEnabled)
+    XCTAssertTrue(manager.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
+    XCTAssertFalse(manager.cachedAppEventsConfiguration.eventCollectionEnabled)
+
     // Capture inverted configurations
     connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
+
     // Copy store state to avoid meaningless test
     let storeCopy = UserDefaultsSpy()
     let storeDump = store.dictionaryRepresentation()
@@ -336,15 +345,17 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     storeCopy.capturedObjectRetrievalKey = store.capturedObjectRetrievalKey
     storeCopy.capturedSetObjectKey = store.capturedSetObjectKey
     storeCopy.capturedValues = store.capturedValues
+
     // Configure shared manager with copied store state
-    AppEventsConfigurationManager.configure(
+    manager.configure(
       store: storeCopy,
       settings: settings,
       graphRequestFactory: graphRequestFactory,
       graphRequestConnectionFactory: graphRequestConnectionFactory
     )
+
     // Confirm configuration is unarchived from store instead of set again from defaults
-    XCTAssertFalse(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
-    XCTAssertTrue(AppEventsConfigurationManager.shared.cachedAppEventsConfiguration.eventCollectionEnabled)
+    XCTAssertFalse(manager.cachedAppEventsConfiguration.advertiserIDCollectionEnabled)
+    XCTAssertTrue(manager.cachedAppEventsConfiguration.eventCollectionEnabled)
   }
 }
