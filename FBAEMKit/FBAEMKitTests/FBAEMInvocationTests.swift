@@ -753,7 +753,7 @@ class FBAEMInvocationTests: XCTestCase {
     )
   }
 
-  func testUpdateConversionWithValue() { // swiftlint:disable:this function_body_length
+  func testUpdateConversionWithValue() {
     let invocation: AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)

@@ -33,6 +33,19 @@ type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"
 
+# Use 10x the defaults for these to essentially disable these rules
+type_body_length:
+  warning: 2000 # default 200
+  error: 3500 # default 350
+
+file_length:
+  warning: 4000 # default 400
+  error: 10000 # default 1000
+
+function_body_length:
+  warning: 400 # default 40
+  error: 1000 # default 100
+
 # Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
 modifier_order:
   preferred_modifier_order:
