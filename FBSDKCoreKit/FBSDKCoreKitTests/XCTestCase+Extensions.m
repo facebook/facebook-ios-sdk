@@ -15,4 +15,9 @@
   XCTAssertThrows(block(), @"%@", message);
 }
 
+- (void)assertDoesNotRaiseExceptionWithMessage:(NSString *)message block:(void (^)(void))block
+{
+  XCTAssertNoThrow(block(), @"%@", message);
+}
+
 @end

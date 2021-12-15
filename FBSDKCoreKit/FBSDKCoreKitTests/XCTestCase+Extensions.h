@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(assertRaisesException(message:block:));
 // UNCRUSTIFY_FORMAT_ON
 
+// UNCRUSTIFY_FORMAT_OFF
+- (void)assertDoesNotRaiseExceptionWithMessage:(NSString *)message block:(void (^)(void))block
+NS_SWIFT_NAME(assertDoesNotRaiseException(message:block:));
+// UNCRUSTIFY_FORMAT_ON
+
 @end
 
 NS_ASSUME_NONNULL_END

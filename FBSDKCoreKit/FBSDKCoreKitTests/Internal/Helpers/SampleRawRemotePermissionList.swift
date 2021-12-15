@@ -44,7 +44,7 @@ class SampleRawRemotePermissionList: NSObject {
 
   static let missingTopLevelKey: [String: Any] = [:]
 
-  static var randomValues: Any {
+  static var randomValues: [String: Any] {
     let json: Any = [
       "data": [
         [
@@ -53,7 +53,7 @@ class SampleRawRemotePermissionList: NSObject {
         ]
       ]
     ]
-    return Fuzzer.randomize(json: json)
+    return Fuzzer.randomize(json: json) as? [String: Any] ?? [:]
   }
 
   static var validAllStatuses: [String: Any] {

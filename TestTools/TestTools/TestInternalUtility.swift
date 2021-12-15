@@ -16,13 +16,13 @@ public class TestInternalUtility: NSObject,
   AppURLSchemeProviding,
   InternalUtilityProtocol {
 
-  public var stubbedScheme = "No stub app url scheme provided"
   public var validateURLSchemesCalled = false
   public var isFacebookAppInstalled = false
   public var isMessengerAppInstalled = false
   public var stubbedURL: URL?
   public var capturedExtensibleParameters: NSMutableDictionary?
   public var isUnity = false
+  public var appURLScheme = ""
 
   public func facebookURL(
     withHostPrefix hostPrefix: String,
@@ -40,10 +40,6 @@ public class TestInternalUtility: NSObject,
     error errorRef: NSErrorPointer
   ) -> URL {
     stubbedURL ?? URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
-  }
-
-  public func appURLScheme() -> String {
-    stubbedScheme
   }
 
   public func url(

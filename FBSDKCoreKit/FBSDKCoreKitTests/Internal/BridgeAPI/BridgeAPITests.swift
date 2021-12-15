@@ -811,7 +811,7 @@ class BridgeAPITests: XCTestCase {
 
   func testHandlingBridgeResponseWithInvalidScheme() {
     stubBridgeApiResponseWithUrlCreation()
-    appURLSchemeProvider.stubbedScheme = "foo"
+    appURLSchemeProvider.appURLScheme = "foo"
 
     XCTAssertFalse(
       api._handleResponseURL(sampleURL, sourceApplication: ""),
@@ -822,7 +822,7 @@ class BridgeAPITests: XCTestCase {
 
   func testHandlingBridgeResponseWithInvalidHost() throws {
     stubBridgeApiResponseWithUrlCreation()
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(sampleURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(sampleURL.scheme)
 
     XCTAssertFalse(
       api._handleResponseURL(sampleURL, sourceApplication: ""),
@@ -833,7 +833,7 @@ class BridgeAPITests: XCTestCase {
 
   func testHandlingBridgeResponseWithMissingRequest() throws {
     stubBridgeApiResponseWithUrlCreation()
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
 
     XCTAssertFalse(
       api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
@@ -844,7 +844,7 @@ class BridgeAPITests: XCTestCase {
 
   func testHandlingBridgeResponseWithMissingCompletionBlock() throws {
     stubBridgeApiResponseWithUrlCreation()
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
     api.pendingRequest = TestBridgeAPIRequest(url: sampleURL)
 
     XCTAssertTrue(
@@ -862,7 +862,7 @@ class BridgeAPITests: XCTestCase {
       error: nil
     )
     responseFactory.stubbedResponse = response
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
     api.pendingRequest = TestBridgeAPIRequest(url: sampleURL)
 
     var capturedResponse: BridgeAPIResponse?
@@ -887,7 +887,7 @@ class BridgeAPITests: XCTestCase {
       error: SampleError()
     )
     responseFactory.stubbedResponse = response
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
     api.pendingRequest = TestBridgeAPIRequest(url: sampleURL)
 
     var capturedResponse: BridgeAPIResponse?
@@ -913,7 +913,7 @@ class BridgeAPITests: XCTestCase {
 
     responseFactory.stubbedResponse = response
     responseFactory.shouldFailCreation = true
-    appURLSchemeProvider.stubbedScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
+    appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
     api.pendingRequest = TestBridgeAPIRequest(url: sampleURL)
 
     var capturedResponse: BridgeAPIResponse?

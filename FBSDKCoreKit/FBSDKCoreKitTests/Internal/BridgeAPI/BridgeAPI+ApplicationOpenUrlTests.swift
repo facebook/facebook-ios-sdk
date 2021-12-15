@@ -496,10 +496,10 @@ extension BridgeAPITests {
     }
 
     if canHandleBridgeApiResponse {
-      appURLSchemeProvider.stubbedScheme = URLScheme.http.rawValue
+      appURLSchemeProvider.appURLScheme = URLScheme.http.rawValue
       api.pendingRequestCompletionBlock = nil
     } else {
-      appURLSchemeProvider.stubbedScheme = "foo"
+      appURLSchemeProvider.appURLScheme = "foo"
     }
 
     let urlToOpen = (canHandleBridgeApiResponse ? validBridgeResponseURL : sampleURL)

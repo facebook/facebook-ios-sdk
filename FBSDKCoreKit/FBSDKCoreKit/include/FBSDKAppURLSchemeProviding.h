@@ -12,13 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppURLSchemeProviding)
 @protocol FBSDKAppURLSchemeProviding
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
  @warning INTERNAL - DO NOT USE
  */
-- (NSString *)appURLScheme;
+@property (nonatomic, readonly, copy) NSString *appURLScheme;
 
 /**
  Internal Type exposed to facilitate transition to Swift.
