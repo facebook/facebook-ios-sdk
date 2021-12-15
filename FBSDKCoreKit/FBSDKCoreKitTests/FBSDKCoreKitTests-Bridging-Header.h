@@ -189,6 +189,7 @@
 #import "FBSDKURLSessionProxying.h"
 #import "FBSDKUserDataStore.h"
 #import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchy+Testing.h"
 #import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKViewImpressionLogger+Testing.h"
 #import "FBSDKWebDialog+Testing.h"

@@ -16,6 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKCodelessPathComponent;
 @protocol FBSDKEventLogging;
 
 NS_SWIFT_NAME(EventBinding)
@@ -32,7 +33,7 @@ NS_SWIFT_NAME(EventBinding)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-+ (BOOL)isPath:(nullable NSArray *)path matchViewPath:(nullable NSArray *)viewPath;
++ (BOOL)isPath:(nullable NSArray<FBSDKCodelessPathComponent *> *)path matchViewPath:(nullable NSArray<FBSDKCodelessPathComponent *> *)viewPath;
 - (FBSDKEventBinding *)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger;
 - (void)trackEvent:(nullable id)sender;

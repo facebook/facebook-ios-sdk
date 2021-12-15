@@ -139,7 +139,7 @@ static dispatch_once_t setupNonce;
 
 - (void)rematchBindings
 {
-  NSArray *windows = UIApplication.sharedApplication.windows;
+  NSArray<__kindof UIWindow *> *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     [self matchSubviewsIn:window];
   }

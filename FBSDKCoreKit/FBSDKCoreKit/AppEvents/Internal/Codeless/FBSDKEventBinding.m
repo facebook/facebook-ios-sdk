@@ -169,7 +169,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (BOOL)isPath:(nullable NSArray *)path matchViewPath:(nullable NSArray *)viewPath
++ (BOOL)isPath:(nullable NSArray<FBSDKCodelessPathComponent *> *)path matchViewPath:(nullable NSArray<FBSDKCodelessPathComponent *> *)viewPath
 {
   if ((path.count == 0) || (viewPath.count == 0)) {
     return NO;

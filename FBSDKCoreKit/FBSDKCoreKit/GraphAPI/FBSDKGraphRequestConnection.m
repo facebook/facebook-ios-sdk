@@ -723,7 +723,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     if ([request.HTTPMethod.uppercaseString isEqualToString:@"POST"]
         && [graphPath hasSuffix:@"/videos"]) {
       graphPath = [graphPath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-      NSArray *components = [graphPath componentsSeparatedByString:@"/"];
+      NSArray<NSString *> *components = [graphPath componentsSeparatedByString:@"/"];
       if (components.count == 2) {
         prefix = kGraphVideoURLPrefix;
       }

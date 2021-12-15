@@ -88,7 +88,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   FBSDKAuthenticationTokenClaims *claims;
   FBSDKAuthenticationTokenHeader *header;
 
-  NSArray *segments = [tokenString componentsSeparatedByString:@"."];
+  NSArray<NSString *> *segments = [tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {
     completion(nil);
     return;

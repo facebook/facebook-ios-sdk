@@ -550,7 +550,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (NSArray *)_contentURLs
 {
-  NSArray *URLs = nil;
+  NSArray<NSURL *> *URLs = nil;
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)shareContent;

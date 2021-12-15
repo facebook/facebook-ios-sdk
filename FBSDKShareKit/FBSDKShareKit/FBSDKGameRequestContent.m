@@ -48,7 +48,7 @@
   return self.recipientSuggestions;
 }
 
-- (void)setSuggestions:(NSArray *)suggestions
+- (void)setSuggestions:(NSArray<NSString *> *)suggestions
 {
   self.recipientSuggestions = suggestions;
 }
@@ -58,7 +58,7 @@
   return self.recipients;
 }
 
-- (void)setTo:(NSArray *)to
+- (void)setTo:(NSArray<NSString *> *)to
 {
   self.recipients = to;
 }

@@ -67,7 +67,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
   } else if ([obj isKindOfClass:UINavigationController.class]) {
     UIViewController *vc = ((UINavigationController *)obj).visibleViewController;
     UIViewController *tc = ((UINavigationController *)obj).topViewController;
-    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
+    NSArray<NSObject *> *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
     for (NSObject *child in nextChildren) {
       if (tc && [self isView:child superViewOfView:tc.view]) {
         [FBSDKTypeUtility array:children addObject:tc];
@@ -91,7 +91,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     }
   } else if ([obj isKindOfClass:UITabBarController.class]) {
     UIViewController *vc = ((UITabBarController *)obj).selectedViewController;
-    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
+    NSArray<NSObject *> *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
     for (NSObject *child in nextChildren) {
       if (vc && [self isView:child superViewOfView:vc.view]) {
         [FBSDKTypeUtility array:children addObject:vc];
@@ -110,7 +110,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
   } else if ([obj isKindOfClass:UIViewController.class]) {
     UIViewController *vc = (UIViewController *)obj;
     if (vc.isViewLoaded) {
-      NSArray *nextChildren = [FBSDKViewHierarchy getChildren:vc.view];
+      NSArray<NSObject *> *nextChildren = [FBSDKViewHierarchy getChildren:vc.view];
       if (nextChildren.count > 0) {
         [children addObjectsFromArray:nextChildren];
       }
@@ -170,18 +170,18 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
   return nil;
 }
 
-+ (nullable NSArray *)getPath:(NSObject *)obj
++ (nullable NSArray<FBSDKCodelessPathComponent *> *)getPath:(NSObject *)obj
 {
   return [FBSDKViewHierarchy getPath:obj limit:MAX_VIEW_HIERARCHY_LEVEL];
 }
 
-+ (nullable NSArray *)getPath:(NSObject *)obj limit:(int)limit
++ (nullable NSArray<FBSDKCodelessPathComponent *> *)getPath:(NSObject *)obj limit:(int)limit
 {
   if (!obj || limit <= 0) {
     return nil;
   }
 
-  NSMutableArray *path;
+  NSMutableArray<FBSDKCodelessPathComponent *> *path;
 
   NSObject *parent = [FBSDKViewHierarchy getParent:obj];
   if (parent) {

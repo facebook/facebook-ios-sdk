@@ -35,12 +35,14 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKCodelessPathComponent;
+
 NS_SWIFT_NAME(ViewHierarchy)
 @interface FBSDKViewHierarchy : NSObject
 
 + (nullable NSObject *)getParent:(nullable NSObject *)obj;
 + (nullable NSArray<NSObject *> *)getChildren:(NSObject *)obj;
-+ (nullable NSArray<NSObject *> *)getPath:(NSObject *)obj;
++ (nullable NSArray<FBSDKCodelessPathComponent *> *)getPath:(NSObject *)obj;
 + (nullable NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj;
 
 + (NSString *)getText:(nullable NSObject *)obj;

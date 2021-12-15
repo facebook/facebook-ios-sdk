@@ -128,7 +128,7 @@
 
 - (void)testArrayAccessNonEmptyArrayInvalidIndex
 {
-  NSArray *array = @[@1, @2, @3];
+  NSArray<NSNumber *> *array = @[@1, @2, @3];
 
   XCTAssertNil(
     [FBSDKTypeUtility array:array objectAtIndex:5],
@@ -138,7 +138,7 @@
 
 - (void)testArrayAccessNonEmptyArrayZeroIndex
 {
-  NSArray *array = @[@1, @2, @3];
+  NSArray<NSNumber *> *array = @[@1, @2, @3];
 
   XCTAssertEqualObjects(
     [array objectAtIndex:0],
@@ -149,7 +149,7 @@
 
 - (void)testArrayAccessNonEmptyArrayValidIndex
 {
-  NSArray *array = @[@1, @2, @3];
+  NSArray<NSNumber *> *array = @[@1, @2, @3];
 
   XCTAssertEqualObjects(
     [array objectAtIndex:2],

@@ -63,7 +63,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 
 - (nullable FBSDKAuthenticationTokenClaims *)claims
 {
-  NSArray *segments = [_tokenString componentsSeparatedByString:@"."];
+  NSArray<NSString *> *segments = [_tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {
     return nil;
   }

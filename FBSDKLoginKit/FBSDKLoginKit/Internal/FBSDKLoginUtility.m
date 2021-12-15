@@ -59,7 +59,7 @@
     return nil;
   }
 
-  NSArray *signatureAndPayload = [signedRequest componentsSeparatedByString:@"."];
+  NSArray<NSString *> *signatureAndPayload = [signedRequest componentsSeparatedByString:@"."];
   NSString *userID = nil;
 
   if (signatureAndPayload.count == 2) {

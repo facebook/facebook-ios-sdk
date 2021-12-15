@@ -200,7 +200,7 @@
     return;
   }
 
-  NSArray *windows = UIApplication.sharedApplication.windows;
+  NSArray<__kindof UIWindow *> *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     [self matchSubviewsIn:window];
   }
@@ -257,7 +257,7 @@
       return;
     }
 
-    NSArray *path = [FBSDKViewHierarchy getPath:view];
+    NSArray<FBSDKCodelessPathComponent *> *path = [FBSDKViewHierarchy getPath:view];
 
     void (^matchBlock)(void) = ^void () {
       if ([view isKindOfClass:UIControl.class]) {

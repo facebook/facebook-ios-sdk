@@ -292,31 +292,31 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSString *dialogFlowsField = [NSString stringWithFormat:@"%@.os_version(%@)",
                                 FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD,
                                 osVersion];
-  NSArray *fields = @[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD,
-                      dialogFlowsField,
-                      FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
-                    #if !TARGET_OS_TV
-                      , FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
-                    #endif
-                    #if DEBUG
-                      , FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
-                    #endif
-                    #if TARGET_OS_TV
-                      , FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD
-                    #endif
+  NSArray<NSString *> *fields = @[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD,
+                                  dialogFlowsField,
+                                  FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
+                                #if !TARGET_OS_TV
+                                  , FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
+                                #endif
+                                #if DEBUG
+                                  , FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
+                                #endif
+                                #if TARGET_OS_TV
+                                  , FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD
+                                #endif
   ];
   NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : [fields componentsJoinedByString:@","],
                                                         @"os_version" : osVersion};

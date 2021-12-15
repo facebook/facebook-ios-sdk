@@ -239,7 +239,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   // check if we are sending to a specific set of recipients.  if we are and they are all frictionless recipients, we
   // can perform this action without displaying the web dialog
   _webDialog.shouldDeferVisibility = NO;
-  NSArray *recipients = content.recipients;
+  NSArray<NSString *> *recipients = content.recipients;
   if (_frictionlessRequestsEnabled && recipients) {
     // specify these parameters to get the frictionless recipients from the dialog when it is presented
     parameters[@"frictionless"] = @YES;

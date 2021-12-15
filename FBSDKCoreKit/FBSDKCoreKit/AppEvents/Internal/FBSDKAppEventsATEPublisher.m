@@ -76,7 +76,7 @@
                          operatingSystemVersion.minorVersion,
                          operatingSystemVersion.patchVersion];
 
-  NSArray *event = @[
+  NSArray<NSDictionary *> *event = @[
     @{
       @"_eventName" : @"fb_mobile_ate_status",
       @"ate_status" : @(self.settings.advertisingTrackingStatus).stringValue,

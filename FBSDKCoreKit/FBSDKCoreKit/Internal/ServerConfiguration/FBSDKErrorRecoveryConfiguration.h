@@ -25,7 +25,7 @@ NS_SWIFT_NAME(ErrorRecoveryConfiguration)
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithRecoveryDescription:(NSString *)description
-                         optionDescriptions:(NSArray *)optionDescriptions
+                         optionDescriptions:(NSArray<NSString *> *)optionDescriptions
                                    category:(FBSDKGraphRequestError)category
                          recoveryActionName:(NSString *)recoveryActionName NS_DESIGNATED_INITIALIZER;
 @end

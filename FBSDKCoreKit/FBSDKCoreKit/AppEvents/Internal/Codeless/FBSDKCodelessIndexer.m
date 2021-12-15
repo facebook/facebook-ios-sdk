@@ -446,7 +446,7 @@ static id<FBSDKSettings> _settings;
 {
   NSMutableArray *trees = [NSMutableArray array];
 
-  NSArray *windows = UIApplication.sharedApplication.windows;
+  NSArray<__kindof UIWindow *> *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {
     NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
                                                                                       targetNode:nil

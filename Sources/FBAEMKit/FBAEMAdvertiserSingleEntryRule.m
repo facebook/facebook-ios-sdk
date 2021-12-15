@@ -180,7 +180,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     return NO;
   }
   NSRange searchedRange = NSMakeRange(0, stringValue.length);
-  NSArray *matches = [regex matchesInString:stringValue options:0 range:searchedRange];
+  NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:stringValue options:0 range:searchedRange];
   return matches.count > 0;
 }
 

@@ -288,8 +288,8 @@ static NSMutableArray *_pendingRequestors;
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
-  NSArray *products = response.products;
-  NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
+  NSArray<SKProduct *> *products = response.products;
+  NSArray<NSString *> *invalidProductIdentifiers = response.invalidProductIdentifiers;
   if (products.count + invalidProductIdentifiers.count != 1) {
     id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
     [logger logEntry:@"FBSDKPaymentObserver: Expect to resolve one product per request"];

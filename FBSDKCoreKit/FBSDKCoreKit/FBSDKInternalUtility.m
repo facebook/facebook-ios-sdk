@@ -334,10 +334,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 - (void)deleteFacebookCookies
 {
   NSHTTPCookieStorage *cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage;
-  NSArray *facebookCookies = [cookies cookiesForURL:[self facebookURLWithHostPrefix:@"m."
-                                                                               path:@"/dialog/"
-                                                                    queryParameters:@{}
-                                                                              error:NULL]];
+  NSArray<NSHTTPCookie *> *facebookCookies = [cookies cookiesForURL:[self facebookURLWithHostPrefix:@"m."
+                                                                                               path:@"/dialog/"
+                                                                                    queryParameters:@{}
+                                                                                              error:NULL]];
 
   for (NSHTTPCookie *cookie in facebookCookies) {
     [cookies deleteCookie:cookie];
@@ -594,7 +594,7 @@ static NSMapTable *_transientObjects;
     urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary<NSString *, id> *urlType in urlTypes) {
-    NSArray *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
+    NSArray<NSString *> *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
     if ([urlSchemes containsObject:urlScheme]) {
       return YES;
     }
@@ -626,7 +626,7 @@ static NSMapTable *_transientObjects;
 
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
-  static NSArray *schemes = nil;
+  static NSArray<NSString *> *schemes = nil;
   dispatch_once(&fetchApplicationQuerySchemesToken, ^{
     schemes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });

@@ -120,7 +120,7 @@ static NSString *const kErrorCategoryLogin = @"login";
         category = FBSDKGraphRequestErrorRecoverable;
       }
       NSString *suggestion = dictionary[@"recovery_message"];
-      NSArray *options = dictionary[@"recovery_options"];
+      NSArray<NSString *> *options = dictionary[@"recovery_options"];
 
       NSArray *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
       for (NSDictionary<NSString *, id> *codeSubcodesDictionary in validItems) {
