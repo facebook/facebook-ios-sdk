@@ -9,6 +9,7 @@
 #import "FBSDKDeviceLoginViewController.h"
 
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
+#import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
 
 @interface FBSDKDeviceLoginViewController () <FBSDKDeviceLoginManagerDelegate>
 
