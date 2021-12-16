@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKViewHierarchy (Testing)
 
 // This is the actual method signature for getPath:
-//+ (nullable NSArray<FBSDKCodelessPathComponent *> *)getPath:(NSObject *)obj;
+// + (nullable NSArray<FBSDKCodelessPathComponent *> *)getPath:(NSObject *)obj;
 // Since FBSDKCodelessPathComponent is internal the above method isn't exposed to Swift.
 // Redefined here to allow the tests to continue to compile
 + (nullable NSArray<NSObject *> *)getPath:(NSObject *)obj;
