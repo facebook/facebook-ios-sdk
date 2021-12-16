@@ -19,6 +19,7 @@ line_length:
   warning: 120
   ignores_comments: true
   ignores_urls: true
+  ignores_interpolated_strings: true
 nesting:
   type_level: 2
 private_outlet:

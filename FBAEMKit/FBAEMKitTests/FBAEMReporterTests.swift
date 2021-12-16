@@ -585,7 +585,7 @@ class FBAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["fields": "", "advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["fields": "", "advertiser_ids": #"["\#(SampleAEMData.invocationWithAdvertiserID1.businessID!)"]"#], // swiftlint:disable:this force_unwrapping
       "Should have expected advertiserIDs in config request params"
     )
 
@@ -594,7 +594,7 @@ class FBAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["fields": "", "advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["fields": "", "advertiser_ids": #"["\#(SampleAEMData.invocationWithAdvertiserID1.businessID!)","\#(SampleAEMData.invocationWithAdvertiserID2.businessID!)"]"#], // swiftlint:disable:this force_unwrapping
       "Should have expected advertiserIDs in config request params"
     )
   }
