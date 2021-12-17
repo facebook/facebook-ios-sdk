@@ -58,6 +58,19 @@ class TestInternalUtility: InternalUtilityProtocol {
   func hexadecimalString(from data: Data) -> String? {
     nil
   }
+
+  func validateAppID() {}
+
+  func validateRequiredClientAccessToken() -> String {
+    ""
+  }
+
+  func extractPermissions(
+    fromResponse responseObject: [String: Any],
+    grantedPermissions: NSMutableSet,
+    declinedPermissions: NSMutableSet,
+    expiredPermissions: NSMutableSet
+  ) {}
 }
 
 enum URLConstants {

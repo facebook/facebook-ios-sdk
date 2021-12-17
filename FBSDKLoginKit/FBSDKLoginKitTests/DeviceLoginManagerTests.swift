@@ -18,31 +18,33 @@ class DeviceLoginManagerTests: XCTestCase {
   let fakeAppID = "123"
   let fakeClientToken = "abc"
   let permissions = ["email", "public_profile"]
-  let redirectURL = URL(string: "https://www.example.com")
-  let poller = TestDevicePoller()
-  private let delegate = TestDeviceLoginManagerDelegate()
-  lazy var factory = TestGraphRequestFactory()
-  lazy var manager = DeviceLoginManager(
-    permissions: permissions,
-    enableSmartLogin: false,
-    graphRequestFactory: factory,
-    devicePoller: poller
-  )
+  let redirectURL = URL(string: "https://www.example.com")! // swiftlint:disable:this force_unwrapping
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var poller: TestDevicePoller!
+  var delegate: TestDeviceLoginManagerDelegate!
+  var factory: TestGraphRequestFactory!
+  var settings: TestSettings!
+  var internalUtility: TestInternalUtility!
+  var manager: DeviceLoginManager!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    // This is a temporary hack to account for the fact that types need to be
-    // initialized before being used, but doing that on the shared ApplicationDelegate
-    // will create a host of 'real' types that will do things like start timers
-    // and make network requests, and generally pollute the test environment.
-    // This is mimicking the behavior of calling `didFinishLaunching` by configuring
-    // the types that are needed for these test cases.
-    InternalUtility.shared.isConfigured = true
-    Settings.shared.isConfigured = true
-
-    Settings.shared.appID = fakeAppID
-    Settings.shared.clientToken = fakeClientToken
+    poller = TestDevicePoller()
+    delegate = TestDeviceLoginManagerDelegate()
+    factory = TestGraphRequestFactory()
+    settings = TestSettings()
+    internalUtility = TestInternalUtility()
+    manager = DeviceLoginManager(
+      permissions: permissions,
+      enableSmartLogin: false,
+      graphRequestFactory: factory,
+      devicePoller: poller,
+      settings: settings,
+      internalUtility: internalUtility
+    )
 
     manager.redirectURL = redirectURL
     manager.delegate = delegate
@@ -50,9 +52,65 @@ class DeviceLoginManagerTests: XCTestCase {
   }
 
   override func tearDown() {
-    Settings.shared.reset()
+    poller = nil
+    delegate = nil
+    factory = nil
+    settings = nil
+    internalUtility = nil
+    manager = nil
 
     super.tearDown()
+  }
+
+  // MARK: Dependencies
+
+  func testCreatingWithDependencies() {
+    XCTAssertIdentical(
+      manager.graphRequestFactory,
+      factory,
+      "A device login manager should be created with the provided graph request factory"
+    )
+    XCTAssertIdentical(
+      manager.devicePoller,
+      poller,
+      "A device login manager should be created with the provided device poller"
+    )
+    XCTAssertIdentical(
+      manager.settings,
+      settings,
+      "A device login manager should be created with the provided settings"
+    )
+    XCTAssertIdentical(
+      manager.internalUtility,
+      internalUtility,
+      "A device login manager should be created with the provided internal utility"
+    )
+  }
+
+  func testDefaultDependencies() {
+    manager = DeviceLoginManager(
+      permissions: permissions,
+      enableSmartLogin: false
+    )
+
+    XCTAssertTrue(
+      manager.graphRequestFactory is GraphRequestFactory,
+      "A device login manager should be created with a concrete graph request factory by default"
+    )
+    XCTAssertTrue(
+      manager.devicePoller is DevicePoller,
+      "A device login manager should be created with a concrete device poller by default"
+    )
+    XCTAssertIdentical(
+      manager.settings,
+      Settings.shared,
+      "A device login manager should be created with the shared settings by default"
+    )
+    XCTAssertIdentical(
+      manager.internalUtility,
+      InternalUtility.shared,
+      "A device login manager should be created with the shared internal utility by default"
+    )
   }
 
   // MARK: Start
@@ -74,7 +132,7 @@ class DeviceLoginManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       request.parameters["redirect_uri"] as? String,
-      redirectURL?.absoluteString,
+      redirectURL.absoluteString,
       "Should create a graph request with the expected redirect URL"
     )
     XCTAssertNotNil(
@@ -137,6 +195,8 @@ class DeviceLoginManagerTests: XCTestCase {
   // MARK: _schedulePoll
 
   func testStatusGraphRequestCreation() throws {
+    let tokenString = "sample-token"
+    internalUtility.stubbedRequiredClientAccessToken = tokenString
     let codeInfo = sampleCodeInfo()
     manager._schedulePoll(codeInfo.pollingInterval)
 
@@ -156,7 +216,7 @@ class DeviceLoginManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       request.tokenString,
-      fakeAppID + "|" + fakeClientToken
+      tokenString
     )
   }
 
@@ -303,33 +363,23 @@ class DeviceLoginManagerTests: XCTestCase {
       withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
     )
 
-    let result: [String: Any] = [
+    let response: [String: Any] = [
       "id": "123",
       "permissions": [
-        "data": [
-          [
-            "permission": "public_profile",
-            "status": "granted"
-          ],
-          [
-            "permission": "email",
-            "status": "granted"
-          ],
-          [
-            "permission": "user_friends",
-            "status": "declined"
-          ],
-          [
-            "permission": "user_birthday",
-            "status": "expired"
-          ]
-        ]
+        "marker": true
       ]
     ]
+    let granted = ["public_profile", "email"]
+    let declined = ["user_friends"]
+    let expired = ["user_birthday"]
+    internalUtility.stubbedGrantedPermissions = granted
+    internalUtility.stubbedDeclinedPermissions = declined
+    internalUtility.stubbedExpiredPermissions = expired
+
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(
       nil,
-      result,
+      response,
       nil
     )
 
@@ -342,10 +392,24 @@ class DeviceLoginManagerTests: XCTestCase {
       XCTFail("Should receive an AccessToken within login result")
       return
     }
+    let marker = try XCTUnwrap(internalUtility.capturedExtractPermissionsResponse?["marker"] as? Bool)
+    XCTAssertTrue(
+      marker,
+      "The response's permissions should be passed to the internal utility"
+    )
     XCTAssertEqual(token.userID, "123")
-    XCTAssertEqual(token.permissions, ["public_profile", "email"])
-    XCTAssertEqual(token.declinedPermissions, ["user_friends"])
-    XCTAssertEqual(token.expiredPermissions, ["user_birthday"])
+    XCTAssertEqual(
+      Set(token.permissions.map(\.name)),
+      Set(granted)
+    )
+    XCTAssertEqual(
+      Set(token.declinedPermissions.map(\.name)),
+      Set(declined)
+    )
+    XCTAssertEqual(
+      Set(token.expiredPermissions.map(\.name)),
+      Set(expired)
+    )
     XCTAssertEqual(token, AccessToken.current)
   }
 

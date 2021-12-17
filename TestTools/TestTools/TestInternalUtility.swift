@@ -94,4 +94,38 @@ public class TestInternalUtility: NSObject,
   public func hexadecimalString(from data: Data) -> String? {
     nil
   }
+
+  public func validateAppID() {}
+
+  public var stubbedRequiredClientAccessToken: String?
+
+  public func validateRequiredClientAccessToken() -> String {
+    stubbedRequiredClientAccessToken ?? ""
+  }
+
+  public var capturedExtractPermissionsResponse: [String: Any]?
+  public var stubbedGrantedPermissions: [String]?
+  public var stubbedDeclinedPermissions: [String]?
+  public var stubbedExpiredPermissions: [String]?
+
+  public func extractPermissions(
+    fromResponse responseObject: [String: Any],
+    grantedPermissions: NSMutableSet,
+    declinedPermissions: NSMutableSet,
+    expiredPermissions: NSMutableSet
+  ) {
+    capturedExtractPermissionsResponse = responseObject
+
+    if let granted = stubbedGrantedPermissions {
+      grantedPermissions.addObjects(from: granted)
+    }
+
+    if let declined = stubbedDeclinedPermissions {
+      declinedPermissions.addObjects(from: declined)
+    }
+
+    if let expired = stubbedExpiredPermissions {
+      expiredPermissions.addObjects(from: expired)
+    }
+  }
 }

@@ -12,9 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKDeviceLoginManager (Testing)
 
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic) id<FBSDKDevicePolling> devicePoller;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKInternalUtility> internalUtility;
+
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
-                graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestConnectionFactory
-                       devicePoller:(id<FBSDKDevicePolling>)poller;
+                graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                       devicePoller:(id<FBSDKDevicePolling>)devicePoller
+                           settings:(id<FBSDKSettings>)settings
+                    internalUtility:(id<FBSDKInternalUtility>)internalUtility;
 
 - (void)_schedulePoll:(NSUInteger)interval;
 

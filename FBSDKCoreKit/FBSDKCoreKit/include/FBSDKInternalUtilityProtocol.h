@@ -98,6 +98,28 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
  */
 - (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
+/**
+  validates that the app ID is non-nil, throws an NSException if nil.
+ */
+- (void)validateAppID;
+
+/**
+ Validates that the client access token is non-nil, otherwise - throws an NSException otherwise.
+ Returns the composed client access token.
+ */
+- (NSString *)validateRequiredClientAccessToken;
+
+/**
+  Extracts permissions from a response fetched from me/permissions
+ @param responseObject the response
+ @param grantedPermissions the set to add granted permissions to
+ @param declinedPermissions the set to add declined permissions to.
+ */
+- (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
+                    grantedPermissions:(NSMutableSet<NSString *> *)grantedPermissions
+                   declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
+                    expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
+
 @end
 
 NS_ASSUME_NONNULL_END

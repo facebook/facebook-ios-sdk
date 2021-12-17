@@ -78,28 +78,6 @@ NS_SWIFT_NAME(InternalUtility)
 - (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
-  Extracts permissions from a response fetched from me/permissions
- @param responseObject the response
- @param grantedPermissions the set to add granted permissions to
- @param declinedPermissions the set to add declined permissions to.
- */
-- (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
-                    grantedPermissions:(NSMutableSet<NSString *> *)grantedPermissions
-                   declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
-                    expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
-
-/**
-  validates that the app ID is non-nil, throws an NSException if nil.
- */
-- (void)validateAppID;
-
-/**
- Validates that the client access token is non-nil, otherwise - throws an NSException otherwise.
- Returns the composed client access token.
- */
-- (NSString *)validateRequiredClientAccessToken;
-
-/**
   Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
 - (nullable UIViewController *)viewControllerForView:(UIView *)view;

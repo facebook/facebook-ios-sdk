@@ -27,8 +27,11 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 @property (nonatomic) BOOL isCancelled;
 @property (nonatomic) NSNetService *loginAdvertisementService;
 @property (nonatomic) BOOL isSmartLoginEnabled;
+
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonatomic) id<FBSDKDevicePolling> poller;
+@property (nonatomic) id<FBSDKDevicePolling> devicePoller;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKInternalUtility> internalUtility;
 
 @end
 
@@ -43,31 +46,37 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                    enableSmartLogin:(BOOL)enableSmartLogin
-                graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
-                       devicePoller:(id<FBSDKDevicePolling>)poller
+                graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                       devicePoller:(id<FBSDKDevicePolling>)devicePoller
+                           settings:(id<FBSDKSettings>)settings
+                    internalUtility:(id<FBSDKInternalUtility>)internalUtility
 {
-  self = [self initWithPermissions:permissions enableSmartLogin:enableSmartLogin];
-  _graphRequestFactory = graphRequestFactory;
-  _poller = poller;
-  return self;
-}
-
-- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
-{
-  id<FBSDKGraphRequestFactory> factory = [FBSDKGraphRequestFactory new];
-  FBSDKDevicePoller *poller = [FBSDKDevicePoller new];
   if ((self = [super init])) {
     _permissions = [permissions copy];
     _isSmartLoginEnabled = enableSmartLogin;
-    _graphRequestFactory = factory;
-    _poller = poller;
+    _graphRequestFactory = graphRequestFactory;
+    _devicePoller = devicePoller;
+    _settings = settings;
+    _internalUtility = internalUtility;
   }
+
   return self;
+}
+
+- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                   enableSmartLogin:(BOOL)enableSmartLogin
+{
+  return [self initWithPermissions:permissions
+                  enableSmartLogin:enableSmartLogin
+               graphRequestFactory:[FBSDKGraphRequestFactory new]
+                      devicePoller:[FBSDKDevicePoller new]
+                          settings:FBSDKSettings.sharedSettings
+                   internalUtility:FBSDKInternalUtility.sharedUtility];
 }
 
 - (void)start
 {
-  [FBSDKInternalUtility.sharedUtility validateAppID];
+  [self.internalUtility validateAppID];
   [FBSDKTypeUtility array:g_loginManagerInstances addObject:self];
 
   NSDictionary<NSString *, id> *parameters = @{
@@ -75,11 +84,11 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
     @"redirect_uri" : self.redirectURL.absoluteString ?: @"",
     FBSDK_DEVICE_INFO_PARAM : [FBSDKDeviceRequestsHelper getDeviceInfo],
   };
-  id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
-                                                                             parameters:parameters
-                                                                            tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
-                                                                             HTTPMethod:@"POST"
-                                                                                  flags:FBSDKGraphRequestFlagNone];
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
+                                                                                 parameters:parameters
+                                                                                tokenString:[self.internalUtility validateRequiredClientAccessToken]
+                                                                                 HTTPMethod:@"POST"
+                                                                                      flags:FBSDKGraphRequestFlagNone];
   request.graphErrorRecoveryDisabled = YES;
   FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
@@ -87,28 +96,35 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
       return;
     }
 
+    NSURL *verificationURL;
+    NSString *rawVerificationURL = [FBSDKTypeUtility dictionary:result
+                                                   objectForKey:@"verification_uri"
+                                                         ofType:NSString.class];
+    if (rawVerificationURL) {
+      verificationURL = [NSURL URLWithString:rawVerificationURL];
+    }
+
     NSString *identifier = [FBSDKTypeUtility dictionary:result objectForKey:@"code" ofType:NSString.class];
-    if (identifier) {
-      NSString *loginCode = [FBSDKTypeUtility dictionary:result objectForKey:@"user_code" ofType:NSString.class];
-      NSString *verificationURL = [FBSDKTypeUtility dictionary:result objectForKey:@"verification_uri" ofType:NSString.class];
+    NSString *loginCode = [FBSDKTypeUtility dictionary:result objectForKey:@"user_code" ofType:NSString.class];
+    if (identifier && verificationURL && loginCode) {
       double expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] doubleValue];
       long interval = [[FBSDKTypeUtility dictionary:result objectForKey:@"interval" ofType:NSNumber.class] longValue];
 
-      self->_codeInfo = [[FBSDKDeviceLoginCodeInfo alloc]
-                         initWithIdentifier:identifier
-                         loginCode:loginCode
-                         verificationURL:[NSURL URLWithString:verificationURL]
-                         expirationDate:[NSDate.date dateByAddingTimeInterval:expiresIn]
-                         pollingInterval:interval];
+      self.codeInfo = [[FBSDKDeviceLoginCodeInfo alloc]
+                       initWithIdentifier:identifier
+                       loginCode:loginCode
+                       verificationURL:verificationURL
+                       expirationDate:[NSDate.date dateByAddingTimeInterval:expiresIn]
+                       pollingInterval:interval];
 
-      if (self->_isSmartLoginEnabled) {
-        [FBSDKDeviceRequestsHelper startAdvertisementService:self->_codeInfo.loginCode
+      if (self.isSmartLoginEnabled) {
+        [FBSDKDeviceRequestsHelper startAdvertisementService:self.codeInfo.loginCode
                                                 withDelegate:self
         ];
       }
 
-      [self.delegate deviceLoginManager:self startedWithCodeInfo:self->_codeInfo];
-      [self _schedulePoll:self->_codeInfo.pollingInterval];
+      [self.delegate deviceLoginManager:self startedWithCodeInfo:self.codeInfo];
+      [self _schedulePoll:self.codeInfo.pollingInterval];
     } else {
       [self _notifyError:[FBSDKError errorWithCode:FBSDKErrorUnknown message:@"Unable to create a login request"]];
     }
@@ -119,7 +135,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 - (void)cancel
 {
   [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
-  _isCancelled = YES;
+  self.isCancelled = YES;
   [g_loginManagerInstances removeObject:self];
 }
 
@@ -143,11 +159,11 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   };
 
   if (tokenString) {
-    id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"me"
-                                                                               parameters:@{@"fields" : @"id,permissions"}
-                                                                              tokenString:tokenString
-                                                                               HTTPMethod:@"GET"
-                                                                                    flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+    id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"me"
+                                                                                   parameters:@{@"fields" : @"id,permissions"}
+                                                                                  tokenString:tokenString
+                                                                                   HTTPMethod:@"GET"
+                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
     FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id rawResult, NSError *error) {
       NSDictionary<NSString *, id> *graphResult = [FBSDKTypeUtility dictionaryValue:rawResult];
       if (!error && graphResult) {
@@ -158,15 +174,15 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
           NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
           NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-          [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:permissionResult
-                                                          grantedPermissions:permissions
-                                                         declinedPermissions:declinedPermissions
-                                                          expiredPermissions:expiredPermissions];
+          [self.internalUtility extractPermissionsFromResponse:permissionResult
+                                            grantedPermissions:permissions
+                                           declinedPermissions:declinedPermissions
+                                            expiredPermissions:expiredPermissions];
           FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
                                                                             permissions:permissions.allObjects
                                                                     declinedPermissions:declinedPermissions.allObjects
                                                                      expiredPermissions:expiredPermissions.allObjects
-                                                                                  appID:FBSDKSettings.sharedSettings.appID
+                                                                                  appID:self.settings.appID
                                                                                  userID:userID
                                                                          expirationDate:expirationDate
                                                                             refreshDate:nil
@@ -186,7 +202,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
     };
     [request startWithCompletion:completion];
   } else {
-    _isCancelled = YES;
+    self.isCancelled = YES;
     FBSDKDeviceLoginManagerResult *result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:nil isCancelled:YES];
     completeWithResult(result);
   }
@@ -197,14 +213,14 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   FBSDKDeviceLoginError code = [error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] unsignedIntegerValue];
   switch (code) {
     case FBSDKDeviceLoginErrorAuthorizationPending:
-      [self _schedulePoll:_codeInfo.pollingInterval];
+      [self _schedulePoll:self.codeInfo.pollingInterval];
       break;
     case FBSDKDeviceLoginErrorCodeExpired:
     case FBSDKDeviceLoginErrorAuthorizationDeclined:
       [self _notifyToken:nil withExpirationDate:nil withDataAccessExpirationDate:nil];
       break;
     case FBSDKDeviceLoginErrorExcessivePolling:
-      [self _schedulePoll:_codeInfo.pollingInterval * 2];
+      [self _schedulePoll:self.codeInfo.pollingInterval * 2];
     default:
       [self _notifyError:error];
       break;
@@ -213,50 +229,50 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_schedulePoll:(NSUInteger)interval
 {
-  [_poller scheduleBlock:^{
-             if (self->_isCancelled) {
-               return;
-             }
+  [self.devicePoller scheduleBlock:^{
+                       if (self.isCancelled) {
+                         return;
+                       }
 
-             NSDictionary<NSString *, id> *parameters = @{ @"code" : self->_codeInfo.identifier };
-             id<FBSDKGraphRequest> request = [self->_graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
-                                                                                              parameters:parameters
-                                                                                             tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
-                                                                                              HTTPMethod:@"POST"
-                                                                                                   flags:FBSDKGraphRequestFlagNone];
-             request.graphErrorRecoveryDisabled = YES;
-             FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-               if (self->_isCancelled) {
-                 return;
-               }
-               if (error) {
-                 [self _processError:error];
-               } else {
-                 NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                 NSDate *expirationDate = NSDate.distantFuture;
-                 NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
-                 if (expiresIn > 0) {
-                   expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
-                 }
+                       NSDictionary<NSString *, id> *parameters = @{ @"code" : self.codeInfo.identifier };
+                       id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
+                                                                                                      parameters:parameters
+                                                                                                     tokenString:[self.internalUtility validateRequiredClientAccessToken]
+                                                                                                      HTTPMethod:@"POST"
+                                                                                                           flags:FBSDKGraphRequestFlagNone];
+                       request.graphErrorRecoveryDisabled = YES;
+                       FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                         if (self.isCancelled) {
+                           return;
+                         }
+                         if (error) {
+                           [self _processError:error];
+                         } else {
+                           NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                           NSDate *expirationDate = NSDate.distantFuture;
+                           NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
+                           if (expiresIn > 0) {
+                             expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
+                           }
 
-                 NSDate *dataAccessExpirationDate = NSDate.distantFuture;
-                 NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
-                 if (dataAccessExpirationTime > 0) {
-                   dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];
-                 }
+                           NSDate *dataAccessExpirationDate = NSDate.distantFuture;
+                           NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
+                           if (dataAccessExpirationTime > 0) {
+                             dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];
+                           }
 
-                 if (tokenString) {
-                   [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
-                 } else {
-                   NSError *unknownError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                                                  code:FBSDKErrorUnknown
-                                                               message:@"Device Login poll failed. No token nor error was found."];
-                   [self _notifyError:unknownError];
-                 }
-               }
-             };
-             [request startWithCompletion:completion];
-           } interval:interval];
+                           if (tokenString) {
+                             [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
+                           } else {
+                             NSError *unknownError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
+                                                                            code:FBSDKErrorUnknown
+                                                                         message:@"Device Login poll failed. No token nor error was found."];
+                             [self _notifyError:unknownError];
+                           }
+                         }
+                       };
+                       [request startWithCompletion:completion];
+                     } interval:interval];
 }
 
 - (void)netService:(NSNetService *)sender

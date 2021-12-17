@@ -32,8 +32,7 @@ NS_SWIFT_NAME(DeviceLoginManager)
  @param permissions permissions to request.
  */
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
-                   enableSmartLogin:(BOOL)enableSmartLogin
-  NS_DESIGNATED_INITIALIZER;
+                   enableSmartLogin:(BOOL)enableSmartLogin;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
