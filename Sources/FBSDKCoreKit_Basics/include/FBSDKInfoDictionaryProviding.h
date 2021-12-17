@@ -14,6 +14,7 @@ NS_SWIFT_NAME(InfoDictionaryProviding)
 @protocol FBSDKInfoDictionaryProviding
 
 @property (nullable, readonly, copy) NSDictionary<NSString *, id> *infoDictionary;
+@property (nullable, readonly, copy) NSString *bundleIdentifier;
 
 - (nullable id)objectForInfoDictionaryKey:(NSString *)key;
 

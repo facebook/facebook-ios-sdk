@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKErrorCreating.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -22,10 +24,14 @@ NS_SWIFT_NAME(BridgeAPIProtocolWebV2)
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
 @property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+@property (nonatomic, readonly) id<FBSDKInternalUtility> internalUtility;
+@property (nonatomic, readonly) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 
 - (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
-                                       errorFactory:(id<FBSDKErrorCreating>)errorFactory;
+                                       errorFactory:(id<FBSDKErrorCreating>)errorFactory
+                                    internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                             infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 
 @end
 

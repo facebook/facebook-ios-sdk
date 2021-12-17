@@ -22,6 +22,10 @@ public class TestInternalUtility: NSObject,
   public var stubbedURL: URL?
   public var stubbedAppURL: URL?
   public var stubbedFacebookURL: URL?
+  public var capturedURLScheme: String?
+  public var capturedURLHost: String?
+  public var capturedURLPath: String?
+  public var capturedURLQueryParameters: [String: String]?
   public var capturedAppURLHost: String?
   public var capturedAppURLPath: String?
   public var capturedAppURLQueryParameters: [String: String]?
@@ -38,6 +42,11 @@ public class TestInternalUtility: NSObject,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
+    capturedURLScheme = scheme
+    capturedURLHost = host
+    capturedURLPath = path
+    capturedURLQueryParameters = queryParameters
+
     guard let url = stubbedURL else { throw SampleError() }
     return url
   }

@@ -35,6 +35,8 @@ public class TestBundle: NSObject, InfoDictionaryProviding {
     stubbedInfoDictionary = infoDictionary
   }
 
+  public var bundleIdentifier: String?
+
   public func object(forInfoDictionaryKey key: String) -> Any? {
     lastCapturedKey = key
     capturedKeys.append(key)

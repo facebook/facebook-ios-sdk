@@ -22,15 +22,18 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     static let actionID = "123"
     static let methodName = "open"
     static let scheme = URLScheme.https
+    static let bundleIdentifier = "bundle.identifier"
   }
 
   let validQueryParameters = ["Foo": "Bar"]
 
   // swiftlint:disable implicitly_unwrapped_optional
+  var bridge: BridgeAPIProtocolWebV2!
   var serverConfigurationProvider: ServerConfigurationProviding!
   var nativeBridge: TestBridgeAPIProtocol!
   var errorFactory: ErrorCreating!
-  var bridge: BridgeAPIProtocolWebV2!
+  var internalUtility: TestInternalUtility!
+  var bundle: TestBundle!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -39,10 +42,15 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     serverConfigurationProvider = TestServerConfigurationProvider()
     nativeBridge = TestBridgeAPIProtocol()
     errorFactory = TestErrorFactory()
+    internalUtility = TestInternalUtility()
+    bundle = TestBundle()
+    bundle.bundleIdentifier = Values.bundleIdentifier
     bridge = BridgeAPIProtocolWebV2(
       serverConfigurationProvider: serverConfigurationProvider,
       nativeBridge: nativeBridge,
-      errorFactory: errorFactory
+      errorFactory: errorFactory,
+      internalUtility: internalUtility,
+      infoDictionaryProvider: bundle
     )
   }
 
@@ -50,6 +58,8 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     serverConfigurationProvider = nil
     nativeBridge = nil
     errorFactory = nil
+    internalUtility = nil
+    bundle = nil
     bridge = nil
 
     super.tearDown()
@@ -67,6 +77,14 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     XCTAssertTrue(
       bridge.errorFactory === errorFactory,
       "Should be able to create with a custom error factory"
+    )
+    XCTAssertTrue(
+      bridge.internalUtility === internalUtility,
+      "Should be able to create with a custom internal utility"
+    )
+    XCTAssertTrue(
+      bridge.infoDictionaryProvider === bundle,
+      "Should be able to create with a custom info dictionary provider"
     )
   }
 
@@ -88,6 +106,14 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     XCTAssertTrue(
       factory.reporter === ErrorReporter.shared,
       "The error factory should use the shared error reporter"
+    )
+    XCTAssertTrue(
+      bridge.internalUtility === InternalUtility.shared,
+      "Should use the expected default internal utility"
+    )
+    XCTAssertTrue(
+      bridge.infoDictionaryProvider === Bundle.main,
+      "Should use the expected default info dictionary provider"
     )
   }
 
@@ -150,72 +176,52 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     )
   }
 
-  func testRequestUrlUsesQueryParametersFromNativeBridge() {
-    let queryItem = URLQueryItem(name: "somethingUnique", value: UUID().uuidString)
+  func testRequestUrl() throws {
+    let value = UUID().uuidString
+    let queryItem = URLQueryItem(name: "somethingUnique", value: value)
     let urlWithParams = SampleURLs.valid(queryItems: [queryItem])
     nativeBridge.stubbedRequestURL = urlWithParams
     stubServerConfigurationWithDialog(
-      named: Values.methodName
+      named: Values.methodName,
+      url: urlWithParams
     )
 
-    guard let url = try? bridge.requestURL(
+    internalUtility.stubbedAppURL = urlWithParams
+    internalUtility.stubbedFacebookURL = urlWithParams
+
+    _ = try? bridge.requestURL(
       withActionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       parameters: validQueryParameters
     )
-    else {
-      return XCTFail("Should create a valid url")
-    }
 
-    guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems
-    else {
-      return XCTFail("Should have query items")
-    }
-    XCTAssertTrue(
-      queryItems.contains(queryItem),
+    let queryParameters = try XCTUnwrap(internalUtility.capturedURLQueryParameters)
+    XCTAssertEqual(
+      queryParameters["somethingUnique"],
+      value,
       "The url should contain the query items from the url provided by the native bridge"
     )
-  }
-
-  func testRequestURL() {
-    let expectedURL = SampleURLs.valid(path: "foo")
-    stubServerConfigurationWithDialog(
-      named: Values.methodName,
-      url: expectedURL
-    )
-    guard let url = try? bridge.requestURL(
-      withActionID: Values.actionID,
-      scheme: Values.scheme.rawValue,
-      methodName: Values.methodName,
-      parameters: validQueryParameters
-    )
-    else {
-      return XCTFail("Should create a valid url")
-    }
 
     XCTAssertEqual(
-      url.host,
-      expectedURL.host,
+      internalUtility.capturedURLHost,
+      urlWithParams.host,
       "Should create a url using the host from the dialog configuration"
     )
     XCTAssertEqual(
-      url.path,
-      expectedURL.path,
+      internalUtility.capturedURLPath,
+      urlWithParams.path,
       "Should create a url using the path from the dialog configuration"
     )
 
-    let items = queryItems(from: url)
-    XCTAssertTrue(
-      items.contains(
-        URLQueryItem(name: Keys.iosBundleID, value: Bundle.main.bundleIdentifier)
-      ),
+    XCTAssertEqual(
+      queryParameters[Keys.iosBundleID],
+      bundle.bundleIdentifier,
       "Should add the bundle ID to the query parameters"
     )
-    XCTAssertTrue(
-      items.contains(
-        URLQueryItem(name: Keys.redirectURL, value: "fb://bridge/open")
-      ),
+    XCTAssertEqual(
+      queryParameters[Keys.redirectURL],
+      urlWithParams.absoluteString,
       "Should add the redirect url to the query parameters"
     )
   }
@@ -223,95 +229,106 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
   // MARK: - Redirect URL
 
   func testRedirectUrlWithoutActionIdOrMethodName() {
+    let appURL = SampleURLs.valid.appendingPathComponent("appURL")
+    internalUtility.stubbedAppURL = appURL
+
     let url = try? bridge._redirectURL(withActionID: nil, methodName: nil)
-    XCTAssertEqual(
-      url?.absoluteString,
-      "fb://bridge/",
-      "Should create a redirect url without an action identifier and method name"
-    )
+
+    let message = "Should create a redirect url without an action identifier and method name using the internal utility"
+
+    XCTAssertEqual(internalUtility.capturedAppURLHost, "bridge", message)
+    XCTAssertEqual(internalUtility.capturedAppURLPath, "", message)
+    XCTAssertEqual(internalUtility.capturedAppURLQueryParameters, [:], message)
+    XCTAssertEqual(url, appURL, message)
   }
 
   func testRedirectUrlWithMethodNameOnly() {
+    let appURL = SampleURLs.valid.appendingPathComponent("appURL")
+    internalUtility.stubbedAppURL = appURL
+
     let url = try? bridge._redirectURL(withActionID: nil, methodName: Values.methodName)
 
-    XCTAssertEqual(
-      url?.absoluteString,
-      "fb://bridge/\(Values.methodName)",
-      "Should create a redirect url using the method name for the path"
-    )
+    let message = "Should create a redirect url using the method name for the path using the internal utility"
+
+    XCTAssertEqual(internalUtility.capturedAppURLHost, "bridge", message)
+    XCTAssertEqual(internalUtility.capturedAppURLPath, Values.methodName, message)
+    XCTAssertEqual(internalUtility.capturedAppURLQueryParameters, [:], message)
+    XCTAssertEqual(url, appURL, message)
   }
 
   func testRedirectUrlWithActionIdOnly() {
+    let appURL = SampleURLs.valid.appendingPathComponent("appURL")
+    internalUtility.stubbedAppURL = appURL
+
     guard
-      let url = try? bridge._redirectURL(withActionID: name, methodName: nil),
-      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let url = try? bridge._redirectURL(withActionID: Values.actionID, methodName: nil),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: Values.actionID], options: []),
       let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
 
+    let message = """
+        Should create a redirect url with serialized bridge api arguments that \
+        include the action identifier using the internal utility
+      """
+
+    XCTAssertEqual(internalUtility.capturedAppURLHost, "bridge", message)
+    XCTAssertEqual(internalUtility.capturedAppURLPath, "", message)
     XCTAssertEqual(
-      url.scheme,
-      "fb",
-      "Should create a redirect url with the expected scheme"
+      internalUtility.capturedAppURLQueryParameters,
+      [Keys.bridgeArgs: bridgeArgsString],
+      message
     )
-    XCTAssertEqual(
-      url.host,
-      "bridge",
-      "Should create a redirect url with the expected host"
-    )
-    XCTAssertTrue(
-      queryItems(from: url).contains(
-        URLQueryItem(name: Keys.bridgeArgs, value: bridgeArgsString)
-      ),
-      "Should create a redirect url with serialized bridge api arguments that include the action identifier"
-    )
+    XCTAssertEqual(url, appURL, message)
   }
 
   func testRedirectUrlWithMethodNameAndActionID() {
+    let appURL = SampleURLs.valid.appendingPathComponent("appURL")
+    internalUtility.stubbedAppURL = appURL
+
     guard
-      let url = try? bridge._redirectURL(withActionID: name, methodName: Values.methodName),
-      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let url = try? bridge._redirectURL(withActionID: Values.actionID, methodName: Values.methodName),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: Values.actionID], options: []),
       let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
 
+    let message = """
+        Should create a redirect url with serialized bridge api arguments that \
+        include the action identifier using the internal utility
+      """
+
+    XCTAssertEqual(internalUtility.capturedAppURLHost, "bridge", message)
+    XCTAssertEqual(internalUtility.capturedAppURLPath, Values.methodName, message)
     XCTAssertEqual(
-      url.scheme,
-      "fb",
-      "Should create a redirect url with the expected scheme"
+      internalUtility.capturedAppURLQueryParameters,
+      [Keys.bridgeArgs: bridgeArgsString],
+      message
     )
-    XCTAssertEqual(
-      url.host,
-      "bridge",
-      "Should create a redirect url with the expected host"
-    )
-    XCTAssertEqual(
-      url.path,
-      "/" + Values.methodName,
-      "Should create a redirect url using the method name for the path"
-    )
-    XCTAssertTrue(
-      queryItems(from: url).contains(
-        URLQueryItem(name: Keys.bridgeArgs, value: bridgeArgsString)
-      ),
-      "Should create a redirect url with serialized bridge api arguments that include the action identifier"
-    )
+    XCTAssertEqual(url, appURL, message)
   }
 
   // MARK: - Request URL for DialogConfiguration
 
   func testRequestURLForDialogConfigurationWithoutScheme() throws {
+    let facebookURL = SampleURLs.valid.appendingPathComponent("facebook")
+    internalUtility.stubbedFacebookURL = facebookURL
+
     let url = try XCTUnwrap(URL(string: "/"))
-    let configuration = DialogConfiguration(name: name, url: url, appVersions: [])
+    let configuration = DialogConfiguration(name: UUID().uuidString, url: url, appVersions: [])
     let requestURL = try? bridge._requestURL(for: configuration)
 
-    XCTAssertEqual(
-      requestURL?.absoluteString,
-      "https://m.facebook.com/\(Settings.shared.graphAPIVersion)/",
-      "Should provide a request url for a dialog configuration without a scheme"
-    )
+    let message = """
+      Should provide a request url for a dialog configuration without a scheme \
+      using the internal utility
+      """
+
+    XCTAssertEqual(internalUtility.capturedFacebookURLHostPrefix, "m", message)
+    XCTAssertEqual(internalUtility.capturedFacebookURLPath, "/", message)
+    XCTAssertTrue(internalUtility.capturedFacebookURLQueryParameters?.isEmpty ?? false, message)
+    XCTAssertEqual(requestURL, facebookURL, message)
   }
 
   func testRequestURLForDialogConfigurationWithScheme() {
@@ -374,7 +391,9 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     bridge = BridgeAPIProtocolWebV2(
       serverConfigurationProvider: serverConfigurationProvider,
       nativeBridge: nativeBridge,
-      errorFactory: errorFactory
+      errorFactory: errorFactory,
+      internalUtility: internalUtility,
+      infoDictionaryProvider: bundle
     )
   }
 
