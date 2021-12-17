@@ -1,16 +1,22 @@
 # SwiftFormat Config
-# Version: 0.48.18
+# Version: 0.49.0
 # Rules: https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
 
-# How to automatically run swiftformat to "Live Test" a change to this config
-# brew install entr
-# ls .swiftformat | entr -c sh -c "git add .swiftformat && git checkout . && swiftformat . && git -P diff && swiftlint --quiet"
+# NOTE: Caveat with using both SwiftFormat and SwiftLint:
+# It's possible that enabling or changing a rule could cause a warning in SwiftLint if rules are not aligned
+# For this reason, after making a change to this file, run the following to ensure that swiftlint doesn't show any additional warnings
+# "swiftformat . && swiftlint --quiet"
 
+# TESTING A CHANGE: How to automatically run swiftformat to "Live Test" a change to this config
+# 1. Install entr to watch changes to this file: brew install entr
+# 2. Run: ls .swiftformat | entr -c sh -c "git add .swiftformat && git checkout . && swiftformat . && git -P diff && swiftlint --quiet"
+
+
+# Excluded files and dirs
 --exclude samples,testing,ads,internal # dirs
 --exclude Package.swift # files
 
-# Rules to run
-
+# Enabled rules
 --rules andOperator
 --rules anyObjectProtocol
 --rules blankLinesAroundMark
@@ -28,7 +34,7 @@
 --rules hoistPatternLet
 --rules indent
 --rules initCoderUnavailable
---rules isEmpty  # opt-in rule
+--rules isEmpty # (opt-in)
 --rules leadingDelimiters
 --rules linebreakAtEndOfFile
 --rules linebreaks
@@ -74,9 +80,26 @@
 --rules wrap
 --rules wrapArguments
 --rules wrapAttributes
---rules wrapEnumCases
+--rules wrapEnumCases # (opt-in)
 --rules yodaConditions
 
+# Disabled Rules
+# --rules acronyms # (opt-in)
+# --rules assertionFailures
+# --rules blankLinesAtStartOfScope # removes the first blank line in classes, structs, funcs etc
+# --rules blankLinesBetweenImports # (opt-in)
+# --rules blockComments # (opt-in)
+# --rules markTypes # (opt-in) # adds various "// MARK: -" sections
+# --rules numberFormatting # makes numbers like 123_456_789
+# --rules organizeDeclarations # (opt-in) # adds Internal, Private, Lifecycle sections and re-orders code
+# --rules preferDouble # (opt-in)
+# --rules redundantClosure
+# --rules sortedSwitchCases # (opt-in) # sorts cases in enums
+# --rules trailingCommas # should enable this
+# --rules unusedArguments # changes unused args to _
+# --rules wrapConditionalBodies # (opt-in)
+# --rules wrapMultilineStatementBraces # puts brace after multiline statement on new line
+# --rules wrapSwitchCases # (opt-in) # splits "case .one, .two:" onto 2 lines
 
 # Options
 --header "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
