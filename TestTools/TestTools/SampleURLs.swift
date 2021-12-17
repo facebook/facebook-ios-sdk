@@ -26,8 +26,5 @@ public enum SampleURLs {
 }
 
 public enum SampleURLRequest {
-
-  public static let valid: URLRequest = {
-    URLRequest(url: SampleURLs.valid)
-  }()
+  public static let valid = URLRequest(url: SampleURLs.valid)
 }

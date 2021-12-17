@@ -38,7 +38,7 @@ class FBSDKLoginManager: NSObject {
   }
 }
 
-// MARK: - FBSDKURLOpening
+// MARK: URLOpening
 
 extension FBSDKLoginManager: URLOpening {
   public func application(

@@ -14,10 +14,7 @@ class CodelessIndexerTests: XCTestCase {
   let graphRequestFactory = TestGraphRequestFactory()
   let dataStore = UserDefaultsSpy()
   let connection = TestGraphRequestConnection()
-  lazy var graphRequestConnectionFactory: TestGraphRequestConnectionFactory = {
-    TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
-  }()
-
+  lazy var graphRequestConnectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   let settings = TestSettings()
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"

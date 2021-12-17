@@ -19,6 +19,7 @@
 # Enabled rules
 --rules andOperator
 --rules anyObjectProtocol
+--rules assertionFailures
 --rules blankLinesAroundMark
 --rules blankLinesAtEndOfScope
 --rules blankLinesBetweenScopes
@@ -42,6 +43,7 @@
 --rules preferKeyPath
 --rules redundantBackticks
 --rules redundantBreak
+--rules redundantClosure
 --rules redundantExtensionACL
 --rules redundantFileprivate
 --rules redundantGet
@@ -85,20 +87,18 @@
 
 # Disabled Rules
 # --rules acronyms # (opt-in) # capitalizes acronyms, ex varWithUrl -> varWithURL, methodWithId() -> methodWithID()
-# --rules assertionFailures
 # --rules blankLinesAtStartOfScope # removes the first blank line in classes, structs, funcs etc
-# --rules blankLinesBetweenImports # (opt-in)
-# --rules blockComments # (opt-in)
-# --rules markTypes # (opt-in) # adds various "// MARK: -" sections
+# --rules blankLinesBetweenImports # (opt-in) # removes blank line between imports
+# --rules blockComments # (opt-in) # changes all block comments i.e. /* ... */ to // style comments
+# --rules markTypes # (opt-in) # adds various "// MARK: -" sections at the top of classes, extensions
 # --rules numberFormatting # makes numbers like 123_456_789
-# --rules organizeDeclarations # (opt-in) # adds Internal, Private, Lifecycle sections and re-orders code
-# --rules preferDouble # (opt-in)
-# --rules redundantClosure
+# --rules organizeDeclarations # (opt-in) # adds Internal, Private, Lifecycle sections and re-orders a lot of code
+# --rules preferDouble # (opt-in) # Replaces occurrences of CGFloat with Double
 # --rules sortedSwitchCases # (opt-in) # sorts cases in enums
-# --rules trailingCommas # should enable this
-# --rules unusedArguments # changes unused args to _
-# --rules wrapConditionalBodies # (opt-in)
-# --rules wrapMultilineStatementBraces # puts brace after multiline statement on new line
+# --rules trailingCommas # we should enable this
+# --rules unusedArguments # changes unused args to an underscore, too many changes
+# --rules wrapConditionalBodies # (opt-in) # moves the return in a guard on a new line
+# --rules wrapMultilineStatementBraces # puts brace after multiline statement on new line, swiftlint conflict
 # --rules wrapSwitchCases # (opt-in) # splits "case .one, .two:" onto 2 lines
 
 # Options

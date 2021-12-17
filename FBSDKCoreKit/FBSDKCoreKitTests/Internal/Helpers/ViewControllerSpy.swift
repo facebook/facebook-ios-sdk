@@ -25,9 +25,7 @@ class ViewControllerSpy: UIViewController {
     stubbedTransitionCoordinator
   }
 
-  private lazy var presenting = {
-    ViewControllerSpy.makeDefaultSpy()
-  }()
+  private lazy var presenting = ViewControllerSpy.makeDefaultSpy()
 
   override var presentingViewController: UIViewController? {
     presenting

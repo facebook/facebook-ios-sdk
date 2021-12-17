@@ -13,9 +13,7 @@ class BridgeAPIResponseTests: XCTestCase {
   let request = TestBridgeAPIRequest(url: SampleURLs.valid)
   let bridgeProtocol = TestBridgeAPIProtocol()
   let queryItems = [URLQueryItem(name: "foo", value: "bar")]
-  lazy var responseURL: URL = {
-    SampleURLs.valid(queryItems: queryItems)
-  }()
+  lazy var responseURL = SampleURLs.valid(queryItems: queryItems)
 
   func testCreatingWithMinimalInput() {
     let response = BridgeAPIResponse(request: request, error: SampleError())
