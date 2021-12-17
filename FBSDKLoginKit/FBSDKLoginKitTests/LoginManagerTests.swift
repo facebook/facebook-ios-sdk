@@ -653,6 +653,9 @@ class LoginManagerTests: XCTestCase {
   }
 
   func testLoginWithSFVC() {
+    internalUtility.stubbedAppURL = sampleURL
+    internalUtility.stubbedFacebookURL = sampleURL
+
     loginManager.logIn(withPermissions: ["public_profile"], from: UIViewController()) { _, _ in }
 
     XCTAssertTrue(
@@ -698,7 +701,7 @@ class LoginManagerTests: XCTestCase {
       )
     )
 
-    internalUtility.stubbedURL = sampleURL
+    internalUtility.stubbedAppURL = sampleURL
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
         with: configuration,
@@ -741,7 +744,7 @@ class LoginManagerTests: XCTestCase {
       tracking: .limited,
       nonce: "some_nonce"
     )
-    internalUtility.stubbedURL = sampleURL
+    internalUtility.stubbedAppURL = sampleURL
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
         with: configuration,
@@ -814,7 +817,7 @@ class LoginManagerTests: XCTestCase {
     )
     let logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
 
-    internalUtility.stubbedURL = sampleURL
+    internalUtility.stubbedAppURL = sampleURL
 
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
@@ -857,7 +860,7 @@ class LoginManagerTests: XCTestCase {
       authType: .reauthorize
     )
     let logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
-    internalUtility.stubbedURL = sampleURL
+    internalUtility.stubbedAppURL = sampleURL
 
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
@@ -1296,47 +1299,67 @@ class LoginManagerTests: XCTestCase {
     )
   }
 
-  func validateCommonLoginParameters(_ parameters: [String: String]) throws {
+  func validateCommonLoginParameters(
+    _ parameters: [String: String],
+    file: StaticString = #file,
+    line: UInt = #line
+  ) throws {
     XCTAssertEqual(
       parameters["client_id"],
-      appID
+      appID,
+      file: file,
+      line: line
     )
     XCTAssertEqual(
       parameters["display"],
-      "touch"
+      "touch",
+      file: file,
+      line: line
     )
     XCTAssertEqual(
       parameters["sdk"],
-      "ios"
+      "ios",
+      file: file,
+      line: line
     )
     XCTAssertEqual(
       parameters["return_scopes"],
-      "true"
+      "true",
+      file: file,
+      line: line
     )
     XCTAssertEqual(
       parameters["fbapp_pres"],
-      "0"
+      "0",
+      file: file,
+      line: line
     )
     XCTAssertEqual(
       parameters["ies"],
-      settings.isAutoLogAppEventsEnabled ? "1" : "0"
+      settings.isAutoLogAppEventsEnabled ? "1" : "0",
+      file: file,
+      line: line
     )
     XCTAssertNotNil(
-      parameters["e2e"]
+      parameters["e2e"],
+      file: file,
+      line: line
     )
 
-    let stateJsonString = try XCTUnwrap(parameters["state"])
+    let stateJsonString = try XCTUnwrap(parameters["state"], file: file, line: line)
     let state = try BasicUtility.object(forJSONString: stateJsonString) as? [String: Any]
-    XCTAssertNotNil(state?["challenge"])
-    XCTAssertNotNil(state?["0_auth_logger_id"])
+    XCTAssertNotNil(state?["challenge"], file: file, line: line)
+    XCTAssertNotNil(state?["0_auth_logger_id"], file: file, line: line)
 
-    let cbt = try XCTUnwrap(parameters["cbt"])
-    let cbtDouble = try XCTUnwrap(Double(cbt))
+    let cbt = try XCTUnwrap(parameters["cbt"], file: file, line: line)
+    let cbtDouble = try XCTUnwrap(Double(cbt), file: file, line: line)
     let currentMilliseconds = 1000 * Date().timeIntervalSince1970
-    XCTAssertEqual(cbtDouble, currentMilliseconds, accuracy: 500)
+    XCTAssertEqual(cbtDouble, currentMilliseconds, accuracy: 500, file: file, line: line)
     XCTAssertEqual(
       parameters["redirect_uri"],
-      internalUtility.stubbedURL?.absoluteString
+      sampleURL.absoluteString,
+      file: file,
+      line: line
     )
   }
 }

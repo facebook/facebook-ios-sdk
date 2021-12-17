@@ -12,12 +12,18 @@ import XCTest
 
 class BridgeAPIRequestTests: XCTestCase {
 
-  let internalURLOpener = TestInternalURLOpener(canOpenUrl: true)
-  let internalUtility = TestInternalUtility()
-  let settings = TestSettings()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var internalURLOpener: TestInternalURLOpener!
+  var internalUtility: TestInternalUtility!
+  var settings: TestSettings!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
+
+    internalURLOpener = TestInternalURLOpener(canOpenUrl: true)
+    internalUtility = TestInternalUtility()
+    settings = TestSettings()
 
     BridgeAPIRequest.configure(
       internalURLOpener: internalURLOpener,
@@ -28,6 +34,11 @@ class BridgeAPIRequestTests: XCTestCase {
 
   override func tearDown() {
     BridgeAPIRequest.resetClassDependencies()
+
+    internalURLOpener = nil
+    internalUtility = nil
+    settings = nil
+
     super.tearDown()
   }
 

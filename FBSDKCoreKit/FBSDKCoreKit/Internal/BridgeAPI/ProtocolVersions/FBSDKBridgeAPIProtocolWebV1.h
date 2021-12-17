@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKErrorCreating.h"
 
@@ -19,8 +21,10 @@ NS_SWIFT_NAME(BridgeAPIProtocolWebV1)
 @interface FBSDKBridgeAPIProtocolWebV1 : NSObject <FBSDKBridgeAPIProtocol>
 
 @property (nonatomic, readonly) id<FBSDKErrorCreating> errorFactory;
+@property (nonatomic, readonly) id<FBSDKInternalUtility> internalUtility;
 
-- (instancetype)initWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory;
+- (instancetype)initWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+                     internalUtility:(id<FBSDKInternalUtility>)internalUtility;
 
 @end
 

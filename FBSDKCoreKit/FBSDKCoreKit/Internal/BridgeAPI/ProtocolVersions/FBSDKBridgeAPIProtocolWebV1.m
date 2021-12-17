@@ -30,13 +30,15 @@
 - (instancetype)init
 {
   FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
-  return [self initWithErrorFactory:factory];
+  return [self initWithErrorFactory:factory internalUtility:FBSDKInternalUtility.sharedUtility];
 }
 
-- (instancetype)initWithErrorFactory:(id<FBSDKErrorCreating>)errorFactory
+- (instancetype)initWithErrorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                     internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
 {
   if ((self = [super init])) {
     _errorFactory = errorFactory;
+    _internalUtility = internalUtility;
   }
 
   return self;
@@ -53,22 +55,27 @@
   if (![FBSDKTypeUtility coercedToStringValue:actionID] || ![FBSDKTypeUtility coercedToStringValue:methodName]) {
     return nil;
   }
-  NSMutableDictionary<NSString *, id> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
+
+  NSString *bridgeArgumentsJSONString = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY : actionID }
+                                                                         error:NULL
+                                                          invalidObjectHandler:NULL];
+  NSDictionary<NSString *, NSString *> *redirectQueryParameters = @{
+    FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY : bridgeArgumentsJSONString
+  };
+  NSURL *redirectURL = [self.internalUtility appURLWithHost:@"bridge"
+                                                       path:methodName
+                                            queryParameters:redirectQueryParameters
+                                                      error:NULL];
+
+  NSMutableDictionary<NSString *, NSString *> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@"touch" forKey:@"display"];
-  NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY : actionID }
-                                                          error:NULL
-                                           invalidObjectHandler:NULL];
-  NSDictionary<NSString *, id> *redirectQueryParameters = @{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY : bridgeArgs };
-  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"bridge"
-                                                                     path:methodName
-                                                          queryParameters:redirectQueryParameters
-                                                                    error:NULL];
   [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL.absoluteString forKey:@"redirect_uri"];
-  [queryParameters addEntriesFromDictionary:parameters];
-  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
-                                                                  path:[@"/dialog/" stringByAppendingString:methodName]
-                                                       queryParameters:queryParameters
-                                                                 error:NULL];
+  [queryParameters addEntriesFromDictionary:parameters]; // this could overwrite values we just added
+
+  return [self.internalUtility facebookURLWithHostPrefix:@"m"
+                                                    path:[@"/dialog/" stringByAppendingString:methodName]
+                                         queryParameters:queryParameters
+                                                   error:NULL];
 }
 
 - (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID

@@ -20,6 +20,14 @@ public class TestInternalUtility: NSObject,
   public var isFacebookAppInstalled = false
   public var isMessengerAppInstalled = false
   public var stubbedURL: URL?
+  public var stubbedAppURL: URL?
+  public var stubbedFacebookURL: URL?
+  public var capturedAppURLHost: String?
+  public var capturedAppURLPath: String?
+  public var capturedAppURLQueryParameters: [String: String]?
+  public var capturedFacebookURLHostPrefix: String?
+  public var capturedFacebookURLPath: String?
+  public var capturedFacebookURLQueryParameters: [String: String]?
   public var capturedExtensibleParameters: NSMutableDictionary?
   public var isUnity = false
   public var appURLScheme = ""
@@ -30,9 +38,7 @@ public class TestInternalUtility: NSObject,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
-    struct Error: Swift.Error {}
-
-    guard let url = stubbedURL else { throw Error() }
+    guard let url = stubbedURL else { throw SampleError() }
     return url
   }
 
@@ -41,7 +47,12 @@ public class TestInternalUtility: NSObject,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
-    stubbedURL ?? URL(string: "facebook.com")! // swiftlint:disable:this force_unwrapping
+    capturedFacebookURLHostPrefix = hostPrefix
+    capturedFacebookURLPath = path
+    capturedFacebookURLQueryParameters = queryParameters
+
+    guard let url = stubbedFacebookURL else { throw SampleError() }
+    return url
   }
 
   public func appURL(
@@ -49,7 +60,12 @@ public class TestInternalUtility: NSObject,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
-    stubbedURL ?? URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
+    capturedAppURLHost = host
+    capturedAppURLPath = path
+    capturedAppURLQueryParameters = queryParameters
+
+    guard let url = stubbedAppURL else { throw SampleError() }
+    return url
   }
 
   public func registerTransientObject(_ object: Any) {}
