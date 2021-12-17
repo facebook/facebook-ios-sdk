@@ -24,7 +24,7 @@ NS_SWIFT_NAME(ShareUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 + (void)assertCollection:(id<NSFastEnumeration>)collection ofClass:itemClass name:(NSString *)name;
-+ (void)assertCollection:(id<NSFastEnumeration>)collection ofClassStrings:(NSArray *)classStrings name:(NSString *)name;
++ (void)assertCollection:(id<NSFastEnumeration>)collection ofClassStrings:(NSArray<NSString *> *)classStrings name:(NSString *)name;
 + (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs;
 + (nullable NSDictionary<NSString *, id> *)convertPhoto:(nullable FBSDKSharePhoto *)photo;
 + (nullable UIImage *)imageWithCircleColor:(nullable UIColor *)color

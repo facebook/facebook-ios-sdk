@@ -26,7 +26,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
                         paramKey:(NSString *)paramKey
              linguisticCondition:(nullable NSString *)linguisticCondition
               numericalCondition:(nullable NSNumber *)numericalCondition
-                  arrayCondition:(nullable NSArray *)arrayCondition
+                  arrayCondition:(nullable NSArray<NSString *> *)arrayCondition
 {
   if ((self = [super init])) {
     _operator = op;
@@ -100,7 +100,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   }
   NSDictionary<NSString *, id> *subParams = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSDictionary.class];
   NSRange range = NSMakeRange(1, paramPath.count - 1);
-  NSArray *subParamPath = [paramPath subarrayWithRange:range];
+  NSArray<NSString *> *subParamPath = [paramPath subarrayWithRange:range];
   return [self isMatchedEventParameters:subParams paramPath:subParamPath];
 }
 
@@ -115,7 +115,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   }
   BOOL isMatched = NO;
   NSRange range = NSMakeRange(1, paramPath.count - 1);
-  NSArray *subParamPath = [paramPath subarrayWithRange:range];
+  NSArray<NSString *> *subParamPath = [paramPath subarrayWithRange:range];
   for (NSDictionary<NSString *, id> *item in items) {
     isMatched |= [self isMatchedEventParameters:item paramPath:subParamPath];
     if (isMatched) {
@@ -215,7 +215,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   NSString *paramKey = [decoder decodeObjectOfClass:NSString.class forKey:PARAMKEY_KEY];
   NSString *linguisticCondition = [decoder decodeObjectOfClass:NSString.class forKey:STRING_VALUE_KEY];
   NSNumber *numericalCondition = [decoder decodeObjectOfClass:NSNumber.class forKey:NUMBER_VALUE_KEY];
-  NSArray *arrayCondition = [decoder decodeObjectOfClass:NSArray.class forKey:ARRAY_VALUE_KEY];
+  NSArray<NSString *> *arrayCondition = [decoder decodeObjectOfClass:NSArray.class forKey:ARRAY_VALUE_KEY];
   return [self initWithOperator:op
                        paramKey:paramKey
             linguisticCondition:linguisticCondition

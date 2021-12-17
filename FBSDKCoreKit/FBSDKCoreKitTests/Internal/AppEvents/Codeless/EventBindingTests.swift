@@ -71,7 +71,8 @@ class EventBindingTests: XCTestCase {
   }
 
   func testEventBindingEquation() throws {
-    let remoteEventBindings = try XCTUnwrap(SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as? [Any])
+    // swiftlint:disable:next line_length
+    let remoteEventBindings = try XCTUnwrap(SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as? [[String: Any]])
     let bindings = eventBindingManager.parseArray(remoteEventBindings)
     XCTAssertEqual(bindings[0], bindings[0])
     XCTAssertNotEqual(bindings[0], bindings[1])
@@ -120,7 +121,7 @@ class EventBindingTests: XCTestCase {
 
   var parsedBindings: [EventBinding] {
     // swiftlint:disable:next force_cast
-    let remoteEventBindings = SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as! [Any]
+    let remoteEventBindings = SampleRawRemoteEventBindings.sampleDictionary["event_bindings"] as! [[String: Any]]
     return eventBindingManager.parseArray(remoteEventBindings)
   }
 }

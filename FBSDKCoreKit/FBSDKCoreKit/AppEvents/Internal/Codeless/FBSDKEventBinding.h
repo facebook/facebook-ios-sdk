@@ -26,7 +26,8 @@ NS_SWIFT_NAME(EventBinding)
 @property (nullable, nonatomic, readonly, copy) FBSDKAppEventName eventName;
 @property (nullable, nonatomic, readonly, copy) NSString *eventType;
 @property (nullable, nonatomic, readonly, copy) NSString *appVersion;
-@property (nullable, nonatomic, readonly) NSArray *path;
+// patternlint-disable-next-line objc-headers-collection-generics
+@property (nullable, nonatomic, readonly) NSArray *path; // NSArray<FBSDKCodelessPathComponent *>
 @property (nullable, nonatomic, readonly, copy) NSString *pathType;
 @property (nullable, nonatomic, readonly) NSArray<FBSDKCodelessParameterComponent *> *parameters;
 

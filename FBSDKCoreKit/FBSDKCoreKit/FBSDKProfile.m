@@ -730,8 +730,8 @@ static id<FBSDKURLHosting> _urlHoster;
 
 + (nullable NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
 {
-  NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
-  NSMutableArray *friendIDs = [NSMutableArray new];
+  NSArray<NSDictionary<NSString *, id> *> *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
+  NSMutableArray<FBSDKUserIdentifier *> *friendIDs = [NSMutableArray new];
 
   for (NSDictionary<NSString *, id> *rawFriend in rawFriends) {
     if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {

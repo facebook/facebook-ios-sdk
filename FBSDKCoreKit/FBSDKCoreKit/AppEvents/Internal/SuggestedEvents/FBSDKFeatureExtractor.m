@@ -346,7 +346,7 @@ void sum(float *val0, float *val1)
   }
 }
 
-+ (BOOL)foundIndicators:(NSArray *)indicators inValues:(NSArray *)values
++ (BOOL)foundIndicators:(NSArray<NSString *> *)indicators inValues:(NSArray<NSString *> *)values
 {
   for (NSString *indicator in indicators) {
     for (NSString *value in values) {

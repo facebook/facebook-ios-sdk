@@ -1390,7 +1390,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 // otherwise, either flush (if not explicitonly behavior) or persist them back.
 - (void)checkPersistedEvents
 {
-  NSArray *existingEventsStates = [self.appEventsStateStore retrievePersistedAppEventsStates];
+  NSArray<FBSDKAppEventsState *> *existingEventsStates = [self.appEventsStateStore retrievePersistedAppEventsStates];
   if (existingEventsStates.count == 0) {
     return;
   }

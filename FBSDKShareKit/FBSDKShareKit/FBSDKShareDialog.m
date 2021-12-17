@@ -548,7 +548,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   return [ret copy];
 }
 
-- (NSArray *)_contentURLs
+- (NSArray<NSURL *> *)_contentURLs
 {
   NSArray<NSURL *> *URLs = nil;
   id<FBSDKSharingContent> shareContent = self.shareContent;

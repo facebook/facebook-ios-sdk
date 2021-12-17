@@ -24,8 +24,8 @@
     _value = [dict[CODELESS_MAPPING_PARAMETER_VALUE_KEY] copy];
     _pathType = [dict[CODELESS_MAPPING_PATH_TYPE_KEY] copy];
 
-    NSArray *ary = dict[CODELESS_MAPPING_PATH_KEY];
-    NSMutableArray *mut = [NSMutableArray array];
+    NSArray<NSDictionary<NSString *, id> *> *ary = dict[CODELESS_MAPPING_PATH_KEY];
+    NSMutableArray<FBSDKCodelessPathComponent *> *mut = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *info in ary) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];

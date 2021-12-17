@@ -18,7 +18,7 @@ NS_SWIFT_NAME(AppEventsState)
 
 @property (class, nullable, nonatomic) NSArray<id<FBSDKEventsProcessing>> *eventProcessors;
 
-@property (nonatomic, readonly, copy) NSArray *events;
+@property (nonatomic, readonly, copy) NSArray<NSDictionary<NSString *, id> *> *events;
 @property (nonatomic, readonly, assign) NSUInteger numSkipped;
 @property (nonatomic, readonly, copy) NSString *tokenString;
 @property (nonatomic, readonly, copy) NSString *appID;

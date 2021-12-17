@@ -96,7 +96,7 @@
   return self;
 }
 
-- (NSArray *)parseArray:(NSArray *)array
+- (NSArray *)parseArray:(NSArray<NSDictionary<NSString *, id> *> *)array
 {
   NSMutableArray *result = [NSMutableArray array];
 
@@ -302,7 +302,7 @@
           }
 
           if (matchedBindings.count > 0) {
-            NSArray *bindings = matchedBindings.allObjects;
+            NSArray<FBSDKEventBinding *> *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
               [self handleDidSelectRowWithBindings:bindings target:target command:command tableView:tableView indexPath:indexPath];
             };
@@ -332,7 +332,7 @@
           }
 
           if (matchedBindings.count > 0) {
-            NSArray *bindings = matchedBindings.allObjects;
+            NSArray<FBSDKEventBinding *> *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
               [self handleDidSelectItemWithBindings:bindings target:target command:command collectionView:collectionView indexPath:indexPath];
             };
@@ -359,7 +359,7 @@
 }
 
 #pragma clang diagnostic pop
-- (void)updateBindings:(NSArray *)bindings
+- (void)updateBindings:(NSArray<FBSDKEventBinding *> *)bindings
 {
   if (self.eventBindings.count > 0 && self.eventBindings.count == bindings.count) {
     // Check whether event bindings are the same

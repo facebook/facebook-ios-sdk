@@ -61,15 +61,15 @@ static id<FBSDKNumberParsing> _numberParser;
     _appVersion = [dict[CODELESS_MAPPING_APP_VERSION_KEY] copy];
     _pathType = [dict[CODELESS_MAPPING_PATH_TYPE_KEY] copy];
 
-    NSArray *pathComponents = dict[CODELESS_MAPPING_PATH_KEY];
-    NSMutableArray *mut = [NSMutableArray array];
+    NSArray<NSDictionary<NSString *, id> *> *pathComponents = dict[CODELESS_MAPPING_PATH_KEY];
+    NSMutableArray<FBSDKCodelessPathComponent *> *mut = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *info in pathComponents) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
     _path = [mut copy];
 
-    NSArray *parameters = dict[CODELESS_MAPPING_PARAMETERS_KEY];
+    NSArray<NSDictionary<NSString *, id> *> *parameters = dict[CODELESS_MAPPING_PARAMETERS_KEY];
     mut = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *info in parameters) {
       FBSDKCodelessParameterComponent *component = [[FBSDKCodelessParameterComponent alloc] initWithJSON:info];
@@ -130,7 +130,7 @@ static id<FBSDKNumberParsing> _numberParser;
   if (component.index >= 0) {
     NSObject *parent = [FBSDKViewHierarchy getParent:view];
     if (parent) {
-      NSArray *children = [FBSDKViewHierarchy getChildren:[FBSDKViewHierarchy getParent:view]];
+      NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:parent];
       NSUInteger index = [children indexOfObject:view];
       if (index == NSNotFound || index != component.index) {
         return NO;

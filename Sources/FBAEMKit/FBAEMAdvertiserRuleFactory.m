@@ -88,7 +88,7 @@
   FBAEMAdvertiserRuleOperator operator = [self getOperator:rawRule];
   NSString *linguisticCondition = nil;
   NSNumber *numericalCondition = nil;
-  NSArray *arrayCondition = nil;
+  NSArray<NSString *> *arrayCondition = nil;
   switch (operator) {
     case Unknown:
     default:

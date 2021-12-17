@@ -270,7 +270,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     NSMutableSet<NSString *> *actions = [NSMutableSet set];
     NSSet<NSObject *> *targets = control.allTargets;
     for (NSObject *target in targets) {
-      NSArray *ary = [control actionsForTarget:target forControlEvent:0];
+      NSArray<NSString *> *ary = [control actionsForTarget:target forControlEvent:0];
       if (ary.count > 0) {
         [actions addObjectsFromArray:ary];
       }

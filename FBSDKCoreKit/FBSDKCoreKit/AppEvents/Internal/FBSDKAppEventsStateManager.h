@@ -24,7 +24,7 @@ NS_SWIFT_NAME(AppEventsStateManager)
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState;
 
 // returns the array of saved app event states and deletes them.
-- (NSArray *)retrievePersistedAppEventsStates;
+- (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates;
 
 @end
 NS_ASSUME_NONNULL_END

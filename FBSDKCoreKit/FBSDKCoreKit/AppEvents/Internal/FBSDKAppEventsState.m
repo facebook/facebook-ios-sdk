@@ -23,7 +23,7 @@
 
 @interface FBSDKAppEventsState ()
 
-@property (nonatomic) NSMutableArray *mutableEvents;
+@property (nonatomic) NSMutableArray<NSDictionary<NSString *, id> *> *mutableEvents;
 
 @end
 
@@ -94,7 +94,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 #pragma mark - Implementation
 
-- (NSArray *)events
+- (NSArray<NSDictionary<NSString *, id> *> *)events
 {
   return [_mutableEvents copy];
 }
@@ -129,7 +129,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 {
   NSMutableString *receipts_string = [NSMutableString string];
   NSInteger transactionId = 1;
-  for (NSMutableDictionary<NSString *, id> *events in _mutableEvents) {
+  for (NSDictionary<NSString *, id> *events in _mutableEvents) {
     NSMutableDictionary<NSString *, id> *event = events[@"event"];
 
     NSString *receipt = event[@"receipt_data"];

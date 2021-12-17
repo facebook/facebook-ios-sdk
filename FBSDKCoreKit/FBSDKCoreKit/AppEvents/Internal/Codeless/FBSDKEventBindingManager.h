@@ -24,8 +24,9 @@ NS_SWIFT_NAME(EventBindingManager)
 
 - (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
                      eventLogger:(id<FBSDKEventLogging>)eventLogger;
-- (void)updateBindings:(NSArray *)bindings;
-- (NSArray<FBSDKEventBinding *> *)parseArray:(NSArray *)array;
+// patternlint-disable-next-line objc-headers-collection-generics
+- (void)updateBindings:(NSArray *)bindings; // NSArray<FBSDKEventBinding *>
+- (NSArray<FBSDKEventBinding *> *)parseArray:(NSArray<NSDictionary<NSString *, id> *> *)array;
 
 @end
 

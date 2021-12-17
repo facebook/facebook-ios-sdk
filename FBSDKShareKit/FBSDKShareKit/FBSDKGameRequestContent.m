@@ -43,7 +43,7 @@
   }
 }
 
-- (NSArray *)suggestions
+- (NSArray<NSString *> *)suggestions
 {
   return self.recipientSuggestions;
 }
@@ -53,7 +53,7 @@
   self.recipientSuggestions = suggestions;
 }
 
-- (NSArray *)to
+- (NSArray<NSString *> *)to
 {
   return self.recipients;
 }

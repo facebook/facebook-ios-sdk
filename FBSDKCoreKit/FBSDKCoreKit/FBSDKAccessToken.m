@@ -43,9 +43,9 @@ static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
 @implementation FBSDKAccessToken
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray *)permissions
-                declinedPermissions:(NSArray *)declinedPermissions
-                 expiredPermissions:(NSArray *)expiredPermissions
+                        permissions:(NSArray<NSString *> *)permissions
+                declinedPermissions:(NSArray<NSString *> *)declinedPermissions
+                 expiredPermissions:(NSArray<NSString *> *)expiredPermissions
                               appID:(NSString *)appID
                              userID:(NSString *)userID
                      expirationDate:(NSDate *)expirationDate

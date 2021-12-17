@@ -465,7 +465,7 @@ static id<FBSDKSettings> _settings;
     return nil;
   }
 
-  NSArray *viewTrees = [trees reverseObjectEnumerator].allObjects;
+  NSArray<NSDictionary<NSString *, id> *> *viewTrees = [trees reverseObjectEnumerator].allObjects;
 
   NSData *data = UIImageJPEGRepresentation([FBSDKCodelessIndexer screenshot], 0.5);
   NSString *screenshot = [data base64EncodedStringWithOptions:0];

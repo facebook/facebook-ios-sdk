@@ -24,7 +24,7 @@ NS_SWIFT_NAME(AEMAdvertiserSingleEntryRule)
 @property (nonatomic, readonly) NSString *paramKey;
 @property (nullable, nonatomic, readonly) NSString *linguisticCondition;
 @property (nullable, nonatomic, readonly) NSNumber *numericalCondition;
-@property (nullable, nonatomic, readonly) NSArray *arrayCondition;
+@property (nullable, nonatomic, readonly) NSArray<NSString *> *arrayCondition;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -33,7 +33,7 @@ NS_SWIFT_NAME(AEMAdvertiserSingleEntryRule)
                         paramKey:(NSString *)paramKey
              linguisticCondition:(nullable NSString *)linguisticCondition
               numericalCondition:(nullable NSNumber *)numericalCondition
-                  arrayCondition:(nullable NSArray *)arrayCondition;
+                  arrayCondition:(nullable NSArray<NSString *> *)arrayCondition;
 
 @end
 

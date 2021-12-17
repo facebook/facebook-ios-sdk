@@ -318,8 +318,8 @@ extension AEMAdvertiserSingleEntryRule {
       let isParamKeyEqual = paramKey == rule.paramKey
       let isLinguisticConditionEqual = linguisticCondition == rule.linguisticCondition
       var isArrayConditionEqual = false
-      if let array1 = arrayCondition as? [String] {
-        let array2 = rule.arrayCondition as? [String]
+      if let array1 = arrayCondition {
+        let array2 = rule.arrayCondition
         isArrayConditionEqual = array1 == array2
       } else {
         isArrayConditionEqual = rule.arrayCondition == nil

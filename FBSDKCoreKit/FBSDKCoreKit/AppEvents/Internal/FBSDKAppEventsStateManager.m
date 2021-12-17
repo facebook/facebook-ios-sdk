@@ -69,7 +69,7 @@
   self.canSkipDiskCheck = NO;
 }
 
-- (NSArray *)retrievePersistedAppEventsStates
+- (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates;
 {
   NSMutableArray *eventsStates = [NSMutableArray array];
   if (!self.canSkipDiskCheck) {

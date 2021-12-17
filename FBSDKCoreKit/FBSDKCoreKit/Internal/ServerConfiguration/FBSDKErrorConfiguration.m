@@ -65,7 +65,7 @@ static NSString *const kErrorCategoryLogin = @"login";
         @"Please log into this app again to reconnect your Facebook account.",
         @"The fallback message to display to recover invalidated tokens"
       );
-      NSArray *fallbackArray = @[
+      NSArray<NSDictionary<NSString *, id> *> *fallbackArray = @[
         @{ @"name" : @"login",
            @"items" : @[@{ @"code" : @102 },
                         @{ @"code" : @190 }],
