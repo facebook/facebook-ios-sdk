@@ -12,7 +12,7 @@ import FBSDKLoginKit
 class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
 
   let stubbedLoginCompleter: TestLoginCompleter
-  var capturedUrlParameters = [String: Any]()
+  var capturedURLParameters = [String: Any]()
   var capturedAppID: String?
   var capturedGraphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol?
   var capturedAuthenticationTokenCreator: AuthenticationTokenCreating?
@@ -27,7 +27,7 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
     authenticationTokenCreator: AuthenticationTokenCreating
   ) -> LoginCompleting {
-    capturedUrlParameters = parameters
+    capturedURLParameters = parameters
     capturedAppID = appID
     capturedGraphRequestConnectionFactory = graphRequestConnectionFactory
     capturedAuthenticationTokenCreator = authenticationTokenCreator

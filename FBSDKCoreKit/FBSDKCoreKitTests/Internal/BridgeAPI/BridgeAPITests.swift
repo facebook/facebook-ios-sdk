@@ -380,7 +380,7 @@ class BridgeAPITests: XCTestCase {
 
   // MARK: Did Finish Launching With Options
 
-  func testDidFinishLaunchingWithoutLaunchedUrlWithoutSourceApplication() {
+  func testDidFinishLaunchingWithoutLaunchedURLWithoutSourceApplication() {
     XCTAssertFalse(
       api.application(UIApplication.shared, didFinishLaunchingWithOptions: [:]),
       "Should not consider it a successful launch if there is no launch url or source application"
@@ -410,7 +410,7 @@ class BridgeAPITests: XCTestCase {
       UIApplication.LaunchOptionsKey.annotation: sampleAnnotation
     ]
 
-    FBSDKLoginManager.stubbedOpenUrlSuccess = true
+    FBSDKLoginManager.stubbedOpenURLSuccess = true
 
     XCTAssertTrue(
       api.application(UIApplication.shared, didFinishLaunchingWithOptions: options),
@@ -418,7 +418,7 @@ class BridgeAPITests: XCTestCase {
     )
 
     XCTAssertEqual(
-      FBSDKLoginManager.capturedOpenUrl,
+      FBSDKLoginManager.capturedOpenURL,
       sampleURL,
       "Should pass the launch url to the login manager"
     )
@@ -434,9 +434,9 @@ class BridgeAPITests: XCTestCase {
     )
   }
 
-  // MARK: - Open Url
+  // MARK: - Open URL
 
-  func testOpenUrlWithMissingSender() {
+  func testOpenURLWithMissingSender() {
     api.open(
       sampleURL,
       sender: nil
@@ -452,7 +452,7 @@ class BridgeAPITests: XCTestCase {
     )
   }
 
-  func testOpenUrlWithSender() {
+  func testOpenURLWithSender() {
     let urlOpener = FBSDKLoginManager()
     api.open(
       sampleURL,
@@ -519,7 +519,7 @@ class BridgeAPITests: XCTestCase {
       capturedError = error
     }
 
-    urlOpener.capturedOpenUrlCompletion?(true)
+    urlOpener.capturedOpenURLCompletion?(true)
 
     XCTAssertTrue(
       capturedSuccess,
@@ -539,7 +539,7 @@ class BridgeAPITests: XCTestCase {
       capturedError = error
     }
 
-    urlOpener.capturedOpenUrlCompletion?(false)
+    urlOpener.capturedOpenURLCompletion?(false)
 
     XCTAssertFalse(
       capturedSuccess,
@@ -746,10 +746,10 @@ class BridgeAPITests: XCTestCase {
 
     XCTAssertNil(api.pendingRequest, "Should cancel the request")
     XCTAssertTrue(
-      urlOpener.openUrlWasCalled,
+      urlOpener.openURLWasCalled,
       "Should ask the opener to open a url (even though there is not one provided)"
     )
-    XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should be called with nil arguments")
+    XCTAssertNil(FBSDKLoginManager.capturedOpenURL, "The url opener should be called with nil arguments")
     XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should be called with nil arguments")
     XCTAssertNil(FBSDKLoginManager.capturedAnnotation, "The url opener should be called with nil arguments")
   }
@@ -772,7 +772,7 @@ class BridgeAPITests: XCTestCase {
     )
 
     XCTAssertNil(api.pendingRequest, "Should cancel the request")
-    XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should not be called")
+    XCTAssertNil(FBSDKLoginManager.capturedOpenURL, "The url opener should not be called")
     XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should not be called")
     XCTAssertNil(FBSDKLoginManager.capturedAnnotation, "The url opener should not be called")
   }
@@ -807,7 +807,7 @@ class BridgeAPITests: XCTestCase {
     XCTAssertNil(logger.capturedContents, "Expected nothing to be logged")
   }
 
-  // MARK: - Bridge Response Url Handling
+  // MARK: - Bridge Response URL Handling
 
   func testHandlingBridgeResponseWithInvalidScheme() {
     stubBridgeApiResponseWithUrlCreation()

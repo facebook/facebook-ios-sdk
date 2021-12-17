@@ -12,10 +12,10 @@ import FBSDKCoreKit
 public class SampleUserProfiles: NSObject {
 
   public static let defaultName = "John Smith"
-  public static let defaultImageUrl = URL(string: "http://www.example.com/image.jpg")
+  public static let defaultImageURL = URL(string: "http://www.example.com/image.jpg")
   public static let defaultUserID = "123"
 
-  public static var missingImageUrl = createValid(imageURL: nil)
+  public static var missingImageURL = createValid(imageURL: nil)
   public static var validLimited = createValid(isLimited: true)
 
   public static func createValid(userID: String) -> Profile {
@@ -29,7 +29,7 @@ public class SampleUserProfiles: NSObject {
   public static func createValid(
     userID: String = defaultUserID,
     name: String? = defaultName,
-    imageURL url: URL? = defaultImageUrl,
+    imageURL url: URL? = defaultImageURL,
     isExpired: Bool = false,
     isLimited: Bool = false
   ) -> Profile {

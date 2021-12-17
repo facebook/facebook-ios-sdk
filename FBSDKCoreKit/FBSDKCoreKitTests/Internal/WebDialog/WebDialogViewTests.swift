@@ -277,8 +277,8 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
       policy = $0
     }
 
-    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleURLs.valid)
-    urlOpener.capturedOpenUrlCompletion?(true)
+    XCTAssertEqual(urlOpener.capturedOpenURL, SampleURLs.valid)
+    urlOpener.capturedOpenURLCompletion?(true)
     XCTAssertEqual(
       policy,
       .cancel,
@@ -287,7 +287,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
     policy = nil
 
-    urlOpener.capturedOpenUrlCompletion?(false)
+    urlOpener.capturedOpenURLCompletion?(false)
     XCTAssertEqual(
       policy,
       .cancel,
@@ -307,7 +307,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
       policy = $0
     }
 
-    XCTAssertNil(urlOpener.capturedOpenUrl)
+    XCTAssertNil(urlOpener.capturedOpenURL)
     XCTAssertEqual(
       policy,
       .allow,

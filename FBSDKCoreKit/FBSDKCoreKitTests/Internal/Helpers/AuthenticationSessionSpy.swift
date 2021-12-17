@@ -11,8 +11,8 @@ import Foundation
 @objcMembers
 class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
 
-  var capturedUrl: URL
-  var capturedCallbackUrlScheme: String?
+  var capturedURL: URL
+  var capturedCallbackURLScheme: String?
   var capturedCompletionHandler: FBSDKAuthenticationCompletionHandler?
   var startCallCount = 0
   var cancelCallCount = 0
@@ -28,8 +28,8 @@ class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
     callbackURLScheme: String?,
     completionHandler: @escaping FBSDKAuthenticationCompletionHandler
   ) {
-    capturedUrl = url
-    capturedCallbackUrlScheme = callbackURLScheme
+    capturedURL = url
+    capturedCallbackURLScheme = callbackURLScheme
     capturedCompletionHandler = completionHandler
   }
 

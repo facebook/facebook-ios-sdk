@@ -160,7 +160,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     )
   }
 
-  func testRequestURLWithUnavailableNativeBridgeUrl() {
+  func testRequestURLWithUnavailableNativeBridgeURL() {
     stubServerConfigurationWithDialog(named: Values.methodName)
     nativeBridge.stubbedRequestURLError = SampleError()
     let url = try? bridge.requestURL(
@@ -176,7 +176,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     )
   }
 
-  func testRequestUrl() throws {
+  func testRequestURL() throws {
     let value = UUID().uuidString
     let queryItem = URLQueryItem(name: "somethingUnique", value: value)
     let urlWithParams = SampleURLs.valid(queryItems: [queryItem])
@@ -228,7 +228,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   // MARK: - Redirect URL
 
-  func testRedirectUrlWithoutActionIdOrMethodName() {
+  func testRedirectURLWithoutActionIdOrMethodName() {
     let appURL = SampleURLs.valid.appendingPathComponent("appURL")
     internalUtility.stubbedAppURL = appURL
 
@@ -242,7 +242,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     XCTAssertEqual(url, appURL, message)
   }
 
-  func testRedirectUrlWithMethodNameOnly() {
+  func testRedirectURLWithMethodNameOnly() {
     let appURL = SampleURLs.valid.appendingPathComponent("appURL")
     internalUtility.stubbedAppURL = appURL
 
@@ -256,7 +256,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     XCTAssertEqual(url, appURL, message)
   }
 
-  func testRedirectUrlWithActionIdOnly() {
+  func testRedirectURLWithActionIdOnly() {
     let appURL = SampleURLs.valid.appendingPathComponent("appURL")
     internalUtility.stubbedAppURL = appURL
 
@@ -283,7 +283,7 @@ class BridgeAPIProtocolWebV2Tests: XCTestCase {
     XCTAssertEqual(url, appURL, message)
   }
 
-  func testRedirectUrlWithMethodNameAndActionID() {
+  func testRedirectURLWithMethodNameAndActionID() {
     let appURL = SampleURLs.valid.appendingPathComponent("appURL")
     internalUtility.stubbedAppURL = appURL
 

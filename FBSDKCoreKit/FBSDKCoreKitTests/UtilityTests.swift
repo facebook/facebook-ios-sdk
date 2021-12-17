@@ -15,7 +15,7 @@ class UtilityTests: XCTestCase {
     XCTAssertEqual(hashed, "3d59f7548e1af2151b64135003ce63c0a484c26b9b8b166a7b1c1805ec34b00a")
   }
 
-  func testURLDecodeShouldNotModifyUnencodedUrlString() {
+  func testURLDecodeShouldNotModifyUnencodedURLString() {
     let unencoded = "https://www.facebook.com/index.html?a=b&c=d"
 
     XCTAssertEqual(unencoded, Utility.decode(urlString: unencoded))

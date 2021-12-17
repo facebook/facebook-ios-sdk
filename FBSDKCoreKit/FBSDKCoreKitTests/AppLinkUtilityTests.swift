@@ -18,7 +18,7 @@ class AppLinkUtilityTests: XCTestCase {
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appEventsDropDeterminer = TestAppEventsDropDeterminer()
   let appEventParametersExtractor = TestAppEventParametersExtractor()
-  let userIdProvider = TestUserIDProvider()
+  let userIDProvider = TestUserIDProvider()
   let userDataStore = TestUserDataStore()
   let appLinkURLFactory = TestAppLinkURLFactory()
 
@@ -185,7 +185,7 @@ class AppLinkUtilityTests: XCTestCase {
       appEventsDropDeterminer: appEventsDropDeterminer,
       appEventParametersExtractor: appEventParametersExtractor,
       appLinkURLFactory: appLinkURLFactory,
-      userIDProvider: userIdProvider,
+      userIDProvider: userIDProvider,
       userDataStore: userDataStore
     )
   }

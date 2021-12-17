@@ -64,7 +64,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     )
   }
 
-  func testShowWithInvalidUrlFromParameters() {
+  func testShowWithInvalidURLFromParameters() {
     let dialog = createAndShowDialog(name: name)
 
     XCTAssertEqual(
@@ -87,7 +87,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     )
   }
 
-  func testShowWithValidUrlFromParametersWithoutWindow() {
+  func testShowWithValidURLFromParametersWithoutWindow() {
     createAndShowDialog()
 
     XCTAssertTrue(

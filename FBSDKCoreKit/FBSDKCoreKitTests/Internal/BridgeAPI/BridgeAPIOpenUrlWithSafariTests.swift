@@ -14,7 +14,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   let loginManager = FBSDKLoginManager()
 
   let logger = TestLogger(loggingBehavior: .developerErrors)
-  let urlOpener = TestInternalURLOpener(canOpenUrl: true)
+  let urlOpener = TestInternalURLOpener(canOpenURL: true)
   let bridgeAPIResponseFactory = TestBridgeAPIResponseFactory()
   let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
@@ -52,7 +52,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       nonHTTPUrl,
       "Should try to open a url with a non http scheme"
     )
@@ -67,7 +67,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   }
 
   func testWithAuthenticationURL() {
-    loginManager.stubbedIsAuthenticationUrl = true
+    loginManager.stubbedIsAuthenticationURL = true
     api.expectingBackground = true
 
     api.openURLWithSafariViewController(
@@ -77,7 +77,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       handler: uninvokedSuccessBlock()
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open an authentication url when safari controller is specified"
     )
     XCTAssertNotNil(api.authenticationSessionCompletionHandler)
@@ -86,7 +86,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   }
 
   func testWithNonAuthenticationURLWithSafariControllerAvailable() {
-    loginManager.stubbedIsAuthenticationUrl = false
+    loginManager.stubbedIsAuthenticationURL = false
     api.expectingBackground = true
 
     api.openURLWithSafariViewController(
@@ -96,7 +96,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       handler: uninvokedSuccessBlock()
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open an authentication url when safari controller is specified"
     )
     XCTAssertNil(api.authenticationSessionCompletionHandler)
@@ -106,7 +106,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
 
   func testWithoutSafariVcAvailable() {
     frameworkLoader.stubSafariViewControllerClass = nil
-    loginManager.stubbedIsAuthenticationUrl = false
+    loginManager.stubbedIsAuthenticationURL = false
     api.expectingBackground = true
 
     api.openURLWithSafariViewController(
@@ -117,7 +117,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       sampleUrl,
       "Should try to open a url when a safari controller is not available"
     )
@@ -130,7 +130,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   }
 
   func testWithoutFromViewController() {
-    loginManager.stubbedIsAuthenticationUrl = false
+    loginManager.stubbedIsAuthenticationURL = false
     api.expectingBackground = true
 
     api.openURLWithSafariViewController(
@@ -140,7 +140,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       handler: uninvokedSuccessBlock()
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertNil(api.authenticationSessionCompletionHandler)
@@ -153,7 +153,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
 
   func testWithFromViewControllerMissingTransitionCoordinator() {
     let spy = ViewControllerSpy.makeDefaultSpy()
-    loginManager.stubbedIsAuthenticationUrl = false
+    loginManager.stubbedIsAuthenticationURL = false
     api.expectingBackground = true
     var didInvokeHandler = false
     let handler: SuccessBlock = { success, error in
@@ -199,7 +199,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should not pass a completion handler to the safari vc presentation"
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertNil(api.authenticationSessionCompletionHandler)
@@ -212,7 +212,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     let spy = ViewControllerSpy.makeDefaultSpy()
     let coordinator = TestViewControllerTransitionCoordinator()
     spy.stubbedTransitionCoordinator = coordinator
-    loginManager.stubbedIsAuthenticationUrl = false
+    loginManager.stubbedIsAuthenticationURL = false
     api.expectingBackground = true
     var didInvokeHandler = false
     let handler: SuccessBlock = { success, error in
@@ -232,7 +232,7 @@ class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     )
 
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
 

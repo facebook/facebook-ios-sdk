@@ -11,28 +11,28 @@ import Foundation
 
 @objcMembers
 class TestInternalURLOpener: NSObject, InternalURLOpener {
-  var capturedOpenUrl: URL?
-  var capturedCanOpenUrl: URL?
-  var openUrlStubs = [URL: Bool]()
-  var canOpenUrl: Bool
-  var capturedOpenUrlCompletion: ((Bool) -> Void)?
+  var capturedOpenURL: URL?
+  var capturedCanOpenURL: URL?
+  var openURLStubs = [URL: Bool]()
+  var canOpenURL: Bool
+  var capturedOpenURLCompletion: ((Bool) -> Void)?
 
-  init(canOpenUrl: Bool = false) {
-    self.canOpenUrl = canOpenUrl
+  init(canOpenURL: Bool = false) {
+    self.canOpenURL = canOpenURL
   }
 
   func stubOpen(url: URL, success: Bool) {
-    openUrlStubs[url] = success
+    openURLStubs[url] = success
   }
 
   func canOpen(_ url: URL) -> Bool {
-    capturedCanOpenUrl = url
-    return canOpenUrl
+    capturedCanOpenURL = url
+    return canOpenURL
   }
 
   func open(_ url: URL) -> Bool {
-    capturedOpenUrl = url
-    guard let didOpen = openUrlStubs[url] else {
+    capturedOpenURL = url
+    guard let didOpen = openURLStubs[url] else {
       fatalError("Must stub whether \(url.absoluteString) can be opened")
     }
     return didOpen
@@ -43,7 +43,7 @@ class TestInternalURLOpener: NSObject, InternalURLOpener {
     options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
     completionHandler completion: ((Bool) -> Void)?
   ) {
-    capturedOpenUrl = url
-    capturedOpenUrlCompletion = completion
+    capturedOpenURL = url
+    capturedOpenURLCompletion = completion
   }
 }

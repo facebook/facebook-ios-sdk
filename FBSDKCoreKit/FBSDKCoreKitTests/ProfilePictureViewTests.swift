@@ -81,7 +81,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfileNoImageURL() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.missingImageUrl, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.missingImageURL, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -99,7 +99,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   // MARK: - Token Notifications
 
-  func testReceivingAccessTokenNotificationWithDidChangeUserIdKey() {
+  func testReceivingAccessTokenNotificationWithDidChangeUserIDKey() {
     let view = TestProfilePictureView()
     let notification = Notification(
       name: .AccessTokenDidChange,
@@ -169,7 +169,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithoutImageURL() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.missingImageUrl, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.missingImageURL, shouldPostNotification: false)
 
     view._updateImageWithProfile()
 

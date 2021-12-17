@@ -21,7 +21,7 @@ class BridgeAPIRequestTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    internalURLOpener = TestInternalURLOpener(canOpenUrl: true)
+    internalURLOpener = TestInternalURLOpener(canOpenURL: true)
     internalUtility = TestInternalUtility()
     settings = TestSettings()
 
@@ -79,7 +79,7 @@ class BridgeAPIRequestTests: XCTestCase {
   }
 
   func testUnopenableURL() {
-    internalURLOpener.canOpenUrl = false
+    internalURLOpener.canOpenURL = false
     XCTAssertNil(
       makeRequest(protocolType: .native, scheme: .facebookApp),
       "BridgeAPIRequests should only be created for openable URLs"
@@ -117,7 +117,7 @@ class BridgeAPIRequestTests: XCTestCase {
 
   func testUnopenableRequestURL() throws {
     let request = try XCTUnwrap(makeRequest())
-    internalURLOpener.canOpenUrl = false
+    internalURLOpener.canOpenURL = false
 
     XCTAssertThrowsError(
       try request.requestURL(),

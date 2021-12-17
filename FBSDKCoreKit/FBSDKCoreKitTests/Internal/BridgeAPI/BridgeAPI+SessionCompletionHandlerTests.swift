@@ -10,7 +10,7 @@ extension BridgeAPITests {
 
   // MARK: - Setting Session Completion Handler
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithValidUrlWithoutError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithValidURLWithoutError() {
     var capturedSuccesses = [Bool]()
     var capturedErrors = [Error?]()
     let handler: SuccessBlock = { success, error in
@@ -41,7 +41,7 @@ extension BridgeAPITests {
     verifyAuthenticationPropertiesReset()
   }
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidUrlWithoutError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidURLWithoutError() {
     let url = URL(string: " ")
 
     var capturedSuccesses = [Bool]()
@@ -72,7 +72,7 @@ extension BridgeAPITests {
     verifyAuthenticationPropertiesReset()
   }
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithoutUrlWithoutError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithoutURLWithoutError() {
     var capturedSuccesses = [Bool]()
     var capturedErrors = [Error?]()
     let handler: SuccessBlock = { success, error in
@@ -101,7 +101,7 @@ extension BridgeAPITests {
     verifyAuthenticationPropertiesReset()
   }
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithValidUrlWithError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithValidURLWithError() {
     var capturedSuccesses = [Bool]()
     var capturedErrors = [Error?]()
     let handler: SuccessBlock = { success, error in
@@ -130,7 +130,7 @@ extension BridgeAPITests {
     verifyAuthenticationPropertiesReset()
   }
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidUrlWithError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidURLWithError() {
     let url = URL(string: " ")
 
     var capturedSuccesses = [Bool]()
@@ -161,7 +161,7 @@ extension BridgeAPITests {
     verifyAuthenticationPropertiesReset()
   }
 
-  func testInvokingAuthSessionCompletionHandlerFromHandlerWithoutUrlWithError() {
+  func testInvokingAuthSessionCompletionHandlerFromHandlerWithoutURLWithError() {
     var capturedSuccesses = [Bool]()
     var capturedErrors = [Error?]()
     let handler: SuccessBlock = { success, error in

@@ -380,7 +380,7 @@ class AppLinkNavigationTests: XCTestCase {
 
   func testNavigationTypeWithoutTarget() {
     XCTAssertEqual(
-      navigation.navigationType(for: [], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [], urlOpener: TestInternalURLOpener(canOpenURL: true)),
       .failure,
       "The navigation type for an empty list of targets should be a failure"
     )
@@ -392,7 +392,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: false)),
       .failure,
       "The navigation type when there is an invalid target and no web url should be 'failure'"
     )
@@ -404,7 +404,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: true)),
       .app,
       "The navigation type when there is a valid target and no web url should be 'app'"
     )
@@ -416,7 +416,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: true)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: true)),
       .app,
       "The navigation type when there is a valid target and a web url should be 'app'"
     )
@@ -428,7 +428,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenUrl: false)),
+      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: false)),
       .browser,
       "The navigation type when there is an invalid target and a web url should be 'browser'"
     )
@@ -439,7 +439,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testSuccessfullyNavigatingWithTargetWithoutWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    let opener = TestInternalURLOpener(canOpenUrl: true)
+    let opener = TestInternalURLOpener(canOpenURL: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     do {
@@ -454,11 +454,11 @@ class AppLinkNavigationTests: XCTestCase {
       )
       XCTAssertEqual(result, .app, "Should return the correct navigation type")
       XCTAssertNotNil(
-        opener.capturedOpenUrl,
+        opener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        opener.capturedOpenUrl?.absoluteString,
+        opener.capturedOpenURL?.absoluteString,
         eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
@@ -470,7 +470,7 @@ class AppLinkNavigationTests: XCTestCase {
   func testUnsuccessfullyNavigatingWithTargetWithWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid(path: name))
-    let opener = TestInternalURLOpener(canOpenUrl: true)
+    let opener = TestInternalURLOpener(canOpenURL: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
 
     do {
@@ -487,11 +487,11 @@ class AppLinkNavigationTests: XCTestCase {
       )
       XCTAssertEqual(result, .browser, "Should return the correct navigation type")
       XCTAssertNotNil(
-        opener.capturedOpenUrl,
+        opener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        opener.capturedOpenUrl?.absoluteString,
+        opener.capturedOpenURL?.absoluteString,
         eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
@@ -576,7 +576,7 @@ class AppLinkNavigationTests: XCTestCase {
     resolver.capturedCompletion?(nil, nil)
 
     XCTAssertEqual(
-      resolver.capturedUrl,
+      resolver.capturedURL,
       SampleURLs.valid,
       "Should resolve using the provided url"
     )

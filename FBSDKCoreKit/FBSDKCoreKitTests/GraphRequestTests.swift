@@ -80,7 +80,7 @@ final class GraphRequestTests: XCTestCase {
     )
   }
 
-  func testCreatingWithCustomUrlSessionProxyFactory() {
+  func testCreatingWithCustomURLSessionProxyFactory() {
     factory = TestGraphRequestConnectionFactory(stubbedConnection: GraphRequestConnection())
     let request = GraphRequest(
       graphPath: path,

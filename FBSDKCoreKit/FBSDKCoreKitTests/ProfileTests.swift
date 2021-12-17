@@ -792,7 +792,7 @@ class ProfileTests: XCTestCase {
     XCTAssertNil(Profile.current)
   }
 
-  func testProfileParseBlockReturnsNilIfResultHasNoId() throws {
+  func testProfileParseBlockReturnsNilIfResultHasNoID() throws {
     let result = [
       "first_name": "firstname",
       "middle_name": "middlename",
@@ -805,7 +805,7 @@ class ProfileTests: XCTestCase {
     XCTAssertNil(Profile.current)
   }
 
-  func testProfileParseBlockReturnsNilIfResultHasEmptyId() throws {
+  func testProfileParseBlockReturnsNilIfResultHasEmptyID() throws {
     result["id"] = ""
     Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)

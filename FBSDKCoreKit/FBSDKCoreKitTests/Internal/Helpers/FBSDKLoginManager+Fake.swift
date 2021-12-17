@@ -9,24 +9,24 @@
 @objc(FBSDKLoginManager) // for NSClassFromString(@"FBSDKLoginManager")
 @objcMembers
 class FBSDKLoginManager: NSObject {
-  static var capturedOpenUrl: URL?
+  static var capturedOpenURL: URL?
   static var capturedSourceApplication: String?
   static var capturedAnnotation: String?
-  static var stubbedOpenUrlSuccess = false
+  static var stubbedOpenURLSuccess = false
 
-  var openUrlWasCalled = false
-  var capturedCanOpenUrl: URL?
+  var openURLWasCalled = false
+  var capturedCanOpenURL: URL?
   var capturedCanOpenSourceApplication: String?
   var capturedCanOpenAnnotation: String?
-  var stubbedCanOpenUrl = false
-  var stubbedIsAuthenticationUrl = false
+  var stubbedCanOpenURL = false
+  var stubbedIsAuthenticationURL = false
   private var urlPropagationMap = [String: Bool]()
 
   class func resetTestEvidence() {
-    capturedOpenUrl = nil
+    capturedOpenURL = nil
     capturedSourceApplication = nil
     capturedAnnotation = nil
-    stubbedOpenUrlSuccess = false
+    stubbedOpenURLSuccess = false
   }
 
   func stubShouldStopPropagationOfURL(_ url: URL, withValue value: Bool) {
@@ -47,11 +47,11 @@ extension FBSDKLoginManager: URLOpening {
     sourceApplication: String?,
     annotation: Any?
   ) -> Bool {
-    openUrlWasCalled = true
-    FBSDKLoginManager.capturedOpenUrl = url
+    openURLWasCalled = true
+    FBSDKLoginManager.capturedOpenURL = url
     FBSDKLoginManager.capturedSourceApplication = sourceApplication
     FBSDKLoginManager.capturedAnnotation = annotation as? String
-    return FBSDKLoginManager.stubbedOpenUrlSuccess
+    return FBSDKLoginManager.stubbedOpenURLSuccess
   }
 
   public func applicationDidBecomeActive(_ application: UIApplication) {
@@ -64,13 +64,13 @@ extension FBSDKLoginManager: URLOpening {
     sourceApplication: String?,
     annotation: Any?
   ) -> Bool {
-    capturedCanOpenUrl = url
+    capturedCanOpenURL = url
     capturedCanOpenSourceApplication = sourceApplication
     capturedCanOpenAnnotation = annotation as? String
-    return stubbedCanOpenUrl
+    return stubbedCanOpenURL
   }
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
-    stubbedIsAuthenticationUrl
+    stubbedIsAuthenticationURL
   }
 }

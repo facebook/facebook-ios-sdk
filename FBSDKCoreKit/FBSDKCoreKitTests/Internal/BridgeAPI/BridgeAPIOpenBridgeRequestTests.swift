@@ -13,7 +13,7 @@ import XCTest
 class BridgeAPIOpenBridgeRequestTests: XCTestCase {
 
   let sampleUrl = URL(string: "http://example.com")
-  let urlOpener = TestInternalURLOpener(canOpenUrl: true)
+  let urlOpener = TestInternalURLOpener(canOpenURL: true)
   let bridgeAPIResponseFactory = TestBridgeAPIResponseFactory()
   let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
@@ -28,7 +28,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
     errorFactory: TestErrorFactory()
   )
 
-  // MARK: - Url Opening
+  // MARK: - URL Opening
 
   func testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithFromVc() {
     frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
@@ -144,7 +144,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
     )
 
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertFalse(
@@ -175,7 +175,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: completionHandler
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertFalse(
@@ -208,7 +208,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: completionHandler
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertFalse(
@@ -239,7 +239,7 @@ class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: completionHandler
     )
     XCTAssertNil(
-      urlOpener.capturedOpenUrl,
+      urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
     XCTAssertFalse(

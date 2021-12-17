@@ -182,7 +182,7 @@ class LoginManagerTests: XCTestCase {
 
   // MARK: Opening URL
 
-  func testOpenUrlUsesLoginCompleterFactory() throws {
+  func testOpenURLUsesLoginCompleterFactory() throws {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&state=%7B%22challenge%22%3A%22a%2520%253Dbcdef%22%7D")
     )
@@ -194,37 +194,37 @@ class LoginManagerTests: XCTestCase {
       "Should create a login completer using the expected app identifier"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["access_token"] as? String,
+      loginCompleterFactory.capturedURLParameters["access_token"] as? String,
       "sometoken",
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["denied_scopes"] as? String,
+      loginCompleterFactory.capturedURLParameters["denied_scopes"] as? String,
       "email,user_friends",
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["expires_in"] as? String,
+      loginCompleterFactory.capturedURLParameters["expires_in"] as? String,
       "5183949",
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["granted_scopes"] as? String,
+      loginCompleterFactory.capturedURLParameters["granted_scopes"] as? String,
       "public_profile",
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["signed_request"] as? String,
+      loginCompleterFactory.capturedURLParameters["signed_request"] as? String,
       "ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0",
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["state"] as? String,
+      loginCompleterFactory.capturedURLParameters["state"] as? String,
       #"{"challenge":"a%20%3Dbcdef"}"#,
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
-      loginCompleterFactory.capturedUrlParameters["user_id"] as? String,
+      loginCompleterFactory.capturedURLParameters["user_id"] as? String,
       "123",
       "Should create a login completer using the parameters parsed from the url"
     )

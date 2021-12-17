@@ -12,12 +12,12 @@ import Foundation
 
 extension BridgeAPITests {
 
-  // MARK: - Url Opening
+  // MARK: - URL Opening
 
   func testOpenUrlShouldStopPropagationWithPendingURL() {
     let urlOpener = FBSDKLoginManager()
     urlOpener.stubShouldStopPropagationOfURL(sampleURL, withValue: true)
-    urlOpener.stubbedCanOpenUrl = true
+    urlOpener.stubbedCanOpenURL = true
 
     api.pendingURLOpen = urlOpener
 
@@ -32,7 +32,7 @@ extension BridgeAPITests {
     )
 
     XCTAssertNil(
-      urlOpener.capturedCanOpenUrl,
+      urlOpener.capturedCanOpenURL,
       "Should not check if a url can be opened when exiting early"
     )
   }
@@ -466,7 +466,7 @@ extension BridgeAPITests {
     }
 
     urlOpener.stubShouldStopPropagationOfURL(sampleURL, withValue: false)
-    urlOpener.stubbedCanOpenUrl = pendingUrlCanOpenUrl
+    urlOpener.stubbedCanOpenURL = pendingUrlCanOpenUrl
 
     api.pendingURLOpen = urlOpener
 
@@ -594,7 +594,7 @@ extension BridgeAPITests {
       line: line
     )
     XCTAssertEqual(
-      urlOpener.capturedCanOpenUrl,
+      urlOpener.capturedCanOpenURL,
       expectedCanOpenUrlCalledWithUrl,
       "The url opener's can open url method should be called with the expected URL",
       file: file,
@@ -616,7 +616,7 @@ extension BridgeAPITests {
     )
 
     XCTAssertEqual(
-      FBSDKLoginManager.capturedOpenUrl,
+      FBSDKLoginManager.capturedOpenURL,
       expectedOpenUrlUrl,
       "The url opener's open url method should be called with the expected URL",
       file: file,

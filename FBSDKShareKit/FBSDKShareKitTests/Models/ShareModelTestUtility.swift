@@ -80,7 +80,7 @@ enum ShareModelTestUtility {
     ]
   }
 
-  static var photosWithFileUrls: [SharePhoto] {
+  static var photosWithFileURLs: [SharePhoto] {
     [
       photoWithFileURL
     ]
@@ -118,7 +118,7 @@ enum ShareModelTestUtility {
     content.contentURL = contentURL
     content.hashtag = hashtag
     content.peopleIDs = peopleIDs
-    content.photos = photosWithFileUrls
+    content.photos = photosWithFileURLs
     content.placeID = placeID
     content.ref = ref
     return content

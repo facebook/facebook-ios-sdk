@@ -19,7 +19,7 @@ class LocationTests: XCTestCase {
     XCTAssertEqual(location.name, dict["name"])
   }
 
-  func testCreateWithIdOnly() {
+  func testCreateWithIDOnly() {
     let dict = ["id": "110843418940484"]
     let location = Location(from: dict)
 

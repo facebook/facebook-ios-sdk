@@ -84,7 +84,7 @@
 --rules yodaConditions
 
 # Disabled Rules
-# --rules acronyms # (opt-in)
+# --rules acronyms # (opt-in) # capitalizes acronyms, ex varWithUrl -> varWithURL, methodWithId() -> methodWithID()
 # --rules assertionFailures
 # --rules blankLinesAtStartOfScope # removes the first blank line in classes, structs, funcs etc
 # --rules blankLinesBetweenImports # (opt-in)

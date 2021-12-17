@@ -8,11 +8,11 @@
 
 @objcMembers
 class TestAppLinkResolver: NSObject, AppLinkResolving {
-  var capturedUrl: URL?
+  var capturedURL: URL?
   var capturedCompletion: AppLinkBlock?
 
   func appLink(from url: URL, handler: @escaping AppLinkBlock) {
-    capturedUrl = url
+    capturedURL = url
     capturedCompletion = handler
   }
 }
