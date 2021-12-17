@@ -107,7 +107,7 @@
 
 - (NSURL *)_generateURL
 {
-  NSMutableDictionary<NSString *, id> *parametersDictionary = [self queryParameters];
+  NSMutableDictionary<NSString *, NSString *> *parametersDictionary = [self queryParameters];
   NSError *error;
   return [_internalUtility URLWithScheme:FBSDKURLSchemeHTTPS
                                     host:FBSDK_CONTEXT_DIALOG_URL_HOST
@@ -116,26 +116,23 @@
                                    error:&error];
 }
 
-- (NSMutableDictionary<NSString *, id> *)queryParameters
+- (NSMutableDictionary<NSString *, NSString *> *)queryParameters
 {
-  NSMutableDictionary<NSString *, id> *appSwitchParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, NSString *> *appSwitchParameters = [NSMutableDictionary new];
   if (self.dialogContent && [self.dialogContent isKindOfClass:FBSDKChooseContextContent.class]) {
     FBSDKChooseContextContent *content = (FBSDKChooseContextContent *)self.dialogContent;
 
-    NSString *filtersName = [FBSDKChooseContextContent filtersNameForFilters:content.filter];
-    if (filtersName) {
-      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY] = filtersName;
-    }
+    [FBSDKTypeUtility dictionary:appSwitchParameters
+                       setObject:[FBSDKChooseContextContent filtersNameForFilters:content.filter]
+                          forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY];
 
-    NSNumber *minParticipants = @(content.minParticipants);
-    if (minParticipants != nil) {
-      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY] = minParticipants;
-    }
+    [FBSDKTypeUtility dictionary:appSwitchParameters
+                       setObject:@(content.minParticipants).stringValue
+                          forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY];
 
-    NSNumber *maxParticipants = @(content.maxParticipants);
-    if (maxParticipants != nil) {
-      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
-    }
+    [FBSDKTypeUtility dictionary:appSwitchParameters
+                       setObject:@(content.maxParticipants).stringValue
+                          forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY];
   }
   return appSwitchParameters;
 }

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginManager (Testing)
 
-- (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
+- (nullable NSDictionary<NSString *, NSString *> *)logInParametersFromURL:(NSURL *)url;
 
 - (nullable NSString *)loadExpectedNonce;
 
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(validateReauthentication(accessToken:result:));
 // UNCRUSTIFY_FORMAT_ON
 
-- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
+- (nullable NSDictionary<NSString *, NSString *> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
 
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(UIViewController *)viewController

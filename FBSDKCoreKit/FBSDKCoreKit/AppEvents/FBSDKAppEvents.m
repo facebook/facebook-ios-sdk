@@ -1080,10 +1080,10 @@ static BOOL g_explicitEventsLoggedYet = NO;
     if ([self.appEventsUtility shouldDropAppEvents]) {
       return;
     }
-    NSMutableDictionary<NSString *, id> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
-                                                                                    shouldAccessAdvertisingID:self.serverConfiguration.isAdvertisingIDEnabled
-                                                                                                       userID:self.userID
-                                                                                                     userData:[self getUserData]];
+    NSMutableDictionary<NSString *, NSString *> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
+                                                                                            shouldAccessAdvertisingID:self.serverConfiguration.isAdvertisingIDEnabled
+                                                                                                               userID:self.userID
+                                                                                                             userData:[self getUserData]];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
@@ -1120,7 +1120,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 #endif
 }
 
-- (void)appendInstallTimestamp:(nonnull NSMutableDictionary<NSString *, id> *)parameters
+- (void)appendInstallTimestamp:(nonnull NSMutableDictionary<NSString *, NSString *> *)parameters
 {
   if (@available(iOS 14.0, *)) {
     if ([self.settings isSetATETimeExceedsInstallTime]) {
@@ -1450,11 +1450,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
                              logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
       return;
     }
-    NSMutableDictionary<NSString *, id> *postParameters = [self.appEventsUtility
-                                                           activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
-                                                           shouldAccessAdvertisingID:self.serverConfiguration.advertisingIDEnabled
-                                                           userID:self.userID
-                                                           userData:[self getUserData]];
+    NSMutableDictionary<NSString *, NSString *> *postParameters = [self.appEventsUtility
+                                                                   activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
+                                                                   shouldAccessAdvertisingID:self.serverConfiguration.advertisingIDEnabled
+                                                                   userID:self.userID
+                                                                   userData:[self getUserData]];
     NSInteger length = receipt_data.length;
     if (length > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:receipt_data forKey:@"receipt_data"];

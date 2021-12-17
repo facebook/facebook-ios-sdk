@@ -59,11 +59,11 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The Facebook URL.
  */
-- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
-                                path:(NSString *)path
-                     queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                      defaultVersion:(NSString *)defaultVersion
-                               error:(NSError *__autoreleasing *)errorRef;
+- (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+                                         path:(NSString *)path
+                              queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
+                               defaultVersion:(NSString *)defaultVersion
+                                        error:(NSError *__autoreleasing *)errorRef;
 
 /**
   Constructs a Facebook URL that doesn't need to specify an API version.

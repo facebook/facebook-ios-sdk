@@ -38,8 +38,10 @@ NS_SWIFT_NAME(InternalUtility)
   <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility>
 #endif
 
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 @property (class, nonnull, readonly) FBSDKInternalUtility *sharedUtility;
 
@@ -52,37 +54,11 @@ NS_SWIFT_NAME(InternalUtility)
 @property (nonatomic, readonly, strong) NSBundle *bundleForStrings;
 
 /**
-  Constructs an URL for the current app.
- @param host The host for the URL.
- @param path The path for the URL.
- @param queryParameters The query parameters for the URL.  This will be converted into a query string.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return The app URL.
- */
-- (NSURL *)appURLWithHost:(NSString *)host
-                     path:(NSString *)path
-          queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                    error:(NSError *__autoreleasing *)errorRef;
-
-/**
   Parses an FB url's query params (and potentially fragment) into a dictionary.
  @param url The FB url.
  @return A dictionary with the key/value pairs.
  */
 - (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url;
-
-/**
-  Constructs a Facebook URL.
- @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
- @param path The path for the URL.  This may or may not include a version.
- @param queryParameters The query parameters for the URL.  This will be converted into a query string.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return The Facebook URL.
- */
-- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
-                                path:(NSString *)path
-                     queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                               error:(NSError *__autoreleasing *)errorRef;
 
 /**
   Tests whether the supplied URL is a valid URL for opening in the browser.

@@ -24,34 +24,32 @@ public class TestInternalUtility: NSObject,
   public var isUnity = false
   public var appURLScheme = ""
 
+  public func url(
+    withScheme scheme: String,
+    host: String,
+    path: String,
+    queryParameters: [String: String]
+  ) throws -> URL {
+    struct Error: Swift.Error {}
+
+    guard let url = stubbedURL else { throw Error() }
+    return url
+  }
+
   public func facebookURL(
     withHostPrefix hostPrefix: String,
     path: String,
-    queryParameters: [String: Any],
-    error errorRef: NSErrorPointer
-  ) -> URL {
+    queryParameters: [String: String]
+  ) throws -> URL {
     stubbedURL ?? URL(string: "facebook.com")! // swiftlint:disable:this force_unwrapping
   }
 
   public func appURL(
     withHost host: String,
     path: String,
-    queryParameters: [String: Any],
-    error errorRef: NSErrorPointer
-  ) -> URL {
-    stubbedURL ?? URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
-  }
-
-  public func url(
-    withScheme scheme: String,
-    host: String,
-    path: String,
-    queryParameters: [String: Any]
+    queryParameters: [String: String]
   ) throws -> URL {
-    struct Error: Swift.Error {}
-
-    guard let url = stubbedURL else { throw Error() }
-    return url
+    stubbedURL ?? URL(string: "example.com")! // swiftlint:disable:this force_unwrapping
   }
 
   public func registerTransientObject(_ object: Any) {}

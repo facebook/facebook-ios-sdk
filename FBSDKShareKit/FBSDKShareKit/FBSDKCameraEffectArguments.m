@@ -90,8 +90,9 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _arguments = [decoder decodeObjectOfClass:NSMutableDictionary.class
-                                       forKey:FBSDKCameraEffectArgumentsArgumentsKey];
+    NSSet<Class> *classes = [NSSet setWithObjects:NSMutableDictionary.class, NSString.class, nil];
+    _arguments = [decoder decodeObjectOfClasses:classes
+                                         forKey:FBSDKCameraEffectArgumentsArgumentsKey];
   }
   return self;
 }

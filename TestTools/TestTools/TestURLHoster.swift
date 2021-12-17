@@ -12,7 +12,7 @@ public final class TestURLHoster: URLHosting {
   public var capturedHost: String?
   public var capturedHostPrefix: String?
   public var capturedPath: String?
-  public var capturedQueryParameters: [String: Any]?
+  public var capturedQueryParameters: [String: String]?
   public var stubbedURL: URL?
 
   private var url: URL {
@@ -30,9 +30,8 @@ public final class TestURLHoster: URLHosting {
   public func appURL(
     withHost host: String,
     path: String,
-    queryParameters: [String: Any],
-    error errorRef: NSErrorPointer
-  ) -> URL {
+    queryParameters: [String: String]
+  ) throws -> URL {
     capturedHost = host
     capturedPath = path
     capturedQueryParameters = queryParameters
@@ -42,9 +41,8 @@ public final class TestURLHoster: URLHosting {
   public func facebookURL(
     withHostPrefix hostPrefix: String,
     path: String,
-    queryParameters: [String: Any],
-    error errorRef: NSErrorPointer
-  ) -> URL {
+    queryParameters: [String: String]
+  ) throws -> URL {
     capturedHostPrefix = hostPrefix
     capturedPath = path
     capturedQueryParameters = queryParameters

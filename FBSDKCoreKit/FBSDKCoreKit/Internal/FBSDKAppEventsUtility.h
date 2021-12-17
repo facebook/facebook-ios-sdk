@@ -38,11 +38,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 
-- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
-                                                                       userID:(nullable NSString *)userID
-                                                                     userData:(nullable NSString *)userData;
-
 - (BOOL)isSensitiveUserData:(NSString *)text;
 - (BOOL)isStandardEvent:(nullable NSString *)event;
 

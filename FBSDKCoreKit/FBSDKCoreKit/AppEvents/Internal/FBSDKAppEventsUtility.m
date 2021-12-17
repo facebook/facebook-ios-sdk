@@ -71,12 +71,12 @@ static FBSDKAppEventsUtility *_shared;
   self.internalUtility = internalUtility;
 }
 
-- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
-                                                                       userID:(nullable NSString *)userID
-                                                                     userData:(nullable NSString *)userData
+- (NSMutableDictionary<NSString *, NSString *> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                            shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                               userID:(nullable NSString *)userID
+                                                                             userData:(nullable NSString *)userData
 {
-  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, NSString *> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
   if (shouldAccessAdvertisingID) {

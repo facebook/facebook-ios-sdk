@@ -40,8 +40,34 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 - (nullable NSURL *)URLWithScheme:(NSString *)scheme
                              host:(NSString *)host
                              path:(NSString *)path
-                  queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                  queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                             error:(NSError *__autoreleasing *)errorRef;
+
+/**
+  Constructs an URL for the current app.
+ @param host The host for the URL.
+ @param path The path for the URL.
+ @param queryParameters The query parameters for the URL.  This will be converted into a query string.
+ @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
+ @return The app URL.
+ */
+- (nullable NSURL *)appURLWithHost:(NSString *)host
+                              path:(NSString *)path
+                   queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
+                             error:(NSError *__autoreleasing *)errorRef;
+
+/**
+  Constructs a Facebook URL.
+ @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
+ @param path The path for the URL.  This may or may not include a version.
+ @param queryParameters The query parameters for the URL.  This will be converted into a query string.
+ @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
+ @return The Facebook URL.
+ */
+- (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+                                         path:(NSString *)path
+                              queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
+                                        error:(NSError *__autoreleasing *)errorRef;
 
 /**
   Registers a transient object so that it will not be deallocated until unregistered
@@ -65,7 +91,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 /**
   add data processing options to the dictionary.
  */
-- (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters;
+- (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, NSString *> *)parameters;
 
 /**
   Converts NSData to a hexadecimal UTF8 String.

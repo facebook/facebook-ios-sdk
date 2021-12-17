@@ -100,136 +100,122 @@ class InternalUtilityTests: XCTestCase {
     )
   }
 
-  func testFacebookURL() {
+  func testFacebookURL() throws {
     Settings.shared.facebookDomainPart = ""
     var urlString = ""
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "",
       path: "",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
 
     XCTAssertEqual(urlString, "https://facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m.",
       path: "",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/dialog/share",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "dialog/share",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "dialog/share",
-      queryParameters: ["key": "value"],
-      error: nil
+      queryParameters: ["key": "value"]
     ).absoluteString
     XCTAssertEqual(
       urlString,
       "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share?key=value"
     )
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v1.0/dialog/share",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v1.0/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/dialog/share",
       queryParameters: [:],
-      defaultVersion: "v2.0",
-      error: nil
+      defaultVersion: "v2.0"
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v2.0/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v1.0/dialog/share",
       queryParameters: [:],
-      defaultVersion: "v2.0",
-      error: nil
+      defaultVersion: "v2.0"
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v1.0/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v987654321.2/dialog/share",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v987654321.2/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v.1/dialog/share",
       queryParameters: [:],
-      defaultVersion: "v2.0",
-      error: nil
+      defaultVersion: "v2.0"
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v2.0/v.1/dialog/share")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v1/dialog/share",
       queryParameters: [:],
-      defaultVersion: "v2.0",
-      error: nil
+      defaultVersion: "v2.0"
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v2.0/v1/dialog/share")
 
     Settings.shared.graphAPIVersion = "v3.3"
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v1/dialog/share",
       queryParameters: [:],
-      defaultVersion: "",
-      error: nil
+      defaultVersion: ""
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v3.3/v1/dialog/share")
 
     Settings.shared.graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/dialog/share",
       queryParameters: [:],
-      defaultVersion: "",
-      error: nil
+      defaultVersion: ""
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
   }
 
-  func testFacebookGamingURL() {
+  func testFacebookGamingURL() throws {
     Settings.shared.facebookDomainPart = ""
     let authToken = AuthenticationToken(
       tokenString: "token_string",
@@ -238,19 +224,17 @@ class InternalUtilityTests: XCTestCase {
     )
     AuthenticationToken.current = authToken
 
-    var urlString = InternalUtility.shared.facebookURL(
+    var urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "graph",
       path: "",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://graph.fb.gg/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
-    urlString = InternalUtility.shared.facebookURL(
+    urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "graph-video",
       path: "",
-      queryParameters: [:],
-      error: nil
+      queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://graph-video.fb.gg/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
   }
@@ -506,29 +490,27 @@ class InternalUtilityTests: XCTestCase {
 
   // MARK: - App URL with host
 
-  func testAppUrlWithEmptyHost() {
+  func testAppUrlWithEmptyHost() throws {
     Settings.shared.appID = "appid"
     Settings.shared.appURLSchemeSuffix = "foo"
 
-    let url = InternalUtility.shared.appURL(
+    let url = try InternalUtility.shared.appURL(
       withHost: "",
       path: validPath,
-      queryParameters: validParameters,
-      error: nil
+      queryParameters: validParameters
     )
 
     XCTAssertNil(url.host, "Should not set an empty host.")
   }
 
-  func testAppUrlWithValidHost() {
+  func testAppUrlWithValidHost() throws {
     Settings.shared.appID = "appid"
     Settings.shared.appURLSchemeSuffix = "foo"
 
-    let url = InternalUtility.shared.appURL(
+    let url = try InternalUtility.shared.appURL(
       withHost: "facebook",
       path: validPath,
-      queryParameters: validParameters,
-      error: nil
+      queryParameters: validParameters
     )
 
     XCTAssertEqual(url.host, "facebook", "Should set the expected host.")
@@ -1312,34 +1294,6 @@ class InternalUtilityTests: XCTestCase {
     obj1 = nil
     XCTAssertFalse(InternalUtility.shared.object(obj1 as Any, isEqualTo: obj2))
     XCTAssertFalse(InternalUtility.shared.object(obj2, isEqualTo: obj1 as Any))
-  }
-
-  func testCreatingUrlWithUnknownError() throws { // InvalidQueryString
-    XCTAssertThrowsError(
-      try InternalUtility.shared.url(
-        withScheme: "https",
-        host: "example",
-        path: "/foo",
-        queryParameters: ["a date": Date()]
-      )
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertEqual(
-        nsError.domain,
-        "com.facebook.sdk.core",
-        "Creating a url with an error reference should repopulate the error domain correctly"
-      )
-      XCTAssertEqual(
-        nsError.code,
-        3,
-        "Creating a url with an error reference should repopulate the error code correctly"
-      )
-      XCTAssertEqual(
-        nsError.userInfo[ErrorDeveloperMessageKey] as? String,
-        "Unknown error building URL.",
-        "Creating a url with an error reference should repopulate the error message correctly"
-      )
-    }
   }
 
   // MARK: - Helpers

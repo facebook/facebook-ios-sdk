@@ -12,11 +12,11 @@ class TestInternalUtility: InternalUtilityProtocol {
   var scheme: String?
   var host: String?
   var path: String?
-  var queryParameters: [String: Any]?
+  var queryParameters: [String: String]?
   var isFacebookAppInstalled = false
   var isUnity = false
 
-  func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: Any]) throws -> URL {
+  func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: String]) throws -> URL {
     self.scheme = scheme
     self.host = host
     self.path = path
@@ -26,7 +26,23 @@ class TestInternalUtility: InternalUtilityProtocol {
     returnUrlComponents.host = host
     returnUrlComponents.path = path
 
-    return returnUrlComponents.url ?? URL(string: "www.facebook.com")! // swiftlint:disable:this force_unwrapping
+    return returnUrlComponents.url ?? SampleURLs.valid
+  }
+
+  func appURL(
+    withHost host: String,
+    path: String,
+    queryParameters: [String: String]
+  ) throws -> URL {
+    SampleURLs.valid
+  }
+
+  func facebookURL(
+    withHostPrefix hostPrefix: String,
+    path: String,
+    queryParameters: [String: String]
+  ) throws -> URL {
+    SampleURLs.valid
   }
 
   func registerTransientObject(_ object: Any) {}

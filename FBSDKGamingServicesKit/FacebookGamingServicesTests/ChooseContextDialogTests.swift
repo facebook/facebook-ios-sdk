@@ -103,17 +103,17 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
 
     dialog.show()
-    let filterQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterFilter] as? String)
-    let maxSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize] as? Int)
-    let minSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize] as? Int)
+    let filterQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterFilter])
+    let maxSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize])
+    let minSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize])
 
     XCTAssertNotNil(dialog)
     XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
     XCTAssertEqual(util.host, URLConstants.host)
     XCTAssertEqual(util.path, URLConstants.appSwitch(appID: defaultAppID).path)
     XCTAssertEqual(filterQuery, "NO_FILTER")
-    XCTAssertEqual(maxSizeQuery, 0)
-    XCTAssertEqual(minSizeQuery, 0)
+    XCTAssertEqual(maxSizeQuery, "0")
+    XCTAssertEqual(minSizeQuery, "0")
   }
 
   func testShowDialogWithoutSettingAppID() throws {

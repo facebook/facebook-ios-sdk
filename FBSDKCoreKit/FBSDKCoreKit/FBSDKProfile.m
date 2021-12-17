@@ -566,8 +566,8 @@ static id<FBSDKURLHosting> _urlHoster;
 
   NSMutableDictionary<NSString *, id> *queryParameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:queryParameters setObject:type forKey:pictureModeKey];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)).stringValue forKey:widthKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)).stringValue forKey:heightKey];
 
   if ([self.accessTokenProvider currentAccessToken]) {
     [FBSDKTypeUtility dictionary:queryParameters setObject:[[self.accessTokenProvider currentAccessToken] tokenString]

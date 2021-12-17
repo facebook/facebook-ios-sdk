@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (jsonData) {
     NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-    NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSString *> *parameters = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:parameters setObject:(crashReports ?: @"") forKey:@"crash_reports"];
     [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
     id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]

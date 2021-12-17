@@ -168,7 +168,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [_logger startSessionForLoginManager:self];
   [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
 
-  NSDictionary<NSString *, id> *loginUrlParameters = [self logInParametersFromURL:url];
+  NSDictionary<NSString *, NSString *> *loginUrlParameters = [self logInParametersFromURL:url];
   if (loginUrlParameters) {
     id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:loginUrlParameters
                                                                                                      appID:self.settings.appID
@@ -327,10 +327,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
-- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                                                               loggingToken:(NSString *)loggingToken
-                                                                     logger:(FBSDKLoginManagerLogger *)logger
-                                                                 authMethod:(NSString *)authMethod
+- (nullable NSDictionary<NSString *, NSString *> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                                                                       loggingToken:(NSString *)loggingToken
+                                                                             logger:(FBSDKLoginManagerLogger *)logger
+                                                                         authMethod:(NSString *)authMethod
 {
   // Making sure configuration is not nil in case this method gets called
   // internally without specifying a cofiguration.
@@ -343,18 +343,18 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
   [self.internalUtility validateURLSchemes];
 
-  NSMutableDictionary<NSString *, id> *loginParams = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, NSString *> *loginParams = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:loginParams setObject:self.settings.appID forKey:@"client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
-  [FBSDKTypeUtility dictionary:loginParams setObject:@([self.internalUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@([self.internalUtility isFacebookAppInstalled]).stringValue forKey:@"fbapp_pres"];
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.authType forKey:@"auth_type"];
   [FBSDKTypeUtility dictionary:loginParams setObject:loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
-  [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:@(self.settings.isAutoLogAppEventsEnabled) forKey:@"ies"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds).stringValue forKey:@"cbt"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@(self.settings.isAutoLogAppEventsEnabled).stringValue forKey:@"ies"];
   [FBSDKTypeUtility dictionary:loginParams setObject:self.settings.appURLSchemeSuffix forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 
@@ -421,7 +421,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [self logIn];
 }
 
-- (nullable NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url
+- (nullable NSDictionary<NSString *, NSString *> *)logInParametersFromURL:(NSURL *)url
 {
   NSError *error = nil;
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
@@ -521,10 +521,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   BOOL useSafariViewController = [provider useSafariViewControllerForDialogName:@"login"];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
-  NSDictionary<NSString *, id> *loginParams = [self logInParametersWithConfiguration:_configuration
-                                                                        loggingToken:provider.loggingToken
-                                                                              logger:_logger
-                                                                          authMethod:authMethod];
+  NSDictionary<NSString *, NSString *> *loginParams = [self logInParametersWithConfiguration:_configuration
+                                                                                loggingToken:provider.loggingToken
+                                                                                      logger:_logger
+                                                                                  authMethod:authMethod];
   NSError *error;
   NSURL *authURL = nil;
   if (loginParams[@"redirect_uri"]) {

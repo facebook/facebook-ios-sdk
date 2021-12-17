@@ -212,13 +212,12 @@ final class GraphRequestTests: XCTestCase {
       }
   }
 
-  func testSerializeURL() {
-    let baseURL = InternalUtility.shared.facebookURL(
+  func testSerializeURL() throws {
+    let baseURL = try InternalUtility.shared.facebookURL(
       withHostPrefix: prefix,
       path: path,
       queryParameters: [:],
-      defaultVersion: version,
-      error: nil
+      defaultVersion: version
     )
     let url = GraphRequest.serializeURL(
       baseURL.absoluteString,
@@ -283,15 +282,14 @@ final class GraphRequestTests: XCTestCase {
     XCTAssertFalse(request.isGraphErrorRecoveryDisabled)
   }
 
-  func testSetSettingsWithDebugParamValue() {
+  func testSetSettingsWithDebugParamValue() throws {
     let debugParameter = "TestValue"
     settings.graphAPIDebugParamValue = debugParameter
-    let baseURL = InternalUtility.shared.facebookURL(
+    let baseURL = try InternalUtility.shared.facebookURL(
       withHostPrefix: prefix,
       path: path,
       queryParameters: [:],
-      defaultVersion: version,
-      error: nil
+      defaultVersion: version
     )
     let url = GraphRequest.serializeURL(
       baseURL.absoluteString,

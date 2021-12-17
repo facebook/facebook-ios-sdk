@@ -154,10 +154,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   }
 }
 
-- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
-                                path:(NSString *)path
-                     queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                               error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+                                         path:(NSString *)path
+                              queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
+                                        error:(NSError *__autoreleasing *)errorRef
 {
   return [self facebookURLWithHostPrefix:hostPrefix
                                     path:path
@@ -166,11 +166,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
                                    error:errorRef];
 }
 
-- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
-                                path:(NSString *)path
-                     queryParameters:(NSDictionary<NSString *, id> *)queryParameters
-                      defaultVersion:(NSString *)defaultVersion
-                               error:(NSError *__autoreleasing *)errorRef
+- (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+                                         path:(NSString *)path
+                              queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
+                               defaultVersion:(NSString *)defaultVersion
+                                        error:(NSError *__autoreleasing *)errorRef
 {
   NSString *version = (defaultVersion.length > 0) ? defaultVersion : FBSDKSettings.sharedSettings.graphAPIVersion;
   if (version.length) {
@@ -186,7 +186,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path
-                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef
 {
   return [self _facebookURLWithHostPrefix:hostPrefix
@@ -198,7 +198,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)_facebookURLWithHostPrefix:(NSString *)hostPrefix
                                  path:(NSString *)path
-                      queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                      queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                        defaultVersion:(NSString *)version
                                 error:(NSError *__autoreleasing *)errorRef
 {

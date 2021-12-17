@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventParametersExtracting)
 @protocol FBSDKAppEventParametersExtracting
 
-- (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
-                                                                       userID:(nullable NSString *)userID
-                                                                     userData:(nullable NSString *)userData;
+- (NSMutableDictionary<NSString *, NSString *> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
+                                                            shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID
+                                                                               userID:(nullable NSString *)userID
+                                                                             userData:(nullable NSString *)userData;
 
 @end
 

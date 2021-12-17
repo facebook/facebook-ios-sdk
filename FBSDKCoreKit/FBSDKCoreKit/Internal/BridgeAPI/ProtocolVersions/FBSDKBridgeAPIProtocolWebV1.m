@@ -47,7 +47,7 @@
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                                     scheme:(NSString *)scheme
                                 methodName:(NSString *)methodName
-                                parameters:(NSDictionary<NSString *, id> *)parameters
+                                parameters:(NSDictionary<NSString *, NSString *> *)parameters
                                      error:(NSError *__autoreleasing *)errorRef
 {
   if (![FBSDKTypeUtility coercedToStringValue:actionID] || ![FBSDKTypeUtility coercedToStringValue:methodName]) {
@@ -63,7 +63,7 @@
                                                                      path:methodName
                                                           queryParameters:redirectQueryParameters
                                                                     error:NULL];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL forKey:@"redirect_uri"];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL.absoluteString forKey:@"redirect_uri"];
   [queryParameters addEntriesFromDictionary:parameters];
   return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                   path:[@"/dialog/" stringByAppendingString:methodName]
@@ -72,7 +72,7 @@
 }
 
 - (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
-                                                         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                         queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                                                                cancelled:(BOOL *)cancelledRef
                                                                    error:(NSError *__autoreleasing *)errorRef
 {

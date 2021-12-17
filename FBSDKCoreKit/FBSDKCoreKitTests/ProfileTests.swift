@@ -99,18 +99,18 @@ class ProfileTests: XCTestCase {
     try makeImageURL()
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "normal",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      100,
+      queryItems[widthKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      100,
+      queryItems[heightKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -121,22 +121,22 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "normal",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      100,
+      queryItems[widthKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      100,
+      queryItems[heightKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[accessTokenKey] as? String,
+      queryItems[accessTokenKey],
       "Foo",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
@@ -148,22 +148,22 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "normal",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      100,
+      queryItems[widthKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      100,
+      queryItems[heightKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[accessTokenKey] as? String,
+      queryItems[accessTokenKey],
       SampleAccessTokens.validToken.tokenString,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
@@ -176,22 +176,22 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "normal",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      100,
+      queryItems[widthKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      100,
+      queryItems[heightKey],
+      "100",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[accessTokenKey] as? String,
+      queryItems[accessTokenKey],
       SampleAccessTokens.validToken.tokenString,
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
@@ -202,18 +202,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "small",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      10,
+      queryItems[widthKey],
+      "10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      20,
+      queryItems[heightKey],
+      "20",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -223,18 +223,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "album",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      10,
+      queryItems[widthKey],
+      "10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      20,
+      queryItems[heightKey],
+      "20",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -244,18 +244,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "large",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      10,
+      queryItems[widthKey],
+      "10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      20,
+      queryItems[heightKey],
+      "20",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -265,18 +265,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "square",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      10,
+      queryItems[widthKey],
+      "10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      20,
+      queryItems[heightKey],
+      "20",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -288,18 +288,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "square",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      0,
+      queryItems[widthKey],
+      "0",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      0,
+      queryItems[heightKey],
+      "0",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -309,18 +309,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "square",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      10,
+      queryItems[widthKey],
+      "10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      20,
+      queryItems[heightKey],
+      "20",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }
@@ -330,18 +330,18 @@ class ProfileTests: XCTestCase {
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
-      queryItems[pictureModeKey] as? String,
+      queryItems[pictureModeKey],
       "square",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[widthKey] as? Int,
-      -10,
+      queryItems[widthKey],
+      "-10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
     XCTAssertEqual(
-      queryItems[heightKey] as? Int,
-      -10,
+      queryItems[heightKey],
+      "-10",
       "Should add the expected query items to a url when creating a url for fetching a profile image"
     )
   }

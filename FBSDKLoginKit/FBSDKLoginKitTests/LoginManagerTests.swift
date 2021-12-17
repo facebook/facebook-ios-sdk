@@ -710,10 +710,10 @@ class LoginManagerTests: XCTestCase {
 
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
-      parameters["response_type"] as? String,
+      parameters["response_type"],
       "id_token,token_or_nonce,signed_request,graph_domain"
     )
-    let scopes = (parameters["scope"] as? String)?
+    let scopes = parameters["scope"]?
       .split(separator: ",")
       .sorted()
       .joined(separator: ",")
@@ -723,14 +723,14 @@ class LoginManagerTests: XCTestCase {
     )
     XCTAssertNotNil(parameters["nonce"])
     XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
-    let rawState = try XCTUnwrap(parameters["state"] as? String)
+    let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(
       state?["3_method"] as? String,
       "sfvc_auth"
     )
     XCTAssertEqual(
-      parameters["auth_type"] as? String,
+      parameters["auth_type"],
       LoginAuthType.rerequest.rawValue
     )
   }
@@ -754,10 +754,10 @@ class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
 
     XCTAssertEqual(
-      parameters["response_type"] as? String,
+      parameters["response_type"],
       "id_token,graph_domain"
     )
-    let scopes = (parameters["scope"] as? String)?
+    let scopes = parameters["scope"]?
       .split(separator: ",")
       .sorted()
       .joined(separator: ",")
@@ -766,21 +766,21 @@ class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertEqual(
-      parameters["nonce"] as? String,
+      parameters["nonce"],
       "some_nonce"
     )
     XCTAssertEqual(
-      parameters["tp"] as? String,
+      parameters["tp"],
       "ios_14_do_not_track"
     )
-    let rawState = try XCTUnwrap(parameters["state"] as? String)
+    let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(
       state?["3_method"] as? String,
       "browser_auth"
     )
     XCTAssertEqual(
-      parameters["auth_type"] as? String,
+      parameters["auth_type"],
       LoginAuthType.rerequest.rawValue
     )
   }
@@ -827,10 +827,10 @@ class LoginManagerTests: XCTestCase {
 
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
-      parameters["response_type"] as? String,
+      parameters["response_type"],
       "id_token,token_or_nonce,signed_request,graph_domain"
     )
-    let scopes = (parameters["scope"] as? String)?
+    let scopes = parameters["scope"]?
       .split(separator: ",")
       .sorted()
       .joined(separator: ",")
@@ -843,7 +843,7 @@ class LoginManagerTests: XCTestCase {
       parameters["tp"],
       "Regular login should not send a tracking parameter"
     )
-    let rawState = try XCTUnwrap(parameters["state"] as? String)
+    let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(state?["3_method"] as? String, "sfvc_auth")
     XCTAssertNil(parameters["auth_type"])
@@ -871,10 +871,10 @@ class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
 
     XCTAssertEqual(
-      parameters["response_type"] as? String,
+      parameters["response_type"],
       "id_token,token_or_nonce,signed_request,graph_domain"
     )
-    let scopes = (parameters["scope"] as? String)?
+    let scopes = parameters["scope"]?
       .split(separator: ",")
       .sorted()
       .joined(separator: ",")
@@ -884,11 +884,11 @@ class LoginManagerTests: XCTestCase {
     )
     XCTAssertNotNil(parameters["nonce"])
     XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
-    let rawState = try XCTUnwrap(parameters["state"] as? String)
+    let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(state?["3_method"] as? String, "sfvc_auth")
     XCTAssertEqual(
-      parameters["auth_type"] as? String,
+      parameters["auth_type"],
       LoginAuthType.reauthorize.rawValue
     )
   }
@@ -900,9 +900,9 @@ class LoginManagerTests: XCTestCase {
 
     let parameters = try XCTUnwrap(loginManager.logInParameters(from: url))
 
-    XCTAssertEqual(parameters["nonce"] as? String, "someNonce")
-    XCTAssertEqual(parameters["granted_scopes"] as? String, "public_profile")
-    XCTAssertEqual(parameters["denied_scopes"] as? String, "")
+    XCTAssertEqual(parameters["nonce"], "someNonce")
+    XCTAssertEqual(parameters["granted_scopes"], "public_profile")
+    XCTAssertEqual(parameters["denied_scopes"], "")
   }
 
   // MARK: logInWithURL
@@ -1296,45 +1296,46 @@ class LoginManagerTests: XCTestCase {
     )
   }
 
-  func validateCommonLoginParameters(_ parameters: [String: Any]) throws {
+  func validateCommonLoginParameters(_ parameters: [String: String]) throws {
     XCTAssertEqual(
-      parameters["client_id"] as? String,
+      parameters["client_id"],
       appID
     )
     XCTAssertEqual(
-      parameters["display"] as? String,
+      parameters["display"],
       "touch"
     )
     XCTAssertEqual(
-      parameters["sdk"] as? String,
+      parameters["sdk"],
       "ios"
     )
     XCTAssertEqual(
-      parameters["return_scopes"] as? String,
+      parameters["return_scopes"],
       "true"
     )
     XCTAssertEqual(
-      parameters["fbapp_pres"] as? Int,
-      0
+      parameters["fbapp_pres"],
+      "0"
     )
     XCTAssertEqual(
-      parameters["ies"] as? Bool,
-      settings.isAutoLogAppEventsEnabled
+      parameters["ies"],
+      settings.isAutoLogAppEventsEnabled ? "1" : "0"
     )
     XCTAssertNotNil(
       parameters["e2e"]
     )
 
-    let stateJsonString = try XCTUnwrap(parameters["state"] as? String)
+    let stateJsonString = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: stateJsonString) as? [String: Any]
     XCTAssertNotNil(state?["challenge"])
     XCTAssertNotNil(state?["0_auth_logger_id"])
 
-    let cbt = try XCTUnwrap(parameters["cbt"] as? Double)
+    let cbt = try XCTUnwrap(parameters["cbt"])
+    let cbtDouble = try XCTUnwrap(Double(cbt))
     let currentMilliseconds = 1000 * Date().timeIntervalSince1970
-    XCTAssertEqual(cbt, currentMilliseconds, accuracy: 500)
+    XCTAssertEqual(cbtDouble, currentMilliseconds, accuracy: 500)
     XCTAssertEqual(
-      parameters["redirect_uri"] as? String,
+      parameters["redirect_uri"],
       internalUtility.stubbedURL?.absoluteString
     )
   }
