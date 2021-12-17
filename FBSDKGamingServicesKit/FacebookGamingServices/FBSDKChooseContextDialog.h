@@ -18,6 +18,8 @@
  #import <FacebookGamingServices/FBSDKContextWebDialog.h>
  #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 
+typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter);
+
 NS_ASSUME_NONNULL_BEGIN
 /**
   A dialog for the choose context through app switch

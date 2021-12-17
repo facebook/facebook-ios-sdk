@@ -30,7 +30,7 @@ NS_SWIFT_NAME(DialogProtocol)
 /**
   The content object used to create the specific dialog
  */
-@property (nullable, nonatomic, copy) id<FBSDKValidatable> dialogContent;
+@property (nullable, nonatomic) id<FBSDKValidatable> dialogContent;
 
 /**
   Begins to show the specfic dialog
