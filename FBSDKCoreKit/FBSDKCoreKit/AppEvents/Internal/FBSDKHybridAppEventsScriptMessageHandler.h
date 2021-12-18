@@ -24,7 +24,7 @@ NS_SWIFT_NAME(HybridAppEventsScriptMessageHandler)
 
 // UNCRUSTIFY_FORMAT_OFF
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-                  loggingNotifier:(id<FBSDKLoggingNotifying>)loggingNotifier
+                    loggingNotifier:(id<FBSDKLoggingNotifying>)loggingNotifier
 NS_SWIFT_NAME(init(eventLogger:loggingNotifier:));
 // UNCRUSTIFY_FORMAT_ON
 

@@ -139,7 +139,7 @@ static id<FBSDKErrorCreating> _errorFactory;
                            parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                 frame:(CGRect)frame
                              delegate:(id<FBSDKWebDialogDelegate>)delegate
-                         windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                         windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
 {
   FBSDKWebDialog *dialog = [[self alloc] initWithName:name
                                            parameters:parameters

@@ -60,7 +60,7 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   return self;
 }
 
-- (void)startReferralWithCompletionHandler:(FBSDKReferralManagerResultBlock)handler
+- (void)startReferralWithCompletionHandler:(nullable FBSDKReferralManagerResultBlock)handler
 {
   _handler = [handler copy];
   _logger = [FBSDKReferralManagerLogger new];
