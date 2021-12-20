@@ -301,7 +301,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   if ((self = [super init])) {
     _timeout = g_defaultTimeout;
     _session = [self.class.sessionProxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
-    _state = kStateCreated;
+    _state = FBSDKGraphRequestConnectionStateCreated;
     _requests = [NSMutableArray new];
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
   }
@@ -345,7 +345,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
         parameters:(nullable NSDictionary<NSString *, id> *)parameters
         completion:(FBSDKGraphRequestCompletion)completion
 {
-  if (self.state != kStateCreated) {
+  if (self.state != FBSDKGraphRequestConnectionStateCreated) {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:@"Cannot add requests once started or if a URLRequest is set"
                                  userInfo:nil];
@@ -359,7 +359,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (void)cancel
 {
-  self.state = kStateCancelled;
+  self.state = FBSDKGraphRequestConnectionStateCancelled;
   [self.session invalidateAndCancel];
 }
 
@@ -376,13 +376,14 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     // TODO: Use a logger provider for this.
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:msg];
-    self.state = kStateCancelled;
+    self.state = FBSDKGraphRequestConnectionStateCancelled;
     [self completeFBSDKURLSessionWithResponse:nil data:nil networkError:error];
 
     return;
   }
 
-  if (self.state != kStateCreated && self.state != kStateSerialized) {
+  if (self.state != FBSDKGraphRequestConnectionStateCreated
+      && self.state != FBSDKGraphRequestConnectionStateSerialized) {
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
@@ -390,7 +391,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [self.class.piggybackManager addPiggybackRequests:self];
   NSMutableURLRequest *request = [self requestWithBatch:self.requests timeout:self.timeout];
 
-  self.state = kStateStarted;
+  self.state = FBSDKGraphRequestConnectionStateStarted;
 
   [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
   self.requestStartTime = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds];
@@ -750,13 +751,13 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
                                        data:(NSData *)data
                                networkError:(NSError *)error
 {
-  if (self.state != kStateCancelled) {
+  if (self.state != FBSDKGraphRequestConnectionStateCancelled) {
     NSAssert(
-      self.state == kStateStarted,
+      self.state == FBSDKGraphRequestConnectionStateStarted,
       @"Unexpected state %lu in completeWithResponse",
       (unsigned long)self.state
     );
-    self.state = kStateCompleted;
+    self.state = FBSDKGraphRequestConnectionStateCompleted;
   }
 
   NSArray *results = nil;

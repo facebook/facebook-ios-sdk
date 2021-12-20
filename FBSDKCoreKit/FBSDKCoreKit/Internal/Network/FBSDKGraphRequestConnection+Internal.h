@@ -31,12 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 // FBSDKGraphRequestConnectionState
 
 typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
-  kStateCreated,
-  kStateSerialized,
-  kStateStarted,
-  kStateCompleted,
-  kStateCancelled,
-};
+  FBSDKGraphRequestConnectionStateCreated,
+  FBSDKGraphRequestConnectionStateSerialized,
+  FBSDKGraphRequestConnectionStateStarted,
+  FBSDKGraphRequestConnectionStateCompleted,
+  FBSDKGraphRequestConnectionStateCancelled,
+} NS_SWIFT_NAME(GraphRequestConnectionState);
 
 @interface FBSDKGraphRequestConnection ()
 
