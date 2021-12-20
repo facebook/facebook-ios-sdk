@@ -573,7 +573,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with the expected concrete data store"
     )
     XCTAssertTrue(
-      AppEventsConfigurationManager.shared.settings === Settings.shared,
+      AppEventsConfigurationManager.shared.settings === settings,
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
@@ -657,7 +657,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with a swizzler of the expected type"
     )
     XCTAssertTrue(
-      indexer.settings is Settings,
+      indexer.settings === settings,
       "Should configure with a settings of the expected type"
     )
     XCTAssertTrue(
@@ -704,9 +704,8 @@ class ApplicationDelegateTests: XCTestCase {
       UserDefaults.standard,
       "Should configure with the expected concrete data store"
     )
-    XCTAssertEqual(
-      ModelManager.shared.settings as? Settings,
-      Settings.shared,
+    XCTAssertTrue(
+      ModelManager.shared.settings === settings,
       "Should configure with the expected concrete settings"
     )
     XCTAssertTrue(
@@ -749,7 +748,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the expected concrete gatekeeper manager"
     )
     XCTAssertTrue(
-      FeatureManager.shared.settings === Settings.shared,
+      FeatureManager.shared.settings === settings,
       "Should configure with the expected concrete settings"
     )
     XCTAssertTrue(
@@ -782,7 +781,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the expected feature checker"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.settings === Settings.shared,
+      InstrumentManager.shared.settings === settings,
       "Should configure with the shared settings instance"
     )
     XCTAssertTrue(
@@ -809,7 +808,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the expected info dictionary provider"
     )
     XCTAssertTrue(
-      AppLinkUtility.settings === Settings.shared,
+      AppLinkUtility.settings === settings,
       "Should configure with the expected settings"
     )
     XCTAssertTrue(
@@ -876,7 +875,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      AppLinkURL.settings === Settings.shared,
+      AppLinkURL.settings === settings,
       "Should configure with the expected settings"
     )
     XCTAssertTrue(
@@ -903,7 +902,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the expected internal utility"
     )
     XCTAssertTrue(
-      BridgeAPIRequest.settings === Settings.shared,
+      BridgeAPIRequest.settings === settings,
       "Should configure with the expected settings"
     )
   }
@@ -922,7 +921,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should configure with the expected device information provider"
     )
     XCTAssertTrue(
-      AppEventsUtility.shared.settings === Settings.shared,
+      AppEventsUtility.shared.settings === settings,
       "Should configure with the expected settings"
     )
     XCTAssertTrue(
@@ -949,7 +948,7 @@ class ApplicationDelegateTests: XCTestCase {
       "A graph request connection should have the correct piggyback manager provider by default"
     )
     XCTAssertTrue(
-      GraphRequestConnection.settings === Settings.shared,
+      GraphRequestConnection.settings === settings,
       "A graph request connection should have the correct settings type by default"
     )
     XCTAssertTrue(
@@ -1031,7 +1030,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      AppEventsDeviceInfo.shared.settings === Settings.shared,
+      AppEventsDeviceInfo.shared.settings === settings,
       "Should be configured with the expected concrete settings"
     )
   }
@@ -1046,7 +1045,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with the expected app link resolver"
     )
     XCTAssertTrue(
-      AppLinkNavigation.settings === Settings.shared,
+      AppLinkNavigation.settings === settings,
       "Should be configured with the expected settings"
     )
     XCTAssertTrue(
@@ -1112,7 +1111,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Initializing the SDK should set concrete logger for event logging"
     )
     XCTAssertTrue(
-      appEvents.capturedConfigureSettings === Settings.shared,
+      appEvents.capturedConfigureSettings === settings,
       "Initializing the SDK should set concrete settings for event logging"
     )
     XCTAssertTrue(
@@ -1261,7 +1260,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with the expected concrete swizzler"
     )
     XCTAssertTrue(
-      CodelessIndexer.settings === Settings.shared,
+      CodelessIndexer.settings === settings,
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
@@ -1275,7 +1274,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      CrashShield.settings is Settings,
+      CrashShield.settings === settings,
       "Should be configured with the expected settings"
     )
     XCTAssertTrue(
@@ -1326,7 +1325,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with expected concrete token cache"
     )
     XCTAssertTrue(
-      cache.settings === Settings.shared,
+      cache.settings === settings,
       "The cache should use the shared Settings instance"
     )
 
@@ -1373,7 +1372,7 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with the expected concrete notification center"
     )
     XCTAssertTrue(
-      Profile.settings === Settings.shared,
+      Profile.settings === settings,
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
@@ -1436,7 +1435,7 @@ class ApplicationDelegateTests: XCTestCase {
     )
 
     XCTAssertTrue(
-      GraphRequestPiggybackManager.settings === Settings.shared,
+      GraphRequestPiggybackManager.settings === settings,
       "Should be configured with the expected concrete settings"
     )
     XCTAssertTrue(
