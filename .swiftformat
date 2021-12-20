@@ -109,4 +109,5 @@
 --indentstrings true
 --modifierorder open, override
 --swiftversion 5
+--wraparguments before-first
 --xcodeindentation enabled

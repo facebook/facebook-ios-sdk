@@ -226,11 +226,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with valid email
   func testGetMetadataWithEmail() {
     let text = "test@fb.com"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Email",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Email",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
 
@@ -249,11 +251,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with valid phone number
   func testGetMetadataWithPhoneNumber() {
     let text = "1112223333"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Phone Number",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Phone Number",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     XCTAssertEqual(
@@ -271,11 +275,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with valid phone number or zipcode with labels
   func testGetMetadataWithPhoneNumberWithLabels() {
     let text = "11122"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "",
-                                        labels: ["phone", "zipcode"],
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "",
+      labels: ["phone", "zipcode"],
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     let r6Indexer = metadataIndexerStoredValue(forKey: "r6")
     XCTAssertEqual(
@@ -293,11 +299,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with secure text
   func testGetMetadataWithSecureText() {
     let text = "dfjald1314"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Pass-word",
-                                        labels: nil,
-                                        secureTextEntry: true,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Pass-word",
+      labels: nil,
+      secureTextEntry: true,
+      inputType: .default
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
 
@@ -316,11 +324,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with invalid email
   func testGetMetadataWithInvalidEmail() {
     let text = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Email",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Email",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
 
@@ -339,11 +349,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with invalid email placeholder
   func testGetMetadataWithInvalidEmailPlaceholder() {
     let text = "test@fb.com"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
 
@@ -362,11 +374,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for getting metadata with valid phone number containing +-().
   func testGetMetadataWithValidPhoneNumberWithPunctuations() throws {
     let text = "+1(222)-333-444"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Phone Number",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Phone Number",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     let numberNoPunctuations = try XCTUnwrap(Utility.sha256Hash("1222333444" as NSObject))
     let numberWithPunctuations = try XCTUnwrap(Utility.sha256Hash(text as NSObject))
@@ -382,17 +396,21 @@ class MetadataIndexerTests: XCTestCase {
 
   // test for geting metadata with invalid phone number
   func testGetMetadataWithInvalidPhoneNumber() {
-    metadataIndexer.getMetadataWithText("1234",
-                                        placeholder: "Enter your Phone Number",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      "1234",
+      placeholder: "Enter your Phone Number",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
 
-    metadataIndexer.getMetadataWithText("1234567891011121314",
-                                        placeholder: "Mobile Number",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      "1234567891011121314",
+      placeholder: "Mobile Number",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     XCTAssertEqual(
       r2Indexer.count,
@@ -404,11 +422,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with invalid phone number placeholder
   func testGetMetadataWithInvalidPhoneNumberPlaceholder() {
     let text = "1112223333"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     XCTAssertEqual(
@@ -426,11 +446,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with text which is neither email nor phone number
   func testGetMetadataWithTextNotEmailAndPhone() {
     let text = "facebook"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Name",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .alphabet)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Name",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .alphabet
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     XCTAssertEqual(
@@ -448,11 +470,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with no text
   func testGetMetadataWithNoText() {
     let text = ""
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Email",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Email",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     XCTAssertEqual(
@@ -470,11 +494,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for geting metadata with too long text
   func testGetMetadataWithTooLongText() {
     let text = "".padding(toLength: 1000, withPad: "a", startingAt: 0) + "@fb.com"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "Enter your Email",
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "Enter your Email",
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
 
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
@@ -494,11 +520,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithTooLongPlaceholder() {
     let text = "test@fb.com"
     let indicator = "".padding(toLength: 1000, withPad: "enter your email ", startingAt: 0)
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .emailAddress)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .emailAddress
+    )
     let r1Indexer = metadataIndexerStoredValue(forKey: "r1")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
 
@@ -518,11 +546,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidGender() {
     let text = "male"
     let indicator = "gender"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r3Indexer = metadataIndexerStoredValue(forKey: "r3")
     XCTAssertEqual(
       r3Indexer[0],
@@ -534,11 +564,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidGender() {
     let text = "test"
     let indicator = "gender"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r3Indexer = metadataIndexerStoredValue(forKey: "r3")
     XCTAssertEqual(
       r3Indexer.count,
@@ -550,11 +582,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidGenderIndicator() {
     let text = "female"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r3Indexer = metadataIndexerStoredValue(forKey: "r3")
     XCTAssertEqual(
       r3Indexer.count,
@@ -567,11 +601,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidCity() {
     let text = "Menlo Park"
     let indicator = "city"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r4Indexer = metadataIndexerStoredValue(forKey: "r4")
     XCTAssertEqual(
       r4Indexer[0],
@@ -584,11 +620,13 @@ class MetadataIndexerTests: XCTestCase {
     // Although rule_V for city is "", but should not accept empty text case
     let text = ""
     let indicator = "city"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r4Indexer = metadataIndexerStoredValue(forKey: "r4")
 
     XCTAssertEqual(
@@ -601,11 +639,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidCityIndicator() {
     let text = "Menlo Park"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r4Indexer = metadataIndexerStoredValue(forKey: "r4")
 
     XCTAssertEqual(
@@ -619,11 +659,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidState() {
     let text = "CA"
     let indicator = "province"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r5Indexer = metadataIndexerStoredValue(forKey: "r5")
 
     XCTAssertEqual(
@@ -637,11 +679,13 @@ class MetadataIndexerTests: XCTestCase {
     // Although rule_V for state is "", but should not accept empty text case
     let text = ""
     let indicator = "state"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r5Indexer = metadataIndexerStoredValue(forKey: "r5")
 
     XCTAssertEqual(
@@ -654,11 +698,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidStateIndicator() {
     let text = "CA"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r5Indexer = metadataIndexerStoredValue(forKey: "r5")
     XCTAssertEqual(
       r5Indexer.count,
@@ -671,11 +717,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidZip() {
     let text = "94025"
     let indicator = "zcode"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r6Indexer = metadataIndexerStoredValue(forKey: "r6")
     XCTAssertEqual(
       r6Indexer[0],
@@ -687,11 +735,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for getting metadata with valid zipcode containing "-" (will also be regarded as phone number)
   func testGetMetadataWithValidZipWithPunctuations() throws {
     let text = "94025-1234"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "",
-                                        labels: ["zcode", "phone"],
-                                        secureTextEntry: false,
-                                        inputType: .phonePad)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "",
+      labels: ["zcode", "phone"],
+      secureTextEntry: false,
+      inputType: .phonePad
+    )
     let r6Indexer = metadataIndexerStoredValue(forKey: "r6")
     let r2Indexer = metadataIndexerStoredValue(forKey: "r2")
     let validZipWithPunctuations = try XCTUnwrap(Utility.sha256Hash(text as NSObject))
@@ -715,11 +765,13 @@ class MetadataIndexerTests: XCTestCase {
     // the rule for zip code should be 5-digit number
     let text = "9402"
     let indicator = "zcode"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r6Indexer = metadataIndexerStoredValue(forKey: "r6")
     XCTAssertEqual(
       r6Indexer.count,
@@ -731,11 +783,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidZipIndicator() {
     let text = "94025"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r6Indexer = metadataIndexerStoredValue(forKey: "r6")
     XCTAssertEqual(
       r6Indexer.count,
@@ -748,11 +802,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidFn() {
     let text = "David"
     let indicator = "fn"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r7Indexer = metadataIndexerStoredValue(forKey: "r7")
     XCTAssertEqual(
       r7Indexer[0],
@@ -765,11 +821,13 @@ class MetadataIndexerTests: XCTestCase {
     // Although rule_V for first name is "", but should not accept empty text case
     let text = ""
     let indicator = "fn"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r7Indexer = metadataIndexerStoredValue(forKey: "r7")
     XCTAssertEqual(
       r7Indexer.count,
@@ -781,11 +839,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidFnIndicator() {
     let text = "David"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r7Indexer = metadataIndexerStoredValue(forKey: "r7")
     XCTAssertEqual(
       r7Indexer.count,
@@ -798,11 +858,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithValidLn() {
     let text = "Taylor"
     let indicator = "ln"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r8Indexer = metadataIndexerStoredValue(forKey: "r8")
     XCTAssertEqual(
       r8Indexer[0],
@@ -815,11 +877,13 @@ class MetadataIndexerTests: XCTestCase {
     // Although rule_V for last name is "", but should not accept empty text case
     let text = ""
     let indicator = "ln"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r8Indexer = metadataIndexerStoredValue(forKey: "r8")
     XCTAssertEqual(
       r8Indexer.count,
@@ -831,11 +895,13 @@ class MetadataIndexerTests: XCTestCase {
   func testGetMetadataWithInvalidLnIndicator() {
     let text = "Taylor"
     let indicator = "test"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: indicator,
-                                        labels: nil,
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: indicator,
+      labels: nil,
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r8Indexer = metadataIndexerStoredValue(forKey: "r8")
     XCTAssertEqual(
       r8Indexer.count,
@@ -847,11 +913,13 @@ class MetadataIndexerTests: XCTestCase {
   // test for getting meta with first name with labels (will also be regarded as last name, state, city
   func testGetMetadataWithFirstNameWithLabels() throws {
     let text = "Taylor"
-    metadataIndexer.getMetadataWithText(text,
-                                        placeholder: "",
-                                        labels: ["fn", "ln", "state", "city"],
-                                        secureTextEntry: false,
-                                        inputType: .default)
+    metadataIndexer.getMetadataWithText(
+      text,
+      placeholder: "",
+      labels: ["fn", "ln", "state", "city"],
+      secureTextEntry: false,
+      inputType: .default
+    )
     let r4Indexer = metadataIndexerStoredValue(forKey: "r4")
     let r5Indexer = metadataIndexerStoredValue(forKey: "r5")
     let r7Indexer = metadataIndexerStoredValue(forKey: "r7")
