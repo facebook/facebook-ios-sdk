@@ -19,15 +19,12 @@ class AppEventsStateManagerTests: XCTestCase {
     manager.clearPersistedAppEventsStates()
   }
 
-  func testPersistingValidState() {
+  func testPersistingValidState() throws {
     state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
     manager.persistAppEventsData(state)
 
     let retrievedStates = manager.retrievePersistedAppEventsStates()
-    guard let retrievedState = retrievedStates[0] as? AppEventsState else {
-      XCTFail("The retrieved state is not an AppEventState object.")
-      return
-    }
+    let retrievedState = try XCTUnwrap(retrievedStates.first, "No state has been retrieved")
 
     XCTAssertEqual(
       retrievedState.tokenString,
