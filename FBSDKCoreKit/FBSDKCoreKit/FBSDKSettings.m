@@ -99,7 +99,8 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
 @property (nonatomic) BOOL isConfigured;
-@property (nullable, nonatomic) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
+@property (nullable, nonatomic, readwrite) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
+
 @end
 
 @implementation FBSDKSettings

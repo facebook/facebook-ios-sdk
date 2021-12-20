@@ -790,6 +790,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       InternalUtility.shared.loggerFactory,
       "InternalUtility should not have a logger factory by default"
     )
+    XCTAssertNil(
+      InternalUtility.shared.settings,
+      "InternalUtility should not have settings by default"
+    )
 
     configurator.configureTargets()
 
@@ -800,6 +804,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       InternalUtility.shared.loggerFactory === components.loggerFactory,
       "InternalUtility should be configured with the logger factory"
+    )
+    XCTAssertTrue(
+      InternalUtility.shared.settings === components.settings,
+      "InternalUtility should be configured with the settings"
     )
   }
 

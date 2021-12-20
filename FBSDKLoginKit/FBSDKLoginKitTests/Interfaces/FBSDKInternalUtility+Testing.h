@@ -17,7 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isConfigured;
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                                   settings:(id<FBSDKSettings>)settings;
+
 + (void)reset;
 
 @end

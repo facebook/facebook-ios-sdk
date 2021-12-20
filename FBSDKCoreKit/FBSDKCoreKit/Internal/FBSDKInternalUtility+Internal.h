@@ -48,7 +48,8 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 @property (nonatomic, readonly, assign) NSOperatingSystemVersion operatingSystemVersion;
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                                   settings:(id<FBSDKSettings>)settings;
 
 /**
   Constructs a Facebook URL.

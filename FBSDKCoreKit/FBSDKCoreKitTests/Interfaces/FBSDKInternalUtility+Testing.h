@@ -14,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nonatomic) BOOL isConfigured;
 
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 + (void)reset;
 
 - (BOOL)_canOpenURLScheme:(nullable NSString *)scheme;

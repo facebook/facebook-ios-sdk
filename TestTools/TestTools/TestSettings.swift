@@ -38,6 +38,7 @@ public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var loggingBehaviors = Set<LoggingBehavior>()
   public var isCodelessDebugLogEnabled = false
   public static var loggingBehaviors = Set<LoggingBehavior>()
+  public var persistableDataProcessingOptions: [String: Any]?
 
   public func logWarnings() {
     logWarningsCallCount += 1

@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 @property (nullable, nonatomic) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic) BOOL isConfigured;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 
 @end
 
@@ -67,17 +68,19 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 #pragma mark - Class Methods
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory;
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                                   settings:(id<FBSDKSettings>)settings;
 {
   self.infoDictionaryProvider = infoDictionaryProvider;
   self.loggerFactory = loggerFactory;
+  self.settings = settings;
   self.isConfigured = YES;
 }
 
 - (NSString *)appURLScheme
 {
-  NSString *appID = (FBSDKSettings.sharedSettings.appID ?: @"");
-  NSString *suffix = (FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @"");
+  NSString *appID = (self.settings.appID ?: @"");
+  NSString *suffix = (self.settings.appURLSchemeSuffix ?: @"");
   return [[NSString alloc] initWithFormat:@"fb%@%@", appID, suffix];
 }
 
@@ -172,7 +175,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
                                defaultVersion:(NSString *)defaultVersion
                                         error:(NSError *__autoreleasing *)errorRef
 {
-  NSString *version = (defaultVersion.length > 0) ? defaultVersion : FBSDKSettings.sharedSettings.graphAPIVersion;
+  NSString *version = (defaultVersion.length > 0) ? defaultVersion : self.settings.graphAPIVersion;
   if (version.length) {
     version = [@"/" stringByAppendingString:version];
   }
@@ -211,7 +214,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   ? @"fb.gg"
   : @"facebook.com";
 
-  NSString *domainPart = FBSDKSettings.sharedSettings.facebookDomainPart;
+  NSString *domainPart = self.settings.facebookDomainPart;
   if (domainPart.length) {
     host = [[NSString alloc] initWithFormat:@"%@.%@", domainPart, host];
   }
@@ -226,7 +229,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
       id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
       [logger logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
                         version,
-                        FBSDKSettings.sharedSettings.graphAPIVersion]];
+                        self.settings.graphAPIVersion]];
       version = nil;
     }
     if (![path hasPrefix:@"/"]) {
@@ -429,9 +432,9 @@ static NSMapTable *_transientObjects;
 - (void)validateAppID
 {
   [self validateConfiguration];
-  if (!FBSDKSettings.sharedSettings.appID) {
+  if (!self.settings.appID) {
     NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
-    @"FacebookAppID to the Info.plist or call FBSDKSettings.sharedSettings.appID.";
+    @"FacebookAppID to the Info.plist or call Settings.shared.appID.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
 }
@@ -439,19 +442,19 @@ static NSMapTable *_transientObjects;
 - (NSString *)validateRequiredClientAccessToken
 {
   [self validateConfiguration];
-  if (!FBSDKSettings.sharedSettings.clientToken) {
+  if (!self.settings.clientToken) {
     NSString *reason = @"ClientToken is required to be set for this operation. "
-    @"Set the FacebookClientToken in the Info.plist or call [FBSDKSettings setClientToken:]. "
+    @"Set the FacebookClientToken in the Info.plist or set `Settings.shared.clientToken`. "
     @"You can find your client token in your App Settings -> Advanced.";
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
   }
-  return [NSString stringWithFormat:@"%@|%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.clientToken];
+  return [NSString stringWithFormat:@"%@|%@", self.settings.appID, self.settings.clientToken];
 }
 
 - (void)validateURLSchemes
 {
   [self validateAppID];
-  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.sharedSettings.appID, FBSDKSettings.sharedSettings.appURLSchemeSuffix ?: @""];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", self.settings.appID, self.settings.appURLSchemeSuffix ?: @""];
   if (![self isRegisteredURLScheme:defaultUrlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is not registered as a URL scheme. Please add it in your Info.plist", defaultUrlScheme];
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
@@ -475,7 +478,7 @@ static NSMapTable *_transientObjects;
 
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
 {
-  NSDictionary<NSString *, id> *dataProcessingOptions = FBSDKSettings.sharedSettings.persistableDataProcessingOptions;
+  NSDictionary<NSString *, id> *dataProcessingOptions = self.settings.persistableDataProcessingOptions;
   if (dataProcessingOptions) {
     NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
     if (options && [options isKindOfClass:NSArray.class]) {
@@ -645,7 +648,7 @@ static NSMapTable *_transientObjects;
 
 - (BOOL)isUnity
 {
-  NSString *userAgentSuffix = FBSDKSettings.sharedSettings.userAgentSuffix;
+  NSString *userAgentSuffix = self.settings.userAgentSuffix;
   if (userAgentSuffix != nil && [userAgentSuffix rangeOfString:@"Unity"].location != NSNotFound) {
     return YES;
   }

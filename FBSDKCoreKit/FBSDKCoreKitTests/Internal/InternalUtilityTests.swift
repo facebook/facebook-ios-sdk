@@ -16,18 +16,18 @@ class InternalUtilityTests: XCTestCase {
   let validPath = "example"
   let facebookUrlSchemeMissingMessage = "fbapi is missing from your Info.plist under LSApplicationQueriesSchemes and is required." // swiftlint:disable:this line_length
   let messengerUrlSchemeMissingMessage = "fb-messenger-share-api is missing from your Info.plist under LSApplicationQueriesSchemes and is required." // swiftlint:disable:this line_length
-
-  // swiftlint:disable implicitly_unwrapped_optional force_unwrapping
-  var bundle: TestBundle!
-  var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
-  var loggerFactory: TestLoggerFactory!
-  var logger: TestLogger!
   let dialogURL = URL(
     string: "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog"
-  )!
+  )! // swiftlint:disable:this force_unwrapping
   let nonDialogURL = URL(
     string: "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/foo"
-  )!
+  )! // swiftlint:disable:this force_unwrapping
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var bundle: TestBundle!
+  var loggerFactory: TestLoggerFactory!
+  var logger: TestLogger!
+  var settings: TestSettings!
   // swiftlint:enable implicitly_unwrapped_optional force_unwrapping
 
   override func setUp() {
@@ -36,37 +36,33 @@ class InternalUtilityTests: XCTestCase {
     InternalUtility.reset()
 
     bundle = TestBundle()
-    appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     loggerFactory = TestLoggerFactory()
     logger = TestLogger(loggingBehavior: .developerErrors)
     loggerFactory.logger = logger
-
-    Settings.shared.reset()
-    Settings.configure(
-      store: UserDefaultsSpy(),
-      appEventsConfigurationProvider: appEventsConfigurationProvider,
-      infoDictionaryProvider: bundle,
-      eventLogger: TestAppEvents()
-    )
+    settings = TestSettings()
 
     InternalUtility.shared.deleteFacebookCookies()
     InternalUtility.reset()
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
   }
 
   override func tearDown() {
-    Settings.shared.reset()
     InternalUtility.reset()
 
     bundle = nil
-    appEventsConfigurationProvider = nil
     loggerFactory = nil
     logger = nil
+    settings = nil
 
     super.tearDown()
+  }
+
+  func configureInternalUtility() {
+    InternalUtility.shared.configure(
+      withInfoDictionaryProvider: bundle,
+      loggerFactory: loggerFactory,
+      settings: settings
+    )
   }
 
   func testDefaultDependencies() {
@@ -80,16 +76,13 @@ class InternalUtilityTests: XCTestCase {
       InternalUtility.shared.loggerFactory,
       "Should not have a logger factory by default"
     )
+    XCTAssertNil(
+      InternalUtility.shared.settings,
+      "Should not have settings by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
-    let bundle = TestBundle()
-    let loggerFactory = TestLoggerFactory()
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-
     XCTAssertTrue(
       InternalUtility.shared.infoDictionaryProvider === bundle,
       "Should be able to provide an info dictionary provider"
@@ -98,10 +91,14 @@ class InternalUtilityTests: XCTestCase {
       InternalUtility.shared.loggerFactory === loggerFactory,
       "The shared instance should use the provided logger factory"
     )
+    XCTAssertTrue(
+      InternalUtility.shared.settings === settings,
+      "The shared instance should use the provided settings"
+    )
   }
 
   func testFacebookURL() throws {
-    Settings.shared.facebookDomainPart = ""
+    settings.facebookDomainPart = ""
     var urlString = ""
 
     urlString = try InternalUtility.shared.facebookURL(
@@ -196,7 +193,7 @@ class InternalUtilityTests: XCTestCase {
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v2.0/v1/dialog/share")
 
-    Settings.shared.graphAPIVersion = "v3.3"
+    settings.graphAPIVersion = "v3.3"
     urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/v1/dialog/share",
@@ -205,7 +202,7 @@ class InternalUtilityTests: XCTestCase {
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/v3.3/v1/dialog/share")
 
-    Settings.shared.graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
+    settings.graphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
     urlString = try InternalUtility.shared.facebookURL(
       withHostPrefix: "m",
       path: "/dialog/share",
@@ -216,7 +213,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testFacebookGamingURL() throws {
-    Settings.shared.facebookDomainPart = ""
+    settings.facebookDomainPart = ""
     let authToken = AuthenticationToken(
       tokenString: "token_string",
       nonce: "nonce",
@@ -370,8 +367,8 @@ class InternalUtilityTests: XCTestCase {
   // MARK: - App URL Scheme
 
   func testAppURLSchemeWithMissingAppIdMissingSuffix() {
-    Settings.shared.appID = nil
-    Settings.shared.appURLSchemeSuffix = nil
+    settings.appID = nil
+    settings.appURLSchemeSuffix = nil
     // This is not desired behavior but accurately reflects what is currently written.
     XCTAssertEqual(
       InternalUtility.shared.appURLScheme,
@@ -381,8 +378,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testAppURLSchemeWithMissingAppIdInvalidSuffix() {
-    Settings.shared.appID = nil
-    Settings.shared.appURLSchemeSuffix = "   "
+    settings.appID = nil
+    settings.appURLSchemeSuffix = "   "
     // This is not desired behavior but accurately reflects what is currently written.
     XCTAssertEqual(
       InternalUtility.shared.appURLScheme,
@@ -392,8 +389,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testAppURLSchemeWithMissingAppIdValidSuffix() {
-    Settings.shared.appID = nil
-    Settings.shared.appURLSchemeSuffix = "foo"
+    settings.appID = nil
+    settings.appURLSchemeSuffix = "foo"
     // This is not desired behavior but accurately reflects what is currently written.
     XCTAssertEqual(
       InternalUtility.shared.appURLScheme,
@@ -404,8 +401,8 @@ class InternalUtilityTests: XCTestCase {
 
   func testAppURLSchemeWithInvalidAppIdMissingSuffix() {
     let appID = " "
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = nil
+    settings.appID = appID
+    settings.appURLSchemeSuffix = nil
     let expected = "fb\(appID)"
 
     // This is not desired behavior but accurately reflects what is currently written.
@@ -419,8 +416,8 @@ class InternalUtilityTests: XCTestCase {
   func testAppURLSchemeWithInvalidAppIdInvalidSuffix() {
     let appID = " "
     let suffix = " "
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = suffix
+    settings.appID = appID
+    settings.appURLSchemeSuffix = suffix
     let expected = "fb\(appID)\(suffix)"
 
     // This is not desired behavior but accurately reflects what is currently written.
@@ -434,8 +431,8 @@ class InternalUtilityTests: XCTestCase {
   func testAppURLSchemeWithInvalidAppIdValidSuffix() {
     let appID = " "
     let suffix = "foo"
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = suffix
+    settings.appID = appID
+    settings.appURLSchemeSuffix = suffix
     let expected = "fb\(appID)\(suffix)"
 
     // This is not desired behavior but accurately reflects what is currently written.
@@ -448,8 +445,8 @@ class InternalUtilityTests: XCTestCase {
 
   func testAppURLSchemeWithValidAppIdMissingSuffix() {
     let appID = "appid"
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = nil
+    settings.appID = appID
+    settings.appURLSchemeSuffix = nil
     let expected = "fb\(appID)"
 
     XCTAssertEqual(
@@ -462,8 +459,8 @@ class InternalUtilityTests: XCTestCase {
   func testAppURLSchemeWithValidAppIdInvalidSuffix() {
     let appID = "appid"
     let suffix = "   "
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = suffix
+    settings.appID = appID
+    settings.appURLSchemeSuffix = suffix
     let expected = "fb\(appID)\(suffix)"
 
     // This is not desired behavior but accurately reflects what is currently written.
@@ -477,8 +474,8 @@ class InternalUtilityTests: XCTestCase {
   func testAppURLSchemeWithValidAppIdValidSuffix() {
     let appID = "appid"
     let suffix = "foo"
-    Settings.shared.appID = appID
-    Settings.shared.appURLSchemeSuffix = suffix
+    settings.appID = appID
+    settings.appURLSchemeSuffix = suffix
     let expected = "fb\(appID)\(suffix)"
 
     XCTAssertEqual(
@@ -491,8 +488,8 @@ class InternalUtilityTests: XCTestCase {
   // MARK: - App URL with host
 
   func testAppUrlWithEmptyHost() throws {
-    Settings.shared.appID = "appid"
-    Settings.shared.appURLSchemeSuffix = "foo"
+    settings.appID = "appid"
+    settings.appURLSchemeSuffix = "foo"
 
     let url = try InternalUtility.shared.appURL(
       withHost: "",
@@ -504,8 +501,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testAppUrlWithValidHost() throws {
-    Settings.shared.appID = "appid"
-    Settings.shared.appURLSchemeSuffix = "foo"
+    settings.appID = "appid"
+    settings.appURLSchemeSuffix = "foo"
 
     let url = try InternalUtility.shared.appURL(
       withHost: "facebook",
@@ -680,10 +677,7 @@ class InternalUtilityTests: XCTestCase {
   func testIsRegisteredCanOpenURLSchemeWithMissingScheme() {
     let querySchemes = [String]()
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(
       InternalUtility.shared.isRegisteredCanOpenURLScheme(name),
@@ -694,10 +688,7 @@ class InternalUtilityTests: XCTestCase {
   func testIsRegisteredCanOpenURLSchemeWithScheme() {
     let querySchemes = [name]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertTrue(
       InternalUtility.shared.isRegisteredCanOpenURLScheme(name),
@@ -708,10 +699,7 @@ class InternalUtilityTests: XCTestCase {
   func testIsRegisteredCanOpenURLSchemeCache() {
     let querySchemes = [name]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertTrue(InternalUtility.shared.isRegisteredCanOpenURLScheme(name), "Sanity check")
 
@@ -725,10 +713,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testFacebookAppInstalledMissingQuerySchemes() {
     bundle = TestBundle(infoDictionary: [:])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isFacebookAppInstalled)
 
@@ -738,10 +723,7 @@ class InternalUtilityTests: XCTestCase {
   func testFacebookAppInstalledEmptyQuerySchemes() {
     let querySchemes = [String]()
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isFacebookAppInstalled)
 
@@ -751,10 +733,7 @@ class InternalUtilityTests: XCTestCase {
   func testFacebookAppInstalledMissingQueryScheme() {
     let querySchemes = ["Foo"]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isFacebookAppInstalled)
 
@@ -764,10 +743,7 @@ class InternalUtilityTests: XCTestCase {
   func testFacebookAppInstalledValidQueryScheme() {
     let querySchemes = ["fbauth2"]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isFacebookAppInstalled)
 
@@ -776,10 +752,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testFacebookAppInstalledCache() {
     bundle = TestBundle(infoDictionary: [:])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertEqual(logger.logEntryCallCount, 0, "There should not be developer errors logged initially")
 
@@ -795,10 +768,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testMessengerAppInstalledMissingQuerySchemes() {
     bundle = TestBundle(infoDictionary: [:])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isMessengerAppInstalled)
 
@@ -811,10 +781,7 @@ class InternalUtilityTests: XCTestCase {
   func testMessengerAppInstalledEmptyQuerySchemes() {
     let querySchemes = [String]()
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isMessengerAppInstalled)
 
@@ -827,10 +794,7 @@ class InternalUtilityTests: XCTestCase {
   func testMessengerAppInstalledMissingQueryScheme() {
     let querySchemes = ["Foo"]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isMessengerAppInstalled)
 
@@ -843,10 +807,7 @@ class InternalUtilityTests: XCTestCase {
   func testMessengerAppInstalledValidQueryScheme() {
     let querySchemes = ["fb-messenger-share-api"]
     bundle = TestBundle(infoDictionary: ["LSApplicationQueriesSchemes": querySchemes])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(InternalUtility.shared.isMessengerAppInstalled)
 
@@ -854,10 +815,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testMessengerAppInstalledCache() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: TestBundle(infoDictionary: [:]),
-      loggerFactory: loggerFactory
-    )
+    bundle = TestBundle(infoDictionary: [:])
+    configureInternalUtility()
 
     XCTAssertTrue(
       TestLogger.capturedLogEntries.isEmpty, "There should not be developer errors logged initially"
@@ -967,7 +926,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testValidatingAppIDWhenUninitialized() {
     InternalUtility.reset()
-    Settings.shared.appID = "abc"
+    settings.appID = "abc"
 
     assertRaisesException(message: "Should raise an exception") {
       InternalUtility.shared.validateAppID()
@@ -975,11 +934,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidatingAppID() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = nil
+    settings.appID = nil
 
     assertRaisesException(message: "Should raise an exception") {
       InternalUtility.shared.validateAppID()
@@ -988,8 +943,8 @@ class InternalUtilityTests: XCTestCase {
 
   func testValidateClientAccessTokenWhenUninitialized() {
     InternalUtility.reset()
-    Settings.shared.appID = "abc"
-    Settings.shared.clientToken = "123"
+    settings.appID = "abc"
+    settings.clientToken = "123"
 
     assertRaisesException(message: "Should raise an exception") {
       InternalUtility.shared.validateRequiredClientAccessToken()
@@ -997,12 +952,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidateClientAccessTokenWithoutClientTokenWithoutAppID() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = nil
+    settings.appID = nil
+    settings.clientToken = nil
 
     assertRaisesException(message: "Should raise an exception") {
       InternalUtility.shared.validateRequiredClientAccessToken()
@@ -1010,12 +961,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidateClientAccessTokenWithClientTokenWithoutAppID() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = nil
-    Settings.shared.clientToken = "client123"
+    settings.appID = nil
+    settings.clientToken = "client123"
 
     XCTAssertEqual(
       InternalUtility.shared.validateRequiredClientAccessToken(),
@@ -1025,12 +972,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidateClientAccessTokenWithClientTokenWithAppID() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = "appid"
-    Settings.shared.clientToken = "client123"
+    settings.appID = "appid"
+    settings.clientToken = "client123"
 
     XCTAssertEqual(
       InternalUtility.shared.validateRequiredClientAccessToken(),
@@ -1040,8 +983,8 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidateClientAccessTokenWithoutClientTokenWithAppID() {
-    Settings.shared.appID = "appid"
-    Settings.shared.clientToken = nil
+    settings.appID = "appid"
+    settings.clientToken = nil
 
     assertRaisesException(message: "Should raise an exception") {
       InternalUtility.shared.validateRequiredClientAccessToken()
@@ -1050,10 +993,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testIsRegisteredUrlSchemeWithRegisteredScheme() {
     bundle = makeBundle(registeredUrlSchemes: ["com.foo.bar"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertTrue(
       InternalUtility.shared.isRegisteredURLScheme("com.foo.bar"),
@@ -1063,10 +1003,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testIsRegisteredUrlSchemeWithoutRegisteredScheme() {
     bundle = makeBundle(registeredUrlSchemes: ["com.foo.bar"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     XCTAssertFalse(
       InternalUtility.shared.isRegisteredURLScheme("com.facebook"),
@@ -1076,10 +1013,7 @@ class InternalUtilityTests: XCTestCase {
 
   func testIsRegisteredUrlSchemeCaching() {
     bundle = TestBundle()
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     InternalUtility.shared.isRegisteredURLScheme("com.facebook")
 
@@ -1098,11 +1032,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidatingUrlSchemesWithoutAppID() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = nil
+    settings.appID = nil
 
     assertRaisesException(
       message: "Cannot validate url schemes without an app identifier"
@@ -1120,18 +1050,10 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidatingUrlSchemesWithAppIdMatchingBundleEntry() {
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
-    Settings.shared.appID = "appid"
-    Settings.shared.appURLSchemeSuffix = nil
-
+    settings.appID = "appid"
+    settings.appURLSchemeSuffix = nil
     bundle = makeBundle(registeredUrlSchemes: ["fbappid"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     assertDoesNotRaiseException(
       message: "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
@@ -1141,14 +1063,10 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry() {
-    Settings.shared.appID = "appid"
-    Settings.shared.appURLSchemeSuffix = nil
-
+    settings.appID = "appid"
+    settings.appURLSchemeSuffix = nil
     bundle = makeBundle(registeredUrlSchemes: ["fb123"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     assertRaisesException(
       message: "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
@@ -1160,10 +1078,7 @@ class InternalUtilityTests: XCTestCase {
   // We can't loop through these because of how stubbing works.
   func testValidatingFacebookUrlSchemes_api() {
     bundle = makeBundle(registeredUrlSchemes: ["fbapi"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     assertRaisesException(
       message: "Should throw an error if fbapi is present in the bundle url schemes"
@@ -1175,10 +1090,7 @@ class InternalUtilityTests: XCTestCase {
   // We can't loop through these because of how stubbing works.
   func testValidatingFacebookUrlSchemes_messenger() {
     bundle = makeBundle(registeredUrlSchemes: ["fb-messenger-share-api"])
-    InternalUtility.shared.configure(
-      withInfoDictionaryProvider: bundle,
-      loggerFactory: loggerFactory
-    )
+    configureInternalUtility()
 
     assertRaisesException(
       message: "Should throw an error if fb-messenger-share-api is present in the bundle url schemes"
@@ -1199,7 +1111,12 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testExtendDictionaryWithDataProcessingOptions() {
-    Settings.shared.setDataProcessingOptions(["LDU"], country: 10, state: 100)
+    settings.persistableDataProcessingOptions = [
+      "data_processing_options": ["LDU"],
+      "data_processing_options_country": 10,
+      "data_processing_options_state": 100
+    ]
+
     let parameters = NSMutableDictionary()
     InternalUtility.shared.extendDictionary(withDataProcessingOptions: parameters)
 
@@ -1245,7 +1162,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testIsUnityWithMissingSuffix() {
-    Settings.shared.userAgentSuffix = nil
+    settings.userAgentSuffix = nil
     XCTAssertFalse(
       InternalUtility.shared.isUnity,
       "User agent should determine whether an app is Unity"
@@ -1253,7 +1170,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testIsUnityWithNonUnitySuffix() {
-    Settings.shared.userAgentSuffix = "Foo"
+    settings.userAgentSuffix = "Foo"
     XCTAssertFalse(
       InternalUtility.shared.isUnity,
       "User agent should determine whether an app is Unity"
@@ -1261,7 +1178,7 @@ class InternalUtilityTests: XCTestCase {
   }
 
   func testIsUnityWithUnitySuffix() {
-    Settings.shared.userAgentSuffix = "__Unity__"
+    settings.userAgentSuffix = "__Unity__"
     XCTAssertTrue(
       InternalUtility.shared.isUnity,
       "User agent should determine whether an app is Unity"

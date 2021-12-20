@@ -1021,6 +1021,10 @@ class ApplicationDelegateTests: XCTestCase {
       InternalUtility.shared.loggerFactory is LoggerFactory,
       "Should be configured with the expected concrete logger factory"
     )
+    XCTAssertTrue(
+      InternalUtility.shared.settings === settings,
+      "Should be configured with the expected concrete settings"
+    )
   }
 
   // TEMP: added to configurator tests

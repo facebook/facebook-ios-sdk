@@ -59,7 +59,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
   [FBSDKInternalUtility reset]; // need to reset fetchUrlSchemesToken nonce
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:bundle
-                                                            loggerFactory:[TestLoggerFactory new]];
+                                                            loggerFactory:[TestLoggerFactory new]
+                                                                 settings:FBSDKSettings.sharedSettings];
 }
 
 - (void)testReferralURL

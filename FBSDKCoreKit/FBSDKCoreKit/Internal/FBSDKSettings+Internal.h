@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
-@property (nullable, nonatomic) NSDictionary<NSString *, id> *persistableDataProcessingOptions;
 
 // UNCRUSTIFY_FORMAT_OFF
 + (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store

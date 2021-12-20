@@ -756,7 +756,8 @@ static UIApplicationState _applicationState;
   [FBSDKImpressionLoggingButton configureWithImpressionLoggerFactory:impressionLoggerFactory]; // TEMP: added to configurator
 
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle
-                                                            loggerFactory:[FBSDKLoggerFactory new]]; // TEMP: added to configurator
+                                                            loggerFactory:[FBSDKLoggerFactory new]
+                                                                 settings:self.settings]; // TEMP: added to configurator
   [FBSDKAppEventsConfigurationManager.shared configureWithStore:store
                                                        settings:self.settings
                                             graphRequestFactory:graphRequestFactory
