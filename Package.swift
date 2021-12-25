@@ -20,6 +20,8 @@ import Glibc
 import Darwin.C
 #endif
 
+repository URL: https://github.com/facebook/facebook-ios-sdk
+
 enum BinarySource {
     case local, remote
 
