@@ -45,7 +45,6 @@ static dispatch_once_t checkIfMessengerAppInstalledToken;
 static dispatch_once_t checkRegisteredCanOpenUrlSchemesToken;
 static dispatch_once_t checkOperatingSystemVersionToken;
 static dispatch_once_t fetchUrlSchemesToken;
-static dispatch_once_t sharedUtilityNonce;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
@@ -56,13 +55,17 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 // Transitional singleton introduced as a way to change the usage semantics
 // from a type-based interface to an instance-based interface.
+static FBSDKInternalUtility *_shared;
+
 + (instancetype)sharedUtility
 {
-  static id instance;
-  dispatch_once(&sharedUtilityNonce, ^{
-    instance = [self new];
-  });
-  return instance;
+  @synchronized(self) {
+    if (!_shared) {
+      _shared = [self new];
+    }
+  }
+
+  return _shared;
 }
 
 #pragma mark - Class Methods
@@ -395,7 +398,7 @@ static NSMapTable *_transientObjects;
 - (BOOL)isFacebookAppInstalled
 {
   dispatch_once(&checkIfFacebookAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
+    [self checkRegisteredCanOpenURLScheme:FBSDKURLSchemeFacebookAPI];
   });
   return [self _canOpenURLScheme:FBSDKURLSchemeFacebookAPI];
 }
@@ -403,7 +406,7 @@ static NSMapTable *_transientObjects;
 - (BOOL)isMessengerAppInstalled
 {
   dispatch_once(&checkIfMessengerAppInstalledToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
+    [self checkRegisteredCanOpenURLScheme:FBSDKURLSchemeMessengerApp];
   });
   return [self _canOpenURLScheme:FBSDKURLSchemeMessengerApp];
 }
@@ -692,9 +695,11 @@ static NSMapTable *_transientObjects;
   if (fetchUrlSchemesToken) {
     fetchUrlSchemesToken = 0;
   }
-  if (sharedUtilityNonce) {
-    sharedUtilityNonce = 0;
-  }
+
+  self.sharedUtility.infoDictionaryProvider = nil;
+  self.sharedUtility.loggerFactory = nil;
+  self.sharedUtility.settings = nil;
+  self.sharedUtility.isConfigured = NO;
 }
 
 #endif
