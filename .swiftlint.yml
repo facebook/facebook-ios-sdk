@@ -8,7 +8,7 @@ excluded:
 cyclomatic_complexity: 11
 file_header:
   required_string:
-    "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is
+    "/*\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n * All rights reserved.\n *\n * This source code is
     licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
 
 identifier_name:

@@ -1,4 +1,4 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
 # All rights reserved.
 #
 # This source code is licensed under the license found in the
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.license      = {
     type: 'Facebook Platform License',
     text: <<-LICENSE
-    Copyright (c) Facebook, Inc. and its affiliates. All rights reserved.
+    Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
 
     You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
     copy, modify, and distribute this software in source code or binary form for use
