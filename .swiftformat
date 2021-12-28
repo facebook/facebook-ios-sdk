@@ -102,7 +102,7 @@
 # --rules wrapSwitchCases # (opt-in) # splits "case .one, .two:" onto 2 lines
 
 # Options
---header "/*\n * Copyright (c) Facebook, Inc. and its affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
+--header "/*\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
 --ifdef no-indent
 --importgrouping  "testable-first"
 --indent 2
