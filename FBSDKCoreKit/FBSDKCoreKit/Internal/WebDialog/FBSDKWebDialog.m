@@ -143,7 +143,7 @@ static id<FBSDKErrorCreating> _errorFactory;
 {
   FBSDKWebDialog *dialog = [[self alloc] initWithName:name
                                            parameters:parameters
-                                                frame:CGRectZero
+                                                frame:frame
                                              delegate:delegate
                                          windowFinder:windowFinder];
   [dialog show];
