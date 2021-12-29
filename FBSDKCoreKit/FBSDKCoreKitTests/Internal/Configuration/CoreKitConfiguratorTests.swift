@@ -88,7 +88,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AccessToken should be not have a graph request piggyback manager by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AccessToken.tokenCache === components.tokenCache,
@@ -182,7 +182,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEvents should not have an internal utility by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppEvents.shared.gateKeeperManager === components.gateKeeperManager,
@@ -288,7 +288,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEvents should not have an AEM reporter by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppEvents.shared.onDeviceMLModelManager === components.modelManager,
@@ -334,7 +334,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEventsConfigurationManager should not have a graph request connection factory by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppEventsConfigurationManager.shared.store === components.defaultDataStore,
@@ -360,7 +360,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEventsDeviceInfo should not have settings by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppEventsDeviceInfo.shared.settings === components.settings,
@@ -374,7 +374,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEventsState should not have event processors by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     let processors = try XCTUnwrap(
       AppEventsState.eventProcessors,
@@ -409,7 +409,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEventsUtility should not have an internal utility by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppEventsUtility.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
@@ -435,7 +435,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AuthenticationToken should not have a token cache by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AuthenticationToken.tokenCache === components.tokenCache,
@@ -457,7 +457,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "Button should not have an access token provider by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       FBButton.applicationActivationNotifier as AnyObject === components.applicationActivationNotifier as AnyObject,
@@ -487,7 +487,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "FeatureManager should not have a data store by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       FeatureManager.shared.gateKeeperManager === components.gateKeeperManager,
@@ -521,7 +521,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GateKeeperManager should not have a data store by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       GateKeeperManager.settings === components.settings,
@@ -555,7 +555,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequest should not have a connection factory by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       GraphRequest.settings === components.settings,
@@ -626,7 +626,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not be able to make requests by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       GraphRequestConnection.sessionProxyFactory === components.urlSessionProxyFactory,
@@ -701,7 +701,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestPiggybackManager should not have a graph request factory by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       GraphRequestPiggybackManager.tokenWallet === components.accessTokenWallet,
@@ -727,7 +727,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "ImpressionLoggingButton should not have an impression logger factory by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       ImpressionLoggingButton.impressionLoggerFactory === components.impressionLoggerFactory,
@@ -757,7 +757,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "InstrumentManager should not have a crash handler by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       InstrumentManager.shared.crashObserver === components.crashObserver,
@@ -795,7 +795,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "InternalUtility should not have settings by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       InternalUtility.shared.infoDictionaryProvider === components.infoDictionaryProvider,
@@ -817,7 +817,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "SDKError should not have an error reporter by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       SDKError.errorReporter === components.errorReporter,
@@ -839,7 +839,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "ServerConfigurationManager should not have a dialog configuration map builder by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       ServerConfigurationManager.shared.graphRequestFactory === components.graphRequestFactory,
@@ -873,7 +873,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "Settings should not have an event logger by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       Settings.shared.store === components.defaultDataStore,
@@ -911,7 +911,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
 
     components.settings.appID = "sample"
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AEMReporter.networker === components.aemNetworker,
@@ -946,7 +946,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppLinkNavigation should not have an app link resolver by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppLinkNavigation.settings === components.settings,
@@ -980,7 +980,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppLinkURL should not have an app link target factory by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppLinkURL.settings === components.settings,
@@ -1038,7 +1038,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppLinkUtility should not have a user data store by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AppLinkUtility.graphRequestFactory === components.graphRequestFactory,
@@ -1100,7 +1100,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AuthenticationStatusUtility should not have an authentication token by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       AuthenticationStatusUtility.profileSetter === components.profileSetter,
@@ -1134,7 +1134,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "BridgeAPIRequest should not have settings by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       BridgeAPIRequest.internalURLOpener === components.internalURLOpener,
@@ -1180,7 +1180,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "CodelessIndexer should not have an advertiser ID provider by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       CodelessIndexer.graphRequestFactory === components.graphRequestFactory,
@@ -1226,7 +1226,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "CrashShield should not have a feature checker by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       CrashShield.settings === components.settings,
@@ -1248,7 +1248,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "FeatureExtractor should not have a web view provider by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       FeatureExtractor.rulesFromKeyProvider === components.rulesFromKeyProvider,
@@ -1294,7 +1294,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "ModelManager should not have a feature extractor by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       ModelManager.shared.featureChecker === components.featureChecker,
@@ -1352,7 +1352,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "Profile should not have a URL hoster by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       Profile.dataStore === components.defaultDataStore,
@@ -1386,7 +1386,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "FBWebDialogView should not have an internal URL opener by default"
     )
 
-    configurator.configureTargets()
+    configurator.performConfiguration()
 
     XCTAssertTrue(
       FBWebDialogView.webViewProvider === components.webViewProvider,

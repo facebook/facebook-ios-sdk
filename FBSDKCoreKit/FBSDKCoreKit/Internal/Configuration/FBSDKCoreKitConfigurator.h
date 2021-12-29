@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKCoreKitComponents.h"
+#import "FBSDKCoreKitConfiguring.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,11 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(CoreKitConfigurator)
-@interface FBSDKCoreKitConfigurator : NSObject
+@interface FBSDKCoreKitConfigurator : NSObject <FBSDKCoreKitConfiguring>
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithComponents:(FBSDKCoreKitComponents *)components;
-
-- (void)configureTargets;
 
 @end
 

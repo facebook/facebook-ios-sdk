@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
   return self;
 }
 
-- (void)configureTargets
+- (void)performConfiguration
 {
   [self configureAccessToken];
   [self configureAppEvents];
