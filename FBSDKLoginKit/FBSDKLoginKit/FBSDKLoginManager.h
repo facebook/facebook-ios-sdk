@@ -171,7 +171,8 @@ This method should be called with the url from the openURL method.
 // UNCRUSTIFY_FORMAT_OFF
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-NS_SWIFT_NAME(logIn(url:handler:));
+NS_SWIFT_NAME(logIn(url:handler:))
+DEPRECATED_MSG_ATTRIBUTE("`logInWithURL:handler:` is deprecated and will be removed in the next major release");
 // UNCRUSTIFY_FORMAT_ON
 
 /**
