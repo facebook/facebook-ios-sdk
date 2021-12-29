@@ -106,12 +106,13 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) Class<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
+@property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 @property (nonatomic, readonly) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (nonatomic, readonly) id<FBSDKSettings> settings;
+@property (nonatomic, readonly) id<FBSDKSettings, FBSDKSettingsLogging> settings;
 @property (nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic, readonly) id<FBSDKTokenCaching> tokenCache;
 @property (nonatomic, readonly) id<FBSDKURLSessionProxyProviding> urlSessionProxyFactory;
@@ -136,7 +137,6 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKInternalURLOpener> internalURLOpener;
 @property (nonatomic, readonly) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nonatomic, readonly) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> modelManager;
-@property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
 @property (nonatomic, readonly) Class<FBSDKProfileProviding> profileSetter;
 @property (nonatomic, readonly) id<FBSDKRulesFromKeyProvider> rulesFromKeyProvider;
 @property (nonatomic, readonly) id<FBSDKSessionProviding> sessionDataTaskProvider;
@@ -183,12 +183,13 @@ NS_SWIFT_NAME(CoreKitComponents)
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                           piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
               restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                  settings:(id<FBSDKSettings>)settings
+                                  settings:(id<FBSDKSettings, FBSDKSettingsLogging>)settings
                          timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
                                 tokenCache:(id<FBSDKTokenCaching>)tokenCache
                     urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
@@ -212,7 +213,6 @@ NS_SWIFT_NAME(CoreKitComponents)
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
-                       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider

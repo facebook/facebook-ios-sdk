@@ -128,4 +128,6 @@ public class TestInternalUtility: NSObject,
       expiredPermissions.addObjects(from: expired)
     }
   }
+
+  public func validateFacebookReservedURLSchemes() {}
 }

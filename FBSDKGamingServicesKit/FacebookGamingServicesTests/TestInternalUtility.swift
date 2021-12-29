@@ -71,6 +71,8 @@ class TestInternalUtility: InternalUtilityProtocol {
     declinedPermissions: NSMutableSet,
     expiredPermissions: NSMutableSet
   ) {}
+
+  func validateFacebookReservedURLSchemes() {}
 }
 
 enum URLConstants {

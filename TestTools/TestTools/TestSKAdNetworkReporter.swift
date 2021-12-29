@@ -20,4 +20,6 @@ public class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
   public func isReportingEvent(_ event: String) -> Bool {
     reportingEvents.contains(event)
   }
+
+  public func checkAndRevokeTimer() {}
 }

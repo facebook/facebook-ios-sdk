@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
+#import <FBSDKCoreKit/FBSDKSettingsLogging.h>
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Settings)
-@interface FBSDKSettings : NSObject <FBSDKSettings>
+@interface FBSDKSettings : NSObject <FBSDKSettings, FBSDKSettingsLogging>
 
 #if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;

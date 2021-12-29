@@ -26,8 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ApplicationDelegate)
 @interface FBSDKApplicationDelegate : NSObject
 
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 /**
  Gets the singleton instance.

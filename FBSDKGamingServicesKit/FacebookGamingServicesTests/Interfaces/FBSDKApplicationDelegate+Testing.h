@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 
+- (void)resetApplicationObserverCache;
+
 @end
 
 NS_ASSUME_NONNULL_END

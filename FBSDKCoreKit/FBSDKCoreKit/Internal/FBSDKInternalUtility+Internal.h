@@ -98,11 +98,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (void)deleteFacebookCookies;
 
-/**
-  validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
- */
-- (void)validateFacebookReservedURLSchemes;
-
 #if !TARGET_OS_TV
 /**
   returns interface orientation for the key window.

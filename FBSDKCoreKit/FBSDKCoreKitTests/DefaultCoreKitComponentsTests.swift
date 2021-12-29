@@ -295,6 +295,13 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testNotificationCenter() {
+    XCTAssertTrue(
+      components.notificationCenter === NotificationCenter.default,
+      "The default components should use the default NotificationCenter as its notification center"
+    )
+  }
+
   func testOperatingSystemVersionComparer() {
     XCTAssertTrue(
       components.operatingSystemVersionComparer === ProcessInfo.processInfo,
@@ -564,13 +571,6 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     XCTAssertTrue(
       components.modelManager === ModelManager.shared,
       "The default components should use the shared ModelManager as its model manager"
-    )
-  }
-
-  func testNotificationCenter() {
-    XCTAssertTrue(
-      components.notificationCenter === NotificationCenter.default,
-      "The default components should use the default NotificationCenter as its notification center"
     )
   }
 

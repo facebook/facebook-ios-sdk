@@ -77,18 +77,13 @@ class BridgeAPITests: XCTestCase {
     let serverConfigurationProvider = TestServerConfigurationProvider(
       configuration: ServerConfigurationFixtures.defaultConfig
     )
-    let delegate = ApplicationDelegate(
-      notificationCenter: TestNotificationCenter(),
-      tokenWallet: TestAccessTokenWallet.self,
-      settings: TestSettings(),
-      featureChecker: TestFeatureManager(),
-      appEvents: TestAppEvents(),
+    let components = TestCoreKitComponents.makeComponents(
       serverConfigurationProvider: serverConfigurationProvider,
-      store: UserDefaultsSpy(),
-      authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-      profileProvider: TestProfileProvider.self,
-      backgroundEventLogger: backgroundEventLogger,
-      paymentObserver: TestPaymentObserver()
+      backgroundEventLogger: backgroundEventLogger
+    )
+    let delegate = ApplicationDelegate(
+      components: components,
+      configurator: TestCoreKitConfigurator(components: components)
     )
     delegate.initializeSDK()
   }

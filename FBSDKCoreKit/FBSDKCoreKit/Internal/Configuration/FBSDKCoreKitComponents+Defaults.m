@@ -160,6 +160,7 @@ static FBSDKCoreKitComponents * _default;
                                                logger:FBSDKLogger.class
                                         loggerFactory:loggerFactory
                               macCatalystDeterminator:NSProcessInfo.processInfo
+                                   notificationCenter:NSNotificationCenter.defaultCenter
                        operatingSystemVersionComparer:NSProcessInfo.processInfo
                                       paymentObserver:paymentObserver
                                      piggybackManager:FBSDKGraphRequestPiggybackManager.class
@@ -188,7 +189,6 @@ static FBSDKCoreKitComponents * _default;
                                     internalURLOpener:UIApplication.sharedApplication
                                       metadataIndexer:metaIndexer
                                          modelManager:FBSDKModelManager.shared
-                                   notificationCenter:NSNotificationCenter.defaultCenter
                                         profileSetter:FBSDKProfile.class
                                  rulesFromKeyProvider:FBSDKModelManager.shared
                               sessionDataTaskProvider:NSURLSession.sharedSession

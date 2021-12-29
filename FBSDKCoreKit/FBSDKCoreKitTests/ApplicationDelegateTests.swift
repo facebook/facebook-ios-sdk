@@ -24,6 +24,8 @@ class ApplicationDelegateTests: XCTestCase {
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
   var paymentObserver: TestPaymentObserver!
   var profile: Profile!
+  var components: CoreKitComponents!
+  var configurator: TestCoreKitConfigurator!
   var delegate: ApplicationDelegate! // swiftlint:disable:this weak_delegate
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -53,20 +55,19 @@ class ApplicationDelegateTests: XCTestCase {
       linkURL: nil,
       refreshDate: nil
     )
-    delegate = ApplicationDelegate(
-      notificationCenter: notificationCenter,
-      tokenWallet: TestAccessTokenWallet.self,
-      settings: settings,
-      featureChecker: featureChecker,
+    components = TestCoreKitComponents.makeComponents(
       appEvents: appEvents,
+      defaultDataStore: userDataStore,
+      featureChecker: featureChecker,
+      notificationCenter: notificationCenter,
+      paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      store: userDataStore,
-      authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-      profileProvider: TestProfileProvider.self,
-      backgroundEventLogger: backgroundEventLogger,
-      paymentObserver: paymentObserver
+      settings: settings,
+      backgroundEventLogger: backgroundEventLogger
     )
+    configurator = TestCoreKitConfigurator(components: components)
 
+    makeDelegate()
     delegate.resetApplicationObserverCache()
   }
 
@@ -81,11 +82,23 @@ class ApplicationDelegateTests: XCTestCase {
     serverConfigurationProvider = nil
     paymentObserver = nil
     profile = nil
+    components = nil
     delegate = nil
 
     resetTestDependencies()
 
     super.tearDown()
+  }
+
+  func makeDelegate(usesTestConfigurator: Bool = true) {
+    let configurator: CoreKitConfiguring = usesTestConfigurator
+      ? configurator
+      : CoreKitConfigurator(components: components)
+
+    delegate = ApplicationDelegate(
+      components: components,
+      configurator: configurator
+    )
   }
 
   func resetTestDependencies() {
@@ -96,108 +109,134 @@ class ApplicationDelegateTests: XCTestCase {
     TestProfileProvider.reset()
   }
 
+  func testDefaultComponentsAndConfiguration() throws {
+    delegate = ApplicationDelegate()
+
+    XCTAssertIdentical(
+      delegate.components,
+      CoreKitComponents.default,
+      "An application delegate should be created with the default components by default"
+    )
+
+    let configurator = try XCTUnwrap(
+      delegate.configurator as? CoreKitConfigurator,
+      "An application delegate should be created with a concrete configurator by default"
+    )
+    XCTAssertIdentical(
+      configurator.components,
+      CoreKitComponents.default,
+      "The configurator should be created with the default components by default"
+    )
+  }
+
+  func testComponentsAndConfiguration() {
+    let components = TestCoreKitComponents.makeComponents()
+    let configurator = TestCoreKitConfigurator(components: components)
+    delegate = ApplicationDelegate(components: components, configurator: configurator)
+
+    XCTAssertIdentical(
+      delegate.components,
+      components,
+      "An application delegate should be created with the provided components"
+    )
+    XCTAssertIdentical(
+      delegate.configurator,
+      configurator,
+      "An application delegate should be created with the provided configurator"
+    )
+  }
+
   func testDefaultDependencies() {
     delegate = ApplicationDelegate.shared
 
     XCTAssertEqual(
-      delegate.notificationObserver as? NotificationCenter,
+      delegate.components.notificationCenter as? NotificationCenter,
       NotificationCenter.default,
       "Should use the default system notification center"
     )
     XCTAssertTrue(
-      delegate.tokenWallet is AccessToken.Type,
+      delegate.components.accessTokenWallet is AccessToken.Type,
       "Should use the expected default access token setter"
     )
     XCTAssertEqual(
-      delegate.featureChecker as? FeatureManager,
+      delegate.components.featureChecker as? FeatureManager,
       FeatureManager.shared,
       "Should use the default feature checker"
     )
     XCTAssertEqual(
-      delegate.appEvents as? AppEvents,
+      delegate.components.appEvents as? AppEvents,
       AppEvents.shared,
       "Should use the expected default app events instance"
     )
     XCTAssertTrue(
-      delegate.serverConfigurationProvider is ServerConfigurationManager,
+      delegate.components.serverConfigurationProvider is ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertEqual(
-      delegate.store as? UserDefaults,
+      delegate.components.defaultDataStore as? UserDefaults,
       UserDefaults.standard,
       "Should use the expected default persistent store"
     )
     XCTAssertTrue(
-      delegate.authenticationTokenWallet is AuthenticationToken.Type,
+      delegate.components.authenticationTokenWallet is AuthenticationToken.Type,
       "Should use the expected default access token setter"
     )
     XCTAssertTrue(
-      delegate.settings === Settings.shared,
+      delegate.components.settings === Settings.shared,
       "Should use the expected default settings"
     )
     XCTAssertTrue(
-      delegate.paymentObserver is PaymentObserver,
+      delegate.components.paymentObserver is PaymentObserver,
       "Should use the expected concrete payment observer"
     )
   }
 
   func testCreatingWithDependencies() {
     XCTAssertTrue(
-      delegate.notificationObserver is TestNotificationCenter,
+      delegate.components.notificationCenter is TestNotificationCenter,
       "Should be able to create with a custom notification center"
     )
     XCTAssertTrue(
-      delegate.tokenWallet is TestAccessTokenWallet.Type,
+      delegate.components.accessTokenWallet is TestAccessTokenWallet.Type,
       "Should be able to create with a custom access token setter"
     )
     XCTAssertEqual(
-      delegate.featureChecker as? TestFeatureManager,
+      delegate.components.featureChecker as? TestFeatureManager,
       featureChecker,
       "Should be able to create with a feature checker"
     )
     XCTAssertEqual(
-      delegate.appEvents as? TestAppEvents,
+      delegate.components.appEvents as? TestAppEvents,
       appEvents,
       "Should be able to create with an app events instance"
     )
     XCTAssertTrue(
-      delegate.serverConfigurationProvider is TestServerConfigurationProvider,
+      delegate.components.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to create with a server configuration provider"
     )
     XCTAssertEqual(
-      delegate.store as? UserDefaultsSpy,
+      delegate.components.defaultDataStore as? UserDefaultsSpy,
       userDataStore,
       "Should be able to create with a persistent store"
     )
     XCTAssertTrue(
-      delegate.authenticationTokenWallet is TestAuthenticationTokenWallet.Type,
+      delegate.components.authenticationTokenWallet is TestAuthenticationTokenWallet.Type,
       "Should be able to create with a custom access token setter"
     )
     XCTAssertEqual(
-      delegate.settings as? TestSettings,
+      delegate.components.settings as? TestSettings,
       settings,
       "Should be able to create with custom settings"
     )
     XCTAssertEqual(
-      delegate.backgroundEventLogger as? TestBackgroundEventLogger,
+      delegate.components.backgroundEventLogger as? TestBackgroundEventLogger,
       backgroundEventLogger,
       "Should be able to create with custom background event logger"
     )
   }
 
-  func testCreatingSetsExpirer() throws {
-    let delegateCenter = try XCTUnwrap(delegate.notificationObserver as? TestNotificationCenter)
-    let expirerCenter = try XCTUnwrap(delegate.accessTokenExpirer.notificationCenter as? TestNotificationCenter)
-
-    XCTAssertEqual(
-      expirerCenter,
-      delegateCenter,
-      "Should create the token expirer using the delegate's notification center"
-    )
-  }
-
   func testCreatingConfiguresPaymentProductRequestorFactory() throws {
-    let paymentObserver = try XCTUnwrap(ApplicationDelegate.shared.paymentObserver as? PaymentObserver)
+    let paymentObserver = try XCTUnwrap(ApplicationDelegate.shared.components.paymentObserver as? PaymentObserver)
     let factory = try XCTUnwrap(paymentObserver.requestorFactory as? PaymentProductRequestorFactory)
 
     XCTAssertTrue(
@@ -273,6 +312,14 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssert(
       featureChecker.capturedFeaturesContains(.instrument),
       "Should check if the instrument feature is enabled on initialization"
+    )
+  }
+
+  func testInitializingSDKPerformsDownstreamConfigurations() {
+    delegate.initializeSDK()
+    XCTAssertTrue(
+      configurator.performConfigurationCalled,
+      "Initializing the SDK should ask the configurator to perform downstream configuration"
     )
   }
 
@@ -453,6 +500,7 @@ class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSdkEnablesGraphRequests() {
+    makeDelegate(usesTestConfigurator: false)
     GraphRequestConnection.resetCanMakeRequests()
     delegate.initializeSDK()
 
@@ -464,15 +512,18 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresEventsProcessorsForAppEventsState() throws {
+    makeDelegate(usesTestConfigurator: false)
     AppEvents.shared.reset()
     delegate.initializeSDK()
 
     XCTAssertEqual(AppEventsState.eventProcessors?.count, 2)
-    XCTAssertTrue(
-      AppEventsState.eventProcessors?.first === appEvents.capturedConfigureEventDeactivationParameterProcessor
+    XCTAssertIdentical(
+      AppEventsState.eventProcessors?.first,
+      components.eventDeactivationManager
     )
-    XCTAssertTrue(
-      AppEventsState.eventProcessors?.last === appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor
+    XCTAssertIdentical(
+      AppEventsState.eventProcessors?.last,
+      components.restrictiveDataFilterManager
     )
   }
 
@@ -566,22 +617,27 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppEventsConfigurationManager() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppEventsConfigurationManager.shared.store === UserDefaults.standard,
+    XCTAssertIdentical(
+      AppEventsConfigurationManager.shared.store,
+      components.defaultDataStore,
       "Should be configured with the expected concrete data store"
     )
-    XCTAssertTrue(
-      AppEventsConfigurationManager.shared.settings === settings,
+    XCTAssertIdentical(
+      AppEventsConfigurationManager.shared.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
-    XCTAssertTrue(
-      AppEventsConfigurationManager.shared.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      AppEventsConfigurationManager.shared.graphRequestFactory,
+      components.graphRequestFactory,
       "Should be configured with the expected concrete request provider"
     )
-    XCTAssertTrue(
-      AppEventsConfigurationManager.shared.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      AppEventsConfigurationManager.shared.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "Should be configured with the expected concrete connection provider"
     )
   }
@@ -590,7 +646,9 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresAEMReporter() {
+    makeDelegate(usesTestConfigurator: false)
     AEMReporter.reset()
+
     XCTAssertNil(
       AEMReporter.networker,
       "AEMReporter should not have an AEM networker by default"
@@ -606,8 +664,9 @@ class ApplicationDelegateTests: XCTestCase {
 
     delegate.initializeSDK(launchOptions: [:])
 
-    XCTAssertTrue(
-      AEMReporter.networker is AEMNetworker,
+    XCTAssertIdentical(
+      AEMReporter.networker,
+      components.aemNetworker,
       "AEMReporter should be configured with an AEM networker"
     )
     XCTAssertEqual(
@@ -615,14 +674,16 @@ class ApplicationDelegateTests: XCTestCase {
       Settings.shared.appID,
       "AEMReporter should be configured with the settings' app ID"
     )
-    XCTAssertTrue(
-      AEMReporter.reporter is SKAdNetworkReporter,
+    XCTAssertIdentical(
+      AEMReporter.reporter,
+      components.skAdNetworkReporter,
       "AEMReporter should be configured with a SKAdNetwork reporter"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresError() {
+    makeDelegate(usesTestConfigurator: false)
     SDKError.reset()
     XCTAssertNil(
       SDKError.errorReporter,
@@ -630,48 +691,27 @@ class ApplicationDelegateTests: XCTestCase {
     )
     delegate.initializeSDK(launchOptions: [:])
 
-    XCTAssertEqual(
-      SDKError.errorReporter as? ErrorReporter,
-      ErrorReporter.shared
+    XCTAssertIdentical(
+      SDKError.errorReporter,
+      components.errorReporter
     )
   }
 
   func testInitializingConfiguresSuggestedEventsIndexer() throws {
+    makeDelegate(usesTestConfigurator: false)
     ModelManager.reset()
     delegate.initializeSDK(launchOptions: [:])
 
-    let indexer = try XCTUnwrap(
-      ModelManager.shared.suggestedEventsIndexer as? SuggestedEventsIndexer
-    )
-
-    XCTAssertTrue(
-      indexer.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      ModelManager.shared.suggestedEventsIndexer,
+      components.suggestedEventsIndexer,
       "Should configure with a request provider of the expected type"
-    )
-    XCTAssertTrue(
-      indexer.serverConfigurationProvider is ServerConfigurationManager,
-      "Should configure with a server configuration manager of the expected type"
-    )
-    XCTAssertTrue(
-      indexer.swizzler is Swizzler.Type,
-      "Should configure with a swizzler of the expected type"
-    )
-    XCTAssertTrue(
-      indexer.settings === settings,
-      "Should configure with a settings of the expected type"
-    )
-    XCTAssertTrue(
-      indexer.eventLogger === AppEvents.shared,
-      "Should configure with the expected event logger"
-    )
-    XCTAssertTrue(
-      indexer.eventProcessor is ModelManager,
-      "Should have an event processor of the expected type"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresModelManager() {
+    makeDelegate(usesTestConfigurator: false)
     ModelManager.reset()
     XCTAssertNil(ModelManager.shared.featureChecker, "Should not have a feature checker by default")
     XCTAssertNil(ModelManager.shared.graphRequestFactory, "Should not have a request factory by default")
@@ -685,74 +725,86 @@ class ApplicationDelegateTests: XCTestCase {
 
     delegate.initializeSDK(launchOptions: [:])
 
-    XCTAssertEqual(
-      ModelManager.shared.featureChecker as? FeatureManager,
-      FeatureManager.shared,
+    XCTAssertIdentical(
+      ModelManager.shared.featureChecker,
+      components.featureChecker,
       "Should configure with the expected concrete feature checker"
     )
-    XCTAssertTrue(
-      ModelManager.shared.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      ModelManager.shared.graphRequestFactory,
+      components.graphRequestFactory,
       "Should configure with a request factory of the expected type"
     )
-    XCTAssertEqual(
-      ModelManager.shared.fileManager as? FileManager,
-      FileManager.default,
+    XCTAssertIdentical(
+      ModelManager.shared.fileManager,
+      components.fileManager,
       "Should configure with the expected concrete file manager"
     )
-    XCTAssertEqual(
-      ModelManager.shared.store as? UserDefaults,
-      UserDefaults.standard,
+    XCTAssertIdentical(
+      ModelManager.shared.store,
+      components.defaultDataStore,
       "Should configure with the expected concrete data store"
     )
-    XCTAssertTrue(
-      ModelManager.shared.settings === settings,
+    XCTAssertIdentical(
+      ModelManager.shared.settings,
+      components.settings,
       "Should configure with the expected concrete settings"
     )
-    XCTAssertTrue(
-      ModelManager.shared.dataExtractor is NSData.Type,
+    XCTAssertIdentical(
+      ModelManager.shared.dataExtractor,
+      components.dataExtractor,
       "Should configure with the expected concrete data extractor"
     )
-    XCTAssertTrue(
-      ModelManager.shared.gateKeeperManager === GateKeeperManager.self,
+    XCTAssertIdentical(
+      ModelManager.shared.gateKeeperManager,
+      components.gateKeeperManager,
       "Should configure with the expected concrete gatekeeper manager"
     )
-    XCTAssertTrue(
-      ModelManager.shared.featureExtractor === FeatureExtractor.self,
+    XCTAssertIdentical(
+      ModelManager.shared.featureExtractor,
+      components.featureExtractor,
       "Should configure with the expected feature extractor"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresGraphRequest() {
+    makeDelegate(usesTestConfigurator: false)
     GraphRequest.resetClassDependencies()
     delegate.initializeSDK(launchOptions: [:])
 
     let request = GraphRequest(graphPath: name)
-    XCTAssertTrue(
-      request.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      request.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "Should configure the graph request with a connection provider to use in creating new instances"
     )
-    XCTAssertTrue(
-      GraphRequest.accessTokenProvider === AccessToken.self,
+    XCTAssertIdentical(
+      GraphRequest.accessTokenProvider,
+      components.accessTokenWallet,
       "Should configure the graph request type with the expected concrete token string provider"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresFeatureManager() {
+    makeDelegate(usesTestConfigurator: false)
     FeatureManager.shared.resetDependencies()
     delegate.initializeSDK(launchOptions: [:])
 
-    XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager === GateKeeperManager.self,
+    XCTAssertIdentical(
+      FeatureManager.shared.gateKeeperManager,
+      components.gateKeeperManager,
       "Should configure with the expected concrete gatekeeper manager"
     )
-    XCTAssertTrue(
-      FeatureManager.shared.settings === settings,
+    XCTAssertIdentical(
+      FeatureManager.shared.settings,
+      components.settings,
       "Should configure with the expected concrete settings"
     )
-    XCTAssertTrue(
-      FeatureManager.shared.store === UserDefaults.standard,
+    XCTAssertIdentical(
+      FeatureManager.shared.store,
+      components.defaultDataStore,
       "Should configure with the expected concrete data store"
     )
   }
@@ -760,90 +812,78 @@ class ApplicationDelegateTests: XCTestCase {
   // TEMP: added to configurator tests -- need to check same feature checker
   // and settings for crash observer
   func testInitializingConfiguresInstrumentManager() throws {
+    makeDelegate(usesTestConfigurator: false)
     InstrumentManager.reset()
     delegate.initializeSDK(launchOptions: [:])
 
-    let crashObserver = try XCTUnwrap(
-      InstrumentManager.shared.crashObserver as? CrashObserver,
+    XCTAssertIdentical(
+      InstrumentManager.shared.crashObserver,
+      components.crashObserver,
       "Should configure with a crash observer"
-    )
-
-    XCTAssertTrue(
-      crashObserver.featureChecker === InstrumentManager.shared.featureChecker,
-      "Should use the same feature checker for the crash observer and the instrument manager"
-    )
-    XCTAssertTrue(
-      crashObserver.settings === InstrumentManager.shared.settings,
-      "Should use the same settings for the crash observer and the instrument manager"
-    )
-    XCTAssertTrue(
-      InstrumentManager.shared.featureChecker is FeatureManager,
-      "Should configure with the expected feature checker"
-    )
-    XCTAssertTrue(
-      InstrumentManager.shared.settings === settings,
-      "Should configure with the shared settings instance"
-    )
-    XCTAssertTrue(
-      InstrumentManager.shared.errorReporter === ErrorReporter.shared,
-      "Should configure with the shared error reporter instance"
-    )
-    XCTAssertTrue(
-      InstrumentManager.shared.crashHandler === CrashHandler.shared,
-      "Should configure with the shared Crash Handler instance"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresAppLinkUtility() {
+    makeDelegate(usesTestConfigurator: false)
     AppLinkUtility.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppLinkUtility.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      AppLinkUtility.graphRequestFactory,
+      components.graphRequestFactory,
       "Should configure with the expected graph request factory"
     )
-    XCTAssertTrue(
-      AppLinkUtility.infoDictionaryProvider === Bundle.main,
+    XCTAssertIdentical(
+      AppLinkUtility.infoDictionaryProvider,
+      components.infoDictionaryProvider,
       "Should configure with the expected info dictionary provider"
     )
-    XCTAssertTrue(
-      AppLinkUtility.settings === settings,
+    XCTAssertIdentical(
+      AppLinkUtility.settings,
+      components.settings,
       "Should configure with the expected settings"
     )
-    XCTAssertTrue(
-      AppLinkUtility.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+    XCTAssertIdentical(
+      AppLinkUtility.appEventsConfigurationProvider,
+      components.appEventsConfigurationProvider,
       "Should configure with the expected app events configuration manager"
     )
-    XCTAssertTrue(
-      AppLinkUtility.advertiserIDProvider === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      AppLinkUtility.advertiserIDProvider,
+      components.advertiserIDProvider,
       "Should configure with the expected advertiser id provider"
     )
-    XCTAssertTrue(
-      AppLinkUtility.appEventsDropDeterminer === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      AppLinkUtility.appEventsDropDeterminer,
+      components.appEventsDropDeterminer,
       "Should configure with the expected app events drop determiner"
     )
-    XCTAssertTrue(
-      AppLinkUtility.appEventParametersExtractor === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      AppLinkUtility.appEventParametersExtractor,
+      components.appEventParametersExtractor,
       "Should configure with the expected app events parameter extractor"
     )
-    XCTAssertTrue(
-      AppLinkUtility.appLinkURLFactory is AppLinkURLFactory,
+    XCTAssertIdentical(
+      AppLinkUtility.appLinkURLFactory,
+      components.appLinkURLFactory,
       "Should configure with the expected app link URL factory"
     )
-    XCTAssertTrue(
-      AppLinkUtility.userIDProvider === AppEvents.shared,
+    XCTAssertIdentical(
+      AppLinkUtility.userIDProvider,
+      components.userIDProvider,
       "Should configure with the expected user id provider"
     )
-    XCTAssertTrue(
-      AppLinkUtility.userDataStore is UserDataStore,
+    XCTAssertIdentical(
+      AppLinkUtility.userDataStore,
+      components.userDataStore,
       "Should configure with the expected user data store"
     )
   }
 
   func testInitializingCreatesPaymentObserver() throws {
     let observer = try XCTUnwrap(
-      ApplicationDelegate.shared.paymentObserver as? PaymentObserver
+      ApplicationDelegate.shared.components.paymentObserver as? PaymentObserver
     )
 
     XCTAssertEqual(
@@ -859,364 +899,432 @@ class ApplicationDelegateTests: XCTestCase {
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresServerConfigurationManager() {
+    makeDelegate(usesTestConfigurator: false)
     let manager = ServerConfigurationManager.shared
     manager.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(manager.graphRequestFactory is GraphRequestFactory)
-    XCTAssertTrue(manager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
-    XCTAssertTrue(manager.dialogConfigurationMapBuilder is DialogConfigurationMapBuilder)
+    XCTAssertIdentical(
+      manager.graphRequestFactory,
+      components.graphRequestFactory
+    )
+    XCTAssertIdentical(
+      manager.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory
+    )
+    XCTAssertIdentical(
+      manager.dialogConfigurationMapBuilder,
+      components.dialogConfigurationMapBuilder
+    )
   }
 
   // TEMP: added to configurator tests
   func testInitializingConfiguresAppLinkURL() {
+    makeDelegate(usesTestConfigurator: false)
     AppLinkURL.reset()
 
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppLinkURL.settings === settings,
+    XCTAssertIdentical(
+      AppLinkURL.settings,
+      components.settings,
       "Should configure with the expected settings"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkFactory is AppLinkFactory,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkFactory,
+      components.appLinkFactory,
       "Should configure with the expected app link factory"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkTargetFactory is AppLinkTargetFactory,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkTargetFactory,
+      components.appLinkTargetFactory,
       "Should configure with the expected app link target factory"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkEventPoster is MeasurementEvent,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkEventPoster,
+      components.appLinkEventPoster,
       "Should configure with the expected app link event poster"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresBridgeAPIRequest() {
+    makeDelegate(usesTestConfigurator: false)
     BridgeAPIRequest.resetClassDependencies()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      BridgeAPIRequest.internalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      BridgeAPIRequest.internalUtility,
+      components.internalUtility,
       "Should configure with the expected internal utility"
     )
-    XCTAssertTrue(
-      BridgeAPIRequest.settings === settings,
+    XCTAssertIdentical(
+      BridgeAPIRequest.settings,
+      components.settings,
       "Should configure with the expected settings"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAppEventsUtility() {
+    makeDelegate(usesTestConfigurator: false)
     AppEventsUtility.shared.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppEventsUtility.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+    XCTAssertIdentical(
+      AppEventsUtility.shared.appEventsConfigurationProvider,
+      components.appEventsConfigurationProvider,
       "Should configure with the expected app events configuration provider"
     )
-    XCTAssertTrue(
-      AppEventsUtility.shared.deviceInformationProvider is AppEventsDeviceInfo,
+    XCTAssertIdentical(
+      AppEventsUtility.shared.deviceInformationProvider,
+      components.deviceInformationProvider,
       "Should configure with the expected device information provider"
     )
-    XCTAssertTrue(
-      AppEventsUtility.shared.settings === settings,
+    XCTAssertIdentical(
+      AppEventsUtility.shared.settings,
+      components.settings,
       "Should configure with the expected settings"
     )
-    XCTAssertTrue(
-      AppEventsUtility.shared.internalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      AppEventsUtility.shared.internalUtility,
+      components.internalUtility,
       "Should configure with the expected internal utility"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresGraphRequestConnection() {
+    makeDelegate(usesTestConfigurator: false)
     GraphRequestConnection.resetClassDependencies()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      GraphRequestConnection.sessionProxyFactory is URLSessionProxyFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.sessionProxyFactory,
+      components.urlSessionProxyFactory,
       "A graph request connection should have the correct concrete session provider by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.errorConfigurationProvider is ErrorConfigurationProvider,
+    XCTAssertIdentical(
+      GraphRequestConnection.errorConfigurationProvider,
+      components.errorConfigurationProvider,
       "A graph request connection should have the correct error configuration provider by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.piggybackManager === GraphRequestPiggybackManager.self,
+    XCTAssertIdentical(
+      GraphRequestConnection.piggybackManager,
+      components.piggybackManager,
       "A graph request connection should have the correct piggyback manager provider by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.settings === settings,
+    XCTAssertIdentical(
+      GraphRequestConnection.settings,
+      components.settings,
       "A graph request connection should have the correct settings type by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "A graph request connection should have the correct connection factory by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.eventLogger === AppEvents.shared,
+    XCTAssertIdentical(
+      GraphRequestConnection.eventLogger,
+      components.eventLogger,
       "A graph request connection should have the correct events logger by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.operatingSystemVersionComparer === ProcessInfo.processInfo,
+    XCTAssertIdentical(
+      GraphRequestConnection.operatingSystemVersionComparer,
+      components.operatingSystemVersionComparer,
       "A graph request connection should have the correct operating system version comparer by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.macCatalystDeterminator === ProcessInfo.processInfo,
+    XCTAssertIdentical(
+      GraphRequestConnection.macCatalystDeterminator,
+      components.macCatalystDeterminator,
       "A graph request connection should have the correct Mac Catalyst determinator by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.accessTokenProvider === AccessToken.self,
+    XCTAssertIdentical(
+      GraphRequestConnection.accessTokenProvider,
+      components.accessTokenWallet,
       "A graph request connection should have the correct access token provider by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.accessTokenSetter === AccessToken.self,
+    XCTAssertIdentical(
+      GraphRequestConnection.accessTokenSetter,
+      components.accessTokenWallet,
       "A graph request connection should have the correct access token setter by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.errorFactory is ErrorFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.errorFactory,
+      components.errorFactory,
       "A graph request connection should have an error factory by default"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.authenticationTokenProvider === AuthenticationToken.self,
+    XCTAssertIdentical(
+      GraphRequestConnection.authenticationTokenProvider,
+      components.authenticationTokenWallet,
       "A graph request connection should have the correct authentication token provider by default"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSDKConfiguresAuthenticationStatusUtility() {
+    makeDelegate(usesTestConfigurator: false)
     AuthenticationStatusUtility.resetClassDependencies()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AuthenticationStatusUtility.profileSetter === Profile.self,
+    XCTAssertIdentical(
+      AuthenticationStatusUtility.profileSetter,
+      components.profileSetter,
       "Should configure with the expected profile setter"
     )
-    XCTAssertTrue(
-      AuthenticationStatusUtility.sessionDataTaskProvider === URLSession.shared,
+    XCTAssertIdentical(
+      AuthenticationStatusUtility.sessionDataTaskProvider,
+      components.sessionDataTaskProvider,
       "Should configure with the expected session data task provider"
     )
-    XCTAssertTrue(
-      AuthenticationStatusUtility.accessTokenWallet === AccessToken.self,
+    XCTAssertIdentical(
+      AuthenticationStatusUtility.accessTokenWallet,
+      components.accessTokenWallet,
       "Should configure with the expected access token"
     )
-    XCTAssertTrue(
-      AuthenticationStatusUtility.authenticationTokenWallet === AuthenticationToken.self,
+    XCTAssertIdentical(
+      AuthenticationStatusUtility.authenticationTokenWallet,
+      components.authenticationTokenWallet,
       "Should configure with the expected authentication token"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresInternalUtility() {
+    makeDelegate(usesTestConfigurator: false)
     InternalUtility.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      InternalUtility.shared.infoDictionaryProvider === Bundle.main,
+    XCTAssertIdentical(
+      InternalUtility.shared.infoDictionaryProvider,
+      components.infoDictionaryProvider,
       "Should be configured with the expected concrete info dictionary provider"
     )
-    XCTAssertTrue(
-      InternalUtility.shared.loggerFactory is LoggerFactory,
+    XCTAssertIdentical(
+      InternalUtility.shared.loggerFactory,
+      components.loggerFactory,
       "Should be configured with the expected concrete logger factory"
     )
-    XCTAssertTrue(
-      InternalUtility.shared.settings === settings,
+    XCTAssertIdentical(
+      InternalUtility.shared.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
   }
 
   // TEMP: added to configurator tests
-  func testInitializingSdkConfiguresSharedAppEventsDeviceInfo() throws {
+  func testInitializingSdkConfiguresSharedAppEventsDeviceInfo() {
+    makeDelegate(usesTestConfigurator: false)
     AppEventsDeviceInfo.shared.resetDependencies()
 
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppEventsDeviceInfo.shared.settings === settings,
+    XCTAssertIdentical(
+      AppEventsDeviceInfo.shared.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppLinkNavigation() {
+    makeDelegate(usesTestConfigurator: false)
     AppLinkNavigation.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AppLinkNavigation.default === WebViewAppLinkResolver.shared,
+    XCTAssertIdentical(
+      AppLinkNavigation.default,
+      components.appLinkResolver,
       "Should be configured with the expected app link resolver"
     )
-    XCTAssertTrue(
-      AppLinkNavigation.settings === settings,
+    XCTAssertIdentical(
+      AppLinkNavigation.settings,
+      components.settings,
       "Should be configured with the expected settings"
     )
-    XCTAssertTrue(
-      AppLinkNavigation.appLinkEventPoster is MeasurementEvent,
+    XCTAssertIdentical(
+      AppLinkNavigation.appLinkEventPoster,
+      components.appLinkEventPoster,
       "Should be configured with the expected app link event poster"
     )
-    XCTAssertTrue(
-      AppLinkNavigation.appLinkResolver is WebViewAppLinkResolver,
+    XCTAssertIdentical(
+      AppLinkNavigation.appLinkResolver,
+      components.appLinkResolver,
       "Should be configured with the expected app link resolver"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresButtonSuperclass() {
+    makeDelegate(usesTestConfigurator: false)
     ApplicationDelegate.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      FBButton.applicationActivationNotifier is ApplicationDelegate,
+    XCTAssertIdentical(
+      FBButton.applicationActivationNotifier as AnyObject,
+      components.getApplicationActivationNotifier() as AnyObject,
       "Should be configured with the expected concrete application activation notifier"
     )
-    XCTAssertTrue(
-      FBButton.eventLogger === AppEvents.shared,
+    XCTAssertIdentical(
+      FBButton.eventLogger,
+      components.eventLogger,
       "Should be configured with the expected concrete app events"
     )
-    XCTAssertTrue(
-      FBButton.accessTokenProvider === AccessToken.self,
+    XCTAssertIdentical(
+      FBButton.accessTokenProvider,
+      components.accessTokenWallet,
       "Should be configured with the expected concrete access token provider"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAppEvents() throws {
+    makeDelegate(usesTestConfigurator: false)
     AppEvents.shared.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      appEvents.capturedConfigureGateKeeperManager === GateKeeperManager.self,
+    XCTAssertIdentical(
+      AppEvents.shared.gateKeeperManager,
+      components.gateKeeperManager,
       "Initializing the SDK should set gate keeper manager for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureAppEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.appEventsConfigurationProvider,
+      components.appEventsConfigurationProvider,
       "Initializing the SDK should set AppEvents configuration provider for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureServerConfigurationProvider === ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "Initializing the SDK should set server configuration provider for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureGraphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      AppEvents.shared.graphRequestFactory,
+      components.graphRequestFactory,
       "Initializing the SDK should set graph request factory for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureFeatureChecker === delegate.featureChecker,
+    XCTAssertIdentical(
+      AppEvents.shared.featureChecker,
+      components.featureChecker,
       "Initializing the SDK should set feature checker for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigurePrimaryDataStore === UserDefaults.standard,
+    XCTAssertIdentical(
+      AppEvents.shared.primaryDataStore,
+      components.defaultDataStore,
       "Should be configured with the expected concrete primary data store"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureLogger === Logger.self,
+    XCTAssertIdentical(
+      AppEvents.shared.logger,
+      components.logger,
       "Initializing the SDK should set concrete logger for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureSettings === settings,
+    XCTAssertIdentical(
+      AppEvents.shared.settings,
+      components.settings,
       "Initializing the SDK should set concrete settings for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigurePaymentObserver === delegate.paymentObserver,
+    XCTAssertIdentical(
+      AppEvents.shared.paymentObserver,
+      components.paymentObserver,
       "Initializing the SDK should set concrete payment observer for event logging"
     )
 
-    let recorder = try XCTUnwrap(
-      appEvents.capturedConfigureTimeSpentRecorder as? TimeSpentData,
+    XCTAssertIdentical(
+      AppEvents.shared.timeSpentRecorder,
+      components.timeSpentRecorder,
       "Initializing the SDK should set concrete time spent recorder for event logging"
     )
-    XCTAssertTrue(
-      recorder.eventLogger === appEvents,
-      "The time spent recorder's event logger should be the shared app events"
-    )
-    XCTAssertTrue(
-      recorder.serverConfigurationProvider === ServerConfigurationManager.shared,
-      "The time spent recorder's server configuration provider should be the shared server configuration manager"
-    )
 
-    XCTAssertTrue(
-      appEvents.capturedConfigureAppEventsStateStore === AppEventsStateManager.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.appEventsStateStore,
+      components.appEventsStateStore,
       "Initializing the SDK should set concrete state store for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureEventDeactivationParameterProcessor is EventDeactivationManager,
+    XCTAssertIdentical(
+      AppEvents.shared.eventDeactivationParameterProcessor,
+      components.eventDeactivationManager,
       "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor is RestrictiveDataFilterManager,
+    XCTAssertIdentical(
+      AppEvents.shared.restrictiveDataFilterParameterProcessor,
+      components.restrictiveDataFilterManager,
       "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureATEPublisherFactory is ATEPublisherFactory,
+    XCTAssertIdentical(
+      AppEvents.shared.atePublisherFactory,
+      components.atePublisherFactory,
       "Initializing the SDK should set concrete ate publisher factory for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureAppEventsStateProvider is AppEventsStateFactory,
+    XCTAssertIdentical(
+      AppEvents.shared.appEventsStateProvider,
+      components.appEventsStateProvider,
       "Initializing the SDK should set concrete AppEvents state provider for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedAdvertiserIDProvider === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.advertiserIDProvider,
+      components.advertiserIDProvider,
       "Initializing the SDK should set concrete advertiser ID provider"
     )
-    XCTAssertTrue(
-      appEvents.capturedUserDataStore is UserDataStore,
+    XCTAssertIdentical(
+      AppEvents.shared.userDataStore,
+      components.userDataStore,
       "Initializing the SDK should set the expected concrete user data store"
     )
-    XCTAssertTrue(
-      appEvents.capturedAppEventsUtility === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.appEventsUtility,
+      components.appEventsUtility,
       "Initializing the SDK should set concrete app events utility"
     )
-    XCTAssertTrue(
-      appEvents.capturedInternalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.internalUtility,
+      components.internalUtility,
       "Initializing the SDK should set concrete internal utility"
     )
   }
 
   // TEMP: added to configurator tests
   func testConfiguringNonTVAppEventsDependencies() throws {
+    makeDelegate(usesTestConfigurator: false)
     AppEvents.shared.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      appEvents.capturedOnDeviceMLModelManager === ModelManager.shared,
+    XCTAssertIdentical(
+      AppEvents.shared.onDeviceMLModelManager,
+      components.modelManager,
       "Initializing the SDK should set concrete on device model manager for event logging"
     )
 
-    let metadataIndexer = try XCTUnwrap(
-      appEvents.capturedMetadataIndexer as? MetadataIndexer,
+    XCTAssertIdentical(
+      AppEvents.shared.metadataIndexer,
+      components.metadataIndexer,
       "Initializing the SDK should set a concrete metadata indexer for event logging"
     )
-    XCTAssertTrue(
-      metadataIndexer.userDataStore is UserDataStore,
-      "Should create the meta indexer with the expected user data store"
-    )
-    XCTAssertTrue(
-      metadataIndexer.swizzler === Swizzler.self,
-      "Should create the meta indexer with the expected swizzzler"
-    )
 
-    XCTAssertTrue(
-      appEvents.capturedSKAdNetworkReporter === delegate.skAdNetworkReporter,
+    XCTAssertIdentical(
+      AppEvents.shared.skAdNetworkReporter,
+      components.skAdNetworkReporter,
       "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedConfigureSwizzler === Swizzler.self,
+    XCTAssertIdentical(
+      AppEvents.shared.swizzler,
+      components.swizzler,
       "Initializing the SDK should set concrete swizzler for event logging"
     )
-    XCTAssertTrue(
-      appEvents.capturedCodelessIndexer === CodelessIndexer.self,
+    XCTAssertIdentical(
+      AppEvents.shared.codelessIndexer,
+      components.codelessIndexer,
       "Initializing the SDK should set concrete codeless indexer"
     )
-    XCTAssertTrue(
-      appEvents.capturedAEMReporter === AEMReporter.self,
+    XCTAssertIdentical(
+      AppEvents.shared.aemReporter,
+      components.aemReporter,
       "Initializing the SDK should set the concrete AEM reporter"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGateKeeperManager() {
+    makeDelegate(usesTestConfigurator: false)
     GateKeeperManager.reset()
     delegate.initializeSDK()
 
@@ -1225,287 +1333,273 @@ class ApplicationDelegateTests: XCTestCase {
       "Initializing the SDK should enable loading gatekeepers"
     )
 
-    XCTAssertTrue(
-      GateKeeperManager.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      GateKeeperManager.graphRequestFactory,
+      components.graphRequestFactory,
       "Should be configured with the expected concrete graph request provider"
     )
-    XCTAssertTrue(
-      GateKeeperManager.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      GateKeeperManager.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "Should be configured with the expected concrete graph request connection provider"
     )
-    XCTAssertTrue(
-      GateKeeperManager.store === UserDefaults.standard,
+    XCTAssertIdentical(
+      GateKeeperManager.store,
+      components.defaultDataStore,
       "Should be configured with the expected concrete data store"
     )
   }
 
   // TEMP: added to configurator tests
   func testConfiguringCodelessIndexer() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      CodelessIndexer.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      CodelessIndexer.graphRequestFactory,
+      components.graphRequestFactory,
       "Should be configured with the expected concrete graph request provider"
     )
-    XCTAssertTrue(
-      CodelessIndexer.serverConfigurationProvider === ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      CodelessIndexer.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "Should be configured with the expected concrete server configuration provider"
     )
-    XCTAssertTrue(
-      CodelessIndexer.dataStore === UserDefaults.standard,
+    XCTAssertIdentical(
+      CodelessIndexer.dataStore,
+      components.defaultDataStore,
       "Should be configured with the standard user defaults"
     )
-    XCTAssertTrue(
-      CodelessIndexer.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      CodelessIndexer.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "Should be configured with the expected concrete graph request connection provider"
     )
-    XCTAssertTrue(
-      CodelessIndexer.swizzler === Swizzler.self,
+    XCTAssertIdentical(
+      CodelessIndexer.swizzler,
+      components.swizzler,
       "Should be configured with the expected concrete swizzler"
     )
-    XCTAssertTrue(
-      CodelessIndexer.settings === settings,
+    XCTAssertIdentical(
+      CodelessIndexer.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
-    XCTAssertTrue(
-      CodelessIndexer.advertiserIDProvider === AppEventsUtility.shared,
+    XCTAssertIdentical(
+      CodelessIndexer.advertiserIDProvider,
+      components.advertiserIDProvider,
       "Should be configured with the expected concrete advertiser identifier provider"
     )
   }
 
   // TEMP: added to configurator tests
   func testConfiguringCrashShield() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      CrashShield.settings === settings,
+    XCTAssertIdentical(
+      CrashShield.settings,
+      components.settings,
       "Should be configured with the expected settings"
     )
-    XCTAssertTrue(
-      CrashShield.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      CrashShield.graphRequestFactory,
+      components.graphRequestFactory,
       "Should be configured with the expected concrete graph request provider"
     )
-    XCTAssertTrue(
-      CrashShield.featureChecking is FeatureManager,
+    XCTAssertIdentical(
+      CrashShield.featureChecking,
+      components.featureChecker,
       "Should be configured with the expected concrete Feature manager"
     )
   }
 
-  func testConfiguringRestrictiveDataFilterManager() {
-    delegate.initializeSDK()
-
-    let restrictiveDataFilterManager = appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor as? RestrictiveDataFilterManager // swiftlint:disable:this line_length
-    XCTAssertTrue(
-      restrictiveDataFilterManager?.serverConfigurationProvider === ServerConfigurationManager.shared,
-      "Should be configured with the expected concrete server configuration provider"
-    )
-  }
-
-  func testConfiguringFBSDKSKAdNetworkReporter() {
-    delegate.initializeSDK()
-    XCTAssertTrue(
-      delegate.skAdNetworkReporter.graphRequestFactory is GraphRequestFactory,
-      "Should be configured with the expected concrete graph request provider"
-    )
-    XCTAssertTrue(
-      delegate.skAdNetworkReporter.dataStore === UserDefaults.standard,
-      "Should be configured with the standard user defaults"
-    )
-    if #available(iOS 11.3, *) {
-      XCTAssertTrue(
-        delegate.skAdNetworkReporter.conversionValueUpdater === SKAdNetwork.self,
-        "Should be configured with the default Conversion Value Updating Class"
-      )
-    }
-  }
-
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenCache() throws {
+    makeDelegate(usesTestConfigurator: false)
     AccessToken.tokenCache = nil
     delegate.initializeSDK()
 
-    let cache = try XCTUnwrap(
-      AccessToken.tokenCache as? TokenCache,
+    XCTAssertIdentical(
+      AccessToken.tokenCache,
+      components.tokenCache,
       "Should be configured with expected concrete token cache"
-    )
-    XCTAssertTrue(
-      cache.settings === settings,
-      "The cache should use the shared Settings instance"
-    )
-
-    let store = try XCTUnwrap(
-      cache.keychainStore as? KeychainStore,
-      "The cache should use an instance of KeychainStore"
-    )
-    XCTAssertEqual(
-      store.service,
-      "com.facebook.sdk.tokencache.com.apple.dt.xctest.tool",
-      "The keychain store should use a service with a well-known prefix plus the main bundle identifier"
-    )
-    XCTAssertNil(
-      store.accessGroup,
-      "The keychain store should not have an access group"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenGraphRequestPiggybackManager() {
+    makeDelegate(usesTestConfigurator: false)
     AccessToken.graphRequestPiggybackManager = nil
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AccessToken.graphRequestPiggybackManager === GraphRequestPiggybackManager.self,
+    XCTAssertIdentical(
+      AccessToken.graphRequestPiggybackManager,
+      components.piggybackManager,
       "Should be configured with expected concrete graph request piggyback manager"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresProfile() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      Profile.dataStore === UserDefaults.standard,
+    XCTAssertIdentical(
+      Profile.dataStore,
+      components.defaultDataStore,
       "Should be configured with the expected concrete data store"
     )
-    XCTAssertTrue(
-      Profile.accessTokenProvider === AccessToken.self,
+    XCTAssertIdentical(
+      Profile.accessTokenProvider,
+      components.accessTokenWallet,
       "Should be configured with the expected concrete token provider"
     )
-    XCTAssertTrue(
-      Profile.notificationCenter === NotificationCenter.default,
+    XCTAssertIdentical(
+      Profile.notificationCenter,
+      components.notificationCenter,
       "Should be configured with the expected concrete notification center"
     )
-    XCTAssertTrue(
-      Profile.settings === settings,
+    XCTAssertIdentical(
+      Profile.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
-    XCTAssertTrue(
-      Profile.urlHoster === InternalUtility.shared,
+    XCTAssertIdentical(
+      Profile.urlHoster,
+      components.urlHoster,
       "Should be configured with the expected concrete URL hoster"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAuthenticationTokenCache() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AuthenticationToken.tokenCache is TokenCache,
+    XCTAssertIdentical(
+      AuthenticationToken.tokenCache,
+      components.tokenCache,
       "Should be configured with expected concrete token cache"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresAccessTokenConnectionFactory() {
+    makeDelegate(usesTestConfigurator: false)
     AccessToken.graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      AccessToken.graphRequestConnectionFactory is GraphRequestConnectionFactory,
+    XCTAssertIdentical(
+      AccessToken.graphRequestConnectionFactory,
+      components.graphRequestConnectionFactory,
       "Should be configured with expected concrete graph request connection factory"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresSettings() {
+    makeDelegate(usesTestConfigurator: false)
     Settings.shared.reset()
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      Settings.shared.store === UserDefaults.standard,
+    XCTAssertIdentical(
+      Settings.shared.store,
+      components.defaultDataStore,
       "Should be configured with the expected concrete data store"
     )
-    XCTAssertTrue(
-      Settings.shared.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+    XCTAssertIdentical(
+      Settings.shared.appEventsConfigurationProvider,
+      components.appEventsConfigurationProvider,
       "Should be configured with the expected concrete app events configuration provider"
     )
-    XCTAssertTrue(
-      Settings.shared.infoDictionaryProvider === Bundle.main,
+    XCTAssertIdentical(
+      Settings.shared.infoDictionaryProvider,
+      components.infoDictionaryProvider,
       "Should be configured with the expected concrete info dictionary provider"
     )
-    XCTAssertTrue(
-      Settings.shared.eventLogger === AppEvents.shared,
+    XCTAssertIdentical(
+      Settings.shared.eventLogger,
+      components.eventLogger,
       "Should be configured with the expected concrete event logger"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresGraphRequestPiggybackManager() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.tokenWallet === AccessToken.self,
+    XCTAssertIdentical(
+      GraphRequestPiggybackManager.tokenWallet,
+      components.accessTokenWallet,
       "Should be configured with the expected concrete access token provider"
     )
 
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.settings === settings,
+    XCTAssertIdentical(
+      GraphRequestPiggybackManager.settings,
+      components.settings,
       "Should be configured with the expected concrete settings"
     )
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.serverConfigurationProvider === ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      GraphRequestPiggybackManager.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "Should be configured with the expected concrete server configuration"
     )
 
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.graphRequestFactory is GraphRequestFactory,
+    XCTAssertIdentical(
+      GraphRequestPiggybackManager.graphRequestFactory,
+      components.graphRequestFactory,
       "Should be configured with the expected concrete graph request provider"
     )
   }
 
   // TEMP: added to configurator tests as part of a complete test
   func testInitializingSdkConfiguresCurrentAccessTokenProviderForGraphRequest() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      GraphRequest.accessTokenProvider === AccessToken.self,
+    XCTAssertIdentical(
+      GraphRequest.accessTokenProvider,
+      components.accessTokenWallet,
       "Should be configered with expected access token class."
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresWebDialogView() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
 
-    XCTAssertTrue(
-      FBWebDialogView.webViewProvider is WebViewFactory,
+    XCTAssertIdentical(
+      FBWebDialogView.webViewProvider,
+      components.webViewProvider,
       "Should be configured with the expected concrete web view provider"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresFeatureExtractor() {
+    makeDelegate(usesTestConfigurator: false)
     delegate.initializeSDK()
-    XCTAssertTrue(
-      FeatureExtractor.rulesFromKeyProvider === ModelManager.shared,
+
+    XCTAssertIdentical(
+      FeatureExtractor.rulesFromKeyProvider,
+      components.rulesFromKeyProvider,
       "Should be configured with the expected concrete rules from key provider"
     )
   }
 
   // TEMP: added to configurator tests
   func testInitializingSdkConfiguresImpressionLoggingButton() throws {
+    makeDelegate(usesTestConfigurator: false)
     ImpressionLoggingButton.resetClassDependencies()
     delegate.initializeSDK()
 
-    let factory = try XCTUnwrap(
-      ImpressionLoggingButton.impressionLoggerFactory as? ImpressionLoggerFactory,
+    XCTAssertIdentical(
+      ImpressionLoggingButton.impressionLoggerFactory,
+      components.impressionLoggerFactory,
       "Should be configured with the expected concrete logger factory"
-    )
-    XCTAssertTrue(
-      factory.graphRequestFactory is GraphRequestFactory,
-      "The impression factory should have the expected concrete graph request factory"
-    )
-    XCTAssertTrue(
-      factory.eventLogger === AppEvents.shared,
-      "The impression factory should have the expected concrete event logger"
-    )
-    XCTAssertTrue(
-      factory.notificationCenter === NotificationCenter.default,
-      "The impression factory should have the expected concrete notification center"
-    )
-    XCTAssertTrue(
-      factory.accessTokenWallet === AccessToken.self,
-      "The impression factory should have the expected concrete access token wallet"
     )
   }
 

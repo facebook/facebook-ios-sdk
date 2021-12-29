@@ -19,6 +19,8 @@ NS_SWIFT_NAME(SKAdNetworkReporting)
 
 - (BOOL)isReportingEvent:(NSString *)event;
 
+- (void)checkAndRevokeTimer;
+
 @end
 
 NS_ASSUME_NONNULL_END

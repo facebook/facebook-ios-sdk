@@ -43,12 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                           piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
               restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                  settings:(id<FBSDKSettings>)settings
+                                  settings:(id<FBSDKSettings, FBSDKSettingsLogging>)settings
                          timeSpentRecorder:(id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)timeSpentRecorder
                                 tokenCache:(id<FBSDKTokenCaching>)tokenCache
                     urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
@@ -72,7 +73,6 @@ NS_ASSUME_NONNULL_BEGIN
                         internalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
-                       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
                   sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
@@ -117,6 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
     _logger = logger;
     _loggerFactory = loggerFactory;
     _macCatalystDeterminator = macCatalystDeterminator;
+    _notificationCenter = notificationCenter;
     _operatingSystemVersionComparer = operatingSystemVersionComparer;
     _paymentObserver = paymentObserver;
     _piggybackManager = piggybackManager;
@@ -146,7 +147,6 @@ NS_ASSUME_NONNULL_BEGIN
     _internalURLOpener = internalURLOpener;
     _metadataIndexer = metadataIndexer;
     _modelManager = modelManager;
-    _notificationCenter = notificationCenter;
     _profileSetter = profileSetter;
     _rulesFromKeyProvider = rulesFromKeyProvider;
     _sessionDataTaskProvider = sessionDataTaskProvider;

@@ -10,8 +10,26 @@
 import XCTest
 
 class GamingContextPayloadObserverTests: XCTestCase {
-  let gamingContextDelegate = GamingContextPayloadObserverDelegate()
-  lazy var gamingContextObserver = GamingPayloadObserver(delegate: gamingContextDelegate)
+  // swiftlint:disable implicitly_unwrapped_optional
+  var gamingContextDelegate: GamingContextPayloadObserverDelegate!
+  var gamingContextObserver: GamingPayloadObserver!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    ApplicationDelegate.shared.resetApplicationObserverCache()
+
+    gamingContextDelegate = GamingContextPayloadObserverDelegate()
+    gamingContextObserver = GamingPayloadObserver(delegate: gamingContextDelegate)
+  }
+
+  override func tearDown() {
+    gamingContextDelegate = nil
+    gamingContextObserver = nil
+
+    super.tearDown()
+  }
 
   // MARK: - GamingContextObserver
 

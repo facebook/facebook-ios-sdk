@@ -120,6 +120,11 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                    declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
 
+/**
+  validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
+ */
+- (void)validateFacebookReservedURLSchemes;
+
 @end
 
 NS_ASSUME_NONNULL_END

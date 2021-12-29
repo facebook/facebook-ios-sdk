@@ -38,8 +38,6 @@ NS_SWIFT_NAME(init(graphRequestFactory:dataStore:conversionValueUpdater:));
 
 - (void)enable;
 
-- (void)checkAndRevokeTimer;
-
 - (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value;
