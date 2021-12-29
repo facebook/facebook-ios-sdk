@@ -86,6 +86,7 @@
 #import "FBSDKCloseIcon+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKitComponents.h"
+#import "FBSDKCoreKitComponents+Defaults.h"
 #import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKCrashHandler+Testing.h"
 #import "FBSDKCrashObserver.h"

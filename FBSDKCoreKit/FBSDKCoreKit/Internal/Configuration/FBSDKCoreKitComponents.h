@@ -149,6 +149,9 @@ NS_SWIFT_NAME(CoreKitComponents)
 
 #endif
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithAccessTokenExpirer:(id<FBSDKAccessTokenExpiring>)accessTokenExpirer
                          accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding>)accessTokenWallet
                       advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
