@@ -44,6 +44,12 @@ targets:
       Debug: Configurations/FBSDKGamingServicesKit-Static.xcconfig
       Release: Configurations/FBSDKGamingServicesKit-Static.xcconfig
     dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
+        link: false
+      - target: FBSDKShareKit/FBSDKShareKit-Static
+        link: false
       - target: FacebookGamingServices-Static
     preBuildScripts:
       - name: Run Swiftlint
