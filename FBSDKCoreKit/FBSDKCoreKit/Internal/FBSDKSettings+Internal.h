@@ -30,10 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
 
 // UNCRUSTIFY_FORMAT_OFF
-+ (void)      configureWithStore:(nonnull id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(nonnull id<FBSDKAppEventsConfigurationProviding>)provider
-          infoDictionaryProvider:(nonnull id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                     eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+- (void)      configureWithStore:(id<FBSDKDataPersisting>)store
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
+          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 // UNCRUSTIFY_FORMAT_ON
 
@@ -47,9 +47,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (BOOL)isDataProcessingRestricted;
 
-+ (void)recordSetAdvertiserTrackingEnabled;
-
-+ (BOOL)isEventDelayTimerExpired;
+- (void)recordSetAdvertiserTrackingEnabled;
 
 + (BOOL)isSetATETimeExceedsInstallTime;
 
@@ -62,6 +60,10 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 - (void)logWarnings;
 
 - (void)logIfSDKSettingsChanged;
+
+- (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
+
+- (BOOL)isEventDelayTimerExpired;
 
 @end
 

@@ -684,10 +684,10 @@ static UIApplicationState _applicationState;
   [FBSDKServerConfigurationManager.shared configureWithGraphRequestFactory:graphRequestFactory
                                              graphRequestConnectionFactory:graphRequestConnectionFactory
                                              dialogConfigurationMapBuilder:[FBSDKDialogConfigurationMapBuilder new]]; // TEMP: added to configurator
-  [FBSDKSettings configureWithStore:store
-     appEventsConfigurationProvider:appEventsConfigurationProvider
-             infoDictionaryProvider:NSBundle.mainBundle
-                        eventLogger:FBSDKAppEvents.shared]; // TEMP: added to configurator
+  [FBSDKSettings.sharedSettings configureWithStore:store
+                    appEventsConfigurationProvider:appEventsConfigurationProvider
+                            infoDictionaryProvider:NSBundle.mainBundle
+                                       eventLogger:FBSDKAppEvents.shared]; // TEMP: added to configurator
   [FBSDKFeatureManager.shared configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                                                     settings:self.settings
                                                        store:store]; // TEMP: added to configurator

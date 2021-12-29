@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Settings)
 @interface FBSDKSettings : NSObject <FBSDKSettings>
 
+#if !FBTEST
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+#endif
 
 /**
  The shared settings instance. Prefer this and the exposed instance methods over the class variants.

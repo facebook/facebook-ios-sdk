@@ -1412,7 +1412,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      Settings.store === UserDefaults.standard,
+      Settings.shared.store === UserDefaults.standard,
       "Should be configured with the expected concrete data store"
     )
     XCTAssertTrue(
@@ -1420,11 +1420,11 @@ class ApplicationDelegateTests: XCTestCase {
       "Should be configured with the expected concrete app events configuration provider"
     )
     XCTAssertTrue(
-      Settings.infoDictionaryProvider === Bundle.main,
+      Settings.shared.infoDictionaryProvider === Bundle.main,
       "Should be configured with the expected concrete info dictionary provider"
     )
     XCTAssertTrue(
-      Settings.eventLogger === AppEvents.shared,
+      Settings.shared.eventLogger === AppEvents.shared,
       "Should be configured with the expected concrete event logger"
     )
   }

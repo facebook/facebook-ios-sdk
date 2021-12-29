@@ -250,10 +250,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureSettings
 {
-  [FBSDKSettings configureWithStore:self.components.defaultDataStore
-     appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
-             infoDictionaryProvider:self.components.infoDictionaryProvider
-                        eventLogger:self.components.eventLogger];
+  [FBSDKSettings.sharedSettings configureWithStore:self.components.defaultDataStore
+                    appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
+                            infoDictionaryProvider:self.components.infoDictionaryProvider
+                                       eventLogger:self.components.eventLogger];
 }
 
 // MARK: - Non-tvOS

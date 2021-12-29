@@ -10,12 +10,19 @@ import FBSDKCoreKit
 import XCTest
 
 class SettingsTests: XCTestCase {
-  let logger = TestEventLogger()
-  let appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
 
-  var userDefaultsSpy = UserDefaultsSpy()
-  var settings = Settings.shared
-  var bundle = TestBundle()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var logger: TestEventLogger!
+  var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
+  var userDefaultsSpy: UserDefaultsSpy!
+  var settings: Settings!
+  var bundle: InfoDictionaryProviding!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  var testBundle: TestBundle {
+    bundle as! TestBundle // swiftlint:disable:this force_cast
+  }
+
   var userAgentSuffix = ""
 
   static let emptyString = ""
@@ -24,9 +31,26 @@ class SettingsTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    settings = Settings.shared
+    logger = TestEventLogger()
+    appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
+    userDefaultsSpy = UserDefaultsSpy()
+    bundle = TestBundle()
+    settings = Settings()
+    configureSettings()
+  }
 
-    Settings.configure(
+  override func tearDown() {
+    logger = nil
+    appEventsConfigurationProvider = nil
+    userDefaultsSpy = nil
+    bundle = nil
+    settings = nil
+
+    super.tearDown()
+  }
+
+  private func configureSettings() {
+    settings.configure(
       store: userDefaultsSpy,
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       infoDictionaryProvider: bundle,
@@ -34,68 +58,62 @@ class SettingsTests: XCTestCase {
     )
   }
 
-  override func tearDown() {
-    super.tearDown()
-
-    Settings.shared.reset()
-  }
-
   func testDefaultUserDefaultsSpy() {
-    Settings.shared.reset()
+    settings.reset()
     XCTAssertNil(
-      Settings.store,
+      settings.store,
       "Settings should not have a default data userDefaultsSpy"
     )
   }
 
   func testConfiguringWithUserDefaultsSpy() {
     XCTAssertTrue(
-      Settings.store === userDefaultsSpy,
+      settings.store === userDefaultsSpy,
       "Should be able to set a persistent data userDefaultsSpy"
     )
   }
 
   func testDefaultAppEventsConfigurationProvider() {
-    Settings.shared.reset()
+    settings.reset()
     XCTAssertNil(
-      Settings.shared.appEventsConfigurationProvider,
+      settings.appEventsConfigurationProvider,
       "Settings should not have a default app events configuration provider"
     )
   }
 
   func testConfiguringWithAppEventsConfigurationProvider() {
     XCTAssertTrue(
-      Settings.shared.appEventsConfigurationProvider === appEventsConfigurationProvider,
+      settings.appEventsConfigurationProvider === appEventsConfigurationProvider,
       "Should be able to set an app events configuration provider"
     )
   }
 
   func testDefaultInfoDictionaryProvider() {
-    Settings.shared.reset()
+    settings.reset()
     XCTAssertNil(
-      Settings.infoDictionaryProvider,
+      settings.infoDictionaryProvider,
       "Settings should not have a default info dictionary provider"
     )
   }
 
   func testConfiguringWithInfoDictionaryProvider() {
     XCTAssertTrue(
-      Settings.infoDictionaryProvider === bundle,
+      settings.infoDictionaryProvider === bundle,
       "Should be able to set an info dictionary provider"
     )
   }
 
   func testDefaultEventLogger() {
-    Settings.shared.reset()
+    settings.reset()
     XCTAssertNil(
-      Settings.eventLogger,
+      settings.eventLogger,
       "Settings should not have a default event logger"
     )
   }
 
   func testConfiguringWithEventLogger() {
     XCTAssertTrue(
-      Settings.eventLogger === logger,
+      settings.eventLogger === logger,
       "Should be able to set an event logger"
     )
   }
@@ -107,7 +125,7 @@ class SettingsTests: XCTestCase {
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertEqual(
-      Settings.advertisingTrackingStatus(),
+      settings.advertisingTrackingStatus,
       configuration.defaultATEStatus,
       """
       Advertiser tracking status should use the cached app events configuration
@@ -129,9 +147,9 @@ class SettingsTests: XCTestCase {
   }
 
   func testGettingExplicitlySetFacebookAdvertiserTrackingStatus() {
-    Settings.setAdvertiserTrackingStatus(.disallowed)
+    settings.setAdvertiserTrackingStatus(.disallowed)
     XCTAssertEqual(
-      Settings.advertisingTrackingStatus(),
+      settings.advertisingTrackingStatus,
       .disallowed,
       "Should return the explicitly set tracking status"
     )
@@ -152,7 +170,7 @@ class SettingsTests: XCTestCase {
       forKey: key
     )
     XCTAssertEqual(
-      Settings.advertisingTrackingStatus(),
+      settings.advertisingTrackingStatus,
       .allowed,
       "Should return the tracking status from the data userDefaultsSpy"
     )
@@ -174,7 +192,7 @@ class SettingsTests: XCTestCase {
       forKey: key
     )
     XCTAssertEqual(
-      Settings.advertisingTrackingStatus(),
+      settings.advertisingTrackingStatus,
       .allowed,
       "Should return the tracking status from the data userDefaultsSpy"
     )
@@ -190,7 +208,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToEnabled() {
-    Settings.shared.isAdvertiserTrackingEnabled = true
+    settings.isAdvertiserTrackingEnabled = true
     XCTAssertEqual(
       userDefaultsSpy.capturedSetObjectKey,
       "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
@@ -199,7 +217,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToDisallowed() {
-    Settings.shared.isAdvertiserTrackingEnabled = false
+    settings.isAdvertiserTrackingEnabled = false
     XCTAssertEqual(
       userDefaultsSpy.capturedSetObjectKey,
       "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
@@ -208,10 +226,10 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToEnabledProperty() {
-    Settings.shared.isAdvertiserTrackingEnabled = true
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertTrue(
-      Settings.shared.isAdvertiserTrackingEnabled,
+      settings.isAdvertiserTrackingEnabled,
       "Setting advertiser tracking status should be allowed"
     )
     XCTAssertEqual(
@@ -222,10 +240,10 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToDisallowedProperty() {
-    Settings.shared.isAdvertiserTrackingEnabled = false
+    settings.isAdvertiserTrackingEnabled = false
 
     XCTAssertFalse(
-      Settings.shared.isAdvertiserTrackingEnabled,
+      settings.isAdvertiserTrackingEnabled,
       "Setting advertiser tracking status should be disallowed"
     )
     XCTAssertEqual(
@@ -236,7 +254,7 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToUnspecified() {
-    Settings.setAdvertiserTrackingStatus(.unspecified)
+    settings.setAdvertiserTrackingStatus(.unspecified)
 
     XCTAssertNil(
       userDefaultsSpy.object(forKey: "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"),
@@ -248,10 +266,10 @@ class SettingsTests: XCTestCase {
 
   func testLoggingBehaviors() {
     let behaviors = Set([LoggingBehavior.accessTokens, .appEvents])
-    Settings.shared.loggingBehaviors = behaviors
+    settings.loggingBehaviors = behaviors
 
     XCTAssertEqual(
-      Settings.shared.loggingBehaviors,
+      settings.loggingBehaviors,
       behaviors,
       "Should be able to set and retrieve logging behaviors"
     )
@@ -278,7 +296,7 @@ class SettingsTests: XCTestCase {
 
   func testDefaultGraphErrorRecoveryEnabled() {
     XCTAssertTrue(
-      Settings.shared.isGraphErrorRecoveryEnabled,
+      settings.isGraphErrorRecoveryEnabled,
       "isGraphErrorRecoveryEnabled should be enabled by default"
     )
   }
@@ -304,7 +322,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingBehaviorsFromPlistWithInvalidEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookLoggingBehavior": ["Foo"]])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.loggingBehaviors.first,
@@ -315,14 +333,14 @@ class SettingsTests: XCTestCase {
   }
 
   func testSettingBehaviorsFromPlistWithValidEntry() {
-    let realBundle = Bundle(for: Settings.self)
-    Settings.infoDictionaryProvider = realBundle
+    bundle = Bundle(for: Settings.self)
+    configureSettings()
+
     let expected = Set([LoggingBehavior.developerErrors])
     XCTAssertEqual(settings.loggingBehaviors, expected)
   }
 
   func testLoggingBehaviorsInternalStorage() throws {
-    let bundle = Settings.infoDictionaryProvider as? TestBundle
     settings.loggingBehaviors = Set([LoggingBehavior.informational])
     XCTAssertNotNil(settings.loggingBehaviors, "sanity check")
     XCTAssertNil(
@@ -330,7 +348,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle?.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -346,7 +364,8 @@ class SettingsTests: XCTestCase {
 
   func testSettingDomainPrefixFromEmptyPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookDomainPart": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
+
     XCTAssertEqual(
       settings.facebookDomainPart,
       Self.emptyString,
@@ -356,7 +375,8 @@ class SettingsTests: XCTestCase {
 
   func testSettingFacebookDomainPrefixFromPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookDomainPart": "beta"])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
+
     XCTAssertEqual(
       settings.facebookDomainPart,
       "beta",
@@ -367,7 +387,7 @@ class SettingsTests: XCTestCase {
   func testSettingDomainPrefixWithPlistEntry() {
     let domainPrefix = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookDomainPart": domainPrefix])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
     settings.facebookDomainPart = "foo"
 
     XCTAssertNil(
@@ -431,7 +451,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -441,7 +461,8 @@ class SettingsTests: XCTestCase {
   func testClientTokenFromPlist() {
     let clientToken = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookClientToken": clientToken])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
+
     XCTAssertEqual(
       settings.clientToken,
       clientToken,
@@ -458,7 +479,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingClientTokenFromEmptyPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookClientToken": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.clientToken,
@@ -470,7 +491,7 @@ class SettingsTests: XCTestCase {
   func testSettingClientTokenWithPlistEntry() {
     let clientToken = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookClientToken": clientToken])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     settings.clientToken = "foo"
 
@@ -543,7 +564,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -553,8 +574,7 @@ class SettingsTests: XCTestCase {
   func testAppIdentifierFromPlist() {
     let appIdentifier = "abc1234"
     bundle = TestBundle(infoDictionary: ["FacebookAppID": appIdentifier])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.appID,
@@ -572,7 +592,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingAppIdentifierFromEmptyPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookAppID": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.appID,
@@ -584,7 +604,7 @@ class SettingsTests: XCTestCase {
   func testSettingAppIdentifierWithPlistEntry() {
     let appIdentifier = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookClientToken": appIdentifier])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     settings.appID = "foo"
 
@@ -652,7 +672,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -662,7 +682,7 @@ class SettingsTests: XCTestCase {
   func testDisplayNameFromPlist() {
     let displayName = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookDisplayName": displayName])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.displayName,
@@ -680,7 +700,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingDisplayNameFromEmptyPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookDisplayName": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.displayName,
@@ -692,7 +712,7 @@ class SettingsTests: XCTestCase {
   func testSettingDisplayNameWithPlistEntry() {
     let displayName = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookDisplayName": displayName])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     settings.displayName = "foo"
 
@@ -760,7 +780,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -770,7 +790,7 @@ class SettingsTests: XCTestCase {
   func testJPEGCompressionQualityFromPlist() {
     let jpegCompressionQuality = 0.1
     bundle = TestBundle(infoDictionary: ["FacebookJpegCompressionQuality": jpegCompressionQuality])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       Double(settings.jpegCompressionQuality),
@@ -791,7 +811,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingJPEGCompressionQualityFromInvalidPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookJpegCompressionQuality": -2.0])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertNotEqual(
       settings.jpegCompressionQuality,
@@ -802,8 +822,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingJPEGCompressionQualityWithPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookJpegCompressionQuality": 0.2])
-    Settings.infoDictionaryProvider = bundle
-
+    configureSettings()
     settings.jpegCompressionQuality = 0.3
 
     XCTAssertNil(
@@ -871,7 +890,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -881,8 +900,7 @@ class SettingsTests: XCTestCase {
   func testURLSchemeSuffixFromPlist() {
     let urlSchemeSuffix = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookUrlSchemeSuffix": urlSchemeSuffix])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.appURLSchemeSuffix,
@@ -900,7 +918,7 @@ class SettingsTests: XCTestCase {
 
   func testSettingURLSchemeSuffixFromEmptyPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookUrlSchemeSuffix": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.appURLSchemeSuffix,
@@ -912,8 +930,7 @@ class SettingsTests: XCTestCase {
   func testSettingURLSchemeSuffixWithPlistEntry() {
     let urlSchemeSuffix = "abc123"
     bundle = TestBundle(infoDictionary: ["FacebookUrlSchemeSuffix": urlSchemeSuffix])
-    Settings.infoDictionaryProvider = bundle
-
+    configureSettings()
     settings.appURLSchemeSuffix = "foo"
 
     XCTAssertNil(
@@ -980,7 +997,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -989,8 +1006,7 @@ class SettingsTests: XCTestCase {
 
   func testAutoLogAppEventsEnabledFromPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
@@ -1007,7 +1023,7 @@ class SettingsTests: XCTestCase {
 
   func testAutoLogAppEventsEnabledInvalidPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
@@ -1032,7 +1048,7 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(settings.isAutoLogAppEventsEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertTrue(
       settings.isAutoLogAppEventsEnabled,
@@ -1051,7 +1067,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -1060,8 +1076,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookAdvertiserIDCollectionEnabled() {
     bundle = TestBundle(infoDictionary: ["FacebookAdvertiserIDCollectionEnabled": false])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isAdvertiserIDCollectionEnabled,
@@ -1078,8 +1093,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookAdvertiserIDCollectionEnabledInvalidPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookAdvertiserIDCollectionEnabled": Self.emptyString])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isAdvertiserIDCollectionEnabled,
@@ -1106,7 +1120,7 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(settings.isAdvertiserIDCollectionEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookAdvertiserIDCollectionEnabled": false])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertTrue(
       settings.isAdvertiserIDCollectionEnabled,
@@ -1125,7 +1139,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -1134,7 +1148,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookSKAdNetworkReportEnabledFromPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookSKAdNetworkReportEnabled": false])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isSKAdNetworkReportEnabled,
@@ -1151,7 +1165,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookSKAdNetworkReportEnabledInvalidPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookSKAdNetworkReportEnabled": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isSKAdNetworkReportEnabled,
@@ -1176,7 +1190,7 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(settings.isSKAdNetworkReportEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookSKAdNetworkReportEnabled": false])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertTrue(
       settings.isSKAdNetworkReportEnabled,
@@ -1195,7 +1209,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -1204,8 +1218,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookCodelessDebugLogEnabled() {
     bundle = TestBundle(infoDictionary: ["FacebookCodelessDebugLogEnabled": false])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isCodelessDebugLogEnabled,
@@ -1215,8 +1228,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookCodelessDebugLogEnabledDefaultValue() {
     bundle = TestBundle(infoDictionary: [:])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isCodelessDebugLogEnabled,
@@ -1226,7 +1238,7 @@ class SettingsTests: XCTestCase {
 
   func testFacebookCodelessDebugLogEnabledInvalidPlistEntry() {
     bundle = TestBundle(infoDictionary: ["FacebookCodelessDebugLogEnabled": Self.emptyString])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isCodelessDebugLogEnabled,
@@ -1252,7 +1264,7 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(settings.isCodelessDebugLogEnabled)
 
     bundle = TestBundle(infoDictionary: ["FacebookCodelessDebugLogEnabled": false])
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertTrue(
       settings.isCodelessDebugLogEnabled,
@@ -1271,7 +1283,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -1293,7 +1305,7 @@ class SettingsTests: XCTestCase {
       "Should attempt to access the cache to retrieve the initial value for a cachable property"
     )
     XCTAssertFalse(
-      bundle.capturedKeys.contains("FacebookAutoLogAppEventsEnabled"),
+      testBundle.capturedKeys.contains("FacebookAutoLogAppEventsEnabled"),
       "Should not attempt to access the plist for cachable properties that have a value in the cache"
     )
   }
@@ -1301,8 +1313,7 @@ class SettingsTests: XCTestCase {
   func testInitialAccessForCachablePropertyWithEmptyCacheNonEmptyPlist() {
     // Using false because it is not the default value for `isAutoInitializationEnabled`
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
@@ -1315,7 +1326,7 @@ class SettingsTests: XCTestCase {
       "Should attempt to access the cache to retrieve the initial value for a cachable property"
     )
     XCTAssertEqual(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "FacebookAutoLogAppEventsEnabled",
       "Should attempt to access the plist for cachable properties that have no value in the cache"
     )
@@ -1333,7 +1344,7 @@ class SettingsTests: XCTestCase {
       "Should attempt to access the cache to retrieve the initial value for a cachable property"
     )
     XCTAssertEqual(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "FacebookAutoLogAppEventsEnabled",
       "Should attempt to access the plist for cachable properties that have no value in the cache"
     )
@@ -1350,7 +1361,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache for a non-cachable property"
     )
     XCTAssertEqual(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "FacebookClientToken",
       "Should attempt to access the plist for non-cachable properties"
     )
@@ -1358,8 +1369,7 @@ class SettingsTests: XCTestCase {
 
   func testInitialAccessForNonCachablePropertyWithNonEmptyPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookClientToken": "abc123"])
-
-    Settings.infoDictionaryProvider = bundle
+    configureSettings()
 
     XCTAssertEqual(
       settings.clientToken,
@@ -1372,7 +1382,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache for a non-cachable property"
     )
     XCTAssertEqual(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "FacebookClientToken",
       "Should attempt to access the plist for non-cachable properties"
     )
@@ -1544,7 +1554,7 @@ class SettingsTests: XCTestCase {
       "Should attempt to access the cache to retrieve the initial value for a cachable property"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist for data processing options"
     )
   }
@@ -1554,12 +1564,7 @@ class SettingsTests: XCTestCase {
 
     // Reset internal storage
     settings.reset()
-    Settings.configure(
-      store: userDefaultsSpy,
-      appEventsConfigurationProvider: appEventsConfigurationProvider,
-      infoDictionaryProvider: bundle,
-      eventLogger: logger
-    )
+    configureSettings()
 
     XCTAssertNotNil(
       settings.persistableDataProcessingOptions,
@@ -1571,7 +1576,7 @@ class SettingsTests: XCTestCase {
       "Should attempt to access the cache to retrieve the initial value for a cachable property"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist for data processing options"
     )
   }
@@ -1588,7 +1593,7 @@ class SettingsTests: XCTestCase {
       "Should not attempt to access the cache to retrieve objects that have a current value"
     )
     XCTAssertNil(
-      bundle.capturedKeys.last,
+      testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
     )
   }
@@ -1613,13 +1618,13 @@ class SettingsTests: XCTestCase {
   }
 
   func testRecordSetAdvertiserTrackingEnabled() {
-    Settings.recordSetAdvertiserTrackingEnabled()
+    settings.recordSetAdvertiserTrackingEnabled()
     XCTAssertNotNil(
       userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"],
       "Should persist the value after setting it"
     )
     let date = userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"]
-    Settings.recordSetAdvertiserTrackingEnabled()
+    settings.recordSetAdvertiserTrackingEnabled()
     XCTAssertNotEqual(
       date as? Date,
       userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"] as? Date,
@@ -1629,7 +1634,7 @@ class SettingsTests: XCTestCase {
 
   func testIsEventDelayTimerExpired() {
     settings.recordInstall()
-    XCTAssertFalse(Settings.isEventDelayTimerExpired())
+    XCTAssertFalse(settings.isEventDelayTimerExpired())
 
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
@@ -1639,21 +1644,21 @@ class SettingsTests: XCTestCase {
 
     userDefaultsSpy.setValue(expiredDate, forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp")
 
-    XCTAssertTrue(Settings.isEventDelayTimerExpired())
+    XCTAssertTrue(settings.isEventDelayTimerExpired())
   }
 
   func testIsSetATETimeExceedsInstallTime() {
     settings.recordInstall()
-    Settings.recordSetAdvertiserTrackingEnabled()
-    XCTAssertFalse(Settings.isSetATETimeExceedsInstallTime())
-    Settings.recordSetAdvertiserTrackingEnabled()
+    settings.recordSetAdvertiserTrackingEnabled()
+    XCTAssertFalse(settings.isSetATETimeExceedsInstallTime)
+    settings.recordSetAdvertiserTrackingEnabled()
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var addComponents = DateComponents()
     addComponents.month = -1
     let expiredDate = calendar.date(byAdding: addComponents, to: today, wrappingComponents: false)
     userDefaultsSpy.setValue(expiredDate, forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp")
-    XCTAssertTrue(Settings.isSetATETimeExceedsInstallTime())
+    XCTAssertTrue(settings.isSetATETimeExceedsInstallTime)
   }
 
   // MARK: - test for internal functions

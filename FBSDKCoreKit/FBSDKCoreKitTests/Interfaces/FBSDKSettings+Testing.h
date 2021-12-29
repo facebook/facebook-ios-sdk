@@ -13,9 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKSettings (Testing)
 
-@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (class, nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-@property (class, nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 
 - (void)reset;

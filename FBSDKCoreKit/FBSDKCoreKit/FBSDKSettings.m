@@ -121,7 +121,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @synthesize appID = _appID;
 @synthesize JPEGCompressionQuality = _JPEGCompressionQuality;
 @synthesize loggingBehaviors = _loggingBehaviors;
-static dispatch_once_t sharedSettingsNonce;
 
 - (instancetype)init
 {
@@ -141,13 +140,17 @@ static dispatch_once_t sharedSettingsNonce;
 // dependency for their actual use cases.
 // The move will be:
 // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
+static FBSDKSettings *_shared;
+
 + (instancetype)sharedSettings
 {
-  static id instance;
-  dispatch_once(&sharedSettingsNonce, ^{
-    instance = [self new];
-  });
-  return instance;
+  @synchronized(self) {
+    if (!_shared) {
+      _shared = [self new];
+    }
+  }
+
+  return _shared;
 }
 
 - (void)      configureWithStore:(id<FBSDKDataPersisting>)store
@@ -161,32 +164,6 @@ static dispatch_once_t sharedSettingsNonce;
   self.eventLogger = eventLogger;
 
   self.isConfigured = YES;
-}
-
-+ (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
-          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                     eventLogger:(id<FBSDKEventLogging>)eventLogger
-{
-  [self.sharedSettings configureWithStore:store
-           appEventsConfigurationProvider:provider
-                   infoDictionaryProvider:infoDictionaryProvider
-                              eventLogger:eventLogger];
-}
-
-+ (id<FBSDKDataPersisting>)store
-{
-  return self.sharedSettings.store;
-}
-
-+ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-{
-  return self.sharedSettings.infoDictionaryProvider;
-}
-
-+ (id<FBSDKEventLogging>)eventLogger
-{
-  return self.sharedSettings.eventLogger;
 }
 
 #pragma mark - Plist Configuration Settings
@@ -437,7 +414,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isEventDataUsageLimited
 {
-  NSNumber *storedValue = [FBSDKSettings.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
+  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
     return NO;
   }
@@ -648,22 +625,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return self.sharedSettings.graphAPIVersion;
 }
 
-+ (NSNumber *)appEventSettingsForPlistKey:(NSString *)plistKey
-                             defaultValue:(NSNumber *)defaultValue
-{
-  return [[NSBundle.mainBundle objectForInfoDictionaryKey:plistKey] copy] ?: defaultValue;
-}
-
-+ (NSNumber *)appEventSettingsForUserDefaultsKey:(NSString *)userDefaultsKey
-                                    defaultValue:(NSNumber *)defaultValue
-{
-  NSData *data = [self.store objectForKey:userDefaultsKey];
-  if ([data isKindOfClass:NSNumber.class]) {
-    return (NSNumber *)data;
-  }
-  return defaultValue;
-}
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
@@ -767,7 +728,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self.store setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }
 
-+ (BOOL)isEventDelayTimerExpired
+- (BOOL)isEventDelayTimerExpired
 {
   NSDate *timestamp = [self.store objectForKey:FBSDKSettingsInstallTimestamp];
   if (timestamp) {
@@ -844,17 +805,13 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (void)reset
 {
-  // Reset the nonce so that a new instance will be created.
-  if (sharedSettingsNonce) {
-    sharedSettingsNonce = 0;
-  }
   _loggingBehaviors = nil;
   self.persistableDataProcessingOptions = nil;
-}
-
-+ (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
-{
-  self.sharedSettings.infoDictionaryProvider = provider;
+  self.store = nil;
+  self.appEventsConfigurationProvider = nil;
+  self.infoDictionaryProvider = nil;
+  self.eventLogger = nil;
+  self.isConfigured = NO;
 }
 
 #endif
