@@ -78,7 +78,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testApplicationActivationNotifier() {
     XCTAssertTrue(
-      components.applicationActivationNotifier as AnyObject === ApplicationDelegate.shared,
+      components.getApplicationActivationNotifier() as AnyObject === ApplicationDelegate.shared,
       "The default components should use the shared ApplicationDelegate as its application activation notifier"
     )
   }

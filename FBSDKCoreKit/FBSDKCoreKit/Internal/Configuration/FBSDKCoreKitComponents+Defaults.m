@@ -137,7 +137,6 @@ static FBSDKCoreKitComponents * _default;
                                appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                                   appEventsStateStore:FBSDKAppEventsStateManager.shared
                                      appEventsUtility:FBSDKAppEventsUtility.shared
-                        applicationActivationNotifier:FBSDKApplicationDelegate.sharedInstance
                                   atePublisherFactory:atePublisherFactory
                             authenticationTokenWallet:FBSDKAuthenticationToken.class
                                          crashHandler:FBSDKCrashHandler.shared
@@ -152,6 +151,7 @@ static FBSDKCoreKitComponents * _default;
                                           eventLogger:FBSDKAppEvents.shared
                                        featureChecker:FBSDKFeatureManager.shared
                                     gateKeeperManager:FBSDKGateKeeperManager.class
+                     getApplicationActivationNotifier:^id (void) { return FBSDKApplicationDelegate.sharedInstance; }
                         graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
                                   graphRequestFactory:graphRequestFactory
                               impressionLoggerFactory:impressionLoggerFactory

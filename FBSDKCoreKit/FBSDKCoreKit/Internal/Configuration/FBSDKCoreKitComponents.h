@@ -83,7 +83,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
 @property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
-@property (nonatomic, readonly) id applicationActivationNotifier;
+@property (nonatomic, readonly) id (^getApplicationActivationNotifier)(void);
 @property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonatomic, readonly) id<FBSDKCrashHandler> crashHandler;
@@ -160,7 +160,6 @@ NS_SWIFT_NAME(CoreKitComponents)
                     appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
                           appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
-             applicationActivationNotifier:(id)applicationActivationNotifier
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                               crashHandler:(id<FBSDKCrashHandler>)crashHandler
@@ -175,6 +174,7 @@ NS_SWIFT_NAME(CoreKitComponents)
                                eventLogger:(id<FBSDKEventLogging>)eventLogger
                             featureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
                          gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+          getApplicationActivationNotifier:(id (^)(void))getApplicationActivationNotifier
              graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory

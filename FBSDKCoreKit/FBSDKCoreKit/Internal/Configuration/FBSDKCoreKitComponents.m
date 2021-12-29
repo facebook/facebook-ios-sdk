@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
                     appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
                           appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
-             applicationActivationNotifier:(id)applicationActivationNotifier
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                               crashHandler:(id<FBSDKCrashHandler>)crashHandler
@@ -35,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
                                eventLogger:(id<FBSDKEventLogging>)eventLogger
                             featureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
                          gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+          getApplicationActivationNotifier:(id (^)(void))getApplicationActivationNotifier
              graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                        graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                    impressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
@@ -94,7 +94,6 @@ NS_ASSUME_NONNULL_BEGIN
     _appEventsStateProvider = appEventsStateProvider;
     _appEventsStateStore = appEventsStateStore;
     _appEventsUtility = appEventsUtility;
-    _applicationActivationNotifier = applicationActivationNotifier;
     _atePublisherFactory = atePublisherFactory;
     _authenticationTokenWallet = authenticationTokenWallet;
     _crashHandler = crashHandler;
@@ -109,6 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
     _eventLogger = eventLogger;
     _featureChecker = featureChecker;
     _gateKeeperManager = gateKeeperManager;
+    _getApplicationActivationNotifier = getApplicationActivationNotifier;
     _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _graphRequestFactory = graphRequestFactory;
     _impressionLoggerFactory = impressionLoggerFactory;

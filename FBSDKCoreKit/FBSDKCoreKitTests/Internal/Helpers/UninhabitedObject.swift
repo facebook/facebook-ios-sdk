@@ -6,4 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class UninhabitedObject {}
+// swiftlint:disable:next convenience_type
+final class UninhabitedObject {
+  static let shared = UninhabitedObject()
+}

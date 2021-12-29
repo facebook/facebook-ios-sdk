@@ -163,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureButton
 {
-  [FBSDKButton configureWithApplicationActivationNotifier:self.components.applicationActivationNotifier
+  [FBSDKButton configureWithApplicationActivationNotifier:self.components.getApplicationActivationNotifier()
                                               eventLogger:self.components.eventLogger
                                       accessTokenProvider:self.components.accessTokenWallet];
 }

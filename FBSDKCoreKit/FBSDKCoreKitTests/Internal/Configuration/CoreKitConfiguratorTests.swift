@@ -459,8 +459,9 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
     configurator.performConfiguration()
 
-    XCTAssertTrue(
-      FBButton.applicationActivationNotifier as AnyObject === components.applicationActivationNotifier as AnyObject,
+    XCTAssertIdentical(
+      FBButton.applicationActivationNotifier as AnyObject,
+      components.getApplicationActivationNotifier() as AnyObject,
       "Button should be configured with the application activation notifier"
     )
     XCTAssertTrue(
