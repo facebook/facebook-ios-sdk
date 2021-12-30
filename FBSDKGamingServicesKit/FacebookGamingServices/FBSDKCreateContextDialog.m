@@ -16,8 +16,6 @@
 
  #import <FacebookGamingServices/FacebookGamingServices-Swift.h>
 
- #import "FBSDKCreateContextContent.h"
-
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300
  #define FBSDKWEBDIALOGFRAMEHEIGHT 185
