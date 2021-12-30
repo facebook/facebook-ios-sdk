@@ -17,7 +17,7 @@ enum SampleContextDialogs {
       windowFinder: TestWindowFinder(),
       delegate: delegate
     )
-    dialog.show()
+    _ = dialog.show()
     return dialog
   }
 
