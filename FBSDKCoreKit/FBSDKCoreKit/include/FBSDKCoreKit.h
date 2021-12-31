@@ -59,6 +59,8 @@
 #import <FBSDKCoreKit/FBSDKLogging.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #import <FBSDKCoreKit/FBSDKLoginTooltip.h>
+#import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
+#import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
 #import <FBSDKCoreKit/FBSDKRandom.h>

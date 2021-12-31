@@ -151,8 +151,6 @@
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKModelManager+Testing.h"
 #import "FBSDKModelUtility.h"
-#import "FBSDKNetworkErrorChecker.h"
-#import "FBSDKNetworkErrorChecking.h"
 #import "FBSDKNotificationProtocols.h"
 #import "FBSDKPasteboard.h"
 #import "FBSDKPaymentObserving.h"

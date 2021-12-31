@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKNetworkErrorChecking.h"
+#import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
