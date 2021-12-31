@@ -16,6 +16,7 @@ class AppEventsUtilityTests: XCTestCase {
   var deviceInformationProvider: TestDeviceInformationProvider!
   var settings: TestSettings!
   var internalUtility: TestInternalUtility!
+  var errorFactory: TestErrorFactory!
   var appEventsUtility: AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -27,12 +28,14 @@ class AppEventsUtilityTests: XCTestCase {
     deviceInformationProvider = TestDeviceInformationProvider()
     settings = TestSettings()
     internalUtility = TestInternalUtility()
+    errorFactory = TestErrorFactory()
     appEventsUtility = AppEventsUtility()
     appEventsUtility.configure(
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       deviceInformationProvider: deviceInformationProvider,
       settings: settings,
-      internalUtility: internalUtility
+      internalUtility: internalUtility,
+      errorFactory: errorFactory
     )
   }
 
@@ -40,6 +43,8 @@ class AppEventsUtilityTests: XCTestCase {
     appEventsConfigurationProvider = nil
     deviceInformationProvider = nil
     settings = nil
+    internalUtility = nil
+    errorFactory = nil
     appEventsUtility = nil
 
     TestGateKeeperManager.reset()
@@ -47,10 +52,30 @@ class AppEventsUtilityTests: XCTestCase {
     super.tearDown()
   }
 
-  func testLogNotification() {
-    expectation(forNotification: .AppEventsLoggingResult, object: nil)
+  func testLogNotification() throws {
+    var error: TestSDKError?
+    expectation(forNotification: .AppEventsLoggingResult, object: nil) { notification in
+      error = notification.object as? TestSDKError
+      return true
+    }
+
     appEventsUtility.logAndNotify("test")
-    waitForExpectations(timeout: 2, handler: nil)
+
+    waitForExpectations(timeout: 2)
+    let sdkError = try XCTUnwrap(
+      error,
+      "The notification should contain an error created by the error factory"
+    )
+    XCTAssertEqual(
+      sdkError.code,
+      CoreError.errorAppEventsFlush.rawValue,
+      "The app events flush error code should be used"
+    )
+    XCTAssertEqual(
+      sdkError.message,
+      "test",
+      "The message should be added to the error"
+    )
   }
 
   func testValidation() {
@@ -734,6 +759,10 @@ class AppEventsUtilityTests: XCTestCase {
       appEventsUtility.internalUtility,
       "Should not have an internal utility by default"
     )
+    XCTAssertNil(
+      appEventsUtility.errorFactory,
+      "Should not have an error factory by default"
+    )
   }
 
   func testCustomDependencies() {
@@ -752,6 +781,11 @@ class AppEventsUtilityTests: XCTestCase {
     XCTAssertTrue(
       appEventsUtility.internalUtility === internalUtility,
       "Should be able to set custom internal utility"
+    )
+    XCTAssertIdentical(
+      appEventsUtility.errorFactory,
+      errorFactory,
+      "Should be able to set custom error factory"
     )
   }
 

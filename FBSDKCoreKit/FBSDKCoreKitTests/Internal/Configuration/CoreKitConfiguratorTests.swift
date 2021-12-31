@@ -418,6 +418,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEventsUtility.shared.internalUtility,
       "AppEventsUtility should not have an internal utility by default"
     )
+    XCTAssertNil(
+      AppEventsUtility.shared.errorFactory,
+      "AppEventsUtility should not have an error factory by default"
+    )
 
     configurator.performConfiguration()
 
@@ -436,6 +440,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEventsUtility.shared.internalUtility === components.internalUtility,
       "AppEventsUtility should be configured with the internal utility"
+    )
+    XCTAssertIdentical(
+      AppEventsUtility.shared.errorFactory,
+      components.errorFactory,
+      "AppEventsUtility should be configured with the error factory"
     )
   }
 

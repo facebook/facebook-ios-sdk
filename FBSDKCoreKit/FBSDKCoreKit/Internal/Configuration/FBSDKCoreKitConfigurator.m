@@ -156,7 +156,8 @@ NS_ASSUME_NONNULL_BEGIN
   [FBSDKAppEventsUtility.shared configureWithAppEventsConfigurationProvider:self.components.appEventsConfigurationProvider
                                                   deviceInformationProvider:self.components.deviceInformationProvider
                                                                    settings:self.components.settings
-                                                            internalUtility:self.components.internalUtility];
+                                                            internalUtility:self.components.internalUtility
+                                                               errorFactory:self.components.errorFactory];
 }
 
 - (void)configureAuthenticationToken

@@ -64,11 +64,13 @@ static FBSDKAppEventsUtility *_shared;
                           deviceInformationProvider:(id<FBSDKDeviceInformationProviding>)deviceInformationProvider
                                            settings:(id<FBSDKSettings>)settings
                                     internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                                       errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
   self.deviceInformationProvider = deviceInformationProvider;
   self.settings = settings;
   self.internalUtility = internalUtility;
+  self.errorFactory = errorFactory;
 }
 
 - (NSMutableDictionary<NSString *, NSString *> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
@@ -276,7 +278,10 @@ static FBSDKAppEventsUtility *_shared;
   }
 
   [FBSDKLogger singleShotLogEntry:behaviorToLog logEntry:msg];
-  NSError *error = [FBSDKError errorWithCode:FBSDKErrorAppEventsFlush message:msg];
+  NSError *error = [self.errorFactory errorWithCode:FBSDKErrorAppEventsFlush
+                                           userInfo:nil
+                                            message:msg
+                                    underlyingError:nil];
   [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
@@ -481,6 +486,7 @@ static FBSDKAppEventsUtility *_shared;
   self.deviceInformationProvider = nil;
   self.settings = nil;
   self.internalUtility = nil;
+  self.errorFactory = nil;
   self.cachedAdvertiserIdentifierManager = nil;
 }
 
