@@ -6,20 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKErrorCreating.h"
-#import "FBSDKErrorReporting.h"
+#import <FBSDKCoreKit/FBSDKErrorCreating.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ErrorFactory)
 @interface FBSDKErrorFactory : NSObject <FBSDKErrorCreating>
-
-@property (nonatomic, strong) id<FBSDKErrorReporting> reporter;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)initWithReporter:(id<FBSDKErrorReporting>)reporter;
 
 @end
 

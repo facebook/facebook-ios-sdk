@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 - Added network error checking protocol (`NetworkErrorChecking`) and concrete implementation (`NetworkErrorChecker`)
+- Added error factory protocol (`ErrorCreating`) and concrete implementation (`ErrorFactory`)
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...HEAD)
 

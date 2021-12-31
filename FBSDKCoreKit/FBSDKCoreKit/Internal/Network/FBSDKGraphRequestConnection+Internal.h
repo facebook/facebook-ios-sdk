@@ -6,15 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
-#import <FBSDKCoreKit/FBSDKLogger.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKErrorConfigurationProviding.h"
-#import "FBSDKErrorCreating.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestBody.h"

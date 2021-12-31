@@ -12,13 +12,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKConstants.h"
-#import "FBSDKErrorCreating.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKPasteboard.h"

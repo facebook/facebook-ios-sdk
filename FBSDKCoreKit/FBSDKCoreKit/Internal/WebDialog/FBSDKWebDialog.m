@@ -10,11 +10,12 @@
 
 #import "FBSDKWebDialog+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"

@@ -12,7 +12,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKConstants.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureManager.h"
 

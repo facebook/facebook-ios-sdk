@@ -22,6 +22,7 @@
 #import "FBSDKCodelessIndexer+Internal.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKError+Internal.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
@@ -66,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAppEventsUtility];
   [self configureAuthenticationToken];
   [self configureButton];
+  [self configureErrorFactory];
   [self configureFeatureManager];
   [self configureGatekeeperManager];
   [self configureGraphRequest];
@@ -166,6 +168,11 @@ NS_ASSUME_NONNULL_BEGIN
   [FBSDKButton configureWithApplicationActivationNotifier:self.components.getApplicationActivationNotifier()
                                               eventLogger:self.components.eventLogger
                                       accessTokenProvider:self.components.accessTokenWallet];
+}
+
+- (void)configureErrorFactory
+{
+  [FBSDKErrorFactory configureWithDefaultReporter:self.components.errorReporter];
 }
 
 - (void)configureFeatureManager

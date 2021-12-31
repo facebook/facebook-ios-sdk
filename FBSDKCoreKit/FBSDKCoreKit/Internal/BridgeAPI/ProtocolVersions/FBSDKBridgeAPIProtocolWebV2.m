@@ -10,10 +10,11 @@
 
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKDialogConfiguration.h"
-#import "FBSDKErrorCreating.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKServerConfigurationManager.h"

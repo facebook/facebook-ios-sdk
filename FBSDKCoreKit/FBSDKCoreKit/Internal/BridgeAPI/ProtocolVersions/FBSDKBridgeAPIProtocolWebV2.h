@@ -10,10 +10,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKBridgeAPIProtocol.h"
-#import "FBSDKErrorCreating.h"
 #import "FBSDKServerConfigurationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN

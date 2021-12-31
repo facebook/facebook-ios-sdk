@@ -44,6 +44,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppEventsUtility.shared.reset()
     AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
+    ErrorFactory.resetClassDependencies()
     FeatureManager.shared.resetDependencies()
     GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
@@ -471,6 +472,21 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       FBButton.accessTokenProvider === components.accessTokenWallet,
       "Button should be configured with the expected concrete access token provider"
+    )
+  }
+
+  func testConfiguringErrorFactory() {
+    XCTAssertNil(
+      ErrorFactory.defaultReporter,
+      "ErrorFactory should not have a default reporter by default"
+    )
+
+    configurator.performConfiguration()
+
+    XCTAssertIdentical(
+      ErrorFactory.defaultReporter,
+      components.errorReporter,
+      "FeatureManager should be configured with the error reporter"
     )
   }
 

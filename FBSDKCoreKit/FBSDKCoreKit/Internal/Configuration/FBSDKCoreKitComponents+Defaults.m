@@ -29,7 +29,7 @@
 #import "FBSDKCrashObserver.h"
 #import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKErrorConfigurationProvider.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"

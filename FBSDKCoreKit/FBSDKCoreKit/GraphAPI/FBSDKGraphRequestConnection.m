@@ -8,13 +8,13 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKErrorConfigurationProvider.h"
-#import "FBSDKErrorCreating.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"

@@ -14,6 +14,17 @@ final class ErrorFactoryTests: XCTestCase {
   // MARK: - Test Assumptions
 
   private enum Assumptions {
+    static let noDefaultClassReporter = """
+      The error factory type should not have a default error reporter by default
+      """
+    static let defaultClassReporter = """
+      The error factory type should have a default error reporter
+      """
+
+    static let noDefaultInstanceReporter = """
+      Should be able to create an error factory without a default error reporter
+      """
+
     static let errorReporter = """
       An error factory should be created with the provided error reporter
       """
@@ -80,20 +91,70 @@ final class ErrorFactoryTests: XCTestCase {
     static let reporting = """
       An error should be sent to the factory's error reporter
       """
+    static let defaultReporting = """
+      An error factory using the default error reporter should report errors
+      """
   }
 
   // MARK: - Test Fixture
 
-  lazy var factory = ErrorFactory(reporter: reporter)
-  let reporter = TestErrorReporter()
-  var error: Error! // swiftlint:disable:this implicitly_unwrapped_optional
+  // swiftlint:disable implicitly_unwrapped_optional
+  var factory: ErrorFactory!
+  var reporter: TestErrorReporter!
+  var defaultReporter: TestErrorReporter!
+  var error: Error!
+  // swiftlint:enable implicitly_unwrapped_optional
+
   var nsError: NSError { error as NSError }
+
+  override func setUp() {
+    super.setUp()
+
+    ErrorFactory.resetClassDependencies()
+
+    reporter = TestErrorReporter()
+    defaultReporter = TestErrorReporter()
+    factory = ErrorFactory(reporter: reporter)
+  }
+
+  override func tearDown() {
+    reporter = nil
+    defaultReporter = nil
+    error = nil
+    factory = nil
+
+    super.tearDown()
+  }
 
   // MARK: - Tests
 
   // MARK: Dependencies
 
-  func testDependencies() {
+  func testClassDependencies() {
+    XCTAssertNil(
+      ErrorFactory.defaultReporter,
+      Assumptions.noDefaultClassReporter
+    )
+
+    ErrorFactory.configure(defaultReporter: defaultReporter)
+
+    XCTAssertIdentical(
+      ErrorFactory.defaultReporter,
+      defaultReporter,
+      Assumptions.defaultClassReporter
+    )
+  }
+
+  func testNullaryInitialization() {
+    factory = ErrorFactory()
+
+    XCTAssertNil(
+      factory.reporter,
+      Assumptions.noDefaultInstanceReporter
+    )
+  }
+
+  func testInitializationWithDependencies() {
     XCTAssertTrue(factory.reporter === reporter, Assumptions.errorReporter)
   }
 
@@ -430,6 +491,28 @@ final class ErrorFactoryTests: XCTestCase {
     )
   }
 
+  // MARK: - Using Default Reporter
+
+  func testUsingDefaultErrorReporter() throws {
+    // Creating a factory without a reporter or a default reporter
+    factory = ErrorFactory()
+
+    // Adding the default reporter after the fact
+    ErrorFactory.configure(defaultReporter: defaultReporter)
+
+    error = factory.unknownError(
+      message: Values.message,
+      userInfo: Values.userInfo
+    )
+    try checkReporting(
+      reporter: defaultReporter,
+      domain: ErrorDomain,
+      code: CoreError.errorUnknown.rawValue,
+      message: Values.message,
+      assumption: Assumptions.defaultReporting
+    )
+  }
+
   // MARK: - Provided and Expected Values
 
   private enum Values {
@@ -483,30 +566,34 @@ final class ErrorFactoryTests: XCTestCase {
   // MARK: - Common Validation
 
   private func checkReporting(
+    reporter reporterToCheck: TestErrorReporter? = nil,
     domain: String,
     code: Int,
     message: String?,
     file: StaticString = #file,
-    line: UInt = #line
+    line: UInt = #line,
+    assumption: String = Assumptions.reporting
   ) throws {
+    let testReporter: TestErrorReporter = reporterToCheck ?? reporter
+
     XCTAssertEqual(
-      reporter.capturedErrorDomain,
+      testReporter.capturedErrorDomain,
       domain,
-      Assumptions.reporting,
+      assumption,
       file: file,
       line: line
     )
     XCTAssertEqual(
-      reporter.capturedErrorCode,
+      testReporter.capturedErrorCode,
       code,
-      Assumptions.reporting,
+      assumption,
       file: file,
       line: line
     )
     XCTAssertEqual(
-      reporter.capturedMessage,
+      testReporter.capturedMessage,
       message,
-      Assumptions.reporting,
+      assumption,
       file: file,
       line: line
     )

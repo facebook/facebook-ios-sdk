@@ -41,7 +41,6 @@
 #import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKDialogConfigurationMapBuilding.h"
 #import "FBSDKErrorConfigurationProviding.h"
-#import "FBSDKErrorCreating.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKEventProcessing.h"

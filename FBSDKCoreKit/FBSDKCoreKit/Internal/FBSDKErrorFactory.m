@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 
 #import "FBSDKConstants.h"
 
@@ -14,11 +14,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKErrorFactory
 
+// MARK: - Class Dependencies
+
+static id<FBSDKErrorReporting> _defaultReporter;
+
++ (nullable id<FBSDKErrorReporting>)defaultReporter
+{
+  return _defaultReporter;
+}
+
++ (void)setDefaultReporter:(nullable id<FBSDKErrorReporting>)defaultReporter
+{
+  _defaultReporter = defaultReporter;
+}
+
++ (void)configureWithDefaultReporter:(id<FBSDKErrorReporting>)defaultReporter
+{
+  self.defaultReporter = defaultReporter;
+}
+
+#if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.defaultReporter = nil;
+}
+
+#endif
+
 // MARK: - Lifecycle
 
 - (instancetype)initWithReporter:(id<FBSDKErrorReporting>)reporter
 {
-  if ((self = [super init])) {
+  if ((self = [self init])) {
     _reporter = reporter;
   }
 
@@ -56,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
   }
 
   userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
-  [self.reporter saveError:code errorDomain:domain message:message];
+  [self reportErrorWithCode:code domain:domain message:message];
 
   return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 }
@@ -131,6 +159,16 @@ NS_ASSUME_NONNULL_BEGIN
                     userInfo:userInfo
                      message:message
              underlyingError:nil];
+}
+
+// MARK: - Reporting
+
+- (void)reportErrorWithCode:(NSInteger)code
+                     domain:(NSString *)domain
+                    message:(nullable NSString *)message
+{
+  id<FBSDKErrorReporting> reporter = self.reporter ?: self.class.defaultReporter;
+  [reporter saveError:code errorDomain:domain message:message];
 }
 
 @end

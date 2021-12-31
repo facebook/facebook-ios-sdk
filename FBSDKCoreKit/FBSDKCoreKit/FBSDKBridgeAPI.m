@@ -13,14 +13,14 @@
 #import <SafariServices/SafariServices.h>
 
 #import <AuthenticationServices/AuthenticationServices.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKErrorCreating.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"

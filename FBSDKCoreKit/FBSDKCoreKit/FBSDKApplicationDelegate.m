@@ -41,7 +41,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureManager.h"

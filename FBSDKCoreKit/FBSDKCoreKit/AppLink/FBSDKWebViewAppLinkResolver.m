@@ -13,11 +13,11 @@
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLink.h"
-#import "FBSDKErrorCreating.h"
-#import "FBSDKErrorFactory.h"
+#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 #import "NSURLSession+Protocols.h"
