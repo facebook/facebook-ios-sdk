@@ -67,7 +67,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     BridgeAPIRequest.resetClassDependencies()
     CodelessIndexer.reset()
     CrashShield.reset()
-    FBWebDialogView.reset()
+    FBWebDialogView.resetClassDependencies()
     FeatureExtractor.reset()
     ModelManager.reset()
     Profile.reset()
@@ -1420,6 +1420,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       FBWebDialogView.urlOpener,
       "FBWebDialogView should not have an internal URL opener by default"
     )
+    XCTAssertNil(
+      FBWebDialogView.errorFactory,
+      "FBWebDialogView should not have an error factory by default"
+    )
 
     configurator.performConfiguration()
 
@@ -1430,6 +1434,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       FBWebDialogView.urlOpener === components.internalURLOpener,
       "FBWebDialogView should be configured with the internal URL opener"
+    )
+    XCTAssertIdentical(
+      FBWebDialogView.errorFactory,
+      components.errorFactory,
+      "FBWebDialogView should be configured with the error factory"
     )
   }
 }

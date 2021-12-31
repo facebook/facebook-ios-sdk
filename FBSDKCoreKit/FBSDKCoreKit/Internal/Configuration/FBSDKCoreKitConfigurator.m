@@ -37,6 +37,7 @@
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKURL+Internal.h"
+#import "FBSDKWebDialogView+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -381,7 +382,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureWebDialogView
 {
   [FBSDKWebDialogView configureWithWebViewProvider:self.components.webViewProvider
-                                         urlOpener:self.components.internalURLOpener];
+                                         urlOpener:self.components.internalURLOpener
+                                      errorFactory:self.components.errorFactory];
 }
 
 #endif

@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKWebDialogView.h"
+#import "FBSDKWebDialogView+Internal.h"
 
 #import <WebKit/WebKit.h>
 
@@ -33,22 +33,45 @@
 
 static id<FBSDKWebViewProviding> _webViewProvider;
 static id<FBSDKInternalURLOpener> _urlOpener;
+static id<FBSDKErrorCreating> _errorFactory;
 
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
-                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
++ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
+                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
+                        errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 {
-  _webViewProvider = provider;
+  _webViewProvider = webViewProvider;
   _urlOpener = urlOpener;
+  _errorFactory = errorFactory;
 }
 
-+ (id<FBSDKInternalURLOpener>)urlOpener
++ (nullable id<FBSDKWebViewProviding>)webViewProvider
+{
+  return _webViewProvider;
+}
+
++ (void)setWebViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
+{
+  _webViewProvider = webViewProvider;
+}
+
++ (nullable id<FBSDKInternalURLOpener>)urlOpener
 {
   return _urlOpener;
 }
 
-- (id<FBSDKInternalURLOpener>)urlOpener
++ (void)setUrlOpener:(nullable id<FBSDKInternalURLOpener>)urlOpener
 {
-  return FBSDKWebDialogView.urlOpener;
+  _urlOpener = urlOpener;
+}
+
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return _errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  _errorFactory = errorFactory;
 }
 
 #pragma mark - Object Lifecycle
@@ -59,7 +82,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
     self.backgroundColor = UIColor.clearColor;
     self.opaque = NO;
 
-    _webView = [_webViewProvider createWebViewWithFrame:CGRectZero];
+    _webView = [self.class.webViewProvider createWebViewWithFrame:CGRectZero];
     _webView.navigationDelegate = self;
 
     // Since we cannot constrain the webview protocol to be a UIView subclass
@@ -204,7 +227,10 @@ static id<FBSDKInternalURLOpener> _urlOpener;
       NSInteger errorCode = [FBSDKTypeUtility integerValue:parameters[@"error_code"]];
       if (errorCode) {
         NSString *errorMessage = [FBSDKTypeUtility coercedToStringValue:parameters[@"error_msg"]];
-        NSError *error = [FBSDKError errorWithCode:errorCode message:errorMessage];
+        NSError *error = [self.class.errorFactory errorWithCode:errorCode
+                                                       userInfo:nil
+                                                        message:errorMessage
+                                                underlyingError:nil];
         [self.delegate webDialogView:self didFailWithError:error];
       } else {
         [self.delegate webDialogViewDidCancel:self];
@@ -215,11 +241,11 @@ static id<FBSDKInternalURLOpener> _urlOpener;
     decisionHandler(WKNavigationActionPolicyCancel);
   } else if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
     if (@available(iOS 10.0, *)) {
-      [self.urlOpener openURL:URL options:@{} completionHandler:^(BOOL success) {
+      [self.class.urlOpener openURL:URL options:@{} completionHandler:^(BOOL success) {
         decisionHandler(WKNavigationActionPolicyCancel);
       }];
     } else {
-      [self.urlOpener openURL:URL];
+      [self.class.urlOpener openURL:URL];
       decisionHandler(WKNavigationActionPolicyCancel);
     }
   } else {
@@ -235,15 +261,11 @@ static id<FBSDKInternalURLOpener> _urlOpener;
 
 #if DEBUG && FBTEST
 
-+ (void)reset
++ (void)resetClassDependencies
 {
-  _webViewProvider = nil;
-  _urlOpener = nil;
-}
-
-+ (id<FBSDKWebViewProviding>)webViewProvider
-{
-  return _webViewProvider;
+  self.webViewProvider = nil;
+  self.urlOpener = nil;
+  self.errorFactory = nil;
 }
 
 #endif

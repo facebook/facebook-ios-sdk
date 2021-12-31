@@ -15,6 +15,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added network error checking protocol (`NetworkErrorChecking`) and concrete implementation (`NetworkErrorChecker`)
 - Added error factory protocol (`ErrorCreating`) and concrete implementation (`ErrorFactory`)
 
+### Removed
+
+- Removed `configureWithWebViewProvider:urlOpener:` from `FBSDKWebDialogView`
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...HEAD)
 
 ## 12.2.1
