@@ -103,7 +103,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [FBSDKAccessToken configureWithTokenCache:self.components.tokenCache
               graphRequestConnectionFactory:self.components.graphRequestConnectionFactory
-               graphRequestPiggybackManager:self.components.piggybackManager];
+               graphRequestPiggybackManager:self.components.piggybackManager
+                               errorFactory:self.components.errorFactory];
 }
 
 - (void)configureAppEvents

@@ -78,15 +78,19 @@ final class CoreKitConfiguratorTests: XCTestCase {
   func testConfiguringAccessToken() {
     XCTAssertNil(
       AccessToken.tokenCache,
-      "AccessToken should be not have a token cache by default"
+      "AccessToken should not have a token cache by default"
     )
     XCTAssertNil(
       AccessToken.graphRequestConnectionFactory,
-      "AccessToken should be not have a graph request connection factory by default"
+      "AccessToken should not have a graph request connection factory by default"
     )
     XCTAssertNil(
       AccessToken.graphRequestPiggybackManager,
-      "AccessToken should be not have a graph request piggyback manager by default"
+      "AccessToken should not have a graph request piggyback manager by default"
+    )
+    XCTAssertNil(
+      AccessToken.errorFactory,
+      "AccessToken should not have an error factory by default"
     )
 
     configurator.performConfiguration()
@@ -102,6 +106,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AccessToken.graphRequestPiggybackManager === components.piggybackManager,
       "Should be configured with the graph request piggyback manager"
+    )
+    XCTAssertIdentical(
+      AccessToken.errorFactory,
+      components.errorFactory,
+      "Should be configured with the error factory"
     )
   }
 

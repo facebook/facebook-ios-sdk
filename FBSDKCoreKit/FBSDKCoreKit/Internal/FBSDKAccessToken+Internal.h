@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKErrorCreating.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestPiggybackManaging.h"
@@ -18,10 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (class, nullable, nonatomic) Class<FBSDKGraphRequestPiggybackManaging> graphRequestPiggybackManager;
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 + (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-   graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager;
+   graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
+                   errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 + (void)resetTokenCache;
 

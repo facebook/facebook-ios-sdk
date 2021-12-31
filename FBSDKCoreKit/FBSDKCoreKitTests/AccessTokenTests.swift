@@ -32,7 +32,8 @@ class AccessTokenTests: XCTestCase {
     AccessToken.configure(
       withTokenCache: tokenCache,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
-      graphRequestPiggybackManager: graphRequestPiggybackManager
+      graphRequestPiggybackManager: graphRequestPiggybackManager,
+      errorFactory: TestErrorFactory()
     )
   }
 
@@ -85,12 +86,10 @@ class AccessTokenTests: XCTestCase {
   func testRefreshingNilTokenError() throws {
     AccessToken.current = nil
 
-    var didInvokeCompletion = false
     var connection: GraphRequestConnecting?
     var data: Any?
     var error: Error?
     AccessToken.refreshCurrentAccessToken { potentialConnection, potentialData, potentialError in
-      didInvokeCompletion = true
       connection = potentialConnection
       data = potentialData
       error = potentialError
@@ -104,13 +103,20 @@ class AccessTokenTests: XCTestCase {
       "Should not call back with data if there is no token to refresh"
     )
 
-    let unwrappedError = try XCTUnwrap(error, "Should error when attempting to refresh a nil access token")
-    XCTAssertEqual(
-      (unwrappedError as NSError).code,
-      CoreError.errorAccessTokenRequired.rawValue,
-      "Should return a known error"
+    let sdkError = try XCTUnwrap(
+      error as? TestSDKError,
+      "Should error when attempting to refresh a nil access token"
     )
-    XCTAssertTrue(didInvokeCompletion)
+    XCTAssertEqual(
+      sdkError.code,
+      CoreError.errorAccessTokenRequired.rawValue,
+      "Should return an error with an access token required code"
+    )
+    XCTAssertEqual(
+      sdkError.message,
+      "No current access token to refresh",
+      "Should return an error with an appropriate message"
+    )
   }
 
   func testRefreshCurrentAccessTokenWithNonNilToken() {

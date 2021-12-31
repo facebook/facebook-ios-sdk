@@ -8,10 +8,10 @@
 
 #import "FBSDKAccessToken+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKErrorCreating.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKConstants.h"
-#import "FBSDKError.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -28,6 +28,7 @@ static FBSDKAccessToken *g_currentAccessToken;
 static id<FBSDKTokenCaching> g_tokenCache;
 static id<FBSDKGraphRequestConnectionFactory> g_graphRequestConnectionFactory;
 static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
+static id<FBSDKErrorCreating> g_errorFactory;
 
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
@@ -165,13 +166,11 @@ static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
     #endif
     }
   } else if (completion) {
-    completion(
-      nil,
-      nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorAccessTokenRequired
-       message:@"No current access token to refresh"]
-    );
+    NSError *error = [self.errorFactory errorWithCode:FBSDKErrorAccessTokenRequired
+                                             userInfo:nil
+                                              message:@"No current access token to refresh"
+                                      underlyingError:nil];
+    completion(nil, nil, error);
   }
 }
 
@@ -197,13 +196,25 @@ static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
   g_graphRequestPiggybackManager = graphRequestPiggybackManager;
 }
 
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return g_errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  g_errorFactory = errorFactory;
+}
+
 + (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
    graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
+                   errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   self.tokenCache = tokenCache;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
   self.graphRequestPiggybackManager = graphRequestPiggybackManager;
+  self.errorFactory = errorFactory;
 }
 
 #pragma mark - Equality
@@ -318,6 +329,7 @@ static Class<FBSDKGraphRequestPiggybackManaging> g_graphRequestPiggybackManager;
   self.tokenCache = nil;
   self.graphRequestConnectionFactory = nil;
   self.graphRequestPiggybackManager = nil;
+  self.errorFactory = nil;
 }
 
 + (void)resetCurrentAccessTokenCache
