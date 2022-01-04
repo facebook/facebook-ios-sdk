@@ -7,8 +7,8 @@
  */
 
 @objcMembers
-final class TestErrorFactory: NSObject, ErrorCreating {
-  func error(
+public final class TestErrorFactory: NSObject, ErrorCreating {
+  public func error(
     code: Int,
     userInfo: [String: Any]? = nil,
     message: String?,
@@ -23,7 +23,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func error(
+  public func error(
     domain: String,
     code: Int,
     userInfo: [String: Any]? = nil,
@@ -40,7 +40,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func invalidArgumentError(
+  public func invalidArgumentError(
     name: String,
     value: Any?,
     message: String?,
@@ -55,7 +55,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func invalidArgumentError(
+  public func invalidArgumentError(
     domain: String,
     name: String,
     value: Any?,
@@ -72,7 +72,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func requiredArgumentError(
+  public func requiredArgumentError(
     name: String,
     message: String?,
     underlyingError: Error?
@@ -85,7 +85,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func requiredArgumentError(
+  public func requiredArgumentError(
     domain: String,
     name: String,
     message: String?,
@@ -100,7 +100,7 @@ final class TestErrorFactory: NSObject, ErrorCreating {
     )
   }
 
-  func unknownError(message: String?, userInfo: [String: Any]? = nil) -> Error {
+  public func unknownError(message: String?, userInfo: [String: Any]? = nil) -> Error {
     TestSDKError(type: .unknown, userInfo: userInfo, message: message)
   }
 }

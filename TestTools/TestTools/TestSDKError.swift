@@ -6,26 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@objc public enum TestSDKErrorType: Int {
+  case general
+  case invalidArgument
+  case requiredArgument
+  case unknown
+}
+
 @objcMembers
-class TestSDKError: NSError {
-  @objc enum ErrorType: Int {
-    case general
-    case invalidArgument
-    case requiredArgument
-    case unknown
-  }
+public final class TestSDKError: NSError {
+  public let type: TestSDKErrorType
+  public let name: String?
+  public let value: Any?
+  public let message: String?
+  public let underlyingError: Error?
 
-  let type: ErrorType
-  let name: String?
-  let value: Any?
-  let message: String?
-  let underlyingError: Error?
+  public static let testErrorDomain = "TestSDKError"
+  public static let testErrorCode = 141414
 
-  static let testErrorDomain = "TestSDKError"
-  static let testErrorCode = 141414
-
-  init(
-    type: ErrorType,
+  public init(
+    type: TestSDKErrorType,
     domain: String = TestSDKError.testErrorDomain,
     code: Int = TestSDKError.testErrorCode,
     userInfo: [String: Any]? = nil,
@@ -43,11 +43,11 @@ class TestSDKError: NSError {
   }
 
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func copy(with zone: NSZone? = nil) -> Any {
+  public override func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 }
