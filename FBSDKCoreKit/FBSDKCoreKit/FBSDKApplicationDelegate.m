@@ -149,6 +149,7 @@ static UIApplicationState _applicationState;
   if ((self = [super init])) {
     _components = components;
     _configurator = configurator;
+    _applicationObservers = [NSHashTable new];
   }
 
   return self;

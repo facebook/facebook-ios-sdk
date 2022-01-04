@@ -127,6 +127,12 @@ class ApplicationDelegateTests: XCTestCase {
       CoreKitComponents.default,
       "The configurator should be created with the default components by default"
     )
+
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      0,
+      "The delegate should have an empty hash table of application observers"
+    )
   }
 
   func testComponentsAndConfiguration() {
@@ -143,6 +149,11 @@ class ApplicationDelegateTests: XCTestCase {
       delegate.configurator,
       configurator,
       "An application delegate should be created with the provided configurator"
+    )
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      0,
+      "The delegate should have an empty hash table of application observers"
     )
   }
 
