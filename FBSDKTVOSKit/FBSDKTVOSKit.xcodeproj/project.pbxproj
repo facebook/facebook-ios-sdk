@@ -45,7 +45,6 @@
 		9D8E94781BC332900012023B /* FBSDKTVOSConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D8E94761BC332900012023B /* FBSDKTVOSConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D8E94791BC332900012023B /* FBSDKTVOSConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8E94771BC332900012023B /* FBSDKTVOSConstants.m */; };
 		9DEC55871BBA636A00C7DB4A /* FBSDKTVOSKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DEC55861BBA636A00C7DB4A /* FBSDKTVOSKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9DEC55931BBA636A00C7DB4A /* FBSDKTVOSKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC55921BBA636A00C7DB4A /* FBSDKTVOSKitTests.m */; };
 		9DEC56041BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DEC56021BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DEC56051BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEC56031BBA7BB600C7DB4A /* FBSDKDeviceLoginViewController.m */; };
 /* End PBXBuildFile section */
@@ -279,7 +278,6 @@
 		9DEC55861BBA636A00C7DB4A /* FBSDKTVOSKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTVOSKit.h; sourceTree = "<group>"; };
 		9DEC55881BBA636A00C7DB4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DEC558D1BBA636A00C7DB4A /* FBSDKTVOSKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FBSDKTVOSKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DEC55921BBA636A00C7DB4A /* FBSDKTVOSKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTVOSKitTests.m; sourceTree = "<group>"; };
 		9DEC55941BBA636A00C7DB4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DEC55A51BBA63FF00C7DB4A /* FacebookSDK-Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FacebookSDK-Application.xcconfig"; sourceTree = "<group>"; };
 		9DEC55A61BBA63FF00C7DB4A /* FacebookSDK-ApplicationTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FacebookSDK-ApplicationTests.xcconfig"; sourceTree = "<group>"; };
@@ -500,7 +498,6 @@
 		9DEC55911BBA636A00C7DB4A /* FBSDKTVOSKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				9DEC55921BBA636A00C7DB4A /* FBSDKTVOSKitTests.m */,
 				9DEC55941BBA636A00C7DB4A /* Info.plist */,
 			);
 			path = FBSDKTVOSKitTests;
@@ -899,7 +896,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9DEC55931BBA636A00C7DB4A /* FBSDKTVOSKitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
