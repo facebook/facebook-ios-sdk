@@ -109,7 +109,7 @@ class TestAppEvents: TestEventLogger,
   }
 
   // swiftlint:disable:next function_parameter_count
-  func configureNonTVComponentsWith(
+  func configureNonTVComponents(
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
     skAdNetworkReporter: AppEventsReporter?,

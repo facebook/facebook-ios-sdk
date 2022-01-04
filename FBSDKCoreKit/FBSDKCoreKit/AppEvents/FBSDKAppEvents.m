@@ -1690,6 +1690,10 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.userDataStore = nil;
   self.appEventsUtility = nil;
   self.internalUtility = nil;
+  // The actual setter on here has a check to see if the SDK is initialized
+  // This is not a useful check for tests so we can just reset the underlying
+  // static var.
+  g_overrideAppID = nil;
 
 #if !TARGET_OS_TV
   self.onDeviceMLModelManager = nil;

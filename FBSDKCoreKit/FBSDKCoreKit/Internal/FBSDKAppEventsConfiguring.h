@@ -66,12 +66,15 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 
 #if !TARGET_OS_TV
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
                                            codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
                                                   swizzler:(Class<FBSDKSwizzling>)swizzler
-                                               aemReporter:(Class<FBSDKAEMReporter>)aemReporter;
+                                               aemReporter:(Class<FBSDKAEMReporter>)aemReporter
+NS_SWIFT_NAME(configureNonTVComponents(onDeviceMLModelManager:metadataIndexer:skAdNetworkReporter:codelessIndexer:swizzler:aemReporter:));
+// UNCRUSTIFY_FORMAT_ON
 
 #endif
 
