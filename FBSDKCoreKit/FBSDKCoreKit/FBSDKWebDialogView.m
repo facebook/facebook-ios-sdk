@@ -15,7 +15,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKCloseIcon.h"
-#import "FBSDKError.h"
 #import "FBSDKInternalURLOpener.h"
 #import "FBSDKWebViewProviding.h"
 

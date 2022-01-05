@@ -19,6 +19,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Removed `configureWithWebViewProvider:urlOpener:` from `FBSDKWebDialogView`
 
+### Deprecated
+
+- `SDKError` has been deprecated in favor of the new `ErrorFactory` and `NetworkErrorChecker` types
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...HEAD)
 
 ## 12.2.1

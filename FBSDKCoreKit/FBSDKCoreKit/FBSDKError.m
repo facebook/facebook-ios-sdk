@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -22,18 +22,21 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKError
+#pragma clang diagnostic pop
 
 // MARK: - Class Dependencies
 
-static id<FBSDKErrorReporting> _errorReporter;
+static _Nullable id<FBSDKErrorReporting> _errorReporter;
 
-+ (id<FBSDKErrorReporting>)errorReporter
++ (nullable id<FBSDKErrorReporting>)errorReporter
 {
   return _errorReporter;
 }
 
-+ (void)setErrorReporter:(id<FBSDKErrorReporting>)errorReporter
++ (void)setErrorReporter:(nullable id<FBSDKErrorReporting>)errorReporter
 {
   _errorReporter = errorReporter;
 }

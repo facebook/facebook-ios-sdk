@@ -249,7 +249,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureSDKError
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKError configureWithErrorReporter:self.components.errorReporter];
+  #pragma clang diagnostic pop
 }
 
 - (void)configureServerConfigurationManager

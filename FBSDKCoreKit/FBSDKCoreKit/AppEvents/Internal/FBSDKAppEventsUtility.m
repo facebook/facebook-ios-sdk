@@ -10,12 +10,7 @@
 
 #import <AdSupport/AdSupport.h>
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKError.h>
-#import <FBSDKCoreKit/FBSDKLogger.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 

@@ -39,7 +39,6 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
