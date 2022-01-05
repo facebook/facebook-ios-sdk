@@ -169,6 +169,18 @@ static _Nullable id<FBSDKWindowFinding> _windowFinder;
   _windowFinder = windowFinder;
 }
 
+static _Nullable id<FBSDKErrorCreating> _errorFactory;
+
++ (nullable id<FBSDKErrorCreating>)errorFactory
+{
+  return _errorFactory;
+}
+
++ (void)setErrorFactory:(nullable id<FBSDKErrorCreating>)errorFactory
+{
+  _errorFactory = errorFactory;
+}
+
 #pragma mark - Class Configuration
 
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
@@ -179,6 +191,7 @@ static _Nullable id<FBSDKWindowFinding> _windowFinder;
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
                           windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
+                          errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
 {
   self.internalURLOpener = internalURLOpener;
   self.internalUtility = internalUtility;
@@ -188,6 +201,7 @@ static _Nullable id<FBSDKWindowFinding> _windowFinder;
   self.bridgeAPIRequestOpener = bridgeAPIRequestOpener;
   self.socialComposeViewControllerFactory = socialComposeViewControllerFactory;
   self.windowFinder = windowFinder;
+  self.errorFactory = errorFactory;
 
   self.hasBeenConfigured = YES;
 }
@@ -205,7 +219,8 @@ static _Nullable id<FBSDKWindowFinding> _windowFinder;
                bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
     socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]
-                          windowFinder:FBSDKInternalUtility.sharedUtility];
+                          windowFinder:FBSDKInternalUtility.sharedUtility
+                          errorFactory:[FBSDKErrorFactory new]];
 }
 
 static dispatch_once_t validateAPIURLSchemeRegisteredToken;
@@ -228,6 +243,8 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   self.bridgeAPIRequestFactory = nil;
   self.bridgeAPIRequestOpener = nil;
   self.socialComposeViewControllerFactory = nil;
+  self.windowFinder = nil;
+  self.errorFactory = nil;
 
   validateAPIURLSchemeRegisteredToken = 0;
 
@@ -387,13 +404,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if (errorCode == 4201) {
     [self _invokeDelegateDidCancel];
   } else if (errorCode != 0) {
-    NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                            code:FBSDKShareErrorUnknown
-                                        userInfo:@{
-                        FBSDKGraphRequestErrorGraphErrorCodeKey : @(errorCode)
-                      }
-                                         message:results[@"error_message"]
-                                 underlyingError:nil];
+    NSError *error = [self.class.errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                                         code:FBSDKShareErrorUnknown
+                                                     userInfo:@{ FBSDKGraphRequestErrorGraphErrorCodeKey : @(errorCode) }
+                                                      message:results[@"error_message"]
+                                              underlyingError:nil];
     [self _handleWebResponseParameters:nil error:error cancelled:NO];
   } else {
     // not all web dialogs report cancellation, so assume that the share has completed with no additional information
@@ -693,9 +708,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 {
   if (![self _canShowNative]) {
     if (canShowErrorRef != NULL) {
-      *canShowErrorRef = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                code:FBSDKShareErrorDialogNotAvailable
-                                             message:@"Native share dialog is not available."];
+      *canShowErrorRef = [self.class.errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                                             code:FBSDKShareErrorDialogNotAvailable
+                                                         userInfo:nil
+                                                          message:@"Native share dialog is not available."
+                                                  underlyingError:nil];
     }
     return NO;
   }
@@ -763,9 +780,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 {
   if (![self _canShowShareSheet]) {
     if (canShowErrorRef != NULL) {
-      *canShowErrorRef = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                code:FBSDKShareErrorDialogNotAvailable
-                                             message:@"Share sheet is not available."];
+      *canShowErrorRef = [self.class.errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                                             code:FBSDKShareErrorDialogNotAvailable
+                                                         userInfo:nil
+                                                          message:@"Share sheet is not available."
+                                                  underlyingError:nil];
     }
     return NO;
   }
@@ -775,9 +794,10 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   UIViewController *fromViewController = self.fromViewController;
   if (!fromViewController) {
     if (validationErrorRef != NULL) {
-      *validationErrorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                                   name:@"fromViewController"
-                                                                message:nil];
+      *validationErrorRef = [self.class.errorFactory requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                                name:@"fromViewController"
+                                                                             message:nil
+                                                                     underlyingError:nil];
     }
     return NO;
   }
@@ -789,9 +809,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
   if (!composeViewController || ![composeViewController isKindOfClass:UIViewController.class]) {
     if (canShowErrorRef != NULL) {
-      *canShowErrorRef = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                code:FBSDKShareErrorDialogNotAvailable
-                                             message:@"Error creating social compose view controller."];
+      *canShowErrorRef = [self.class.errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                                             code:FBSDKShareErrorDialogNotAvailable
+                                                         userInfo:nil
+                                                          message:@"Error creating social compose view controller."
+                                                  underlyingError:nil];
     }
     return NO;
   }
@@ -887,9 +909,10 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Share dialog does not support %@.",
                              NSStringFromClass(self.shareContent.class)];
-        *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                           name:@"shareContent"
-                                                        message:message];
+        *errorRef = [self.class.errorFactory requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                        name:@"shareContent"
+                                                                     message:message
+                                                             underlyingError:nil];
       }
       return NO;
     }
@@ -928,10 +951,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     }
   }
   if (errorRef != NULL) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                      name:@"FBSDKShareDialogMode"
-                                                     value:@(self.mode)
-                                                   message:nil];
+    *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                   name:@"FBSDKShareDialogMode"
+                                                                  value:@(self.mode)
+                                                                message:nil
+                                                        underlyingError:nil];
   }
   return NO;
 }
@@ -944,20 +968,22 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     FBSDKShareLinkContent *const linkContent = shareContent;
     if (!linkContent.contentURL) {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"FBSDKShareLinkContent contentURL is required."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"FBSDKShareLinkContent contentURL is required."
+                                                            underlyingError:nil];
       }
       return NO;
     }
   }
   if ([shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     if ((errorRef != NULL) && !*errorRef) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"shareContent"
-                                                       value:shareContent
-                                                     message:@"Camera Content must be shared in `Native` mode."];
+      *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                     name:@"shareContent"
+                                                                    value:shareContent
+                                                                  message:@"Camera Content must be shared in `Native` mode."
+                                                          underlyingError:nil];
     }
     return NO;
   }
@@ -971,10 +997,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if (containsPhotos) {
     if (FBSDKAccessToken.currentAccessToken == nil) {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"The web share dialog needs a valid access token to stage photos."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"The web share dialog needs a valid access token to stage photos."
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -984,10 +1011,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       }
     } else {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"Web share dialogs cannot include photos."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"Web share dialogs cannot include photos."
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -995,10 +1023,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if (containsVideos) {
     if (FBSDKAccessToken.currentAccessToken == nil) {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"The web share dialog needs a valid access token to stage videos."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"The web share dialog needs a valid access token to stage videos."
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -1011,10 +1040,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if (containsMedia) {
     if (bridgeOptions & FBSDKShareBridgeOptionsPhotoImageURL) { // a web-based URL is required
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"Web share dialogs cannot include local media."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"Web share dialogs cannot include local media."
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -1030,19 +1060,21 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     FBSDKShareLinkContent *const linkContent = shareContent;
     if (!linkContent.contentURL) {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"FBSDKShareLinkContent contentURL is required."];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"FBSDKShareLinkContent contentURL is required."
+                                                            underlyingError:nil];
       }
       return NO;
     }
   } else {
     if ((errorRef != NULL) && !*errorRef) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"shareContent"
-                                                       value:shareContent
-                                                     message:@"Feed share dialogs support FBSDKShareLinkContent."];
+      *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                     name:@"shareContent"
+                                                                    value:shareContent
+                                                                  message:@"Feed share dialogs support FBSDKShareLinkContent."
+                                                          underlyingError:nil];
     }
     return NO;
   }
@@ -1055,10 +1087,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     if ([self.class.shareUtility shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareContent]) {
       if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:@"Multimedia Content is only available for mode `ShareSheet`"];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:@"Multimedia Content is only available for mode `ShareSheet`"
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -1080,10 +1113,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       } else {
         if ((errorRef != NULL) && !*errorRef) {
           NSString *message = @"Share photo content must have UIImage photos in order to share with the share sheet";
-          *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                            name:@"shareContent"
-                                                           value:shareContent
-                                                         message:message];
+          *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                         name:@"shareContent"
+                                                                        value:shareContent
+                                                                      message:message
+                                                              underlyingError:nil];
         }
         return NO;
       }
@@ -1100,10 +1134,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       if ((errorRef != NULL) && !*errorRef) {
         NSString *message = [NSString stringWithFormat:@"Share sheet does not support %@.",
                              NSStringFromClass(shareContent.class)];
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"shareContent"
-                                                         value:shareContent
-                                                       message:message];
+        *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                       name:@"shareContent"
+                                                                      value:shareContent
+                                                                    message:message
+                                                            underlyingError:nil];
       }
       return NO;
     }
@@ -1117,10 +1152,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       && self.mode == FBSDKShareDialogModeShareSheet
       && ![self _canUseFBShareSheet]) {
     if ((errorRef != NULL) && !*errorRef) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"shareContent"
-                                                       value:shareContent
-                                                     message:@"Cannot use the share sheet if the share sheet is unavailable. Make sure the FB app is installed."];
+      *errorRef = [self.class.errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                                     name:@"shareContent"
+                                                                    value:shareContent
+                                                                  message:@"Cannot use the share sheet if the share sheet is unavailable. Make sure the FB app is installed."
+                                                          underlyingError:nil];
     }
     return NO;
   }

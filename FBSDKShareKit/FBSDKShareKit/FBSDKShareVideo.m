@@ -138,10 +138,12 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
     }
   }
   if ((errorRef != NULL) && !*errorRef) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                      name:@"data"
-                                                     value:data
-                                                   message:@"Cannot share video data."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:@"data"
+                                                       value:data
+                                                     message:@"Cannot share video data."
+                                             underlyingError:nil];
   }
   return NO;
 }
@@ -159,10 +161,12 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
       }
     } else {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"videoAsset"
-                                                         value:videoAsset
-                                                       message:@"Must refer to a video file."];
+        id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+        *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                            name:@"videoAsset"
+                                                           value:videoAsset
+                                                         message:@"Must refer to a video file."
+                                                 underlyingError:nil];
       }
       return NO;
     }
@@ -184,10 +188,12 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
     }
   }
   if ((errorRef != NULL) && !*errorRef) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                      name:kFBSDKShareVideoURLKey
-                                                     value:videoURL
-                                                   message:@"Must refer to an asset file."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:kFBSDKShareVideoURLKey
+                                                       value:videoURL
+                                                     message:@"Must refer to an asset file."
+                                             underlyingError:nil];
   }
   return NO;
 }
@@ -204,10 +210,12 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
     return [self _validateVideoURL:_videoURL withOptions:bridgeOptions error:errorRef];
   } else {
     if ((errorRef != NULL) && !*errorRef) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"video"
-                                                       value:self
-                                                     message:@"Must have an asset, data, or videoURL value."];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"video"
+                                                         value:self
+                                                       message:@"Must have an asset, data, or videoURL value."
+                                               underlyingError:nil];
     }
     return NO;
   }

@@ -8,12 +8,13 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKShareDialog.h"
 #import "FBSDKShareInternalURLOpening.h"
 
 @protocol FBSDKShareUtility;
 @protocol FBSDKSocialComposeViewControllerFactory;
-@protocol FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
 @property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
 @property (class, nullable, nonatomic) id<FBSDKWindowFinding> windowFinder;
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 @end
 

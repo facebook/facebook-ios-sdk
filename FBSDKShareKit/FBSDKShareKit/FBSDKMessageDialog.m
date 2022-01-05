@@ -104,9 +104,12 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 {
   NSError *error;
   if (!self.canShow) {
-    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                   code:FBSDKShareErrorDialogNotAvailable
-                                message:@"Message dialog is not available."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    error = [errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                     code:FBSDKShareErrorDialogNotAvailable
+                                 userInfo:nil
+                                  message:@"Message dialog is not available."
+                          underlyingError:nil];
     [self _invokeDelegateDidFailWithError:error];
     return NO;
   }
@@ -151,11 +154,13 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
         || [self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]
         || [self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {} else {
       if (errorRef != NULL) {
+        id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
                              NSStringFromClass(self.shareContent.class)];
-        *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                           name:@"shareContent"
-                                                        message:message];
+        *errorRef = [errorFactory requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                             name:@"shareContent"
+                                                          message:message
+                                                  underlyingError:nil];
       }
       return NO;
     }

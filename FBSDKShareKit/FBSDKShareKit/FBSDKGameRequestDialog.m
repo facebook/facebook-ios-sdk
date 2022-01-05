@@ -91,9 +91,12 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 {
   [self _cleanUp];
   if (!url) {
-    NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                            code:FBSDKShareErrorUnknown
-                                         message:@"Facebook app did not return a url"];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    NSError *error = [errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                              code:FBSDKShareErrorUnknown
+                                          userInfo:nil
+                                           message:@"Facebook app did not return a url"
+                                   underlyingError:nil];
     [self handleDialogError:error];
   } else {
     NSDictionary<NSString *, id> *parsedResults = [self parsedPayloadFromURL:url];
@@ -158,10 +161,11 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 - (void)handleBridgeAPIFailureWithError:(NSError *)error
 {
   if (error) {
-    NSError *sdkError = [FBSDKError
-                         errorWithCode:FBSDKErrorBridgeAPIInterruption
-                         message:@"Error occured while interacting with Gaming Services, Failed to open bridge."
-                         underlyingError:error];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    NSError *sdkError = [errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                           userInfo:nil
+                                            message:@"Error occured while interacting with Gaming Services, Failed to open bridge."
+                                    underlyingError:error];
     [self handleDialogError:sdkError];
   }
 }
@@ -216,9 +220,12 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 {
   NSError *error;
   if (!self.canShow) {
-    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                   code:FBSDKShareErrorDialogNotAvailable
-                                message:@"Game request dialog is not available."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    error = [errorFactory errorWithDomain:FBSDKShareErrorDomain
+                                     code:FBSDKShareErrorDialogNotAvailable
+                                 userInfo:nil
+                                  message:@"Game request dialog is not available."
+                          underlyingError:nil];
     [_delegate gameRequestDialog:self didFailWithError:error];
     return NO;
   }
@@ -266,10 +273,12 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
     return [self.content validateWithOptions:FBSDKShareBridgeOptionsDefault error:errorRef];
   }
   if (errorRef != NULL) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                      name:@"content"
-                                                     value:self.content
-                                                   message:nil];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:@"content"
+                                                       value:self.content
+                                                     message:nil
+                                             underlyingError:nil];
   }
   return NO;
 }
@@ -398,8 +407,11 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
   }
   [self _cleanUp];
 
-  NSError *error = [FBSDKError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
-                                     message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]];
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+  NSError *error = [errorFactory errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
+                                      userInfo:nil
+                                       message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]
+                               underlyingError:nil];
   if (!error.code) {
     // reformat "to[x]" keys into an array.
     int counter = 0;

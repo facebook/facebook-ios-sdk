@@ -260,10 +260,12 @@
     return [shareContent validateWithOptions:bridgeOptions error:errorRef];
   } else {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"shareContent"
-                                                       value:shareContent
-                                                     message:nil];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"shareContent"
+                                                         value:shareContent
+                                                       message:nil
+                                               underlyingError:nil];
     }
     return NO;
   }
@@ -385,10 +387,12 @@
                            name,
                            (unsigned long)minCount,
                            (unsigned long)maxCount];
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:array
-                                                     message:message];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:name
+                                                         value:array
+                                                       message:message
+                                               underlyingError:nil];
     }
     return NO;
   } else {
@@ -409,10 +413,12 @@
   }
   if (!URL.isFileURL) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:URL
-                                                     message:nil];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:name
+                                                         value:URL
+                                                       message:nil
+                                               underlyingError:nil];
     }
     return NO;
   }
@@ -423,11 +429,12 @@
                                      options:NSDataReadingMapped
                                        error:&fileError]) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:URL
-                                                     message:@"Error reading file"
-                                             underlyingError:fileError];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:name
+                                                         value:URL
+                                                       message:@"Error reading file"
+                                               underlyingError:fileError];
     }
     return NO;
   }
@@ -446,10 +453,12 @@
     return YES;
   } else {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:name
-                                                       value:URL
-                                                     message:nil];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:name
+                                                         value:URL
+                                                       message:nil
+                                               underlyingError:nil];
     }
     return NO;
   }
@@ -462,9 +471,11 @@
       || ([value isKindOfClass:NSArray.class] && !((NSArray *)value).count)
       || ([value isKindOfClass:[NSDictionary<NSString *, id> class]] && !((NSDictionary<NSString *, id> *)value).count)) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:name
-                                                      message:nil];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                           name:name
+                                                        message:nil
+                                                underlyingError:nil];
     }
     return NO;
   }
@@ -488,10 +499,12 @@
     }
   }
   if (errorRef != NULL) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                      name:argumentName
-                                                     value:@(value)
-                                                   message:nil];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:argumentName
+                                                       value:@(value)
+                                                     message:nil
+                                             underlyingError:nil];
   }
   return NO;
 }

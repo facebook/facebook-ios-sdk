@@ -182,9 +182,11 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
     NSCharacterSet *nonDigitCharacters = NSCharacterSet.decimalDigitCharacterSet.invertedSet;
     if ([_effectID rangeOfCharacterFromSet:nonDigitCharacters].location != NSNotFound) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"effectID"
-                                                       value:_effectID
-                                                     message:@"Invalid value for effectID, effectID can contain only numerical characters."];
+        id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+        *errorRef = [errorFactory invalidArgumentErrorWithName:@"effectID"
+                                                         value:_effectID
+                                                       message:@"Invalid value for effectID, effectID can contain only numerical characters."
+                                               underlyingError:nil];
       }
       return NO;
     }

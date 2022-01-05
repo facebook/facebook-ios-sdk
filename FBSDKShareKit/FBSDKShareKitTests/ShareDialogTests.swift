@@ -22,6 +22,7 @@ class ShareDialogTests: XCTestCase {
   var socialComposeViewController: TestSocialComposeViewController!
   var socialComposeViewControllerFactory: TestSocialComposeViewControllerFactory!
   var windowFinder: TestWindowFinder!
+  var errorFactory: TestErrorFactory!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -40,8 +41,8 @@ class ShareDialogTests: XCTestCase {
     socialComposeViewControllerFactory = TestSocialComposeViewControllerFactory()
     socialComposeViewControllerFactory.stubbedSocialComposeViewController = socialComposeViewController
     socialComposeViewControllerFactory.canMakeSocialComposeViewController = true
-
     windowFinder = TestWindowFinder()
+    errorFactory = TestErrorFactory()
 
     ShareDialog.configure(
       internalURLOpener: internalURLOpener,
@@ -51,13 +52,24 @@ class ShareDialogTests: XCTestCase {
       bridgeAPIRequestFactory: bridgeAPIRequestFactory,
       bridgeAPIRequestOpener: bridgeAPIRequestOpener,
       socialComposeViewControllerFactory: socialComposeViewControllerFactory,
-      windowFinder: windowFinder
+      windowFinder: windowFinder,
+      errorFactory: errorFactory
     )
 
     ShareCameraEffectContent.configure(internalUtility: internalUtility)
   }
 
   override func tearDown() {
+    internalURLOpener = nil
+    internalUtility = nil
+    settings = nil
+    bridgeAPIRequestFactory = nil
+    bridgeAPIRequestOpener = nil
+    socialComposeViewController = nil
+    socialComposeViewControllerFactory = nil
+    windowFinder = nil
+    errorFactory = nil
+
     ShareDialog.resetClassDependencies()
     TestShareUtility.reset()
     ShareCameraEffectContent.resetClassDependencies()
@@ -99,6 +111,10 @@ class ShareDialogTests: XCTestCase {
     XCTAssertTrue(
       ShareDialog.windowFinder === InternalUtility.shared,
       "ShareDialog should use the shared internal utility for its default window finding dependency"
+    )
+    XCTAssertTrue(
+      ShareDialog.errorFactory is ErrorFactory,
+      "ShareDialog should use a concrete error factory for its default error factory dependency"
     )
   }
 
