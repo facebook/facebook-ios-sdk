@@ -54,13 +54,6 @@ NS_SWIFT_NAME(InternalUtility)
 @property (nonatomic, readonly, strong) NSBundle *bundleForStrings;
 
 /**
-  Parses an FB url's query params (and potentially fragment) into a dictionary.
- @param url The FB url.
- @return A dictionary with the key/value pairs.
- */
-- (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url;
-
-/**
   Tests whether the supplied URL is a valid URL for opening in the browser.
  @param URL The URL to test.
  @return YES if the URL refers to an http or https resource, otherwise NO.

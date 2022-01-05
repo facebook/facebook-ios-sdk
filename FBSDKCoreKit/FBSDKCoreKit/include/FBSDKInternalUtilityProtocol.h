@@ -125,6 +125,13 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
  */
 - (void)validateFacebookReservedURLSchemes;
 
+/**
+  Parses an FB url's query params (and potentially fragment) into a dictionary.
+ @param url The FB url.
+ @return A dictionary with the key/value pairs.
+ */
+- (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

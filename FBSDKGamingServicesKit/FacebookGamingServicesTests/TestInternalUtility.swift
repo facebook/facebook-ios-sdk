@@ -73,6 +73,10 @@ class TestInternalUtility: InternalUtilityProtocol {
   ) {}
 
   func validateFacebookReservedURLSchemes() {}
+
+  func parameters(fromFBURL url: URL) -> [String: Any] {
+    [:]
+  }
 }
 
 enum URLConstants {

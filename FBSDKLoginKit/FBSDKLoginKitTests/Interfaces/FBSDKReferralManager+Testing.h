@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKReferralManager.h"
+#import "FBSDKReferralManager+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleOpenURLComplete:(BOOL)didOpen error:(nullable NSError *)error;
 
 - (BOOL)validateChallenge:(NSString *)challenge;
-+ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener;
 
 @end
 

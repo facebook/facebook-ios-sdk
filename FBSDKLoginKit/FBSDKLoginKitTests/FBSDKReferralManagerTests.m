@@ -12,6 +12,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <TestTools/TestTools.h>
 
 #import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKLoginKitTests-Swift.h"
@@ -29,6 +30,10 @@ static NSString *const _mockChallenge = @"mockChallenge";
 @interface FBSDKReferralManagerTests : XCTestCase
 
 @property (nonatomic) FBSDKReferralManager *manager;
+@property (nonatomic) TestBridgeAPIRequestOpener *bridgeAPIRequestOpener;
+@property (nonatomic) TestInternalUtility *internalUtility;
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestErrorFactory *errorFactory;
 
 @end
 
@@ -37,67 +42,222 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)setUp
 {
   [super setUp];
-  [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
-                         didFinishLaunchingWithOptions:@{}];
 
-  _manager = [FBSDKReferralManager new];
-  FBSDKSettings.sharedSettings.appID = _mockAppID;
+  [FBSDKReferralManager resetClassDependencies];
+
+  self.bridgeAPIRequestOpener = [TestBridgeAPIRequestOpener new];
+  self.internalUtility = [TestInternalUtility new];
+  self.settings = [TestSettings new];
+  self.errorFactory = [TestErrorFactory new];
+  self.settings.appID = _mockAppID;
+  [self configureClassDependencies];
+
+  self.manager = [FBSDKReferralManager new];
 }
 
-- (void)mockURLScheme
+- (void)tearDown
 {
-  [self mockURLSchemesWith:@"fbmockAppID"];
+  self.bridgeAPIRequestOpener = nil;
+  self.internalUtility = nil;
+  self.settings = nil;
+  self.errorFactory = nil;
+  self.manager = nil;
+
+  [FBSDKReferralManager resetClassDependencies];
+
+  [super tearDown];
 }
 
-- (void)mockURLSchemesWith:(NSString *)urlScheme
+- (void)configureClassDependencies
 {
-  TestBundle *bundle = [[TestBundle alloc] initWithInfoDictionary:@{
-                          @"CFBundleURLTypes" : @[
-                            @{ @"CFBundleURLSchemes" : @[urlScheme] }
-                          ]
-                        }];
+  [FBSDKReferralManager configureWithBridgeAPIRequestOpener:self.bridgeAPIRequestOpener
+                                            internalUtility:self.internalUtility
+                                                   settings:self.settings
+                                               errorFactory:self.errorFactory];
+}
 
-  [FBSDKInternalUtility reset]; // need to reset fetchUrlSchemesToken nonce
-  [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:bundle
-                                                            loggerFactory:[TestLoggerFactory new]
-                                                                 settings:FBSDKSettings.sharedSettings];
+- (void)testMissingClassDependencies
+{
+  [FBSDKReferralManager resetClassDependencies];
+
+  XCTAssertNil(
+    FBSDKReferralManager.bridgeAPIRequestOpener,
+    "ReferralManager should not have a bridge API request opener by default"
+  );
+  XCTAssertNil(
+    FBSDKReferralManager.internalUtility,
+    "ReferralManager should not have an internal utility by default"
+  );
+  XCTAssertNil(
+    FBSDKReferralManager.settings,
+    "ReferralManager should not have settings by default"
+  );
+  XCTAssertNil(
+    FBSDKReferralManager.errorFactory,
+    "ReferralManager should not have an error factory by default"
+  );
+}
+
+- (void)testDefaultClassDependenciesWithNullaryInitializer
+{
+  [FBSDKReferralManager resetClassDependencies];
+
+  self.manager = [FBSDKReferralManager new];
+
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.bridgeAPIRequestOpener,
+    FBSDKBridgeAPI.sharedInstance,
+    "ReferralManager should be configured with the shared bridge API"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.internalUtility,
+    FBSDKInternalUtility.sharedUtility,
+    "ReferralManager should be configured with the shared internal utility"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.settings,
+    FBSDKSettings.sharedSettings,
+    "ReferralManager should be configured with the shared settings"
+  );
+  XCTAssertTrue(
+    [(NSObject *)FBSDKReferralManager.errorFactory isKindOfClass:FBSDKErrorFactory.class],
+    "ReferralManager should be configured with an error factory"
+  );
+}
+
+- (void)testDefaultClassDependenciesWithUnaryInitializer
+{
+  [FBSDKReferralManager resetClassDependencies];
+
+  self.manager = [[FBSDKReferralManager alloc] initWithViewController:[UIViewController new]];
+
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.bridgeAPIRequestOpener,
+    FBSDKBridgeAPI.sharedInstance,
+    "ReferralManager should be configured with the shared bridge API"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.internalUtility,
+    FBSDKInternalUtility.sharedUtility,
+    "ReferralManager should be configured with the shared internal utility"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.settings,
+    FBSDKSettings.sharedSettings,
+    "ReferralManager should be configured with the shared settings"
+  );
+  XCTAssertTrue(
+    [(NSObject *)FBSDKReferralManager.errorFactory isKindOfClass:FBSDKErrorFactory.class],
+    "ReferralManager should be configured with an error factory"
+  );
+}
+
+- (void)testClassDependencies
+{
+  [FBSDKReferralManager resetClassDependencies];
+  [self configureClassDependencies];
+
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.bridgeAPIRequestOpener,
+    self.bridgeAPIRequestOpener,
+    "ReferralManager should be configured with the bridge API request opener"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.internalUtility,
+    self.internalUtility,
+    "ReferralManager should be configured with the internal utility"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.settings,
+    self.settings,
+    "ReferralManager should be configured with the settings"
+  );
+  XCTAssertEqualObjects(
+    FBSDKReferralManager.errorFactory,
+    self.errorFactory,
+    "ReferralManager should be configured with the error factory"
+  );
 }
 
 - (void)testReferralURL
 {
-  NSURL *url = [_manager referralURL];
+  NSURL *redirectURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedAppURL = redirectURL;
 
-  XCTAssertTrue([url.path hasSuffix:@"dialog/share_referral"]);
+  NSURL *facebookURL = [NSURL URLWithString:@"sample://facebook-url"];
+  self.internalUtility.stubbedFacebookURL = facebookURL;
 
-  NSDictionary<NSString *, id> *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
-  NSString *appID = params[@"app_id"];
-  NSString *redirectURI = params[@"redirect_uri"];
-  NSString *challenge = params[@"state"];
-  NSString *expectedUrlPrefix = [FBSDKInternalUtility.sharedUtility
-                                 appURLWithHost:@"authorize"
-                                 path:@""
-                                 queryParameters:@{}
-                                 error:NULL].absoluteString;
+  NSURL *url = [self.manager referralURL];
 
-  XCTAssertEqualObjects(appID, _mockAppID);
-  XCTAssertTrue([redirectURI hasPrefix:expectedUrlPrefix]);
-  XCTAssert(challenge.length > 0);
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedAppURLHost,
+    @"authorize",
+    @"The internal utility should be sent the correct app URL host"
+  );
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedAppURLPath,
+    @"",
+    @"The internal utility should be sent the correct app URL path"
+  );
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedAppURLQueryParameters,
+    @{},
+    @"The internal utility should be sent the correct app URL query parameters"
+  );
+
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedFacebookURLHostPrefix,
+    @"m.",
+    @"The internal utility should be sent the correct Facebook URL host prefix"
+  );
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedFacebookURLPath,
+    @"/dialog/share_referral",
+    @"The internal utility should be sent the correct Facebook URL path"
+  );
+
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedFacebookURLQueryParameters[@"app_id"],
+    _mockAppID,
+    @"The internal utility should be sent the correct Facebook URL query parameters"
+  );
+  XCTAssertEqualObjects(
+    self.internalUtility.capturedFacebookURLQueryParameters[@"redirect_uri"],
+    redirectURL.absoluteString,
+    @"The internal utility should be sent the correct Facebook URL query parameters"
+  );
+  XCTAssertTrue(
+    self.internalUtility.capturedFacebookURLQueryParameters[@"state"].length > 0,
+    @"The internal utility should be sent the correct Facebook URL query parameters"
+  );
+
+  XCTAssertEqualObjects(
+    url,
+    facebookURL,
+    @"The referral URL should be the one produced by the internal utility"
+  );
 }
 
 - (void)testStartReferralOpensSFVC
 {
-  [self mockURLScheme];
+  // Ensure a referral URL is produced
+  self.internalUtility.stubbedAppURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedFacebookURL = [NSURL URLWithString:@"sample://facebook-url"];
 
-  TestBridgeAPIRequestOpener *testBridgeAPI = [TestBridgeAPIRequestOpener new];
-  FBSDKReferralManager.bridgeAPIRequestOpener = testBridgeAPI;
+  [self.manager startReferralWithCompletionHandler:nil];
 
-  [_manager startReferralWithCompletionHandler:nil];
-  XCTAssertEqual(testBridgeAPI.openURLWithSFVCCount, 1, "openURLWithSafariViewController should be called");
+  XCTAssertEqual(
+    self.bridgeAPIRequestOpener.openURLWithSFVCCount,
+    1,
+    "openURLWithSafariViewController should be called"
+  );
 }
 
 - (void)testReferralSuccess
 {
-  [self mockURLScheme];
+  // Ensure a referral URL is produced
+  self.internalUtility.stubbedAppURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedFacebookURL = [NSURL URLWithString:@"sample://facebook-url"];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
@@ -108,16 +268,24 @@ static NSString *const _mockChallenge = @"mockChallenge";
       NSArray<FBSDKReferralCode *> *expectedReferralCodes = @[[FBSDKReferralCode initWithString:@"abc"], [FBSDKReferralCode initWithString:@"def"]];
       XCTAssertEqualObjects(referralCodes, expectedReferralCodes);
       XCTAssertFalse(result.isCancelled);
-      [expectation fulfill];
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager startReferralWithCompletionHandler:completionHandler];
 
-  NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:_manager.expectedChallenge];
+  // Set up challenge and referral codes
+  self.manager.expectedChallenge = _mockChallenge;
+  self.internalUtility.stubbedFBURLParameters = @{
+    @"state" : _mockChallenge,
+    @"fb_referral_codes" : @"[\"abc\",\"def\"]"
+  };
+
+  NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:self.manager.expectedChallenge];
   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryString]];
 
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([self.manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -126,22 +294,25 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralCancelWithOpenURLCompletionHandler
 {
-  [self mockURLScheme];
+  // Ensure a referral URL is produced
+  self.internalUtility.stubbedAppURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedFacebookURL = [NSURL URLWithString:@"sample://facebook-url"];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-  NSError *cancelError = [[NSError alloc]initWithDomain:@"com.apple.SafariServices.Authentication" code:0 userInfo:nil];
+  NSError *cancelError = [[NSError alloc] initWithDomain:@"com.apple.SafariServices.Authentication" code:0 userInfo:nil];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
       XCTFail(@"Should not have error");
     } else {
       XCTAssertTrue(result.isCancelled);
       XCTAssertNil(result.referralCodes);
-      [expectation fulfill];
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
-  [_manager handleOpenURLComplete:NO error:cancelError];
+  [self.manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager handleOpenURLComplete:NO error:cancelError];
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -150,7 +321,9 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralCancelWithAppDelegate
 {
-  [self mockURLScheme];
+  // Ensure a referral URL is produced
+  self.internalUtility.stubbedAppURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedFacebookURL = [NSURL URLWithString:@"sample://facebook-url"];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSURL *fakeURL = [NSURL URLWithString:@"https://www.facebook.com"];
@@ -160,13 +333,14 @@ static NSString *const _mockChallenge = @"mockChallenge";
     } else {
       XCTAssertTrue(result.isCancelled);
       XCTAssertNil(result.referralCodes);
-      [expectation fulfill];
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
-  [_manager handleOpenURLComplete:YES error:nil];
-  XCTAssertFalse([_manager application:nil openURL:fakeURL sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  [self.manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager handleOpenURLComplete:YES error:nil];
+  XCTAssertFalse([self.manager application:nil openURL:fakeURL sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -175,19 +349,18 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralErrorWithInvalidURLSchemes
 {
-  [self mockURLSchemesWith:@"invalid url scheme"];
-
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager startReferralWithCompletionHandler:completionHandler];
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
@@ -195,21 +368,20 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralErrorWithOpenURLCompletionHandler
 {
-  [self mockURLScheme];
-
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSError *fakeError = [[NSError alloc]initWithDomain:FBSDKErrorDomain code:FBSDKErrorBridgeAPIInterruption userInfo:nil];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
-  [_manager handleOpenURLComplete:NO error:fakeError];
+  [self.manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager handleOpenURLComplete:NO error:fakeError];
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -218,8 +390,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralErrorWithAppDelegate
 {
-  [self mockURLScheme];
-  _manager.expectedChallenge = @"mockChallenge";
+  self.manager.expectedChallenge = @"mockChallenge";
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSString *invalidQueryString = @"?fb_referral_codes=%5B%22abc%2C%22def";
@@ -227,14 +398,15 @@ static NSString *const _mockChallenge = @"mockChallenge";
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  [self.manager startReferralWithCompletionHandler:completionHandler];
+  XCTAssertTrue([self.manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -243,8 +415,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralErrorWithBadChallenge
 {
-  [self mockURLScheme];
-  _manager.expectedChallenge = @"mockChallenge";;
+  self.manager.expectedChallenge = @"mockChallenge";;
 
   NSString *badChallenge = @"badChallenge";
   NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:badChallenge];
@@ -253,14 +424,15 @@ static NSString *const _mockChallenge = @"mockChallenge";
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  [self.manager startReferralWithCompletionHandler:completionHandler];
+  XCTAssertTrue([self.manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -269,7 +441,9 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralSuccessWithInvalidReferralCode
 {
-  [self mockURLScheme];
+  // Ensure a referral URL is produced
+  self.internalUtility.stubbedAppURL = [NSURL URLWithString:@"sample://redirect-url"];
+  self.internalUtility.stubbedFacebookURL = [NSURL URLWithString:@"sample://facebook-url"];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
@@ -280,16 +454,24 @@ static NSString *const _mockChallenge = @"mockChallenge";
       NSArray<FBSDKReferralCode *> *expectedReferralCodes = @[[FBSDKReferralCode initWithString:@"abc"]];
       XCTAssertEqualObjects(referralCodes, expectedReferralCodes, @"Only valid referral codes should be returned");
       XCTAssertFalse(result.isCancelled);
-      [expectation fulfill];
     }
+
+    [expectation fulfill];
   };
 
-  [_manager startReferralWithCompletionHandler:completionHandler];
+  [self.manager startReferralWithCompletionHandler:completionHandler];
 
-  NSString *queryStringWithInvalidCode = [@"?fb_referral_codes=%5B%22abc%22%2C%22def?%22%5D&state=" stringByAppendingString:_manager.expectedChallenge];
+  // Set up challenge and referral codes
+  self.manager.expectedChallenge = _mockChallenge;
+  self.internalUtility.stubbedFBURLParameters = @{
+    @"state" : _mockChallenge,
+    @"fb_referral_codes" : @"[\"abc\"]"
+  };
+
+  NSString *queryStringWithInvalidCode = [@"?fb_referral_codes=%5B%22abc%22%2C%22def?%22%5D&state=" stringByAppendingString:self.manager.expectedChallenge];
   NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryStringWithInvalidCode]];
 
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([self.manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);

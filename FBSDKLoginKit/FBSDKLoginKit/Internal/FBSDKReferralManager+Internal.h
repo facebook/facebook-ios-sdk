@@ -8,21 +8,29 @@
 
 #if !TARGET_OS_TV
 
-#ifdef BUCK
- #import <FBSDKLoginKit/FBSDKReferralManager.h>
-#else
- #import "FBSDKReferralManager.h"
-#endif
-
-#if FBSDK_SWIFT_PACKAGE
- #import <FBSDKCoreKit.h>
-#else
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKReferralManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKReferralManager () <FBSDKURLOpening>
+
+@property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
+@property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
+@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
+
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithBridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+                            internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(bridgeAPIRequestOpener:internalUtility:settings:errorFactory:));
+// UNCRUSTIFY_FORMAT_ON
+
+#if FBTEST
++ (void)resetClassDependencies;
+#endif
 
 @end
 
