@@ -36,11 +36,18 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   }
 }
 
-@protocol BASIC_FBSDKError
+NS_ASSUME_NONNULL_BEGIN
 
-+ (NSError *)invalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message;
+@protocol FBSDKBasicsErrorCreating
+
+- (NSError *)invalidArgumentErrorWithName:(NSString *)name
+                                    value:(nullable id)value
+                                  message:(nullable NSString *)message
+                          underlyingError:(nullable NSError *)underlyingError;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 @implementation FBSDKBasicUtility
 
@@ -52,11 +59,13 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
     if (![FBSDKTypeUtility isValidJSONObject:object]) {
       if (errorRef != NULL) {
-        Class FBSDKErrorClass = NSClassFromString(@"FBSDKError");
-        if ([FBSDKErrorClass respondsToSelector:@selector(invalidArgumentErrorWithName:value:message:)]) {
-          *errorRef = [FBSDKErrorClass invalidArgumentErrorWithName:@"object"
-                                                              value:object
-                                                            message:@"Invalid object for JSON serialization."];
+        Class FBSDKErrorFactory = NSClassFromString(@"FBSDKErrorFactory");
+        id factory = [FBSDKErrorFactory new];
+        if ([factory respondsToSelector:@selector(invalidArgumentErrorWithName:value:message:underlyingError:)]) {
+          *errorRef = [factory invalidArgumentErrorWithName:@"object"
+                                                      value:object
+                                                    message:@"Invalid object for JSON serialization."
+                                            underlyingError:nil];
         }
       }
       return nil;

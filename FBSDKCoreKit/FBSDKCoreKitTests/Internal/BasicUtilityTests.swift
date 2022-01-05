@@ -7,9 +7,38 @@
  */
 
 import FBSDKCoreKit
+import Foundation
+import TestTools
 import XCTest
 
 class BasicUtilityTests: XCTestCase {
+
+  func testInvalidObjectToJSONString() throws {
+    let invalidObject = TestErrorFactory()
+
+    XCTAssertThrowsError(
+      _ = try BasicUtility.jsonString(for: invalidObject) { object, _ in object },
+      "An error should be thrown"
+    ) { error in
+      let nsError = error as NSError
+      XCTAssertEqual(nsError.code, 2, "An invalid argument error code should be used")
+      XCTAssertEqual(
+        nsError.userInfo["com.facebook.sdk:FBSDKErrorArgumentNameKey"] as? String,
+        "object",
+        "The error name should refer to the object parameter"
+      )
+      XCTAssertIdentical(
+        nsError.userInfo["com.facebook.sdk:FBSDKErrorArgumentValueKey"] as AnyObject,
+        invalidObject,
+        "The error value should contain the object argument"
+      )
+      XCTAssertEqual(
+        nsError.userInfo["com.facebook.sdk:FBSDKErrorDeveloperMessageKey"] as? String,
+        "Invalid object for JSON serialization.",
+        "The error message should indicate that the object argument cannot be serialized to JSON"
+      )
+    }
+  }
 
   func testJSONString() throws {
     let urlString = "https://www.facebook.com"
