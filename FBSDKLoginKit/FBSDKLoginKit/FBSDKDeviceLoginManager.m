@@ -126,7 +126,12 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
       [self.delegate deviceLoginManager:self startedWithCodeInfo:self.codeInfo];
       [self _schedulePoll:self.codeInfo.pollingInterval];
     } else {
-      [self _notifyError:[FBSDKError errorWithCode:FBSDKErrorUnknown message:@"Unable to create a login request"]];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      NSError *unknownError = [errorFactory errorWithCode:FBSDKErrorUnknown
+                                                 userInfo:nil
+                                                  message:@"Unable to create a login request"
+                                          underlyingError:nil];
+      [self _notifyError:unknownError];
     }
   };
   [request startWithCompletion:completion];
@@ -194,10 +199,12 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
           return;
         }
       }
-      NSError *wrappedError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                                     code:FBSDKErrorUnknown
-                                                  message:@"Unable to fetch permissions for token"
-                                          underlyingError:error];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      NSError *wrappedError = [errorFactory errorWithDomain:FBSDKLoginErrorDomain
+                                                       code:FBSDKErrorUnknown
+                                                   userInfo:nil
+                                                    message:@"Unable to fetch permissions for token"
+                                            underlyingError:error];
       [self _notifyError:wrappedError];
     };
     [request startWithCompletion:completion];
@@ -264,9 +271,12 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                            if (tokenString) {
                              [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
                            } else {
-                             NSError *unknownError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                                                            code:FBSDKErrorUnknown
-                                                                         message:@"Device Login poll failed. No token nor error was found."];
+                             id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+                             NSError *unknownError = [errorFactory errorWithDomain:FBSDKLoginErrorDomain
+                                                                              code:FBSDKErrorUnknown
+                                                                          userInfo:nil
+                                                                           message:@"Device Login poll failed. No token nor error was found."
+                                                                   underlyingError:nil];
                              [self _notifyError:unknownError];
                            }
                          }

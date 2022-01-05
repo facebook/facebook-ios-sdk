@@ -72,7 +72,11 @@ static NSDateFormatter *_dateFormatter;
       // Currently OIDC is not supported for app switching. We
       // will treat the login attempt as invalid if an ID token
       // if returned together with nonce.
-      _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Invalid server response. Please try to login again"];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      _parameters.error = [errorFactory errorWithCode:FBSDKLoginErrorUnknown
+                                             userInfo:nil
+                                              message:@"Invalid server response. Please try to login again"
+                                      underlyingError:nil];
     }
   }
   return self;
@@ -94,7 +98,11 @@ static NSDateFormatter *_dateFormatter;
   } else if (_parameters.authenticationTokenString && !nonce) {
     // If there is no nonce then somehow an auth token string was provided
     // but the call did not originate from the sdk. This is not a valid state
-    _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Please try to login again"];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    _parameters.error = [errorFactory errorWithCode:FBSDKLoginErrorUnknown
+                                           userInfo:nil
+                                            message:@"Please try to login again"
+                                    underlyingError:nil];
     handler(_parameters);
   } else if (_parameters.authenticationTokenString && nonce) {
     [self fetchAndSetPropertiesForParameters:_parameters
@@ -117,7 +125,11 @@ static NSDateFormatter *_dateFormatter;
         parameters.profile = [FBSDKLoginURLCompleter profileWithClaims:token.claims];
       }
     } else {
-      parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      parameters.error = [errorFactory errorWithCode:FBSDKLoginErrorInvalidIDToken
+                                            userInfo:nil
+                                             message:@"Invalid ID token from login response."
+                                     underlyingError:nil];
     }
     handler(parameters);
   };
@@ -191,7 +203,11 @@ static NSDateFormatter *_dateFormatter;
   NSString *appID = _parameters.appID ?: @"";
 
   if (nonce.length == 0 || appID.length == 0) {
-    _parameters.error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Missing required parameters to exchange nonce for access token."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    _parameters.error = [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                                           userInfo:nil
+                                            message:@"Missing required parameters to exchange nonce for access token."
+                                    underlyingError:nil];
     handler(_parameters);
     return;
   }

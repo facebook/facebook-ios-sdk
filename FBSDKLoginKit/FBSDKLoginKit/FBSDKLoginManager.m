@@ -101,7 +101,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     NSString *failureMessage = @"Cannot login without a valid login configuration. Please make sure the `LoginConfiguration` provided is non-nil";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:failureMessage];
-    NSError *error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:failureMessage];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    NSError *error = [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                                        userInfo:nil
+                                         message:failureMessage
+                                 underlyingError:nil];
 
     _handler = [completion copy];
     [self invokeHandler:nil error:error];
@@ -135,9 +139,12 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
   if (![self.accessTokenWallet currentAccessToken]) {
     NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
-    NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                            code:FBSDKLoginErrorMissingAccessToken
-                                         message:errorMessage];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    NSError *error = [errorFactory errorWithDomain:FBSDKLoginErrorDomain
+                                              code:FBSDKLoginErrorMissingAccessToken
+                                          userInfo:nil
+                                           message:errorMessage
+                                   underlyingError:nil];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:errorMessage];
     handler(nil, error);
     return;
@@ -336,7 +343,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   // internally without specifying a cofiguration.
   if (!configuration) {
     NSString *failureMessage = @"Unable to perform login.";
-    NSError *error = [FBSDKError errorWithCode:FBSDKErrorUnknown message:failureMessage];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    NSError *error = [errorFactory errorWithCode:FBSDKErrorUnknown
+                                        userInfo:nil
+                                         message:failureMessage
+                                 underlyingError:nil];
     [self invokeHandler:nil error:error];
     return nil;
   }
@@ -434,7 +445,14 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       return fbLoginData;
     }
   }
-  error = error ?: [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Failed to parse deep link url for login data"];
+  if (!error) {
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    error = [errorFactory errorWithCode:FBSDKLoginErrorUnknown
+                               userInfo:nil
+                                message:@"Failed to parse deep link url for login data"
+                        underlyingError:nil];
+  }
+
   [self invokeHandler:nil error:error];
   return nil;
 }
@@ -554,7 +572,13 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       [self.urlOpener openURL:authURL sender:self handler:handlerWrapper];
     }
   } else {
-    error = error ?: [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Failed to construct oauth browser url"];
+    if (!error) {
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      error = [errorFactory errorWithCode:FBSDKLoginErrorUnknown
+                                 userInfo:nil
+                                  message:@"Failed to construct oauth browser url"
+                          underlyingError:nil];
+    }
     if (handler) {
       handler(NO, error);
     }
