@@ -29,7 +29,7 @@
 
 // MARK: - Class Dependencies
 
-static _Nullable id<FBSDKErrorReporting> _errorReporter;
+static _Nullable id <FBSDKErrorReporting> _errorReporter;
 
 + (nullable id<FBSDKErrorReporting>)errorReporter
 {
