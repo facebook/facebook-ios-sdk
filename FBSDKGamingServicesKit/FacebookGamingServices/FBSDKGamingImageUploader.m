@@ -90,13 +90,16 @@
                           completion:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+
   if (FBSDKAccessToken.currentAccessToken == nil) {
     completionHandler(
       false,
       nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorAccessTokenRequired
-       message:@"A valid access token is required to upload Images"]
+      [errorFactory errorWithCode:FBSDKErrorAccessTokenRequired
+                         userInfo:nil
+                          message:@"A valid access token is required to upload Images"
+                  underlyingError:nil]
     );
 
     return;
@@ -106,9 +109,10 @@
     completionHandler(
       false,
       nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorInvalidArgument
-       message:@"Attempting to upload a nil image"]
+      [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                         userInfo:nil
+                          message:@"Attempting to upload a nil image"
+                  underlyingError:nil]
     );
 
     return;
@@ -141,10 +145,10 @@
        completionHandler(
          false,
          nil,
-         [FBSDKError
-          errorWithCode:FBSDKErrorGraphRequestGraphAPI
-          message:@"Image upload failed"
-          underlyingError:error]
+         [errorFactory errorWithCode:FBSDKErrorGraphRequestGraphAPI
+                            userInfo:nil
+                             message:@"Image upload failed"
+                     underlyingError:error]
        );
        return;
      }

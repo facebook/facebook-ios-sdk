@@ -37,9 +37,11 @@
   if (!hasContextToken) {
     if (errorRef != NULL) {
       NSString *message = @"The contextToken is required.";
-      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKErrorDomain
-                                                         name:@"contextToken"
-                                                      message:message];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory requiredArgumentErrorWithDomain:FBSDKErrorDomain
+                                                           name:@"contextToken"
+                                                        message:message
+                                                underlyingError:nil];
     }
     return NO;
   }

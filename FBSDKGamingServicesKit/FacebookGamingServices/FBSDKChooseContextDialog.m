@@ -69,10 +69,11 @@
    sender:weakSelf
    handler:^(BOOL success, NSError *_Nullable bridgeError) {
      if (!success && bridgeError) {
-       NSError *sdkError = [FBSDKError
-                            errorWithCode:FBSDKErrorBridgeAPIInterruption
-                            message:@"Error occured while interacting with Gaming Services, Failed to open bridge."
-                            underlyingError:bridgeError];
+       id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+       NSError *sdkError = [errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                              userInfo:nil
+                                               message:@"Error occured while interacting with Gaming Services, Failed to open bridge."
+                                       underlyingError:bridgeError];
        [weakSelf _handleDialogError:sdkError];
      }
    }];
@@ -81,18 +82,24 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+
   if (!FBSDKSettings.sharedSettings.appID) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError errorWithCode:FBSDKErrorUnknown message:@"App ID is not set in settings"];
+      *errorRef = [errorFactory errorWithCode:FBSDKErrorUnknown
+                                     userInfo:nil
+                                      message:@"App ID is not set in settings"
+                              underlyingError:nil];
     }
     return NO;
   }
   if (![self.dialogContent respondsToSelector:@selector(validateWithError:)]) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
-                                                        name:@"content"
-                                                       value:self.dialogContent
-                                                     message:nil];
+      *errorRef = [errorFactory invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                                          name:@"content"
+                                                         value:self.dialogContent
+                                                       message:nil
+                                               underlyingError:nil];
     }
 
     return NO;
@@ -155,7 +162,8 @@
       contextSize = [queryItem.value integerValue];
     }
     if ([queryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_ERROR_MESSAGE_KEY] && errorRef != nil) {
-      *errorRef = [FBSDKError unknownErrorWithMessage:queryItem.value];
+      id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+      *errorRef = [errorFactory unknownErrorWithMessage:queryItem.value userInfo:nil];
     }
   }
 

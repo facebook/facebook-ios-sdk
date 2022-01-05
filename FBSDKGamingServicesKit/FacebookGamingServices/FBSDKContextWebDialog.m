@@ -47,8 +47,11 @@
     return;
   }
 
-  NSError *error = [FBSDKError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
-                                     message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]];
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+  NSError *error = [errorFactory errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
+                                      userInfo:nil
+                                       message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]
+                               underlyingError:nil];
   [self _handleCompletionWithDialogResults:results error:error];
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }

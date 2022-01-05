@@ -52,9 +52,11 @@ open class FBSDKContextDialogPresenter: NSObject {
       )
       return nil
     } catch {
-      return SDKError.error(
-        withCode: CoreError.errorAccessTokenRequired.rawValue,
-        message: "A valid access token is required to launch the Dialog"
+      return ErrorFactory().error(
+        code: CoreError.errorAccessTokenRequired.rawValue,
+        userInfo: nil,
+        message: "A valid access token is required to launch the Dialog",
+        underlyingError: nil
       ) as NSError
     }
   }
@@ -109,9 +111,11 @@ open class FBSDKContextDialogPresenter: NSObject {
       )
       return nil
     } catch {
-      return SDKError.error(
-        withCode: CoreError.errorAccessTokenRequired.rawValue,
-        message: "A valid access token is required to launch the Dialog"
+      return ErrorFactory().error(
+        code: CoreError.errorAccessTokenRequired.rawValue,
+        userInfo: nil,
+        message: "A valid access token is required to launch the Dialog",
+        underlyingError: nil
       ) as NSError
     }
   }

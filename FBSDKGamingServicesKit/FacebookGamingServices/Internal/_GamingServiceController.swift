@@ -50,8 +50,9 @@ public class _GamingServiceController: NSObject {
     completionHandler?(
       false,
       nil,
-      SDKError.error(
-        withCode: CoreError.errorBridgeAPIInterruption.rawValue,
+      ErrorFactory().error(
+        code: CoreError.errorBridgeAPIInterruption.rawValue,
+        userInfo: nil,
         message: "\(error != nil ? "Error" : "An unknown error") occured while interacting with Gaming Services",
         underlyingError: error
       )

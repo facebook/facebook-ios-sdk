@@ -32,9 +32,11 @@ public class FriendFinderDialog: NSObject {
 
   func launch(completionHandler: @escaping GamingServiceCompletionHandler) {
     guard let appID = Settings.shared.appID ?? AccessToken.current?.appID else {
-      let error = SDKError.error(
-        withCode: CoreError.errorAccessTokenRequired.rawValue,
-        message: "A valid access token is required to launch the Friend Finder"
+      let error = ErrorFactory().error(
+        code: CoreError.errorAccessTokenRequired.rawValue,
+        userInfo: nil,
+        message: "A valid access token is required to launch the Friend Finder",
+        underlyingError: nil
       )
       completionHandler(false, error)
       return

@@ -32,7 +32,6 @@ class ErrorReporterTests: XCTestCase {
 
     TestLogger.reset()
     TestFileDataExtractor.reset()
-    SDKError.reset()
     TestFileDataExtractor.reset()
 
     factory = TestGraphRequestFactory()

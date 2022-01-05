@@ -116,10 +116,11 @@ public class CustomUpdateGraphRequest {
       with: encodedContent,
       options: .allowFragments
     ) as? [String: Any] else {
-      throw SDKError.invalidArgumentError(
-        withName: "CustomUpdateContent",
+      throw ErrorFactory().invalidArgumentError(
+        name: "CustomUpdateContent",
         value: content,
-        message: "Custom Update Content is invalid please check parameters."
+        message: "Custom Update Content is invalid please check parameters.",
+        underlyingError: nil
       )
     }
 

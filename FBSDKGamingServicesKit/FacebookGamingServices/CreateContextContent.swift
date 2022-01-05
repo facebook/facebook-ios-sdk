@@ -42,11 +42,10 @@ public class CreateContextContent: NSObject, ValidatableProtocol {
   public func validate() throws {
     let hasPlayerID = !playerID.isEmpty
     guard hasPlayerID else {
-      let message = "The playerID is required."
-      throw SDKError.requiredArgumentError(
-        withDomain: ErrorDomain,
+      throw ErrorFactory().requiredArgumentError(
         name: "playerID",
-        message: message
+        message: "The playerID is required.",
+        underlyingError: nil
       )
     }
   }

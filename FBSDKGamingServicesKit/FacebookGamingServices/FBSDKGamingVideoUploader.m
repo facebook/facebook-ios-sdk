@@ -104,13 +104,16 @@
                           completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+
   if (FBSDKAccessToken.currentAccessToken == nil) {
     completion(
       false,
       nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorAccessTokenRequired
-       message:@"A valid access token is required to upload Images"]
+      [errorFactory errorWithCode:FBSDKErrorAccessTokenRequired
+                         userInfo:nil
+                          message:@"A valid access token is required to upload Images"
+                  underlyingError:nil]
     );
 
     return;
@@ -120,9 +123,10 @@
     completion(
       false,
       nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorInvalidArgument
-       message:@"Attempting to upload a nil videoURL"]
+      [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                         userInfo:nil
+                          message:@"Attempting to upload a nil videoURL"
+                  underlyingError:nil]
     );
 
     return;
@@ -136,9 +140,10 @@
     completion(
       false,
       nil,
-      [FBSDKError
-       errorWithCode:FBSDKErrorInvalidArgument
-       message:@"Attempting to upload an empty video file"]
+      [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                         userInfo:nil
+                          message:@"Attempting to upload an empty video file"
+                  underlyingError:nil]
     );
 
     return;
@@ -172,10 +177,11 @@
   NSError *finalError = error;
 
   if (success == false && error == nil) {
-    finalError =
-    [FBSDKError
-     errorWithCode:FBSDKErrorUnknown
-     message:@"Video upload was unsuccessful, but no error was thrown."];
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    finalError = [errorFactory errorWithCode:FBSDKErrorUnknown
+                                    userInfo:nil
+                                     message:@"Video upload was unsuccessful, but no error was thrown."
+                             underlyingError:nil];
   }
 
   if (_completionHandler != nil) {

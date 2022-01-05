@@ -8,6 +8,7 @@
 
 #if !os(tvOS)
 
+import FBSDKCoreKit
 import Foundation
 
 /**
@@ -85,11 +86,11 @@ public class CreateContextDialog: ContextWebDialog {
       throw GamingServicesDialogError.missingContent
     }
     guard content.responds(to: #selector(validate)) else {
-      throw SDKError.invalidArgumentError(
-        withDomain: ErrorDomain,
+      throw ErrorFactory().invalidArgumentError(
         name: "content",
         value: dialogContent,
-        message: nil
+        message: nil,
+        underlyingError: nil
       )
     }
 
