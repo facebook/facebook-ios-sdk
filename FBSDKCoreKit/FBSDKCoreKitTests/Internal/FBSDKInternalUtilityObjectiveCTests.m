@@ -10,6 +10,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKInternalUtility+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKInternalUtilityObjectiveCTests : XCTestCase
@@ -25,6 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
   [super setUp];
 
   self.internalUtility = [FBSDKInternalUtility new];
+  [self.internalUtility configureWithInfoDictionaryProvider:[TestBundle new]
+                                              loggerFactory:[TestLoggerFactory new]
+                                                   settings:[TestSettings new]
+                                               errorFactory:[TestErrorFactory new]];
 }
 
 - (void)tearDown
@@ -44,20 +51,16 @@ NS_ASSUME_NONNULL_BEGIN
                       queryParameters:@{@"a date" : (NSString *) NSDate.date}
                                 error:&error];
 
-  XCTAssertEqualObjects(
-    error.domain,
-    @"com.facebook.sdk.core",
-    "Creating a url with an error reference should repopulate the error domain correctly"
-  );
+  TestSDKError *testError = (TestSDKError *)error;
   XCTAssertEqual(
-    error.code,
-    3,
-    "Creating a url with an error reference should repopulate the error code correctly"
+    testError.type,
+    TestSDKErrorTypeUnknown,
+    @"Creating a url with an error reference should repopulate the error message correctly"
   );
   XCTAssertEqualObjects(
-    [error.userInfo objectForKey:FBSDKErrorDeveloperMessageKey],
+    testError.message,
     @"Unknown error building URL.",
-    "Creating a url with an error reference should repopulate the error message correctly"
+    @"Creating a url with an error reference should repopulate the error with the appropriate type"
   );
 }
 

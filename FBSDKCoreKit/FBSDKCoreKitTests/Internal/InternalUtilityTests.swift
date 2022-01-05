@@ -29,6 +29,7 @@ class InternalUtilityTests: XCTestCase {
   var loggerFactory: TestLoggerFactory!
   var logger: TestLogger!
   var settings: TestSettings!
+  var errorFactory: TestErrorFactory!
   // swiftlint:enable implicitly_unwrapped_optional force_unwrapping
 
   override func setUp() {
@@ -41,6 +42,7 @@ class InternalUtilityTests: XCTestCase {
     logger = TestLogger(loggingBehavior: .developerErrors)
     loggerFactory.logger = logger
     settings = TestSettings()
+    errorFactory = TestErrorFactory()
 
     internalUtility = InternalUtility()
     internalUtility.deleteFacebookCookies()
@@ -54,6 +56,7 @@ class InternalUtilityTests: XCTestCase {
     loggerFactory = nil
     logger = nil
     settings = nil
+    errorFactory = nil
     internalUtility = nil
 
     super.tearDown()
@@ -63,7 +66,8 @@ class InternalUtilityTests: XCTestCase {
     internalUtility.configure(
       withInfoDictionaryProvider: bundle,
       loggerFactory: loggerFactory,
-      settings: settings
+      settings: settings,
+      errorFactory: errorFactory
     )
   }
 
@@ -82,6 +86,10 @@ class InternalUtilityTests: XCTestCase {
       internalUtility.settings,
       "Should not have settings by default"
     )
+    XCTAssertNil(
+      internalUtility.errorFactory,
+      "Should not have an error factory by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -96,6 +104,11 @@ class InternalUtilityTests: XCTestCase {
     XCTAssertTrue(
       internalUtility.settings === settings,
       "The shared instance should use the provided settings"
+    )
+    XCTAssertIdentical(
+      internalUtility.errorFactory,
+      errorFactory,
+      "The shared instance should use the provided error factory"
     )
   }
 

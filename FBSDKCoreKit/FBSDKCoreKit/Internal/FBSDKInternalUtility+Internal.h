@@ -49,7 +49,8 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                               loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
-                                   settings:(id<FBSDKSettings>)settings;
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 /**
   Constructs a Facebook URL.

@@ -243,7 +243,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
   [FBSDKInternalUtility.sharedUtility configureWithInfoDictionaryProvider:self.components.infoDictionaryProvider
                                                             loggerFactory:self.components.loggerFactory
-                                                                 settings:self.components.settings];
+                                                                 settings:self.components.settings
+                                                             errorFactory:self.components.errorFactory];
 }
 
 - (void)configureSDKError

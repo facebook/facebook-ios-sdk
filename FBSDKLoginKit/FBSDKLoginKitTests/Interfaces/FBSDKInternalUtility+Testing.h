@@ -18,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                               loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
-                                   settings:(id<FBSDKSettings>)settings;
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 + (void)reset;
 

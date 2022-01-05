@@ -829,6 +829,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       InternalUtility.shared.settings,
       "InternalUtility should not have settings by default"
     )
+    XCTAssertNil(
+      InternalUtility.shared.errorFactory,
+      "InternalUtility should not have an error factory by default"
+    )
 
     configurator.performConfiguration()
 
@@ -843,6 +847,11 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       InternalUtility.shared.settings === components.settings,
       "InternalUtility should be configured with the settings"
+    )
+    XCTAssertIdentical(
+      InternalUtility.shared.errorFactory,
+      components.errorFactory,
+      "InternalUtility should be configured with the error factory"
     )
   }
 

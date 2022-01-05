@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 @property (nonatomic) BOOL isConfigured;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 @end
 
@@ -72,11 +73,13 @@ static FBSDKInternalUtility *_shared;
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
                               loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
-                                   settings:(id<FBSDKSettings>)settings;
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 {
   self.infoDictionaryProvider = infoDictionaryProvider;
   self.loggerFactory = loggerFactory;
   self.settings = settings;
+  self.errorFactory = errorFactory;
   self.isConfigured = YES;
 }
 
@@ -311,11 +314,10 @@ static FBSDKInternalUtility *_shared;
     }
     if (!queryString) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
-                                                          name:@"queryParameters"
-                                                         value:queryParameters
-                                                       message:nil
-                                               underlyingError:queryStringError];
+        *errorRef = [self.errorFactory invalidArgumentErrorWithName:@"queryParameters"
+                                                              value:queryParameters
+                                                            message:nil
+                                                    underlyingError:queryStringError];
       }
       return nil;
     }
@@ -331,7 +333,8 @@ static FBSDKInternalUtility *_shared;
     if (URL) {
       *errorRef = nil;
     } else {
-      *errorRef = [FBSDKError unknownErrorWithMessage:@"Unknown error building URL."];
+      *errorRef = [self.errorFactory unknownErrorWithMessage:@"Unknown error building URL."
+                                                    userInfo:nil];
     }
   }
   return URL;
@@ -699,6 +702,7 @@ static NSMapTable *_transientObjects;
   self.sharedUtility.infoDictionaryProvider = nil;
   self.sharedUtility.loggerFactory = nil;
   self.sharedUtility.settings = nil;
+  self.sharedUtility.errorFactory = nil;
   self.sharedUtility.isConfigured = NO;
 }
 

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 @property (nonatomic) BOOL isConfigured;
 
 + (void)reset;
