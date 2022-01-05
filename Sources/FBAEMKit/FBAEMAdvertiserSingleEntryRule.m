@@ -131,11 +131,11 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   BOOL isMatched = NO;
   switch (_operator) {
     case FBAEMAdvertiserRuleOperatorContains:
-      isMatched = stringValue && [stringValue containsString:_linguisticCondition]; break;
+      isMatched = stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorNotContains:
-      isMatched = !(stringValue && [stringValue containsString:_linguisticCondition]); break;
+      isMatched = !(stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]); break;
     case FBAEMAdvertiserRuleOperatorStartsWith:
-      isMatched = stringValue && [stringValue hasPrefix:_linguisticCondition]; break;
+      isMatched = stringValue && [stringValue.lowercaseString hasPrefix:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorI_Contains:
       isMatched = stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorI_NotContains:
@@ -145,9 +145,9 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     case FBAEMAdvertiserRuleOperatorRegexMatch:
       isMatched = stringValue && [self isRegexMatch:stringValue]; break;
     case FBAEMAdvertiserRuleOperatorEqual:
-      isMatched = stringValue && [stringValue isEqualToString:_linguisticCondition]; break;
+      isMatched = stringValue && [stringValue.lowercaseString isEqualToString:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorNotEqual:
-      isMatched = !(stringValue && [stringValue isEqualToString:_linguisticCondition]); break;
+      isMatched = !(stringValue && [stringValue.lowercaseString isEqualToString:_linguisticCondition.lowercaseString]); break;
     case FBAEMAdvertiserRuleOperatorI_IsAny:
       isMatched = stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:YES]; break;
     case FBAEMAdvertiserRuleOperatorI_IsNotAny:

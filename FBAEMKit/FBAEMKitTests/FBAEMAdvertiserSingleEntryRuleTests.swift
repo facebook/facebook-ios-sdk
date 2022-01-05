@@ -33,6 +33,10 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(["fb_content": ["title": "helloworld"]]),
       "Should expect the event parameter matched with the rule"
     )
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(["fb_content": ["title": "HelloWorld"]]),
+      "Should expect the event parameter matched with the rule"
+    )
     XCTAssertFalse(
       rule.isMatchedEventParameters(["fb_content": ["tt": "helloworld"]]),
       "Should not expect the event parameter matched with the rule"
@@ -187,6 +191,10 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
       rule.isMatched(withStringValue: "worldhelloworld", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
     )
+    XCTAssertFalse(
+      rule.isMatched(withStringValue: "WorldHelloWorld", numericalValue: nil),
+      "Shoule not expect parameter matched with the value"
+    )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldhellworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -195,6 +203,10 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
     rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "helloworld", numericalValue: nil),
+      "Shoule expect parameter matched with the value"
+    )
+    XCTAssertTrue(
+      rule.isMatched(withStringValue: "HelloWorld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
     )
     XCTAssertFalse(
@@ -237,6 +249,10 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
       "Shoule expect parameter matched with the value"
     )
+    XCTAssertTrue(
+      rule.isMatched(withStringValue: "Hello", numericalValue: nil),
+      "Shoule expect parameter matched with the value"
+    )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "hellw", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
@@ -245,6 +261,10 @@ class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
     rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotEqual)
     XCTAssertFalse(
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
+      "Shoule not expect parameter matched with the value"
+    )
+    XCTAssertFalse(
+      rule.isMatched(withStringValue: "Hello", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
     )
     XCTAssertTrue(
