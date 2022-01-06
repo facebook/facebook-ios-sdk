@@ -19,7 +19,6 @@
 
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"

@@ -15,7 +15,6 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKCoreKitVersions.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
 

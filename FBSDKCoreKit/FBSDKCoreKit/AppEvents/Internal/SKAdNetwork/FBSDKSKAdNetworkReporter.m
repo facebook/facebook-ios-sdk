@@ -17,7 +17,6 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKConversionValueUpdating.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"

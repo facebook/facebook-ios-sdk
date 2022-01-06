@@ -16,7 +16,6 @@
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKDataPersisting.h"
 #import "FBSDKEventProcessing.h"
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKGateKeeperManaging.h"

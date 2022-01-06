@@ -75,7 +75,6 @@
 #import "NSNotificationCenter+Extensions.h"
 #import "NSProcessInfo+Protocols.h"
 #import "NSURLSession+Protocols.h"
-#import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
  #import "FBSDKAEMNetworker.h"

@@ -8,8 +8,9 @@
 
 #import "FBSDKATEPublisherFactory.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKAppEventsATEPublisher.h"
-#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

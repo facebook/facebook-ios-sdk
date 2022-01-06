@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCrashHandler.h>
 #import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
+#import <FBSDKCoreKit_Basics/FBSDKDataPersisting.h>
 #import <FBSDKCoreKit_Basics/FBSDKFileDataExtracting.h>
 #import <FBSDKCoreKit_Basics/FBSDKFileManaging.h>
 #import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
@@ -22,3 +23,4 @@
 #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
 #import <FBSDKCoreKit_Basics/NSBundle+InfoDictionaryProviding.h>
+#import <FBSDKCoreKit_Basics/NSUserDefaults+FBSDKDataPersisting.h>

@@ -12,10 +12,10 @@
 
 #import <FBAEMKit/FBAEMKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsReporter.h"
 #import "FBSDKConversionValueUpdating.h"
-#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

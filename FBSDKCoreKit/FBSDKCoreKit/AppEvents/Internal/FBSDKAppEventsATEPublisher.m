@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"

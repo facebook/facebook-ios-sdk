@@ -38,7 +38,6 @@
 #import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexing.h"
 #import "FBSDKConstants.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"

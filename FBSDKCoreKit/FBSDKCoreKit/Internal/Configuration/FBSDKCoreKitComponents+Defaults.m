@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBAEMKit/FBAEMKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAEMNetworker.h"
 #import "FBSDKATEPublisherFactory.h"
@@ -57,7 +58,6 @@
 #import "NSNotificationCenter+Extensions.h"
 #import "NSProcessInfo+Protocols.h"
 #import "NSURLSession+Protocols.h"
-#import "NSUserDefaults+FBSDKDataPersisting.h"
 #import "UIApplication+URLOpener.h"
 
 @implementation FBSDKCoreKitComponents (DefaultCoreKitComponents)

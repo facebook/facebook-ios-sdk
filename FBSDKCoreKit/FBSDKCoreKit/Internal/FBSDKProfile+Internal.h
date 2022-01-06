@@ -10,8 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
-
-#import "FBSDKDataPersisting.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #if FBSDK_SWIFT_PACKAGE
  #import "FBSDKGraphRequest.h"

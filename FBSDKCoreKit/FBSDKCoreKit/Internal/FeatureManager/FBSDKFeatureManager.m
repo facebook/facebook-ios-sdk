@@ -8,7 +8,8 @@
 
 #import "FBSDKFeatureManager.h"
 
-#import "FBSDKDataPersisting.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKSettingsProtocol.h"

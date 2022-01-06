@@ -37,7 +37,6 @@
 #import "FBSDKApplicationStateSetting.h"
 #import "FBSDKBackgroundEventLogging.h"
 #import "FBSDKCodelessIndexing.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKDialogConfigurationMapBuilding.h"
 #import "FBSDKErrorConfigurationProviding.h"

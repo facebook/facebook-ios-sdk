@@ -10,12 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 // TODO: Can these all be forward decls?
 
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKCodelessIndexing.h"
-#import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKServerConfigurationProviding.h"
