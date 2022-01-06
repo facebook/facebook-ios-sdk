@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.0...HEAD)
+
+## 12.3.0
+
 ### Added
 
 - Added network error checking protocol (`NetworkErrorChecking`) and concrete implementation (`NetworkErrorChecker`)
@@ -23,7 +27,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - `SDKError` has been deprecated in favor of the new `ErrorFactory` and `NetworkErrorChecker` types
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...HEAD)
+[2022-01-06](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...v12.3.0)
 
 ## 12.2.1
 
