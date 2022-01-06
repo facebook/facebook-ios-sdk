@@ -234,7 +234,7 @@ static id<FBSDKErrorCreating> g_errorFactory;
     self.expirationDate.hash,
     self.dataAccessExpirationDate.hash,
   };
-  #pragma clange diagnostic pop
+  #pragma clang diagnostic pop
 
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -264,7 +264,7 @@ static id<FBSDKErrorCreating> g_errorFactory;
     && [FBSDKInternalUtility.sharedUtility object:self.refreshDate isEqualToObject:token.refreshDate]
     && [FBSDKInternalUtility.sharedUtility object:self.expirationDate isEqualToObject:token.expirationDate]
     && [FBSDKInternalUtility.sharedUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]);
-  #pragma clange diagnostic pop
+  #pragma clang diagnostic pop
 }
 
 #pragma mark - NSCopying

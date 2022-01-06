@@ -480,4 +480,4 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 @end
 
-#pragma clange diagnostic pop
+#pragma clang diagnostic pop

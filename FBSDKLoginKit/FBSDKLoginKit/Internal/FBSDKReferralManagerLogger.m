@@ -108,7 +108,7 @@ static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
   [self logEvent:FBSDKAppEventNameFBReferralEnd params:params];
 }
 
-#pragma clange diagnostic pop
+#pragma clang diagnostic pop
 
 - (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
