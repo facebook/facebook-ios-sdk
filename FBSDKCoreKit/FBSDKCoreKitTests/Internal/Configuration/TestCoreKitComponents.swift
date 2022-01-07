@@ -45,7 +45,7 @@ enum TestCoreKitComponents {
     notificationCenter: NotificationObserving & NotificationPosting = TestNotificationCenter(),
     operatingSystemVersionComparer: OperatingSystemVersionComparing = TestProcessInfo(),
     paymentObserver: PaymentObserving = TestPaymentObserver(),
-    piggybackManager: GraphRequestPiggybackManaging.Type = TestGraphRequestPiggybackManager.self,
+    piggybackManager: GraphRequestPiggybackManaging = TestGraphRequestPiggybackManager(),
     restrictiveDataFilterManager: AppEventsParameterProcessing & EventsProcessing = TestAppEventsParameterProcessor(),
     serverConfigurationProvider: ServerConfigurationProviding = TestServerConfigurationProvider(),
     settings: SettingsLogging & SettingsProtocol = TestSettings(),

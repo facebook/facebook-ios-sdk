@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
                         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                          piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+                          piggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
               restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                   settings:(id<FBSDKSettings, FBSDKSettingsLogging>)settings

@@ -19,12 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKAccessToken (Internal)
 
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (class, nullable, nonatomic) Class<FBSDKGraphRequestPiggybackManaging> graphRequestPiggybackManager;
+@property (class, nullable, nonatomic) id<FBSDKGraphRequestPiggybackManaging> graphRequestPiggybackManager;
 @property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 
 + (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-   graphRequestPiggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
+   graphRequestPiggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
                    errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 + (void)resetTokenCache;

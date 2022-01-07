@@ -244,7 +244,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 + (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
                  errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                           piggybackManager:(nonnull Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+                           piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
                                    settings:(nonnull id<FBSDKSettings>)settings
               graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
                                 eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger

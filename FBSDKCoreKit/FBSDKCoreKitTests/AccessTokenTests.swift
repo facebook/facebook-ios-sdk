@@ -15,19 +15,18 @@ class AccessTokenTests: XCTestCase {
   var tokenCache: TestTokenCache!
   var connection: TestGraphRequestConnection!
   var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
-  var graphRequestPiggybackManager: TestGraphRequestPiggybackManager.Type!
+  var graphRequestPiggybackManager: TestGraphRequestPiggybackManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     AccessToken.resetClassDependencies()
-    TestGraphRequestPiggybackManager.reset()
 
     tokenCache = TestTokenCache()
     connection = TestGraphRequestConnection()
     graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
-    graphRequestPiggybackManager = TestGraphRequestPiggybackManager.self
+    graphRequestPiggybackManager = TestGraphRequestPiggybackManager()
 
     AccessToken.configure(
       withTokenCache: tokenCache,
@@ -42,7 +41,6 @@ class AccessTokenTests: XCTestCase {
 
     AccessToken.current = nil
     AccessToken.resetClassDependencies()
-    TestGraphRequestPiggybackManager.reset()
   }
 
   func testDefaultClassDependencies() {
@@ -125,7 +123,7 @@ class AccessTokenTests: XCTestCase {
     XCTAssertEqual(connection.startCallCount, 1, "Should start one connection for refreshing")
 
     XCTAssertTrue(
-      TestGraphRequestPiggybackManager.addRefreshPiggybackWasCalled,
+      graphRequestPiggybackManager.addRefreshPiggybackWasCalled,
       "Refreshing an access token should add a refresh piggyback"
     )
   }

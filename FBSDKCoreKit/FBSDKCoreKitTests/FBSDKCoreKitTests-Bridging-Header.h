@@ -127,7 +127,7 @@
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKGraphRequestPiggybackManager+Internal.h"
+#import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKImpressionLoggerFactory.h"

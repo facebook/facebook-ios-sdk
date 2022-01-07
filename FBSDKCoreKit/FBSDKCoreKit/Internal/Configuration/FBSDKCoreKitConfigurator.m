@@ -28,7 +28,6 @@
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
-#import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKImpressionLoggingButton+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -73,7 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureGatekeeperManager];
   [self configureGraphRequest];
   [self configureGraphRequestConnection];
-  [self configureGraphRequestPiggybackManager];
   [self configureImpressionLoggingButton];
   [self configureInstrumentManager];
   [self configureInternalUtility];
@@ -215,14 +213,6 @@ NS_ASSUME_NONNULL_BEGIN
                                                       errorFactory:self.components.errorFactory
                                        authenticationTokenProvider:self.components.authenticationTokenWallet];
   [FBSDKGraphRequestConnection setCanMakeRequests];
-}
-
-- (void)configureGraphRequestPiggybackManager
-{
-  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:self.components.accessTokenWallet
-                                                     settings:self.components.settings
-                                  serverConfigurationProvider:self.components.serverConfigurationProvider
-                                          graphRequestFactory:self.components.graphRequestFactory];
 }
 
 - (void)configureImpressionLoggingButton

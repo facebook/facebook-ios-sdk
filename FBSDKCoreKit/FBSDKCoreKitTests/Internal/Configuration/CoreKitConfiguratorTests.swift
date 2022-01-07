@@ -50,7 +50,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
     GraphRequestConnection.resetCanMakeRequests()
-    GraphRequestPiggybackManager.reset()
     ImpressionLoggingButton.resetClassDependencies()
     InstrumentManager.reset()
     InternalUtility.reset()
@@ -715,44 +714,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       GraphRequestConnection.canMakeRequests,
       "GraphRequestConnection should be configured to be able to make requests"
-    )
-  }
-
-  func testConfiguringGraphRequestPiggybackManager() {
-    XCTAssertNil(
-      GraphRequestPiggybackManager.tokenWallet,
-      "GraphRequestPiggybackManager should not have an access token wallet by default"
-    )
-    XCTAssertNil(
-      GraphRequestPiggybackManager.settings,
-      "GraphRequestPiggybackManager should not have a settings by default"
-    )
-    XCTAssertNil(
-      GraphRequestPiggybackManager.serverConfigurationProvider,
-      "GraphRequestPiggybackManager should not have a server configuration by default"
-    )
-    XCTAssertNil(
-      GraphRequestPiggybackManager.graphRequestFactory,
-      "GraphRequestPiggybackManager should not have a graph request factory by default"
-    )
-
-    configurator.performConfiguration()
-
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.tokenWallet === components.accessTokenWallet,
-      "GraphRequestPiggybackManager should be configured with the access token wallet"
-    )
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.settings === components.settings,
-      "GraphRequestPiggybackManager should be configured with the settings"
-    )
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.serverConfigurationProvider === components.serverConfigurationProvider,
-      "GraphRequestPiggybackManager should be configured with the server configuration"
-    )
-    XCTAssertTrue(
-      GraphRequestPiggybackManager.graphRequestFactory === components.graphRequestFactory,
-      "GraphRequestPiggybackManager should be configured with the graph request factory"
     )
   }
 

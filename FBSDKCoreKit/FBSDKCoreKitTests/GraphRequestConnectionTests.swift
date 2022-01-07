@@ -32,6 +32,7 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
   var connection: GraphRequestConnection!
   var errorFactory: TestErrorFactory!
   var metadata: GraphRequestMetadata!
+  var piggybackManager: TestGraphRequestPiggybackManager!
   // swiftlint:enable implicitly_unwrapped_optional force_unwrapping identifier_name line_length
 
   func createSampleMetadata() -> GraphRequestMetadata {
@@ -68,10 +69,11 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
     macCatalystDeterminator = TestMacCatalystDeterminator()
     logger = TestLogger(loggingBehavior: .developerErrors)
     errorFactory = TestErrorFactory()
+    piggybackManager = TestGraphRequestPiggybackManager()
     GraphRequestConnection.configure(
       withURLSessionProxyFactory: sessionFactory,
       errorConfigurationProvider: errorConfigurationProvider,
-      piggybackManager: TestGraphRequestPiggybackManager.self,
+      piggybackManager: piggybackManager,
       settings: settings,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       eventLogger: eventLogger,
@@ -103,11 +105,11 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
     errorFactory = nil
     didInvokeDelegateRequestConnectionDidSendBodyData = false
     metadata = nil
+    piggybackManager = nil
 
     GraphRequestConnection.resetClassDependencies()
     GraphRequestConnection.resetDefaultConnectionTimeout()
     GraphRequestConnection.resetCanMakeRequests()
-    TestGraphRequestPiggybackManager.reset()
     TestLogger.reset()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
@@ -216,7 +218,7 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
       "A graph request connection should persist the error configuration provider it was created with"
     )
     XCTAssertTrue(
-      GraphRequestConnection.piggybackManager === TestGraphRequestPiggybackManager.self,
+      GraphRequestConnection.piggybackManager === piggybackManager,
       "A graph request connection should persist the piggyback manager it was created with"
     )
     XCTAssertTrue(
@@ -847,7 +849,7 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
     connection.start()
 
     XCTAssertTrue(
-      connection === TestGraphRequestPiggybackManager.capturedConnection,
+      connection === piggybackManager.capturedConnection,
       "Starting a request should invoke the piggyback manager"
     )
   }

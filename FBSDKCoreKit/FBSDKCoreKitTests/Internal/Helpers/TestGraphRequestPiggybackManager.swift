@@ -9,24 +9,19 @@
 import FBSDKCoreKit
 
 @objcMembers
-class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
+final class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
 
-  static var capturedConnection: GraphRequestConnecting?
-  static var addRefreshPiggybackWasCalled = false
+  var capturedConnection: GraphRequestConnecting?
+  var addRefreshPiggybackWasCalled = false
 
-  static func addPiggybackRequests(_ connection: GraphRequestConnecting) {
+  func addPiggybackRequests(_ connection: GraphRequestConnecting) {
     capturedConnection = connection
   }
 
-  static func addRefreshPiggyback(
+  func addRefreshPiggyback(
     _ connection: GraphRequestConnecting,
     permissionHandler: GraphRequestCompletion? = nil
   ) {
     addRefreshPiggybackWasCalled = true
-  }
-
-  static func reset() {
-    capturedConnection = nil
-    addRefreshPiggybackWasCalled = false
   }
 }

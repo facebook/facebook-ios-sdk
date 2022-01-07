@@ -107,7 +107,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
-@property (nonatomic, readonly) Class<FBSDKGraphRequestPiggybackManaging> piggybackManager;
+@property (nonatomic, readonly) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, readonly) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterManager;
 @property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKSettings, FBSDKSettingsLogging> settings;
@@ -184,7 +184,7 @@ NS_SWIFT_NAME(CoreKitComponents)
                         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                          piggybackManager:(Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+                          piggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
               restrictiveDataFilterManager:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterManager
                serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                   settings:(id<FBSDKSettings, FBSDKSettingsLogging>)settings
