@@ -41,6 +41,7 @@ class FBAEMReporterTests: XCTestCase {
 
   let networker = TestAEMNetworker()
   let reporter = TestSKAdNetworkReporter()
+  let userDefaultsSpy = UserDefaultsSpy()
   let date = Calendar.current.date(
     byAdding: .day,
     value: -2,
@@ -59,26 +60,22 @@ class FBAEMReporterTests: XCTestCase {
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
   let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
+  let aggregationRequestTimestampToNotDelay = Date().addingTimeInterval(-100)
 
   override class func setUp() {
     super.setUp()
-
-    reset()
   }
 
   override func setUp() {
     super.setUp()
 
+    AEMReporter.reset()
     removeReportFile()
-    AEMReporter.configure(withNetworker: networker, appID: "123", reporter: reporter)
+    AEMReporter.configure(withNetworker: networker, appID: "123", reporter: reporter, store: userDefaultsSpy)
     // Actual queue doesn't matter as long as it's not the same as the designated queue name in the class
     AEMReporter.queue = DispatchQueue(label: name, qos: .background)
     AEMReporter.isEnabled = true
     AEMReporter.reportFilePath = reportFilePath
-  }
-
-  class func reset() {
-    AEMReporter.reset()
   }
 
   func testEnable() {
@@ -109,6 +106,11 @@ class FBAEMReporterTests: XCTestCase {
       reporter,
       AEMReporter.reporter as? TestSKAdNetworkReporter,
       "Should configure with the expected SKAdNetwork reporter"
+    )
+    XCTAssertEqual(
+      userDefaultsSpy,
+      AEMReporter.store as? UserDefaultsSpy,
+      "Should configure with the expected data store"
     )
   }
 
@@ -411,7 +413,11 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter._sendAggregationRequest()
     XCTAssertNil(
       networker.capturedGraphPath,
-      "GraphRequest should be created because of there is no invocation"
+      "GraphRequest should not be created because of there is no invocation"
+    )
+    XCTAssertNil(
+      userDefaultsSpy.capturedSetObjectKey,
+      "Min aggregation request timestamp should not be updated because of there is no request"
     )
 
     guard let invocation = AEMReporter.parseURL(urlWithInvocation) else { return XCTFail("Parsing Error") }
@@ -420,7 +426,29 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter._sendAggregationRequest()
     XCTAssertTrue(
       networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
-      "GraphRequst should created because of there is non-aggregated invocation"
+      "GraphRequst should be created because of there is non-aggregated invocation"
+    )
+    XCTAssertEqual(
+      userDefaultsSpy.capturedSetObjectKey,
+      "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp",
+      "Min aggregation request timestamp should not be updated because of there is non-aggregated invocation"
+    )
+  }
+
+  func testSendAggregationRequestWithDelay() {
+    AEMReporter.minAggregationRequestTimestamp = Date().addingTimeInterval(100)
+    guard let invocation = AEMReporter.parseURL(urlWithInvocation) else { return XCTFail("Parsing Error") }
+    invocation.isAggregated = false
+    AEMReporter.invocations = [invocation]
+    AEMReporter._sendAggregationRequest()
+    XCTAssertNil(
+      networker.capturedGraphPath,
+      "GraphRequst should not be created immediately because of there is delay"
+    )
+    XCTAssertEqual(
+      userDefaultsSpy.capturedSetObjectKey,
+      "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp",
+      "Min aggregation request timestamp should not be updated because of there is non-aggregated invocation"
     )
   }
 
@@ -443,7 +471,6 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testCompletingAggregationRequestWithoutError() {
-
     guard let invocation = AEMReporter.parseURL(urlWithInvocation) else { return XCTFail("Parsing Error") }
     invocation.isAggregated = false
     AEMReporter.invocations = [invocation]
@@ -988,6 +1015,68 @@ class FBAEMReporterTests: XCTestCase {
         }
       }
     }
+  }
+
+  // MARK: - Aggregation Request
+
+  func testShouldDelayAggregationRequestWithNilTimestamp() {
+    AEMReporter.minAggregationRequestTimestamp = nil
+    XCTAssertFalse(
+      AEMReporter._shouldDelayAggregationRequest(),
+      "Should not expect to delay aggregation request when timestamp is nil"
+    )
+  }
+
+  func testShouldDelayAggregationRequestWithExpiredTimestamp() {
+    AEMReporter.minAggregationRequestTimestamp = aggregationRequestTimestampToNotDelay
+    XCTAssertFalse(
+      AEMReporter._shouldDelayAggregationRequest(),
+      "Should not expect to delay aggregation request when timestamp is expired"
+    )
+  }
+
+  func testShouldDelayAggregationRequestWithValidTimestamp() {
+    AEMReporter.minAggregationRequestTimestamp = Date().addingTimeInterval(5)
+    XCTAssertTrue(
+      AEMReporter._shouldDelayAggregationRequest(),
+      "Should not expect to delay aggregation request when timestamp is within the range"
+    )
+  }
+
+  func testLoadMinAggregationRequestTimestamp() {
+    let timestamp = Date()
+    userDefaultsSpy.set(
+      timestamp,
+      forKey: "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp"
+    )
+
+    let data = AEMReporter._loadMinAggregationRequestTimestamp()
+    XCTAssertEqual(
+      timestamp,
+      data,
+      "Should return the timestamp from the userDefaultsSpy"
+    )
+    XCTAssertEqual(
+      userDefaultsSpy.capturedObjectRetrievalKey,
+      "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp",
+      "Should retrieve the min aggregation request timestamp from the userDefaultsSpy"
+    )
+  }
+
+  func testUpdateAggregationRequestTimestamp() {
+    let timestamp = Date().timeIntervalSince1970
+    AEMReporter._updateAggregationRequestTimestamp(timestamp)
+
+    XCTAssertEqual(
+      timestamp,
+      AEMReporter.minAggregationRequestTimestamp?.timeIntervalSince1970,
+      "Should set the expected tiemstamp"
+    )
+    XCTAssertEqual(
+      userDefaultsSpy.capturedSetObjectKey,
+      "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp",
+      "Should persist the min aggregation request timestamp when setting a new one"
+    )
   }
 
   // MARK: - Helpers

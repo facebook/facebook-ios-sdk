@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import "FBAEMReporter.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,8 +25,15 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
+@property (class, nullable, nonatomic) NSDate *minAggregationRequestTimestamp;
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
 @property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
+@property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
+
++ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
+                         appID:(nullable NSString *)appID
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+                         store:(nullable id<FBSDKDataPersisting>)store;
 
 + (void)enable;
 
@@ -76,6 +85,12 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 + (NSMutableArray<FBAEMInvocation *> *)_loadReportData;
 
 + (void)_saveReportData;
+
++ (BOOL)_shouldDelayAggregationRequest;
+
++ (nullable NSDate *)_loadMinAggregationRequestTimestamp;
+
++ (void)_updateAggregationRequestTimestamp:(NSTimeInterval)timestamp;
 
 + (void)_clearCache;
 
