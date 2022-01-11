@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import "FBSDKCodeVerifier.h"
 #import "FBSDKNonceUtility.h"
 #import "FBSDKPermission.h"
 
@@ -89,6 +90,21 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                              messengerPageId:(nullable NSString *)messengerPageId
                                     authType:(nullable FBSDKLoginAuthType)authType
 {
+  return [self initWithPermissions:permissions
+                          tracking:tracking
+                             nonce:nonce
+                   messengerPageId:messengerPageId
+                          authType:authType
+                      codeVerifier:FBSDKCodeVerifier.new];
+}
+
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
+                                       nonce:(NSString *)nonce
+                             messengerPageId:(nullable NSString *)messengerPageId
+                                    authType:(nullable FBSDKLoginAuthType)authType
+                                codeVerifier:(FBSDKCodeVerifier *)codeVerifier
+{
   if (![FBSDKNonceUtility isValidNonce:nonce]) {
     NSString *msg = [NSString stringWithFormat:@"Invalid nonce:%@ provided to login configuration. Returning nil.", nonce];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -109,12 +125,19 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     return nil;
   }
 
+  if (!codeVerifier) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:@"Invalid code verifier provided to login configuration. Returning nil."];
+    return nil;
+  }
+
   if ((self = [super init])) {
     _requestedPermissions = permissionsSet;
     _tracking = tracking;
     _nonce = nonce;
     _messengerPageId = [FBSDKTypeUtility coercedToStringValue:messengerPageId];
     self.authType = authType;
+    _codeVerifier = codeVerifier;
   }
 
   return self;

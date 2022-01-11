@@ -42,6 +42,10 @@ class LoginConfigurationTests: XCTestCase {
       .rerequest,
       "Auth Type should default to rerequest when unspecified"
     )
+    XCTAssertNotNil(
+      config.codeVerifier,
+      "A config should be created with a default code verifier"
+    )
   }
 
   func testCreatingWithNonceString() {
@@ -134,6 +138,16 @@ class LoginConfigurationTests: XCTestCase {
       LoginConfiguration.authType(for: "rerequest"),
       .rerequest,
       "Should return corresponding auth type when valid raw auth type is given"
+    )
+  }
+
+  func testCreatingWithCodeVerifier() {
+    let codeVerifier = CodeVerifier()
+    let config = LoginConfiguration(codeVerifier: codeVerifier)
+    XCTAssertEqual(
+      config?.codeVerifier.value,
+      codeVerifier.value,
+      "Should create a configuration with the provided code verifier"
     )
   }
 }

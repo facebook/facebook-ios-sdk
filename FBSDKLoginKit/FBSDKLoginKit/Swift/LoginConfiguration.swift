@@ -21,20 +21,24 @@ public extension LoginConfiguration {
     Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
    - parameter messengerPageId: An optional page id to use for a login attempt. Defaults to `nil`
    - parameter authType: An optional auth type to use for a login attempt. Defaults to `.rerequest`
+   - parameter codeVerifier: An optional codeVerifier used for the PKCE process.
+   If not provided, this will be randomly generated.
    */
   convenience init?(
     permissions: Set<Permission> = [],
     tracking: LoginTracking = .enabled,
     nonce: String = UUID().uuidString,
     messengerPageId: String? = nil,
-    authType: LoginAuthType? = .rerequest
+    authType: LoginAuthType? = .rerequest,
+    codeVerifier: CodeVerifier = CodeVerifier()
   ) {
     self.init(
       __permissions: permissions.map { $0.name },
       tracking: tracking,
       nonce: nonce,
       messengerPageId: messengerPageId,
-      authType: authType
+      authType: authType,
+      codeVerifier: codeVerifier
     )
   }
 }

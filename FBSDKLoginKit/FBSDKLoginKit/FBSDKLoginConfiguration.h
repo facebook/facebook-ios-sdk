@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKCodeVerifier.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKPermission;
@@ -48,6 +50,10 @@ NS_SWIFT_NAME(LoginConfiguration)
 
 /// The auth type associated with this login request.
 @property (nullable, nonatomic, readonly) FBSDKLoginAuthType authType;
+
+/// The code verifier used in the PKCE process.
+/// If not provided, a code verifier will be randomly generated.
+@property (nonatomic, readonly) FBSDKCodeVerifier *codeVerifier;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -121,6 +127,25 @@ NS_SWIFT_NAME(LoginConfiguration)
                                     tracking:(FBSDKLoginTracking)tracking
                              messengerPageId:(nullable NSString *)messengerPageId
                                     authType:(nullable FBSDKLoginAuthType)authType
+  NS_REFINED_FOR_SWIFT;
+
+/**
+ Attempts to initialize a new configuration with the expected parameters.
+
+ @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
+ @param tracking the tracking preference to use for a login attempt.
+ @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
+ Creation of the configuration will fail if the nonce is invalid.
+ @param messengerPageId the associated page id  to use for a login attempt.
+ @param authType auth_type param to use for login.
+ @param codeVerifier The code verifier used in the PKCE process.
+ */
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
+                                       nonce:(NSString *)nonce
+                             messengerPageId:(nullable NSString *)messengerPageId
+                                    authType:(nullable FBSDKLoginAuthType)authType
+                                codeVerifier:(FBSDKCodeVerifier *)codeVerifier
   NS_REFINED_FOR_SWIFT;
 
 /**
