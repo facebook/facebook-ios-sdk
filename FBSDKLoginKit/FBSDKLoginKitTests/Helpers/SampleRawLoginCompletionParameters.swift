@@ -17,6 +17,8 @@ enum SampleRawLoginCompletionParameters {
   static let dataExpirationDate = Date().timeIntervalSince1970.advanced(by: Double(secondsInDay * daysUntilDataExpiration))
   static let expirationDate = Date().timeIntervalSince1970.advanced(by: Double(secondsInDay * daysUntilExpiration))
   static let fakeChallenge = "some_challenge"
+  static let defaultDomain = "facebook"
+  static let defaultState = "{\"challenge\":\"some_challenge\"}"
 
   static let defaultParameters: [String: Any] = [
     "access_token": "some_access_token",
@@ -37,55 +39,102 @@ enum SampleRawLoginCompletionParameters {
   ]
 
   static var withAccessToken: [String: Any] {
-    createParameters(withoutKeys: ["id_token", "nonce", "error", "error_message"])
+    createParameters(withKeys: [
+      "access_token",
+      "granted_scopes",
+      "denied_scopes",
+      "signed_request",
+      "user_id",
+      "expires",
+      "expires_at",
+      "expires_in",
+      "data_access_expiration_time",
+      "state",
+      "graph_domain",
+    ])
   }
 
   static var withAccessTokenWithIDToken: [String: Any] {
-    createParameters(withoutKeys: ["nonce", "error", "error_message"])
-  }
-
-  static var missingNonce: [String: Any] {
-    createParameters(withoutKeys: ["nonce"])
+    createParameters(withKeys: [
+      "access_token",
+      "id_token",
+      "granted_scopes",
+      "denied_scopes",
+      "signed_request",
+      "user_id",
+      "expires",
+      "expires_at",
+      "expires_in",
+      "data_access_expiration_time",
+      "state",
+      "graph_domain",
+    ])
   }
 
   static var withNonce: [String: Any] {
-    createParameters(withoutKeys: ["id_token", "access_token", "error", "error_message"])
+    createParameters(withKeys: [
+      "nonce",
+      "user_id",
+      "state",
+      "graph_domain"
+    ])
   }
 
   static var withIDToken: [String: Any] {
-    createParameters(withoutKeys: ["access_token", "nonce", "error", "error_message"])
+    createParameters(withKeys: [
+      "id_token",
+      "granted_scopes",
+      "denied_scopes",
+      "user_id",
+      "state",
+      "graph_domain"
+    ])
   }
 
   static var withoutAccessTokenWithoutIDTokenWithoutNonce: [String: Any] {
-    createParameters(withoutKeys: ["id_token", "access_token", "nonce", "error", "error_message"])
+    createParameters(withKeys: [
+      "granted_scopes",
+      "denied_scopes",
+      "signed_request",
+      "user_id",
+      "expires",
+      "expires_at",
+      "expires_in",
+      "data_access_expiration_time",
+      "state",
+      "graph_domain"
+    ])
   }
 
-  static var withEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce: [String: Any] {
-    var parameters = createParameters(withoutKeys: ["error", "error_message"])
-    parameters["access_token"] = ""
-    parameters["id_token"] = ""
-    parameters["nonce"] = ""
+  static var withEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce = [
+    "access_token": "",
+    "id_token": "",
+    "nonce": ""
+  ]
 
-    return parameters
-  }
-
-  static var withStringExpirations: [String: Any] {
-    var parameters = createParameters(withoutKeys: ["error", "error_message"])
-    parameters["expires"] = defaultParameters["expires"] as? String
-    parameters["expires_at"] = defaultParameters["expires_at"] as? String
-    parameters["expires_in"] = defaultParameters["expires_in"] as? String
-    parameters["data_access_expiration_time"] = defaultParameters["data_access_expiration_time"] as? String
-    return parameters
-  }
+  static var withStringExpirations = [
+    "access_token": "some_access_token",
+    "user_id": "123",
+    "expires_in": String(secondsInDay * 60),
+    "data_access_expiration_time": String(dataExpirationDate),
+    "state": defaultState,
+    "graph_domain": defaultDomain
+  ]
 
   static var withError: [String: Any] {
-    createParameters(withoutKeys: ["id_token", "access_token", "nonce"])
+    createParameters(withKeys: [
+      "user_id",
+      "state",
+      "graph_domain",
+      "error",
+      "error_message",
+    ])
   }
 
-  static func createParameters(withoutKeys keys: [String]) -> [String: Any] {
-    var parameters = defaultParameters
+  static func createParameters(withKeys keys: [String]) -> [String: Any] {
+    var parameters: [String: Any] = [:]
     keys.forEach { key in
-      parameters.removeValue(forKey: key)
+      parameters[key] = defaultParameters[key]
     }
     return parameters
   }
