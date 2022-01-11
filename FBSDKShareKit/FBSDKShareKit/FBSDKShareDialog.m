@@ -1208,7 +1208,10 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (void)_logDialogShow
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSString *shareMode = NSStringFromFBSDKShareDialogMode(self.mode);
+  #pragma clang diagnostic pop
 
   NSString *contentType;
   if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {

@@ -13,7 +13,16 @@
 extension ShareDialog.Mode: CustomStringConvertible {
   /// The string description
   public var description: String {
-    __NSStringFromFBSDKShareDialogMode(self)
+    switch self {
+    case .automatic: return "Automatic"
+    case .native: return "Native"
+    case .shareSheet: return "ShareSheet"
+    case .browser: return "Browser"
+    case .web: return "Web"
+    case .feedBrowser: return "FeedBrowser"
+    case .feedWeb: return "FeedWeb"
+    default: return "Unknown"
+    }
   }
 }
 

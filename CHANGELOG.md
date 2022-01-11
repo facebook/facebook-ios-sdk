@@ -26,6 +26,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Deprecated
 
 - `SDKError` has been deprecated in favor of the new `ErrorFactory` and `NetworkErrorChecker` types
+- `NSStringFromFBSDKShareDialogMode()` has been deprecated in favor of `ShareDialog.Mode.description`
 
 [2022-01-06](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.3.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.2.1...v12.3.0)
