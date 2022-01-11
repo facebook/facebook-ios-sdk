@@ -116,6 +116,7 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
+          - FBSDKCodeVerifier.[h,m]
           - FBSDKLoginConfiguration.[h,m]
           - FBSDKReferral*
           - FBSDKLoginButton*
@@ -167,6 +168,7 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
+          - FBSDKCodeVerifier.[h,m]
           - FBSDKLoginConfiguration.[h,m]
           - FBSDKReferral*
           - FBSDKLoginButton*
