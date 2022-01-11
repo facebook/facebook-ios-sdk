@@ -736,6 +736,8 @@ class LoginManagerTests: XCTestCase {
       parameters["auth_type"],
       LoginAuthType.rerequest.rawValue
     )
+    XCTAssertNotNil(parameters["code_challenge"])
+    XCTAssertEqual(parameters["code_challenge_method"] as? String, "S256")
   }
 
   func testLoginTrackingLimitedLoginParams() throws {
@@ -786,6 +788,8 @@ class LoginManagerTests: XCTestCase {
       parameters["auth_type"],
       LoginAuthType.rerequest.rawValue
     )
+    XCTAssertNil(parameters["code_challenge"])
+    XCTAssertNil(parameters["code_challenge_method"])
   }
 
   func testLoginParamsWithNilConfiguration() {

@@ -14,6 +14,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAuthenticationTokenFactory.h"
+#import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
@@ -26,6 +27,7 @@
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 static NSString *const FBSDKExpectedNonceKey = @"expected_login_nonce";
+static NSString *const FBSDKExpectedCodeVerifierKey = @"expected_login_code_verifier";
 static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
@@ -324,20 +326,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 }
 
-- (nullable NSString *)loadExpectedChallenge
-{
-  return [self.keychainStore stringForKey:FBSDKExpectedChallengeKey];
-}
-
-- (nullable NSString *)loadExpectedNonce
-{
-  return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
-}
-
-- (nullable NSDictionary<NSString *, NSString *> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                                                                       loggingToken:(NSString *)loggingToken
-                                                                             logger:(FBSDKLoginManagerLogger *)logger
-                                                                         authMethod:(NSString *)authMethod
+- (nullable NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                                                               loggingToken:(NSString *)loggingToken
+                                                                     logger:(FBSDKLoginManagerLogger *)logger
+                                                                 authMethod:(NSString *)authMethod
 {
   // Making sure configuration is not nil in case this method gets called
   // internally without specifying a cofiguration.
@@ -400,6 +392,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       break;
     case FBSDKLoginTrackingEnabled:
       responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+      [FBSDKTypeUtility dictionary:loginParams setObject:configuration.codeVerifier.challenge forKey:@"code_challenge"];
+      [FBSDKTypeUtility dictionary:loginParams setObject:@"S256" forKey:@"code_challenge_method"];
+      [self storeExpectedCodeVerifier:configuration.codeVerifier];
       break;
   }
 
@@ -479,20 +474,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                                          NSError *openedURLError) {
                                            completion(openedURL, openedURLError);
                                          }];
-}
-
-- (void)storeExpectedChallenge:(NSString *)challengeExpected
-{
-  [self.keychainStore setString:challengeExpected
-                         forKey:FBSDKExpectedChallengeKey
-                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
-}
-
-- (void)storeExpectedNonce:(NSString *)nonceExpected
-{
-  [self.keychainStore setString:nonceExpected
-                         forKey:FBSDKExpectedNonceKey
-                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 + (NSString *)stringForChallenge
@@ -664,6 +645,44 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   NSMutableSet<FBSDKPermission *> *recentlyDeclinedPermissions = _requestedPermissions.mutableCopy;
   [recentlyDeclinedPermissions intersectSet:declinedPermissions];
   return recentlyDeclinedPermissions;
+}
+
+#pragma mark - Keychain Storage
+
+- (void)storeExpectedChallenge:(NSString *)challengeExpected
+{
+  [self.keychainStore setString:challengeExpected
+                         forKey:FBSDKExpectedChallengeKey
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+}
+
+- (nullable NSString *)loadExpectedChallenge
+{
+  return [self.keychainStore stringForKey:FBSDKExpectedChallengeKey];
+}
+
+- (void)storeExpectedNonce:(NSString *)nonceExpected
+{
+  [self.keychainStore setString:nonceExpected
+                         forKey:FBSDKExpectedNonceKey
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+}
+
+- (nullable NSString *)loadExpectedNonce
+{
+  return [self.keychainStore stringForKey:FBSDKExpectedNonceKey];
+}
+
+- (void)storeExpectedCodeVerifier:(FBSDKCodeVerifier *)codeVerifier
+{
+  [self.keychainStore setString:codeVerifier.value
+                         forKey:FBSDKExpectedCodeVerifierKey
+                  accessibility:[FBSDKDynamicFrameworkLoaderProxy loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+}
+
+- (nullable NSString *)loadExpectedCodeVerifier
+{
+  return [self.keychainStore stringForKey:FBSDKExpectedCodeVerifierKey];
 }
 
 #pragma mark - Test Methods
