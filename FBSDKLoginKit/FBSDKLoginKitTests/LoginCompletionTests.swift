@@ -95,6 +95,13 @@ class LoginCompletionTests: XCTestCase {
     verifyParameters(actual: completer.parameters, expected: parameters)
   }
 
+  func testInitWithCode() {
+    let parameters = SampleRawLoginCompletionParameters.withCode
+    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+
+    verifyParameters(actual: completer.parameters, expected: parameters)
+  }
+
   func testInitWithIDToken() {
     let parameters = SampleRawLoginCompletionParameters.withIDToken
     let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
@@ -116,8 +123,8 @@ class LoginCompletionTests: XCTestCase {
     verifyEmptyParameters(completer.parameters)
   }
 
-  func testInitWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce() {
-    let parameters = SampleRawLoginCompletionParameters.withEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
+  func testInitWithEmptyStrings() {
+    let parameters = SampleRawLoginCompletionParameters.withEmptyStrings
     let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
     verifyEmptyParameters(completer.parameters)

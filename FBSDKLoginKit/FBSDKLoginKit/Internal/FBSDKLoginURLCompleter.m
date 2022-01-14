@@ -57,12 +57,17 @@ static NSDateFormatter *_dateFormatter;
     BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyAccessTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class]).length > 0;
+    BOOL hasNonEmptyCodeString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"code" ofType:NSString.class]).length > 0;
 
     // Nonce and id token are mutually exclusive parameters
     BOOL hasBothNonceAndIdToken = hasNonEmptyNonceString && hasNonEmptyIdTokenString;
     BOOL hasEitherNonceOrIdToken = hasNonEmptyNonceString || hasNonEmptyIdTokenString;
 
-    if (hasNonEmptyAccessTokenString || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)) {
+    if (
+      hasNonEmptyCodeString
+      || hasNonEmptyAccessTokenString
+      || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)
+    ) {
       [self setParametersWithDictionary:parameters appID:appID];
     } else if ([FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] || [FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class]) {
       self.errorWithDictionary = parameters;
@@ -150,6 +155,7 @@ static NSDateFormatter *_dateFormatter;
   _parameters.accessTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class];
   _parameters.nonceString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class];
   _parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class];
+  _parameters.code = [FBSDKTypeUtility dictionary:parameters objectForKey:@"code" ofType:NSString.class];
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)

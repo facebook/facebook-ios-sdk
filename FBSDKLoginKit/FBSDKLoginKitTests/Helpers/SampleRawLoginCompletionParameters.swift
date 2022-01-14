@@ -36,6 +36,7 @@ enum SampleRawLoginCompletionParameters {
     "graph_domain": "facebook",
     "error": "some_error",
     "error_message": "some_error_message",
+    "code": "some_code",
   ]
 
   static var withAccessToken: [String: Any] {
@@ -71,9 +72,19 @@ enum SampleRawLoginCompletionParameters {
     ])
   }
 
+  // TODO(T105541882): remove nonce once code flow is complete
   static var withNonce: [String: Any] {
     createParameters(withKeys: [
       "nonce",
+      "user_id",
+      "state",
+      "graph_domain"
+    ])
+  }
+
+  static var withCode: [String: Any] {
+    createParameters(withKeys: [
+      "code",
       "user_id",
       "state",
       "graph_domain"
@@ -106,10 +117,11 @@ enum SampleRawLoginCompletionParameters {
     ])
   }
 
-  static var withEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce = [
+  static var withEmptyStrings = [
     "access_token": "",
     "id_token": "",
-    "nonce": ""
+    "nonce": "",
+    "code": ""
   ]
 
   static var withStringExpirations = [

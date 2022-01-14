@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSString *accessTokenString;
 @property (nullable, nonatomic, copy) NSString *nonceString;
 @property (nullable, nonatomic, copy) NSString *authenticationTokenString;
+@property (nullable, nonatomic, copy) NSString *code;
 
 @property (nullable, nonatomic, copy) NSSet<FBSDKPermission *> *permissions;
 @property (nullable, nonatomic, copy) NSSet<FBSDKPermission *> *declinedPermissions;
