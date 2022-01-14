@@ -22,16 +22,6 @@
 #import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
 
-@interface FBSDKLoginURLCompleter ()
-
-@property (nonatomic) id<NSObject> observer;
-@property (nonatomic) BOOL performExplicitFallback;
-@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
-@property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
-@property (nonatomic) FBSDKLoginCompletionParameters *parameters;
-
-@end
-
 @implementation FBSDKLoginURLCompleter
 
 static id<FBSDKProfileCreating> _profileFactory;
@@ -48,11 +38,15 @@ static NSDateFormatter *_dateFormatter;
                                 appID:(NSString *)appID
         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
+                  graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                      internalUtility:(id<FBSDKURLHosting>)internalUtility
 {
   if ((self = [super init])) {
     _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _authenticationTokenCreator = authenticationTokenCreator;
     _parameters = [FBSDKLoginCompletionParameters new];
+    _graphRequestFactory = graphRequestFactory;
+    _internalUtility = internalUtility;
 
     BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;

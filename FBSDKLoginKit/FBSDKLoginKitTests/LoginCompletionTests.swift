@@ -37,6 +37,8 @@ class LoginCompletionTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var graphConnection: TestGraphRequestConnection!
   var authenticationTokenFactory: TestAuthenticationTokenFactory!
+  var graphRequestFactory: TestGraphRequestFactory!
+  var internalUtility: TestInternalUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -46,6 +48,8 @@ class LoginCompletionTests: XCTestCase {
 
     graphConnection = TestGraphRequestConnection()
     authenticationTokenFactory = TestAuthenticationTokenFactory()
+    graphRequestFactory = TestGraphRequestFactory()
+    internalUtility = TestInternalUtility()
   }
 
   override func tearDown() {
@@ -609,7 +613,9 @@ class LoginCompletionTests: XCTestCase {
       urlParameters: parameters,
       appID: appID,
       graphRequestConnectionFactory: graphConnectionFactory,
-      authenticationTokenCreator: authenticationTokenFactory
+      authenticationTokenCreator: authenticationTokenFactory,
+      graphRequestFactory: graphRequestFactory,
+      internalUtility: internalUtility
     )
   }
 

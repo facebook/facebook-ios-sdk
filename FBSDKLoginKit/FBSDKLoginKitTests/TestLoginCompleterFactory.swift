@@ -16,6 +16,8 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   var capturedAppID: String?
   var capturedGraphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol?
   var capturedAuthenticationTokenCreator: AuthenticationTokenCreating?
+  var capturedGraphRequestFactory: GraphRequestFactoryProtocol?
+  var capturedInternalUtility: URLHosting?
 
   init(stubbedLoginCompleter: TestLoginCompleter = TestLoginCompleter()) {
     self.stubbedLoginCompleter = stubbedLoginCompleter
@@ -25,12 +27,16 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
     urlParameters parameters: [String: Any],
     appID: String,
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
-    authenticationTokenCreator: AuthenticationTokenCreating
+    authenticationTokenCreator: AuthenticationTokenCreating,
+    graphRequestFactory: GraphRequestFactoryProtocol,
+    internalUtility: URLHosting
   ) -> LoginCompleting {
     capturedURLParameters = parameters
     capturedAppID = appID
     capturedGraphRequestConnectionFactory = graphRequestConnectionFactory
     capturedAuthenticationTokenCreator = authenticationTokenCreator
+    capturedGraphRequestFactory = graphRequestFactory
+    capturedInternalUtility = internalUtility
 
     return stubbedLoginCompleter
   }

@@ -25,7 +25,9 @@ NS_SWIFT_NAME(LoginCompleterFactoryProtocol)
                                                             appID:(NSString *)appID
                                     graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                        authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
-  NS_SWIFT_NAME(createLoginCompleter(urlParameters:appID:graphRequestConnectionFactory:authenticationTokenCreator:));
+                                              graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                                  internalUtility:(id<FBSDKURLHosting>)internalUtility
+  NS_SWIFT_NAME(createLoginCompleter(urlParameters:appID:graphRequestConnectionFactory:authenticationTokenCreator:graphRequestFactory:internalUtility:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end

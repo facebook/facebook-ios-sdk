@@ -22,7 +22,9 @@ class LoginCompleterFactoryTests: XCTestCase {
       urlParameters: [:],
       appID: name,
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
-      authenticationTokenCreator: TestAuthenticationTokenFactory()
+      authenticationTokenCreator: TestAuthenticationTokenFactory(),
+      graphRequestFactory: TestGraphRequestFactory(),
+      internalUtility: TestInternalUtility()
     )
     XCTAssertTrue(
       completer is LoginURLCompleter,

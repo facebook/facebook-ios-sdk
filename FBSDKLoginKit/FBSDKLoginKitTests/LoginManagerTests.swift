@@ -25,6 +25,7 @@ class LoginManagerTests: XCTestCase {
   var loginCompleter: TestLoginCompleter!
   var loginCompleterFactory: TestLoginCompleterFactory!
   var testUser: Profile!
+  var graphRequestFactory: TestGraphRequestFactory!
   // swiftlint:enable implicitly_unwrapped_optional
 
   let appID = "7391628439"
@@ -63,6 +64,7 @@ class LoginManagerTests: XCTestCase {
     settings.appID = appID
     loginCompleter = TestLoginCompleter()
     loginCompleterFactory = TestLoginCompleterFactory(stubbedLoginCompleter: loginCompleter)
+    graphRequestFactory = TestGraphRequestFactory()
 
     loginManager = LoginManager(
       internalUtility: internalUtility,
@@ -73,7 +75,8 @@ class LoginManagerTests: XCTestCase {
       profile: TestProfileProvider.self,
       urlOpener: urlOpener,
       settings: settings,
-      loginCompleterFactory: loginCompleterFactory
+      loginCompleterFactory: loginCompleterFactory,
+      graphRequestFactory: graphRequestFactory
     )
     testUser = createProfile()
     TestProfileProvider.current = testUser

@@ -29,13 +29,23 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(LoginURLCompleter)
 @interface FBSDKLoginURLCompleter : NSObject <FBSDKLoginCompleting>
 
+@property (nonatomic) id<NSObject> observer;
+@property (nonatomic) BOOL performExplicitFallback;
+@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
+@property (nonatomic) FBSDKLoginCompletionParameters *parameters;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
+@property (nonatomic) id<FBSDKURLHosting> internalUtility;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-           authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator;
+           authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
+                  graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                      internalUtility:(id<FBSDKURLHosting>)internalUtility;
 
 @end
 

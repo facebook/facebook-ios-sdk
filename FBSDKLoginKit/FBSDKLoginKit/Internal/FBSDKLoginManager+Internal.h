@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nonatomic) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic) id<FBSDKSettings> settings;
 @property (nonatomic) id<FBSDKLoginCompleterFactory> loginCompleterFactory;
+@property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 
 @property (nullable, nonatomic, weak) UIViewController *fromViewController;
 @property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
@@ -70,6 +71,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
                               urlOpener:(id<FBSDKURLOpener>)urlOpener
                                settings:(id<FBSDKSettings>)settings
                   loginCompleterFactory:(id<FBSDKLoginCompleterFactory>)loginCompleterFactory
+                    graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
 ;
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
