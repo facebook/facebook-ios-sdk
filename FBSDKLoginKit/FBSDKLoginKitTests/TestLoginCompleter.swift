@@ -13,13 +13,15 @@ class TestLoginCompleter: NSObject, LoginCompleting {
 
   var capturedCompletionHandler: LoginCompletionParametersBlock?
   var capturedNonce: String?
+  var capturedCodeVerifier: String?
 
   func completeLogin(handler: @escaping LoginCompletionParametersBlock) {
     capturedCompletionHandler = handler
   }
 
-  func completeLogin(handler: @escaping LoginCompletionParametersBlock, nonce: String?) {
+  func completeLogin(handler: @escaping LoginCompletionParametersBlock, nonce: String?, codeVerifier: String?) {
     capturedCompletionHandler = handler
     capturedNonce = nonce
+    capturedCodeVerifier = codeVerifier
   }
 }
