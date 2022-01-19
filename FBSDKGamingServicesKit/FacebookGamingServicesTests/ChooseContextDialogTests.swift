@@ -20,6 +20,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   override func setUp() {
     super.setUp()
 
+    GamingContext.current = nil
     dialogDidCompleteSuccessfully = false
     dialogDidCancel = false
     dialogError = nil
@@ -40,10 +41,13 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let validCallbackURL = URL(string: "fbabc123://gaming/contextchoose/?context_id=123456789&context_size=3")
 
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
-    dialog.show()
-    let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
-    dialogURLOpenerDelegate
-      .application(UIApplication.shared, open: validCallbackURL, sourceApplication: "", annotation: nil)
+    _ = dialog.show()
+    _ = dialog.application(
+      UIApplication.shared,
+      open: validCallbackURL,
+      sourceApplication: "",
+      annotation: nil
+    )
 
     XCTAssertNotNil(dialog)
     XCTAssertTrue(dialogDidCompleteSuccessfully)
@@ -65,26 +69,34 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let url = URL(string: "fbabc123://gaming/contextchoose/?context_id=")
 
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
-    dialog.show()
-    let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
-    dialogURLOpenerDelegate
-      .application(UIApplication.shared, open: url, sourceApplication: "", annotation: nil)
+    _ = dialog.show()
+    _ = dialog.application(
+      UIApplication.shared,
+      open: url,
+      sourceApplication: "",
+      annotation: nil
+    )
 
     XCTAssertTrue(
       dialogDidCancel,
       "Should cancel if a context cannot be created from the URL"
     )
-    XCTAssertNil(
-      GamingContext.current,
-      "Should clear the current context when completing with an invalid url"
+    XCTAssertEqual(
+      GamingContext.current?.identifier,
+      name,
+      "The current gaming context should still hold the old context"
+    )
+    XCTAssertEqual(
+      GamingContext.current?.size,
+      2,
+      "The current gaming context should still be the same size"
     )
   }
 
   func testDialogCancels() throws {
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
-    dialog.show()
-    let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
-    dialogURLOpenerDelegate.applicationDidBecomeActive(UIApplication.shared)
+    _ = dialog.show()
+    dialog.applicationDidBecomeActive(UIApplication.shared)
 
     XCTAssertNotNil(dialog)
     XCTAssertFalse(dialogDidCompleteSuccessfully)
@@ -102,10 +114,11 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     util.isFacebookAppInstalled = true
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
 
-    dialog.show()
-    let filterQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterFilter])
-    let maxSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize])
-    let minSizeQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize])
+    _ = dialog.show()
+    let queryParams = try XCTUnwrap(util.queryParameters)
+    let filterQuery = try XCTUnwrap(queryParams[URLConstants.queryParameterFilter])
+    let maxSizeQuery = queryParams[URLConstants.queryParameterMaxSize]
+    let minSizeQuery = queryParams[URLConstants.queryParameterMinSize]
 
     XCTAssertNotNil(dialog)
     XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
@@ -121,7 +134,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let content = ChooseContextContent()
     let dialog = ChooseContextDialog(content: content, delegate: self)
     Settings.shared.appID = nil
-    dialog.show()
+    _ = dialog.show()
 
     let dialogError = try XCTUnwrap(dialogError)
     XCTAssertNotNil(dialog)
@@ -133,7 +146,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     let appIDErrorMessage = "The minimum size cannot be greater than the maximum size"
     let contentErrorName = "minParticipants"
     let dialog = try XCTUnwrap(SampleContextDialogs.showChooseContextDialogWithInvalidSizes(delegate: self))
-    dialog.show()
+    _ = dialog.show()
 
     let dialogError = try XCTUnwrap(dialogError)
     XCTAssertNotNil(dialog)
@@ -145,7 +158,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
 
   func testShowDialogWithNullValuesInContent() throws {
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
-    dialog.show()
+    _ = dialog.show()
 
     XCTAssertNotNil(dialog)
     XCTAssertFalse(dialogDidCompleteSuccessfully)

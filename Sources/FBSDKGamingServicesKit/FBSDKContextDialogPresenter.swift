@@ -133,7 +133,7 @@ open class FBSDKContextDialogPresenter: NSObject {
     delegate: ContextDialogDelegate
   ) -> ChooseContextDialog {
     let dialog = ChooseContextDialog(content: content, delegate: delegate)
-    dialog.show()
+    _ = dialog.show()
 
     return dialog
   }

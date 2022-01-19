@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import TestTools
 
 enum SampleContextDialogs {
@@ -43,7 +44,7 @@ enum SampleContextDialogs {
     delegate: ContextDialogDelegate
   ) -> ChooseContextDialog? {
     let content = ChooseContextContent()
-    let dialog = ChooseContextDialog(content: content, delegate: delegate, internalUtility: utility)
+    let dialog = ChooseContextDialog(content, delegate: delegate, internalUtility: utility)
 
     return dialog
   }
