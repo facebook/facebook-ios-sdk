@@ -44,7 +44,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> accessTokenWallet;
 @property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
 @property (nonatomic) Class<FBSDKProfileProviding> profile;
-@property (nonatomic)  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
 @property (nonatomic) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic) id<FBSDKSettings> settings;
@@ -65,7 +64,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
                    keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
                       accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
-          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
                               urlOpener:(id<FBSDKURLOpener>)urlOpener

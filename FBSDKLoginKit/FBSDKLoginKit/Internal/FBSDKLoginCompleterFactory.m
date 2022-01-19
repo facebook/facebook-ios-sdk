@@ -20,14 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<FBSDKLoginCompleting>)createLoginCompleterWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                                             appID:(NSString *)appID
-                                    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                                        authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
                                               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                                   internalUtility:(id<FBSDKURLHosting>)internalUtility
 {
   return [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters
                                                          appID:appID
-                                 graphRequestConnectionFactory:graphRequestConnectionFactory
                                     authenticationTokenCreator:authenticationTokenCreator
                                            graphRequestFactory:graphRequestFactory
                                                internalUtility:internalUtility];

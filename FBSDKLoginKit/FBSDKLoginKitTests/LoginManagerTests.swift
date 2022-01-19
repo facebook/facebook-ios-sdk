@@ -18,8 +18,6 @@ class LoginManagerTests: XCTestCase {
   var loginManager: LoginManager!
   var keychainStoreFactory: TestKeychainStoreFactory!
   var keychainStore: TestKeychainStore!
-  var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
-  var connection: TestGraphRequestConnection!
   var urlOpener: TestURLOpener!
   var settings: TestSettings!
   var loginCompleter: TestLoginCompleter!
@@ -57,8 +55,6 @@ class LoginManagerTests: XCTestCase {
     keychainStore = TestKeychainStore()
     keychainStoreFactory = TestKeychainStoreFactory()
     keychainStoreFactory.stubbedKeychainStore = keychainStore
-    connection = TestGraphRequestConnection()
-    graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
     urlOpener = TestURLOpener()
     settings = TestSettings()
     settings.appID = appID
@@ -70,7 +66,6 @@ class LoginManagerTests: XCTestCase {
       internalUtility: internalUtility,
       keychainStoreFactory: keychainStoreFactory,
       accessTokenWallet: TestAccessTokenWallet.self,
-      graphRequestConnectionFactory: graphRequestConnectionFactory,
       authenticationToken: TestAuthenticationTokenWallet.self,
       profile: TestProfileProvider.self,
       urlOpener: urlOpener,
@@ -150,8 +145,6 @@ class LoginManagerTests: XCTestCase {
     loginManager = nil
     keychainStoreFactory = nil
     keychainStore = nil
-    graphRequestConnectionFactory = nil
-    connection = nil
     urlOpener = nil
     settings = nil
     loginCompleter = nil
@@ -175,7 +168,6 @@ class LoginManagerTests: XCTestCase {
     XCTAssertTrue(loginManager.internalUtility is InternalUtility)
     XCTAssertTrue(loginManager.keychainStore.self is KeychainStore)
     XCTAssertTrue(loginManager.accessTokenWallet is AccessToken.Type)
-    XCTAssertTrue(loginManager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
     XCTAssertTrue(loginManager.authenticationToken is AuthenticationToken.Type)
     XCTAssertTrue(loginManager.profile is Profile.Type)
     XCTAssertTrue(loginManager.urlOpener is BridgeAPI)
@@ -436,12 +428,13 @@ class LoginManagerTests: XCTestCase {
 
     loginManager.completeAuthentication(parameters, expectChallenge: true)
 
+    let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
-      connection.capturedRequest?.graphPath,
+      capturedRequest?.graphPath,
       "me",
       "Should create a graph request with the expected graph path"
     )
-    connection.capturedCompletion?(nil, ["id": existingToken.userID], nil)
+    capturedRequest?.capturedCompletionHandler?(nil, ["id": existingToken.userID], nil)
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertNil(capturedError)
@@ -1014,7 +1007,7 @@ class LoginManagerTests: XCTestCase {
       XCTFail("Should not actually reauthorize and call the handler in this test")
     }
 
-    XCTAssertTrue(connection.capturedRequests.isEmpty)
+    XCTAssertTrue(graphRequestFactory.capturedRequests.isEmpty)
     XCTAssertFalse(loginManager.state == .idle)
   }
 
@@ -1100,18 +1093,19 @@ class LoginManagerTests: XCTestCase {
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
 
+    let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
-      connection.capturedRequest?.graphPath,
+      capturedRequest?.graphPath,
       "me",
       "Should create a graph request with the expected graph path"
     )
     XCTAssertEqual(
-      connection.capturedRequest?.tokenString,
+      capturedRequest?.tokenString,
       SampleAccessTokens.validToken.tokenString,
       "Should create a graph request with the expected access token string"
     )
     XCTAssertEqual(
-      connection.capturedRequest?.flags,
+      capturedRequest?.flags,
       [.doNotInvalidateTokenOnError, .disableErrorRecovery],
       "The graph request should not invalidate the token on error or disable error recovery"
     )
@@ -1134,7 +1128,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    connection.capturedCompletion?(nil, nil, SampleError())
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertNotNil(capturedError)
     XCTAssertNil(capturedResult)
@@ -1157,7 +1151,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    connection.capturedCompletion?(nil, ["id": SampleAccessTokens.validToken.userID], nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": SampleAccessTokens.validToken.userID], nil)
 
     XCTAssertNil(capturedError)
     XCTAssertEqual(capturedResult, result)
@@ -1180,7 +1174,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    connection.capturedCompletion?(nil, ["id": "456"], nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": "456"], nil)
 
     XCTAssertNotNil(capturedError)
     XCTAssertNil(capturedResult)

@@ -23,7 +23,6 @@ enum SampleRawLoginCompletionParameters {
   static let defaultParameters: [String: Any] = [
     "access_token": "some_access_token",
     "id_token": "some_id_token",
-    "nonce": "some_nonce",
     "granted_scopes": "public_profile,openid",
     "denied_scopes": "email",
     "signed_request": "some_signed_request",
@@ -72,16 +71,6 @@ enum SampleRawLoginCompletionParameters {
     ])
   }
 
-  // TODO(T105541882): remove nonce once code flow is complete
-  static var withNonce: [String: Any] {
-    createParameters(withKeys: [
-      "nonce",
-      "user_id",
-      "state",
-      "graph_domain"
-    ])
-  }
-
   static var withCode: [String: Any] {
     createParameters(withKeys: [
       "code",
@@ -102,7 +91,7 @@ enum SampleRawLoginCompletionParameters {
     ])
   }
 
-  static var withoutAccessTokenWithoutIDTokenWithoutNonce: [String: Any] {
+  static var withoutAccessTokenWithoutIDTokenWithoutCode: [String: Any] {
     createParameters(withKeys: [
       "granted_scopes",
       "denied_scopes",
@@ -120,7 +109,6 @@ enum SampleRawLoginCompletionParameters {
   static var withEmptyStrings = [
     "access_token": "",
     "id_token": "",
-    "nonce": "",
     "code": ""
   ]
 
