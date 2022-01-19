@@ -166,6 +166,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                                   completion(NO);
                                 });
                               }
+                              if (key) {
+                                CFRelease(key);
+                              }
                             }];
 }
 
@@ -174,11 +177,11 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   [self getCertificateWithKey:certificateKey
                    completion:^(SecCertificateRef cert) {
-                     SecKeyRef publicKey = nil;
+                     SecKeyRef publicKey = NULL;
 
                      if (cert) {
                        SecPolicyRef policy = SecPolicyCreateBasicX509();
-                       SecTrustRef trust;
+                       SecTrustRef trust = NULL;
 
                        OSStatus status = SecTrustCreateWithCertificates(cert, policy, &trust);
 
@@ -186,6 +189,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                          publicKey = SecTrustCopyPublicKey(trust);
                        }
 
+                       if (trust) {
+                         CFRelease(trust);
+                       }
                        CFRelease(policy);
                        CFRelease(cert);
                      }
