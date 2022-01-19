@@ -564,6 +564,34 @@ class LoginButtonTests: XCTestCase {
     )
   }
 
+  // MARK: Code Verifier
+
+  func testSettingCodeVerifier() {
+    let codeVerifier = CodeVerifier()
+    button.codeVerifier = codeVerifier
+    XCTAssertEqual(
+      button.codeVerifier.value,
+      codeVerifier.value,
+      "Should set the code verifier to the expected value"
+    )
+    XCTAssertEqual(
+      button.loginConfiguration().codeVerifier.value,
+      codeVerifier.value,
+      "Should create a login configuration with the expected code verifier"
+    )
+  }
+
+  func testDefaultCodeVerifier() {
+    XCTAssertNotNil(
+      button.codeVerifier,
+      "Default code verifier should not be nil"
+    )
+    XCTAssertNotNil(
+      button.loginConfiguration().codeVerifier,
+      "Should create a login configuration with the default code verifier"
+    )
+  }
+
   // MARK: Button Press
 
   func testButtonPressNotAuthenticatedLoginNotAllowed() throws {
