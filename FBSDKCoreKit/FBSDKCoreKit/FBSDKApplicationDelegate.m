@@ -13,7 +13,7 @@
 
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKBridgeAPI+Internal.h"
-#import "FBSDKCoreKitComponents+Defaults.h"
+#import "FBSDKCoreKitComponents.h"
 #import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKMeasurementEventListener.h"
