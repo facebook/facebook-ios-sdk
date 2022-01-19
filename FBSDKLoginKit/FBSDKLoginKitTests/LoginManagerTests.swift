@@ -716,8 +716,8 @@ class LoginManagerTests: XCTestCase {
 
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
-      parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      parameters["response_type"] as? String,
+      "code,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -837,8 +837,8 @@ class LoginManagerTests: XCTestCase {
 
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
-      parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      parameters["response_type"] as? String,
+      "code,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -881,8 +881,8 @@ class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
 
     XCTAssertEqual(
-      parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      parameters["response_type"] as? String,
+      "code,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
