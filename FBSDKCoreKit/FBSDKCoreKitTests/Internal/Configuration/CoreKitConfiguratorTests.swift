@@ -53,7 +53,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     ImpressionLoggingButton.resetClassDependencies()
     InstrumentManager.reset()
     InternalUtility.reset()
-    SDKError.reset()
     ServerConfigurationManager.shared.reset()
     Settings.shared.reset()
 
@@ -813,20 +812,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
       InternalUtility.shared.errorFactory,
       components.errorFactory,
       "InternalUtility should be configured with the error factory"
-    )
-  }
-
-  func testConfiguringSDKError() {
-    XCTAssertNil(
-      SDKError.errorReporter,
-      "SDKError should not have an error reporter by default"
-    )
-
-    configurator.performConfiguration()
-
-    XCTAssertTrue(
-      SDKError.errorReporter === components.errorReporter,
-      "SDKError should be configured with the error reporter"
     )
   }
 

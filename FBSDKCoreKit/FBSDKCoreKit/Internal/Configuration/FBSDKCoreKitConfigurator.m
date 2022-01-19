@@ -21,7 +21,6 @@
 #import "FBSDKButton+Internal.h"
 #import "FBSDKCodelessIndexer+Internal.h"
 #import "FBSDKCrashShield+Internal.h"
-#import "FBSDKError+Internal.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
@@ -75,7 +74,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureImpressionLoggingButton];
   [self configureInstrumentManager];
   [self configureInternalUtility];
-  [self configureSDKError];
   [self configureServerConfigurationManager];
   [self configureSettings];
 
@@ -235,14 +233,6 @@ NS_ASSUME_NONNULL_BEGIN
                                                             loggerFactory:self.components.loggerFactory
                                                                  settings:self.components.settings
                                                              errorFactory:self.components.errorFactory];
-}
-
-- (void)configureSDKError
-{
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [FBSDKError configureWithErrorReporter:self.components.errorReporter];
-  #pragma clang diagnostic pop
 }
 
 - (void)configureServerConfigurationManager

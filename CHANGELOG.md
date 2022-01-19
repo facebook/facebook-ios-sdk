@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Removed
+
+- Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.0...HEAD)
 
 ## 12.3.0

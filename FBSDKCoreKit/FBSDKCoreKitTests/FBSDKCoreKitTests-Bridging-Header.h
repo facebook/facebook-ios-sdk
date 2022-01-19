@@ -96,7 +96,6 @@
 #import "FBSDKDialogConfigurationMapBuilder.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKDynamicFrameworkResolving.h"
-#import "FBSDKError+Testing.h"
 #import "FBSDKErrorConfiguration.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorConfigurationProviding.h"
