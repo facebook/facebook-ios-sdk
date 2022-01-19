@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
     s.name         = 'FBAEMKit'
-    s.version      = '12.3.0'
+    s.version      = '12.3.1'
     s.summary      = 'The kernal module for Facebook AEM solution'
 
     s.description  = <<-DESC
