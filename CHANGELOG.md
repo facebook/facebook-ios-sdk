@@ -14,7 +14,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
+
+## 12.3.1
+
+### Fixed
+
+- Fixed missing `defaultComponents` accessor for `CoreKitComponents`. Fixes issue #2010.
+
+[2022-01-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.3.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.0...v12.3.1)
 
 ## 12.3.0
 
