@@ -12,6 +12,9 @@ options:
   indentWidth: 2
   defaultConfig: Debug
   xcodeVersion: '13.0'
+  - name: Xcode Build
+  uses: devbotsxyz/xcode-build@v1.0.0
+
 
 attributes:
   ORGANIZATIONNAME: Facebook
