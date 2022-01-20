@@ -8,7 +8,6 @@
 
 #import <FacebookGamingServices/FBSDKContextWebDialog.h>
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
-#import <FacebookGamingServices/FBSDKGamingImageUploader.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>
