@@ -16,14 +16,6 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBSDKSmartLoginServic
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap;
 
-// MARK: - Referral Manager
-
-/** Use to log the start of a referral request */
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBReferralStart;
-
-/** Use to log the end of a referral request */
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd;
-
 // MARK: - Login Manager
 
 /** Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */

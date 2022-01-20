@@ -16,14 +16,6 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_log
 
 FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
 
-// MARK: - Referral Manager
-
-/** Use to log the start of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
-
-/** Use to log the end of a referral request */
-FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
-
 // MARK: - Login Manager
 
 /** Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */

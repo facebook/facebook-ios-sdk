@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Removed
 
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.
+- Removed deprecated `FBSDKReferralCode`, `FBSDKReferralManager`, `FBSDKReferralManagerResult` and related classes.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
 
@@ -95,6 +96,7 @@ This fix means that application observers will now only be notified once per app
 ### Deprecated
 - The aggregate FacebookSDK pod is deprecated. Please use one of the individual pods instead (i.e. FBSDKCoreKit,
   FBSDKShareKit, FBSDKLoginKit, etc.)
+- `FBSDKReferralCode`, `FBSDKReferralManager` and `FBSDKReferralManagerResult` are deprecated and will be removed in v13.0.0
 
 [2021-10-26](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.1.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.0.2...v12.1.0)
