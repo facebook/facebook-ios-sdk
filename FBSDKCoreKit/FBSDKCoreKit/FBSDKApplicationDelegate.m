@@ -33,7 +33,7 @@
 #import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKButton+Internal.h"
-#import "FBSDKCoreKitComponents+Defaults.h"
+#import "FBSDKCoreKitComponents.h"
 #import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield+Internal.h"

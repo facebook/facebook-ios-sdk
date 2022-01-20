@@ -73,6 +73,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CoreKitComponents)
 @interface FBSDKCoreKitComponents : NSObject
 
+@property (class, nonatomic, readonly) FBSDKCoreKitComponents *defaultComponents
+NS_SWIFT_NAME(default);
+
 @property (nonatomic, readonly) id<FBSDKAccessTokenExpiring> accessTokenExpirer;
 @property (nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting, FBSDKTokenStringProviding> accessTokenWallet;
 @property (nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
