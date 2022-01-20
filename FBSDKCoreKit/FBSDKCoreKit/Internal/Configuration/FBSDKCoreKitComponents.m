@@ -238,10 +238,6 @@ static FBSDKCoreKitComponents *_default;
                                                                                                                       appStoreReceiptProvider:[NSBundle bundleForClass:FBSDKApplicationDelegate.class]];
       id<FBSDKPaymentObserving> paymentObserver = [[FBSDKPaymentObserver alloc] initWithPaymentQueue:SKPaymentQueue.defaultQueue
                                                                       paymentProductRequestorFactory:paymentProductRequestorFactory];
-      id<FBSDKGraphRequestPiggybackManaging> piggybackManager = [[FBSDKGraphRequestPiggybackManager alloc] initWithTokenWallet:FBSDKAccessToken.class
-                                                                                                                      settings:FBSDKSettings.sharedSettings
-                                                                                                   serverConfigurationProvider:FBSDKServerConfigurationManager.shared
-                                                                                                           graphRequestFactory:graphRequestFactory];
       id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
       timeSpentRecorder = [[FBSDKTimeSpentData alloc] initWithEventLogger:FBSDKAppEvents.shared
                                               serverConfigurationProvider:FBSDKServerConfigurationManager.shared];
@@ -314,7 +310,7 @@ static FBSDKCoreKitComponents *_default;
                                    notificationCenter:NSNotificationCenter.defaultCenter
                        operatingSystemVersionComparer:NSProcessInfo.processInfo
                                       paymentObserver:paymentObserver
-                                     piggybackManager:piggybackManager
+                                     piggybackManager:FBSDKGraphRequestPiggybackManager.class
                          restrictiveDataFilterManager:[[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared]
                           serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                              settings:FBSDKSettings.sharedSettings
