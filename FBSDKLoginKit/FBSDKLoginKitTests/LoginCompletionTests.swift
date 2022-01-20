@@ -654,9 +654,7 @@ class LoginCompletionTests: XCTestCase {
   // MARK: - Helpers
 
   func createLoginCompleter(parameters: [String: Any], appID: String) -> LoginURLCompleter {
-    let graphConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: graphConnection)
-
-    return LoginURLCompleter(
+    LoginURLCompleter(
       urlParameters: parameters,
       appID: appID,
       authenticationTokenCreator: authenticationTokenFactory,
