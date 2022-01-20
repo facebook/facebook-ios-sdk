@@ -52,6 +52,11 @@ modifier_order:
   preferred_modifier_order:
     [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
 
+custom_rules:
+  blank_line_after_single_line_guard:
+    regex: "guard [^\n]*? else \\{ return (:?\\w+ )?\\}\n[^\n]"
+    message: "Prefer a blank line after a guard with a return."
+
 only_rules:
   - array_init
   - block_based_kvo
@@ -70,6 +75,7 @@ only_rules:
   - contains_over_first_not_nil
   - control_statement
   - convenience_type
+  - custom_rules
   - cyclomatic_complexity
   - deployment_target
   - discarded_notification_center_observer

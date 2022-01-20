@@ -64,6 +64,7 @@ public class _GamingServiceController: NSObject {
   func isValidCallbackURL(_ url: URL, forService service: String) -> Bool {
     // verify the URL is intended as a callback for the SDK's friend finder
     guard let appID = settings.appID, let scheme = url.scheme else { return false }
+
     return scheme.hasPrefix("fb\(appID)") && url.host == service
   }
 }
@@ -79,6 +80,7 @@ extension _GamingServiceController: _GamingServiceControllerProtocol {
 
     urlOpener.open(url, sender: self) { [weak self] success, error in
       guard !success else { return }
+
       self?.handleBridgeAPIError(error)
     }
   }
