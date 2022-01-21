@@ -89,8 +89,6 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (void)_postStartRequest
 {
   FBSDKGraphRequestCompletion startRequestCompletionHandler = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
-
     if (error) {
       [self.delegate videoUploader:self didFailWithError:error];
       return;
@@ -100,11 +98,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       NSNumber *videoID = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_ID]];
       NSDictionary<NSString *, id> *offsetDictionary = [self _extractOffsetsFromResultDictionary:result];
       if (uploadSessionID == nil || videoID == nil) {
-        NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                        code:0
-                                                    userInfo:nil
-                                                     message:@"Failed to get valid upload_session_id or video_id."
-                                             underlyingError:nil];
+        NSError *uploadError = [self errorWithMessage:@"Failed to get valid upload_session_id or video_id."];
         [self.delegate videoUploader:self didFailWithError:uploadError];
         return;
       } else if (offsetDictionary == nil) {
@@ -116,12 +110,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
     }
   };
   if (self.videoSize == 0) {
-    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
-    NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                    code:0
-                                                userInfo:nil
-                                                 message:[NSString stringWithFormat:@"Invalid video size: %lu", (unsigned long)self.videoSize]
-                                         underlyingError:nil];
+    NSError *uploadError = [self errorWithMessage:[NSString stringWithFormat:@"Invalid video size: %lu", (unsigned long)self.videoSize]];
     [self.delegate videoUploader:self didFailWithError:uploadError];
     return;
   }
@@ -168,12 +157,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                                     } else {
                                                       result = [self dictionaryValue:result];
                                                       if (result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS] == nil) {
-                                                        id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
-                                                        NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                                                                        code:0
-                                                                                                    userInfo:nil
-                                                                                                     message:@"Failed to finish uploading."
-                                                                                             underlyingError:nil];
+                                                        NSError *uploadError = [self errorWithMessage:@"Failed to finish uploading."];
                                                         [self.delegate videoUploader:self didFailWithError:uploadError];
                                                         return;
                                                       }
@@ -204,22 +188,13 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   }
   NSNumber *startNum = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_START_OFFSET]];
   NSNumber *endNum = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_END_OFFSET]];
-  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
   if (startNum == nil || endNum == nil) {
-    NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                    code:0
-                                                userInfo:nil
-                                                 message:@"Fail to get valid start_offset or end_offset."
-                                         underlyingError:nil];
+    NSError *uploadError = [self errorWithMessage:@"Fail to get valid start_offset or end_offset."];
     [self.delegate videoUploader:self didFailWithError:uploadError];
     return nil;
   }
   if ([startNum compare:endNum] == NSOrderedDescending) {
-    NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                    code:0
-                                                userInfo:nil
-                                                 message:@"Invalid offset: start_offset is greater than end_offset."
-                                         underlyingError:nil];
+    NSError *uploadError = [self errorWithMessage:@"Invalid offset: start_offset is greater than end_offset."];
     [self.delegate videoUploader:self didFailWithError:uploadError];
     return nil;
   }
@@ -265,15 +240,10 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)failVideoUploadForChunkSizeOffset:(NSUInteger)startOffset endOffset:(NSUInteger)endOffset
 {
-  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
   NSString *message = [NSString stringWithFormat:@"Fail to get video chunk with start offset: %lu, end offset : %lu.",
                        (unsigned long)startOffset,
                        (unsigned long)endOffset];
-  NSError *uploadError = [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
-                                                  code:0
-                                              userInfo:nil
-                                               message:message
-                                       underlyingError:nil];
+  NSError *uploadError = [self errorWithMessage:message];
   [self.delegate videoUploader:self didFailWithError:uploadError];
   return;
 }
@@ -302,6 +272,16 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
   return [object isKindOfClass:[NSDictionary<NSString *, id> class]] ? object : nil;
+}
+
+- (NSError *)errorWithMessage:(NSString *)message
+{
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+  return [errorFactory errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                                  code:0
+                              userInfo:nil
+                               message:message
+                       underlyingError:nil];
 }
 
 @end
