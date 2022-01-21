@@ -34,7 +34,7 @@ NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:graphRequestFactory:)
 
 - (NSNumberFormatter *)numberFormatter;
 
-- (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result;
+- (nullable NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result;
 
 - (void)_startTransferRequestWithNewOffset:(NSDictionary<NSString *, id> *)offsetDictionary
                                       data:(NSData *)data;

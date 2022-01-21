@@ -175,7 +175,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
     let results = [startOffset: "1", endOffset: "1"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: results)
     XCTAssertEqual(
-      extractOffsets.count,
+      extractOffsets?.count,
       2,
       "Should return dictionary if start and end are in offset parameter"
     )
@@ -185,7 +185,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
     let result = [startOffset: "3", endOffset: "7"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
     XCTAssertEqual(
-      extractOffsets.count,
+      extractOffsets?.count,
       2,
       "Should return dictionary if end is larger than start"
     )
@@ -202,7 +202,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
     let result = [startOffset: "-3", endOffset: "-2"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
     XCTAssertEqual(
-      extractOffsets.count,
+      extractOffsets?.count,
       2,
       "Should return dictionary if end is smaller than start even as negative values"
     )
@@ -211,30 +211,27 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
   func testExtractOffsetsFromResultDictionaryWithNilOffset() {
     let result = [startOffset: "3"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
-    XCTAssertEqual(
-      extractOffsets.count,
-      0,
-      "Should return empty dictionary if end is missing"
+    XCTAssertNil(
+      extractOffsets,
+      "Should return nil if end is missing"
     )
   }
 
   func testExtractOffsetsFromResultDictionaryInvalidValue() {
     let result = [startOffset: "3", endOffset: "2invalid"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
-    XCTAssertEqual(
-      extractOffsets.count,
-      0,
-      "Should return empty dictionary if end is invalid value"
+    XCTAssertNil(
+      extractOffsets,
+      "Should return nil if end is invalid value"
     )
   }
 
   func testExtractOffsetsFromResultDictionaryWithDescendingOrder() {
     let result = [startOffset: "3", endOffset: "2"]
     let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
-    XCTAssertEqual(
-      extractOffsets.count,
-      0,
-      "Should return empty dictionary if end is smaller than start"
+    XCTAssertNil(
+      extractOffsets,
+      "Should return nil dictionary if end is smaller than start"
     )
   }
 }
