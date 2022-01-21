@@ -28,7 +28,8 @@ file_name:
   excluded: [
     Enums+Extensions.swift,
     BridgeAPI+ApplicationOpenUrlTests.swift,
-    BridgeAPI+SessionCompletionHandlerTests.swift
+    BridgeAPI+SessionCompletionHandlerTests.swift,
+    ShareAppEventNames.swift,
   ]
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
