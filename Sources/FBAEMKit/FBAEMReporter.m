@@ -401,10 +401,6 @@ static id<FBSDKDataPersisting> _store;
                                      contentID:(nullable NSString *)contentID
                                          block:(dispatch_block_t)block
 {
-  if (!contentID) {
-    NSLog(@"Content ID is not found for the optimized event");
-    return;
-  }
   [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_filter", self.appID]
                                       parameters:[self _catalogRequestParameters:invocation.catalogID contentID:contentID]
                                      tokenString:nil
