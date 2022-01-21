@@ -12,6 +12,5 @@
 
 #import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKContextWebDialog+Testing.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploader+Testing.h"

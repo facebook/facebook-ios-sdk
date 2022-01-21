@@ -9,7 +9,6 @@
 #import <FacebookGamingServices/FBSDKContextWebDialog.h>
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
-#import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>
 
 // The headers below need to be public since they're used in the Swift files
@@ -17,5 +16,4 @@
 // Not sure what the correct approach here is...
 
 #import <FacebookGamingServices/FBSDKGamingServicesKit-Prefix-Header.h>
-#import <FacebookGamingServices/FBSDKGamingVideoUploader.h>
 #import <FacebookGamingServices/FBSDKVideoUploader.h>
