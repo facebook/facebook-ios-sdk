@@ -167,6 +167,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
+      DEFINES_MODULE: YES
   FBSDKShareKit_TV-Dynamic:
     type: framework
     platform: tvOS
@@ -226,6 +227,7 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
+      DEFINES_MODULE: YES
   FBSDKShareKitTests:
     type: bundle.unit-test
     platform: iOS
