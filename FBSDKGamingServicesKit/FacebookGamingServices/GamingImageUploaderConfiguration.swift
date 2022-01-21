@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import UIKit
+
 @objcMembers
 @objc(FBSDKGamingImageUploaderConfiguration)
 public class GamingImageUploaderConfiguration: NSObject {

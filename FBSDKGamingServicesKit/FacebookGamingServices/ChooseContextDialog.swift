@@ -8,6 +8,7 @@
 
 #if !os(tvOS)
 
+import FBSDKCoreKit
 import Foundation
 
 /**
@@ -55,9 +56,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
     internalUtility: InternalUtilityProtocol
   ) {
     self.internalUtility = internalUtility
-    super.init()
-    dialogContent = content
-    self.delegate = delegate
+    super.init(delegate: delegate, dialogContent: content)
   }
 
   public override func show() -> Bool {

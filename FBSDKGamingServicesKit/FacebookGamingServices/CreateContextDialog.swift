@@ -41,9 +41,7 @@ public class CreateContextDialog: ContextWebDialog {
     delegate: ContextDialogDelegate
   ) {
     self.windowFinder = windowFinder
-    super.init()
-    self.delegate = delegate
-    dialogContent = content
+    super.init(delegate: delegate, dialogContent: content)
   }
 
   @discardableResult public override func show() -> Bool {

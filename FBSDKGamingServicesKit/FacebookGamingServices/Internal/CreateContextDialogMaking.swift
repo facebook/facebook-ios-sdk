@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
+
 protocol CreateContextDialogMaking {
   func makeCreateContextDialog(
     content: CreateContextContent,

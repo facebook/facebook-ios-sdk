@@ -46,9 +46,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
     delegate: ContextDialogDelegate
   ) {
     self.windowFinder = windowFinder
-
-    super.init(delegate: delegate)
-    dialogContent = content
+    super.init(delegate: delegate, dialogContent: content)
   }
 
   public override func show() -> Bool {

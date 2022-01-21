@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import TestTools
 import XCTest
 
@@ -19,7 +20,7 @@ class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
   let errorMessageKey = "error_message"
   let errorMessage = "Dialog Error"
 
-  lazy var contextWebDialog = ContextWebDialog(delegate: self)
+  lazy var contextWebDialog = ContextWebDialog(delegate: self, dialogContent: nil)
   let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 300, height: 600))
   var dialogCompleted = false
   var dialogCanceled = false
@@ -57,10 +58,13 @@ class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
     dialog.currentWebDialog = webDialog
 
     dialog.webDialog(webDialog, didCompleteWithResults: [errorCodeKey: cancelErrorCode, errorMessageKey: errorMessage])
+    let error = try XCTUnwrap(dialogError) as NSError
 
     XCTAssertFalse(dialogCompleted)
-    XCTAssertTrue(dialogCanceled)
-    XCTAssertNil(dialogError)
+    XCTAssertFalse(dialogCanceled)
+    XCTAssertNotNil(error)
+    XCTAssertEqual(error.code, cancelErrorCode)
+    XCTAssertEqual(error.userInfo.values.first as? String, errorMessage)
   }
 
   func testDialogReturnsError() throws {

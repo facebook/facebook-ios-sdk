@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FacebookGamingServices/FBSDKContextWebDialog.h>
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
 #import <FacebookGamingServices/FBSDKGamingServiceCompletionHandler.h>
 #import <FacebookGamingServices/FBSDKSwitchContextContent.h>
