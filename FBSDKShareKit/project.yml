@@ -121,7 +121,6 @@ targets:
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
-          - FBSDKAppGroupContent*
           - FBSDKAppInviteContent*
           - FBSDKCameraEffectArguments*
           - FBSDKCameraEffectTextures*
@@ -179,7 +178,6 @@ targets:
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
-          - FBSDKAppGroupContent*
           - FBSDKAppInviteContent*
           - FBSDKCameraEffectArguments*
           - FBSDKCameraEffectTextures*

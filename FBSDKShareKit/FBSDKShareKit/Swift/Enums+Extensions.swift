@@ -25,14 +25,3 @@ extension ShareDialog.Mode: CustomStringConvertible {
     }
   }
 }
-
-/**
- AppGroupPrivacy CustomStringConvertible
- */
-@available(tvOS, unavailable)
-extension AppGroupPrivacy: CustomStringConvertible {
-  /// The string description
-  public var description: String {
-    __NSStringFromFBSDKAppGroupPrivacy(self)
-  }
-}
