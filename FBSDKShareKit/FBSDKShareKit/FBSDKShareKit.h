@@ -26,7 +26,6 @@
  #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
  #import <FBSDKShareKit/FBSDKMessageDialog.h>
  #import <FBSDKShareKit/FBSDKSendButton.h>
- #import <FBSDKShareKit/FBSDKShareButton.h>
  #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
  #import <FBSDKShareKit/FBSDKShareDialog.h>
  #import <FBSDKShareKit/FBSDKShareDialogMode.h>
