@@ -89,7 +89,7 @@ class GamingVideoUploaderTests: XCTestCase {
   }
 
   func testCreatesFileHandle() {
-    uploader.uploadVideo(with: configuration) { _, _, _ in
+    uploader.uploadVideo(configuration: configuration) { _, _, _ in
       XCTFail("Should not invoke the completion handler")
     }
 
@@ -105,7 +105,7 @@ class GamingVideoUploaderTests: XCTestCase {
     fileHandleFactory.stubbedFileHandle = fileHandle
 
     var wasCompletionCalled = false
-    uploader.uploadVideo(with: configuration) { _, _, error in
+    uploader.uploadVideo(configuration: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorInvalidArgument.rawValue,
@@ -117,7 +117,7 @@ class GamingVideoUploaderTests: XCTestCase {
   }
 
   func testCreatesAndStartsUploader() {
-    uploader.uploadVideo(with: configuration) { _, _, _ in
+    uploader.uploadVideo(configuration: configuration) { _, _, _ in
       XCTFail("Should not invoke the completion handler")
     }
     XCTAssertTrue(
@@ -148,7 +148,7 @@ class GamingVideoUploaderTests: XCTestCase {
 
   func testUploadErrorsHandled() throws {
     var wasCompletionCalled = false
-    uploader.uploadVideo(with: configuration) { _, _, error in
+    uploader.uploadVideo(configuration: configuration) { _, _, error in
       XCTAssertTrue(error is SampleError)
 
       wasCompletionCalled = true
@@ -163,7 +163,7 @@ class GamingVideoUploaderTests: XCTestCase {
 
   func testVideoUploaderErrorOnUnsuccessful() throws {
     var wasCompletionCalled = false
-    uploader.uploadVideo(with: configuration) { _, _, error in
+    uploader.uploadVideo(configuration: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorUnknown.rawValue,
@@ -181,7 +181,7 @@ class GamingVideoUploaderTests: XCTestCase {
 
   func testVideoUploaderSucceeds() throws {
     var wasCompletionCalled = false
-    uploader.uploadVideo(with: configuration) { success, _, error in
+    uploader.uploadVideo(configuration: configuration) { success, _, error in
       XCTAssertNil(error, "Should not receive an error when the uploader succeeds")
       XCTAssertTrue(success, "Should indicate success in the completion")
       wasCompletionCalled = true
@@ -210,9 +210,9 @@ class GamingVideoUploaderTests: XCTestCase {
     fileHandle.stubbedReadData = Data(Array(repeating: 1, count: 500))
 
     uploader.uploadVideo(
-      with: configuration,
+      configuration: configuration,
       completion: { _, _, _ in },
-      andProgressHandler: verifyProgress
+      progressHandler: verifyProgress
     )
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
     let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)

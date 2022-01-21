@@ -28,34 +28,25 @@ public final class GamingVideoUploader: NSObject {
   // ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
   static let shared = GamingVideoUploader()
 
-  override convenience init() {
-    self.init(
-      fileHandleFactory: _FileHandleFactory(),
-      videoUploaderFactory: _VideoUploaderFactory()
-    )
-  }
-
   init(
-    fileHandleFactory: _FileHandleCreating,
-    videoUploaderFactory: _VideoUploaderCreating
+    fileHandleFactory: _FileHandleCreating = _FileHandleFactory(),
+    videoUploaderFactory: _VideoUploaderCreating = _VideoUploaderFactory()
   ) {
     self.fileHandleFactory = fileHandleFactory
     self.videoUploaderFactory = videoUploaderFactory
   }
 
-  static func createWithFileHandle(
-    _ fileHandle: _FileHandling,
-    totalBytesToSend totalBytes: UInt,
+  private convenience init(
+    fileHandle: _FileHandling,
+    totalBytesExpectedToSend: UInt,
     completionHandler: GamingServiceResultCompletion?,
     progressHandler: GamingServiceProgressHandler?
-  ) -> GamingVideoUploader {
-    let uploader = GamingVideoUploader()
-    uploader.fileHandle = fileHandle
-    uploader.totalBytesExpectedToSend = totalBytes
-    uploader.completionHandler = completionHandler
-    uploader.progressHandler = progressHandler
-
-    return uploader
+  ) {
+    self.init()
+    self.fileHandle = fileHandle
+    self.totalBytesExpectedToSend = totalBytesExpectedToSend
+    self.completionHandler = completionHandler
+    self.progressHandler = progressHandler
   }
 
   /**
@@ -70,19 +61,19 @@ public final class GamingVideoUploader: NSObject {
     completion: @escaping GamingServiceResultCompletion
   ) {
     shared.uploadVideo(
-      with: configuration,
-      andResultCompletion: completion
+      configuration: configuration,
+      completion: completion
     )
   }
 
   func uploadVideo(
-    with configuration: GamingVideoUploaderConfiguration,
-    andResultCompletion completion: @escaping GamingServiceResultCompletion
+    configuration: GamingVideoUploaderConfiguration,
+    completion: @escaping GamingServiceResultCompletion
   ) {
     uploadVideo(
-      with: configuration,
+      configuration: configuration,
       completion: completion,
-      andProgressHandler: nil
+      progressHandler: nil
     )
   }
 
@@ -100,20 +91,20 @@ public final class GamingVideoUploader: NSObject {
     progressHandler: GamingServiceProgressHandler?
   ) {
     shared.uploadVideo(
-      with: configuration,
+      configuration: configuration,
       completion: completion,
-      andProgressHandler: progressHandler
+      progressHandler: progressHandler
     )
   }
 
   func uploadVideo(
-    with configuration: GamingVideoUploaderConfiguration,
+    configuration: GamingVideoUploaderConfiguration,
     completion: @escaping GamingServiceResultCompletion,
-    andProgressHandler progressHandler: GamingServiceProgressHandler?
+    progressHandler: GamingServiceProgressHandler?
   ) {
     let errorFactory = ErrorFactory()
 
-    if AccessToken.current == nil {
+    guard AccessToken.current != nil else {
       completion(
         false,
         nil,
@@ -146,11 +137,11 @@ public final class GamingVideoUploader: NSObject {
       return
     }
 
-    let fileSize = fileHandle.seekToEndOfFile()
+    let fileSize = UInt(fileHandle.seekToEndOfFile())
 
-    let uploader = GamingVideoUploader.createWithFileHandle(
-      fileHandle,
-      totalBytesToSend: UInt(fileSize),
+    let uploader = GamingVideoUploader(
+      fileHandle: fileHandle,
+      totalBytesExpectedToSend: fileSize,
       completionHandler: completion,
       progressHandler: progressHandler
     )
@@ -159,7 +150,7 @@ public final class GamingVideoUploader: NSObject {
 
     let videoUploader = videoUploaderFactory.create(
       videoName: configuration.videoURL.lastPathComponent,
-      videoSize: UInt(fileSize),
+      videoSize: fileSize,
       parameters: [:],
       delegate: uploader
     )
@@ -167,16 +158,16 @@ public final class GamingVideoUploader: NSObject {
     videoUploader.start()
   }
 
-  func safeCompleteWithSuccess(
-    _ success: Bool,
+  private func safelyComplete(
+    success: Bool,
     error: Error?,
-    result: Any?
+    result: [String: Any]?
   ) {
     var finalError = error
 
-    if success == false, error == nil {
-      let errorFactory = ErrorFactory()
-      finalError = errorFactory.error(
+    if !success,
+       error == nil {
+      finalError = ErrorFactory().error(
         code: CoreError.errorUnknown.rawValue,
         userInfo: nil,
         message: "Video upload was unsuccessful, but no error was thrown.",
@@ -184,18 +175,22 @@ public final class GamingVideoUploader: NSObject {
       )
     }
 
-    completionHandler?(success, result as? [String: Any], finalError)
+    completionHandler?(success, result, finalError)
 
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  func safeProgressWithTotalBytesSent(_ totalBytesSent: UInt) {
+  private func safelyHandleProgress(totalBytesSent: UInt) {
     guard let progressHandler = progressHandler else { return }
 
     let bytesSent = totalBytesSent - self.totalBytesSent
     self.totalBytesSent = totalBytesSent
 
-    progressHandler(Int64(bytesSent), Int64(self.totalBytesSent), Int64(totalBytesExpectedToSend))
+    progressHandler(
+      Int64(bytesSent),
+      Int64(self.totalBytesSent),
+      Int64(totalBytesExpectedToSend)
+    )
   }
 }
 
@@ -210,13 +205,14 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
   ) -> Data? {
     let chunkSize = endOffset - startOffset
     guard let fileHandle = fileHandle else { return nil }
+
     fileHandle.seek(toFileOffset: UInt64(startOffset))
     let videoChunkData = fileHandle.readData(ofLength: Int(chunkSize))
-    if videoChunkData.count != chunkSize {
+    guard videoChunkData.count == chunkSize else {
       return nil
     }
 
-    safeProgressWithTotalBytesSent(startOffset)
+    safelyHandleProgress(totalBytesSent: startOffset)
 
     return videoChunkData
   }
@@ -225,7 +221,7 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
     _ videoUploader: _VideoUploader,
     didCompleteWithResults results: [String: Any]
   ) {
-    safeProgressWithTotalBytesSent(totalBytesExpectedToSend)
+    safelyHandleProgress(totalBytesSent: totalBytesExpectedToSend)
 
     var serverSuccess = false
     let success = results["success"]
@@ -236,8 +232,8 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
       serverSuccess = numberSuccess.boolValue
     }
 
-    safeCompleteWithSuccess(
-      serverSuccess,
+    safelyComplete(
+      success: serverSuccess,
       error: nil,
       result: ["video_id": results["video_id"] ?? ""]
     )
@@ -247,8 +243,8 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
     _ videoUploader: _VideoUploader,
     didFailWithError error: Error
   ) {
-    safeCompleteWithSuccess(
-      false,
+    safelyComplete(
+      success: false,
       error: error,
       result: nil
     )
