@@ -12,6 +12,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+
+#import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareAppEventParameters.h"

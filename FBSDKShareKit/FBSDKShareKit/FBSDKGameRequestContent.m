@@ -10,8 +10,9 @@
 
 #import "FBSDKGameRequestContent.h"
 
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+
 #import "FBSDKHasher.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKShareUtility.h"
 
 #define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"

@@ -15,7 +15,6 @@
 #import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareDialog+Testing.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"

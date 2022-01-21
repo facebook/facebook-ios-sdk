@@ -9,9 +9,9 @@
 #import "FBSDKShareUtility.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 
 #import "FBSDKHashtag.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 
 @implementation FBSDKShareUtility

@@ -8,8 +8,9 @@
 
 #import "FBSDKShareVideo.h"
 
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+
 #import "FBSDKHasher.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"
 

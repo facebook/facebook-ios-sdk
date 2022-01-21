@@ -6,6 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKShareConstants.h"
+#import "FBSDKShareErrorDomain.h"
 
 NSErrorDomain const FBSDKShareErrorDomain = @"com.facebook.sdk.share";

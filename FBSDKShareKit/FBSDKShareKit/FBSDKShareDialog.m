@@ -15,13 +15,15 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <objc/runtime.h>
+
+#import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareExtension.h"
 #import "FBSDKShareInternalURLOpening.h"

@@ -10,8 +10,9 @@
 
 #import <Photos/Photos.h>
 
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+
 #import "FBSDKHasher.h"
-#import "FBSDKShareConstants.h"
 
 NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
 NSString *const kFBSDKSharePhotoImageKey = @"image";

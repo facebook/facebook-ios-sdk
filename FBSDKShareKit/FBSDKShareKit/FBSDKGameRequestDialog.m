@@ -11,10 +11,12 @@
 #import "FBSDKGameRequestDialog.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+
+#import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKGameRequestDialogDelegate.h"
 #import "FBSDKGameRequestFrictionlessRecipientCache.h"
-#import "FBSDKShareConstants.h"
 #import "FBSDKShareUtility.h"
 
 #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
