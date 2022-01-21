@@ -8,9 +8,9 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMessengerIcon.h"
+#import <FBSDKShareKit/_FBSDKMessengerIcon.h>
 
-@implementation FBSDKMessengerIcon
+@implementation _FBSDKMessengerIcon
 
 - (CGPathRef)pathWithSize:(CGSize)size
 {

@@ -10,8 +10,9 @@
 
 #import "FBSDKSendButton.h"
 
+#import <FBSDKShareKit/_FBSDKMessengerIcon.h>
+
 #import "FBSDKMessageDialog.h"
-#import "FBSDKMessengerIcon.h"
 #import "FBSDKShareAppEventName.h"
 
 @interface FBSDKSendButton () <FBSDKButtonImpressionLogging>
@@ -66,7 +67,7 @@
   UIColor *backgroundColor = [UIColor colorWithRed:0.0 green:132.0 / 255.0 blue:1.0 alpha:1.0];
   UIColor *highlightedColor = [UIColor colorWithRed:0.0 green:111.0 / 255.0 blue:1.0 alpha:1.0];
 
-  [self configureWithIcon:[FBSDKMessengerIcon new]
+  [self configureWithIcon:[_FBSDKMessengerIcon new]
                     title:title
           backgroundColor:backgroundColor
          highlightedColor:highlightedColor];

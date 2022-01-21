@@ -12,8 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(MessengerIcon)
-@interface FBSDKMessengerIcon : FBSDKIcon
+NS_SWIFT_NAME(_MessengerIcon)
+@interface _FBSDKMessengerIcon : FBSDKIcon
 @end
 
 NS_ASSUME_NONNULL_END
