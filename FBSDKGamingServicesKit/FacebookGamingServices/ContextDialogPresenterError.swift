@@ -15,4 +15,5 @@ public enum ContextDialogPresenterError: Error {
   case showCreateContext
   case showSwitchContext
   case showChooseContext
+  case invalidAccessToken
 }

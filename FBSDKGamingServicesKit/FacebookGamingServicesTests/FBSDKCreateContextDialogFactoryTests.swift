@@ -55,12 +55,25 @@ class FBSDKCreateContextDialogFactoryTests: XCTestCase {
 
   func testCreatingDialogWithMissingAccessToken() throws {
     let factory = CreateContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
-    XCTAssertNil(
-      factory.makeCreateContextDialog(
+    var capturedError: ContextDialogPresenterError?
+    var createDialog: CreateContextDialog?
+
+    do {
+      createDialog = try factory.makeCreateContextDialog(
         content: content,
         windowFinder: windowFinder,
         delegate: delegate
-      ),
+      ) as? CreateContextDialog
+    } catch {
+      capturedError = error as? ContextDialogPresenterError
+    }
+    XCTAssertEqual(
+      capturedError,
+      ContextDialogPresenterError.invalidAccessToken,
+      "Should throw ContextDialogPresenterError.invalidAccessToken error"
+    )
+    XCTAssertNil(
+      createDialog,
       "Should not create a context dialog with a missing access token"
     )
   }

@@ -55,13 +55,26 @@ class SwitchContextDialogFactoryTests: XCTestCase {
 
   func testCreatingDialogWithMissingAccessToken() throws {
     let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
-    XCTAssertNil(
-      factory.makeSwitchContextDialog(
+    var capturedError: ContextDialogPresenterError?
+    var switchDialog: SwitchContextDialog?
+
+    do {
+      switchDialog = try factory.makeSwitchContextDialog(
         content: content,
         windowFinder: windowFinder,
         delegate: delegate
-      ),
-      "Should not create a dialog with a missing access token"
+      ) as? SwitchContextDialog
+    } catch {
+      capturedError = error as? ContextDialogPresenterError
+    }
+    XCTAssertEqual(
+      capturedError,
+      ContextDialogPresenterError.invalidAccessToken,
+      "Should throw ContextDialogPresenterError.invalidAccessToken error"
+    )
+    XCTAssertNil(
+      switchDialog,
+      "Should not create a context dialog with a missing access token"
     )
   }
 }

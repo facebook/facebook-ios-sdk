@@ -59,8 +59,8 @@ class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingCreateContextDialog() {
-    _ = presenter.makeCreateContextDialog(
+  func testMakingCreateContextDialog() throws {
+    _ = try presenter.makeCreateContextDialog(
       content: createContextContent,
       delegate: delegate
     )
@@ -117,8 +117,8 @@ class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingSwitchContextDialog() {
-    _ = presenter.makeSwitchContextDialog(
+  func testMakingSwitchContextDialog() throws {
+    _ = try presenter.makeSwitchContextDialog(
       content: switchContextContent,
       delegate: delegate
     )

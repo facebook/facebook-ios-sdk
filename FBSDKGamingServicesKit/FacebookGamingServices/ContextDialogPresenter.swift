@@ -47,7 +47,7 @@ public class ContextDialogPresenter {
     content: CreateContextContent,
     delegate: ContextDialogDelegate
   ) throws {
-    guard let dialog = makeCreateContextDialog(content: content, delegate: delegate)
+    guard let dialog = try makeCreateContextDialog(content: content, delegate: delegate)
     else {
       throw ContextDialogPresenterError.showCreateContext
     }
@@ -66,7 +66,7 @@ public class ContextDialogPresenter {
     content: SwitchContextContent,
     delegate: ContextDialogDelegate
   ) throws {
-    guard let dialog = makeSwitchContextDialog(content: content, delegate: delegate)
+    guard let dialog = try makeSwitchContextDialog(content: content, delegate: delegate)
     else {
       throw ContextDialogPresenterError.showSwitchContext
     }
@@ -105,8 +105,8 @@ public class ContextDialogPresenter {
   func makeCreateContextDialog(
     content: CreateContextContent,
     delegate: ContextDialogDelegate
-  ) -> Showable? {
-    createContextDialogFactory.makeCreateContextDialog(
+  ) throws -> Showable? {
+    try createContextDialogFactory.makeCreateContextDialog(
       content: content,
       windowFinder: InternalUtility.shared,
       delegate: delegate
@@ -116,8 +116,8 @@ public class ContextDialogPresenter {
   func makeSwitchContextDialog(
     content: SwitchContextContent,
     delegate: ContextDialogDelegate
-  ) -> Showable? {
-    switchContextDialogFactory.makeSwitchContextDialog(
+  ) throws -> Showable? {
+    try switchContextDialogFactory.makeSwitchContextDialog(
       content: content,
       windowFinder: InternalUtility.shared,
       delegate: delegate

@@ -20,9 +20,9 @@ struct SwitchContextDialogFactory: SwitchContextDialogMaking {
     content: SwitchContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable? {
+  ) throws -> Showable? {
     guard tokenProvider.currentAccessToken != nil else {
-      return nil
+      throw ContextDialogPresenterError.invalidAccessToken
     }
 
     return SwitchContextDialog(

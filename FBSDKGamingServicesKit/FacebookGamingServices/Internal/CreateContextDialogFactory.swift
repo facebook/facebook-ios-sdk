@@ -19,9 +19,9 @@ struct CreateContextDialogFactory: CreateContextDialogMaking {
     content: CreateContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable? {
+  ) throws -> Showable? {
     guard tokenProvider.currentAccessToken != nil else {
-      return nil
+      throw ContextDialogPresenterError.invalidAccessToken
     }
 
     return CreateContextDialog(

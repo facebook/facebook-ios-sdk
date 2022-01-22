@@ -13,5 +13,5 @@ protocol SwitchContextDialogMaking {
     content: SwitchContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable?
+  ) throws -> Showable?
 }
