@@ -45,18 +45,20 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (instancetype)init
 {
   return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility
-                  keychainStoreFactory:[FBSDKKeychainStoreFactory new]
-                     accessTokenWallet:FBSDKAccessToken.class
-                   authenticationToken:FBSDKAuthenticationToken.class
-                               profile:FBSDKProfile.class
-                             urlOpener:FBSDKBridgeAPI.sharedInstance
-                              settings:FBSDKSettings.sharedSettings
-                 loginCompleterFactory:[FBSDKLoginCompleterFactory new] graphRequestFactory:[FBSDKGraphRequestFactory new]];
+                   keychainStoreFactory:[FBSDKKeychainStoreFactory new]
+                      accessTokenWallet:FBSDKAccessToken.class
+          graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]
+                    authenticationToken:FBSDKAuthenticationToken.class
+                                profile:FBSDKProfile.class
+                              urlOpener:FBSDKBridgeAPI.sharedInstance
+                               settings:FBSDKSettings.sharedSettings
+                  loginCompleterFactory:[FBSDKLoginCompleterFactory new] graphRequestFactory:[FBSDKGraphRequestFactory new]];
 }
 
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
                    keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
                       accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+          graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
                               urlOpener:(id<FBSDKURLOpener>)urlOpener
@@ -67,6 +69,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   if ((self = [super init])) {
     _internalUtility = internalUtility;
     _accessTokenWallet = accessTokenWallet;
+    _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _authenticationToken = authenticationToken;
     _profile = profile;
     _urlOpener = urlOpener;
@@ -180,10 +183,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   if (loginUrlParameters) {
     id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:loginUrlParameters
                                                                                                      appID:self.settings.appID
+                                                                             graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                                 authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]
-
-                                                                                       graphRequestFactory:self.graphRequestFactory
-                                                                                           internalUtility:self.internalUtility];
+                                                                                       graphRequestFactory:[FBSDKGraphRequestFactory new] internalUtility:self.internalUtility];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *completionParameters) {
       [self completeAuthentication:completionParameters expectChallenge:NO];
     }];
@@ -392,7 +394,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       tp = @"ios_14_do_not_track";
       break;
     case FBSDKLoginTrackingEnabled:
-      responseType = @"code,signed_request,graph_domain";
+      responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
       [FBSDKTypeUtility dictionary:loginParams setObject:configuration.codeVerifier.challenge forKey:@"code_challenge"];
       [FBSDKTypeUtility dictionary:loginParams setObject:@"S256" forKey:@"code_challenge_method"];
       [self storeExpectedCodeVerifier:configuration.codeVerifier];
@@ -487,11 +489,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken
                       withResult:(FBSDKLoginManagerLoginResult *)loginResult
 {
-  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"me"
-                                                                                 parameters:@{@"fields" : @""}
-                                                                                tokenString:loginResult.token.tokenString
-                                                                                 HTTPMethod:nil
-                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                 parameters:@{@"fields" : @""}
+                                                                tokenString:loginResult.token.tokenString
+                                                                 HTTPMethod:nil
+                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   FBSDKGraphRequestCompletion handler = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     NSString *actualID = result[@"id"];
     if ([currentToken.userID isEqualToString:actualID]) {
@@ -507,7 +509,9 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     }
   };
 
-  [request startWithCompletion:handler];
+  id<FBSDKGraphRequestConnecting> connection = [self.graphRequestConnectionFactory createGraphRequestConnection];
+  [connection addRequest:request completion:handler];
+  [connection start];
 }
 
 // change bool to auth method string.
@@ -714,6 +718,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     NSDictionary<NSString *, id> *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url] ?: @{};
     id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:urlParameters
                                                                                                      appID:self.settings.appID
+                                                                             graphRequestConnectionFactory:self.graphRequestConnectionFactory
                                                                                 authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]
 
                                                                                        graphRequestFactory:self.graphRequestFactory

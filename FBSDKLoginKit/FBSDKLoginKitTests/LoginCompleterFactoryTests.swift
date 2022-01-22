@@ -21,6 +21,7 @@ class LoginCompleterFactoryTests: XCTestCase {
     let completer = LoginCompleterFactory().createLoginCompleter(
       urlParameters: [:],
       appID: name,
+      graphRequestConnectionFactory: TestGraphRequestConnectionFactory(),
       authenticationTokenCreator: TestAuthenticationTokenFactory(),
       graphRequestFactory: TestGraphRequestFactory(),
       internalUtility: TestInternalUtility()

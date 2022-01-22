@@ -18,6 +18,8 @@ class LoginManagerTests: XCTestCase {
   var loginManager: LoginManager!
   var keychainStoreFactory: TestKeychainStoreFactory!
   var keychainStore: TestKeychainStore!
+  var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
+  var connection: TestGraphRequestConnection!
   var urlOpener: TestURLOpener!
   var settings: TestSettings!
   var loginCompleter: TestLoginCompleter!
@@ -55,6 +57,8 @@ class LoginManagerTests: XCTestCase {
     keychainStore = TestKeychainStore()
     keychainStoreFactory = TestKeychainStoreFactory()
     keychainStoreFactory.stubbedKeychainStore = keychainStore
+    connection = TestGraphRequestConnection()
+    graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
     urlOpener = TestURLOpener()
     settings = TestSettings()
     settings.appID = appID
@@ -66,6 +70,7 @@ class LoginManagerTests: XCTestCase {
       internalUtility: internalUtility,
       keychainStoreFactory: keychainStoreFactory,
       accessTokenWallet: TestAccessTokenWallet.self,
+      graphRequestConnectionFactory: graphRequestConnectionFactory,
       authenticationToken: TestAuthenticationTokenWallet.self,
       profile: TestProfileProvider.self,
       urlOpener: urlOpener,
@@ -145,6 +150,8 @@ class LoginManagerTests: XCTestCase {
     loginManager = nil
     keychainStoreFactory = nil
     keychainStore = nil
+    graphRequestConnectionFactory = nil
+    connection = nil
     urlOpener = nil
     settings = nil
     loginCompleter = nil
@@ -168,6 +175,7 @@ class LoginManagerTests: XCTestCase {
     XCTAssertTrue(loginManager.internalUtility is InternalUtility)
     XCTAssertTrue(loginManager.keychainStore.self is KeychainStore)
     XCTAssertTrue(loginManager.accessTokenWallet is AccessToken.Type)
+    XCTAssertTrue(loginManager.graphRequestConnectionFactory is GraphRequestConnectionFactory)
     XCTAssertTrue(loginManager.authenticationToken is AuthenticationToken.Type)
     XCTAssertTrue(loginManager.profile is Profile.Type)
     XCTAssertTrue(loginManager.urlOpener is BridgeAPI)
@@ -428,13 +436,12 @@ class LoginManagerTests: XCTestCase {
 
     loginManager.completeAuthentication(parameters, expectChallenge: true)
 
-    let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
-      capturedRequest?.graphPath,
+      connection.capturedRequest?.graphPath,
       "me",
       "Should create a graph request with the expected graph path"
     )
-    capturedRequest?.capturedCompletionHandler?(nil, ["id": existingToken.userID], nil)
+    connection.capturedCompletion?(nil, ["id": existingToken.userID], nil)
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertNil(capturedError)
@@ -710,7 +717,7 @@ class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
       parameters["response_type"],
-      "code,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -831,7 +838,7 @@ class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
       parameters["response_type"],
-      "code,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -875,7 +882,7 @@ class LoginManagerTests: XCTestCase {
 
     XCTAssertEqual(
       parameters["response_type"],
-      "code,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -1007,7 +1014,7 @@ class LoginManagerTests: XCTestCase {
       XCTFail("Should not actually reauthorize and call the handler in this test")
     }
 
-    XCTAssertTrue(graphRequestFactory.capturedRequests.isEmpty)
+    XCTAssertTrue(connection.capturedRequests.isEmpty)
     XCTAssertFalse(loginManager.state == .idle)
   }
 
@@ -1093,19 +1100,18 @@ class LoginManagerTests: XCTestCase {
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
 
-    let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
-      capturedRequest?.graphPath,
+      connection.capturedRequest?.graphPath,
       "me",
       "Should create a graph request with the expected graph path"
     )
     XCTAssertEqual(
-      capturedRequest?.tokenString,
+      connection.capturedRequest?.tokenString,
       SampleAccessTokens.validToken.tokenString,
       "Should create a graph request with the expected access token string"
     )
     XCTAssertEqual(
-      capturedRequest?.flags,
+      connection.capturedRequest?.flags,
       [.doNotInvalidateTokenOnError, .disableErrorRecovery],
       "The graph request should not invalidate the token on error or disable error recovery"
     )
@@ -1128,7 +1134,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
+    connection.capturedCompletion?(nil, nil, SampleError())
 
     XCTAssertNotNil(capturedError)
     XCTAssertNil(capturedResult)
@@ -1151,7 +1157,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": SampleAccessTokens.validToken.userID], nil)
+    connection.capturedCompletion?(nil, ["id": SampleAccessTokens.validToken.userID], nil)
 
     XCTAssertNil(capturedError)
     XCTAssertEqual(capturedResult, result)
@@ -1174,7 +1180,7 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": "456"], nil)
+    connection.capturedCompletion?(nil, ["id": "456"], nil)
 
     XCTAssertNotNil(capturedError)
     XCTAssertNil(capturedResult)

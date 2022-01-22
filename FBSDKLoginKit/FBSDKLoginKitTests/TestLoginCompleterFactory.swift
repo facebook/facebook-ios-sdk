@@ -14,6 +14,7 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   let stubbedLoginCompleter: TestLoginCompleter
   var capturedURLParameters = [String: Any]()
   var capturedAppID: String?
+  var capturedGraphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol?
   var capturedAuthenticationTokenCreator: AuthenticationTokenCreating?
   var capturedGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedInternalUtility: URLHosting?
@@ -25,12 +26,14 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String,
+    graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
     authenticationTokenCreator: AuthenticationTokenCreating,
     graphRequestFactory: GraphRequestFactoryProtocol,
     internalUtility: URLHosting
   ) -> LoginCompleting {
     capturedURLParameters = parameters
     capturedAppID = appID
+    capturedGraphRequestConnectionFactory = graphRequestConnectionFactory
     capturedAuthenticationTokenCreator = authenticationTokenCreator
     capturedGraphRequestFactory = graphRequestFactory
     capturedInternalUtility = internalUtility
