@@ -163,9 +163,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
   [self _updateNotificationObservers];
-
-  self.authType = FBSDKLoginAuthTypeRerequest;
-  self.codeVerifier = [FBSDKCodeVerifier new];
 }
 
 - (void)_updateNotificationObservers
@@ -284,13 +281,18 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (FBSDKLoginConfiguration *)loginConfiguration
 {
-  NSString *nonce = self.nonce ?: NSUUID.UUID.UUIDString;
-  return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                                     tracking:self.loginTracking
-                                                        nonce:nonce
-                                              messengerPageId:self.messengerPageId
-                                                     authType:self.authType
-                                                 codeVerifier:self.codeVerifier];
+  if (self.nonce) {
+    return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                                       tracking:self.loginTracking
+                                                          nonce:self.nonce
+                                                messengerPageId:self.messengerPageId
+                                                       authType:self.authType];
+  } else {
+    return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                                       tracking:self.loginTracking
+                                                messengerPageId:self.messengerPageId
+                                                       authType:self.authType];
+  }
 }
 
 - (NSString *)_logOutTitle
@@ -401,6 +403,15 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (BOOL)_isAuthenticated
 {
   return (FBSDKAccessToken.currentAccessToken || FBSDKAuthenticationToken.currentAuthenticationToken);
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  if (self = [super initWithFrame:frame]) {
+    self.authType = FBSDKLoginAuthTypeRerequest;
+  }
+
+  return self;
 }
 
 - (void)_logout
