@@ -163,15 +163,6 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   return updatedParameters;
 }
 
-#pragma mark - FBSDKSharingScheme
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode
-{
-  return nil;
-}
-
 #pragma clang diagnostic pop
 
 #pragma mark - FBSDKSharingValidation

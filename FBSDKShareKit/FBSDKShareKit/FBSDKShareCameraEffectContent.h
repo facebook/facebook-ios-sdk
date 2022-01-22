@@ -13,7 +13,6 @@
 #import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
 #import <FBSDKShareKit/FBSDKCameraEffectTextures.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
-#import <FBSDKShareKit/FBSDKSharingScheme.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  A model for content to share with a Facebook camera effect.
  */
 NS_SWIFT_NAME(ShareCameraEffectContent)
-@interface FBSDKShareCameraEffectContent : NSObject <FBSDKSharingContent, FBSDKSharingScheme>
+@interface FBSDKShareCameraEffectContent : NSObject <FBSDKSharingContent>
 #pragma clang diagnostic pop
 
 /**

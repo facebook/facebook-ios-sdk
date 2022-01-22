@@ -721,16 +721,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   if (![self _validateShareContentForNative:validationErrorRef]) {
     return NO;
   }
-  NSString *scheme = nil;
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  if ([self.shareContent respondsToSelector:@selector(schemeForMode:)]) {
-    scheme = [(id<FBSDKSharingScheme>)self.shareContent schemeForMode:FBSDKShareDialogModeNative];
-  }
-  #pragma clang diagnostic pop
-  if (!(scheme.length > 0)) {
-    scheme = FBSDKURLSchemeFacebookAPI;
-  }
+
   NSString *methodName;
   if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     methodName = FBSDK_SHARE_CAMERA_METHOD_NAME;
@@ -743,7 +734,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
                                                                           shouldFailOnDataError:self.shouldFailOnDataError];
   id<FBSDKBridgeAPIRequest> request;
   request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                                          scheme:scheme
+                                                                          scheme:FBSDKURLSchemeFacebookAPI
                                                                       methodName:methodName
                                                                       parameters:parameters
                                                                         userInfo:nil];
