@@ -731,11 +731,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                                                                         tracking:self->_configuration.tracking];
                  }
                  [self completeAuthentication:parameters expectChallenge:YES];
-               }
-                                  nonce:[self loadExpectedNonce]
-                           codeVerifier:[self loadExpectedCodeVerifier]];
+               } nonce:[self loadExpectedNonce]];
     [self storeExpectedNonce:nil];
-    [self storeExpectedCodeVerifier:nil];
   }
 
   return isFacebookURL;
