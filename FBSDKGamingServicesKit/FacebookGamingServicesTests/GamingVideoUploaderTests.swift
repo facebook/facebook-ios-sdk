@@ -35,7 +35,7 @@ class GamingVideoUploaderTests: XCTestCase {
 
   func testDefaults() {
     XCTAssertTrue(
-      GamingVideoUploader.shared.fileHandleFactory is _FileHandleFactory,
+      GamingVideoUploader.shared.fileHandleFactory is FileHandleFactory,
       "Should have the expected file handle factory by default"
     )
     XCTAssertTrue(

@@ -29,7 +29,7 @@ public final class GamingVideoUploader: NSObject {
   static let shared = GamingVideoUploader()
 
   init(
-    fileHandleFactory: _FileHandleCreating = _FileHandleFactory(),
+    fileHandleFactory: _FileHandleCreating = FileHandleFactory(),
     videoUploaderFactory: _VideoUploaderCreating = _VideoUploaderFactory()
   ) {
     self.fileHandleFactory = fileHandleFactory

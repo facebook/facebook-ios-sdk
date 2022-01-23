@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import XCTest
 
 class FBSDKFileHandleFactoryTests: XCTestCase {
@@ -21,7 +21,7 @@ class FBSDKFileHandleFactoryTests: XCTestCase {
     FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
 
     XCTAssertNotNil(
-      try? _FileHandleFactory().fileHandleForReading(from: url),
+      try? FileHandleFactory().fileHandleForReading(from: url),
       "A file handle factory should be able to return a handle to a valid file"
     )
   }
