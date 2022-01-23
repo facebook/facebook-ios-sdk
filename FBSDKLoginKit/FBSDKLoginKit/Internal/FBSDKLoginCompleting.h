@@ -18,13 +18,13 @@ NS_SWIFT_NAME(LoginCompleting)
 @protocol FBSDKLoginCompleting
 
 /**
-  Invoke \p handler with the login parameters derived from the authentication result.
+ Invoke \p handler with the login parameters derived from the authentication result.
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
 
 /**
-  Invoke \p handler with the login parameters derived from the authentication result.
+ Invoke \p handler with the login parameters derived from the authentication result.
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler

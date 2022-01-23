@@ -29,32 +29,32 @@ NS_SWIFT_NAME(GraphRequestProtocol)
 @protocol FBSDKGraphRequest
 
 /**
-  The request parameters.
+ The request parameters.
  */
 @property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
 
 /**
-  The access token string used by the request.
+ The access token string used by the request.
  */
 @property (nullable, nonatomic, readonly, copy) NSString *tokenString;
 
 /**
-  The Graph API endpoint to use for the request, for example "me".
+ The Graph API endpoint to use for the request, for example "me".
  */
 @property (nonatomic, readonly, copy) NSString *graphPath;
 
 /**
-  The HTTPMethod to use for the request, for example "GET" or "POST".
+ The HTTPMethod to use for the request, for example "GET" or "POST".
  */
 @property (nonatomic, readonly, copy) FBSDKHTTPMethod HTTPMethod;
 
 /**
-  The Graph API version to use (e.g., "v2.0")
+ The Graph API version to use (e.g., "v2.0")
  */
 @property (nonatomic, readonly, copy) NSString *version;
 
 /**
-   The graph request flags to use
+  The graph request flags to use
  */
 @property (nonatomic, readonly, assign) FBSDKGraphRequestFlags flags;
 
@@ -64,18 +64,18 @@ NS_SWIFT_NAME(GraphRequestProtocol)
 @property (nonatomic, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
 
 /**
-  Convenience property to determine if the request has attachments
+ Convenience property to determine if the request has attachments
  */
 @property (nonatomic, readonly) BOOL hasAttachments;
 
 /**
-  Starts a connection to the Graph API.
+ Starts a connection to the Graph API.
  @param completion The handler block to call when the request completes.
  */
 - (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion;
 
 /**
-  A formatted description of the graph request
+ A formatted description of the graph request
  */
 - (NSString *)formattedDescription;
 

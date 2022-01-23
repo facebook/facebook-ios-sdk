@@ -14,7 +14,7 @@ NS_SWIFT_NAME(Nonce)
 @interface FBSDKNonceUtility : NSObject
 
 /**
-   Checks if a string represents a valid nonce.
+  Checks if a string represents a valid nonce.
  */
 + (BOOL)isValidNonce:(NSString *)nonce;
 

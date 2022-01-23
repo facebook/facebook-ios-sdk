@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Dynamically loaded constant for SLServiceTypeFacebook
-
  */
 FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeFacebook(void);
 

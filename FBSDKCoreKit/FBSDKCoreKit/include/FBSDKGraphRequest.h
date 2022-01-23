@@ -17,8 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /**
-  Represents a request to the Facebook Graph API.
-
+ Represents a request to the Facebook Graph API.
 
  `FBSDKGraphRequest` encapsulates the components of a request (the
  Graph API path, the parameters, error recovery behavior) and should be
@@ -69,7 +68,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                        HTTPMethod:(FBSDKHTTPMethod)method;
 
 /**
-  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
+ Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  */
@@ -77,7 +76,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                        parameters:(NSDictionary<NSString *, id> *)parameters;
 
 /**
-  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
+ Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  @param method the HTTP method. Empty String defaults to @"GET".
@@ -87,7 +86,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                        HTTPMethod:(FBSDKHTTPMethod)method;
 
 /**
-  Initializes a new instance.
+ Initializes a new instance.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  @param tokenString the token string to use. Specifying nil will cause no token to be used.
@@ -102,7 +101,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
   NS_DESIGNATED_INITIALIZER;
 
 /**
-  Initializes a new instance.
+ Initializes a new instance.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  @param requestFlags  flags that indicate how a graph request should be treated in various scenarios
@@ -112,7 +111,7 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                             flags:(FBSDKGraphRequestFlags)requestFlags;
 
 /**
-  Initializes a new instance.
+ Initializes a new instance.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  @param tokenString the token string to use. Specifying nil will cause no token to be used.
@@ -126,32 +125,32 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                             flags:(FBSDKGraphRequestFlags)flags;
 
 /**
-  The request parameters.
+ The request parameters.
  */
 @property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
 
 /**
-  The access token string used by the request.
+ The access token string used by the request.
  */
 @property (nullable, nonatomic, readonly, copy) NSString *tokenString;
 
 /**
-  The Graph API endpoint to use for the request, for example "me".
+ The Graph API endpoint to use for the request, for example "me".
  */
 @property (nonatomic, readonly, copy) NSString *graphPath;
 
 /**
-  The HTTPMethod to use for the request, for example "GET" or "POST".
+ The HTTPMethod to use for the request, for example "GET" or "POST".
  */
 @property (nonatomic, readonly, copy) FBSDKHTTPMethod HTTPMethod;
 
 /**
-  The Graph API version to use (e.g., "v2.0")
+ The Graph API version to use (e.g., "v2.0")
  */
 @property (nonatomic, readonly, copy) NSString *version;
 
 /**
-  If set, disables the automatic error recovery mechanism.
+ If set, disables the automatic error recovery mechanism.
  @param disable whether to disable the automatic error recovery mechanism
 
  By default, non-batched FBSDKGraphRequest instances will automatically try to recover
@@ -168,7 +167,7 @@ NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Starts a connection to the Graph API.
+ Starts a connection to the Graph API.
  @param completion The handler block to call when the request completes.
  */
 - (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion;

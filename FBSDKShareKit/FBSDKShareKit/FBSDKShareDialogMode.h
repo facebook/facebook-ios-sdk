@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode) {
 } NS_SWIFT_NAME(ShareDialog.Mode);
 
 /**
-  Converts an FBSDKShareDialogMode to an NSString.
+ Converts an FBSDKShareDialogMode to an NSString.
  */
 FOUNDATION_EXPORT NSString *NSStringFromFBSDKShareDialogMode(FBSDKShareDialogMode dialogMode)
 DEPRECATED_MSG_ATTRIBUTE("`NSStringFromFBSDKShareDialogMode` is deprecated and will be removed in the next major release; please use `ShareDialog.Mode.description` instead")

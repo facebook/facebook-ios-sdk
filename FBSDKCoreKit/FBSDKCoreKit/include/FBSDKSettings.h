@@ -164,14 +164,14 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (nonatomic) BOOL isGraphErrorRecoveryEnabled;
 
 /**
-  The Facebook App ID used by the SDK.
+ The Facebook App ID used by the SDK.
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
 @property (nullable, nonatomic, copy) NSString *appID;
 
 /**
-  The Facebook App ID used by the SDK.
+ The Facebook App ID used by the SDK.
 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
@@ -179,7 +179,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
   DEPRECATED_MSG_ATTRIBUTE("`Settings.appID` is deprecated and will be removed in the next major release, please use `Settings.shared.appID` instead");
 
 /**
-  The default url scheme suffix used for sessions.
+ The default url scheme suffix used for sessions.
 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
@@ -187,14 +187,14 @@ NS_SWIFT_NAME(jpegCompressionQuality);
   DEPRECATED_MSG_ATTRIBUTE("`Settings.appURLSchemeSuffix` is deprecated and will be removed in the next major release, please use `Settings.shared.appURLSchemeSuffix` instead");
 
 /**
-  The default url scheme suffix used for sessions.
+ The default url scheme suffix used for sessions.
 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
 @property (nullable, nonatomic, copy) NSString *appURLSchemeSuffix;
 
 /**
-  The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
+ The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
  This is needed for certain API calls when made anonymously, without a user-based access token.
 
  The Facebook App's "client token", which, for a given appid can be found in the Security
@@ -205,7 +205,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (nullable, nonatomic, copy) NSString *clientToken;
 
 /**
-  The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
+ The Client Token that has been set via [[FBSDKSettings sharedSettings] setClientToken].
  This is needed for certain API calls when made anonymously, without a user-based access token.
 
  The Facebook App's "client token", which, for a given appid can be found in the Security
@@ -217,7 +217,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
   DEPRECATED_MSG_ATTRIBUTE("`Settings.clientToken` is deprecated and will be removed in the next major release, please use `Settings.shared.clientToken` instead");
 
 /**
-  The Facebook Display Name used by the SDK.
+ The Facebook Display Name used by the SDK.
 
  This should match the Display Name that has been set for the app with the corresponding Facebook App ID,
  in the Facebook App Dashboard.
@@ -228,7 +228,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
   DEPRECATED_MSG_ATTRIBUTE("`Settings.displayName` is deprecated and will be removed in the next major release, please use `Settings.shared.displayName` instead");
 
 /**
-  The Facebook Display Name used by the SDK.
+ The Facebook Display Name used by the SDK.
 
  This should match the Display Name that has been set for the app with the corresponding Facebook App ID,
  in the Facebook App Dashboard.
@@ -255,7 +255,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (nullable, nonatomic, copy) NSString *facebookDomainPart;
 
 /**
-  The current Facebook SDK logging behavior. This should consist of strings
+ The current Facebook SDK logging behavior. This should consist of strings
  defined as constants with FBSDKLoggingBehavior*.
 
  This should consist a set of strings indicating what information should be logged
@@ -269,7 +269,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
   DEPRECATED_MSG_ATTRIBUTE("`Settings.loggingBehaviors` is deprecated and will be removed in the next major release, please use `Settings.shared.loggingBehaviors` instead");
 
 /**
-  The current Facebook SDK logging behavior. This should consist of strings
+ The current Facebook SDK logging behavior. This should consist of strings
  defined as constants with FBSDKLoggingBehavior*.
 
  This should consist a set of strings indicating what information should be logged
@@ -282,22 +282,22 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 /**
-  Overrides the default Graph API version to use with `FBSDKGraphRequests`.
+ Overrides the default Graph API version to use with `FBSDKGraphRequests`.
 
  The string should be of the form `@"v2.7"`.
 
  Defaults to `defaultGraphAPIVersion`.
-*/
+ */
 @property (class, null_resettable, nonatomic, copy) NSString *graphAPIVersion
   DEPRECATED_MSG_ATTRIBUTE("`Settings.graphAPIVersion` is deprecated and will be removed in the next major release, please use the `Settings.shared.graphAPIVersion` property instead");
 
 /**
-  Overrides the default Graph API version to use with `FBSDKGraphRequests`.
+ Overrides the default Graph API version to use with `FBSDKGraphRequests`.
 
  The string should be of the form `@"v2.7"`.
 
  Defaults to `defaultGraphAPIVersion`.
-*/
+ */
 @property (nonatomic, copy) NSString *graphAPIVersion;
 
 /**
@@ -324,7 +324,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 /**
 Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
 
-@param advertiserTrackingEnabled the value of the flag
+ @param advertiserTrackingEnabled the value of the flag
 @return Whether the the value is set successfully. It will always return NO in iOS 13 and below.
  */
 + (BOOL)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
@@ -333,25 +333,25 @@ Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
 /**
 Set the data processing options.
 
-@param options list of options
-*/
+ @param options list of options
+ */
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
     DEPRECATED_MSG_ATTRIBUTE("`Settings.setDataProcessingOptions(_:)` is deprecated and will be removed in the next major release, please use the `Settings.shared.setDataProcessingOptions(_:)` method to set the data processing options instead");
 
 /**
 Set the data processing options.
 
-@param options list of options
-*/
+ @param options list of options
+ */
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
 
 /**
 Set the data processing options.
 
-@param options list of the options
-@param country code of the country
-@param state code of the state
-*/
+ @param options list of the options
+ @param country code of the country
+ @param state code of the state
+ */
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state
@@ -360,10 +360,10 @@ Set the data processing options.
 /**
 Set the data processing options.
 
-@param options list of the options
-@param country code of the country
-@param state code of the state
-*/
+ @param options list of the options
+ @param country code of the country
+ @param state code of the state
+ */
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state;

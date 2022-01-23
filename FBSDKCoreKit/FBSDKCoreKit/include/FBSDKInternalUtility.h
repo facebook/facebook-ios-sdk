@@ -54,14 +54,14 @@ NS_SWIFT_NAME(InternalUtility)
 @property (nonatomic, readonly, strong) NSBundle *bundleForStrings;
 
 /**
-  Tests whether the supplied URL is a valid URL for opening in the browser.
+ Tests whether the supplied URL is a valid URL for opening in the browser.
  @param URL The URL to test.
  @return YES if the URL refers to an http or https resource, otherwise NO.
  */
 - (BOOL)isBrowserURL:(NSURL *)URL;
 
 /**
-  Checks equality between 2 objects.
+ Checks equality between 2 objects.
 
  Checks for pointer equality, nils, isEqual:.
  @param object The first object to compare.
@@ -71,17 +71,17 @@ NS_SWIFT_NAME(InternalUtility)
 - (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
-  Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
+ Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
 - (nullable UIViewController *)viewControllerForView:(UIView *)view;
 
 /**
-  returns true if the url scheme is registered in the CFBundleURLTypes
+ returns true if the url scheme is registered in the CFBundleURLTypes
  */
 - (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 /**
-  returns currently displayed top view controller.
+ returns currently displayed top view controller.
  */
 - (nullable UIViewController *)topMostViewController;
 

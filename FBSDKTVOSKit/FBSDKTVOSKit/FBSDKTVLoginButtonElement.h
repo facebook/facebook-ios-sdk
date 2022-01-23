@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
  - either a `readPermissions` or (not both) `publishPermissions` attribute whose value is a comma delimited
  list of permissions to request.
  - `redirectURL` an optional URL to redirect the user to after completing the login.
-
  */
 NS_SWIFT_NAME(FBTVLoginButtonElement)
 @interface FBSDKTVLoginButtonElement : TVViewElement <FBSDKDeviceLoginButtonDelegate>

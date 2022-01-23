@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  Extension protocol for NSMutableCopying that adds the mutableCopy method, which is implemented on NSObject.
+ Extension protocol for NSMutableCopying that adds the mutableCopy method, which is implemented on NSObject.
 
  NSObject<NSCopying, NSMutableCopying> implicitly conforms to this protocol.
  */
@@ -21,7 +21,7 @@ NS_SWIFT_NAME(MutableCopying)
 @protocol FBSDKMutableCopying <NSCopying, NSObject, NSMutableCopying>
 
 /**
-  Implemented by NSObject as a convenience to mutableCopyWithZone:.
+ Implemented by NSObject as a convenience to mutableCopyWithZone:.
  @return A mutable copy of the receiver.
  */
 - (id)mutableCopy;

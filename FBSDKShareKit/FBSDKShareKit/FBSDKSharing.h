@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKSharingDelegate;
 
 /**
-  The common interface for components that initiate sharing.
+ The common interface for components that initiate sharing.
 
  @see FBSDKShareDialog
 
@@ -25,17 +25,17 @@ NS_SWIFT_NAME(Sharing)
 @protocol FBSDKSharing <NSObject>
 
 /**
-  The receiver's delegate or nil if it doesn't have a delegate.
+ The receiver's delegate or nil if it doesn't have a delegate.
  */
 @property (nonatomic, weak) id<FBSDKSharingDelegate> delegate;
 
 /**
-  The content to be shared.
+ The content to be shared.
  */
 @property (nullable, nonatomic, copy) id<FBSDKSharingContent> shareContent;
 
 /**
-  A Boolean value that indicates whether the receiver should fail if it finds an error with the share content.
+ A Boolean value that indicates whether the receiver should fail if it finds an error with the share content.
 
  If NO, the sharer will still be displayed without the data that was mis-configured.  For example, an
  invalid placeID specified on the shareContent would produce a data error.
@@ -43,7 +43,7 @@ NS_SWIFT_NAME(Sharing)
 @property (nonatomic, assign) BOOL shouldFailOnDataError;
 
 /**
-  Validates the content on the receiver.
+ Validates the content on the receiver.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return YES if the content is valid, otherwise NO.
  */
@@ -52,13 +52,13 @@ NS_SWIFT_NAME(Sharing)
 @end
 
 /**
-  The common interface for dialogs that initiate sharing.
+ The common interface for dialogs that initiate sharing.
  */
 NS_SWIFT_NAME(SharingDialog)
 @protocol FBSDKSharingDialog <FBSDKSharing>
 
 /**
-  A Boolean value that indicates whether the receiver can initiate a share.
+ A Boolean value that indicates whether the receiver can initiate a share.
 
  May return NO if the appropriate Facebook app is not installed and is required or an access token is
  required but not available.  This method does not validate the content on the receiver, so this can be checked before
@@ -70,7 +70,7 @@ NS_SWIFT_NAME(SharingDialog)
 @property (nonatomic, readonly) BOOL canShow;
 
 /**
-  Shows the dialog.
+ Shows the dialog.
  @return YES if the receiver was able to begin sharing, otherwise NO.
  */
 - (BOOL)show;
@@ -78,7 +78,7 @@ NS_SWIFT_NAME(SharingDialog)
 @end
 
 /**
-  A delegate for FBSDKSharing.
+ A delegate for FBSDKSharing.
 
  The delegate is notified with the results of the sharer as long as the application has permissions to
  receive the information.  For example, if the person is not signed into the containing app, the sharer may not be able

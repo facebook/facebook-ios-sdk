@@ -25,27 +25,27 @@ NS_SWIFT_NAME(DeviceLoginCodeInfo)
 
 /*!
  @abstract the unique id for this login flow.
-*/
+ */
 @property (nonatomic, readonly, copy) NSString *identifier;
 
 /*!
  @abstract the short "user_code" that should be presented to the user.
-*/
+ */
 @property (nonatomic, readonly, copy) NSString *loginCode;
 
 /*!
  @abstract the verification URL.
-*/
+ */
 @property (nonatomic, readonly, copy) NSURL *verificationURL;
 
 /*!
  @abstract the expiration date.
-*/
+ */
 @property (nonatomic, readonly, copy) NSDate *expirationDate;
 
 /*!
  @abstract the polling interval
-*/
+ */
 @property (nonatomic, readonly, assign) NSUInteger pollingInterval;
 
 @end

@@ -18,7 +18,7 @@ NS_SWIFT_NAME(FBPermission)
 
 /**
  The raw string representation of the permission
-*/
+ */
 @property (nonatomic, readonly, copy) NSString *value;
 
 /**
@@ -26,19 +26,19 @@ NS_SWIFT_NAME(FBPermission)
  Creation will fail and return nil if the string is invalid.
 
  @param string the raw permission string
-*/
+ */
 - (nullable instancetype)initWithString:(NSString *)string;
 
 /**
  Returns a set of FBSDKPermission from a set of raw permissions strings.
  Will return nil if any of the input permissions is invalid.
-*/
+ */
 + (nullable NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)rawPermissions;
 
 /**
  Returns a set of string permissions from a set of FBSDKPermission by
  extracting the "value" property for each element.
-*/
+ */
 + (NSSet<NSString *> *)rawPermissionsFromPermissions:(NSSet<FBSDKPermission *> *)permissions;
 
 @end

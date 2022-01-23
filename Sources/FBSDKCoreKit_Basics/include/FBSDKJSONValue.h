@@ -22,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-A safe method to unpack the values in the top-level JSON object.
+ A safe method to unpack the values in the top-level JSON object.
  https://developer.apple.com/documentation/foundation/nsjsonserialization
-*/
+ */
 - (void)matchArray:(void (^_Nullable)(NSArray<FBSDKJSONField *> *_Nonnull))arrayMatcher
         dictionary:(void (^_Nullable)(NSDictionary<NSString *, FBSDKJSONField *> *_Nonnull))dictionaryMatcher
             string:(void (^_Nullable)(NSString *_Nonnull))stringMatcher
@@ -96,7 +96,7 @@ You can wrap resulting objects in this to force users of your JSON to use
 type-safe bindings.
 
 If this is not a valid JSON object...this will return nil.
-*/
+ */
 FBSDKJSONValue *_Nullable FBSDKCreateJSONFromString(NSString *_Nullable string, NSError *__autoreleasing *errorRef);
 
 NS_ASSUME_NONNULL_END

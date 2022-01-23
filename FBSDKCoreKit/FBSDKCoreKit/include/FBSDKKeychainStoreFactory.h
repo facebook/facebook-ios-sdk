@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  Internal type not intended for use outside of the SDKs.
 
  A factory for providing objects that conform to `KeychainStore`
-*/
+ */
 NS_SWIFT_NAME(KeychainStoreFactory)
 @interface FBSDKKeychainStoreFactory : NSObject <FBSDKKeychainStoreProviding>
 @end

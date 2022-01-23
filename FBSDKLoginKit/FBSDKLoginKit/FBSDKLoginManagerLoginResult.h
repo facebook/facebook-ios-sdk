@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FBSDKAuthenticationToken;
 
 /**
-  Describes the result of a login attempt.
+ Describes the result of a login attempt.
  */
 NS_SWIFT_NAME(LoginManagerLoginResult)
 @interface FBSDKLoginManagerLoginResult : NSObject
@@ -46,36 +46,36 @@ NS_SWIFT_NAME(LoginManagerLoginResult)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-  the access token.
+ the access token.
  */
 @property (nullable, nonatomic, copy) FBSDKAccessToken *token;
 
 /**
-  the authentication token.
+ the authentication token.
  */
 @property (nullable, nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
 
 /**
-  whether the login was cancelled by the user.
+ whether the login was cancelled by the user.
  */
 @property (nonatomic, readonly) BOOL isCancelled;
 
 /**
-  the set of permissions granted by the user in the associated request.
+ the set of permissions granted by the user in the associated request.
 
  inspect the token's permissions set for a complete list.
  */
 @property (nonatomic, copy) NSSet<NSString *> *grantedPermissions;
 
 /**
-  the set of permissions declined by the user in the associated request.
+ the set of permissions declined by the user in the associated request.
 
  inspect the token's permissions set for a complete list.
  */
 @property (nonatomic, copy) NSSet<NSString *> *declinedPermissions;
 
 /**
-  Initializes a new instance.
+ Initializes a new instance.
  @param token the access token
  @param authenticationToken the authentication token
  @param isCancelled whether the login was cancelled by the user

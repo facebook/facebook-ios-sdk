@@ -29,7 +29,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 @property (nonatomic, readonly) BOOL isUnity;
 
 /**
-  Constructs an NSURL.
+ Constructs an NSURL.
  @param scheme The scheme for the URL.
  @param host The host for the URL.
  @param path The path for the URL.
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                             error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Constructs an URL for the current app.
+ Constructs an URL for the current app.
  @param host The host for the URL.
  @param path The path for the URL.
  @param queryParameters The query parameters for the URL.  This will be converted into a query string.
@@ -57,7 +57,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                              error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Constructs a Facebook URL.
+ Constructs a Facebook URL.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
  @param path The path for the URL.  This may or may not include a version.
  @param queryParameters The query parameters for the URL.  This will be converted into a query string.
@@ -70,13 +70,13 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                                         error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Registers a transient object so that it will not be deallocated until unregistered
+ Registers a transient object so that it will not be deallocated until unregistered
  @param object The transient object
  */
 - (void)registerTransientObject:(id)object;
 
 /**
-  Unregisters a transient object that was previously registered with registerTransientObject:
+ Unregisters a transient object that was previously registered with registerTransientObject:
  @param object The transient object
  */
 - (void)unregisterTransientObject:(__weak id)object;
@@ -84,22 +84,22 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 - (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
 /**
-  Validates that the right URL schemes are registered, throws an NSException if not.
+ Validates that the right URL schemes are registered, throws an NSException if not.
  */
 - (void)validateURLSchemes;
 
 /**
-  add data processing options to the dictionary.
+ add data processing options to the dictionary.
  */
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, NSString *> *)parameters;
 
 /**
-  Converts NSData to a hexadecimal UTF8 String.
+ Converts NSData to a hexadecimal UTF8 String.
  */
 - (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
 /**
-  validates that the app ID is non-nil, throws an NSException if nil.
+ validates that the app ID is non-nil, throws an NSException if nil.
  */
 - (void)validateAppID;
 
@@ -110,7 +110,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 - (NSString *)validateRequiredClientAccessToken;
 
 /**
-  Extracts permissions from a response fetched from me/permissions
+ Extracts permissions from a response fetched from me/permissions
  @param responseObject the response
  @param grantedPermissions the set to add granted permissions to
  @param declinedPermissions the set to add declined permissions to.
@@ -121,12 +121,12 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
 
 /**
-  validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
+ validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
  */
 - (void)validateFacebookReservedURLSchemes;
 
 /**
-  Parses an FB url's query params (and potentially fragment) into a dictionary.
+ Parses an FB url's query params (and potentially fragment) into a dictionary.
  @param url The FB url.
  @return A dictionary with the key/value pairs.
  */

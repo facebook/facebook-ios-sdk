@@ -299,7 +299,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 /*
  Remove the named swizzle from the given class/selector. If aName is nil, remove all
  swizzles for this class/selector
-*/
+ */
 + (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass named:(NSString *)aName
 {
   @try {

@@ -56,7 +56,7 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
 @class FBSDKLoginManagerLoginResult;
 
 /**
-  Describes the call back to the FBSDKLoginManager
+ Describes the call back to the FBSDKLoginManager
  @param result the result of the authorization
  @param error the authorization error, if any.
  */
@@ -84,7 +84,7 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
 } NS_SWIFT_NAME(DefaultAudience);
 
 /**
-  `FBSDKLoginManager` provides methods for logging the user in and out.
+ `FBSDKLoginManager` provides methods for logging the user in and out.
 
  `FBSDKLoginManager` serves to help manage sessions represented by tokens for authentication,
  `AuthenticationToken`, and data access, `AccessToken`.
@@ -100,7 +100,7 @@ NS_SWIFT_NAME(LoginManager)
 @interface FBSDKLoginManager : NSObject
 
 /**
-  the default audience.
+ the default audience.
 
  you should set this if you intend to ask for publish permissions.
  */
@@ -199,7 +199,7 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Logs the user out
+ Logs the user out
 
  This nils out the singleton instances of `AccessToken` `AuthenticationToken` and `Profle`.
 

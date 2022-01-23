@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior) {
 } NS_SWIFT_NAME(FBLoginButton.TooltipBehavior);
 
 /**
-  A button that initiates a log in or log out flow upon tapping.
+ A button that initiates a log in or log out flow upon tapping.
 
  `FBSDKLoginButton` works with `FBSDKProfile.currentProfile` to
   determine what to display, and automatically starts authentication when tapped (i.e.,
@@ -55,16 +55,16 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior) {
 
  `FBSDKLoginButton` has a fixed height of @c 30 pixels, but you may change the width. `initWithFrame:CGRectZero`
  will size the button to its minimum frame.
-*/
+ */
 NS_SWIFT_NAME(FBLoginButton)
 @interface FBSDKLoginButton : FBSDKButton
 
 /**
-  The default audience to use, if publish permissions are requested at login time.
+ The default audience to use, if publish permissions are requested at login time.
  */
 @property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
 /**
-  Gets or sets the delegate.
+ Gets or sets the delegate.
  */
 @property (nonatomic, weak) IBOutlet id<FBSDKLoginButtonDelegate> delegate;
 /*!
@@ -79,28 +79,28 @@ NS_SWIFT_NAME(FBLoginButton)
  */
 @property (nonatomic, copy) NSArray<NSString *> *permissions;
 /**
-  Gets or sets the desired tooltip behavior.
+ Gets or sets the desired tooltip behavior.
  */
 @property (nonatomic, assign) FBSDKLoginButtonTooltipBehavior tooltipBehavior;
 /**
-  Gets or sets the desired tooltip color style.
+ Gets or sets the desired tooltip color style.
  */
 @property (nonatomic, assign) FBSDKTooltipColorStyle tooltipColorStyle;
 /**
-  Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
+ Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
  */
 @property (nonatomic, assign) FBSDKLoginTracking loginTracking;
 /**
-  Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
+ Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
  An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
  */
 @property (nullable, nonatomic, copy) NSString *nonce;
 /**
-  Gets or sets an optional page id to use for login attempts.
+ Gets or sets an optional page id to use for login attempts.
  */
 @property (nullable, nonatomic, copy) NSString *messengerPageId;
 /**
-  Gets or sets the auth_type to use in the login request. Defaults to rerequest.
+ Gets or sets the auth_type to use in the login request. Defaults to rerequest.
  */
 @property (nullable, nonatomic) FBSDKLoginAuthType authType;
 

@@ -33,7 +33,6 @@ typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
  Describes the callback for appLinkFromURLInBackground.
  @param navType the FBSDKAppLink representing the deferred App Link
  @param error the error during the request, if any
-
  */
 typedef void (^ FBSDKAppLinkNavigationBlock)(FBSDKAppLinkNavigationType navType, NSError *_Nullable error)
 NS_SWIFT_NAME(AppLinkNavigationBlock);

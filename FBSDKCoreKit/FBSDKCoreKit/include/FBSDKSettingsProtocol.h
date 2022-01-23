@@ -46,7 +46,7 @@ NS_SWIFT_NAME(SettingsProtocol)
  Set the data processing options.
 
  @param options list of options
-*/
+ */
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
 
 /**
@@ -55,7 +55,7 @@ NS_SWIFT_NAME(SettingsProtocol)
  @param options list of the options
  @param country code of the country
  @param state code of the state
-*/
+ */
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state;

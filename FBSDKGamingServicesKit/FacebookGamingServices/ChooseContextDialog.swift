@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import Foundation
 
 /**
-  A dialog for the choose context through app switch
+ A dialog for the choose context through app switch
  */
 @objcMembers
 @objc(FBSDKChooseContextDialog)

@@ -11,7 +11,7 @@ import Foundation
 import FBSDKCoreKit
 
 /**
-  A dialog to switch the current gaming context through a web view
+ A dialog to switch the current gaming context through a web view
  */
 public class SwitchContextDialog: ContextWebDialog, Showable {
 

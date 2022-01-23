@@ -18,7 +18,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  Extracts the log in completion parameters from the \p parameters dictionary,
+ Extracts the log in completion parameters from the \p parameters dictionary,
  which must contain the parsed result of the return URL query string.
 
  The \c user_id key is first used to derive the User ID. If that fails, \c signed_request

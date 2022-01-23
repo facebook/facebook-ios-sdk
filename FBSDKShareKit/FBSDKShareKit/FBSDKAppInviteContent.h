@@ -29,7 +29,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination) {
 } NS_SWIFT_NAME(AppInviteDestination);
 
 /**
-  A model for app invite.
+ A model for app invite.
  */
 NS_SWIFT_NAME(AppInviteContent)
 @interface FBSDKAppInviteContent : NSObject <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
@@ -40,24 +40,21 @@ NS_SWIFT_NAME(AppInviteContent)
 - (instancetype)initWithAppLinkURL:(NSURL *)appLinkURL;
 
 /**
-  A URL to a preview image that will be displayed with the app invite
-
+ A URL to a preview image that will be displayed with the app invite
 
  This is optional.  If you don't include it a fallback image will be used.
-*/
+ */
 @property (nullable, nonatomic, copy) NSURL *appInvitePreviewImageURL;
 
 /**
-  An app link target that will be used as a target when the user accept the invite.
-
+ An app link target that will be used as a target when the user accept the invite.
 
  This is a requirement.
  */
 @property (nonatomic, copy) NSURL *appLinkURL;
 
 /**
-  Promotional code to be displayed while sending and receiving the invite.
-
+ Promotional code to be displayed while sending and receiving the invite.
 
  This is optional. This can be between 0 and 10 characters long and can contain
  alphanumeric characters only. To set a promo code, you need to set promo text.
@@ -65,8 +62,7 @@ NS_SWIFT_NAME(AppInviteContent)
 @property (nullable, nonatomic, copy) NSString *promotionCode;
 
 /**
-  Promotional text to be displayed while sending and receiving the invite.
-
+ Promotional text to be displayed while sending and receiving the invite.
 
  This is optional. This can be between 0 and 80 characters long and can contain
  alphanumeric and spaces only.
@@ -74,15 +70,14 @@ NS_SWIFT_NAME(AppInviteContent)
 @property (nullable, nonatomic, copy) NSString *promotionText;
 
 /**
-  Destination for the app invite.
-
+ Destination for the app invite.
 
  This is optional and for declaring destination of the invite.
  */
 @property (nonatomic, assign) FBSDKAppInviteDestination destination;
 
 /**
-  Compares the receiver to another app invite content.
+ Compares the receiver to another app invite content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO
  */

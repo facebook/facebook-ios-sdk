@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Represent an AuthenticationToken used for a login attempt
-*/
+ */
 NS_SWIFT_NAME(AuthenticationToken)
 @interface FBSDKAuthenticationToken : NSObject <NSCopying, NSObject, NSSecureCoding>
 
@@ -23,7 +23,7 @@ NS_SWIFT_NAME(AuthenticationToken)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-  The "global" authentication token that represents the currently logged in user.
+ The "global" authentication token that represents the currently logged in user.
 
  The `currentAuthenticationToken` represents the authentication token of the
  current user and can be used by a client to verify an authentication attempt.
@@ -41,12 +41,12 @@ NS_SWIFT_NAME(AuthenticationToken)
 @property (nonatomic, readonly, copy) NSString *nonce;
 
 /**
-  The graph domain where the user is authenticated.
+ The graph domain where the user is authenticated.
  */
 @property (nonatomic, readonly, copy) NSString *graphDomain;
 
 /**
-  Returns the claims encoded in the AuthenticationToken
+ Returns the claims encoded in the AuthenticationToken
  */
 - (nullable FBSDKAuthenticationTokenClaims *)claims;
 

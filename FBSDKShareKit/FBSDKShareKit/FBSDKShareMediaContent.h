@@ -21,19 +21,19 @@ NS_SWIFT_NAME(ShareMedia)
 @end
 
 /**
-  A model for media content (photo or video) to be shared.
+ A model for media content (photo or video) to be shared.
  */
 NS_SWIFT_NAME(ShareMediaContent)
 @interface FBSDKShareMediaContent : NSObject <FBSDKSharingContent>
 
 /**
-  Media to be shared.
+ Media to be shared.
  @return Array of the media (FBSDKSharePhoto or FBSDKShareVideo)
  */
 @property (nonatomic, copy) NSArray<id<FBSDKShareMedia>> *media;
 
 /**
-  Compares the receiver to another media content.
+ Compares the receiver to another media content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO
  */

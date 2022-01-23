@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGameRequestDialogDelegate;
 
 /**
-  A dialog for sending game requests.
+ A dialog for sending game requests.
  */
 NS_SWIFT_NAME(GameRequestDialog)
 @interface FBSDKGameRequestDialog : NSObject
@@ -48,22 +48,22 @@ NS_SWIFT_NAME(init(content:delegate:));
   NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 
 /**
-  The receiver's delegate or nil if it doesn't have a delegate.
+ The receiver's delegate or nil if it doesn't have a delegate.
  */
 @property (nullable, nonatomic, weak) id<FBSDKGameRequestDialogDelegate> delegate;
 
 /**
-  The content for game request.
+ The content for game request.
  */
 @property (nonatomic, copy) FBSDKGameRequestContent *content;
 
 /**
-  Specifies whether frictionless requests are enabled.
+ Specifies whether frictionless requests are enabled.
  */
 @property (nonatomic, getter = isFrictionlessRequestsEnabled, assign) BOOL frictionlessRequestsEnabled;
 
 /**
-  A Boolean value that indicates whether the receiver can initiate a game request.
+ A Boolean value that indicates whether the receiver can initiate a game request.
 
  May return NO if the appropriate Facebook app is not installed and is required or an access token is
  required but not available.  This method does not validate the content on the receiver, so this can be checked before
@@ -75,13 +75,13 @@ NS_SWIFT_NAME(init(content:delegate:));
 @property (nonatomic, readonly) BOOL canShow;
 
 /**
-  Begins the game request from the receiver.
+ Begins the game request from the receiver.
  @return YES if the receiver was able to show the dialog, otherwise NO.
  */
 - (BOOL)show;
 
 /**
-  Validates the content on the receiver.
+ Validates the content on the receiver.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return YES if the content is valid, otherwise NO.
  */

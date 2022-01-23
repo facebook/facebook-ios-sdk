@@ -20,8 +20,8 @@ NS_SWIFT_NAME(GraphRequestBody)
 @property (nonatomic, readonly, retain) NSData *data;
 
 /**
-  Determines whether to use multipart/form-data or application/json as the Content-Type.
-  If binary attachments are added, this will default to YES.
+ Determines whether to use multipart/form-data or application/json as the Content-Type.
+ If binary attachments are added, this will default to YES.
  */
 @property (nonatomic, assign) BOOL requiresMultipartDataFormat;
 

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
  The key in the result dictionary for requests to old versions of the Graph API
  whose response is not a JSON object.
 
-
  When a request returns a non-JSON response (such as a "true" literal), that response
  will be wrapped into a dictionary using this const as the key. This only applies for very few Graph API
  prior to v2.1.
@@ -33,7 +32,6 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
  The request settings are encapsulated in a reusable <FBSDKGraphRequest> object. The
  `FBSDKGraphRequestConnection` object encapsulates the concerns of a single communication
  e.g. starting a connection, canceling a connection, or batching requests.
-
  */
 NS_SWIFT_NAME(GraphRequestConnection)
 @interface FBSDKGraphRequestConnection : NSObject <FBSDKGraphRequestConnecting>

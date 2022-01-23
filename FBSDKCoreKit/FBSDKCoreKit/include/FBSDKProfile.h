@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  Notification indicating that the `currentProfile` has changed.
+ Notification indicating that the `currentProfile` has changed.
 
  the userInfo dictionary of the notification will contain keys
  `FBSDKProfileChangeOldKey` and
@@ -44,7 +44,6 @@ NS_SWIFT_NAME(ProfileChangeNewKey);
  Describes the callback for loadCurrentProfileWithCompletion.
  @param profile the FBSDKProfile
  @param error the error during the request, if any
-
  */
 typedef void (^ FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nullable error)
 NS_SWIFT_NAME(ProfileBlock);
@@ -56,7 +55,7 @@ typedef NSString FBSDKUserIdentifier
   NS_SWIFT_NAME(UserIdentifier);
 
 /**
-  Represents an immutable Facebook profile
+ Represents an immutable Facebook profile
 
  This class provides a global "currentProfile" instance to more easily
  add social context to your application. When the profile changes, a notification is
@@ -74,7 +73,7 @@ NS_SWIFT_NAME(Profile)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-  initializes a new instance.
+ initializes a new instance.
  @param userID the user ID
  @param firstName the user's first name
  @param middleName the user's middle name
@@ -129,7 +128,7 @@ NS_SWIFT_NAME(Profile)
                      isLimited:(BOOL)isLimited;
 
 /**
-  initializes a new instance.
+ initializes a new instance.
  @param userID the user ID
  @param firstName the user's first name
  @param middleName the user's middle name
@@ -175,27 +174,27 @@ NS_SWIFT_NAME(Profile)
 NS_SWIFT_NAME(current);
 
 /**
-  The user id
+ The user id
  */
 @property (nonatomic, readonly, copy) FBSDKUserIdentifier *userID;
 /**
-  The user's first name
+ The user's first name
  */
 @property (nullable, nonatomic, readonly, copy) NSString *firstName;
 /**
-  The user's middle name
+ The user's middle name
  */
 @property (nullable, nonatomic, readonly, copy) NSString *middleName;
 /**
-  The user's last name
+ The user's last name
  */
 @property (nullable, nonatomic, readonly, copy) NSString *lastName;
 /**
-  The user's complete name
+ The user's complete name
  */
 @property (nullable, nonatomic, readonly, copy) NSString *name;
 /**
-  A URL to the user's profile.
+ A URL to the user's profile.
 
   IMPORTANT: This field will only be populated if your user has granted your application the 'user_link' permission
 
@@ -205,63 +204,63 @@ NS_SWIFT_NAME(current);
 @property (nullable, nonatomic, readonly) NSURL *linkURL;
 
 /**
-  The last time the profile data was fetched.
+ The last time the profile data was fetched.
  */
 @property (nonatomic, readonly) NSDate *refreshDate;
 /**
-  A URL to use for fetching a user's profile image.
+ A URL to use for fetching a user's profile image.
  */
 @property (nullable, nonatomic, readonly) NSURL *imageURL;
 /**
-  The user's email.
+ The user's email.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'email' permission.
  */
 @property (nullable, nonatomic, readonly, copy) NSString *email;
 /**
-  A list of identifiers of the user's friends.
+ A list of identifiers of the user's friends.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
  */
 @property (nullable, nonatomic, readonly, copy) NSArray<FBSDKUserIdentifier *> *friendIDs;
 
 /**
-  The user's birthday.
+ The user's birthday.
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_birthday' permission.
  */
 @property (nullable, nonatomic, readonly, copy) NSDate *birthday;
 
 /**
-  The user's age range
+ The user's age range
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_age_range' permission.
  */
 @property (nullable, nonatomic, readonly, copy) FBSDKUserAgeRange *ageRange;
 
 /**
-  The user's hometown
+ The user's hometown
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_hometown' permission.
  */
 @property (nullable, nonatomic, readonly, copy) FBSDKLocation *hometown;
 
 /**
-  The user's location
+ The user's location
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_location' permission.
  */
 @property (nullable, nonatomic, readonly, copy) FBSDKLocation *location;
 
 /**
-  The user's gender
+ The user's gender
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_gender' permission.
  */
 @property (nullable, nonatomic, readonly, copy) NSString *gender;
 
 /**
-  Indicates if `currentProfile` will automatically observe `FBSDKAccessTokenDidChangeNotification` notifications
+ Indicates if `currentProfile` will automatically observe `FBSDKAccessTokenDidChangeNotification` notifications
  @param enable YES is observing
 
  If observing, this class will issue a graph request for public profile data when the current token's userID
@@ -276,7 +275,7 @@ NS_SWIFT_NAME(enableUpdatesOnAccessTokenChange(_:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Loads the current profile and passes it to the completion block.
+ Loads the current profile and passes it to the completion block.
  @param completion The block to be executed once the profile is loaded
 
  If the profile is already loaded, this method will call the completion block synchronously, otherwise it
@@ -285,7 +284,7 @@ NS_SWIFT_NAME(enableUpdatesOnAccessTokenChange(_:));
 + (void)loadCurrentProfileWithCompletion:(nullable FBSDKProfileBlock)completion;
 
 /**
-  A convenience method for returning a complete `NSURL` for retrieving the user's profile image.
+ A convenience method for returning a complete `NSURL` for retrieving the user's profile image.
  @param mode The picture mode
  @param size The height and width. This will be rounded to integer precision.
  */
@@ -295,7 +294,7 @@ NS_SWIFT_NAME(imageURL(forMode:size:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Returns YES if the profile is equivalent to the receiver.
+ Returns YES if the profile is equivalent to the receiver.
  @param profile the profile to compare to.
  */
 - (BOOL)isEqualToProfile:(FBSDKProfile *)profile;

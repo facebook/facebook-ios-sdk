@@ -25,17 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
-/**  optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
+/**  Optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
 
 /**
-
-
-  Client-side event logging for specialized application analytics available through Facebook App Insights
+ Client-side event logging for specialized application analytics available through Facebook App Insights
  and for use with Facebook Ads conversion tracking and optimization.
-
-
 
  The `FBSDKAppEvents` static class has a few related roles:
 
@@ -76,9 +72,7 @@ NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
  + Event names and parameter names (the keys in the NSDictionary) must be between 2 and 40 characters, and
  must consist of alphanumeric characters, _, -, or spaces.
  + The length of each parameter value can be no more than on the order of 100 characters.
-
  */
-
 NS_SWIFT_NAME(AppEvents)
 @interface FBSDKAppEvents : NSObject
 
@@ -90,8 +84,8 @@ NS_SWIFT_NAME(AppEvents)
  */
 @property (class, nonatomic, readonly, strong) FBSDKAppEvents *shared;
 
-/*
- * Control over event batching/flushing
+/**
+ Control over event batching/flushing
  */
 
 /// The current event flushing behavior specifying when events are sent back to Facebook servers.
@@ -581,8 +575,7 @@ NS_SWIFT_NAME(AppEvents)
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-
-  Notifies the events system that the app has launched and, when appropriate, logs an "activated app" event.
+ Notifies the events system that the app has launched and, when appropriate, logs an "activated app" event.
  This function is called automatically from FBSDKApplicationDelegate applicationDidBecomeActive, unless
  one overrides 'FacebookAutoLogAppEventsEnabled' key to false in the project info plist file.
  In case 'FacebookAutoLogAppEventsEnabled' is set to false, then it should typically be placed in the
@@ -590,8 +583,6 @@ NS_SWIFT_NAME(AppEvents)
 
  This method also takes care of logging the event indicating the first time this app has been launched, which, among other things, is used to
  track user acquisition and app install ads conversions.
-
-
 
  `activateApp` will not log an event on every app launch, since launches happen every time the app is backgrounded and then foregrounded.
  "activated app" events will be logged when the app has not been active for more than 60 seconds.  This method also causes a "deactivated app"
@@ -721,7 +712,7 @@ NS_SWIFT_NAME(requestForCustomAudienceThirdPartyID(accessToken:));
     DEPRECATED_MSG_ATTRIBUTE("`AppEvents.clearUserID` is deprecated and will be removed in the next major release, please set `AppEvents.shared.userID` to `nil` instead");
 
 /**
-  Sets custom user data to associate with all app events. All user data are hashed
+ Sets custom user data to associate with all app events. All user data are hashed
   and used to match Facebook user from this instance of an application.
 
   The user data will be persisted between application instances.
@@ -754,10 +745,10 @@ DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are depreca
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Sets custom user data to associate with all app events. All user data are hashed
-  and used to match Facebook user from this instance of an application.
+ Sets custom user data to associate with all app events. All user data are hashed
+ and used to match Facebook user from this instance of an application.
 
-  The user data will be persisted between application instances.
+ The user data will be persisted between application instances.
 
  @param email user's email
  @param firstName user's first name
@@ -786,25 +777,25 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Returns the set user data else nil
-*/
+ Returns the set user data else nil
+ */
 + (nullable NSString *)getUserData
     DEPRECATED_MSG_ATTRIBUTE("Class methods for getting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
-  Returns the set user data else nil
-*/
+ Returns the set user data else nil
+ */
 - (nullable NSString *)getUserData;
 
 /**
-  Clears the current user data
-*/
+ Clears the current user data
+ */
 + (void)clearUserData
     DEPRECATED_MSG_ATTRIBUTE("Class methods for setting user information are deprecated and will be removed in the next major release. Please use the instance method versions instead.");
 
 /**
-  Clears the current user data
-*/
+ Clears the current user data
+ */
 - (void)clearUserData;
 
 /**
@@ -876,7 +867,6 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  Set whether Unity is already initialized.
 
  @param isUnityInit   Whether Unity is initialized.
-
  */
 + (void)setIsUnityInit:(BOOL)isUnityInit
     DEPRECATED_MSG_ATTRIBUTE("`AppEvents.setIsUnityInit(_:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.setIsUnityInitialized(_:)` instead");
@@ -885,7 +875,6 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  Set whether Unity is already initialized.
 
  @param isUnityInitialized   Whether Unity is initialized.
-
  */
 - (void)setIsUnityInitialized:(BOOL)isUnityInitialized;
 

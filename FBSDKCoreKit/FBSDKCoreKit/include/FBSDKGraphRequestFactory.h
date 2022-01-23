@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  Internal type not intended for use outside of the SDKs.
 
  A factory for providing objects that conform to `GraphRequest`
-*/
+ */
 NS_SWIFT_NAME(GraphRequestFactory)
 @interface FBSDKGraphRequestFactory : NSObject <FBSDKGraphRequestFactory>
 @end

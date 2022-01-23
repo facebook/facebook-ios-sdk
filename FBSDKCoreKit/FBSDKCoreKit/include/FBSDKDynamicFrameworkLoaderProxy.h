@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DynamicFrameworkLoaderProxy)
 @interface FBSDKDynamicFrameworkLoaderProxy : NSObject
 /**
-  Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
+ Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
 
  @return The kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value or nil.
  */

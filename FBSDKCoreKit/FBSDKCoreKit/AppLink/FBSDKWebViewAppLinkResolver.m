@@ -26,7 +26,6 @@
  Describes the callback for appLinkFromURLInBackground.
  @param result the results from following redirects
  @param error the error during the request, if any
-
  */
 typedef void (^ FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> *result, NSError *_Nullable error)
 NS_SWIFT_NAME(URLFollowRedirectsBlock);

@@ -37,7 +37,7 @@ NS_SWIFT_NAME(AuthenticationStatusUtility)
          authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationWallet;
 
 /**
-  Fetches the latest authentication status from server. This will invalidate
+ Fetches the latest authentication status from server. This will invalidate
   the current user session if the returned status is not authorized.
  */
 + (void)checkAuthenticationStatus;

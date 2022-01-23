@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class PHAsset;
 
 /**
-  A video for sharing.
+ A video for sharing.
  */
 NS_SWIFT_NAME(ShareVideo)
 @interface FBSDKShareVideo : NSObject <NSSecureCoding, NSCopying, NSObject, FBSDKShareMedia, FBSDKSharingValidation>
@@ -50,13 +50,13 @@ NS_SWIFT_NAME(ShareVideo)
 + (instancetype)videoWithVideoAsset:(PHAsset *)videoAsset previewPhoto:(FBSDKSharePhoto *)previewPhoto;
 
 /**
-  Convenience method to build a new video object with a videoURL.
+ Convenience method to build a new video object with a videoURL.
  @param videoURL The URL to the video.
  */
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL;
 
 /**
-  Convenience method to build a new video object with a videoURL and a previewPhoto.
+ Convenience method to build a new video object with a videoURL and a previewPhoto.
  @param videoURL The URL to the video.
  @param previewPhoto The photo that represents the video.
  */
@@ -75,19 +75,19 @@ NS_SWIFT_NAME(ShareVideo)
 @property (nullable, nonatomic, copy) PHAsset *videoAsset;
 
 /**
-  The file URL to the video.
+ The file URL to the video.
  @return URL that points to the location of the video on disk
  */
 @property (nullable, nonatomic, copy) NSURL *videoURL;
 
 /**
-  The photo that represents the video.
+ The photo that represents the video.
  @return The photo
  */
 @property (nullable, nonatomic, copy) FBSDKSharePhoto *previewPhoto;
 
 /**
-  Compares the receiver to another video.
+ Compares the receiver to another video.
  @param video The other video
  @return YES if the receiver's values are equal to the other video's values; otherwise NO
  */

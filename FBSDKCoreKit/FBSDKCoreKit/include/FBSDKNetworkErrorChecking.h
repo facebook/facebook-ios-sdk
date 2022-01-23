@@ -17,7 +17,7 @@ NS_SWIFT_NAME(NetworkErrorChecking)
  @param error An error that may or may not represent a network error.
 
  @return `YES` if the error represents a network error, otherwise `NO`.
-*/
+ */
 - (BOOL)isNetworkError:(NSError *)error;
 
 @end

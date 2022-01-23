@@ -26,7 +26,7 @@ NS_SWIFT_NAME(SwitchContextContent)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-  Builds a content object that will be use to display a switch context dialog
+ Builds a content object that will be use to display a switch context dialog
  @param contextID  The context ID of the context instance to switch and set as the current game context
  */
 

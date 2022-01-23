@@ -11,7 +11,7 @@ import FBSDKCoreKit
 #if !os(tvOS)
 
 /**
-  A button to send content through Messenger.
+ A button to send content through Messenger.
 
  Tapping the receiver will invoke the FBSDKShareDialog with the attached shareContent.  If the dialog cannot
  be shown, the button will be disable.

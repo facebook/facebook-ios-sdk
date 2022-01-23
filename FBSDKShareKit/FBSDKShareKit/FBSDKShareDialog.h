@@ -32,7 +32,7 @@ NS_SWIFT_NAME(ShareDialog)
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  A dialog for sharing content on Facebook.
+ A dialog for sharing content on Facebook.
  */
 NS_SWIFT_NAME(ShareDialog)
 @interface FBSDKShareDialog : NSObject <FBSDKSharingDialog>
@@ -43,7 +43,7 @@ NS_SWIFT_NAME(ShareDialog)
   DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
 
 /**
-  Convenience initializer to initialize an `FBSDKShareDialog` with a view controller, content and delegate.
+ Convenience initializer to initialize an `FBSDKShareDialog` with a view controller, content and delegate.
  @param viewController A view controller from which to present the dialog, if appropriate.
  @param content The content to be shared.
  @param delegate The dialog's delegate.
@@ -53,7 +53,7 @@ NS_SWIFT_NAME(ShareDialog)
                               delegate:(nullable id<FBSDKSharingDelegate>)delegate;
 
 /**
-  Convenience method to create an `FBSDKShareDialog` with a view controller, content and delegate.
+ Convenience method to create an `FBSDKShareDialog` with a view controller, content and delegate.
  @param viewController A view controller from which to present the dialog, if appropriate.
  @param content The content to be shared.
  @param delegate The dialog's delegate.
@@ -75,14 +75,14 @@ NS_SWIFT_NAME(ShareDialog)
   NS_SWIFT_UNAVAILABLE("Use init(viewController:content:delegate:).show() instead");
 
 /**
-  A UIViewController from which to present the dialog.
+ A UIViewController from which to present the dialog.
 
  If not specified, the topmost view controller will be automatically determined as best as possible.
  */
 @property (nonatomic, weak) UIViewController *fromViewController;
 
 /**
-  The mode with which to display the dialog.
+ The mode with which to display the dialog.
 
  Defaults to `FBSDKShareDialogModeAutomatic`, which will automatically choose the best available mode.
  */

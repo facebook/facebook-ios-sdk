@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 
 /**
-  A dialog presenter responsible for creating and showing all the dialogs that create, switch,
+ A dialog presenter responsible for creating and showing all the dialogs that create, switch,
  choose and otherwise manipulate the gaming context.
  */
 public class ContextDialogPresenter {

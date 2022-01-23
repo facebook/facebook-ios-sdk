@@ -10,7 +10,7 @@ import FacebookGamingServices
 import FBSDKCoreKit
 
 /**
-  A dialog to switch the current context through a web view
+ A dialog to switch the current context through a web view
  */
 @objcMembers
 open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol, Showable {

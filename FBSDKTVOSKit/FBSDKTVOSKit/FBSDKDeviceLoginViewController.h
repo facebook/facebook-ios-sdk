@@ -32,7 +32,7 @@ NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
 
 /*!
  @abstract Indicates an error with the login.
-*/
+ */
 - (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error;
 
 @end

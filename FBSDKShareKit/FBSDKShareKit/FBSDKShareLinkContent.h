@@ -13,13 +13,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  A model for status and link content to be shared.
+ A model for status and link content to be shared.
  */
 NS_SWIFT_NAME(ShareLinkContent)
 @interface FBSDKShareLinkContent : NSObject <FBSDKSharingContent>
 
 /**
-  Some quote text of the link.
+ Some quote text of the link.
 
  If specified, the quote text will render with custom styling on top of the link.
  @return The quote text of a link
@@ -27,7 +27,7 @@ NS_SWIFT_NAME(ShareLinkContent)
 @property (nullable, nonatomic, copy) NSString *quote;
 
 /**
-  Compares the receiver to another link content.
+ Compares the receiver to another link content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO
  */

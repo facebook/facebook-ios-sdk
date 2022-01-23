@@ -51,12 +51,12 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 
 /*
   Returns the set user data else nil
-*/
+ */
 - (nullable NSString *)getUserData;
 
 /*
   Clears the current user data
-*/
+ */
 - (void)clearUserData;
 
 /*

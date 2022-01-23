@@ -57,8 +57,7 @@ FOUNDATION_EXPORT Class fbsdkdfl_ACAccountStoreClass(void);
 FOUNDATION_EXPORT Class fbsdkdfl_CTTelephonyNetworkInfoClass(void);
 
 /**
-
-  This class provides a way to load constants and methods from Apple Frameworks in a dynamic
+ This class provides a way to load constants and methods from Apple Frameworks in a dynamic
  fashion.  It allows the SDK to be just dragged into a project without having to specify additional
  frameworks to link against.  It is an internal class and not to be used by 3rd party developers.
 
@@ -76,84 +75,84 @@ NS_SWIFT_NAME(DynamicFrameworkLoader)
 #pragma mark - Security Constants
 
 /**
-  Load the kSecRandomDefault value from the Security Framework
+ Load the kSecRandomDefault value from the Security Framework
 
  @return The kSecRandomDefault value or nil.
  */
 + (SecRandomRef)loadkSecRandomDefault;
 
 /**
-  Load the kSecAttrAccessible value from the Security Framework
+ Load the kSecAttrAccessible value from the Security Framework
 
  @return The kSecAttrAccessible value or nil.
  */
 + (CFTypeRef)loadkSecAttrAccessible;
 
 /**
-  Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
+ Load the kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value from the Security Framework
 
  @return The kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly value or nil.
  */
 + (CFTypeRef)loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
 
 /**
-  Load the kSecAttrAccount value from the Security Framework
+ Load the kSecAttrAccount value from the Security Framework
 
  @return The kSecAttrAccount value or nil.
  */
 + (CFTypeRef)loadkSecAttrAccount;
 
 /**
-  Load the kSecAttrService value from the Security Framework
+ Load the kSecAttrService value from the Security Framework
 
  @return The kSecAttrService value or nil.
  */
 + (CFTypeRef)loadkSecAttrService;
 
 /**
-  Load the kSecValueData value from the Security Framework
+ Load the kSecValueData value from the Security Framework
 
  @return The kSecValueData value or nil.
  */
 + (CFTypeRef)loadkSecValueData;
 
 /**
-  Load the kSecClassGenericPassword value from the Security Framework
+ Load the kSecClassGenericPassword value from the Security Framework
 
  @return The kSecClassGenericPassword value or nil.
  */
 + (CFTypeRef)loadkSecClassGenericPassword;
 
 /**
-  Load the kSecAttrAccessGroup value from the Security Framework
+ Load the kSecAttrAccessGroup value from the Security Framework
 
  @return The kSecAttrAccessGroup value or nil.
  */
 + (CFTypeRef)loadkSecAttrAccessGroup;
 
 /**
-  Load the kSecMatchLimitOne value from the Security Framework
+ Load the kSecMatchLimitOne value from the Security Framework
 
  @return The kSecMatchLimitOne value or nil.
  */
 + (CFTypeRef)loadkSecMatchLimitOne;
 
 /**
-  Load the kSecMatchLimit value from the Security Framework
+ Load the kSecMatchLimit value from the Security Framework
 
  @return The kSecMatchLimit value or nil.
  */
 + (CFTypeRef)loadkSecMatchLimit;
 
 /**
-  Load the kSecReturnData value from the Security Framework
+ Load the kSecReturnData value from the Security Framework
 
  @return The kSecReturnData value or nil.
  */
 + (CFTypeRef)loadkSecReturnData;
 
 /**
-  Load the kSecClass value from the Security Framework
+ Load the kSecClass value from the Security Framework
 
  @return The kSecClass value or nil.
  */

@@ -88,7 +88,7 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
 
 /**
  The flag indicating whether the URL comes from auto app link
-*/
+ */
 @property (nonatomic, readonly, getter = isAutoAppLink) BOOL isAutoAppLink;
 
 @end

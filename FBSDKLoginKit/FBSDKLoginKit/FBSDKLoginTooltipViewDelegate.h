@@ -26,7 +26,6 @@ NS_SWIFT_NAME(LoginTooltipViewDelegate)
  @param appIsEligible The value fetched from the server identifying if the app
  is eligible for the new login experience.
 
-
  Use this method to customize display behavior.
  */
 - (BOOL)loginTooltipView:(FBSDKLoginTooltipView *)view shouldAppear:(BOOL)appIsEligible;

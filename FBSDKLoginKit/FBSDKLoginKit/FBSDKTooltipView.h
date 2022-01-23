@@ -39,11 +39,8 @@ typedef NS_ENUM(NSUInteger, FBSDKTooltipColorStyle) {
 } NS_SWIFT_NAME(FBTooltipView.ColorStyle);
 
 /**
-
-  Tooltip bubble with text in it used to display tips for UI elements,
+ Tooltip bubble with text in it used to display tips for UI elements,
  with a pointed arrow (to refer to the UI element).
-
-
 
  The tooltip fades in and will automatically fade out. See `displayDuration`.
  */
@@ -51,30 +48,30 @@ NS_SWIFT_NAME(FBTooltipView)
 @interface FBSDKTooltipView : UIView
 
 /**
-  Gets or sets the amount of time in seconds the tooltip should be displayed.
+ Gets or sets the amount of time in seconds the tooltip should be displayed.
  Set this to zero to make the display permanent until explicitly dismissed.
  Defaults to six seconds.
  */
 @property (nonatomic, assign) CFTimeInterval displayDuration;
 
 /**
-  Gets or sets the color style after initialization.
+ Gets or sets the color style after initialization.
  Defaults to value passed to -initWithTagline:message:colorStyle:.
  */
 @property (nonatomic, assign) FBSDKTooltipColorStyle colorStyle;
 
 /**
-  Gets or sets the message.
+ Gets or sets the message.
  */
 @property (nullable, nonatomic, copy) NSString *message;
 
 /**
-  Gets or sets the optional phrase that comprises the first part of the label (and is highlighted differently).
+ Gets or sets the optional phrase that comprises the first part of the label (and is highlighted differently).
  */
 @property (nullable, nonatomic, copy) NSString *tagline;
 
 /**
-  Designated initializer.
+ Designated initializer.
 
  @param tagline First part of the label, that will be highlighted with different color. Can be nil.
 
@@ -82,10 +79,7 @@ NS_SWIFT_NAME(FBTooltipView)
 
  @param colorStyle Color style to use for tooltip.
 
-
-
  If you need to show a tooltip for login, consider using the `FBSDKLoginTooltipView` view.
-
 
  @see FBSDKLoginTooltipView
  */
@@ -94,14 +88,12 @@ NS_SWIFT_NAME(FBTooltipView)
                      colorStyle:(FBSDKTooltipColorStyle)colorStyle;
 
 /**
-  Show tooltip at the top or at the bottom of given view.
+ Show tooltip at the top or at the bottom of given view.
  Tooltip will be added to anchorView.window.rootViewController.view
 
  @param anchorView view to show at, must be already added to window view hierarchy, in order to decide
  where tooltip will be shown. (If there's not enough space at the top of the anchorView in window bounds -
  tooltip will be shown at the bottom of it)
-
-
 
  Use this method to present the tooltip with automatic positioning or
  use -presentInView:withArrowPosition:direction: for manual positioning
@@ -110,7 +102,7 @@ NS_SWIFT_NAME(FBTooltipView)
 - (void)presentFromView:(UIView *)anchorView;
 
 /**
-  Adds tooltip to given view, with given position and arrow direction.
+ Adds tooltip to given view, with given position and arrow direction.
 
  @param view View to be used as superview.
 
@@ -128,9 +120,7 @@ NS_SWIFT_NAME(present(in:arrowPosition:direction:));
 // UNCRUSTIFY_FORMAT_ON
 
 /**
-  Remove tooltip manually.
-
-
+ Remove tooltip manually.
 
  Calling this method isn't necessary - tooltip will dismiss itself automatically after the `displayDuration`.
  */

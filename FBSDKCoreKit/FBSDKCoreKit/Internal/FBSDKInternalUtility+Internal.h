@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
  @param stop the error during the request, if any
-
  */
 typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
@@ -30,7 +29,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 #endif
 
 /**
-  Constructs the scheme for apps that come to the current app through the bridge.
+ Constructs the scheme for apps that come to the current app through the bridge.
  */
 @property (nonatomic, readonly, copy) NSString *appURLScheme;
 
@@ -53,7 +52,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
                                errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 
 /**
-  Constructs a Facebook URL.
+ Constructs a Facebook URL.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
  @param path The path for the URL.  This may or may not include a version.
  @param queryParameters The query parameters for the URL.  This will be converted into a query string.
@@ -68,7 +67,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
                                         error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Constructs a Facebook URL that doesn't need to specify an API version.
+ Constructs a Facebook URL that doesn't need to specify an API version.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
  @param path The path for the URL.  This may or may not include a version.
  @param queryParameters The query parameters for the URL.  This will be converted into a query string.
@@ -81,33 +80,33 @@ NS_SWIFT_NAME(InvalidObjectHandler);
                                           error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Tests whether the supplied bundle identifier references a Facebook app.
+ Tests whether the supplied bundle identifier references a Facebook app.
  @param bundleIdentifier The bundle identifier to test.
  @return YES if the bundle identifier refers to a Facebook app, otherwise NO.
  */
 - (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
-  Tests whether the supplied bundle identifier references the Safari app.
+ Tests whether the supplied bundle identifier references the Safari app.
  @param bundleIdentifier The bundle identifier to test.
  @return YES if the bundle identifier refers to the Safari app, otherwise NO.
  */
 - (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
- *  Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
+ Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
  */
 - (void)deleteFacebookCookies;
 
 #if !TARGET_OS_TV
 /**
-  returns interface orientation for the key window.
+ Returns interface orientation for the key window.
  */
 - (UIInterfaceOrientation)statusBarOrientation;
 #endif
 
-/*
-  Checks if the permission is a publish permission.
+/**
+ Checks if the permission is a publish permission.
  */
 - (BOOL)isPublishPermission:(NSString *)permission;
 

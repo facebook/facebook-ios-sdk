@@ -14,13 +14,13 @@ NS_SWIFT_NAME(TokenStringProviding)
 @protocol FBSDKTokenStringProviding
 
 /**
-  Return the token string of the current access token.
+ Return the token string of the current access token.
 
   Internal Type exposed to facilitate transition to Swift.
   API Subject to change or removal without warning. Do not use.
 
   @warning INTERNAL - DO NOT USE
-*/
+ */
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *tokenString;
 

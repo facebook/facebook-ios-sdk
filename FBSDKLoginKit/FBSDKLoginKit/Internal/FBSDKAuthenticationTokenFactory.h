@@ -29,7 +29,7 @@ NS_SWIFT_NAME(AuthenticationTokenFactory)
  @param nonce the nonce string used to associate a client session with the token
  @param graphDomain the graph domain where user is authenticated
  @param completion the completion handler
-*/
+ */
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
                              nonce:(NSString *_Nonnull)nonce
                        graphDomain:(NSString *_Nonnull)graphDomain
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(AuthenticationTokenFactory)
  @param tokenString the raw ID token string
  @param nonce the nonce string used to associate a client session with the token
  @param completion the completion handler
-*/
+ */
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
                              nonce:(NSString *_Nonnull)nonce
                         completion:(FBSDKAuthenticationTokenBlock)completion;

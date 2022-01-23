@@ -26,7 +26,6 @@ extern void fb_dispatch_on_default_thread(dispatch_block_t block);
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
  @param stop the error during the request, if any
-
  */
 typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);

@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  Structured interface for accessing the parameters used to complete a log in request.
+ Structured interface for accessing the parameters used to complete a log in request.
  If \c authenticationTokenString is non-<code>nil</code>, the authentication succeeded. If \c error is
  non-<code>nil</code> the request failed. If both are \c nil, the request was cancelled.
  */

@@ -15,7 +15,7 @@ Internal Type exposed to facilitate transition to Swift.
 API Subject to change or removal without warning. Do not use.
 
 @warning INTERNAL - DO NOT USE
-*/
+ */
 @interface FBSDKLoginTooltip : NSObject
 @property (nonatomic, readonly, getter = isEnabled, assign) BOOL enabled;
 @property (nonatomic, readonly, copy) NSString *text;

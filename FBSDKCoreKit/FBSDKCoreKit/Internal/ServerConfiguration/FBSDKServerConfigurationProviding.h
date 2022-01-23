@@ -23,7 +23,7 @@ NS_SWIFT_NAME(ServerConfigurationProviding)
 - (FBSDKServerConfiguration *)cachedServerConfiguration;
 
 /**
-  Executes the completionBlock with a valid and current configuration when it is available.
+ Executes the completionBlock with a valid and current configuration when it is available.
 
  This method will use a cached configuration if it is valid and not expired.
  */
