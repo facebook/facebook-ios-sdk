@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import Foundation
 
 @objcMembers
@@ -18,7 +19,7 @@ class TestGamingServiceController: NSObject, _GamingServiceControllerProtocol {
 }
 
 @objcMembers
-class TestGamingServiceControllerFactory: NSObject, _GamingServiceControllerCreating {
+class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
   var capturedServiceType: _GamingServiceType = .friendFinder
   var capturedCompletion: GamingServiceResultCompletion = { _, _, _ in }
   var capturedPendingResult: [String: Any]?

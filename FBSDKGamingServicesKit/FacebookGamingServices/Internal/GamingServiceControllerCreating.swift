@@ -8,14 +8,7 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(FBSDKGamingServiceControllerCreating)
-public protocol _GamingServiceControllerCreating {
+protocol GamingServiceControllerCreating {
   func create(
     serviceType: _GamingServiceType,
     pendingResult: [String: Any]?,

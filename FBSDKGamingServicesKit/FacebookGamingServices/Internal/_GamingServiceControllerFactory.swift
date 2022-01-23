@@ -14,7 +14,7 @@
  */
 @objcMembers
 @objc(FBSDKGamingServiceControllerFactory)
-public class _GamingServiceControllerFactory: NSObject, _GamingServiceControllerCreating {
+public class _GamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
   public func create(
     serviceType: _GamingServiceType,
     pendingResult: [String: Any]?,

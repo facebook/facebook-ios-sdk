@@ -11,7 +11,7 @@ import FBSDKCoreKit
 @objc(FBSDKFriendFinderDialog)
 public class FriendFinderDialog: NSObject {
 
-  let factory: _GamingServiceControllerCreating
+  let factory: GamingServiceControllerCreating
 
   // Transitional singleton introduced as a way to change the usage semantics
   // from a type-based interface to an instance-based interface.
@@ -21,7 +21,7 @@ public class FriendFinderDialog: NSObject {
     self.init(gamingServiceControllerFactory: _GamingServiceControllerFactory())
   }
 
-  init(gamingServiceControllerFactory: _GamingServiceControllerCreating) {
+  init(gamingServiceControllerFactory: GamingServiceControllerCreating) {
     factory = gamingServiceControllerFactory
   }
 

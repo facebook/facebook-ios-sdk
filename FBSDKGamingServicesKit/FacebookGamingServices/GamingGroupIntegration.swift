@@ -13,7 +13,7 @@ import FBSDKCoreKit
 public class GamingGroupIntegration: NSObject {
 
   let settings: SettingsProtocol
-  let serviceControllerFactory: _GamingServiceControllerCreating
+  let serviceControllerFactory: GamingServiceControllerCreating
 
   override convenience init() {
     self.init(
@@ -22,7 +22,7 @@ public class GamingGroupIntegration: NSObject {
     )
   }
 
-  init(settings: SettingsProtocol, serviceControllerFactory: _GamingServiceControllerCreating) {
+  init(settings: SettingsProtocol, serviceControllerFactory: GamingServiceControllerCreating) {
     self.settings = settings
     self.serviceControllerFactory = serviceControllerFactory
   }

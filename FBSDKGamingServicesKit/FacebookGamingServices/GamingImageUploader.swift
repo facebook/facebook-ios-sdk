@@ -14,7 +14,7 @@ public class GamingImageUploader: NSObject {
 
   private var progressHandler: GamingServiceProgressHandler?
 
-  let factory: _GamingServiceControllerCreating
+  let factory: GamingServiceControllerCreating
   let graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol
 
   // Transitional singleton introduced as a way to change the usage semantics
@@ -37,7 +37,7 @@ public class GamingImageUploader: NSObject {
   }
 
   init(
-    gamingServiceControllerFactory: _GamingServiceControllerCreating,
+    gamingServiceControllerFactory: GamingServiceControllerCreating,
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol
   ) {
     factory = gamingServiceControllerFactory
