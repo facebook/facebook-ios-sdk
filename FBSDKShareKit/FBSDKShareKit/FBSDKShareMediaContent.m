@@ -9,11 +9,11 @@
 #import "FBSDKShareMediaContent.h"
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
-#import "FBSDKShareUtility.h"
 #import "FBSDKShareVideo.h"
 
 #define FBSDK_SHARE_MEDIA_CONTENT_CONTENT_URL_KEY @"contentURL"
@@ -52,7 +52,7 @@
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
+  [_FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
   if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
@@ -60,7 +60,7 @@
 
 - (void)setMedia:(NSArray<id<FBSDKShareMedia>> *)media
 {
-  [FBSDKShareUtility assertCollection:media ofClassStrings:@[NSStringFromClass(FBSDKSharePhoto.class), NSStringFromClass(FBSDKShareVideo.class)] name:@"media"];
+  [_FBSDKShareUtility assertCollection:media ofClassStrings:@[NSStringFromClass(FBSDKSharePhoto.class), NSStringFromClass(FBSDKShareVideo.class)] name:@"media"];
   if (![FBSDKInternalUtility.sharedUtility object:_media isEqualToObject:media]) {
     _media = [media copy];
   }
@@ -79,7 +79,7 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-  if (![FBSDKShareUtility validateArray:_media minCount:1 maxCount:20 name:@"photos" error:errorRef]) {
+  if (![_FBSDKShareUtility validateArray:_media minCount:1 maxCount:20 name:@"photos" error:errorRef]) {
     return NO;
   }
   int videoCount = 0;
@@ -111,7 +111,7 @@
       }
       videoCount++;
       FBSDKShareVideo *video = (FBSDKShareVideo *)media;
-      if (![FBSDKShareUtility validateRequiredValue:video name:@"video" error:errorRef]) {
+      if (![_FBSDKShareUtility validateRequiredValue:video name:@"video" error:errorRef]) {
         return NO;
       }
       if (![video validateWithOptions:bridgeOptions error:errorRef]) {

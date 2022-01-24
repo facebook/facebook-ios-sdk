@@ -10,8 +10,9 @@
 
 #import "FBSDKAppInviteContent.h"
 
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
+
 #import "FBSDKHasher.h"
-#import "FBSDKShareUtility.h"
 
 #define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
 #define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
@@ -59,9 +60,9 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-  return ([FBSDKShareUtility validateRequiredValue:_appLinkURL name:@"appLinkURL" error:errorRef]
-    && [FBSDKShareUtility validateNetworkURL:_appLinkURL name:@"appLinkURL" error:errorRef]
-    && [FBSDKShareUtility validateNetworkURL:_appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]
+  return ([_FBSDKShareUtility validateRequiredValue:_appLinkURL name:@"appLinkURL" error:errorRef]
+    && [_FBSDKShareUtility validateNetworkURL:_appLinkURL name:@"appLinkURL" error:errorRef]
+    && [_FBSDKShareUtility validateNetworkURL:_appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]
     && [self _validatePromoCodeWithError:errorRef]);
 }
 

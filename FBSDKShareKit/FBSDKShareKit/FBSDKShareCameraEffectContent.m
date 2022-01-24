@@ -12,12 +12,12 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKCameraEffectArguments+Internal.h"
 #import "FBSDKCameraEffectTextures+Internal.h"
 #import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareUtility.h"
 
 static NSString *const kFBSDKShareCameraEffectContentEffectIDKey = @"effectID";
 static NSString *const kFBSDKShareCameraEffectContentEffectArgumentsKey = @"effectArguments";

@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
@@ -21,7 +22,6 @@
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareDialogConfiguration+Internal.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"
-#import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
 
 #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
@@ -122,9 +122,13 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   }
 
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
-                                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                                    shouldFailOnDataError:self.shouldFailOnDataError];
+  NSDictionary<NSString *, id> *parameters = @{};
+  if (shareContent) {
+    parameters = [_FBSDKShareUtility parametersForShareContent:shareContent
+                                                 bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                         shouldFailOnDataError:self.shouldFailOnDataError];
+  }
+
   NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]
     ? FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME
     : FBSDK_SHARE_METHOD_NAME);
@@ -168,9 +172,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
       return NO;
     }
   }
-  return [FBSDKShareUtility validateShareContent:self.shareContent
-                                   bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                           error:errorRef];
+  return [_FBSDKShareUtility validateShareContent:self.shareContent
+                                    bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                            error:errorRef];
 }
 
 - (BOOL)_canShowNative

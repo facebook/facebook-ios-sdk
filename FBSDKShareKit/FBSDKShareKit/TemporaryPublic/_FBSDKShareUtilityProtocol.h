@@ -6,22 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- Web Share Block
- */
-
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^ FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
-NS_SWIFT_NAME(WebPhotoContentBlock);
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
-NS_SWIFT_NAME(ShareUtilityProtocol)
-@protocol FBSDKShareUtility
+ @warning INTERNAL - DO NOT USE
+ */
+typedef void (^ _FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
+NS_SWIFT_NAME(_WebPhotoContentBlock);
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ShareUtilityProtocol)
+@protocol _FBSDKShareUtility
 
 + (nullable NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content;
 
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
-                completionHandler:(FBSDKWebPhotoContentBlock)completion;
+                completionHandler:(_FBSDKWebPhotoContentBlock)completion;
 
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *_Nonnull *_Nullable)methodNameRef

@@ -29,7 +29,7 @@ class ShareUtilityTests: XCTestCase {
     let content = ShareLinkContent()
     content.contentURL = ShareModelTestUtility.contentURL
     XCTAssertNotNil(content.shareUUID)
-    let parameters = ShareUtility.parameters(forShare: content, bridgeOptions: [], shouldFailOnDataError: true)
+    let parameters = _ShareUtility.parameters(forShare: content, bridgeOptions: [], shouldFailOnDataError: true)
     XCTAssertEqual(
       content.contentURL,
       parameters["messenger_link"] as? URL,

@@ -6,15 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKShareUtility.h"
-
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHashtag.h"
 #import "FBSDKShareLinkContent.h"
 
-@implementation FBSDKShareUtility
+@implementation _FBSDKShareUtility
 
 #pragma mark - Class Methods
 
@@ -72,7 +71,7 @@
   if (parameters) {
     [FBSDKTypeUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:content.hashtag] forKey:@"hashtag"];
     [FBSDKTypeUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
-    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[_FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
   }
   if (methodNameRef != NULL) {
     *methodNameRef = methodName;
@@ -102,14 +101,14 @@
 }
 
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
-                completionHandler:(FBSDKWebPhotoContentBlock)completion
+                completionHandler:(_FBSDKWebPhotoContentBlock)completion
 {
   void (^stageImageCompletion)(NSArray<NSString *> *) = ^(NSArray<NSString *> *stagedURIs) {
     NSString *const methodName = @"share";
     NSMutableDictionary<NSString *, id> *const parameters =
-    [[FBSDKShareUtility parametersForShareContent:content
-                                    bridgeOptions:FBSDKShareBridgeOptionsWebHashtag
-                            shouldFailOnDataError:NO] mutableCopy];
+    [[_FBSDKShareUtility parametersForShareContent:content
+                                     bridgeOptions:FBSDKShareBridgeOptionsWebHashtag
+                             shouldFailOnDataError:NO] mutableCopy];
     [parameters removeObjectForKey:@"photos"];
     NSString *const stagedURIJSONString = [FBSDKBasicUtility JSONStringForObject:stagedURIs
                                                                            error:nil
@@ -117,7 +116,7 @@
     [FBSDKTypeUtility dictionary:parameters
                        setObject:stagedURIJSONString
                           forKey:@"media"];
-    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[_FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
     if (completion != NULL) {
       completion(YES, methodName, [parameters copy]);
     }
@@ -137,7 +136,7 @@
     [FBSDKTypeUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
     [FBSDKTypeUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
     [FBSDKTypeUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
-    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[_FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
     [FBSDKTypeUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
   }
   return [parameters copy];

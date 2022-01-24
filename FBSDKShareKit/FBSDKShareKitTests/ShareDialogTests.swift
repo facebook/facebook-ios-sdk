@@ -93,7 +93,7 @@ class ShareDialogTests: XCTestCase {
       "ShareDialog should use the shared settings for its default settings dependency"
     )
     XCTAssertTrue(
-      ShareDialog.shareUtility === ShareUtility.self,
+      ShareDialog.shareUtility === _ShareUtility.self,
       "ShareDialog should use the share utility class for its default share utility dependency"
     )
     XCTAssertTrue(

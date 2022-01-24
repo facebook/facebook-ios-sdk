@@ -9,10 +9,10 @@
 #import "FBSDKShareLinkContent.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareUtility.h"
 
 #define FBSDK_SHARE_STATUS_CONTENT_CONTENT_URL_KEY @"contentURL"
 #define FBSDK_SHARE_STATUS_CONTENT_HASHTAG_KEY @"hashtag"
@@ -70,7 +70,7 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-  return [FBSDKShareUtility validateNetworkURL:_contentURL name:@"contentURL" error:errorRef];
+  return [_FBSDKShareUtility validateNetworkURL:_contentURL name:@"contentURL" error:errorRef];
 }
 
 #pragma mark - Equality

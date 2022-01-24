@@ -9,10 +9,10 @@
 #import "FBSDKShareVideo.h"
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHasher.h"
 #import "FBSDKSharePhoto.h"
-#import "FBSDKShareUtility.h"
 
 NSString *const kFBSDKShareVideoAssetKey = @"videoAsset";
 NSString *const kFBSDKShareVideoDataKey = @"data";

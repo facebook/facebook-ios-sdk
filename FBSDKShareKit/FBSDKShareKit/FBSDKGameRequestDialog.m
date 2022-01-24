@@ -12,12 +12,12 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKGameRequestDialogDelegate.h"
 #import "FBSDKGameRequestFrictionlessRecipientCache.h"
-#import "FBSDKShareUtility.h"
 
 #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
 #define FBSDK_GAME_REQUEST_URL_HOST @"game_requests"
@@ -268,7 +268,7 @@ static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
-  if (![FBSDKShareUtility validateRequiredValue:self.content name:@"content" error:errorRef]) {
+  if (![_FBSDKShareUtility validateRequiredValue:self.content name:@"content" error:errorRef]) {
     return NO;
   }
   if ([self.content respondsToSelector:@selector(validateWithOptions:error:)]) {

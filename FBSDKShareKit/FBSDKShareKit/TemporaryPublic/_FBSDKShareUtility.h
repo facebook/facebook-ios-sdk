@@ -11,14 +11,20 @@
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharePhotoContent.h"
-#import "FBSDKShareUtilityProtocol.h"
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingContent.h"
+#import "_FBSDKShareUtilityProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ShareUtility)
-@interface FBSDKShareUtility : NSObject <FBSDKShareUtility>
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ShareUtility)
+@interface _FBSDKShareUtility : NSObject <_FBSDKShareUtility>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

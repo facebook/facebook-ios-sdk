@@ -45,7 +45,7 @@ class ShareLinkContentTests: XCTestCase {
 
   func testValidationWithValidContent() {
     XCTAssertNoThrow(
-      try ShareUtility.validateShare(
+      try _ShareUtility.validateShare(
         ShareModelTestUtility.linkContent,
         bridgeOptions: []
       )

@@ -16,6 +16,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <objc/runtime.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
@@ -31,13 +32,12 @@
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
-#import "FBSDKShareUtility.h"
-#import "FBSDKShareUtilityProtocol.h"
 #import "FBSDKShareVideo.h"
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactory.h"
 #import "UIApplication+ShareInternalURLOpening.h"
+#import "_FBSDKShareUtilityProtocol.h"
 
 /*
  NOTE: version checking with custom URL schemes is not scalable for Facebook, Inc (Meta, Inc) apps.
@@ -111,14 +111,14 @@ static _Nullable id<FBSDKSettings> _settings;
   _settings = settings;
 }
 
-static _Nullable Class<FBSDKShareUtility> _shareUtility;
+static _Nullable Class<_FBSDKShareUtility> _shareUtility;
 
-+ (nullable Class<FBSDKShareUtility>)shareUtility
++ (nullable Class<_FBSDKShareUtility>)shareUtility
 {
   return _shareUtility;
 }
 
-+ (void)setShareUtility:(nullable Class<FBSDKShareUtility>)shareUtility
++ (void)setShareUtility:(nullable Class<_FBSDKShareUtility>)shareUtility
 {
   _shareUtility = shareUtility;
 }
@@ -188,7 +188,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
                        internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                               settings:(nonnull id<FBSDKSettings>)settings
-                          shareUtility:(nonnull Class<FBSDKShareUtility>)shareUtility
+                          shareUtility:(nonnull Class<_FBSDKShareUtility>)shareUtility
                bridgeAPIRequestFactory:(nonnull id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
@@ -217,7 +217,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
   [self configureWithInternalURLOpener:UIApplication.sharedApplication
                        internalUtility:FBSDKInternalUtility.sharedUtility
                               settings:FBSDKSettings.sharedSettings
-                          shareUtility:FBSDKShareUtility.self
+                          shareUtility:_FBSDKShareUtility.self
                bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
     socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]

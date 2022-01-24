@@ -16,6 +16,8 @@
 #import <FBSDKShareKit/FBSDKShareVideoContent.h>
 #import <FBSDKShareKit/FBSDKSharing.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
+#import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
 
 #if !TARGET_OS_TV
  #import <FBSDKShareKit/FBSDKAppInviteContent.h>

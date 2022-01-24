@@ -11,10 +11,10 @@
 #import <Photos/Photos.h>
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareUtility.h"
 
 #define FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY @"contentURL"
 #define FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY @"hashtag"
@@ -53,7 +53,7 @@
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
+  [_FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
   if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
@@ -105,7 +105,7 @@
 
   if (_video.previewPhoto) {
     [FBSDKTypeUtility dictionary:videoParameters
-                       setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
+                       setObject:[_FBSDKShareUtility convertPhoto:_video.previewPhoto]
                           forKey:@"previewPhoto"];
   }
 
@@ -120,7 +120,7 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-  if (![FBSDKShareUtility validateRequiredValue:_video name:@"video" error:errorRef]) {
+  if (![_FBSDKShareUtility validateRequiredValue:_video name:@"video" error:errorRef]) {
     return NO;
   }
   return [_video validateWithOptions:bridgeOptions error:errorRef];

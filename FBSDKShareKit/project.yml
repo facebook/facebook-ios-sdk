@@ -48,6 +48,9 @@ targets:
         excludes:
           - Internal
           - Info.plist
+      - path: FBSDKShareKit/TemporaryPublic
+        headerVisibility: public
+        createIntermediateGroups: true
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         createIntermediateGroups: true
@@ -79,6 +82,9 @@ targets:
         excludes:
           - Internal
           - Info.plist
+      - path: FBSDKShareKit/TemporaryPublic
+        headerVisibility: public
+        createIntermediateGroups: true
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         createIntermediateGroups: true
@@ -127,6 +133,9 @@ targets:
           - FBSDKSharingScheme*
           - Internal
           - Info.plist
+      - path: FBSDKShareKit/TemporaryPublic
+        headerVisibility: public
+        createIntermediateGroups: true
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         excludes:
@@ -183,9 +192,11 @@ targets:
           - FBSDKSharingScheme*
           - Internal
           - Info.plist
+      - path: FBSDKShareKit/TemporaryPublic
+        headerVisibility: public
+        createIntermediateGroups: true
       - path: FBSDKShareKit/Internal
         headerVisibility: project
-        excludes:
         excludes:
           - FBSDKCameraEffectArguments+Internal*
           - FBSDKCameraEffectTextures+Internal*

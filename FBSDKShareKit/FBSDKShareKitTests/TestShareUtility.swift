@@ -7,7 +7,7 @@
  */
 
 @objcMembers
-final class TestShareUtility: NSObject, ShareUtilityProtocol {
+final class TestShareUtility: NSObject, _ShareUtilityProtocol {
   static var stubbedValidateShareShouldThrow = false
   static var stubbedTestShareContainsMedia = false
   static var stubbedTestShareContainsPhotos = false
@@ -28,7 +28,7 @@ final class TestShareUtility: NSObject, ShareUtilityProtocol {
 
   static func buildAsyncWebPhotoContent(
     _ content: SharePhotoContent,
-    completionHandler completion: WebPhotoContentBlock
+    completionHandler completion: _WebPhotoContentBlock
   ) {}
 
   static func buildWebShare(

@@ -13,7 +13,7 @@
 #import "FBSDKShareDialog.h"
 #import "FBSDKShareInternalURLOpening.h"
 
-@protocol FBSDKShareUtility;
+@protocol _FBSDKShareUtility;
 @protocol FBSDKSocialComposeViewControllerFactory;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKShareInternalURLOpening> internalURLOpener;
 @property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
-@property (class, nullable, nonatomic) Class<FBSDKShareUtility> shareUtility;
+@property (class, nullable, nonatomic) Class<_FBSDKShareUtility> shareUtility;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestCreating> bridgeAPIRequestFactory;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
 @property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;

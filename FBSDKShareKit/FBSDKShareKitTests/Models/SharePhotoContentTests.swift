@@ -51,14 +51,14 @@ class SharePhotoContentTests: XCTestCase {
     content.placeID = ShareModelTestUtility.placeID
     content.ref = ShareModelTestUtility.ref
 
-    XCTAssertNoThrow(try ShareUtility.validateShare(content, bridgeOptions: []))
+    XCTAssertNoThrow(try _ShareUtility.validateShare(content, bridgeOptions: []))
   }
 
   func testValidationWithNilPhotos() {
     let content = SharePhotoContent()
 
     XCTAssertThrowsError(
-      try ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShare(content, bridgeOptions: []),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -72,7 +72,7 @@ class SharePhotoContentTests: XCTestCase {
     content.photos = []
 
     XCTAssertThrowsError(
-      try ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShare(content, bridgeOptions: []),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError

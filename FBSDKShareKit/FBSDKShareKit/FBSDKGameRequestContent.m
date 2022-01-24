@@ -11,9 +11,9 @@
 #import "FBSDKGameRequestContent.h"
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import "FBSDKHasher.h"
-#import "FBSDKShareUtility.h"
 
 #define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"
 #define FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY @"message"
@@ -30,7 +30,7 @@
 
 - (void)setRecipients:(NSArray *)recipients
 {
-  [FBSDKShareUtility assertCollection:recipients ofClass:NSString.class name:@"recipients"];
+  [_FBSDKShareUtility assertCollection:recipients ofClass:NSString.class name:@"recipients"];
   if (![_recipients isEqual:recipients]) {
     _recipients = [recipients copy];
   }
@@ -38,7 +38,7 @@
 
 - (void)setRecipientSuggestions:(NSArray *)recipientSuggestions
 {
-  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:NSString.class name:@"recipientSuggestions"];
+  [_FBSDKShareUtility assertCollection:recipientSuggestions ofClass:NSString.class name:@"recipientSuggestions"];
   if (![_recipientSuggestions isEqual:recipientSuggestions]) {
     _recipientSuggestions = [recipientSuggestions copy];
   }
@@ -70,7 +70,7 @@
 {
   id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
 
-  if (![FBSDKShareUtility validateRequiredValue:_message name:@"message" error:errorRef]) {
+  if (![_FBSDKShareUtility validateRequiredValue:_message name:@"message" error:errorRef]) {
     return NO;
   }
   BOOL mustHaveobjectID = _actionType == FBSDKGameRequestActionTypeSend
@@ -140,21 +140,21 @@
     *errorRef = nil;
   }
 
-  return [FBSDKShareUtility validateArgumentWithName:@"actionType"
-                                               value:_actionType
-                                                isIn:@[@(FBSDKGameRequestActionTypeNone),
-                                                       @(FBSDKGameRequestActionTypeSend),
-                                                       @(FBSDKGameRequestActionTypeAskFor),
-                                                       @(FBSDKGameRequestActionTypeTurn),
-                                                       @(FBSDKGameRequestActionTypeInvite)]
-                                               error:errorRef]
-  && [FBSDKShareUtility validateArgumentWithName:@"filters"
-                                           value:_filters
-                                            isIn:@[@(FBSDKGameRequestFilterNone),
-                                                   @(FBSDKGameRequestFilterAppUsers),
-                                                   @(FBSDKGameRequestFilterAppNonUsers),
-                                                   @(FBSDKGameRequestFilterEverybody)]
-                                           error:errorRef];
+  return [_FBSDKShareUtility validateArgumentWithName:@"actionType"
+                                                value:_actionType
+                                                 isIn:@[@(FBSDKGameRequestActionTypeNone),
+                                                        @(FBSDKGameRequestActionTypeSend),
+                                                        @(FBSDKGameRequestActionTypeAskFor),
+                                                        @(FBSDKGameRequestActionTypeTurn),
+                                                        @(FBSDKGameRequestActionTypeInvite)]
+                                                error:errorRef]
+  && [_FBSDKShareUtility validateArgumentWithName:@"filters"
+                                            value:_filters
+                                             isIn:@[@(FBSDKGameRequestFilterNone),
+                                                    @(FBSDKGameRequestFilterAppUsers),
+                                                    @(FBSDKGameRequestFilterAppNonUsers),
+                                                    @(FBSDKGameRequestFilterEverybody)]
+                                            error:errorRef];
 }
 
 #pragma mark - Equality

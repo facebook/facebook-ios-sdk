@@ -11,8 +11,7 @@
 #import "FBSDKCameraEffectArguments.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKShareUtility.h"
+#import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
