@@ -39,7 +39,7 @@ fi
 
 # Run SwiftFormat
 if [ -n "$SWIFTFORMAT_PATH" ]; then
-  $SWIFTFORMAT_PATH "${UNIQUE_SWIFT_FILES[@]}"
+  $SWIFTFORMAT_PATH --lint "${UNIQUE_SWIFT_FILES[@]}"
 else
   echo "warning: SwiftFormat not installed. Install with 'brew install swiftformat' or from https://github.com/nicklockwood/SwiftFormat"
 fi
