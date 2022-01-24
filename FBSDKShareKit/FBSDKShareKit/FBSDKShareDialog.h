@@ -25,7 +25,6 @@ NS_SWIFT_NAME(ShareDialog)
 
  #import <UIKit/UIKit.h>
 
- #import <FBSDKShareKit/FBSDKShareDialogMode.h>
  #import <FBSDKShareKit/FBSDKSharing.h>
  #import <FBSDKShareKit/FBSDKSharingContent.h>
 
@@ -86,7 +85,7 @@ NS_SWIFT_NAME(ShareDialog)
 
  Defaults to `FBSDKShareDialogModeAutomatic`, which will automatically choose the best available mode.
  */
-@property (nonatomic, assign) FBSDKShareDialogMode mode;
+@property (nonatomic, assign) NSUInteger mode;
 
 @end
 

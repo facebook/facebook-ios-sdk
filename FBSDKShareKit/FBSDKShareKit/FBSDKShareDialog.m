@@ -341,6 +341,8 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
       case FBSDKShareDialogModeShareSheet: {
         return [self _canShowShareSheet];
       }
+      default:
+        return false;
     }
   }
 }
@@ -1201,11 +1203,6 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (void)_logDialogShow
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  NSString *shareMode = NSStringFromFBSDKShareDialogMode(self.mode);
-  #pragma clang diagnostic pop
-
   NSString *contentType;
   if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
@@ -1220,7 +1217,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   }
 
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogMode : shareMode,
+    FBSDKAppEventParameterDialogMode : [self modeDescription],
     FBSDKAppEventParameterDialogShareContentType : contentType,
   };
 
@@ -1228,6 +1225,20 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
                                parameters:parameters
                        isImplicitlyLogged:YES
                               accessToken:FBSDKAccessToken.currentAccessToken];
+}
+
+- (NSString *)modeDescription
+{
+  switch (self.mode) {
+    case 0: return @"Automatic";
+    case 1: return @"Native";
+    case 2: return @"ShareSheet";
+    case 3: return @"Browser";
+    case 4: return @"Web";
+    case 5: return @"FeedBrowser";
+    case 6: return @"FeedWeb";
+    default: return @"Unknown";
+  }
 }
 
 - (nullable NSString *)_calculateInitialText

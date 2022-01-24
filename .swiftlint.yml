@@ -30,6 +30,7 @@ file_name:
     BridgeAPI+ApplicationOpenUrlTests.swift,
     BridgeAPI+SessionCompletionHandlerTests.swift,
     ShareAppEventNames.swift,
+    ShareDialogMode.swift,
   ]
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]

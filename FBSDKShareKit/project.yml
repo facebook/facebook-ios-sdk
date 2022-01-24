@@ -48,13 +48,8 @@ targets:
         excludes:
           - Internal
           - Info.plist
-          - Swift
       - path: FBSDKShareKit/Internal
         headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Swift
-        excludes:
-          - Exports.swift
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Static.xcconfig
@@ -84,13 +79,8 @@ targets:
         excludes:
           - Internal
           - Info.plist
-          - Swift
       - path: FBSDKShareKit/Internal
         headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Swift
-        excludes:
-          - Exports.swift
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Dynamic.xcconfig
@@ -137,7 +127,6 @@ targets:
           - FBSDKSharingScheme*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         excludes:
@@ -194,7 +183,6 @@ targets:
           - FBSDKSharingScheme*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKShareKit/Internal
         headerVisibility: project
         excludes:
