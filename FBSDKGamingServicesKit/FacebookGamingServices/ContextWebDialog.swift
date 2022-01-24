@@ -38,8 +38,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     false
   }
 
-  public func validate() throws {
-  }
+  public func validate() throws {}
 
   // MARK: - WebDialogDelegate
 
@@ -94,8 +93,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
     if
       let errorCode = results[Keys.errorCode] as? Int,
-      let errorMessage = results[Keys.errorMessage] as? String
-    {
+      let errorMessage = results[Keys.errorMessage] as? String {
       let errorFactory = ErrorFactory()
       let error = errorFactory.error(
         code: errorCode,

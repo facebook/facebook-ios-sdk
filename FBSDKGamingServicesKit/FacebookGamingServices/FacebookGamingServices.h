@@ -7,7 +7,6 @@
  */
 
 #import <FacebookGamingServices/FBSDKDialogProtocol.h>
-#import <FacebookGamingServices/FBSDKSwitchContextContent.h>
 
 // The headers below need to be public since they're used in the Swift files
 // but they probably shouldn't be actually public.

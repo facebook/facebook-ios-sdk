@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FacebookGamingServices
 import TestTools
 import XCTest
 
@@ -43,16 +44,6 @@ class FBSDKSwitchContextContentTests: XCTestCase {
     )
   }
 
-  func testHashability() {
-    let identicalContent = SwitchContextContent(contextID: name)
-
-    XCTAssertEqual(
-      content.hashValue,
-      identicalContent.hashValue,
-      "Identical contents should have the same hash value"
-    )
-  }
-
   func testEquatability() {
     XCTAssertEqual(content, content)
 
@@ -63,34 +54,5 @@ class FBSDKSwitchContextContentTests: XCTestCase {
     let contentWithDifferentProperties = SwitchContextContent(contextID: "foo")
 
     XCTAssertNotEqual(content, contentWithDifferentProperties)
-  }
-
-  func testSecureCoding() {
-    XCTAssertTrue(
-      SwitchContextContent.supportsSecureCoding,
-      "Should support secure coding"
-    )
-  }
-
-  func testEncoding() {
-    let coder = TestCoder()
-    content.encode(with: coder)
-
-    XCTAssertEqual(
-      coder.encodedObject["contextToken"] as? String,
-      content.contextTokenID,
-      "Should encode the token identifier under the expected key"
-    )
-  }
-
-  func testDecoding() {
-    let coder = TestCoder()
-
-    _ = SwitchContextContent(coder: coder)
-
-    XCTAssertTrue(
-      coder.decodedObject["contextToken"] is NSString.Type,
-      "Should attempt to decode a string for the context token"
-    )
   }
 }
