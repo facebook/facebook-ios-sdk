@@ -83,15 +83,6 @@ public class CreateContextDialog: ContextWebDialog {
     guard let content = dialogContent else {
       throw GamingServicesDialogError.missingContent
     }
-    guard content.responds(to: #selector(validate)) else {
-      throw ErrorFactory().invalidArgumentError(
-        name: "content",
-        value: dialogContent,
-        message: nil,
-        underlyingError: nil
-      )
-    }
-
     try content.validate()
   }
 }

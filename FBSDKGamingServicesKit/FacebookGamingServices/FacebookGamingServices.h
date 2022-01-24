@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FacebookGamingServices/FBSDKDialogProtocol.h>
-
 // The headers below need to be public since they're used in the Swift files
 // but they probably shouldn't be actually public.
 // Not sure what the correct approach here is...
