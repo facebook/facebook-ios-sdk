@@ -1160,7 +1160,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
@@ -1174,7 +1174,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
   };
 
@@ -1188,7 +1188,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 
 - (void)_invokeDelegateDidFailWithError:(nonnull NSError *)error
 {
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,
     FBSDKAppEventParameterNameDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
   };
@@ -1216,7 +1216,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogMode : [self modeDescription],
     FBSDKAppEventParameterNameDialogShareContentType : contentType,
   };

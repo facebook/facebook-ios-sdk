@@ -60,7 +60,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
     }
   }
   NSDictionary<NSString *, id> *eventArgs = notification.userInfo[FBSDKMeasurementEventArgs];
-  NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *logData = [NSMutableDictionary new];
   for (NSString *key in eventArgs.allKeys) {
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9a-zA-Z _-]" options:0 error:&error];

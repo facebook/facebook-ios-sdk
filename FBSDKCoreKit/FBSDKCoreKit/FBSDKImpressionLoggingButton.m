@@ -33,9 +33,9 @@ static id<FBSDKImpressionLoggerFactory> _impressionLoggerFactory;
 {
   // automatic impression tracking if the button conforms to FBSDKButtonImpressionTracking
   if ([self conformsToProtocol:@protocol(FBSDKButtonImpressionLogging)]) {
-    NSString *eventName = ((id<FBSDKButtonImpressionLogging>)self).impressionTrackingEventName;
+    FBSDKAppEventName eventName = ((id<FBSDKButtonImpressionLogging>)self).impressionTrackingEventName;
     NSString *identifier = ((id<FBSDKButtonImpressionLogging>)self).impressionTrackingIdentifier;
-    NSDictionary<NSString *, id> *parameters = ((id<FBSDKButtonImpressionLogging>)self).analyticsParameters;
+    NSDictionary<FBSDKAppEventParameterName, id> *parameters = ((id<FBSDKButtonImpressionLogging>)self).analyticsParameters;
     if (eventName && identifier) {
       id<FBSDKImpressionLogging> impressionLogger
         = [self.class.impressionLoggerFactory makeImpressionLoggerWithEventName:eventName];

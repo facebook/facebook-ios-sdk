@@ -17,7 +17,7 @@ class AppEventsTests: XCTestCase {
   let mockUserID = "mockUserID"
   let purchaseAmount = 1.0
   let currency = "USD"
-  var eventName = "fb_mock_event"
+  var eventName = AppEvents.Name("fb_mock_event")
   var payload = ["fb_push_payload": ["campaign": "testCampaign"]]
 
   // swiftlint:disable implicitly_unwrapped_optional
@@ -44,7 +44,6 @@ class AppEventsTests: XCTestCase {
   var userDataStore: TestUserDataStore!
   var appEventsUtility: TestAppEventsUtility!
   var internalUtility: TestInternalUtility!
-  var appEventName: AppEvents.Name!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -91,7 +90,6 @@ class AppEventsTests: XCTestCase {
 
     configureAppEvents()
     appEvents.loggingOverrideAppID = mockAppID
-    appEventName = AppEvents.Name(eventName)
   }
 
   override func tearDown() {
@@ -118,7 +116,6 @@ class AppEventsTests: XCTestCase {
     userDataStore = nil
     appEventsUtility = nil
     internalUtility = nil
-    appEventName = nil
 
     resetTestHelpers()
 
@@ -239,10 +236,10 @@ class AppEventsTests: XCTestCase {
       "mockAppID/activities"
     )
     validateAEMReporterCalled(
-      eventName: "fb_mobile_purchase",
+      eventName: .init("fb_mobile_purchase"),
       currency: currency,
       value: purchaseAmount,
-      parameters: ["fb_currency": "USD"]
+      parameters: [.init("fb_currency"): "USD"]
     )
   }
 
@@ -278,10 +275,10 @@ class AppEventsTests: XCTestCase {
       "Shouldn't implicitly add events to AppEventsState when logging purshase"
     )
     validateAEMReporterCalled(
-      eventName: "fb_mobile_purchase",
+      eventName: .init("fb_mobile_purchase"),
       currency: currency,
       value: purchaseAmount,
-      parameters: ["fb_currency": "USD"]
+      parameters: [.init("fb_currency"): "USD"]
     )
   }
 
@@ -298,7 +295,7 @@ class AppEventsTests: XCTestCase {
     wait(for: [expectation], timeout: 2)
 
     validateAEMReporterCalled(
-      eventName: "foo",
+      eventName: .init("foo"),
       currency: nil,
       value: nil,
       parameters: [:]
@@ -324,19 +321,19 @@ class AppEventsTests: XCTestCase {
       parameters: [:]
     )
 
-    let expectedAEMParameters = [
-      "fb_product_availability": "IN_STOCK",
-      "fb_product_brand": "PHILZ",
-      "fb_product_condition": "NEW",
-      "fb_product_description": "description",
-      "fb_product_gtin": "BLUE MOUNTAIN",
-      "fb_product_image_link": "https://www.sample.com",
-      "fb_product_item_id": "F40CEE4E-471E-45DB-8541-1526043F4B21",
-      "fb_product_link": "https://www.sample.com",
-      "fb_product_mpn": "BLUE MOUNTAIN",
-      "fb_product_price_amount": "1.000",
-      "fb_product_price_currency": "USD",
-      "fb_product_title": "title"
+    let expectedAEMParameters: [AppEvents.ParameterName: String] = [
+      .init("fb_product_availability"): "IN_STOCK",
+      .init("fb_product_brand"): "PHILZ",
+      .init("fb_product_condition"): "NEW",
+      .init("fb_product_description"): "description",
+      .init("fb_product_gtin"): "BLUE MOUNTAIN",
+      .init("fb_product_image_link"): "https://www.sample.com",
+      .init("fb_product_item_id"): "F40CEE4E-471E-45DB-8541-1526043F4B21",
+      .init("fb_product_link"): "https://www.sample.com",
+      .init("fb_product_mpn"): "BLUE MOUNTAIN",
+      .init("fb_product_price_amount"): "1.000",
+      .init("fb_product_price_currency"): "USD",
+      .init("fb_product_title"): "title"
     ]
 
     let capturedParameters = try XCTUnwrap(
@@ -396,7 +393,7 @@ class AppEventsTests: XCTestCase {
     )
 
     validateAEMReporterCalled(
-      eventName: "fb_mobile_catalog_update",
+      eventName: .init("fb_mobile_catalog_update"),
       currency: nil,
       value: nil,
       parameters: expectedAEMParameters
@@ -528,13 +525,13 @@ class AppEventsTests: XCTestCase {
 
   func testSetPushNotificationsDeviceTokenString() {
     let mockDeviceTokenString = "testDeviceTokenString"
-    eventName = "fb_mobile_obtain_push_token"
+    eventName = .init("fb_mobile_obtain_push_token")
 
     appEvents.pushNotificationsDeviceTokenString = mockDeviceTokenString
 
     XCTAssertEqual(
       appEventsStateProvider.state?.capturedEventDictionary?["_eventName"] as? String,
-      eventName
+      eventName.rawValue
     )
     XCTAssertEqual(appEvents.pushNotificationsDeviceTokenString, mockDeviceTokenString)
     validateAEMReporterCalled(
@@ -599,14 +596,14 @@ class AppEventsTests: XCTestCase {
   func testApplicationTerminatingPersistingStates() {
     appEvents.flushBehavior = .explicitOnly
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: nil,
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
     )
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: nil,
       isImplicitlyLogged: false,
@@ -750,9 +747,9 @@ class AppEventsTests: XCTestCase {
   // swiftlint:enable opening_brace
 
   func testLogEventFilteringOutDeactivatedParameters() {
-    let parameters = ["key": "value"]
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: parameters,
       isImplicitlyLogged: false,
@@ -764,7 +761,7 @@ class AppEventsTests: XCTestCase {
       "AppEvents instance should submit the event name to event deactivation parameters processor."
     )
     XCTAssertEqual(
-      eventDeactivationParameterProcessor.capturedParameters as? [String: String],
+      eventDeactivationParameterProcessor.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "AppEvents instance should submit the parameters to event deactivation parameters processor."
     )
@@ -777,9 +774,9 @@ class AppEventsTests: XCTestCase {
   }
 
   func testLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor() {
-    let parameters = ["key": "value"]
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: parameters,
       isImplicitlyLogged: false,
@@ -791,7 +788,7 @@ class AppEventsTests: XCTestCase {
       "AppEvents instance should submit the event name to the restrictive data filter parameters processor."
     )
     XCTAssertEqual(
-      restrictiveDataFilterParameterProcessor.capturedParameters as? [String: String],
+      restrictiveDataFilterParameterProcessor.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "AppEvents instance should submit the parameters to the restrictive data filter parameters processor."
     )
@@ -800,17 +797,17 @@ class AppEventsTests: XCTestCase {
   // MARK: - Test for log push notification
 
   func testLogPushNotificationOpen() throws {
-    eventName = "fb_mobile_push_opened"
+    eventName = .init("fb_mobile_push_opened")
 
-    let expectedAEMParameters = [
-      "fb_push_action": "testAction",
-      "fb_push_campaign": "testCampaign",
+    let expectedAEMParameters: [AppEvents.ParameterName: String] = [
+      .init("fb_push_action"): "testAction",
+      .init("fb_push_campaign"): "testCampaign",
     ]
 
     appEvents.logPushNotificationOpen(payload: payload, action: "testAction")
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["fb_push_action"] as? String, "testAction")
     XCTAssertEqual(capturedParameters["fb_push_campaign"] as? String, "testCampaign")
     validateAEMReporterCalled(
@@ -822,18 +819,18 @@ class AppEventsTests: XCTestCase {
   }
 
   func testLogPushNotificationOpenWithEmptyAction() throws {
-    eventName = "fb_mobile_push_opened"
+    eventName = .init("fb_mobile_push_opened")
 
     appEvents.logPushNotificationOpen(payload: payload)
 
-    let expectedAEMParameters = [
-      "fb_push_campaign": "testCampaign",
+    let expectedAEMParameters: [AppEvents.ParameterName: String] = [
+      .init("fb_push_campaign"): "testCampaign",
     ]
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
     XCTAssertNil(capturedParameters["fb_push_action"])
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["fb_push_campaign"] as? String, "testCampaign")
     validateAEMReporterCalled(
       eventName: eventName,
@@ -885,7 +882,7 @@ class AppEventsTests: XCTestCase {
       "Should retrieve persisted states when logEvent was called and flush behavior was FlushReasonEagerlyFlushingEvent"
     )
     validateAEMReporterCalled(
-      eventName: AppEvents.Name.purchased.rawValue,
+      eventName: .purchased,
       currency: nil,
       value: purchaseAmount,
       parameters: [:]
@@ -1025,7 +1022,7 @@ class AppEventsTests: XCTestCase {
     TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: false)
 
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: nil,
       isImplicitlyLogged: false,
@@ -1053,7 +1050,7 @@ class AppEventsTests: XCTestCase {
     TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: true)
 
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: nil,
       isImplicitlyLogged: false,
@@ -1079,25 +1076,25 @@ class AppEventsTests: XCTestCase {
 
   func testLogEventWithValueToSum() throws {
     appEvents.logEvent(
-      appEventName,
+      eventName,
       valueToSum: purchaseAmount
     )
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["_valueToSum"] as? Int, 1)
   }
 
   func testLogInternalEvents() throws {
     appEvents.logInternalEvent(
-      appEventName,
+      eventName,
       isImplicitlyLogged: false
     )
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertNil(capturedParameters["_valueToSum"])
     XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
@@ -1111,14 +1108,14 @@ class AppEventsTests: XCTestCase {
 
   func testLogInternalEventsWithValue() throws {
     appEvents.logInternalEvent(
-      appEventName,
+      eventName,
       valueToSum: purchaseAmount,
       isImplicitlyLogged: false
     )
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["_valueToSum"] as? Double, purchaseAmount)
     XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
@@ -1132,7 +1129,7 @@ class AppEventsTests: XCTestCase {
 
   func testLogInternalEventWithAccessToken() throws {
     appEvents.logInternalEvent(
-      appEventName,
+      eventName,
       parameters: [:],
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
@@ -1142,7 +1139,7 @@ class AppEventsTests: XCTestCase {
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertNil(capturedParameters["_valueToSum"])
     XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
@@ -1157,7 +1154,7 @@ class AppEventsTests: XCTestCase {
   func testLogEventWhenAutoLogAppEventsDisabled() {
     settings.isAutoLogAppEventsEnabled = false
     appEvents.logInternalEvent(
-      appEventName,
+      eventName,
       valueToSum: purchaseAmount,
       isImplicitlyLogged: false
     )
@@ -1169,7 +1166,7 @@ class AppEventsTests: XCTestCase {
     appEventsUtility.shouldDropAppEvents = true
     settings.appID = "123"
 
-    appEvents.logEvent(appEventName)
+    appEvents.logEvent(eventName)
 
     XCTAssertNil(
       appEventsStateProvider.state,
@@ -1181,7 +1178,7 @@ class AppEventsTests: XCTestCase {
     appEventsUtility.shouldDropAppEvents = false
     settings.appID = "123"
 
-    appEvents.logEvent(appEventName)
+    appEvents.logEvent(eventName)
 
     XCTAssertNotNil(
       appEventsStateProvider.state,
@@ -1191,9 +1188,9 @@ class AppEventsTests: XCTestCase {
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
     if #available(iOS 11.3, *) {
-      appEvents.logEvent(appEventName, valueToSum: purchaseAmount)
+      appEvents.logEvent(eventName, valueToSum: purchaseAmount)
       XCTAssertEqual(
-        eventName,
+        eventName.rawValue,
         skAdNetworkReporter.capturedEvent,
         "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
       )
@@ -1213,7 +1210,7 @@ class AppEventsTests: XCTestCase {
 
   func testLogImplicitEvent() throws {
     appEvents.logImplicitEvent(
-      appEventName,
+      eventName,
       valueToSum: NSNumber(value: purchaseAmount),
       parameters: [:],
       accessToken: SampleAccessTokens.validToken
@@ -1221,7 +1218,7 @@ class AppEventsTests: XCTestCase {
 
     let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
 
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName)
+    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["_valueToSum"] as? Double, purchaseAmount)
     XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "1")
     validateAEMReporterCalled(
@@ -1237,7 +1234,7 @@ class AppEventsTests: XCTestCase {
   func testLoggingEventWithoutIntegrityParametersProcessor() throws {
     onDeviceMLModelManager.integrityParametersProcessor = nil
 
-    appEvents.logEvent(appEventName, parameters: [.init("foo"): "bar"])
+    appEvents.logEvent(eventName, parameters: [.init("foo"): "bar"])
 
     let logEntry = try XCTUnwrap(TestLogger.capturedLogEntry)
     XCTAssertTrue(
@@ -1248,11 +1245,11 @@ class AppEventsTests: XCTestCase {
 
   func testLoggingEventWithIntegrityParametersProcessor() {
     let parameters = [AppEvents.ParameterName("foo"): "bar"]
-    appEvents.logEvent(appEventName, parameters: parameters)
+    appEvents.logEvent(eventName, parameters: parameters)
 
     XCTAssertEqual(
-      integrityParametersProcessor.capturedParameters as? [String: String],
-      ["foo": "bar"],
+      integrityParametersProcessor.capturedParameters as? [AppEvents.ParameterName: String],
+      [.init("foo"): "bar"],
       "Should use the integrity parameters processor to filter the parameters"
     )
   }
@@ -1612,15 +1609,15 @@ class AppEventsTests: XCTestCase {
 
   // MARK: - Helpers
 
-  func validateAEMReporterCalled(
-    eventName: String?,
+  private func validateAEMReporterCalled(
+    eventName: AppEvents.Name?,
     currency: String?,
     value: Double?,
-    parameters: [String: String]?
+    parameters: [AppEvents.ParameterName: String]?
   ) {
     XCTAssertEqual(
       TestAEMReporter.capturedEvent,
-      eventName,
+      eventName?.rawValue,
       "Should invoke the AEM reporter with the expected event name"
     )
     XCTAssertEqual(
@@ -1635,8 +1632,18 @@ class AppEventsTests: XCTestCase {
     )
     XCTAssertEqual(
       TestAEMReporter.capturedParameters as? [String: String],
-      parameters,
+      convertParameters(parameters),
       "Should invoke the AEM reporter with the expected parameters"
+    )
+  }
+
+  private func convertParameters(_ potentialParameters: [AppEvents.ParameterName: String]?) -> [String: String]? {
+    guard let parameters = potentialParameters else { return nil }
+
+    return .init(
+      uniqueKeysWithValues: parameters.map {
+        ($0.key.rawValue, $0.value)
+      }
     )
   }
 }

@@ -72,12 +72,12 @@ class IntegrityManagerTests: XCTestCase {
 
   // MARK: - Processing
 
-  func testProcessingParametersWithRestrictedData() {
+  func testProcessingParametersWithRestrictedData() throws {
     manager.enable()
 
-    let parameters = [
-      "address": "2301 N Highland Ave, Los Angeles, CA 90068", // address
-      "period_starts": "2020-02-03", // health
+    let parameters: [AppEvents.ParameterName: String] = [
+      .init("address"): "2301 N Highland Ave, Los Angeles, CA 90068", // address
+      .init("period_starts"): "2020-02-03", // health
     ]
 
     processor.stubbedParameters = [
@@ -85,19 +85,17 @@ class IntegrityManagerTests: XCTestCase {
       "period_starts": true
     ]
 
-    guard let processed = manager.processParameters(parameters, eventName: name) as? [String: String] else {
-      return XCTFail("Processed parameters should be in the expected format")
-    }
+    let processed = try XCTUnwrap(
+      manager.processParameters(parameters, eventName: .init(name)) as? [AppEvents.ParameterName: String],
+      "Processed parameters should be in the expected format"
+    )
 
-    XCTAssertNil(
-      processed["address"]
+    XCTAssertNil(processed[.init("address")])
+    XCTAssertNil(processed[.init("period_starts")])
+    let onDeviceParams = try XCTUnwrap(
+      processed[.init("_onDeviceParams")],
+      "Should have the expected processed on-device parameters"
     )
-    XCTAssertNil(
-      processed["period_starts"]
-    )
-    guard let onDeviceParams = processed["_onDeviceParams"] else {
-      return XCTFail("Should have the expected processed on-device parameters")
-    }
     XCTAssertTrue(
       onDeviceParams.contains("address")
     )
@@ -106,23 +104,24 @@ class IntegrityManagerTests: XCTestCase {
     )
   }
 
-  func testProcessingParametersWithNonRestrictedData() {
+  func testProcessingParametersWithNonRestrictedData() throws {
     manager.enable()
 
-    let parameters: [String: Any] = [
-      "_valueToSum": 1,
-      "_session_id": "12345"
+    let parameters: [AppEvents.ParameterName: Any] = [
+      .init("_valueToSum"): 1,
+      .init("_session_id"): "12345"
     ]
     processor.stubbedParameters = [
       "_valueToSum": false,
       "_session_id": false
     ]
-    guard let processed = manager.processParameters(parameters, eventName: name) else {
-      return XCTFail("Processed parameters should be in the expected format")
-    }
+    let processed = try XCTUnwrap(
+      manager.processParameters(parameters, eventName: .init(name)),
+      "Processed parameters should be in the expected format"
+    )
 
-    XCTAssertNotNil(processed["_valueToSum"])
-    XCTAssertNotNil(processed["_session_id"])
-    XCTAssertNil(processed["_onDeviceParams"])
+    XCTAssertNotNil(processed[.init("_valueToSum")])
+    XCTAssertNotNil(processed[.init("_session_id")])
+    XCTAssertNil(processed[.init("_onDeviceParams")])
   }
 }

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKEventsProcessing.h"
 
@@ -18,8 +21,8 @@ NS_SWIFT_NAME(EventDeactivationManager)
 
 - (void)enable;
 - (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName;
+- (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                                                                   eventName:(FBSDKAppEventName)eventName;
 
 @end
 

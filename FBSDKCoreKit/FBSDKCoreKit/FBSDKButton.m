@@ -186,8 +186,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
 #pragma mark - Subclass Methods
 
-- (void)logTapEventWithEventName:(NSString *)eventName
-                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+- (void)logTapEventWithEventName:(FBSDKAppEventName)eventName
+                      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self.class.eventLogger logInternalEvent:eventName
                                 parameters:parameters

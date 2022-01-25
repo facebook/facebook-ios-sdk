@@ -25,8 +25,8 @@ NS_SWIFT_NAME(RestrictiveDataFilterManager)
 
 - (void)enable;
 - (void)processEvents:(NSArray<NSDictionary<NSString *, id> *> *)events;
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName;
+- (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                                                                   eventName:(FBSDKAppEventName)eventName;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -364,7 +364,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
     DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPurchase(_:currency:parameters:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPurchase(amount:currency:parameters:)` instead");
 
 /**
@@ -388,7 +388,7 @@ NS_SWIFT_NAME(AppEvents)
 // UNCRUSTIFY_FORMAT_OFF
 - (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
   NS_SWIFT_NAME(logPurchase(amount:currency:parameters:));
 // UNCRUSTIFY_FORMAT_ON
 
@@ -414,7 +414,7 @@ NS_SWIFT_NAME(AppEvents)
  */
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken
     DEPRECATED_MSG_ATTRIBUTE("`AppEvents.logPurchase(_:currency:parameters:accessToken:)` is deprecated and will be removed in the next major release; please use `AppEvents.shared.logPurchase(amount:currency:parameters:accessToken:)` instead");
 
@@ -441,7 +441,7 @@ NS_SWIFT_NAME(AppEvents)
 // UNCRUSTIFY_FORMAT_OFF
 - (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken
   NS_SWIFT_NAME(logPurchase(amount:currency:parameters:accessToken:));
 // UNCRUSTIFY_FORMAT_ON
@@ -901,7 +901,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @warning INTERNAL - DO NOT USE
  */
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 /**
@@ -911,7 +911,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @warning INTERNAL - DO NOT USE
  */
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(nullable FBSDKAccessToken *)accessToken;
 

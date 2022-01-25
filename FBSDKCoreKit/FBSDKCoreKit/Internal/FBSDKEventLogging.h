@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventName.h"
-#import "FBSDKAppEventsFlushBehavior.h"
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 
 @class FBSDKAccessToken;
 
@@ -23,21 +24,21 @@ NS_SWIFT_NAME(EventLogging)
 - (void)flushForReason:(NSUInteger)flushReason;
 
 - (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(nullable FBSDKAccessToken *)accessToken;
 

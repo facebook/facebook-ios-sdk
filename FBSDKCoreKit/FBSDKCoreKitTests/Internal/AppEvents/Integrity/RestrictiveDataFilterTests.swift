@@ -32,24 +32,32 @@ class RestrictiveDataFilterTests: XCTestCase {
     return restrictiveDataFilterManager
   }
 
-  func testFilterByParams() {
-    let eventName = "restrictive_event_name"
-    let parameters1 = [
-      "dob": "06-29-2019"
+  func testFilterByParams() throws {
+    let eventName = AppEvents.Name("restrictive_event_name")
+    let parameters1: [AppEvents.ParameterName: Any] = [
+      .init("dob"): "06-29-2019"
     ]
-    let expected1 = [
-      "_restrictedParams": #"{"dob":"4"}"#
+    let expected1: [AppEvents.ParameterName: String] = [
+      .init("_restrictedParams"): #"{"dob":"4"}"#
     ]
     let processedParameters1 = restrictiveDataFilterManager.processParameters(parameters1, eventName: eventName)
 
-    XCTAssertEqual(processedParameters1 as? [String: String], expected1)
+    XCTAssertEqual(processedParameters1 as? [AppEvents.ParameterName: String], expected1)
 
-    let parameters2 = [
-      "test_key": 66666
+    let parameters2: [AppEvents.ParameterName: Any] = [
+      .init("test_key"): 66666
     ]
-    let processedParameters2 = restrictiveDataFilterManager.processParameters(parameters2, eventName: eventName)
+    let processedParameters2 = try XCTUnwrap(
+      restrictiveDataFilterManager.processParameters(
+        parameters2,
+        eventName: eventName
+      ) as? [AppEvents.ParameterName: Int]
+    )
 
-    XCTAssertEqual(processedParameters2 as? [String: NSNumber], parameters2 as [String: NSNumber])
+    XCTAssertEqual(
+      processedParameters2,
+      parameters2 as? [AppEvents.ParameterName: Int]
+    )
   }
 
   func testGetMatchedDataTypeByParam() {

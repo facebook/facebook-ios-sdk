@@ -17,7 +17,7 @@ class ViewImpressionLoggerTests: XCTestCase {
   let sharedTrackerName = AppEvents.Name("shared")
   lazy var tracker = createImpressionLogger(named: sharedTrackerName)
   let impressionIdentifier = "foo"
-  let parameters = ["bar": "baz"]
+  let parameters: [AppEvents.ParameterName: String] = [.init("bar"): "baz"]
 
   override func setUp() {
     super.setUp()
@@ -101,7 +101,7 @@ class ViewImpressionLoggerTests: XCTestCase {
       "Should log an impression with the event name"
     )
     XCTAssertEqual(
-      logger.capturedParameters as? [String: String],
+      logger.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "Should log an impression with the expected parameters"
     )
@@ -155,7 +155,7 @@ class ViewImpressionLoggerTests: XCTestCase {
       "Should log an impression from a new tracker even if the impression is not valid"
     )
     XCTAssertNil(
-      logger.capturedParameters?["__view_impression_identifier__"],
+      logger.capturedParameters?[.init("__view_impression_identifier__")],
       "Should not log the same impression twice even if the trackers are different"
     )
   }

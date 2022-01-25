@@ -11,11 +11,11 @@ import XCTest
 class EventDeactivationTests: XCTestCase {
 
   enum Keys {
-    static let ui = "_ui" // swiftlint:disable:this identifier_name
-    static let logTime = "_logTime"
-    static let sessionID = "_session_id"
-    static let launchSource = "fb_mobile_launch_source"
-    static let deprecated = "deprecated_3"
+    static let ui = AppEvents.ParameterName("_ui") // swiftlint:disable:this identifier_name
+    static let logTime = AppEvents.ParameterName("_logTime")
+    static let sessionID = AppEvents.ParameterName("_session_id")
+    static let launchSource = AppEvents.ParameterName("fb_mobile_launch_source")
+    static let deprecated = AppEvents.ParameterName("deprecated_3")
   }
 
   let rawConfiguration = [
@@ -34,10 +34,10 @@ class EventDeactivationTests: XCTestCase {
     serverConfigurationProvider: provider
   )
 
-  func testProcessParameters() {
+  func testProcessParameters() throws {
     eventDeactivationManager.enable()
 
-    let parameters: [String: Any] = [
+    let parameters: [AppEvents.ParameterName: Any] = [
       Keys.ui: "UITabBarController",
       Keys.logTime: 1_576_109_848,
       Keys.sessionID: "30AF582C-0225-40A4-B3EE-2A571AB926F3",
@@ -45,13 +45,13 @@ class EventDeactivationTests: XCTestCase {
       Keys.deprecated: "test",
     ]
 
-    guard let result = eventDeactivationManager.processParameters(
-      parameters,
-      eventName: "manual_initiated_checkout"
-    ) else {
-      XCTFail("Result must not be nil")
-      return
-    }
+    let result = try XCTUnwrap(
+      eventDeactivationManager.processParameters(
+        parameters,
+        eventName: .init("manual_initiated_checkout")
+      ),
+      "Result must not be nil"
+    )
 
     XCTAssertNil(result[Keys.deprecated])
     XCTAssertNotNil(result[Keys.ui])

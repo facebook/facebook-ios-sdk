@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fetchServerConfiguration:(nullable FBSDKCodeBlock)callback;
 - (void)    logEvent:(FBSDKAppEventName)eventName
           valueToSum:(NSNumber *)valueToSum
-          parameters:(nullable NSDictionary<NSString *, id> *)parameters
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(nullable FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;

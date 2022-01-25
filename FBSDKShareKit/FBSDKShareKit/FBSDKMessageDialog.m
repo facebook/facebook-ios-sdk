@@ -197,7 +197,7 @@
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
@@ -215,7 +215,7 @@
 
 - (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
-  NSDictionary<NSString *, id> *parameters = @{
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{
     FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
@@ -233,7 +233,7 @@
 
 - (void)_invokeDelegateDidFailWithError:(NSError *)error
 {
-  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *parameters = [@{FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterNameDialogErrorMessage];
 
@@ -263,9 +263,9 @@
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary<NSString *, id> *parameters = @{FBSDKAppEventParameterNameDialogShareContentType : contentType,
-                                               FBSDKAppEventParameterNameDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
-                                               FBSDKAppEventParameterNameDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
+  NSDictionary<FBSDKAppEventParameterName, id> *parameters = @{FBSDKAppEventParameterNameDialogShareContentType : contentType,
+                                                               FBSDKAppEventParameterNameDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
+                                                               FBSDKAppEventParameterNameDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
                                parameters:parameters

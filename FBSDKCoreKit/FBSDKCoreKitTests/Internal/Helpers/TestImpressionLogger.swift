@@ -11,11 +11,11 @@ import FBSDKCoreKit
 class TestImpressionLogger: ImpressionLogging {
 
   var capturedIdentifier: String?
-  var capturedParameters: [String: Any]?
+  var capturedParameters: [AppEvents.ParameterName: Any]?
 
   func logImpression(
     withIdentifier identifier: String,
-    parameters: [String: Any]?
+    parameters: [AppEvents.ParameterName: Any]?
   ) {
     capturedIdentifier = identifier
     capturedParameters = parameters

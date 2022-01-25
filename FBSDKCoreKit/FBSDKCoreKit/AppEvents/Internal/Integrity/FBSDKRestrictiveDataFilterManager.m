@@ -76,16 +76,16 @@ static FBSDKRestrictiveDataFilterManager *_instance;
   }
 }
 
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName
+- (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                                                                   eventName:(FBSDKAppEventName)eventName
 {
   if (!self.isRestrictiveEventFilterEnabled) {
     return parameters;
   }
   if (parameters) {
     @try {
-      NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
-      NSMutableDictionary<NSString *, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
+      NSMutableDictionary<FBSDKAppEventParameterName, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
+      NSMutableDictionary<FBSDKAppEventParameterName, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
 
       for (NSString *key in [parameters keyEnumerator]) {
         NSString *type = [self getMatchedDataTypeWithEventName:eventName paramKey:key];

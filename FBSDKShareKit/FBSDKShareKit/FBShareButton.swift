@@ -29,7 +29,7 @@ public final class FBShareButton: FBButton, SharingButton {
     }
   }
 
-  public var analyticsParameters: [String: Any]? { nil }
+  public var analyticsParameters: [AppEvents.ParameterName: Any]? { nil }
 
   public var impressionTrackingEventName: AppEvents.Name { .shareButtonImpression }
 
@@ -75,7 +75,7 @@ public final class FBShareButton: FBButton, SharingButton {
 
   @IBAction private func share() {
     logTapEvent(
-      withEventName: AppEvents.Name.shareButtonDidTap.rawValue,
+      withEventName: .shareButtonDidTap,
       parameters: analyticsParameters
     )
 

@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
+
 @objcMembers
 class TestEventLogger: NSObject, EventLogging {
   var flushCallCount = 0
   var flushBehavior: AppEvents.FlushBehavior = .auto
   var capturedEventName: AppEvents.Name?
-  var capturedParameters: [String: Any]?
+  var capturedParameters: [AppEvents.ParameterName: Any]?
   var capturedIsImplicitlyLogged = false
   var capturedAccessToken: AccessToken?
   var capturedValueToSum: Double?
@@ -22,7 +24,7 @@ class TestEventLogger: NSObject, EventLogging {
     capturedFlushReason = flushReason
   }
 
-  func logEvent(_ eventName: AppEvents.Name, parameters: [String: Any]?) {
+  func logEvent(_ eventName: AppEvents.Name, parameters: [AppEvents.ParameterName: Any]?) {
     capturedEventName = eventName
     capturedParameters = parameters
   }
@@ -30,7 +32,7 @@ class TestEventLogger: NSObject, EventLogging {
   func logEvent(
     _ eventName: AppEvents.Name,
     valueToSum: Double,
-    parameters: [String: Any]?
+    parameters: [AppEvents.ParameterName: Any]?
   ) {
     capturedEventName = eventName
     capturedValueToSum = valueToSum
@@ -44,7 +46,7 @@ class TestEventLogger: NSObject, EventLogging {
 
   func logInternalEvent(
     _ eventName: AppEvents.Name,
-    parameters: [String: Any]?,
+    parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool
   ) {
     capturedEventName = eventName
@@ -54,7 +56,7 @@ class TestEventLogger: NSObject, EventLogging {
 
   func logInternalEvent(
     _ eventName: AppEvents.Name,
-    parameters: [String: Any]?,
+    parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool,
     accessToken: AccessToken?
   ) {

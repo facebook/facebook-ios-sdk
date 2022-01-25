@@ -97,14 +97,14 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
   } @catch (NSException *exception) {}
 }
 
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName
+- (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                                                                   eventName:(FBSDKAppEventName)eventName
 {
   @try {
     if (!self.isEventDeactivationEnabled || parameters.count == 0 || self.eventsWithDeactivatedParams.count == 0) {
       return parameters;
     }
-    NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    NSMutableDictionary<FBSDKAppEventParameterName, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
     for (NSString *key in [parameters keyEnumerator]) {
       for (FBSDKDeactivatedEvent *event in self.eventsWithDeactivatedParams) {
         if ([event.eventName isEqualToString:eventName] && [event.deactivatedParams containsObject:key]) {

@@ -8,14 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsParameterProcessing)
 @protocol FBSDKAppEventsParameterProcessing
 
 - (void)enable;
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName;
+- (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                                                                   eventName:(FBSDKAppEventName)eventName;
 
 @end
 

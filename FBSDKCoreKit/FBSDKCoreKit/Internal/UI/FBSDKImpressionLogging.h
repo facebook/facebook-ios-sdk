@@ -8,13 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ImpressionLogging)
 @protocol FBSDKImpressionLogging
 
 - (void)logImpressionWithIdentifier:(NSString *)identifier
-                         parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+                         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 @end
 

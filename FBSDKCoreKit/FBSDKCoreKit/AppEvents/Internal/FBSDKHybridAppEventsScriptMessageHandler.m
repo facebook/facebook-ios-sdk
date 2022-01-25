@@ -51,7 +51,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
     NSString *event = body[FBSDKAppEventsWKWebViewMessagesEventKey];
     if ([event isKindOfClass:NSString.class] && (event.length > 0)) {
       NSString *stringedParams = [FBSDKTypeUtility stringValueOrNil:body[FBSDKAppEventsWKWebViewMessagesParamsKey]];
-      NSMutableDictionary<NSString *, id> *params = nil;
+      NSMutableDictionary<FBSDKAppEventParameterName, id> *params = nil;
       NSError *jsonParseError = nil;
       if (stringedParams) {
         params = [FBSDKTypeUtility JSONObjectWithData:[stringedParams dataUsingEncoding:NSUTF8StringEncoding]

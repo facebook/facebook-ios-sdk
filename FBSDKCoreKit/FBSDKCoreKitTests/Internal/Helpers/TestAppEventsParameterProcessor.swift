@@ -12,15 +12,18 @@ import Foundation
 @objcMembers
 class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing, EventsProcessing {
   var enableWasCalled = false
-  var capturedParameters: [String: Any]?
-  var capturedEventName: String?
+  var capturedParameters: [AppEvents.ParameterName: Any]?
+  var capturedEventName: AppEvents.Name?
   var capturedEvents: [[String: Any]]?
 
   func enable() {
     enableWasCalled = true
   }
 
-  func processParameters(_ parameters: [String: Any]?, eventName: String) -> [String: Any]? {
+  func processParameters(
+    _ parameters: [AppEvents.ParameterName: Any]?,
+    eventName: AppEvents.Name
+  ) -> [AppEvents.ParameterName: Any]? {
     capturedParameters = parameters
     capturedEventName = eventName
     return parameters

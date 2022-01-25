@@ -448,10 +448,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should log an opt-in event with the expected event name"
     )
     XCTAssertEqual(
-      eventLogger.capturedParameters as? [String: String],
+      eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
       [
-        Keys.isSuggestedEvent: "1",
-        Keys.eventButtonText: Values.buttonText
+        .init(Keys.isSuggestedEvent): "1",
+        .init(Keys.eventButtonText): Values.buttonText
       ],
       "Should log an opt-in event with the expected parameters"
     )

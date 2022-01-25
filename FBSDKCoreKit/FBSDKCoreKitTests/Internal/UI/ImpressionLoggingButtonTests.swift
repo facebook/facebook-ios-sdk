@@ -64,8 +64,8 @@ class ImpressionLoggingButtonTests: XCTestCase {
       "Should log an event with the expected identifier"
     )
     XCTAssertEqual(
-      impressionLoggerFactory.impressionLogger.capturedParameters as? [String: String],
-      button.analyticsParameters as? [String: String],
+      impressionLoggerFactory.impressionLogger.capturedParameters as? [AppEvents.ParameterName: String],
+      button.analyticsParameters as? [AppEvents.ParameterName: String],
       "Should log an event with the expected parameters"
     )
   }

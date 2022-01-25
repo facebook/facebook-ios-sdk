@@ -96,8 +96,8 @@ class EventBindingTests: XCTestCase {
       "Tracking events should log the event name"
     )
     XCTAssertEqual(
-      eventLogger.capturedParameters as? [String: String],
-      ["_is_fb_codeless": "1"],
+      eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
+      [.init("_is_fb_codeless"): "1"],
       "Should track whether the event was codeless"
     )
   }
@@ -113,8 +113,8 @@ class EventBindingTests: XCTestCase {
       "Tracking events should log the event name"
     )
     XCTAssertEqual(
-      eventLogger.capturedParameters as? [String: String],
-      ["_is_fb_codeless": "1"],
+      eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
+      [.init("_is_fb_codeless"): "1"],
       "Should track whether the event was codeless"
     )
   }

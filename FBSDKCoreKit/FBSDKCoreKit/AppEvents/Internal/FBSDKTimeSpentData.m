@@ -225,7 +225,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   }
 }
 
-- (NSDictionary<NSString *, id> *)appEventsParametersForActivate
+- (NSDictionary<FBSDKAppEventParameterName, id> *)appEventsParametersForActivate
 {
   return @{
     FBSDKAppEventParameterNameLaunchSource : [self getSourceApplication],
@@ -233,17 +233,17 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   };
 }
 
-- (NSDictionary<NSString *, id> *)appEventsParametersForDeactivate
+- (NSDictionary<FBSDKAppEventParameterName, id> *)appEventsParametersForDeactivate
 {
   int quantaIndex = 0;
   while (_timeSinceLastSuspend > INACTIVE_SECONDS_QUANTA[quantaIndex]) {
     quantaIndex++;
   }
 
-  NSMutableDictionary<NSString *, id> *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
-                                                    FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
-                                                    FBSDKAppEventParameterNameLaunchSource : [self getSourceApplication],
-                                                    FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
+                                                                    FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
+                                                                    FBSDKAppEventParameterNameLaunchSource : [self getSourceApplication],
+                                                                    FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
   if (_lastSuspendTime) {
     [FBSDKTypeUtility dictionary:params setObject:@(_lastSuspendTime) forKey:@"_logTime"];
   }

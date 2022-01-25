@@ -232,9 +232,9 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   return [FBSDKBasicUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }
 
-- (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
+- (NSMutableDictionary<FBSDKAppEventParameterName, id> *)_parametersForNewEvent
 {
-  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary new];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters setObject:_identifier ?: FBSDKLoginManagerLoggerValueEmpty forKey:FBSDKLoginManagerLoggerParamIdentifierKey];
@@ -249,7 +249,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   return eventParameters;
 }
 
-- (void)logEvent:(FBSDKAppEventName)eventName params:(nullable NSMutableDictionary<NSString *, id> *)params
+- (void)logEvent:(FBSDKAppEventName)eventName params:(nullable NSMutableDictionary<FBSDKAppEventParameterName, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras
@@ -268,7 +268,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 
 - (void)logEvent:(FBSDKAppEventName)eventName result:(NSString *)result error:(NSError *)error
 {
-  NSMutableDictionary<NSString *, id> *params = [self _parametersForNewEvent];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *params = [self _parametersForNewEvent];
 
   [FBSDKTypeUtility dictionary:params setObject:result forKey:FBSDKLoginManagerLoggerParamResultKey];
 

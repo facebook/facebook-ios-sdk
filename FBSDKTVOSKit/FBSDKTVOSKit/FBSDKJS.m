@@ -32,7 +32,7 @@
   [FBSDKAppEvents.shared logEvent:eventName];
 }
 
-+ (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters
++ (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [FBSDKAppEvents.shared logEvent:eventName parameters:parameters];
 }
@@ -44,7 +44,7 @@
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [FBSDKAppEvents.shared logPurchase:purchaseAmount currency:currency parameters:parameters];
 }

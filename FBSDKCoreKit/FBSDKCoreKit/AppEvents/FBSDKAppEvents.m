@@ -234,13 +234,13 @@ static BOOL g_explicitEventsLoggedYet = NO;
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self.shared logEvent:eventName parameters:parameters];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self logEvent:eventName
       valueToSum:nil
@@ -250,7 +250,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self.shared logEvent:eventName
              valueToSum:valueToSum
@@ -259,7 +259,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self logEvent:eventName
       valueToSum:@(valueToSum)
@@ -269,7 +269,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
   [self.shared logEvent:eventName
@@ -280,7 +280,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(nullable NSDictionary<NSString *, id> *)parameters
+      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
   [self logEvent:eventName
@@ -308,7 +308,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self.shared logPurchase:purchaseAmount
                   currency:currency
@@ -317,7 +317,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self logPurchase:purchaseAmount
            currency:currency
@@ -327,7 +327,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken
 {
   [self.shared logPurchase:purchaseAmount
@@ -338,14 +338,14 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(nullable NSDictionary<NSString *, id> *)parameters
+         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
         accessToken:(nullable FBSDKAccessToken *)accessToken
 {
   [self validateConfiguration];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
-  NSDictionary<NSString *, id> *newParameters;
+  NSDictionary<FBSDKAppEventParameterName, id> *newParameters;
   if (!parameters) {
     newParameters = @{ FBSDKAppEventParameterNameCurrency : currency };
   } else {
@@ -399,7 +399,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
 
-  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterNamePushCampaign : campaign} mutableCopy];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *parameters = [@{FBSDKAppEventParameterNamePushCampaign : campaign} mutableCopy];
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterNamePushAction];
   }
@@ -419,7 +419,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                   gtin:(nullable NSString *)gtin
                    mpn:(nullable NSString *)mpn
                  brand:(nullable NSString *)brand
-            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+            parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self.shared logProductItem:itemID
                  availability:availability
@@ -448,7 +448,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                   gtin:(nullable NSString *)gtin
                    mpn:(nullable NSString *)mpn
                  brand:(nullable NSString *)brand
-            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+            parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   [self validateConfiguration];
 
@@ -482,7 +482,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
 
-  NSMutableDictionary<NSString *, id> *dict = [NSMutableDictionary dictionary];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *dict = [NSMutableDictionary dictionary];
   if (nil != parameters) {
     dict.valuesForKeysWithDictionary = parameters;
   }
@@ -946,7 +946,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -957,7 +957,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -970,7 +970,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -982,7 +982,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -997,7 +997,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)logImplicitEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(nullable NSDictionary<NSString *, id> *)parameters
+              parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
   [self logEvent:eventName
@@ -1237,7 +1237,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 - (void)    logEvent:(FBSDKAppEventName)eventName
           valueToSum:(NSNumber *)valueToSum
-          parameters:(nullable NSDictionary<NSString *, id> *)parameters
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1312,7 +1312,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   parameters = [self.restrictiveDataFilterParameterProcessor processParameters:parameters
                                                                      eventName:eventName];
 
-  NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
   if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@(self.appEventsUtility.unixTimeNow) forKey:FBSDKAppEventParameterNameLogTime];

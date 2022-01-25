@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - The minimum supported version of iOS is now 11.0.
+- Replaced more `AppEvents.Name` and `AppEvents.ParameterName` types in method signatures
 
 ### Removed
 

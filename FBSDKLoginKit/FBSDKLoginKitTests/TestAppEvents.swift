@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
+
 @objcMembers
 class TestAppEvents: AppEvents {
-  var capturedParameters: [String: Any]?
+  var capturedParameters: [AppEvents.ParameterName: Any]?
 
   override func logInternalEvent(
     _ eventName: AppEvents.Name,
-    parameters: [String: Any]?,
+    parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool
   ) {
     capturedParameters = parameters

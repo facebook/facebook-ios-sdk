@@ -33,7 +33,7 @@ NS_SWIFT_NAME(ViewImpressionLogger)
 
 @property (nonatomic, readonly, copy) FBSDKAppEventName eventName;
 
-- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
 @end
 

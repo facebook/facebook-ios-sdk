@@ -86,7 +86,7 @@ static dispatch_once_t token;
 
 #pragma mark - Public API
 
-- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(nullable NSDictionary<NSString *, id> *)parameters
+- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
 {
   NSMutableDictionary<NSString *, id> *keys = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:keys setObject:identifier forKey:@"__view_impression_identifier__"];

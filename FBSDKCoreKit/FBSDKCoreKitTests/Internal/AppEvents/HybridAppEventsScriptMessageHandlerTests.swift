@@ -12,11 +12,11 @@ import XCTest
 class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
 
   enum Keys {
-    static let valid = "key"
-    static let event = "event"
-    static let params = "params"
-    static let pixelID = "pixelID"
-    static let referralID = "_fb_pixel_referral_id"
+    static let valid = AppEvents.ParameterName("key")
+    static let event = AppEvents.ParameterName("event")
+    static let params = AppEvents.ParameterName("params")
+    static let pixelID = AppEvents.ParameterName("pixelID")
+    static let referralID = AppEvents.ParameterName("_fb_pixel_referral_id")
   }
 
   enum Values {
@@ -219,7 +219,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
 
   func assertEventLogged(
     name: String,
-    parameters: [String: String],
+    parameters: [AppEvents.ParameterName: String],
     file: StaticString = #file,
     line: UInt = #line
   ) {
@@ -231,7 +231,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
       line: line
     )
     XCTAssertEqual(
-      eventLogger.capturedParameters as? [String: String],
+      eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "Should log the expected parameters",
       file: file,

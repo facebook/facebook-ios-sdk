@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 
-#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKIcon+Internal.h"
 
@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
                                        eventLogger:(id<FBSDKEventLogging>)eventLogger
                                accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
-- (void)logTapEventWithEventName:(NSString *)eventName
-                      parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title

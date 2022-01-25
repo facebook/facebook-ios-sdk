@@ -392,7 +392,7 @@ static NSMutableArray *_pendingRequestors;
                          valueToSum:(double)valueToSum
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
+  NSMutableDictionary<FBSDKAppEventParameterName, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 
   if ([_eventsWithReceipt containsObject:eventName]) {
     NSData *receipt = [self fetchDeviceReceipt];
