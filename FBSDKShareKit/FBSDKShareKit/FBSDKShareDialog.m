@@ -16,6 +16,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <objc/runtime.h>
@@ -23,7 +24,6 @@
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
-#import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareExtension.h"
@@ -1161,7 +1161,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 - (void)_invokeDelegateDidCancel
 {
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
+    FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
@@ -1175,7 +1175,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 - (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
+    FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
@@ -1189,8 +1189,8 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
 - (void)_invokeDelegateDidFailWithError:(nonnull NSError *)error
 {
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,
-    FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
+    FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,
+    FBSDKAppEventParameterNameDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogResult
@@ -1217,8 +1217,8 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   }
 
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogMode : [self modeDescription],
-    FBSDKAppEventParameterDialogShareContentType : contentType,
+    FBSDKAppEventParameterNameDialogMode : [self modeDescription],
+    FBSDKAppEventParameterNameDialogShareContentType : contentType,
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameShareDialogShow

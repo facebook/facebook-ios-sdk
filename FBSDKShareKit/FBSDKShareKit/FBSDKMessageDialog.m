@@ -13,13 +13,13 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
-#import "FBSDKShareAppEventParameters.h"
 #import "FBSDKShareDialogConfiguration+Internal.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareVideoContent.h"
@@ -34,9 +34,6 @@
 @end
 
 @implementation FBSDKMessageDialog
-
-NSString *const FBSDKAppEventParameterDialogShareContentPageID = @"fb_dialog_share_content_page_id";
-NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share_content_uuid";
 
 #pragma mark - Class Methods
 
@@ -201,7 +198,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 - (void)_invokeDelegateDidCancel
 {
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
+    FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
@@ -219,7 +216,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 - (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   NSDictionary<NSString *, id> *parameters = @{
-    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
+    FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
@@ -236,9 +233,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (void)_invokeDelegateDidFailWithError:(NSError *)error
 {
-  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
+  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterNameDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
   if (error) {
-    [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
+    [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterNameDialogErrorMessage];
 
     [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogResult
                                  parameters:parameters
@@ -266,9 +263,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary<NSString *, id> *parameters = @{FBSDKAppEventParameterDialogShareContentType : contentType,
-                                               FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
-                                               FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
+  NSDictionary<NSString *, id> *parameters = @{FBSDKAppEventParameterNameDialogShareContentType : contentType,
+                                               FBSDKAppEventParameterNameDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
+                                               FBSDKAppEventParameterNameDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
   [FBSDKAppEvents.shared logInternalEvent:FBSDKAppEventNameMessengerShareDialogShow
                                parameters:parameters

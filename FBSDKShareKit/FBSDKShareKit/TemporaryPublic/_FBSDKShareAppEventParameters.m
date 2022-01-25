@@ -6,12 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKShareAppEventParameters.h"
+#import "_FBSDKShareAppEventParameters.h"
 
-NSString *const FBSDKAppEventParameterDialogErrorMessage = @"fb_dialog_outcome_error_message";
-NSString *const FBSDKAppEventParameterDialogOutcome = @"fb_dialog_outcome";
-NSString *const FBSDKAppEventParameterDialogShareContentType = @"fb_dialog_share_content_type";
-NSString *const FBSDKAppEventParameterDialogMode = @"fb_dialog_mode";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogErrorMessage = @"fb_dialog_outcome_error_message";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogOutcome = @"fb_dialog_outcome";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogShareContentType = @"fb_dialog_share_content_type";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogMode = @"fb_dialog_mode";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogShareContentPageID = @"fb_dialog_share_content_page_id";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameDialogShareContentUUID = @"fb_dialog_share_content_uuid";
+
 NSString *const FBSDKAppEventsDialogOutcomeValue_Cancelled = @"Cancelled";
 NSString *const FBSDKAppEventsDialogOutcomeValue_Completed = @"Completed";
 NSString *const FBSDKAppEventsDialogOutcomeValue_Failed = @"Failed";
