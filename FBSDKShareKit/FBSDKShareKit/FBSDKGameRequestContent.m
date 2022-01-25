@@ -213,9 +213,11 @@
     _filters = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY];
     _message = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
     _objectID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
-    _recipientSuggestions = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
+    _recipientSuggestions = [decoder decodeObjectOfClasses:[NSSet setWithArray:@[NSArray.class, NSString.class]]
+                                                    forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
     _title = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
-    _recipients = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
+    _recipients = [decoder decodeObjectOfClasses:[NSSet setWithArray:@[NSArray.class, NSString.class]]
+                                          forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
   }
   return self;
 }
