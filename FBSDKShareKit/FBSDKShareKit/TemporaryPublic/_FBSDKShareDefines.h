@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ Internal constants used by ShareKit.
+ Internal use only
+
+ @warning INTERNAL - DO NOT USE
+ */
+
 #define FBSDK_SHARE_CAMERA_METHOD_NAME @"camera"
 #define FBSDK_SHARE_METHOD_NAME @"share"
 #define FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME @"ogshare"

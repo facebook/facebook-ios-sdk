@@ -13,13 +13,13 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareAppEventParameters.h"
-#import "FBSDKShareDefines.h"
 #import "FBSDKShareDialogConfiguration+Internal.h"
 #import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareVideoContent.h"

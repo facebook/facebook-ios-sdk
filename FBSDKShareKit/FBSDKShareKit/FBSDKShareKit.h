@@ -16,6 +16,7 @@
 #import <FBSDKShareKit/FBSDKShareVideoContent.h>
 #import <FBSDKShareKit/FBSDKSharing.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+#import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
 
