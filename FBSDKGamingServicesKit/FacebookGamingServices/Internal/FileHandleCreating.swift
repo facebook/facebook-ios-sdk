@@ -9,5 +9,5 @@
 import Foundation
 
 protocol FileHandleCreating {
-  func fileHandleForReading(from url: URL) throws -> _FileHandling
+  func fileHandleForReading(from url: URL) throws -> FileHandling
 }

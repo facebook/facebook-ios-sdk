@@ -15,7 +15,7 @@ public final class GamingVideoUploader: NSObject {
   private var totalBytesSent: UInt = 0
   private var totalBytesExpectedToSend: UInt = 0
 
-  var fileHandle: _FileHandling?
+  var fileHandle: FileHandling?
   let fileHandleFactory: FileHandleCreating
   let videoUploaderFactory: _VideoUploaderCreating
 
@@ -37,7 +37,7 @@ public final class GamingVideoUploader: NSObject {
   }
 
   private convenience init(
-    fileHandle: _FileHandling,
+    fileHandle: FileHandling,
     totalBytesExpectedToSend: UInt,
     completionHandler: GamingServiceResultCompletion?,
     progressHandler: GamingServiceProgressHandler?

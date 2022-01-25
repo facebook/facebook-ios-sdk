@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import Foundation
 
-class TestFileHandler: _FileHandling {
+class TestFileHandler: FileHandling {
   var stubbedReadData = Data()
   var stubbedSeekToEndOfFile: UInt64 = 0
   var capturedFileOffset: UInt64 = 0

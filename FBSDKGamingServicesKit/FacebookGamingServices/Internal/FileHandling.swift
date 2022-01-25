@@ -8,17 +8,10 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(FBSDKFileHandling)
-public protocol _FileHandling {
+protocol FileHandling {
   func seekToEndOfFile() -> UInt64
   func seek(toFileOffset offset: UInt64)
   func readData(ofLength length: Int) -> Data
 }
 
-extension FileHandle: _FileHandling {}
+extension FileHandle: FileHandling {}

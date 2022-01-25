@@ -14,7 +14,7 @@ class TestFileHandleFactory: FileHandleCreating {
   var stubbedFileHandle = TestFileHandler()
   var capturedURL: URL?
 
-  func fileHandleForReading(from url: URL) throws -> _FileHandling {
+  func fileHandleForReading(from url: URL) throws -> FileHandling {
     capturedURL = url
 
     return stubbedFileHandle
