@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Changed
+
+- The minimum supported version of iOS is now 11.0.
+
 ### Removed
 
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.

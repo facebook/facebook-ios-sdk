@@ -19,7 +19,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: '10.0'
+    tvOS: '11.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig

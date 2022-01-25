@@ -9,7 +9,7 @@
 #include "FacebookSDK-Library.xcconfig"
 
 ARCHS = x86_64 arm64
-TVOS_DEPLOYMENT_TARGET = 10.0
+TVOS_DEPLOYMENT_TARGET = 11.0
 SDKROOT = appletvos
 PRODUCT_NAME = $(PROJECT_NAME)
 INFOPLIST_FILE = $(PROJECT_NAME)/Info.plist

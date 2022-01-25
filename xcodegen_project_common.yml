@@ -6,12 +6,12 @@
 
 options:
   deploymentTarget:
-    iOS: '10.0'
+    iOS: '11.0'
   usesTabs: false
   tabWidth: 2
   indentWidth: 2
   defaultConfig: Debug
-  xcodeVersion: '13.0'
+  xcodeVersion: '13.2'
 
 attributes:
   ORGANIZATIONNAME: Facebook
