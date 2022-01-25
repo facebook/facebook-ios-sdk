@@ -150,11 +150,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
         texturesDataDict[key] = imageData;
       }
     }];
-  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
     effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict requiringSecureCoding:YES error:NULL];
-  #else
-    effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
-  #endif
   }
   [FBSDKTypeUtility dictionary:updatedParameters
                      setObject:effectTexturesData

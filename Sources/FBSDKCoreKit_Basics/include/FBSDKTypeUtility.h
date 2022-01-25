@@ -17,7 +17,7 @@ NS_SWIFT_NAME(TypeUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 /// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
-+ (nullable NSArray *)arrayValue:(id)object;
++ (nullable NSArray *)arrayValue:(nullable id)object;
 
 /**
  Return an object at a given index if the index is valid, otherwise return nil
@@ -46,7 +46,7 @@ NS_SWIFT_NAME(TypeUtility)
 + (BOOL)boolValue:(id)object;
 
 /// Returns an NSDictionary<NSString *, id> if the provided object is an NSDictionary, otherwise returns nil.
-+ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(id)object;
++ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(nullable id)object;
 
 /// Returns an object for a given key in the provided dictionary if it matches the stated type
 + (nullable id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type;

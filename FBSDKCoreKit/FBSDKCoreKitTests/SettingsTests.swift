@@ -1489,7 +1489,6 @@ class SettingsTests: XCTestCase {
     )
   }
 
-  @available(iOS 11.0, *)
   func testSettingInvalidDataProcessOptions() throws {
     settings.setDataProcessingOptions(["Foo", "Bar"])
 

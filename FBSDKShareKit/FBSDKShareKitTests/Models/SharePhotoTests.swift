@@ -51,16 +51,9 @@ class SharePhotoTests: XCTestCase {
   func testCoding() throws {
     let photo = ShareModelTestUtility.photoWithImageURL
     let data = NSKeyedArchiver.archivedData(withRootObject: photo)
-    let unarchivedPhoto: SharePhoto
-    if #available(iOS 11.0, *) {
-      unarchivedPhoto = try XCTUnwrap(
-        NSKeyedUnarchiver.unarchivedObject(ofClass: SharePhoto.self, from: data)
-      )
-    } else {
-      unarchivedPhoto = try XCTUnwrap(
-        NSKeyedUnarchiver.unarchiveObject(with: data) as? SharePhoto
-      )
-    }
+    let unarchivedPhoto = try XCTUnwrap(
+      NSKeyedUnarchiver.unarchivedObject(ofClass: SharePhoto.self, from: data)
+    )
     XCTAssertEqual(unarchivedPhoto, photo)
   }
 }

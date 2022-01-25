@@ -256,8 +256,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   return (self.config && [self.config.eventSet containsObject:event]);
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_loadReportData
 {
   id cachedJSON = [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
@@ -267,20 +265,16 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   self.recordedValues = [NSMutableDictionary new];
   if ([cachedReportData isKindOfClass:NSData.class]) {
     NSDictionary<NSString *, id> *data;
-    if (@available(iOS 11.0, *)) {
-      data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver
-                                                unarchivedObjectOfClasses:[NSSet setWithArray:
-                                                                           @[NSString.class,
-                                                                             NSNumber.class,
-                                                                             NSArray.class,
-                                                                             NSDate.class,
-                                                                             NSDictionary.class,
-                                                                             NSSet.class]]
-                                                fromData:cachedReportData
-                                                error:nil]];
-    } else {
-      data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cachedReportData]];
-    }
+    data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver
+                                              unarchivedObjectOfClasses:[NSSet setWithArray:
+                                                                         @[NSString.class,
+                                                                           NSNumber.class,
+                                                                           NSArray.class,
+                                                                           NSDate.class,
+                                                                           NSDictionary.class,
+                                                                           NSSet.class]]
+                                              fromData:cachedReportData
+                                              error:nil]];
     if (data) {
       self.conversionValue = [FBSDKTypeUtility integerValue:data[@"conversion_value"]];
       self.timestamp = [FBSDKTypeUtility dictionary:data objectForKey:@"timestamp" ofType:NSDate.class];
@@ -297,7 +291,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   [FBSDKTypeUtility dictionary:reportData setObject:self.timestamp forKey:@"timestamp"];
   [FBSDKTypeUtility dictionary:reportData setObject:self.recordedEvents forKey:@"recorded_events"];
   [FBSDKTypeUtility dictionary:reportData setObject:self.recordedValues forKey:@"recorded_values"];
-  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData];
+  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData requiringSecureCoding:NO error:nil];
   if (cache) {
     [self.dataStore setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
   }
@@ -313,8 +307,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     }
   }
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)_isConfigRefreshTimestampValid
 {

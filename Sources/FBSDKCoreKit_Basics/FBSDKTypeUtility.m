@@ -12,8 +12,11 @@
 
 #pragma mark - Class Methods
 
-+ (nullable NSArray *)arrayValue:(id)object
++ (nullable NSArray *)arrayValue:(nullable id)object
 {
+  if (!object) {
+    return nil;
+  }
   return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
 }
 
@@ -57,8 +60,11 @@
   }
 }
 
-+ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(id)object
++ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(nullable id)object
 {
+  if (!object) {
+    return nil;
+  }
   return (NSDictionary<NSString *, id> *)[self _objectValue: object ofClass:[NSDictionary<NSString *, id> class]];
 }
 

@@ -519,8 +519,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self.sharedSettings setDataProcessingOptions:options country:country state:state];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state
@@ -531,14 +529,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     DATA_PROCESSING_OPTIONS_STATE : @(state),
   };
   self.persistableDataProcessingOptions = json;
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json];
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json requiringSecureCoding:NO error:nil];
   if (data) {
     [self.store setObject:data
                    forKey:FBSDKSettingsDataProcessingOptions];
   }
 }
-
-#pragma clang diagnostic pop
 
 + (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
 {
@@ -624,27 +620,16 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return self.sharedSettings.graphAPIVersion;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
 {
   if (!_persistableDataProcessingOptions) {
     NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
     if (data && [data isKindOfClass:NSData.class]) {
-      if (@available(iOS 11.0, tvOS 11.0, *)) {
-        _persistableDataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
-      } else {
-        NSDictionary<NSString *, id> *persistableDataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if (persistableDataProcessingOptions && [persistableDataProcessingOptions isKindOfClass:[NSDictionary<NSString *, id> class]]) {
-          _persistableDataProcessingOptions = persistableDataProcessingOptions;
-        }
-      }
+      _persistableDataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
     }
   }
   return _persistableDataProcessingOptions;
 }
-
-#pragma clang diagnostic pop
 
 + (BOOL)isDataProcessingRestricted
 {

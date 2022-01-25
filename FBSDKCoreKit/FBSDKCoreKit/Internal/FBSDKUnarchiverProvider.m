@@ -14,11 +14,7 @@
 
 + (NSKeyedUnarchiver *)_unarchiverFor:(NSData *)data
 {
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:NULL];
-#else
-  NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-#endif
   return unarchiver;
 }
 

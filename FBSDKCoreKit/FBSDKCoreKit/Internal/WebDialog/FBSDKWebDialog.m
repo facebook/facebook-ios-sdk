@@ -354,10 +354,7 @@ static id<FBSDKErrorCreating> _errorFactory;
 {
   CGRect applicationFrame = _dialogView.window.screen.bounds;
 
-  UIEdgeInsets insets = UIEdgeInsetsZero;
-  if (@available(iOS 11.0, *)) {
-    insets = _dialogView.window.safeAreaInsets;
-  }
+  UIEdgeInsets insets = _dialogView.window.safeAreaInsets;
 
   if (insets.top == 0.0) {
     #pragma clang diagnostic push

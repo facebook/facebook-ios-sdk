@@ -44,17 +44,8 @@ class ShareMediaContentTests: XCTestCase {
       return
     }
 
-    var unarchivedContent: ShareVideo?
-    var data: Data
-
-    if #available(iOS 11.0, *) {
-      // NSKeyedUnarchiver.unarchiveObject(with:) is deprecated in iOS 12. This new version is available from iOS 11.
-      data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
-      unarchivedContent = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareVideo.self, from: data)
-    } else {
-      data = NSKeyedArchiver.archivedData(withRootObject: content)
-      unarchivedContent = NSKeyedUnarchiver.unarchiveObject(with: data) as? ShareVideo
-    }
+    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
+    let unarchivedContent = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareVideo.self, from: data)
 
     guard let unarchivedContent = unarchivedContent else {
       XCTFail("Unable to unarchive or casting to 'ShareVideo' failed")

@@ -9,18 +9,9 @@
 import Foundation
 
 enum DateFormatter {
-  @available(iOS 10.0, *)
-  static var isoFormatter = ISO8601DateFormatter()
-  static var formatter: Foundation.DateFormatter {
-    let formatter = Foundation.DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-    return formatter
-  }
+  private static var isoFormatter = ISO8601DateFormatter()
 
   static func format(ISODateString date: String) -> Date? {
-    if #available(iOS 10.0, *) {
-      return self.isoFormatter.date(from: date)
-    }
-    return formatter.date(from: date)
+    isoFormatter.date(from: date)
   }
 }

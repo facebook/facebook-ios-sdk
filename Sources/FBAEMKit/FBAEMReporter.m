@@ -542,22 +542,21 @@ static id<FBSDKDataPersisting> _store;
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs
 {
-  if (@available(iOS 11.0, *)) {
-    NSData *cachedConfig = [NSData dataWithContentsOfFile:g_configFile options:NSDataReadingMappedIfSafe error:nil];
-    if ([cachedConfig isKindOfClass:NSData.class]) {
-      NSSet<Class> *classes = [NSSet setWithArray:@[
-        NSMutableDictionary.class,
-        NSMutableArray.class,
-        NSString.class,
-        FBAEMConfiguration.class,
-        FBAEMRule.class,
-        FBAEMEvent.class]];
-      NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfig error:nil]];
-      if (cache) {
-        return [cache mutableCopy];
-      }
+  NSData *cachedConfig = [NSData dataWithContentsOfFile:g_configFile options:NSDataReadingMappedIfSafe error:nil];
+  if ([cachedConfig isKindOfClass:NSData.class]) {
+    NSSet<Class> *classes = [NSSet setWithArray:@[
+      NSMutableDictionary.class,
+      NSMutableArray.class,
+      NSString.class,
+      FBAEMConfiguration.class,
+      FBAEMRule.class,
+      FBAEMEvent.class]];
+    NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfig error:nil]];
+    if (cache) {
+      return [cache mutableCopy];
     }
   }
+
   return [NSMutableDictionary new];
 }
 
@@ -566,11 +565,10 @@ static id<FBSDKDataPersisting> _store;
   if (!g_configs) {
     return;
   }
-  if (@available(iOS 11.0, *)) {
-    NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_configs requiringSecureCoding:NO error:nil];
-    if (cache && g_configFile) {
-      [cache writeToFile:g_configFile atomically:YES];
-    }
+
+  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_configs requiringSecureCoding:NO error:nil];
+  if (cache && g_configFile) {
+    [cache writeToFile:g_configFile atomically:YES];
   }
 }
 
@@ -615,13 +613,11 @@ static id<FBSDKDataPersisting> _store;
 
 + (NSMutableArray<FBAEMInvocation *> *)_loadReportData
 {
-  if (@available(iOS 11.0, *)) {
-    NSData *cachedReportData = [NSData dataWithContentsOfFile:g_reportFile options:NSDataReadingMappedIfSafe error:nil];
-    if ([cachedReportData isKindOfClass:NSData.class]) {
-      NSArray<FBAEMInvocation *> *cache = [FBSDKTypeUtility arrayValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, FBAEMInvocation.class]] fromData:cachedReportData error:nil]];
-      if (cache) {
-        return [cache mutableCopy];
-      }
+  NSData *cachedReportData = [NSData dataWithContentsOfFile:g_reportFile options:NSDataReadingMappedIfSafe error:nil];
+  if ([cachedReportData isKindOfClass:NSData.class]) {
+    NSArray<FBAEMInvocation *> *cache = [FBSDKTypeUtility arrayValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, FBAEMInvocation.class]] fromData:cachedReportData error:nil]];
+    if (cache) {
+      return [cache mutableCopy];
     }
   }
   return [NSMutableArray new];
@@ -629,11 +625,9 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)_saveReportData
 {
-  if (@available(iOS 11.0, *)) {
-    NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_invocations requiringSecureCoding:NO error:nil];
-    if (cache && g_reportFile) {
-      [cache writeToFile:g_reportFile atomically:YES];
-    }
+  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_invocations requiringSecureCoding:NO error:nil];
+  if (cache && g_reportFile) {
+    [cache writeToFile:g_reportFile atomically:YES];
   }
 }
 

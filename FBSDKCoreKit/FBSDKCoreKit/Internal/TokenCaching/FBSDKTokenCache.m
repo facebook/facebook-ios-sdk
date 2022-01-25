@@ -38,9 +38,6 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
 - (nullable FBSDKAccessToken *)accessToken
 {
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
@@ -99,7 +96,7 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
     uuid = [NSUUID UUID].UUIDString;
     [defaults setObject:uuid forKey:kFBSDKAccessTokenUserDefaultsKey];
   }
-  NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token];
+  NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token requiringSecureCoding:NO error:nil];
   NSDictionary<NSString *, id> *dict = @{
     kFBSDKTokenUUIDKey : uuid,
     kFBSDKTokenEncodedKey : tokenData
@@ -168,7 +165,7 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
     uuid = NSUUID.UUID.UUIDString;
     [defaults setObject:uuid forKey:kFBSDKAuthenticationTokenUserDefaultsKey];
   }
-  NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token];
+  NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token requiringSecureCoding:NO error:nil];
   NSDictionary<NSString *, id> *dict = @{
     kFBSDKTokenUUIDKey : uuid,
     kFBSDKTokenEncodedKey : tokenData
@@ -179,8 +176,6 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
                       accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
-#pragma clang diagnostic pop
-
 - (void)clearAuthenticationTokenCache
 {
   [self.keychainStore setDictionary:nil
@@ -188,7 +183,6 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
                       accessibility:NULL];
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
-  [defaults synchronize];
 }
 
 - (void)clearAccessTokenCache
@@ -198,7 +192,6 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
                       accessibility:NULL];
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAccessTokenUserDefaultsKey];
-  [defaults synchronize];
 }
 
 @end

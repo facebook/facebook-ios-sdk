@@ -124,29 +124,27 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
   BOOL isRequestingWebAuthenticationSession = NO;
-  if (@available(iOS 11.0, *)) {
-    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
-      _authenticationSessionState = FBSDKAuthenticationSessionShowWebBrowser;
-    } else if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem) {
-      [_authenticationSession cancel];
-      _authenticationSession = nil;
-      NSString *errorDomain;
-      if (@available(iOS 12.0, *)) {
-        errorDomain = @"com.apple.AuthenticationServices.WebAuthenticationSession";
-      } else {
-        errorDomain = @"com.apple.SafariServices.Authentication";
-      }
-
-      NSError *error = [self.errorFactory errorWithDomain:errorDomain
-                                                     code:1
-                                                 userInfo:nil
-                                                  message:nil
-                                          underlyingError:nil];
-      if (_authenticationSessionCompletionHandler) {
-        _authenticationSessionCompletionHandler(nil, error);
-      }
-      isRequestingWebAuthenticationSession = [self _isRequestingWebAuthenticationSession];
+  if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
+    _authenticationSessionState = FBSDKAuthenticationSessionShowWebBrowser;
+  } else if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem) {
+    [_authenticationSession cancel];
+    _authenticationSession = nil;
+    NSString *errorDomain;
+    if (@available(iOS 12.0, *)) {
+      errorDomain = @"com.apple.AuthenticationServices.WebAuthenticationSession";
+    } else {
+      errorDomain = @"com.apple.SafariServices.Authentication";
     }
+
+    NSError *error = [self.errorFactory errorWithDomain:errorDomain
+                                                   code:1
+                                               userInfo:nil
+                                                message:nil
+                                        underlyingError:nil];
+    if (_authenticationSessionCompletionHandler) {
+      _authenticationSessionCompletionHandler(nil, error);
+    }
+    isRequestingWebAuthenticationSession = [self _isRequestingWebAuthenticationSession];
   }
   // _expectingBackground can be YES if the caller started doing work (like login)
   // within the app delegate's lifecycle like openURL, in which case there
@@ -201,27 +199,25 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                                                                        completion:completePendingOpenURLBlock];
     _safariViewController = nil;
   } else {
-    if (@available(iOS 11.0, *)) {
-      if (_authenticationSession != nil) {
-        [_authenticationSession cancel];
-        _authenticationSession = nil;
+    if (_authenticationSession != nil) {
+      [_authenticationSession cancel];
+      _authenticationSession = nil;
 
-        // This check is needed in case another sdk / message / ad etc... tries to open the app
-        // during the login flow.
-        // This dismisses the authentication browser without triggering any login callbacks.
-        // Hence we need to explicitly call the authentication session's completion handler.
-        if (!canOpenURL) {
-          NSString *errorMessage = [[NSString alloc]
-                                    initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
-                                    url];
-          NSError *loginError = [self.errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
-                                                        userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}
-                                                         message:errorMessage
-                                                 underlyingError:nil];
-          if (_authenticationSessionCompletionHandler) {
-            _authenticationSessionCompletionHandler(url, loginError);
-            _authenticationSessionCompletionHandler = nil;
-          }
+      // This check is needed in case another sdk / message / ad etc... tries to open the app
+      // during the login flow.
+      // This dismisses the authentication browser without triggering any login callbacks.
+      // Hence we need to explicitly call the authentication session's completion handler.
+      if (!canOpenURL) {
+        NSString *errorMessage = [[NSString alloc]
+                                  initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
+                                  url];
+        NSError *loginError = [self.errorFactory errorWithCode:FBSDKErrorBridgeAPIInterruption
+                                                      userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}
+                                                       message:errorMessage
+                                               underlyingError:nil];
+        if (_authenticationSessionCompletionHandler) {
+          _authenticationSessionCompletionHandler(url, loginError);
+          _authenticationSessionCompletionHandler = nil;
         }
       }
     }
@@ -263,19 +259,15 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (void)_updateAuthStateIfSystemAlertToUseWebAuthFlowPresented
 {
-  if (@available(iOS 11.0, *)) {
-    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionStarted) {
-      _authenticationSessionState = FBSDKAuthenticationSessionShowAlert;
-    }
+  if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionStarted) {
+    _authenticationSessionState = FBSDKAuthenticationSessionShowAlert;
   }
 }
 
 - (void)_updateAuthStateIfSystemCancelAuthSession
 {
-  if (@available(iOS 11.0, *)) {
-    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
-      _authenticationSessionState = FBSDKAuthenticationSessionCanceledBySystem;
-    }
+  if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
+    _authenticationSessionState = FBSDKAuthenticationSessionCanceledBySystem;
   }
 }
 
@@ -285,8 +277,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     || _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem);
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)openURL:(NSURL *)url
          sender:(nullable id<FBSDKURLOpening>)sender
         handler:(FBSDKSuccessBlock)handler
@@ -299,11 +289,9 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
     if ([weakProcessInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
       if (self.urlOpener) {
-        if (@available(iOS 10.0, *)) {
-          [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
-            handler(success, nil);
-          }];
-        }
+        [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
+          handler(success, nil);
+        }];
       } else {
       #if FBTEST
         // self.urlOpener should only be nil in test
@@ -325,8 +313,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   dispatch_async(dispatch_get_main_queue(), block);
 #endif
 }
-
-#pragma clang diagnostic pop
 
 - (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
      useSafariViewController:(BOOL)useSafariViewController
@@ -394,12 +380,10 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
   _expectingBackground = NO;
   _pendingURLOpen = sender;
-  if (@available(iOS 11.0, *)) {
-    if ([sender isAuthenticationURL:url]) {
-      self.sessionCompletionHandlerFromHandler = handler;
-      [self openURLWithAuthenticationSession:url];
-      return;
-    }
+  if ([sender isAuthenticationURL:url]) {
+    self.sessionCompletionHandlerFromHandler = handler;
+    [self openURLWithAuthenticationSession:url];
+    return;
   }
 
   // trying to dynamically load SFSafariViewController class

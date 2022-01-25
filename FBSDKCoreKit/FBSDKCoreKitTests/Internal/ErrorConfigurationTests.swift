@@ -106,14 +106,9 @@ class ErrorConfigurationTests: XCTestCase {
     let data = NSKeyedArchiver.archivedData(
       withRootObject: intermediaryConfiguration)
 
-    var configuration = NSKeyedUnarchiver.unarchiveObject(
-      with: data
-    ) as! ErrorConfiguration // swiftlint:disable:this force_cast
-    if #available(iOS 11.0, *) {
-      configuration = try NSKeyedUnarchiver.unarchivedObject(
-        ofClass: ErrorConfiguration.self, from: data
-      )! // swiftlint:disable:this force_unwrapping
-    }
+    let configuration = try NSKeyedUnarchiver.unarchivedObject(
+      ofClass: ErrorConfiguration.self, from: data
+    )! // swiftlint:disable:this force_unwrapping
     XCTAssertEqual(
       .transient,
       configuration.recoveryConfiguration(

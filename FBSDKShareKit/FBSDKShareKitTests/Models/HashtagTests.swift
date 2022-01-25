@@ -43,12 +43,7 @@ class HashtagTests: XCTestCase {
   func testCoding() throws {
     let hashtag = Hashtag("#Encoded")
     let data = NSKeyedArchiver.archivedData(withRootObject: hashtag)
-    if #available(iOS 11.0, *) {
-      let unarchivedHashtag = try NSKeyedUnarchiver.unarchivedObject(ofClass: Hashtag.self, from: data)
-      XCTAssertEqual(hashtag, unarchivedHashtag)
-    } else {
-      let unarchivedHashtag = NSKeyedUnarchiver.unarchiveObject(with: data)
-      XCTAssertEqual(hashtag, unarchivedHashtag as! Hashtag) // swiftlint:disable:this force_cast
-    }
+    let unarchivedHashtag = try NSKeyedUnarchiver.unarchivedObject(ofClass: Hashtag.self, from: data)
+    XCTAssertEqual(hashtag, unarchivedHashtag)
   }
 }

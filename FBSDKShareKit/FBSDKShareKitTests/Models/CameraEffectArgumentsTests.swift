@@ -15,7 +15,6 @@ final class CameraEffectArgumentsTests: XCTestCase {
     XCTAssertEqual(arguments.copy() as? CameraEffectArguments, arguments)
   }
 
-  @available(iOS 11.0, *)
   func testCoding() throws {
     let arguments = ShareModelTestUtility.cameraEffectArguments
     let data = NSKeyedArchiver.archivedData(withRootObject: arguments)
