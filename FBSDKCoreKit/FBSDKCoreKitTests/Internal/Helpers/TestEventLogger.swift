@@ -56,7 +56,7 @@ class TestEventLogger: NSObject, EventLogging {
     _ eventName: AppEvents.Name,
     parameters: [String: Any]?,
     isImplicitlyLogged: Bool,
-    accessToken: AccessToken
+    accessToken: AccessToken?
   ) {
     capturedEventName = eventName
     capturedParameters = parameters

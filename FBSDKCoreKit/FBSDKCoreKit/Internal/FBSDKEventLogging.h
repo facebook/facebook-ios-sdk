@@ -39,7 +39,7 @@ NS_SWIFT_NAME(EventLogging)
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(nullable NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
+             accessToken:(nullable FBSDKAccessToken *)accessToken;
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
