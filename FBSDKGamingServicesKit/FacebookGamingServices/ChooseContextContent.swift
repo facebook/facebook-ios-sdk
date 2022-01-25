@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objc(FBSDKChooseContextFilter)
-public enum ChooseContextFilter: Int {
+public enum ChooseContextFilter: Int, CaseIterable {
   case none
   case existingChallenges
   case newPlayersOnly
