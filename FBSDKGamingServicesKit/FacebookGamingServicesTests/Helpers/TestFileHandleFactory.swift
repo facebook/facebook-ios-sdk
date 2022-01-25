@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import Foundation
 
-class TestFileHandleFactory: _FileHandleCreating {
+class TestFileHandleFactory: FileHandleCreating {
 
   var stubbedFileHandle = TestFileHandler()
   var capturedURL: URL?

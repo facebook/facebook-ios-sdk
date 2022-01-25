@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FileHandleFactory: NSObject, _FileHandleCreating {
+class FileHandleFactory: NSObject, FileHandleCreating {
   func fileHandleForReading(from url: URL) throws -> _FileHandling {
     try FileHandle(forReadingFrom: url)
   }

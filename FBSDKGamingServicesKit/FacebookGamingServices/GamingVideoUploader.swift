@@ -16,7 +16,7 @@ public final class GamingVideoUploader: NSObject {
   private var totalBytesExpectedToSend: UInt = 0
 
   var fileHandle: _FileHandling?
-  let fileHandleFactory: _FileHandleCreating
+  let fileHandleFactory: FileHandleCreating
   let videoUploaderFactory: _VideoUploaderCreating
 
   var completionHandler: GamingServiceResultCompletion?
@@ -29,7 +29,7 @@ public final class GamingVideoUploader: NSObject {
   static let shared = GamingVideoUploader()
 
   init(
-    fileHandleFactory: _FileHandleCreating = FileHandleFactory(),
+    fileHandleFactory: FileHandleCreating = FileHandleFactory(),
     videoUploaderFactory: _VideoUploaderCreating = _VideoUploaderFactory()
   ) {
     self.fileHandleFactory = fileHandleFactory
