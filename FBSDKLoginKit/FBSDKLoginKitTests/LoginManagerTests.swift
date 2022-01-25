@@ -915,40 +915,6 @@ class LoginManagerTests: XCTestCase {
     XCTAssertEqual(parameters["denied_scopes"], "")
   }
 
-  // MARK: logInWithURL
-
-  func testLogInWithURLFailWithInvalidLoginData() throws {
-    let urlWithInvalidLoginData = try XCTUnwrap(
-      URL(string: "myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22fb_login%22%3A%22invalid%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D")
-    )
-
-    var capturedResult: LoginManagerLoginResult?
-    var capturedError: Error?
-    loginManager.logIn(url: urlWithInvalidLoginData) { result, error in
-      capturedResult = result
-      capturedError = error
-    }
-
-    XCTAssertNil(capturedResult)
-    XCTAssertNotNil(capturedError)
-  }
-
-  func testLogInWithURLFailWithNoLoginData() throws {
-    let urlWithNoLoginData = try XCTUnwrap(
-      URL(string: "myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22some_param%22%3A%22some_value%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D")
-    )
-
-    var capturedResult: LoginManagerLoginResult?
-    var capturedError: Error?
-    loginManager.logIn(url: urlWithNoLoginData) { result, error in
-      capturedResult = result
-      capturedError = error
-    }
-
-    XCTAssertNil(capturedResult)
-    XCTAssertNotNil(capturedError)
-  }
-
   // MARK: Logout
 
   func testLogout() {

@@ -158,24 +158,6 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
   NS_REFINED_FOR_SWIFT;
 
 /**
- Logs the user in with the given deep link url. Will only log user in if the given url contains valid login data.
- @param url the deep link url
- @param handler the callback.
-
-This method will present a UI to the user and thus should be called on the main thread.
-This method should be called with the url from the openURL method.
-
- @warning This method will present a UI to the user and thus should be called on the main thread.
- */
-
-// UNCRUSTIFY_FORMAT_OFF
-- (void)logInWithURL:(NSURL *)url
-             handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-NS_SWIFT_NAME(logIn(url:handler:))
-DEPRECATED_MSG_ATTRIBUTE("`logInWithURL:handler:` is deprecated and will be removed in the next major release");
-// UNCRUSTIFY_FORMAT_ON
-
-/**
  Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
  @param fromViewController the view controller from which to present the login UI. If nil, the topmost view
  controller will be automatically determined and used.

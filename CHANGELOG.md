@@ -21,6 +21,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `FBSDKReferralCode`, `FBSDKReferralManager`, `FBSDKReferralManagerResult` and related classes.
 - Removed unused `FBSDKAppGroupContent` class, `FBSDKAppGroupPrivacy` enum and `NSStringFromFBSDKAppGroupPrivacy` function.
 - Removed `SharingScheme` protocol from ShareKit
+- Removed deprecated `logInWithURL:handler` from `FBSDKLoginManager`
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
 

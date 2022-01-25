@@ -168,30 +168,6 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [self.profile setCurrentProfile:nil];
 }
 
-- (void)logInWithURL:(NSURL *)url
-             handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-{
-  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:provider.loggingToken
-                                                         tracking:FBSDKLoginTrackingEnabled];
-  _handler = [handler copy];
-
-  [_logger startSessionForLoginManager:self];
-  [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
-
-  NSDictionary<NSString *, NSString *> *loginUrlParameters = [self logInParametersFromURL:url];
-  if (loginUrlParameters) {
-    id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:loginUrlParameters
-                                                                                                     appID:self.settings.appID
-                                                                             graphRequestConnectionFactory:self.graphRequestConnectionFactory
-                                                                                authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]
-                                                                                       graphRequestFactory:[FBSDKGraphRequestFactory new] internalUtility:self.internalUtility];
-    [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *completionParameters) {
-      [self completeAuthentication:completionParameters expectChallenge:NO];
-    }];
-  }
-}
-
 #pragma mark - Private
 
 - (void)handleImplicitCancelOfLogIn
