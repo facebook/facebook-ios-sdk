@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import FBSDKCoreKit
 import TestTools
 import XCTest
@@ -80,7 +80,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testGraphRequestPostFinishRequest() {
     videoUploader.start()
-    videoUploader._postFinishRequest()
+    videoUploader.postFinishRequest()
     XCTAssertEqual(
       graphRequestFactory.capturedGraphPath,
       "me/videos",
@@ -111,7 +111,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testCompletedUploadVideo() throws {
     let offsets = [startOffset: 1, endOffset: 1]
-    videoUploader._startTransferRequest(withOffsetDictionary: offsets)
+    videoUploader.startTransferRequest(withOffsetDictionary: offsets)
     let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["success": true], nil)
     XCTAssertTrue(
@@ -122,7 +122,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testErrorUploadingVideo() throws {
     let offsets = [startOffset: 1, endOffset: 1]
-    videoUploader._startTransferRequest(withOffsetDictionary: offsets)
+    videoUploader.startTransferRequest(withOffsetDictionary: offsets)
     let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["none": true], nil)
     XCTAssertFalse(
@@ -137,7 +137,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testTransferRequestFailWithErrorWhenEndOffsetNil() {
     let offsets = [startOffset: 1]
-    videoUploader._startTransferRequest(withOffsetDictionary: offsets)
+    videoUploader.startTransferRequest(withOffsetDictionary: offsets)
     XCTAssertFalse(
       uploadDidCompleteSuccessfully,
       "Should not consider a transfer successful if there is no end offset for the video"
@@ -146,7 +146,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testStartingTransferRequestWithInvalidOffsets() {
     let offsets = [startOffset: 1, endOffset: 0]
-    videoUploader._startTransferRequest(withOffsetDictionary: offsets)
+    videoUploader.startTransferRequest(withOffsetDictionary: offsets)
     XCTAssertFalse(
       uploadDidCompleteSuccessfully,
       "Should not complete if end is smaller than start"
@@ -155,8 +155,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testStartTransferRequestWithNewOffsetDictionaryFailWithError() throws {
     let offsets = [startOffset: 1, endOffset: 0]
-    videoUploader.numberFormatter()
-    videoUploader._startTransferRequest(withNewOffset: offsets, data: Data("Some Data".utf8))
+    videoUploader.startTransferRequest(withNewOffset: offsets, data: Data("Some Data".utf8))
 
     let completionHandler = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completionHandler(nil, ["none": true], SampleError())
@@ -173,7 +172,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testExtractOffsetsFromResultDictionaryWithSameValues() {
     let results = [startOffset: "1", endOffset: "1"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: results)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: results)
     XCTAssertEqual(
       extractOffsets?.count,
       2,
@@ -183,7 +182,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testExtractOffsetsFromResultDictionaryReturningShareResults() {
     let result = [startOffset: "3", endOffset: "7"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: result)
     XCTAssertEqual(
       extractOffsets?.count,
       2,
@@ -194,13 +193,13 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
   func testExtractOffsetsWithFuzzer() {
     for _ in 0 ... 100 {
       let result = [startOffset: Fuzzer.random, endOffset: Fuzzer.random]
-      videoUploader._extractOffsets(fromResultDictionary: result)
+      _ = videoUploader.extractOffsets(fromResultDictionary: result)
     }
   }
 
   func testExtractOffsetsFromResultDictionaryWithNegativeValues() {
     let result = [startOffset: "-3", endOffset: "-2"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: result)
     XCTAssertEqual(
       extractOffsets?.count,
       2,
@@ -210,7 +209,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testExtractOffsetsFromResultDictionaryWithNilOffset() {
     let result = [startOffset: "3"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: result)
     XCTAssertNil(
       extractOffsets,
       "Should return nil if end is missing"
@@ -219,7 +218,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testExtractOffsetsFromResultDictionaryInvalidValue() {
     let result = [startOffset: "3", endOffset: "2invalid"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: result)
     XCTAssertNil(
       extractOffsets,
       "Should return nil if end is invalid value"
@@ -228,7 +227,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
 
   func testExtractOffsetsFromResultDictionaryWithDescendingOrder() {
     let result = [startOffset: "3", endOffset: "2"]
-    let extractOffsets = videoUploader._extractOffsets(fromResultDictionary: result)
+    let extractOffsets = videoUploader.extractOffsets(fromResultDictionary: result)
     XCTAssertNil(
       extractOffsets,
       "Should return nil dictionary if end is smaller than start"

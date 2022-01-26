@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 /**
  A delegate for `VideoUploader`.
  The delegate passes video chunk to `VideoUploader` object in `Data` format and is notified with the results of the uploader.

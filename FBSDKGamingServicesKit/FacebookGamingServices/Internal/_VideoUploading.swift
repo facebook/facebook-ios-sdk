@@ -21,5 +21,3 @@ public protocol _VideoUploading {
 
   func start()
 }
-
-extension _VideoUploader: _VideoUploading {}
