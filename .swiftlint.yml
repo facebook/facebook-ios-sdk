@@ -58,6 +58,9 @@ custom_rules:
   blank_line_after_single_line_guard:
     regex: "guard [^\n]*? else \\{ return (:?\\w+ )?\\}\n[^\n]"
     message: "Prefer a blank line after a guard with a return."
+  objc_members_above_objc:
+    regex: "@objc[^\n]*?\n@objcMembers"
+    message: "Place @objcMembers above @objc"
 
 only_rules:
   - array_init

@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@objc(FBSDKLoginManager) // for NSClassFromString(@"FBSDKLoginManager")
 @objcMembers
+@objc(FBSDKLoginManager) // for NSClassFromString(@"FBSDKLoginManager")
 class FBSDKLoginManager: NSObject {
   static var capturedOpenURL: URL?
   static var capturedSourceApplication: String?

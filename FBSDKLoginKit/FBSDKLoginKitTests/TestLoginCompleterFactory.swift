@@ -23,7 +23,7 @@ class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
     self.stubbedLoginCompleter = stubbedLoginCompleter
   }
 
-  func createLoginCompleter(
+  func createLoginCompleter( // swiftlint:disable:this function_parameter_count
     urlParameters parameters: [String: Any],
     appID: String,
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
