@@ -8,9 +8,7 @@
 
 import FBSDKCoreKit
 
-@objcMembers
-@objc(FBSDKGamingServiceController)
-public class _GamingServiceController: NSObject {
+class GamingServiceController: NSObject {
 
   private let serviceType: _GamingServiceType
   private var completionHandler: GamingServiceResultCompletion?
@@ -18,7 +16,7 @@ public class _GamingServiceController: NSObject {
   private let urlOpener: URLOpener
   private let settings: SettingsProtocol
 
-  public convenience init(
+  convenience init(
     serviceType: _GamingServiceType,
     pendingResult: [String: Any],
     completionHandler completion: @escaping GamingServiceResultCompletion
@@ -69,7 +67,7 @@ public class _GamingServiceController: NSObject {
   }
 }
 
-extension _GamingServiceController: _GamingServiceControllerProtocol {
+extension GamingServiceController: _GamingServiceControllerProtocol {
   public func call(withArgument argument: String?) {
     guard
       let argument = argument,
@@ -86,7 +84,7 @@ extension _GamingServiceController: _GamingServiceControllerProtocol {
   }
 }
 
-extension _GamingServiceController: URLOpening {
+extension GamingServiceController: URLOpening {
   public func application(
     _ application: UIApplication?,
     open url: URL?,

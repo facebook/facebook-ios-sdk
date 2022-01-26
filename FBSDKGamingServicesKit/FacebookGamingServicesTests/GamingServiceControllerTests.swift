@@ -19,7 +19,7 @@ class GamingServiceControllerTests: XCTestCase {
   var capturedSuccess = false
   var capturedResults = [Any]()
   var serviceError: Error?
-  lazy var gamingService = _GamingServiceController(
+  lazy var gamingService = GamingServiceController(
     serviceType: .community,
     pendingResult: [:],
     urlOpener: urlOpener,
@@ -54,7 +54,7 @@ class GamingServiceControllerTests: XCTestCase {
   }
 
   func testInvalidGamingURLWithValidTypeNotMatchingURLSource() {
-    gamingService = _GamingServiceController(
+    gamingService = GamingServiceController(
       serviceType: .friendFinder,
       pendingResult: [:],
       urlOpener: urlOpener,

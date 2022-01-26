@@ -22,7 +22,7 @@ public class _GamingServiceControllerFactory: NSObject, GamingServiceControllerC
     pendingResult: [String: Any]?,
     completion: @escaping GamingServiceResultCompletion
   ) -> _GamingServiceControllerProtocol {
-    _GamingServiceController(
+    GamingServiceController(
       serviceType: serviceType,
       pendingResult: pendingResult ?? [:],
       completionHandler: completion
