@@ -19,7 +19,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
 
@@ -32,7 +33,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
 
@@ -45,7 +47,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       businessID: nil,
       catalogID: nil,
       isTestMode: true,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
 
@@ -58,7 +61,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: true
+      hasSKAN: true,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
 
@@ -71,7 +75,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       businessID: nil,
       catalogID: "test_catalog_id",
       isTestMode: false,
-      hasSKAN: true
+      hasSKAN: true,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
 }

@@ -78,7 +78,8 @@ class FBAEMInvocationTests: XCTestCase {
     conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
     isAggregated: false,
     isTestMode: false,
-    hasSKAN: false
+    hasSKAN: false,
+    isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
   var config1 = AEMConfiguration(json: [
@@ -366,7 +367,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )
     let config = invocation?._findConfig([Values.defaultMode: [config1, config2]])
     XCTAssertEqual(invocation?.configID, 20000, "Should set the invocation with expected configID")
@@ -432,7 +434,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: "test_advertiserid_123",
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )
     let config = invocation?._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
@@ -467,7 +470,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: "test_advertiserid_cpas",
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )
     let config = invocation?._findConfig([
       Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
@@ -605,7 +609,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: "test_advertiserid_content_test",
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [configWithoutBusinessID],
@@ -637,7 +642,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: "test_advertiserid_content_test",
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [configWithoutBusinessID],
@@ -667,7 +673,8 @@ class FBAEMInvocationTests: XCTestCase {
       businessID: "test_advertiserid_cpas",
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],

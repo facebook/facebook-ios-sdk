@@ -151,7 +151,8 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     businessID: "test_advertiserid_123",
     catalogID: nil,
     isTestMode: false,
-    hasSKAN: false
+    hasSKAN: false,
+    isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
   static let invocationWithAdvertiserID2 = AEMInvocation(
@@ -162,7 +163,8 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     businessID: "test_advertiserid_12346",
     catalogID: nil,
     isTestMode: false,
-    hasSKAN: false
+    hasSKAN: false,
+    isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
   static let invocationWithoutAdvertiserID = AEMInvocation(
@@ -173,6 +175,7 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     businessID: nil,
     catalogID: nil,
     isTestMode: false,
-    hasSKAN: false
+    hasSKAN: false,
+    isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 }

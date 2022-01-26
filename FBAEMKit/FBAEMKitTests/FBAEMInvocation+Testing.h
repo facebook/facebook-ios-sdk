@@ -25,7 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
                                  businessID:(nullable NSString *)businessID
                                   catalogID:(nullable NSString *)catalogID
                                  isTestMode:(BOOL)isTestMode
-                                    hasSKAN:(BOOL)hasSKAN;
+                                    hasSKAN:(BOOL)hasSKAN
+              isConversionFilteringEligible:(BOOL)isConversionFilteringEligible;
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
                                    ACSToken:(NSString *)ACSToken
@@ -43,7 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
                         conversionTimestamp:(nullable NSDate *)conversionTimestamp
                                isAggregated:(BOOL)isAggregated
                                  isTestMode:(BOOL)isTestMode
-                                    hasSKAN:(BOOL)hasSKAN;
+                                    hasSKAN:(BOOL)hasSKAN
+              isConversionFilteringEligible:(BOOL)isConversionFilteringEligible;
 
 - (nullable NSDictionary<NSString *, id> *)processedParameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
