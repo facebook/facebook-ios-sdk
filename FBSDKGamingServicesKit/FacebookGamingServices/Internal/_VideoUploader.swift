@@ -9,52 +9,44 @@
 import FBSDKCoreKit
 import Foundation
 
-// swiftlint:disable identifier_name
-let FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY = "completionGesture"
-let FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST = "post"
-let FBSDK_GAMING_VIDEO_END_OFFSET = "end_offset"
-let FBSDK_GAMING_VIDEO_FILE_CHUNK = "video_file_chunk"
-let FBSDK_GAMING_VIDEO_ID = "video_id"
-let FBSDK_GAMING_VIDEO_SIZE = "file_size"
-let FBSDK_GAMING_VIDEO_START_OFFSET = "start_offset"
-let FBSDK_GAMING_VIDEO_UPLOAD_PHASE = "upload_phase"
-let FBSDK_GAMING_VIDEO_UPLOAD_PHASE_FINISH = "finish"
-let FBSDK_GAMING_VIDEO_UPLOAD_PHASE_START = "start"
-let FBSDK_GAMING_VIDEO_UPLOAD_PHASE_TRANSFER = "transfer"
-let FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID = "upload_session_id"
-let FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS = "success"
-// swiftlint:enable identifier_name
-
-let FBSDKGamingVideoUploadErrorDomain = "com.facebook.sdk.gaming.videoupload"
-
-let FBSDKVideoUploaderDefaultGraphNode = "me"
-let FBSDKVideoUploaderEdge = "videos"
-
 @objcMembers
 @objc(FBSDKVideoUploader)
 public final class _VideoUploader: NSObject, _VideoUploading {
+  private enum Keys {
+    static let videoUploaderDefaultGraphNode = "me"
+    static let videoUploaderEdge = "videos"
 
-  var uploadSessionID: Int?
-  var graphPath = "me/videos"
-  let videoName: String
-  var videoSize: UInt = 0
-  var videoID: Int?
-  let graphRequestFactory: GraphRequestFactoryProtocol
-  private static let numberFormatter: NumberFormatter = {
-    $0.numberStyle = .decimal
-    return $0
-  }(NumberFormatter())
+    static let resultCompletionGesture = "completionGesture"
+    static let resultCompletionGestureValuePost = "post"
 
-  /**
-   Optional parameters for video uploads.
-   See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
-   */
+    static let videoEndOffset = "end_offset"
+    static let videoFileChunk = "video_file_chunk"
+    static let videoID = "video_id"
+    static let videoSize = "file_size"
+    static let videoStartOffset = "start_offset"
+    static let videoUploadPhase = "upload_phase"
+    static let videoUploadPhaseFinish = "finish"
+    static let videoUploadPhaseStart = "start"
+    static let videoUploadPhaseTransfer = "transfer"
+    static let videoUploadSessionID = "upload_session_id"
+    static let videoUploadSuccess = "success"
+  }
+
+  private let videoName: String
+  private let videoSize: UInt
   public var parameters: [String: Any]
+  private let graphRequestFactory: GraphRequestFactoryProtocol
+
+  private var videoID: Int?
+  var uploadSessionID: Int?
+  private var graphPath: String {
+    "\(graphNode)/\(Keys.videoUploaderEdge)"
+  }
 
   /**
    The graph node to which video should be uploaded
    */
-  public var graphNode = FBSDKVideoUploaderDefaultGraphNode
+  public var graphNode = Keys.videoUploaderDefaultGraphNode
 
   /**
    Receiver's delegate
@@ -101,12 +93,22 @@ public final class _VideoUploader: NSObject, _VideoUploading {
    Start the upload process
    */
   public func start() {
-    graphPath = graphPathWithSuffix(FBSDKVideoUploaderEdge)
-    postStartRequest()
-  }
+    guard videoSize != 0 else {
+      let uploadError = errorWithMessage("Invalid video size: \(videoSize)")
+      delegate?.videoUploader(self, didFailWithError: uploadError)
+      return
+    }
 
-  private func postStartRequest() {
-    let startRequestCompletionHandler: GraphRequestCompletion = { [weak self] _, result, error in
+    let parameters = [
+      Keys.videoUploadPhase: Keys.videoUploadPhaseStart,
+      Keys.videoSize: String(format: "%tu", videoSize),
+    ]
+    let request = graphRequestFactory.createGraphRequest(
+      withGraphPath: graphPath,
+      parameters: parameters,
+      httpMethod: .post
+    )
+    request.start { [weak self] _, result, error in
       guard let self = self else { return }
 
       if let error = error {
@@ -116,8 +118,8 @@ public final class _VideoUploader: NSObject, _VideoUploading {
 
       guard
         let result = result as? [String: Any],
-        let uploadSessionID = self.extractInt(result[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID]),
-        let videoID = self.extractInt(result[FBSDK_GAMING_VIDEO_ID])
+        let uploadSessionID = self.extractInt(result[Keys.videoUploadSessionID]),
+        let videoID = self.extractInt(result[Keys.videoID])
       else {
         let uploadError = self.errorWithMessage("Failed to get valid upload_session_id or video_id.")
         self.delegate?.videoUploader(self, didFailWithError: uploadError)
@@ -132,29 +134,12 @@ public final class _VideoUploader: NSObject, _VideoUploading {
       self.videoID = videoID
       self.startTransferRequest(withOffsetDictionary: offsetDictionary)
     }
-
-    guard videoSize != 0 else {
-      let uploadError = errorWithMessage("Invalid video size: \(videoSize)")
-      delegate?.videoUploader(self, didFailWithError: uploadError)
-      return
-    }
-
-    let parameters = [
-      FBSDK_GAMING_VIDEO_UPLOAD_PHASE: FBSDK_GAMING_VIDEO_UPLOAD_PHASE_START,
-      FBSDK_GAMING_VIDEO_SIZE: String(format: "%tu", videoSize),
-    ]
-    graphRequestFactory.createGraphRequest(
-      withGraphPath: graphPath,
-      parameters: parameters,
-      httpMethod: .post
-    )
-      .start(completion: startRequestCompletionHandler)
   }
 
   func startTransferRequest(withOffsetDictionary offsetDictionary: [String: Any]) {
     guard
-      let startOffsetInt = extractInt(offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET]),
-      let endOffsetInt = extractInt(offsetDictionary[FBSDK_GAMING_VIDEO_END_OFFSET]),
+      let startOffsetInt = extractInt(offsetDictionary[Keys.videoStartOffset]),
+      let endOffsetInt = extractInt(offsetDictionary[Keys.videoEndOffset]),
       let startOffset = UInt(exactly: startOffsetInt),
       let endOffset = UInt(exactly: endOffsetInt)
     else {
@@ -186,10 +171,11 @@ public final class _VideoUploader: NSObject, _VideoUploading {
   }
 
   func postFinishRequest() {
-    var parameters: [String: Any] = [:]
-    parameters[FBSDK_GAMING_VIDEO_UPLOAD_PHASE] = FBSDK_GAMING_VIDEO_UPLOAD_PHASE_FINISH
-    if uploadSessionID != nil {
-      parameters[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID] = uploadSessionID
+    var parameters: [String: Any] = [
+      Keys.videoUploadPhase: Keys.videoUploadPhaseFinish
+    ]
+    if let uploadSessionID = uploadSessionID {
+      parameters[Keys.videoUploadSessionID] = uploadSessionID
     }
     parameters.merge(self.parameters) { _, new in new }
 
@@ -203,35 +189,36 @@ public final class _VideoUploader: NSObject, _VideoUploading {
 
       if let error = error {
         self.delegate?.videoUploader(self, didFailWithError: error)
-      } else {
-        guard
-          let result = result as? [String: Any],
-          let resultUploadSuccess = result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS]
-        else {
-          let uploadError = self.errorWithMessage("Failed to finish uploading.")
-          self.delegate?.videoUploader(self, didFailWithError: uploadError)
-          return
-        }
-
-        var shareResult: [String: Any] = [
-          FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS: resultUploadSuccess,
-          FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY: FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST,
-        ]
-
-        if let videoID = self.videoID {
-          shareResult[FBSDK_GAMING_VIDEO_ID] = videoID
-        }
-
-        self.delegate?.videoUploader(self, didCompleteWithResults: shareResult)
+        return
       }
+
+      guard
+        let result = result as? [String: Any],
+        let resultUploadSuccess = result[Keys.videoUploadSuccess]
+      else {
+        let uploadError = self.errorWithMessage("Failed to finish uploading.")
+        self.delegate?.videoUploader(self, didFailWithError: uploadError)
+        return
+      }
+
+      var shareResult: [String: Any] = [
+        Keys.videoUploadSuccess: resultUploadSuccess,
+        Keys.resultCompletionGesture: Keys.resultCompletionGestureValuePost,
+      ]
+
+      if let videoID = self.videoID {
+        shareResult[Keys.videoID] = videoID
+      }
+
+      self.delegate?.videoUploader(self, didCompleteWithResults: shareResult)
     }
   }
 
   func extractOffsets(fromResultDictionary result: Any) -> [String: Any]? {
     guard
       let result = result as? [String: Any],
-      let startOffsetString = result[FBSDK_GAMING_VIDEO_START_OFFSET] as? String,
-      let endOffsetString = result[FBSDK_GAMING_VIDEO_END_OFFSET] as? String
+      let startOffsetString = result[Keys.videoStartOffset] as? String,
+      let endOffsetString = result[Keys.videoEndOffset] as? String
     else {
       return nil
     }
@@ -252,8 +239,8 @@ public final class _VideoUploader: NSObject, _VideoUploading {
     }
 
     let shareResults: [String: Any] = [
-      FBSDK_GAMING_VIDEO_START_OFFSET: startNum,
-      FBSDK_GAMING_VIDEO_END_OFFSET: endNum
+      Keys.videoStartOffset: startNum,
+      Keys.videoEndOffset: endNum
     ]
 
     return shareResults
@@ -267,16 +254,16 @@ public final class _VideoUploader: NSObject, _VideoUploading {
     )
 
     var parameters: [String: Any] = [
-      FBSDK_GAMING_VIDEO_UPLOAD_PHASE: FBSDK_GAMING_VIDEO_UPLOAD_PHASE_TRANSFER,
-      FBSDK_GAMING_VIDEO_FILE_CHUNK: dataAttachment,
+      Keys.videoUploadPhase: Keys.videoUploadPhaseTransfer,
+      Keys.videoFileChunk: dataAttachment,
     ]
 
-    if let startOffset = offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET] {
-      parameters[FBSDK_GAMING_VIDEO_START_OFFSET] = startOffset
+    if let startOffset = offsetDictionary[Keys.videoStartOffset] {
+      parameters[Keys.videoStartOffset] = startOffset
     }
 
     if let uploadSessionID = uploadSessionID {
-      parameters[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID] = uploadSessionID
+      parameters[Keys.videoUploadSessionID] = uploadSessionID
     }
 
     let request = graphRequestFactory.createGraphRequest(
@@ -284,7 +271,6 @@ public final class _VideoUploader: NSObject, _VideoUploading {
       parameters: parameters,
       httpMethod: .post
     )
-
     request.start { _, _, innerError in
       if let innerError = innerError {
         self.delegate?.videoUploader(self, didFailWithError: innerError)
@@ -305,14 +291,10 @@ public final class _VideoUploader: NSObject, _VideoUploading {
     delegate?.videoUploader(self, didFailWithError: uploadError)
   }
 
-  private func graphPathWithSuffix(_ suffix: String) -> String {
-    graphNode + "/" + suffix
-  }
-
   private func errorWithMessage(_ message: String) -> Error {
     let errorFactory = ErrorFactory()
     return errorFactory.error(
-      domain: FBSDKGamingVideoUploadErrorDomain,
+      domain: "com.facebook.sdk.gaming.videoupload",
       code: 0,
       userInfo: nil,
       message: message,

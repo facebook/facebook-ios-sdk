@@ -83,8 +83,7 @@ class VideoUploaderTests: XCTestCase, _VideoUploaderDelegate {
     videoUploader.postFinishRequest()
     XCTAssertEqual(
       graphRequestFactory.capturedGraphPath,
-      "me/videos",
-      "start() should call the graphPathWithSuffix and create the graph path parameter"
+      "me/videos"
     )
     XCTAssertNotNil(graphRequestFactory.capturedHttpMethod)
     XCTAssertNil(
