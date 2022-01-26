@@ -17,10 +17,12 @@ HG_ROOT=$(hg root 2>/dev/null)
 if [ -n "$HG_ROOT" ]; then
   SWIFTLINT_PATH="../Tools/swiftlint/swiftlint"
   SWIFTFORMAT_PATH="internal/tools/swiftformat"
+  # shellcheck disable=SC2207
   IFS=$'\n' CHANGED_FILES=($(hg status --modified --added --no-status --rev 'ancestor(master,.)::.' && hg status --no-status --unknown --modified --added | grep -v '\.\./'))
 else
   SWIFTLINT_PATH=$(which swiftlint)
   SWIFTFORMAT_PATH=$(which swiftformat)
+  # shellcheck disable=SC2207
   IFS=$'\n' CHANGED_FILES=($(git -P diff --name-only --diff-filter=MA main...HEAD && git -P diff --name-only --diff-filter=MA HEAD))
 fi
 
@@ -30,23 +32,53 @@ if [ ${#CHANGED_FILES[@]} -eq 0 ]; then
     exit
 fi
 
+# Run the script from the comand line and pass in "--debug" as an argument for debugging
+# i.e. scripts/build_phase_swiftlint.sh --debug
+if [ "$1" = "--debug" ]; then
+  printf "\\nCHANGED_FILES:\\n"
+  printf "%s\n" "${CHANGED_FILES[@]}"
+fi
+
+
 # SwiftLint doesn't dedup file path args
+# shellcheck disable=SC2207
 IFS=$'\n' UNIQUE_SWIFT_FILES=($(printf '%s\n' "${CHANGED_FILES[@]}" | sort -u | grep ".*\.swift$"))
 if [ ${#UNIQUE_SWIFT_FILES[@]} -eq 0 ]; then
     echo "No Swift files to lint."
     exit
 fi
 
+if [ "$1" = "--debug" ]; then
+  printf "\\nUNIQUE_SWIFT_FILES:\\n"
+  printf "%s\n" "${UNIQUE_SWIFT_FILES[@]}"
+fi
+
+# Fix for issue in which a file was added in a previous commit but is removed in the working copy
+LINTABLE_FILES=()
+for file in "${UNIQUE_SWIFT_FILES[@]}"; do
+    if [[ -e $file ]]; then
+      LINTABLE_FILES+=("$file")
+    elif [ "$1" = "--debug" ]; then
+      echo "FILE DOES NOT EXIST: $file"
+    fi
+done
+
+if [ "$1" = "--debug" ]; then
+  printf "\\nLINTABLE_FILES:\\n"
+  printf "%s\n" "${LINTABLE_FILES[@]}"
+fi
+
+
 # Run SwiftFormat
 if [ -n "$SWIFTFORMAT_PATH" ]; then
-  $SWIFTFORMAT_PATH --lint "${UNIQUE_SWIFT_FILES[@]}"
+  $SWIFTFORMAT_PATH --lint "${LINTABLE_FILES[@]}"
 else
   echo "warning: SwiftFormat not installed. Install with 'brew install swiftformat' or from https://github.com/nicklockwood/SwiftFormat"
 fi
 
 # Run SwiftLint
 if [ -n "$SWIFTLINT_PATH" ]; then
-  $SWIFTLINT_PATH lint "${UNIQUE_SWIFT_FILES[@]}"
+  $SWIFTLINT_PATH lint "${LINTABLE_FILES[@]}"
 else
   echo "warning: SwiftLint not installed, Install with 'brew install swiftlint' or from https://github.com/realm/SwiftLint"
 fi
