@@ -38,7 +38,7 @@
 @property (nullable, nonatomic) NSMutableDictionary<NSNumber *, id> *reactBindings;
 @property (nonnull, nonatomic) NSSet<Class> *validClasses;
 @property (nonatomic) BOOL hasReactNative;
-@property (nullable, nonatomic) NSArray *eventBindings;
+@property (nullable, nonatomic) NSArray<FBSDKEventBinding *> *eventBindings;
 
 @end
 
@@ -85,8 +85,8 @@
                  eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [self initWithSwizzler:swizzler eventLogger:eventLogger])) {
-    NSArray *eventBindingsDict = [FBSDKTypeUtility arrayValue:dict[@"event_bindings"]];
-    NSMutableArray *bindings = [NSMutableArray array];
+    NSArray<NSDictionary<NSString *, id> *> *eventBindingsDict = [FBSDKTypeUtility arrayValue:dict[@"event_bindings"]];
+    NSMutableArray<FBSDKEventBinding *> *bindings = [NSMutableArray array];
     for (NSDictionary<NSString *, id> *d in eventBindingsDict) {
       FBSDKEventBinding *e = [[FBSDKEventBinding alloc] initWithJSON:d eventLogger:eventLogger];
       [FBSDKTypeUtility array:bindings addObject:e];

@@ -92,7 +92,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
        smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
            smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
                    updateMessage:(NSString *)updateMessage
-                   eventBindings:(NSArray *)eventBindings
+                   eventBindings:(NSArray<NSDictionary<NSString *, id> *> *)eventBindings
                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                         AAMRules:(NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
@@ -249,7 +249,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
   NSString *updateMessage = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
-  NSArray *eventBindings = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
+  NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:
                                      [NSDictionary<NSString *, id> class],
                                      NSArray.class,

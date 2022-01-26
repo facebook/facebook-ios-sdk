@@ -382,11 +382,11 @@ class ServerConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithEventBindings() {
-    let bindings = [SampleEventBinding.createValid(withName: name)]
+    let bindings = [["a": "b"]]
     config = Fixtures.config(withDictionary: ["eventBindings": bindings])
 
     XCTAssertEqual(
-      config.eventBindings as? [EventBinding],
+      config.eventBindings as? [[String: String]],
       bindings,
       "Event binding should be settable"
     )
@@ -535,7 +535,7 @@ class ServerConfigurationTests: XCTestCase {
       "smartLoginBookmarkIconURL": exampleURL,
       "smartLoginMenuIconURL": exampleURL,
       "updateMessage": "updateMessage",
-      "eventBindings": ["foo": "bar"],
+      "eventBindings": [["foo": "bar"]],
       "restrictiveParams": ["restrictiveParams": "foo"],
       "AAMRules": ["AAMRules": "foo"],
       "suggestedEventsSetting": ["suggestedEventsSetting": "foo"],
@@ -569,7 +569,10 @@ class ServerConfigurationTests: XCTestCase {
     XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkIconURL"] as? URL, config.smartLoginBookmarkIconURL)
     XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkMenuURL"] as? URL, config.smartLoginMenuIconURL)
     XCTAssertEqual(coder.encodedObject["SDKUpdateMessage"] as? String, config.updateMessage)
-    XCTAssertEqual(coder.encodedObject["eventBindings"] as? [EventBinding], config.eventBindings as? [EventBinding])
+    XCTAssertEqual(
+      coder.encodedObject["eventBindings"] as? [[String: String]],
+      config.eventBindings as? [[String: String]]
+    )
     XCTAssertEqualDicts(coder.encodedObject["restrictiveParams"] as? [String: Any], config.restrictiveParams)
     XCTAssertEqualDicts(coder.encodedObject["AAMRules"] as? [String: Any], config.aamRules)
     XCTAssertEqualDicts(coder.encodedObject["suggestedEventsSetting"] as? [String: Any], config.suggestedEventsSetting)

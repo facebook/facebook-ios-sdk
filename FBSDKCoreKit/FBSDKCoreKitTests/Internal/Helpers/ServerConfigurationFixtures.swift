@@ -79,7 +79,7 @@ class ServerConfigurationFixtures: NSObject {
     let smartLoginBookmarkIconURL = dict["smartLoginBookmarkIconURL"] as? URL ?? defaultConfig.smartLoginBookmarkIconURL
     let smartLoginMenuIconURL = dict["smartLoginMenuIconURL"] as? URL ?? defaultConfig.smartLoginMenuIconURL
     let updateMessage = dict["updateMessage"] as? String ?? defaultConfig.updateMessage
-    let eventBindings = dict["eventBindings"] as? [Any] ?? defaultConfig.eventBindings
+    let eventBindings = dict["eventBindings"] as? [[String: Any]] ?? defaultConfig.eventBindings
     let restrictiveParams = dict["restrictiveParams"] as? [String: Any] ?? defaultConfig.restrictiveParams
     let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfig.aamRules
     let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfig.suggestedEventsSetting

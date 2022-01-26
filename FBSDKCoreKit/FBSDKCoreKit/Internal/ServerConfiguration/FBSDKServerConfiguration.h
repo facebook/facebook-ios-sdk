@@ -56,7 +56,7 @@ NS_SWIFT_NAME(ServerConfiguration)
        smartLoginBookmarkIconURL:(nullable NSURL *)smartLoginBookmarkIconURL
            smartLoginMenuIconURL:(nullable NSURL *)smartLoginMenuIconURL
                    updateMessage:(nullable NSString *)updateMessage
-                   eventBindings:(nullable NSArray *)eventBindings
+                   eventBindings:(nullable NSArray<NSDictionary<NSString *, id> *> *)eventBindings
                restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams
                         AAMRules:(nullable NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(nullable NSDictionary<NSString *, id> *)suggestedEventsSetting
@@ -81,7 +81,7 @@ NS_SWIFT_NAME(ServerConfiguration)
 @property (nullable, nonatomic, readonly, copy) NSURL *smartLoginBookmarkIconURL;
 @property (nullable, nonatomic, readonly, copy) NSURL *smartLoginMenuIconURL;
 @property (nullable, nonatomic, readonly, copy) NSString *updateMessage;
-@property (nullable, nonatomic, readonly, copy) NSArray *eventBindings;
+@property (nullable, nonatomic, readonly, copy) NSArray<NSDictionary<NSString *, id> *> *eventBindings;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *restrictiveParams;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *AAMRules;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *suggestedEventsSetting;
