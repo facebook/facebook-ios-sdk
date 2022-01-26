@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 @objcMembers
 public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isEventDataUsageLimited = false

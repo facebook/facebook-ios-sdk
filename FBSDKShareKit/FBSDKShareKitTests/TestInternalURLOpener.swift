@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 @objcMembers
 final class TestInternalURLOpener: NSObject, ShareInternalURLOpening {
   var canOpenURL = false

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 @objcMembers
 class TestGateKeeperManager: NSObject, GateKeeperManaging {
   static var gateKeepers = [String?: Bool]()

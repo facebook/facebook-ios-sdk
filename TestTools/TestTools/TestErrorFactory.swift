@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 @objcMembers
 public final class TestErrorFactory: NSObject, ErrorCreating {
   public func error(

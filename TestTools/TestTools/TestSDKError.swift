@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 @objc public enum TestSDKErrorType: Int {
   case general
   case invalidArgument
