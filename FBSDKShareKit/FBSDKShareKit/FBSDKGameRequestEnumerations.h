@@ -11,22 +11,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-/**
- NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
-  Additional context about the nature of the request.
- */
-typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType) {
-  /** No action type */
-  FBSDKGameRequestActionTypeNone = 0,
-  /** Send action type: The user is sending an object to the friends. */
-  FBSDKGameRequestActionTypeSend,
-  /** Ask For action type: The user is asking for an object from friends. */
-  FBSDKGameRequestActionTypeAskFor,
-  /** Turn action type: It is the turn of the friends to play against the user in a match. (no object) */
-  FBSDKGameRequestActionTypeTurn,
-  /** Invite action type: The user is inviting a friend. */
-  FBSDKGameRequestActionTypeInvite,
-} NS_SWIFT_NAME(GameRequestActionType);
 
 /**
  NS_ENUM(NSUInteger, FBSDKGameRequestFilters)
