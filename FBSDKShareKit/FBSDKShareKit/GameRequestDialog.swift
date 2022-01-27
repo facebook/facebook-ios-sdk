@@ -320,7 +320,7 @@ public final class GameRequestDialog: NSObject {
     }
 
     if dialogIsFrictionless {
-      GameRequestDialog.recipientCache.update(withResults: results)
+      GameRequestDialog.recipientCache.update(results: results)
     }
 
     cleanUp()
