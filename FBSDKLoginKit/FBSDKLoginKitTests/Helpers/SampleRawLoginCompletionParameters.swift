@@ -8,13 +8,12 @@
 
 import Foundation
 
-// swiftlint:disable line_length
 enum SampleRawLoginCompletionParameters {
 
   static let secondsInDay = 60 * 60 * 24
   static let daysUntilExpiration = 60
   static let daysUntilDataExpiration = 90
-  static let dataExpirationDate = Date().timeIntervalSince1970.advanced(by: Double(secondsInDay * daysUntilDataExpiration))
+  static let dataExpirationDate = Date().timeIntervalSince1970.advanced(by: Double(secondsInDay * daysUntilDataExpiration)) // swiftlint:disable:this line_length
   static let expirationDate = Date().timeIntervalSince1970.advanced(by: Double(secondsInDay * daysUntilExpiration))
   static let fakeChallenge = "some_challenge"
   static let defaultDomain = "facebook"

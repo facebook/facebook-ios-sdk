@@ -64,6 +64,9 @@ custom_rules:
   objc_used_without_importing_foundation:
     regex: "LICENSE file in the root directory of this source tree.\n \\*/\n+@objc"
     message: "@objc attribute used without importing module 'Foundation'"
+  swiftlint_disable_without_this_or_next:
+    regex: "// swiftlint:disable (?!implicitly_unwrapped_optional|force_unwrapping)"
+    message: "Prefer using swiftlint:disable:this or swiftlint:disable:next over swiftlint:disable"
 
 only_rules:
   - array_init

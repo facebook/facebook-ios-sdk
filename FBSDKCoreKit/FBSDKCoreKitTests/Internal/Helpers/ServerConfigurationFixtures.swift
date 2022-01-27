@@ -10,8 +10,6 @@ import Foundation
 
 @objcMembers
 class ServerConfigurationFixtures: NSObject {
-  // swiftlint:disable line_length
-
   /// A default configuration with valid inputs. This is the same default configuration used in production code
   static var defaultConfig: ServerConfiguration {
     ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")
@@ -19,7 +17,9 @@ class ServerConfigurationFixtures: NSObject {
 
   /// A default configuration with custom values passed by dictionary.
   /// To use: Include a dictionary with the keys and values you want to override on the default configuration
-  class func config(withDictionary dict: [String: Any]) -> ServerConfiguration { // swiftlint:disable:this cyclomatic_complexity
+  class func config( // swiftlint:disable:this cyclomatic_complexity
+    withDictionary dict: [String: Any]
+  ) -> ServerConfiguration {
     var loginTooltipEnabled = defaultConfig.isLoginTooltipEnabled
     if dict["loginTooltipEnabled"] != nil {
       loginTooltipEnabled = dict["loginTooltipEnabled"] as? Int != 0
@@ -82,6 +82,7 @@ class ServerConfigurationFixtures: NSObject {
     let eventBindings = dict["eventBindings"] as? [[String: Any]] ?? defaultConfig.eventBindings
     let restrictiveParams = dict["restrictiveParams"] as? [String: Any] ?? defaultConfig.restrictiveParams
     let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfig.aamRules
+    // swiftlint:disable:next line_length
     let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfig.suggestedEventsSetting
 
     return ServerConfiguration(

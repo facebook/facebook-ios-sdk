@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
 
 enum TestCoreKitComponents {

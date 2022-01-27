@@ -8,8 +8,8 @@
 
 import Foundation
 
-// swiftlint:disable function_parameter_count line_length
-
+// swiftlint:disable:next swiftlint_disable_without_this_or_next
+// swiftlint:disable line_length
 extension BridgeAPITests {
 
   // MARK: - URL Opening
@@ -309,7 +309,7 @@ extension BridgeAPITests {
   // MARK: - Helpers
 
   /// Assumes should not stop propagation of url
-  func verifyOpen(
+  func verifyOpen( // swiftlint:disable:this function_parameter_count
     pendingUrlCanOpenUrl: Bool,
     hasSafariViewController: Bool,
     isDismissingSafariViewController: Bool,
@@ -350,7 +350,7 @@ extension BridgeAPITests {
 
   /// Assumes should not stop propagation of url
   /// Assumes SafariViewController is not nil
-  func verifyOpen(
+  func verifyOpen( // swiftlint:disable:this function_parameter_count
     pendingUrlCanOpenUrl: Bool,
     isDismissingSafariViewController: Bool,
     authSessionCompletionHandlerExists: Bool,
@@ -390,7 +390,7 @@ extension BridgeAPITests {
   /// Assumes should not stop propagation of url
   /// Assumes Pending Url cannot open
   /// Assumes SafariViewController is nil
-  func verifyOpenURLWithoutSafariVc(
+  func verifyOpenURLWithoutSafariVc( // swiftlint:disable:this function_parameter_count
     isDismissingSafariViewController: Bool,
     authSessionCompletionHandlerExists: Bool,
     canHandleBridgeApiResponse: Bool,

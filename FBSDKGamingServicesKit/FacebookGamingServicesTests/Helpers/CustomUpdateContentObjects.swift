@@ -12,17 +12,16 @@ import UIKit
 
 enum CustomUpdateContentObjects {
 
-  // swiftlint:disable force_unwrapping
   static var validID = "12345"
   static var validMessage = "Hello"
-  static var gifMedia = FacebookGIF(withUrl: URL(string: "www.test.com")!)
-  static var invalidGifMedia = FacebookGIF(withUrl: URL(string: "")!)
+  static var gifMedia = FacebookGIF(withUrl: URL(string: "www.test.com")!) // swiftlint:disable:this force_unwrapping
+  static var invalidGifMedia = FacebookGIF(withUrl: URL(string: "")!) // swiftlint:disable:this force_unwrapping
   @available(iOS 13.0, *)
   static var validImage = UIImage(
     named: "customColorSilhouette",
     in: Bundle(for: CustomUpdateGraphAPIContentRemoteTests.self),
     with: nil
-  )!
+  )! // swiftlint:disable:this force_unwrapping
 
   @available(iOS 13.0, *)
   static let imageContentInvalidMessage = CustomUpdateContentImage(message: "", image: validImage)

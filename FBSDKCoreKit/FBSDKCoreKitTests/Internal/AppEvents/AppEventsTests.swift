@@ -623,6 +623,7 @@ class AppEventsTests: XCTestCase {
     )
   }
 
+  // swiftlint:disable:next swiftlint_disable_without_this_or_next
   // swiftlint:disable opening_brace
   func testUsingAppEventsWithUninitializedSDK() throws {
     let foo = "foo"
@@ -720,6 +721,7 @@ class AppEventsTests: XCTestCase {
       { self.appEvents.getUserData() },
       { self.appEvents.clearUserData(forType: .email) },
     ]
+    // swiftlint:enable opening_brace
 
     nonExceptionRaisingClosures.forEach { closure in
       assertDoesNotRaiseException(

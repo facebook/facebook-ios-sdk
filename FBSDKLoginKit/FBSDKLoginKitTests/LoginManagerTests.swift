@@ -9,7 +9,6 @@
 import TestTools
 import XCTest
 
-// swiftlint:disable line_length
 class LoginManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
@@ -218,7 +217,8 @@ class LoginManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       loginCompleterFactory.capturedURLParameters["signed_request"] as? String,
-      "ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0",
+      "ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0", // swiftlint:disable:this line_length
+
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
@@ -357,7 +357,11 @@ class LoginManagerTests: XCTestCase {
     }
     loginManager.setRequestedPermissions(["user_friends"])
 
-    _ = keychainStore.setString(challenge, forKey: "expected_login_challenge", accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
+    _ = keychainStore.setString(
+      challenge,
+      forKey: "expected_login_challenge",
+      accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    )
 
     let parameters = LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
@@ -502,7 +506,9 @@ class LoginManagerTests: XCTestCase {
     )
     loginManager.state = .performingLogin
 
-    XCTAssertFalse(loginManager.application(nil, open: url, sourceApplication: "com.apple.mobilesafari", annotation: nil))
+    XCTAssertFalse(
+      loginManager.application(nil, open: url, sourceApplication: "com.apple.mobilesafari", annotation: nil)
+    )
 
     XCTAssertNil(loginCompleter.capturedCompletionHandler)
     XCTAssertEqual(
@@ -671,7 +677,7 @@ class LoginManagerTests: XCTestCase {
     )
     XCTAssertTrue(
       loginManager.usedSFAuthSession,
-      "If useSafariViewController is YES, _usedSFAuthSession should be YES and openURLWithSafariViewController should be invoked"
+      "If useSafariViewController is YES, _usedSFAuthSession should be YES and openURLWithSafariViewController should be invoked" // swiftlint:disable:this line_length
     )
 
     XCTAssertNotNil(urlOpener.viewController)
@@ -1036,7 +1042,9 @@ class LoginManagerTests: XCTestCase {
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
 
-    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(fromDeclinedPermissions: declinedPermissions)
+    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(
+      fromDeclinedPermissions: declinedPermissions
+    )
     XCTAssertTrue(recentlyDeclinedPermissions.isEmpty)
   }
 
@@ -1046,7 +1054,9 @@ class LoginManagerTests: XCTestCase {
     )
     loginManager.setRequestedPermissions(["user_friends"])
 
-    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(fromDeclinedPermissions: declinedPermissions)
+    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(
+      fromDeclinedPermissions: declinedPermissions
+    )
     let expectedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["user_friends"])
     )

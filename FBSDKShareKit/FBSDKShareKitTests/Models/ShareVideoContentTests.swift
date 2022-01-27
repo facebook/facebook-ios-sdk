@@ -10,12 +10,9 @@ import FBSDKCoreKit
 import UIKit
 import XCTest
 
-// swiftlint:disable line_length
 class ShareVideoContentTests: XCTestCase {
 
-  // swiftlint:disable implicitly_unwrapped_optional
-  var content: ShareVideoContent!
-  // swiftlint:enable implicitly_unwrapped_optional
+  var content: ShareVideoContent! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
@@ -147,7 +144,7 @@ class ShareVideoContentTests: XCTestCase {
       let nsError = error as NSError
       XCTAssertNotNil(
         nsError,
-        "Attempting to validate video share content with a valid file url should return a video url specific error when there is no specified bridge option to handle video data"
+        "Attempting to validate video share content with a valid file url should return a video url specific error when there is no specified bridge option to handle video data" // swiftlint:disable:this line_length
       )
       XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
       XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "videoURL")
