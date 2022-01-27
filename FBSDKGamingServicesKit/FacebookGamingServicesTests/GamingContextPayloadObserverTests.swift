@@ -7,6 +7,7 @@
  */
 
 @testable import FacebookGamingServices
+@testable import FBSDKCoreKit
 import XCTest
 
 class GamingContextPayloadObserverTests: XCTestCase {
@@ -17,8 +18,6 @@ class GamingContextPayloadObserverTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-
-    ApplicationDelegate.shared.resetApplicationObserverCache()
 
     gamingContextDelegate = GamingContextPayloadObserverDelegate()
     gamingContextObserver = GamingPayloadObserver(delegate: gamingContextDelegate)

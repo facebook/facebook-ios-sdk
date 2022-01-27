@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import TestTools
 
 class TestInternalUtility: InternalUtilityProtocol {
   var scheme: String?

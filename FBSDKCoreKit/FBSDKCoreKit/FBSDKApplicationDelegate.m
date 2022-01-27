@@ -27,7 +27,7 @@ static UIApplicationState _applicationState;
 
 @property (nonnull, nonatomic, readwrite) FBSDKCoreKitComponents *components;
 @property (nonnull, nonatomic, readwrite) id<FBSDKCoreKitConfiguring> configurator;
-@property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
+@property (nonnull, nonatomic, readwrite) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonatomic) BOOL isAppLaunched;
 
 @end

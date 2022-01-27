@@ -28,6 +28,10 @@ NS_SWIFT_NAME(ApplicationDelegate)
 + (instancetype)new NS_UNAVAILABLE;
 #endif
 
+#if DEBUG && FBTEST
+@property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
+#endif
+
 /**
  Gets the singleton instance.
  */

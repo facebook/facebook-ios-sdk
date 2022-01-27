@@ -14,5 +14,3 @@ INFOPLIST_FILE = $(SRCROOT)/Info.plist
 
 HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-
-SWIFT_OBJC_BRIDGING_HEADER = FacebookGamingServicesTests/FacebookGamingServicesTests-Bridging-Header.h

@@ -7,6 +7,7 @@
  */
 
 @testable import FacebookGamingServices
+import TestTools
 import XCTest
 
 class ChooseContextContentTests: XCTestCase {

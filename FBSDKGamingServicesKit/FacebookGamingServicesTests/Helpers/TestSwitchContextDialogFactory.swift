@@ -7,6 +7,7 @@
  */
 
 @testable import FacebookGamingServices
+import FBSDKCoreKit
 
 class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
   let dialog = TestShowable()

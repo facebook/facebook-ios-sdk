@@ -7,6 +7,7 @@
  */
 
 @testable import FacebookGamingServices
+import XCTest
 
 class ShareTournamentDialogURLBuilderTests: XCTestCase {
   let expirationDate = DateFormatter.format(ISODateString: "2021-09-24T18:03:47+0000")

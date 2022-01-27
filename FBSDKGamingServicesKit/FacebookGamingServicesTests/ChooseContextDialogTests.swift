@@ -7,6 +7,7 @@
  */
 
 import FacebookGamingServices
+import TestTools
 import XCTest
 
 class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {

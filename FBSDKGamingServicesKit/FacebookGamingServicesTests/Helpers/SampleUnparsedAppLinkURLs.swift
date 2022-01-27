@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import TestTools
+import XCTest
+
 enum SampleUnparsedAppLinkURLs {
   enum AppLinkKeys {
     static let data = "al_applink_data"

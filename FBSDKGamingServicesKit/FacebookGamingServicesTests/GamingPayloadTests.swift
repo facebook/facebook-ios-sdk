@@ -7,6 +7,7 @@
  */
 
 @testable import FacebookGamingServices
+import FBSDKCoreKit
 import XCTest
 
 class GamingPayloadTests: XCTestCase {

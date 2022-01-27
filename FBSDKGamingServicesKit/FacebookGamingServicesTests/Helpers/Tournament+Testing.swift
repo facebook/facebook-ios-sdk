@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKGamingServicesKit
+
 extension Tournament: Equatable {
   public static func == (lhs: Tournament, rhs: Tournament) -> Bool {
     lhs.identifier == rhs.identifier
