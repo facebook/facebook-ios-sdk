@@ -22,22 +22,6 @@
 
 @implementation FBSDKAppInviteContent
 
-// This exists because you cannot deprecate a method that has never been implemented.
-// You should not be able to create app invite content without an app link URL.
-// This preserves the now-deprecated behavior and should be removed as soon as possible.
-+ (instancetype)new
-{
-  return [[self alloc] init];
-}
-
-// This exists because you cannot deprecate a method that has never been implemented.
-// You should not be able to create app invite content without an app link URL.
-// This preserves the now-deprecated behavior and should be removed as soon as possible.
-- (instancetype)init
-{
-  return [super init];
-}
-
 - (instancetype)initWithAppLinkURL:(nonnull NSURL *)appLinkURL
 {
   if ((self = [super init])) {
@@ -60,8 +44,7 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-  return ([_FBSDKShareUtility validateRequiredValue:_appLinkURL name:@"appLinkURL" error:errorRef]
-    && [_FBSDKShareUtility validateNetworkURL:_appLinkURL name:@"appLinkURL" error:errorRef]
+  return ([_FBSDKShareUtility validateNetworkURL:_appLinkURL name:@"appLinkURL" error:errorRef]
     && [_FBSDKShareUtility validateNetworkURL:_appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]
     && [self _validatePromoCodeWithError:errorRef]);
 }

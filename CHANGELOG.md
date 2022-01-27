@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed unused `FBSDKAppGroupContent` class, `FBSDKAppGroupPrivacy` enum and `NSStringFromFBSDKAppGroupPrivacy` function.
 - Removed `SharingScheme` protocol from ShareKit
 - Removed deprecated `logInWithURL:handler` from `FBSDKLoginManager`
+- Removed deprecated `init` and `new` methods from `AppInviteContent`
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
 

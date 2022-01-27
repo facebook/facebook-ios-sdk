@@ -34,8 +34,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination) {
 NS_SWIFT_NAME(AppInviteContent)
 @interface FBSDKAppInviteContent : NSObject <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
 
-- (instancetype)init DEPRECATED_MSG_ATTRIBUTE("`AppInviteContent.init` is deprecated and will be removed in the next major release. Please use `AppInviteContent(appLinkURL:) instead");
-+ (instancetype)new DEPRECATED_MSG_ATTRIBUTE("`AppInviteContent.new` is deprecated and will be removed in the next major release. Please use `AppInviteContent(appLinkURL:) instead");
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithAppLinkURL:(NSURL *)appLinkURL;
 

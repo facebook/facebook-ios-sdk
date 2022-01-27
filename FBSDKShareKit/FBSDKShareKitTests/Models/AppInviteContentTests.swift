@@ -48,19 +48,6 @@ class AppInviteContentTests: XCTestCase {
     XCTAssertNoThrow(try content.validate(options: []))
   }
 
-  func testValidationWithNilAppLinkURL() {
-    content = AppInviteContent()
-
-    XCTAssertThrowsError(
-      try content.validate(options: []),
-      "Should throw an error"
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "appLinkURL")
-    }
-  }
-
   func testValidationWithNilPreviewImageURL() {
     content = AppInviteContent(appLinkURL: appLinkURL)
     XCTAssertNoThrow(try content.validate(options: []))
