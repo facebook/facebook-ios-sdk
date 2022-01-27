@@ -22,9 +22,9 @@ class GameRequestContentTests: XCTestCase {
     XCTAssertEqual(content.title, GameRequestContentTests.title())
   }
 
-  func testCopy() {
+  func testEquatabilityOfCopy() {
     let content = GameRequestContentTests.contentWithAllProperties()
-    let contentCopy = content.copy() as? GameRequestContent
+    let contentCopy = GameRequestContentTests.contentWithAllProperties()
     XCTAssertNotIdentical(contentCopy, content)
     XCTAssertEqual(contentCopy, content)
   }
