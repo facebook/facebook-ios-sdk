@@ -8,6 +8,8 @@
 
 #if !os(tvOS)
 
+import FBSDKCoreKit
+import FBSDKShareKit
 import Foundation
 
 /// A model for a game request.
