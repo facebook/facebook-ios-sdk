@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 // Hacky subclassing to get around init not being available.
 // Future work should update ServerConfigurationProvider to return
 // a true abstraction instead of a concrete ServerConfiguration and this

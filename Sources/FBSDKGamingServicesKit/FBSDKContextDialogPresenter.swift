@@ -8,6 +8,7 @@
 
 import FacebookGamingServices
 import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 open class FBSDKContextDialogPresenter: NSObject {

@@ -9,6 +9,7 @@
 #if !os(tvOS)
 
 import FBSDKCoreKit
+import Foundation
 
 /**
  A model for an instant games switchAsync cross play request.

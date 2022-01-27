@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 public class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting, TokenStringProviding {

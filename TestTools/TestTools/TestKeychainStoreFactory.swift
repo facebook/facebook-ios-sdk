@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 public class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {

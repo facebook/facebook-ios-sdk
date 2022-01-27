@@ -7,6 +7,7 @@
  */
 
 import FBSDKLoginKit
+import Foundation
 
 @objcMembers
 class TestLoginCompleter: NSObject, LoginCompleting {

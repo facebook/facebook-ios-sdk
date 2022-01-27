@@ -8,6 +8,7 @@
 
 import FacebookGamingServices
 import FBSDKCoreKit
+import Foundation
 
 /**
  A dialog to switch the current context through a web view

@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 #if !os(tvOS)
 

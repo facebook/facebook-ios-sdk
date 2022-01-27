@@ -7,6 +7,7 @@
  */
 
 import FBAEMKit
+import Foundation
 
 @objcMembers
 class TestInvocation: AEMInvocation {

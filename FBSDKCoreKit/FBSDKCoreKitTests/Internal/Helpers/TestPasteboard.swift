@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 class TestPasteboard: NSObject, Pasteboard {

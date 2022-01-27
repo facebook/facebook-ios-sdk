@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 struct SwizzleEvidence: Equatable {
   let selector: Selector
   let `class`: AnyClass

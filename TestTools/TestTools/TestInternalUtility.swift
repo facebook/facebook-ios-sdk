@@ -8,6 +8,7 @@
 
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
+import Foundation
 
 @objcMembers
 public class TestInternalUtility: NSObject,

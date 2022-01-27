@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 @objc(FBSDKFriendFinderDialog)
 public class FriendFinderDialog: NSObject {

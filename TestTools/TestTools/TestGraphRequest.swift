@@ -7,6 +7,7 @@
  */
 
 @testable import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 public class TestGraphRequest: NSObject, GraphRequestProtocol {

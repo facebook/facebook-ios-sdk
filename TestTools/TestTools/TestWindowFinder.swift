@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import Foundation
 
 @objcMembers
 public class TestWindowFinder: NSObject, WindowFinding {
