@@ -19,7 +19,7 @@ public class FriendFinderDialog: NSObject {
   static let shared = FriendFinderDialog()
 
   public override convenience init() {
-    self.init(gamingServiceControllerFactory: _GamingServiceControllerFactory())
+    self.init(gamingServiceControllerFactory: GamingServiceControllerFactory())
   }
 
   init(gamingServiceControllerFactory: GamingServiceControllerCreating) {

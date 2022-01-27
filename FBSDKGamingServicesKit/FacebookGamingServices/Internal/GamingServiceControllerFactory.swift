@@ -8,16 +8,8 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objcMembers
-@objc(FBSDKGamingServiceControllerFactory)
-public class _GamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
-  public func create(
+final class GamingServiceControllerFactory: GamingServiceControllerCreating {
+  func create(
     serviceType: _GamingServiceType,
     pendingResult: [String: Any]?,
     completion: @escaping GamingServiceResultCompletion

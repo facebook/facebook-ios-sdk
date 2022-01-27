@@ -24,14 +24,14 @@ public class GamingImageUploader: NSObject {
 
   override convenience init() {
     self.init(
-      gamingServiceControllerFactory: _GamingServiceControllerFactory(),
+      gamingServiceControllerFactory: GamingServiceControllerFactory(),
       graphRequestConnectionFactory: GraphRequestConnectionFactory()
     )
   }
 
   convenience init(progressHandler: GamingServiceProgressHandler?) {
     self.init(
-      gamingServiceControllerFactory: _GamingServiceControllerFactory(),
+      gamingServiceControllerFactory: GamingServiceControllerFactory(),
       graphRequestConnectionFactory: GraphRequestConnectionFactory()
     )
     self.progressHandler = progressHandler

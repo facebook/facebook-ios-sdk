@@ -32,7 +32,7 @@ class FBSDKFriendFinderDialogTests: XCTestCase {
 
   func testDefaultDependencies() {
     XCTAssertTrue(
-      FriendFinderDialog.shared.factory is _GamingServiceControllerFactory,
+      FriendFinderDialog.shared.factory is GamingServiceControllerFactory,
       "Should use the expected default gaming service controller factory type by default"
     )
   }

@@ -26,7 +26,7 @@ class FBSDKGamingGroupIntegrationTests: XCTestCase {
       "Should have a default settings of the expected type"
     )
     XCTAssertTrue(
-      GamingGroupIntegration().serviceControllerFactory is _GamingServiceControllerFactory,
+      GamingGroupIntegration().serviceControllerFactory is GamingServiceControllerFactory,
       "Should have a default service controller factory of the expected type"
     )
   }

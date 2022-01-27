@@ -19,7 +19,7 @@ public class GamingGroupIntegration: NSObject {
   override convenience init() {
     self.init(
       settings: Settings.shared,
-      serviceControllerFactory: _GamingServiceControllerFactory()
+      serviceControllerFactory: GamingServiceControllerFactory()
     )
   }
 
