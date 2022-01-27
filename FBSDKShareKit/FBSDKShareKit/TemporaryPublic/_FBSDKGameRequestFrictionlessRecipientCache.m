@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKGameRequestFrictionlessRecipientCache.h"
+#import "_FBSDKGameRequestFrictionlessRecipientCache.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>

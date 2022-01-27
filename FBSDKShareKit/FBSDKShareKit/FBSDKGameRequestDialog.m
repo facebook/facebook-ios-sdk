@@ -12,11 +12,10 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
+#import <FBSDKShareKit/_FBSDKGameRequestFrictionlessRecipientCache.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
-
-#import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
 #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
 #define FBSDK_GAME_REQUEST_URL_HOST @"game_requests"

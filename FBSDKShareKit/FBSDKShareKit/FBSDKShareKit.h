@@ -29,5 +29,6 @@
  #import <FBSDKShareKit/FBSDKMessageDialog.h>
  #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
  #import <FBSDKShareKit/FBSDKShareDialog.h>
+ #import <FBSDKShareKit/_FBSDKGameRequestFrictionlessRecipientCache.h>
  #import <FBSDKShareKit/_FBSDKMessengerIcon.h>
 #endif
