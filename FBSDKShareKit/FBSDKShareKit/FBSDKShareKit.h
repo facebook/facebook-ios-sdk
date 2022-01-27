@@ -24,7 +24,6 @@
 #if !TARGET_OS_TV
  #import <FBSDKShareKit/FBSDKAppInviteContent.h>
  #import <FBSDKShareKit/FBSDKGameRequestContent.h>
- #import <FBSDKShareKit/FBSDKGameRequestDialog.h>
  #import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
  #import <FBSDKShareKit/FBSDKMessageDialog.h>
  #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>

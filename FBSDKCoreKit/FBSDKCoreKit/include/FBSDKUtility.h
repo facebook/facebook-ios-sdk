@@ -94,7 +94,7 @@ NS_SWIFT_NAME(sha256Hash(_:));
 /**
  Returns the graphdomain stored in FBSDKAuthenticationToken
  */
-+ (NSString *)getGraphDomainFromToken;
++ (nullable NSString *)getGraphDomainFromToken;
 
 /**
  Internal Type exposed to facilitate transition to Swift.

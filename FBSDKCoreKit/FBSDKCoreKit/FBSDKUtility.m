@@ -71,7 +71,7 @@
   return [FBSDKBasicUtility SHA256Hash:input];
 }
 
-+ (NSString *)getGraphDomainFromToken
++ (nullable NSString *)getGraphDomainFromToken
 {
   return FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain;
 }
