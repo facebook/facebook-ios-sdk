@@ -16,7 +16,6 @@
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
-#import "FBSDKGameRequestDialogDelegate.h"
 #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
 #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
