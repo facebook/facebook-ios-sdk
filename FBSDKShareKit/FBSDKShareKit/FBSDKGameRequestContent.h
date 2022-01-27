@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKGameRequestURLProvider.h>
+#import <FBSDKShareKit/FBSDKGameRequestEnumerations.h>
 #import <FBSDKShareKit/FBSDKSharingValidation.h>
 
 NS_ASSUME_NONNULL_BEGIN

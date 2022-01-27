@@ -43,10 +43,4 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter) {
   FBSDKGameRequestFilterEverybody,
 } NS_SWIFT_NAME(GameRequestFilter);
 
-NS_SWIFT_NAME(GameRequestURLProvider)
-@interface FBSDKGameRequestURLProvider : NSObject
-+ (NSURL *_Nullable)createDeepLinkURLWithQueryDictionary:(NSDictionary<NSString *, id> *_Nonnull)queryDictionary;
-+ (NSString *_Nullable)filtersNameForFilters:(FBSDKGameRequestFilter)filters;
-+ (NSString *_Nullable)actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType;
-@end
 NS_ASSUME_NONNULL_END

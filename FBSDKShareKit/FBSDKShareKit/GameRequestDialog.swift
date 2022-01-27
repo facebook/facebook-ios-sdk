@@ -101,7 +101,7 @@ public final class GameRequestDialog: NSObject {
     }
 
     let contentDictionary = convertGameRequestContentToDictionaryV2()
-    guard let url = GameRequestURLProvider.createDeepLinkURL(withQueryDictionary: contentDictionary) else { return }
+    guard let url = GameRequestURLProvider.createDeepLinkURL(queryDictionary: contentDictionary) else { return }
 
     isAwaitingResult = true
     BridgeAPI.shared.open(url, sender: self) { [weak self] success, potentialError in
@@ -238,7 +238,7 @@ public final class GameRequestDialog: NSObject {
     if let data = content.data {
       parameters["data"] = data
     }
-    if let filtersName = GameRequestURLProvider.filtersName(forFilters: content.filters) {
+    if let filtersName = GameRequestURLProvider.filtersName(for: content.filters) {
       parameters["filters"] = filtersName
     }
 
@@ -260,7 +260,7 @@ public final class GameRequestDialog: NSObject {
     if let data = content.data {
       parameters["data"] = data
     }
-    if let filtersName = GameRequestURLProvider.filtersName(forFilters: content.filters) {
+    if let filtersName = GameRequestURLProvider.filtersName(for: content.filters) {
       parameters["options"] = filtersName
     }
 
