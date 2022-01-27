@@ -9,4 +9,3 @@
 #import <Foundation/Foundation.h>
 
 id _FBSDKCastToClassOrNilUnsafeInternal(id object, Class klass);
-id _FBSDKCastToProtocolOrNilUnsafeInternal(id object, Protocol *protocol);

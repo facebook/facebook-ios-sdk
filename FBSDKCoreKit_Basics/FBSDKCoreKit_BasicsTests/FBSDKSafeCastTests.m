@@ -10,19 +10,13 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-@protocol ProtocolA <NSObject>
-@end
-
-@protocol ProtocolB <NSObject>
-@end
-
-@interface ClassA : NSObject <ProtocolA>
+@interface ClassA : NSObject
 @end
 
 @implementation ClassA
 @end
 
-@interface ClassB : NSObject <ProtocolB>
+@interface ClassB : NSObject
 @end
 
 @implementation ClassB
@@ -62,36 +56,6 @@
     _FBSDKCastToClassOrNilUnsafeInternal(idA, ClassA.class),
     idA,
     "Casting from an unknown class to a matching class should return the same instance of that class"
-  );
-}
-
-- (void)testCastingToNonConformingProtocol
-{
-  id<ProtocolA> a = [ClassA new];
-  XCTAssertNil(
-    _FBSDKCastToProtocolOrNilUnsafeInternal(a, @protocol(ProtocolB)),
-    "Should not return an object if it does not conform to the stated protocol"
-  );
-
-  id idA = a;
-  XCTAssertNil(
-    _FBSDKCastToProtocolOrNilUnsafeInternal(idA, @protocol(ProtocolB)),
-    "Should not return an object if it does not conform to the stated protocol"
-  );
-}
-
-- (void)testCastingToConformingMatchingProtocol
-{
-  ClassA *a = [ClassA new];
-  XCTAssertNil(
-    _FBSDKCastToProtocolOrNilUnsafeInternal(a, @protocol(ProtocolB)),
-    "Should return an object if it conforms to the stated protocol"
-  );
-
-  id idA = a;
-  XCTAssertNil(
-    _FBSDKCastToProtocolOrNilUnsafeInternal(idA, @protocol(ProtocolB)),
-    "Should return an object if it conforms to the stated protocol"
   );
 }
 

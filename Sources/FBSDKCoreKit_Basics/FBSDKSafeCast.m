@@ -12,8 +12,3 @@ id _FBSDKCastToClassOrNilUnsafeInternal(id object, Class klass)
 {
   return [(NSObject *)object isKindOfClass:klass] ? object : nil;
 }
-
-id _FBSDKCastToProtocolOrNilUnsafeInternal(id object, Protocol *protocol)
-{
-  return [(NSObject *)object conformsToProtocol:protocol] ? object : nil;
-}

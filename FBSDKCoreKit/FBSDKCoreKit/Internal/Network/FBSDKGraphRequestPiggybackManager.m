@@ -38,7 +38,11 @@
 {
   if (self.settings.appID.length > 0) {
     BOOL safeForPiggyback = YES;
-    id<_FBSDKGraphRequestConnecting> internalConnection = _FBSDKCastToProtocolOrNilUnsafeInternal(connection, @protocol(_FBSDKGraphRequestConnecting));
+
+    id<_FBSDKGraphRequestConnecting> internalConnection;
+    if ([((NSObject *)connection) conformsToProtocol:@protocol(_FBSDKGraphRequestConnecting)]) {
+      internalConnection = (id<_FBSDKGraphRequestConnecting>)connection;
+    }
 
     for (FBSDKGraphRequestMetadata *metadata in internalConnection.requests) {
       if (![self isRequestSafeForPiggyback:metadata.request]) {
