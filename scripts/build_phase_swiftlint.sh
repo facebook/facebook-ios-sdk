@@ -7,7 +7,8 @@
 
 # If $PROJECT_DIR is set, this is running from within Xcode from a project subfolder
 if [ -n "$PROJECT_DIR" ]; then
-    cd .. # cd one level up to find the .swiftlint.yml file
+  cd .. # cd one level up to find the .swiftlint.yml file
+  PROJECT_DIR_NAME=${PROJECT_DIR##*/} # ex FBSDKShareKit
 fi
 
 # Add paths for Hg since Xcode build phases do not source the user shell profile
@@ -71,14 +72,22 @@ fi
 
 # Run SwiftFormat
 if [ -n "$SWIFTFORMAT_PATH" ]; then
-  $SWIFTFORMAT_PATH --lint "${LINTABLE_FILES[@]}"
+  if [ -n "$PROJECT_DIR_NAME" ]; then # if within Xcode filter by kit name
+    $SWIFTFORMAT_PATH --lint "${LINTABLE_FILES[@]}" 2>&1 | grep "$PROJECT_DIR_NAME" || true
+  else
+    $SWIFTFORMAT_PATH --lint "${LINTABLE_FILES[@]}"
+  fi
 else
   echo "warning: SwiftFormat not installed. Install with 'brew install swiftformat' or from https://github.com/nicklockwood/SwiftFormat"
 fi
 
 # Run SwiftLint
 if [ -n "$SWIFTLINT_PATH" ]; then
-  $SWIFTLINT_PATH lint "${LINTABLE_FILES[@]}"
+  if [ -n "$PROJECT_DIR_NAME" ]; then # if within Xcode filter by kit name
+    $SWIFTLINT_PATH lint "${LINTABLE_FILES[@]}" | grep "$PROJECT_DIR_NAME" || true
+  else
+    $SWIFTLINT_PATH lint "${LINTABLE_FILES[@]}"
+  fi
 else
   echo "warning: SwiftLint not installed, Install with 'brew install swiftlint' or from https://github.com/realm/SwiftLint"
 fi
