@@ -33,7 +33,6 @@ class TestViewControllerTransitionCoordinator: NSObject, UIViewControllerTransit
     return true
   }
 
-  // swiftlint:disable:next identifier_name
   var capturedAnimateAlongsideTransitionCompletion: ((UIViewControllerTransitionCoordinatorContext) -> Void)?
 
   func animateAlongsideTransition(

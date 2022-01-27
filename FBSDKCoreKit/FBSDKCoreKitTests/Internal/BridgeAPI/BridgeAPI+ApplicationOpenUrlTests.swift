@@ -8,7 +8,7 @@
 
 import Foundation
 
-// swiftlint:disable identifier_name function_parameter_count line_length
+// swiftlint:disable function_parameter_count line_length
 
 extension BridgeAPITests {
 

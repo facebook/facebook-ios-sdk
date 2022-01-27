@@ -11,7 +11,7 @@ import XCTest
 class EventDeactivationTests: XCTestCase {
 
   enum Keys {
-    static let ui = AppEvents.ParameterName("_ui") // swiftlint:disable:this identifier_name
+    static let ui = AppEvents.ParameterName("_ui")
     static let logTime = AppEvents.ParameterName("_logTime")
     static let sessionID = AppEvents.ParameterName("_session_id")
     static let launchSource = AppEvents.ParameterName("fb_mobile_launch_source")

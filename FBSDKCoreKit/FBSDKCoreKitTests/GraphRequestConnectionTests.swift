@@ -12,7 +12,7 @@ import XCTest
 class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
 
   let appID = "appid"
-  var didInvokeDelegateRequestConnectionDidSendBodyData = false // swiftlint:disable:this identifier_name
+  var didInvokeDelegateRequestConnectionDidSendBodyData = false
 
   // swiftlint:disable implicitly_unwrapped_optional force_unwrapping line_length
   let sampleUrl = URL(string: "https://example.com")!
@@ -33,7 +33,7 @@ class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
   var errorFactory: TestErrorFactory!
   var metadata: GraphRequestMetadata!
   var piggybackManager: TestGraphRequestPiggybackManager!
-  // swiftlint:enable implicitly_unwrapped_optional force_unwrapping identifier_name line_length
+  // swiftlint:enable implicitly_unwrapped_optional force_unwrapping line_length
 
   func createSampleMetadata() -> GraphRequestMetadata {
     GraphRequestMetadata(

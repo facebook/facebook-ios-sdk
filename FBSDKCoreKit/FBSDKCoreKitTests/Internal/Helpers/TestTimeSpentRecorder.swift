@@ -18,7 +18,7 @@ class TestTimeSpentRecorder: NSObject, SourceApplicationTracking, TimeSpentRecor
   var capturedSetSourceApplicationURL: URL?
   var capturedSetSourceApplicationFromAppLink: String?
   var capturedIsFromAppLink = false
-  var wasRegisterAutoResetSourceApplicationCalled = false // swiftlint:disable:this identifier_name
+  var wasRegisterAutoResetSourceApplicationCalled = false
 
   func suspend() {
     suspendWasCalled = true

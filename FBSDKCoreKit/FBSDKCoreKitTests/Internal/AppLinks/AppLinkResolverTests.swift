@@ -19,7 +19,7 @@ class AppLinkResolverTests: XCTestCase {
     static let iPad = "ipad"
     static let ios = "ios"
     static let android = "android"
-    static let id = "id" // swiftlint:disable:this identifier_name
+    static let id = "id"
     static let appName = "app_name"
     static let appStoreId = "app_store_id"
     static let package = "package"

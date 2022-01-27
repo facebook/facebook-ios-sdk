@@ -11,7 +11,6 @@ import Foundation
 @objcMembers
 public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isEventDataUsageLimited = false
-  // swiftlint:disable:next identifier_name
   public var shouldUseCachedValuesForExpensiveMetadata = false
   public var isAdvertiserIDCollectionEnabled = false
   public var appID: String?

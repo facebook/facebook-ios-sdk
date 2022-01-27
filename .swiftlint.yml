@@ -12,8 +12,8 @@ file_header:
     licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
 
 identifier_name:
-  excluded:
-    - ok
+  max_length: 56 # default 40
+  excluded: [ui, EU, id, to]
 large_tuple: 3
 line_length:
   warning: 120

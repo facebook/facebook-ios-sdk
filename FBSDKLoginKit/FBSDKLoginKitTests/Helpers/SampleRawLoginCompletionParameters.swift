@@ -8,7 +8,7 @@
 
 import Foundation
 
-// swiftlint:disable identifier_name line_length
+// swiftlint:disable line_length
 enum SampleRawLoginCompletionParameters {
 
   static let secondsInDay = 60 * 60 * 24

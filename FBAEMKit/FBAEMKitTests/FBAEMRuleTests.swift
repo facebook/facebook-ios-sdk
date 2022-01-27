@@ -30,7 +30,7 @@ class FBAEMRuleTests: XCTestCase {
     static let activateApp = "fb_activate_app"
     static let testEvent = "fb_test_event"
     static let USD = "USD"
-    static let EU = "EU" // swiftlint:disable:this identifier_name
+    static let EU = "EU"
     static let JPY = "JPY"
   }
 
