@@ -209,20 +209,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 #pragma mark - Public Methods
 
-+ (void)logEvent:(FBSDKAppEventName)eventName
-{
-  [self.shared logEvent:eventName];
-}
-
 - (void)logEvent:(FBSDKAppEventName)eventName
 {
   [self logEvent:eventName parameters:@{}];
-}
-
-+ (void)logEvent:(FBSDKAppEventName)eventName
-      valueToSum:(double)valueToSum
-{
-  [self.shared logEvent:eventName valueToSum:valueToSum];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -231,12 +220,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
   [self logEvent:eventName
       valueToSum:valueToSum
       parameters:@{}];
-}
-
-+ (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-{
-  [self.shared logEvent:eventName parameters:parameters];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -248,15 +231,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
      accessToken:nil];
 }
 
-+ (void)logEvent:(FBSDKAppEventName)eventName
-      valueToSum:(double)valueToSum
-      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-{
-  [self.shared logEvent:eventName
-             valueToSum:valueToSum
-             parameters:parameters];
-}
-
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
@@ -265,17 +239,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
       valueToSum:@(valueToSum)
       parameters:parameters
      accessToken:nil];
-}
-
-+ (void)logEvent:(FBSDKAppEventName)eventName
-      valueToSum:(NSNumber *)valueToSum
-      parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-     accessToken:(FBSDKAccessToken *)accessToken
-{
-  [self.shared logEvent:eventName
-             valueToSum:valueToSum
-             parameters:parameters
-            accessToken:accessToken];
 }
 
 - (void)logEvent:(FBSDKAppEventName)eventName
@@ -290,29 +253,12 @@ static BOOL g_explicitEventsLoggedYet = NO;
           accessToken:accessToken];
 }
 
-+ (void)logPurchase:(double)purchaseAmount
-           currency:(NSString *)currency
-{
-  [self.shared logPurchase:purchaseAmount
-                  currency:currency
-                parameters:@{}];
-}
-
 - (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
 {
   [self logPurchase:purchaseAmount
            currency:currency
          parameters:@{}];
-}
-
-+ (void)logPurchase:(double)purchaseAmount
-           currency:(NSString *)currency
-         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-{
-  [self.shared logPurchase:purchaseAmount
-                  currency:currency
-                parameters:parameters];
 }
 
 - (void)logPurchase:(double)purchaseAmount
@@ -323,17 +269,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
            currency:currency
          parameters:parameters
         accessToken:nil];
-}
-
-+ (void)logPurchase:(double)purchaseAmount
-           currency:(NSString *)currency
-         parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-        accessToken:(nullable FBSDKAccessToken *)accessToken
-{
-  [self.shared logPurchase:purchaseAmount
-                  currency:currency
-                parameters:parameters
-               accessToken:accessToken];
 }
 
 - (void)logPurchase:(double)purchaseAmount
@@ -369,19 +304,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
  * Push Notifications Logging
  */
 
-+ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
-{
-  [self.shared logPushNotificationOpen:payload action:@""];
-}
-
 - (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
 {
   [self logPushNotificationOpen:payload action:@""];
-}
-
-+ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
-{
-  [self.shared logPushNotificationOpen:payload action:action];
 }
 
 - (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
@@ -405,35 +330,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }
 
   [self logEvent:FBSDKAppEventNamePushOpened parameters:parameters];
-}
-
-+ (void)logProductItem:(NSString *)itemID
-          availability:(FBSDKProductAvailability)availability
-             condition:(FBSDKProductCondition)condition
-           description:(NSString *)description
-             imageLink:(NSString *)imageLink
-                  link:(NSString *)link
-                 title:(NSString *)title
-           priceAmount:(double)priceAmount
-              currency:(NSString *)currency
-                  gtin:(nullable NSString *)gtin
-                   mpn:(nullable NSString *)mpn
-                 brand:(nullable NSString *)brand
-            parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-{
-  [self.shared logProductItem:itemID
-                 availability:availability
-                    condition:condition
-                  description:description
-                    imageLink:imageLink
-                         link:link
-                        title:title
-                  priceAmount:priceAmount
-                     currency:currency
-                         gtin:gtin
-                          mpn:mpn
-                        brand:brand
-                   parameters:parameters];
 }
 
 - (void)logProductItem:(NSString *)itemID
@@ -539,11 +435,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
       parameters:dict];
 }
 
-+ (void)activateApp
-{
-  [self.shared activateApp];
-}
-
 - (void)activateApp
 {
   [self validateConfiguration];
@@ -561,11 +452,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
   [self.timeSpentRecorder restore:YES];
 }
 
-+ (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken
-{
-  [self.shared setPushNotificationsDeviceToken:deviceToken];
-}
-
 - (void)setPushNotificationsDeviceToken:(nullable NSData *)deviceToken
 {
   [self validateConfiguration];
@@ -574,11 +460,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
   if (deviceTokenString) {
     self.pushNotificationsDeviceTokenString = deviceTokenString;
   }
-}
-
-+ (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
-{
-  [self.shared setPushNotificationsDeviceTokenString:deviceTokenString];
 }
 
 - (void)setPushNotificationsDeviceTokenString:(nullable NSString *)deviceTokenString
@@ -604,26 +485,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }
 }
 
-+ (FBSDKAppEventsFlushBehavior)flushBehavior
-{
-  return self.shared.flushBehavior;
-}
-
-+ (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-{
-  self.shared.flushBehavior = flushBehavior;
-}
-
-+ (nullable NSString *)loggingOverrideAppID
-{
-  return self.shared.loggingOverrideAppID;
-}
-
-+ (void)setLoggingOverrideAppID:(nullable NSString *)appID
-{
-  self.shared.loggingOverrideAppID = appID;
-}
-
 - (nullable NSString *)loggingOverrideAppID
 {
   return g_overrideAppID;
@@ -642,20 +503,10 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }
 }
 
-+ (void)flush
-{
-  [self.shared flush];
-}
-
 - (void)flush
 {
   [self validateConfiguration];
   [self flushForReason:FBSDKAppEventsFlushReasonExplicit];
-}
-
-+ (nullable NSString *)userID
-{
-  return self.shared.userID;
 }
 
 - (nullable NSString *)userID
@@ -664,44 +515,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
   return [_userID copy];
 }
 
-+ (void)setUserID:(nullable NSString *)userID
-{
-  self.shared.userID = userID;
-}
-
 - (void)setUserID:(nullable NSString *)userID
 {
   [self validateConfiguration];
   _userID = [userID copy];
   [self.primaryDataStore setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
-}
-
-+ (void)clearUserID
-{
-  self.shared.userID = nil;
-}
-
-+ (void)setUserEmail:(nullable NSString *)email
-           firstName:(nullable NSString *)firstName
-            lastName:(nullable NSString *)lastName
-               phone:(nullable NSString *)phone
-         dateOfBirth:(nullable NSString *)dateOfBirth
-              gender:(nullable NSString *)gender
-                city:(nullable NSString *)city
-               state:(nullable NSString *)state
-                 zip:(nullable NSString *)zip
-             country:(nullable NSString *)country
-{
-  [self.shared setUserEmail:email
-                  firstName:firstName
-                   lastName:lastName
-                      phone:phone
-                dateOfBirth:dateOfBirth
-                     gender:gender
-                       city:city
-                      state:state
-                        zip:zip
-                    country:country];
 }
 
 - (void)setUserEmail:(nullable NSString *)email
@@ -728,30 +546,14 @@ static BOOL g_explicitEventsLoggedYet = NO;
                         externalId:nil];
 }
 
-+ (NSString *)getUserData
-{
-  return [self.shared getUserData];
-}
-
 - (nullable NSString *)getUserData
 {
   return [self.userDataStore getUserData];
 }
 
-+ (void)clearUserData
-{
-  [self.shared clearUserData];
-}
-
 - (void)clearUserData
 {
   [self.userDataStore clearUserData];
-}
-
-+ (void)setUserData:(nullable NSString *)data
-            forType:(FBSDKAppEventUserDataType)type
-{
-  [self.shared setUserData:data forType:type];
 }
 
 - (void)setUserData:(nullable NSString *)data
@@ -760,19 +562,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
   [self.userDataStore setUserData:data forType:type];
 }
 
-+ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
-{
-  [self.shared clearUserDataForType:type];
-}
-
 - (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
 {
   [self.userDataStore clearUserDataForType:type];
-}
-
-+ (NSString *)anonymousID
-{
-  return self.shared.anonymousID;
 }
 
 - (NSString *)anonymousID
@@ -781,11 +573,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
 }
 
 #if !TARGET_OS_TV
-
-+ (void)augmentHybridWKWebView:(WKWebView *)webView
-{
-  [self.shared augmentHybridWebView:webView];
-}
 
 - (void)augmentHybridWebView:(WKWebView *)webView
 {
@@ -816,19 +603,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 #endif
 
-+ (void)setIsUnityInit:(BOOL)isUnityInitialized
-{
-  [self.shared setIsUnityInitialized:isUnityInitialized];
-}
-
 - (void)setIsUnityInitialized:(BOOL)isUnityInitialized
 {
   self._isUnityInitialized = isUnityInitialized;
-}
-
-+ (void)sendEventBindingsToUnity
-{
-  [self.shared sendEventBindingsToUnity];
 }
 
 #pragma clang diagnostic push
@@ -1610,11 +1387,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
 }
 
 #pragma mark - Custom Audience
-
-+ (nullable id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
-{
-  return [self.shared requestForCustomAudienceThirdPartyIDWithAccessToken:accessToken];
-}
 
 - (nullable id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(nullable FBSDKAccessToken *)accessToken
 {

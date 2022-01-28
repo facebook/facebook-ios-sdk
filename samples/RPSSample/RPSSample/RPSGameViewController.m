@@ -666,8 +666,8 @@ typedef void (^RPSBlock)(void);
                                 kResults[lastResult],
                                 transitionalWord,
                                 callType[lastPlayerCall + 1]];
-    [FBSDKAppEvents logEvent:@"Throw Based on Last Result"
-                  parameters:@{callType[playerCall + 1] : previousResult}];
+    [FBSDKAppEvents.shared logEvent:@"Throw Based on Last Result"
+                         parameters:@{callType[playerCall + 1] : previousResult}];
   }
 }
 
@@ -675,9 +675,9 @@ typedef void (^RPSBlock)(void);
 {
   // log the user's choice and the respective result
   NSString *playerChoice = callType[playerCall + 1];
-  [FBSDKAppEvents logEvent:@"Round End"
-                valueToSum:timeTaken
-                parameters:@{@"roundResult" : kResults[result], @"playerChoice" : playerChoice}];
+  [FBSDKAppEvents.shared logEvent:@"Round End"
+                       valueToSum:timeTaken
+                       parameters:@{@"roundResult" : kResults[result], @"playerChoice" : playerChoice}];
 }
 
 - (void)logTimeTaken:(NSTimeInterval)timeTaken
@@ -688,9 +688,9 @@ typedef void (^RPSBlock)(void);
       : timeTaken < 1.5f ? @"1.0s <= t < 1.5s"
         : timeTaken < 2.0f ? @"1.5s <= t < 2.0s"
           : timeTaken < 2.5f ? @"2.0s <= t < 2.5s" : @" >= 2.5s");
-  [FBSDKAppEvents logEvent:@"Time Taken"
-                valueToSum:timeTaken
-                parameters:@{@"Time Taken" : timeTakenStr}];
+  [FBSDKAppEvents.shared logEvent:@"Time Taken"
+                       valueToSum:timeTaken
+                       parameters:@{@"Time Taken" : timeTakenStr}];
 }
 
 @end

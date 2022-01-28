@@ -27,6 +27,38 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `FBSDKAppLinkResolverRequestBuilder`
 - Removed deprecated URL schemes `.facebookApp`, `.facebookShareExtension` and `.masqueradePlayer`; use `.facebookAPI` instead.
 
+#### AppEvents deprecations
+TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)
+
+- Removed deprecated `AppEvents.flushBehavior` (use `AppEvents.shared.flushBehavior` instead)
+- Removed deprecated `AppEvents.loggingOverrideAppID` (use `AppEvents.shared.loggingOverrideAppID` instead)
+- Removed deprecated `AppEvents.userID` (use `AppEvents.shared.userID` instead)
+- Removed deprecated `AppEvents.anonymousID` (use `AppEvents.shared.anonymousID` instead)
+- Removed deprecated `AppEvents.logEvent(_:)` (use `AppEvents.shared.logEvent(_:)` instead)
+- Removed deprecated `AppEvents.logEvent(_:valueToSum:)` (use `AppEvents.shared.logEvent(_:valueToSum:)` instead)
+- Removed deprecated `AppEvents.logEvent(_:parameters:)` (use `AppEvents.shared.logEvent(_:parameters:)` instead)
+- Removed deprecated `AppEvents.logEvent(_:valueToSum:parameters:)` (use `AppEvents.shared.logEvent(_:valueToSum:parameters:)` instead)
+- Removed deprecated `AppEvents.logEvent(_:valueToSum:parameters:accessToken:)` (use `AppEvents.shared.logEvent(_:valueToSum:parameters:accessToken:)` instead)
+- Removed deprecated `AppEvents.logPurchase(_:currency:)` (use `AppEvents.shared.logPurchase(amount:currency:)` instead)
+- Removed deprecated `AppEvents.logPurchase(_:currency:parameters:)` (use `AppEvents.shared.logPurchase(amount:currency:parameters:)` instead)
+- Removed deprecated `AppEvents.logPurchase(_:currency:parameters:accessToken:)` (use `AppEvents.shared.logPurchase(amount:currency:parameters:accessToken:)` instead)
+- Removed deprecated `AppEvents.logPushNotificationOpen(_:)` (use `AppEvents.shared.logPushNotificationOpen(payload:)` instead)
+- Removed deprecated `AppEvents.logPushNotificationOpen(_:action:)` (use `AppEvents.shared.logPushNotificationOpen(payload:action:)` instead)
+- Removed deprecated `AppEvents.logProductItem(_:availability:condition:description:imageLink:link:title:priceAmount:currency:gtin:mpn:brand:parameters:)` (use `AppEvents.shared.logProductItem(id:availability:condition:description:imageLink:link:title:priceAmount:currency:gtin:mpn:brand:parameters:)` instead)
+- Removed deprecated `AppEvents.setPushNotificationsDeviceToken(_:)` (use `AppEvents.shared.setPushNotificationsDeviceToken(_:)` instead)
+- Removed deprecated `AppEvents.setPushNotificationsDeviceToken(_:)` (use `AppEvents.shared.setPushNotificationsDeviceToken(_:)` instead)
+- Removed deprecated `AppEvents.flush()` (use `AppEvents.shared.flush()` instead)
+- Removed deprecated `AppEvents.requestForCustomAudienceThirdPartyID(with:)` (use `AppEvents.shared.requestForCustomAudienceThirdPartyID(accessToken:)` instead)
+- Removed deprecated `AppEvents.clearUserID` is deprecated and will be removed in the next major release, please set `AppEvents.shared.userID` to `nil` instead)
+- Removed deprecated `AppEvents.augmentHybridWKWebView(_:)` (use `AppEvents.shared.augmentHybridWebView(_:)` instead)
+- Removed deprecated `AppEvents.setIsUnityInit(_:)` (use `AppEvents.shared.setIsUnityInitialized(_:)` instead)
+- Removed deprecated `AppEvents.sendEventBindingsToUnity()` (use `AppEvents.shared.sendEventBindingsToUnity()` instead)
+- Removed deprecated `AppEvents.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)` (use `AppEvents.shared.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)`
+- Removed deprecated `AppEvents.clearUserData()` (use `AppEvents.shared.clearUserData()`
+- Removed deprecated `AppEvents.getUserData()` (use `AppEvents.shared.getUserData()`
+- Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)`
+- Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)`
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
 
 ## 12.3.1

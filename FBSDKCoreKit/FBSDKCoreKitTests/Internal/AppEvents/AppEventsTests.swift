@@ -687,7 +687,6 @@ class AppEventsTests: XCTestCase {
       { self.appEvents.augmentHybridWebView(WKWebView()) },
       { self.appEvents.sendEventBindingsToUnity() },
       { self.appEvents.activateApp() },
-      { AppEvents.clearUserID() },
       { _ = self.appEvents.userID },
       { self.appEvents.userID = foo }
     ]
