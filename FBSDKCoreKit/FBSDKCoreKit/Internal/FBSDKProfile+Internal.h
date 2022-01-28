@@ -9,14 +9,9 @@
 #if !TARGET_OS_TV
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#if FBSDK_SWIFT_PACKAGE
- #import "FBSDKGraphRequest.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
