@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -14,7 +16,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkResolverRequestBuilder (Internal) <FBSDKAppLinkResolverRequestBuilding>
+/**
+ Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
+ */
+NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
+@interface FBSDKAppLinkResolverRequestBuilder : NSObject <FBSDKAppLinkResolverRequestBuilding>
+
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

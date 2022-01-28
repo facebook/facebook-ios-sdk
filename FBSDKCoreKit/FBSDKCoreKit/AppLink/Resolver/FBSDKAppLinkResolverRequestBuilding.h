@@ -10,14 +10,18 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppLinkResolverRequestBuilding)
 @protocol FBSDKAppLinkResolverRequestBuilding
 
-- (id<FBSDKGraphRequest> _Nonnull)requestForURLs:(NSArray<NSURL *> *_Nonnull)urls;
-- (NSString *_Nullable)getIdiomSpecificField;
+- (id<FBSDKGraphRequest>)requestForURLs:(NSArray<NSURL *> *)urls;
+- (nullable NSString *)getIdiomSpecificField;
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

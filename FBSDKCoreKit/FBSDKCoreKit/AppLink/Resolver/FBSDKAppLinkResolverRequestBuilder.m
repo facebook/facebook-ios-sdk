@@ -8,9 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import "FBSDKAppLinkResolverRequestBuilder.h"
+
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKGraphRequest+Internal.h"

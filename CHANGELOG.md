@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed `SharingScheme` protocol from ShareKit
 - Removed deprecated `logInWithURL:handler` from `FBSDKLoginManager`
 - Removed deprecated `init` and `new` methods from `AppInviteContent`
+- Removed deprecated `FBSDKAppLinkResolverRequestBuilder`
 - Removed deprecated URL schemes `.facebookApp`, `.facebookShareExtension` and `.masqueradePlayer`; use `.facebookAPI` instead.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)

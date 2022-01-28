@@ -82,7 +82,6 @@
  #import <FBSDKCoreKit/FBSDKAppLink.h>
  #import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
  #import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
- #import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
  #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
  #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
  #import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
