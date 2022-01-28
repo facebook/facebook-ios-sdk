@@ -67,6 +67,9 @@ custom_rules:
   swiftlint_disable_without_this_or_next:
     regex: "// swiftlint:disable (?!implicitly_unwrapped_optional|force_unwrapping)"
     message: "Prefer using swiftlint:disable:this or swiftlint:disable:next over swiftlint:disable"
+  one_let_per_line:
+    regex: " let [^\n]*?, let "
+    message: "Place each let statement and condition on its own line"
 
 only_rules:
   - array_init

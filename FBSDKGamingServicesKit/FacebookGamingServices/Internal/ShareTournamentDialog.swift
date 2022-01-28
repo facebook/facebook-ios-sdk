@@ -138,7 +138,9 @@ public class ShareTournamentDialog: NSObject, URLOpening {
   }
 
   func isTournamentURL(url: URL) -> Bool {
-    if let scheme = url.scheme, let host = url.host, let appID = Settings.shared.appID {
+    if let scheme = url.scheme,
+       let host = url.host,
+       let appID = Settings.shared.appID {
       return scheme.hasPrefix("fb\(appID)") && host.elementsEqual("instant_tournament")
     }
     return false

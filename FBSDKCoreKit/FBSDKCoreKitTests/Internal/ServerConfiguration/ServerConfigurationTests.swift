@@ -2082,7 +2082,8 @@ class ServerConfigurationTests: XCTestCase {
     file: StaticString = #filePath,
     line: UInt = #line
   ) {
-    if let lhs = lhs, let rhs = rhs {
+    if let lhs = lhs,
+       let rhs = rhs {
       let dict1 = NSDictionary(dictionary: lhs)
       let dict2 = NSDictionary(dictionary: rhs)
       XCTAssertEqual(dict1, dict2, message(), file: file, line: line)

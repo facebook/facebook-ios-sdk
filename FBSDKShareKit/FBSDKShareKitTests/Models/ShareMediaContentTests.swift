@@ -16,9 +16,11 @@ class ShareMediaContentTests: XCTestCase {
     let media = ShareModelTestUtility.media
 
     for (item1, item2) in zip(media, mediaContentMedia) {
-      if let photo1 = item1 as? SharePhoto, let photo2 = item2 as? SharePhoto {
+      if let photo1 = item1 as? SharePhoto,
+         let photo2 = item2 as? SharePhoto {
         XCTAssertEqual(photo1, photo2)
-      } else if let video1 = item1 as? ShareVideo, let video2 = item2 as? ShareVideo {
+      } else if let video1 = item1 as? ShareVideo,
+                let video2 = item2 as? ShareVideo {
         XCTAssertEqual(video1, video2)
       } else {
         XCTFail("Unexpected type implementing the ShareMedia protocol. Item1: \(item1), Item2: \(item2)")
