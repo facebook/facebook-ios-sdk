@@ -71,21 +71,6 @@ class BridgeAPIRequestTests: XCTestCase {
     )
   }
 
-  func testUnsupportedWebURL() {
-    XCTAssertNil(
-      makeRequest(protocolType: .web, scheme: .facebookApp),
-      "BridgeAPIRequests should only be created for valid combinations of protocol type and scheme"
-    )
-  }
-
-  func testUnopenableURL() {
-    internalURLOpener.canOpenURL = false
-    XCTAssertNil(
-      makeRequest(protocolType: .native, scheme: .facebookApp),
-      "BridgeAPIRequests should only be created for openable URLs"
-    )
-  }
-
   func testOpenableURL() {
     XCTAssertNotNil(
       makeRequest(protocolType: .native, scheme: .facebookAPI),

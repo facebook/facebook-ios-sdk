@@ -10,10 +10,8 @@ import XCTest
 
 final class URLSchemeTests: XCTestCase {
   func testSchemeRawValues() {
-    XCTAssertEqual(URLScheme.facebookApp.rawValue, "fbauth2")
     XCTAssertEqual(URLScheme.facebookAPI.rawValue, "fbapi")
     XCTAssertEqual(URLScheme.messengerApp.rawValue, "fb-messenger-share-api")
-    XCTAssertEqual(URLScheme.masqueradePlayer.rawValue, "msqrdplayer")
     XCTAssertEqual(URLScheme.https.rawValue, "https")
     XCTAssertEqual(URLScheme.http.rawValue, "http")
     XCTAssertEqual(URLScheme.web.rawValue, "web")

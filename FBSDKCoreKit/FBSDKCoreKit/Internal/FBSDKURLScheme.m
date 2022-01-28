@@ -8,11 +8,8 @@
 
 #import "FBSDKURLScheme.h"
 
-FBSDKURLScheme const FBSDKURLSchemeFacebookApp = @"fbauth2";
 FBSDKURLScheme const FBSDKURLSchemeFacebookAPI = @"fbapi";
-FBSDKURLScheme const FBSDKURLSchemeFacebookShareExtension = @"fbshareextension";
 FBSDKURLScheme const FBSDKURLSchemeMessengerApp = @"fb-messenger-share-api";
-FBSDKURLScheme const FBSDKURLSchemeMasqueradePlayer = @"msqrdplayer";
 FBSDKURLScheme const FBSDKURLSchemeHTTPS = @"https";
 FBSDKURLScheme const FBSDKURLSchemeHTTP = @"http";
 FBSDKURLScheme const FBSDKURLSchemeWeb = @"web";
