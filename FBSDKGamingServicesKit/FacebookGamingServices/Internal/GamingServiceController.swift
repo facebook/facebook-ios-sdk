@@ -68,7 +68,7 @@ class GamingServiceController: NSObject {
   }
 }
 
-extension GamingServiceController: _GamingServiceControllerProtocol {
+extension GamingServiceController: GamingServiceControllerProtocol {
   public func call(withArgument argument: String?) {
     guard
       let argument = argument,

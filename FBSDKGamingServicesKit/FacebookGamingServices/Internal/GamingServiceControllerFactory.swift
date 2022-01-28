@@ -13,7 +13,7 @@ final class GamingServiceControllerFactory: GamingServiceControllerCreating {
     serviceType: _GamingServiceType,
     pendingResult: [String: Any]?,
     completion: @escaping GamingServiceResultCompletion
-  ) -> _GamingServiceControllerProtocol {
+  ) -> GamingServiceControllerProtocol {
     GamingServiceController(
       serviceType: serviceType,
       pendingResult: pendingResult ?? [:],

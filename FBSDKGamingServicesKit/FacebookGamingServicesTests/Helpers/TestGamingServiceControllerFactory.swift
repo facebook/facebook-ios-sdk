@@ -10,7 +10,7 @@
 import Foundation
 
 @objcMembers
-class TestGamingServiceController: NSObject, _GamingServiceControllerProtocol {
+final class TestGamingServiceController: GamingServiceControllerProtocol {
   var capturedArgument: String?
 
   func call(withArgument argument: String?) {
@@ -29,7 +29,7 @@ class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreat
     serviceType: _GamingServiceType,
     pendingResult: [String: Any]?,
     completion: @escaping GamingServiceResultCompletion
-  ) -> _GamingServiceControllerProtocol {
+  ) -> GamingServiceControllerProtocol {
     capturedServiceType = serviceType
     capturedCompletion = completion
     capturedPendingResult = pendingResult
