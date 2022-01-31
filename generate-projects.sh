@@ -12,9 +12,13 @@ YELLOW='\033[1;33m'
 
 pgrep -f '/Applications/Xcode.*\.app/Contents/MacOS/Xcode' > /dev/null
 if [ $? -eq 0 ]; then
-    XCODE_WAS_OPEN="true"
-    echo "⚠️  ${YELLOW}Closing Xcode!${RESET}"
-    killall Xcode || true
+    if [ "$1" = "--skip-closing-xcode" ]; then
+        REOPEN_XCODE=false
+    else
+        echo "⚠️  ${YELLOW}Closing Xcode!${RESET}"
+        killall Xcode || true
+        REOPEN_XCODE=true
+    fi
 fi
 
 XCODEGEN_BINARY="xcodegen"
@@ -47,7 +51,7 @@ for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit
 done
 
 
-if [ $XCODE_WAS_OPEN ]; then
+if [ $REOPEN_XCODE = true ]; then
     echo "${YELLOW}Reopening FacebookSDK.xcworkspace${RESET}"
     open FacebookSDK.xcworkspace
 fi
