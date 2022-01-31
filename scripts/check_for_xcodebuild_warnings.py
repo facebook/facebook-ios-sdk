@@ -22,7 +22,7 @@ def main():
             "xcodebuild clean build-for-testing",
             "-workspace FacebookSDK.xcworkspace",
             "-scheme BuildAllKits-Dynamic",
-            "-destination 'platform=iOS Simulator,name=iPhone 13,OS=15.0'",
+            "-destination 'platform=iOS Simulator,name=iPhone 13'",
         ]
     )
 
