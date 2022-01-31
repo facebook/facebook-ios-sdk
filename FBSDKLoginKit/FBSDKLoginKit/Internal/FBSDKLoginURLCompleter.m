@@ -83,16 +83,21 @@ static NSDateFormatter *_dateFormatter;
 
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
-  [self completeLoginWithHandler:handler nonce:nil];
+  [self completeLoginWithHandler:handler nonce:nil codeVerifier:nil];
 }
 
 /// Performs the work needed to populate the login completion parameters before they
 /// are used to determine login success, failure or cancellation.
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
                            nonce:(nullable NSString *)nonce
+                    codeVerifier:(nullable NSString *)codeVerifier
 {
-  // If there is a nonceString then it means we logged in from the app.
-  if (_parameters.nonceString) {
+  if (_parameters.code) {
+    [self exchangeCodeForTokensWithNonce:nonce
+                            codeVerifier:codeVerifier
+                                 handler:handler];
+  } else if (_parameters.nonceString) {
+    // If there is a nonceString then it means we logged in from the app.
     [self exchangeNonceForTokenWithHandler:handler authenticationNonce:nonce];
   } else if (_parameters.authenticationTokenString && !nonce) {
     // If there is no nonce then somehow an auth token string was provided
@@ -245,6 +250,61 @@ static NSDateFormatter *_dateFormatter;
                                                    }];
 
   [connection start];
+}
+
+- (void)exchangeCodeForTokensWithNonce:(nullable NSString *)nonce
+                          codeVerifier:(nullable NSString *)codeVerifier
+                               handler:(nonnull FBSDKLoginCompletionParametersBlock)handler
+{
+  NSString *code = _parameters.code ?: @"";
+  NSString *appID = _parameters.appID ?: @"";
+
+  if (code.length == 0 || appID.length == 0 || codeVerifier.length == 0) {
+    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+    _parameters.error = [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                                           userInfo:nil
+                                            message:@"Missing required parameters to exchange code for access token."
+                                    underlyingError:nil];
+    handler(_parameters);
+    return;
+  }
+
+  __block FBSDKLoginCompletionParameters *parameters = _parameters;
+  NSURL *redirectURL = [self.internalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:nil];
+  id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"oauth/access_token"
+                                                                             parameters:@{
+                                     @"client_id" : appID,
+                                     @"redirect_uri" : redirectURL.absoluteString,
+                                     @"code_verifier" : codeVerifier,
+                                     @"code" : code,
+                                   }
+                                                                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
+                                   | FBSDKGraphRequestFlagDisableErrorRecovery];
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> requestConnection,
+                                 id result,
+                                 NSError *graphRequestError) {
+                                   parameters.code = nil;
+                                   if (!graphRequestError) {
+                                     NSString *error = [FBSDKTypeUtility dictionary:result objectForKey:@"error" ofType:NSString.class];
+                                     if (!error) {
+                                       parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                                       parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
+                                       parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"id_token" ofType:NSString.class];
+                                     } else {
+                                       id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+                                       parameters.error = [errorFactory errorWithCode:FBSDKErrorInvalidArgument
+                                                                             userInfo:nil
+                                                                              message:@"Failed to exchange code for Access Token"
+                                                                      underlyingError:nil];
+                                     }
+                                   } else {
+                                     parameters.error = graphRequestError;
+                                   }
+
+                                   [self completeLoginWithHandler:handler
+                                                            nonce:nonce
+                                                     codeVerifier:nil];
+                                 }];
 }
 
 + (nullable FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims

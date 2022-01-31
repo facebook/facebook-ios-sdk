@@ -28,7 +28,8 @@ NS_SWIFT_NAME(LoginCompleting)
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-                           nonce:(nullable NSString *)nonce;
+                           nonce:(nullable NSString *)nonce
+                    codeVerifier:(nullable NSString *)codeVerifier;
 
 @end
 
