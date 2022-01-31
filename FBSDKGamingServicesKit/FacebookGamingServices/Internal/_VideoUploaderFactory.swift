@@ -16,7 +16,7 @@ import Foundation
  */
 @objcMembers
 @objc(_FBSDKVideoUploaderFactory)
-public class _VideoUploaderFactory: NSObject, _VideoUploaderCreating {
+public class _VideoUploaderFactory: NSObject, VideoUploaderCreating {
   public func create(
     videoName: String,
     videoSize: UInt,

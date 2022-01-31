@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import Foundation
 
-class TestVideoUploaderFactory: _VideoUploaderCreating {
+class TestVideoUploaderFactory: VideoUploaderCreating {
 
   var capturedVideoName: String?
   var capturedVideoSize: UInt?

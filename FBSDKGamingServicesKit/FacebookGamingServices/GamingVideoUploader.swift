@@ -18,7 +18,7 @@ public final class GamingVideoUploader: NSObject {
 
   var fileHandle: FileHandling?
   let fileHandleFactory: FileHandleCreating
-  let videoUploaderFactory: _VideoUploaderCreating
+  let videoUploaderFactory: VideoUploaderCreating
 
   var completionHandler: GamingServiceResultCompletion?
   var progressHandler: GamingServiceProgressHandler?
@@ -31,7 +31,7 @@ public final class GamingVideoUploader: NSObject {
 
   init(
     fileHandleFactory: FileHandleCreating = FileHandleFactory(),
-    videoUploaderFactory: _VideoUploaderCreating = _VideoUploaderFactory()
+    videoUploaderFactory: VideoUploaderCreating = _VideoUploaderFactory()
   ) {
     self.fileHandleFactory = fileHandleFactory
     self.videoUploaderFactory = videoUploaderFactory

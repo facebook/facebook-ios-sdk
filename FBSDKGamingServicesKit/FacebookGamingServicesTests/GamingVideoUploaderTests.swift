@@ -45,9 +45,12 @@ class GamingVideoUploaderTests: XCTestCase {
   }
 
   func testCreatingWithDependencies() {
-    XCTAssertEqual(
-      ObjectIdentifier(uploader.videoUploaderFactory),
-      ObjectIdentifier(videoUploaderFactory),
+    XCTAssertTrue(
+      uploader.fileHandleFactory is TestFileHandleFactory,
+      "Should be able to create an uploader with a custom file handle factory"
+    )
+    XCTAssertTrue(
+      uploader.videoUploaderFactory is TestVideoUploaderFactory,
       "Should be able to create an uploader with a custom video uploader factory"
     )
   }
