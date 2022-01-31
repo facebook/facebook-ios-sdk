@@ -196,8 +196,8 @@ static id<FBSDKSettings> _settings;
   NSString *className = nil;
   // parse class name only from an entry in format "-[className functionName]+offset"
   // or "+[className functionName]+offset"
-  if (items.count > 0 && ([[FBSDKTypeUtility array:items objectAtIndex:0] hasPrefix:@"+["] || [[FBSDKTypeUtility array:items objectAtIndex:0] hasPrefix:@"-["])) {
-    className = [[FBSDKTypeUtility array:items objectAtIndex:0] substringFromIndex:2];
+  if ([items.firstObject hasPrefix:@"+["] || [items.firstObject hasPrefix:@"-["]) {
+    className = [items.firstObject substringFromIndex:2];
   }
   return className;
 }

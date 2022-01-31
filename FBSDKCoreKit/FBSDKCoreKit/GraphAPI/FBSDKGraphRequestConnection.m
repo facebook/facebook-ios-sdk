@@ -610,7 +610,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [self _validateFieldsParamForGetRequests:requests];
 
   if (requests.count == 1) {
-    FBSDKGraphRequestMetadata *metadata = [FBSDKTypeUtility array:requests objectAtIndex:0];
+    FBSDKGraphRequestMetadata *metadata = requests.firstObject;
     NSURL *url = [NSURL URLWithString:[self urlStringForSingleRequest:metadata.request forBatch:NO]];
     request = [NSMutableURLRequest requestWithURL:url
                                       cachePolicy:NSURLRequestUseProtocolCachePolicy

@@ -85,8 +85,8 @@
     }
 
     NSString *msg = [NSString stringWithFormat:@"FBSDKAppEvents Persist: Read %lu event states. First state has %lu events",
-                     (unsigned long)eventsStates.count,
-                     (unsigned long)(eventsStates.count > 0 ? ((FBSDKAppEventsState *)[FBSDKTypeUtility array:eventsStates objectAtIndex:0]).events.count : 0)];
+                     eventsStates.count,
+                     ((FBSDKAppEventsState *)eventsStates.firstObject).events.count];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                            logEntry:msg];
     [self clearPersistedAppEventsStates];

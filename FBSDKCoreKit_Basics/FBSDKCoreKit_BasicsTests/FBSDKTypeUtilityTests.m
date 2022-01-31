@@ -141,7 +141,7 @@
   NSArray<NSNumber *> *array = @[@1, @2, @3];
 
   XCTAssertEqualObjects(
-    [array objectAtIndex:0],
+    array.firstObject,
     @1,
     "Should be able to retrive a valid object at the first index of an array"
   );
@@ -164,7 +164,7 @@
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
 
   XCTAssertEqualObjects(
-    [array objectAtIndex:0],
+    array.firstObject,
     @"foo",
     "Should be able to insert a valid object into an empty array"
   );
@@ -190,7 +190,7 @@
   [FBSDKTypeUtility array:array addObject:@"bar" atIndex:0];
 
   XCTAssertEqualObjects(
-    [array objectAtIndex:0],
+    array.firstObject,
     @"bar",
     "Should be able to insert a valid object at a non-empty index"
   );
@@ -201,7 +201,7 @@
   NSMutableArray *array = [NSMutableArray array];
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:5];
 
-  XCTAssertNil([FBSDKTypeUtility array:array objectAtIndex:0], "Should not be able to insert a valid object at an invalid index");
+  XCTAssertNil(array.firstObject, "Should not be able to insert a valid object at an invalid index");
 }
 
 @end

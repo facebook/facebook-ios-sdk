@@ -94,7 +94,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     return;
   }
 
-  NSString *encodedHeader = [FBSDKTypeUtility array:segments objectAtIndex:0];
+  NSString *encodedHeader = segments.firstObject;
   NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 

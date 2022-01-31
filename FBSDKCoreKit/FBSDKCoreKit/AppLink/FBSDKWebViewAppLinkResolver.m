@@ -194,7 +194,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
       continue;
     }
     NSArray<NSString *> *nameComponents = [name componentsSeparatedByString:@":"];
-    if (![[FBSDKTypeUtility array:nameComponents objectAtIndex:0] isEqualToString:FBSDKWebViewAppLinkResolverMetaTagPrefix]) {
+    if (![nameComponents.firstObject isEqualToString:FBSDKWebViewAppLinkResolverMetaTagPrefix]) {
       continue;
     }
     NSMutableDictionary<NSString *, id> *root = al;

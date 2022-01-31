@@ -293,7 +293,7 @@ static NSMutableArray *_pendingRequestors;
   }
   SKProduct *product = nil;
   if (products.count) {
-    product = [FBSDKTypeUtility array:products objectAtIndex:0];
+    product = products.firstObject;
   }
   [self logTransactionEvent:product];
 }

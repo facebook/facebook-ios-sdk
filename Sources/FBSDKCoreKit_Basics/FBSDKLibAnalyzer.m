@@ -194,7 +194,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   if (0 == sortedAllAddress.count) {
     return nil;
   }
-  NSString *lowestAddress = [FBSDKTypeUtility array:sortedAllAddress objectAtIndex:0];
+  NSString *lowestAddress = sortedAllAddress.firstObject;
   NSString *highestAddress = [FBSDKTypeUtility array:sortedAllAddress objectAtIndex:sortedAllAddress.count - 1];
 
   if ([address compare:lowestAddress] == NSOrderedAscending || [address compare:highestAddress] == NSOrderedDescending) {

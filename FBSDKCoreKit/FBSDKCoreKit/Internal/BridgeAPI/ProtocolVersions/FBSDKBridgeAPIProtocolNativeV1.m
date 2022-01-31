@@ -235,7 +235,8 @@ static const struct {
   if (!files.count) {
     return nil;
   }
-  return [UIImage imageNamed:[FBSDKTypeUtility array:files objectAtIndex:0]];
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
+  return [UIImage imageNamed:files.firstObject];
 }
 
 - (NSDictionary<NSString *, id> *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef

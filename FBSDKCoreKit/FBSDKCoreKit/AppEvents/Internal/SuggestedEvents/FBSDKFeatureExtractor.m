@@ -109,9 +109,9 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
   NSString *screenName = viewHierarchy[VIEW_HIERARCHY_SCREEN_NAME_KEY];
   NSMutableArray<NSMutableDictionary<NSString *, id> *> *siblings = [NSMutableArray array];
 
-  [self pruneTree:[[FBSDKTypeUtility array:viewTree objectAtIndex:0] mutableCopy] siblings:siblings];
+  [self pruneTree:[viewTree.firstObject mutableCopy] siblings:siblings];
 
-  float *result = [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
+  float *result = [self parseFeatures:viewTree.firstObject];
 
   NSMutableDictionary<NSString *, id> *interactedNode;
   for (NSMutableDictionary<NSString *, id> *node in siblings) {

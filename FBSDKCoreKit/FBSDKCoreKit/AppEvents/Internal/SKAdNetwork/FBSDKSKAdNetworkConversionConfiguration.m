@@ -23,7 +23,7 @@
         return nil;
       }
       NSArray<id> *data = [FBSDKTypeUtility dictionary:dict objectForKey:@"data" ofType:NSArray.class];
-      NSDictionary<NSString *, id> *conversionRules = [FBSDKTypeUtility dictionaryValue:[FBSDKTypeUtility array:data objectAtIndex:0]];
+      NSDictionary<NSString *, id> *conversionRules = [FBSDKTypeUtility dictionaryValue:data.firstObject];
       if (!conversionRules) {
         return nil;
       }

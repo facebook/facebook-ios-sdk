@@ -430,7 +430,7 @@ static id<FBSDKDataPersisting> _store;
 {
   NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
   NSArray<id> *data = [FBSDKTypeUtility dictionary:json objectForKey:@"data" ofType:NSArray.class];
-  NSDictionary<NSString *, id> *catalogData = [FBSDKTypeUtility dictionaryValue:[FBSDKTypeUtility array:data objectAtIndex:0]];
+  NSDictionary<NSString *, id> *catalogData = [FBSDKTypeUtility dictionaryValue:data.firstObject];
   NSNumber *isOptimized = [FBSDKTypeUtility dictionary:catalogData objectForKey:@"content_id_belongs_to_catalog_id" ofType:NSNumber.class] ?: @(NO);
   return isOptimized.boolValue;
 }

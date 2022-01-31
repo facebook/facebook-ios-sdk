@@ -358,7 +358,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   } else if ([key isEqualToString:@"r4"] || [key isEqualToString:@"r5"]) {
     value = [[value componentsSeparatedByCharactersInSet:[NSCharacterSet.letterCharacterSet invertedSet]] componentsJoinedByString:@""];
   } else if ([key isEqualToString:@"r6"]) {
-    value = [FBSDKTypeUtility array:[value componentsSeparatedByString:@"-"] objectAtIndex:0];
+    value = [value componentsSeparatedByString:@"-"].firstObject;
   }
   return value;
 }

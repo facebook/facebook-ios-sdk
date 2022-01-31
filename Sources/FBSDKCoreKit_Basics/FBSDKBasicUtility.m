@@ -329,7 +329,7 @@ NS_ASSUME_NONNULL_END
 {
   NSSearchPathDirectory directory = NSLibraryDirectory;
   NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, YES);
-  NSString *docDirectory = [FBSDKTypeUtility array:paths objectAtIndex:0];
+  NSString *docDirectory = paths.firstObject;
   return [docDirectory stringByAppendingPathComponent:filename];
 }
 
