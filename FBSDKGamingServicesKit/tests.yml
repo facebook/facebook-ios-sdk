@@ -13,9 +13,7 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: FacebookGamingServicesTests
-        group: Tests
-        createIntermediateGroups: false
+      - FacebookGamingServicesTests
     configFiles:
       Debug: Configurations/FacebookGamingServicesTests.xcconfig
       Release: Configurations/FacebookGamingServicesTests.xcconfig
