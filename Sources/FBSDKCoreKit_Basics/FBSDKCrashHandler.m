@@ -52,23 +52,6 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 @implementation FBSDKCrashHandler
 
-// Deprecating the method requires it to be implemented.
-// This should be removed in the next major release.
-+ (instancetype)new
-{
-  return [[FBSDKCrashHandler alloc] init];
-}
-
-// Deprecating the method requires it to be implemented.
-// This should be removed in the next major release.
-- (instancetype)init
-{
-  return [self initWithFileManager:NSFileManager.defaultManager
-                            bundle:NSBundle.mainBundle
-                 fileDataExtractor:NSData.class
-  ];
-}
-
 - (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
                              bundle:(id<FBSDKInfoDictionaryProviding>)bundle
                   fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
@@ -185,11 +168,6 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 # pragma mark - Handler
 
-+ (void)_installExceptionsHandler
-{
-  [FBSDKCrashHandler.shared _installExceptionsHandler];
-}
-
 - (void)_installExceptionsHandler
 {
   NSUncaughtExceptionHandler *currentHandler = NSGetUncaughtExceptionHandler();
@@ -198,11 +176,6 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
     previousExceptionHandler = currentHandler;
     NSSetUncaughtExceptionHandler(&FBSDKExceptionHandler);
   }
-}
-
-+ (void)_uninstallExceptionsHandler
-{
-  [FBSDKCrashHandler.shared _uninstallExceptionsHandler];
 }
 
 - (void)_uninstallExceptionsHandler
@@ -221,11 +194,6 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 #pragma mark - Storage & Process
 
-+ (void)_saveException:(NSException *)exception
-{
-  [FBSDKCrashHandler.shared _saveException:exception];
-}
-
 - (void)_saveException:(NSException *)exception
 {
   if (exception.callStackSymbols && exception.name) {
@@ -235,11 +203,6 @@ static void FBSDKExceptionHandler(NSException *exception)
        kFBSDKCrashReason : exception.name,
      }];
   }
-}
-
-+ (NSArray<NSDictionary<NSString *, id> *> *)_getProcessedCrashLogs
-{
-  return [FBSDKCrashHandler.shared _getProcessedCrashLogs];
 }
 
 - (nullable NSArray<NSDictionary<NSString *, id> *> *)_getProcessedCrashLogs
@@ -271,11 +234,6 @@ static void FBSDKExceptionHandler(NSException *exception)
   return processedCrashLogs;
 }
 
-+ (NSArray<NSDictionary<NSString *, id> *> *)_loadCrashLogs
-{
-  return [FBSDKCrashHandler.shared _loadCrashLogs];
-}
-
 - (NSArray<NSDictionary<NSString *, id> *> *)_loadCrashLogs
 {
   NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:directoryPath error:NULL];
@@ -299,19 +257,9 @@ static void FBSDKExceptionHandler(NSException *exception)
   return [crashLogArray copy];
 }
 
-+ (nullable NSData *)_loadCrashLog:(NSString *)fileName
-{
-  return [FBSDKCrashHandler.shared _loadCrashLog:fileName];
-}
-
 - (nullable NSData *)_loadCrashLog:(NSString *)fileName
 {
   return [self.dataExtractor dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
-}
-
-+ (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
-{
-  return [FBSDKCrashHandler.shared _getCrashLogFileNames:files];
 }
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
@@ -325,11 +273,6 @@ static void FBSDKExceptionHandler(NSException *exception)
   }
 
   return fileNames;
-}
-
-+ (void)_saveCrashLog:(NSDictionary<NSString *, id> *)crashLog
-{
-  [FBSDKCrashHandler.shared _saveCrashLog:crashLog];
 }
 
 - (void)_saveCrashLog:(NSDictionary<NSString *, id> *)crashLog
@@ -354,11 +297,6 @@ static void FBSDKExceptionHandler(NSException *exception)
 
   [data writeToFile:[self _getPathToCrashFile:currentTimestamp]
          atomically:YES];
-}
-
-+ (void)_sendCrashLogs
-{
-  [FBSDKCrashHandler.shared _sendCrashLogs];
 }
 
 - (void)_sendCrashLogs
