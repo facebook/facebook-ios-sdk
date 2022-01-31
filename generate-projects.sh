@@ -10,11 +10,12 @@ EXPECTED_XCODEGEN_VERSION="2.25.0"
 RESET='\033[0m'
 YELLOW='\033[1;33m'
 
+REOPEN_XCODE=false
+
 pgrep -f '/Applications/Xcode.*\.app/Contents/MacOS/Xcode' > /dev/null
+# shellcheck disable=SC2181
 if [ $? -eq 0 ]; then
-    if [ "$1" = "--skip-closing-xcode" ]; then
-        REOPEN_XCODE=false
-    else
+    if [ "$1" != "--skip-closing-xcode" ]; then
         echo "⚠️  ${YELLOW}Closing Xcode!${RESET}"
         killall Xcode || true
         REOPEN_XCODE=true
@@ -51,7 +52,7 @@ for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit
 done
 
 
-if [ $REOPEN_XCODE = true ]; then
+if [ "$REOPEN_XCODE" = true ]; then
     echo "${YELLOW}Reopening FacebookSDK.xcworkspace${RESET}"
     open FacebookSDK.xcworkspace
 fi
