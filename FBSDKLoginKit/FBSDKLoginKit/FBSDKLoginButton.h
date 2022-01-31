@@ -27,6 +27,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKLoginButtonDelegate;
+@class FBSDKCodeVerifier;
 
 /**
  NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
@@ -103,6 +104,10 @@ NS_SWIFT_NAME(FBLoginButton)
  Gets or sets the auth_type to use in the login request. Defaults to rerequest.
  */
 @property (nullable, nonatomic) FBSDKLoginAuthType authType;
+
+/// The code verifier used in the PKCE process.
+/// If not provided, a code verifier will be randomly generated.
+@property (nonatomic) FBSDKCodeVerifier *codeVerifier;
 
 @end
 
