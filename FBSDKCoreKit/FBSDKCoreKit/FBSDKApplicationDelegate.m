@@ -216,7 +216,8 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   [self.components.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [FBAEMReporter setCatalogReportEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
+      [FBAEMReporter setCatalogMatchingEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
+      [FBAEMReporter setConversionFilteringEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
       [FBAEMReporter enable];
       [FBAEMReporter handleURL:url];
     }

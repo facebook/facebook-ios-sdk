@@ -1000,7 +1000,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
         [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
           if (AEMEnabled) {
             [self.aemReporter enable];
-            [self.aemReporter setCatalogReportEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogReport]];
+            [self.aemReporter setCatalogMatchingEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
+            [self.aemReporter setConversionFilteringEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
           }
         }];
       }

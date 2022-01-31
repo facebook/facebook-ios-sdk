@@ -26,7 +26,9 @@ NS_SWIFT_NAME(AEMReporterProtocol)
   NS_SWIFT_NAME(recordAndUpdate(event:currency:value:parameters:));
 // UNCRUSTIFY_FORMAT_ON
 
-+ (void)setCatalogReportEnabled:(BOOL)enabled;
++ (void)setConversionFilteringEnabled:(BOOL)enabled;
+
++ (void)setCatalogMatchingEnabled:(BOOL)enabled;
 
 @end
 
