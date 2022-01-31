@@ -110,26 +110,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     }
   }
 
-  func testShowDialogThroughAppSwitch() throws {
-    let util = TestInternalUtility()
-    util.isFacebookAppInstalled = true
-    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
-
-    _ = dialog.show()
-    let queryParams = try XCTUnwrap(util.queryParameters)
-    let filterQuery = try XCTUnwrap(queryParams[URLConstants.queryParameterFilter])
-    let maxSizeQuery = queryParams[URLConstants.queryParameterMaxSize]
-    let minSizeQuery = queryParams[URLConstants.queryParameterMinSize]
-
-    XCTAssertNotNil(dialog)
-    XCTAssertEqual(util.scheme, URLScheme.https.rawValue)
-    XCTAssertEqual(util.host, URLConstants.host)
-    XCTAssertEqual(util.path, URLConstants.appSwitch(appID: defaultAppID).path)
-    XCTAssertEqual(filterQuery, "NO_FILTER")
-    XCTAssertEqual(maxSizeQuery, "0")
-    XCTAssertEqual(minSizeQuery, "0")
-  }
-
   func testShowDialogWithoutSettingAppID() throws {
     let appIDErrorMessage = "App ID is not set in settings"
     let content = ChooseContextContent()

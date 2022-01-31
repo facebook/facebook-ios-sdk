@@ -19,17 +19,13 @@ import Foundation
 public class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   private enum Constants {
-    static let host = "fb.gg"
-    static let path = "/dialog/choosecontext/"
-    static let filter = "filter"
-    static let minSize = "min_size"
-    static let maxSize = "max_size"
     static let contextKey = "context_id"
     static let contextSize = "context_size"
     static let errorMessage = "error_message"
   }
 
   private var internalUtility: InternalUtilityProtocol
+  private var urlFactory: DialogDeeplinkURLCreating
 
   /**
    Convenience method to build up a choose context app switch with content and a delegate.
@@ -43,27 +39,21 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
     self.init(content, delegate: delegate, internalUtility: InternalUtility.shared)
   }
 
-  /**
-   Convenience method to build up a choose context app switch with content , a delegate and a utility object.
-   @param content The content for the choose context dialog
-   @param delegate The receiver's delegate.
-   @param internalUtility The dialog's utility used to build the url and decide how to display the dialog
-   */
-
-  public init(
+  init(
     _ content: ChooseContextContent,
     delegate: ContextDialogDelegate,
     internalUtility: InternalUtilityProtocol
   ) {
     self.internalUtility = internalUtility
+    urlFactory = ChooseContextDialogURLFactory(appID: Settings.shared.appID ?? "", content: content)
     super.init(delegate: delegate, dialogContent: content)
   }
 
   public override func show() -> Bool {
-    let dialogURL: URL
+    var dialogURL: URL
     do {
       try validate()
-      dialogURL = try generateURL()
+      dialogURL = try urlFactory.generateDialogDeeplinkURL()
     } catch {
       handleDialogError(error as NSError)
       return false
@@ -73,7 +63,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
       dialogURL,
       sender: self
     ) { [weak self] success, bridgeError in
-      guard let weakSelf = self else {
+      guard let self = self else {
         return
       }
 
@@ -84,7 +74,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
           message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
           underlyingError: bridgeError
         )
-        weakSelf.handleDialogError(sdkError as NSError)
+        self.handleDialogError(sdkError)
       }
     }
     return true
@@ -104,29 +94,6 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   private func handleDialogError(_ dialogError: Error) {
     delegate?.contextDialog(self, didFailWithError: dialogError)
-  }
-
-  private func generateURL() throws -> URL {
-    let parametersDictionary = queryParameters()
-    return try internalUtility.url(
-      withScheme: "https",
-      host: Constants.host,
-      path: "\(Constants.path)\(Settings.shared.appID ?? "")/",
-      queryParameters: parametersDictionary
-    )
-  }
-
-  func queryParameters() -> [String: String] {
-    var appSwitchParameters: [String: String] = [:]
-    guard let content = dialogContent as? ChooseContextContent else {
-      return appSwitchParameters
-    }
-
-    appSwitchParameters[Constants.filter] = ChooseContextContent.filtersName(forFilters: content.filter)
-    appSwitchParameters[Constants.minSize] = "\(content.minParticipants)"
-    appSwitchParameters[Constants.maxSize] = "\(content.maxParticipants)"
-
-    return appSwitchParameters
   }
 
   func gamingContextFromURL(_ url: URL) throws -> GamingContext? {
@@ -149,10 +116,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
         contextSize = size
       }
       if queryItem.name == Constants.errorMessage, let errorMessage = queryItem.value {
-        throw ErrorFactory().unknownError(
-          message: errorMessage,
-          userInfo: nil
-        )
+        throw ErrorFactory().unknownError(message: errorMessage, userInfo: nil)
       }
     }
 
