@@ -16,6 +16,7 @@
 
 #import "FBSDKCloseIcon.h"
 #import "FBSDKInternalURLOpener.h"
+#import "FBSDKSafeCast.h"
 #import "FBSDKWebViewProviding.h"
 
 #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0

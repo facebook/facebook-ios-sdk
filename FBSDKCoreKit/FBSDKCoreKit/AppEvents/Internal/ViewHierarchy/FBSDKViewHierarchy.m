@@ -17,6 +17,7 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKCodelessPathComponent.h"
+#import "FBSDKSafeCast.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchyMacros.h"
 

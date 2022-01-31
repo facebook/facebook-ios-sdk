@@ -23,6 +23,7 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
+#import "FBSDKSafeCast.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSessionProxying.h"
 

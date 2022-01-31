@@ -96,7 +96,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
                      error:(NSError **)error
 {
   id parsed = nil;
-  NSString *const utf8 = _FBSDKCastToClassOrNilUnsafeInternal(unsafeString, NSString.class);
+  NSString *const utf8 = [(NSObject *)unsafeString isKindOfClass:NSString.class] ? unsafeString : nil;
   if (!(*error) && utf8) {
     parsed = [FBSDKBasicUtility objectForJSONString:utf8 error:error];
   }

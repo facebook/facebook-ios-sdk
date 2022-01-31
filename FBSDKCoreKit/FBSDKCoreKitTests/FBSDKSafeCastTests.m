@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import "FBSDKSafeCast.h"
 
 @interface ClassA : NSObject
 @end
