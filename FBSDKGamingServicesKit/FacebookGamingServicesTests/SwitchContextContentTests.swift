@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKSwitchContextContentTests: XCTestCase {
+class SwitchContextContentTests: XCTestCase {
 
   lazy var content = SwitchContextContent(contextID: name)
 

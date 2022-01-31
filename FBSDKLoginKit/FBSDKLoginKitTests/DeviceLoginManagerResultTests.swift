@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-class FBSDKDeviceLoginManagerResultTests: XCTestCase {
+class DeviceLoginManagerResultTests: XCTestCase {
 
   func testCreateDeviceLoginManagerResultWithToken() {
     let accessToken = SampleAccessTokens.validToken

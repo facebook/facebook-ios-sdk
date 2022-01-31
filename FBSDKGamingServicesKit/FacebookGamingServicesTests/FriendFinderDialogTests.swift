@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKFriendFinderDialogTests: XCTestCase {
+class FriendFinderDialogTests: XCTestCase {
   let factory = TestGamingServiceControllerFactory()
   lazy var dialog = FriendFinderDialog(gamingServiceControllerFactory: factory)
   let bridgeAPIError = NSError(domain: ErrorDomain, code: CoreError.errorBridgeAPIInterruption.rawValue, userInfo: nil)

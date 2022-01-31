@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKCreateContextDialogFactoryTests: XCTestCase {
+class CreateContextDialogFactoryTests: XCTestCase {
 
   let content = CreateContextContent(playerID: "123")
   let windowFinder = TestWindowFinder()

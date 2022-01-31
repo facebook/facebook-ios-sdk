@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class FBSDKGamingContextTests: XCTestCase {
+class GamingContextTests: XCTestCase {
 
   func testCreating() throws {
     let context = try XCTUnwrap(GamingContext(identifier: name, size: 2))
