@@ -36,41 +36,36 @@ static NSDateFormatter *_dateFormatter;
 
 - (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
-        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
                   graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                       internalUtility:(id<FBSDKURLHosting>)internalUtility
 {
   if ((self = [super init])) {
-    _graphRequestConnectionFactory = graphRequestConnectionFactory;
     _authenticationTokenCreator = authenticationTokenCreator;
     _parameters = [FBSDKLoginCompletionParameters new];
     _graphRequestFactory = graphRequestFactory;
     _internalUtility = internalUtility;
 
-    BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyAccessTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyCodeString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"code" ofType:NSString.class]).length > 0;
 
-    // Nonce and id token are mutually exclusive parameters
-    BOOL hasBothNonceAndIdToken = hasNonEmptyNonceString && hasNonEmptyIdTokenString;
-    BOOL hasEitherNonceOrIdToken = hasNonEmptyNonceString || hasNonEmptyIdTokenString;
+    // Code and id token are mutually exclusive parameters
+    BOOL hasBothCodeAndIdToken = hasNonEmptyCodeString && hasNonEmptyIdTokenString;
+    BOOL hasEitherCodeOrIdToken = hasNonEmptyCodeString || hasNonEmptyIdTokenString;
 
     if (
-      hasNonEmptyCodeString
-      || hasNonEmptyAccessTokenString
-      || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)
+      hasNonEmptyAccessTokenString
+      || (hasEitherCodeOrIdToken && !hasBothCodeAndIdToken)
     ) {
       [self setParametersWithDictionary:parameters appID:appID];
     } else if ([FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] || [FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class]) {
       self.errorWithDictionary = parameters;
-    } else if (hasBothNonceAndIdToken) {
-      // If a nonce is present in the parameter we assume that
-      // user logged in by app switching.
-      // Currently OIDC is not supported for app switching. We
-      // will treat the login attempt as invalid if an ID token
-      // if returned together with nonce.
+    } else if (hasBothCodeAndIdToken) {
+      // If no Access Token is returned with ID Token, we assume that
+      // tracking perference is limited. We currently cannot perform
+      // code exchange with limit tracking, thus this is not a valid
+      // state
       id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
       _parameters.error = [errorFactory errorWithCode:FBSDKLoginErrorUnknown
                                              userInfo:nil
@@ -96,9 +91,6 @@ static NSDateFormatter *_dateFormatter;
     [self exchangeCodeForTokensWithNonce:nonce
                             codeVerifier:codeVerifier
                                  handler:handler];
-  } else if (_parameters.nonceString) {
-    // If there is a nonceString then it means we logged in from the app.
-    [self exchangeNonceForTokenWithHandler:handler authenticationNonce:nonce];
   } else if (_parameters.authenticationTokenString && !nonce) {
     // If there is no nonce then somehow an auth token string was provided
     // but the call did not originate from the sdk. This is not a valid state
@@ -195,61 +187,6 @@ static NSDateFormatter *_dateFormatter;
   // if error is nil, then this should be processed as a cancellation unless
   // _performExplicitFallback is set to YES and the log in behavior is Native.
   _parameters.error = [FBSDKLoginErrorFactory fbErrorFromReturnURLParameters:parameters];
-}
-
-- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-                     authenticationNonce:(NSString *)authenticationNonce
-{
-  if (!handler) {
-    return;
-  }
-
-  NSString *nonce = _parameters.nonceString ?: @"";
-  NSString *appID = _parameters.appID ?: @"";
-
-  if (nonce.length == 0 || appID.length == 0) {
-    id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
-    _parameters.error = [errorFactory errorWithCode:FBSDKErrorInvalidArgument
-                                           userInfo:nil
-                                            message:@"Missing required parameters to exchange nonce for access token."
-                                    underlyingError:nil];
-    handler(_parameters);
-    return;
-  }
-
-  FBSDKGraphRequest *tokenRequest = [[FBSDKGraphRequest alloc]
-                                     initWithGraphPath:@"oauth/access_token"
-                                     parameters:@{ @"grant_type" : @"fb_exchange_nonce",
-                                                   @"fb_exchange_nonce" : nonce,
-                                                   @"client_id" : appID,
-                                                   @"fields" : @"" }
-                                     flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
-                                     | FBSDKGraphRequestFlagDisableErrorRecovery];
-  __block FBSDKLoginCompletionParameters *parameters = _parameters;
-  id<FBSDKGraphRequestConnecting> connection = [_graphRequestConnectionFactory createGraphRequestConnection];
-  [connection addRequest:tokenRequest completion:^(id<FBSDKGraphRequestConnecting> requestConnection,
-                                                   id result,
-                                                   NSError *graphRequestError) {
-                                                     if (!graphRequestError) {
-                                                       parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                                                       parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
-                                                       parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
-                                                       parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"id_token" ofType:NSString.class];
-
-                                                       if (parameters.authenticationTokenString) {
-                                                         [self fetchAndSetPropertiesForParameters:parameters
-                                                                                            nonce:authenticationNonce
-                                                                                          handler:handler];
-                                                         return;
-                                                       }
-                                                     } else {
-                                                       parameters.error = graphRequestError;
-                                                     }
-
-                                                     handler(parameters);
-                                                   }];
-
-  [connection start];
 }
 
 - (void)exchangeCodeForTokensWithNonce:(nullable NSString *)nonce

@@ -31,7 +31,6 @@ NS_SWIFT_NAME(LoginURLCompleter)
 
 @property (nonatomic) id<NSObject> observer;
 @property (nonatomic) BOOL performExplicitFallback;
-@property (nonatomic) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
 @property (nonatomic) FBSDKLoginCompletionParameters *parameters;
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
@@ -42,7 +41,6 @@ NS_SWIFT_NAME(LoginURLCompleter)
 
 - (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
-        graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
                   graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                       internalUtility:(id<FBSDKURLHosting>)internalUtility;
