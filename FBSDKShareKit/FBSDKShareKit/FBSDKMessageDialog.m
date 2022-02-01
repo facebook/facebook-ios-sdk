@@ -21,7 +21,6 @@
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
-#import "FBSDKShareDialogConfiguration+Internal.h"
 #import "FBSDKShareVideoContent.h"
 
 #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
