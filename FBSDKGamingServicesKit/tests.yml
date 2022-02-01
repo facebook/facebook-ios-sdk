@@ -25,23 +25,3 @@ targets:
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
     transitivelyLinkDependencies: true
-  FBSDKGamingServicesKitTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: ../Tests/FBSDKGamingServicesKit
-        group: Tests
-        createIntermediateGroups: false
-    configFiles:
-      Debug: Configurations/FBSDKGamingServicesKitTests.xcconfig
-      Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
-    dependencies:
-      - target: TestTools/TestTools
-        embed: false
-      - target: FacebookGamingServices-Dynamic
-        embed: false
-      - target: FBSDKGamingServicesKit-Dynamic
-        embed: false
-    settings:
-      GCC_WARN_UNUSED_FUNCTION: NO
-    transitivelyLinkDependencies: true

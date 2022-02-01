@@ -182,20 +182,6 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
-               BuildableName = "FBSDKGamingServicesKitTests.xctest"
-               BlueprintName = "FBSDKGamingServicesKitTests"
-               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
                BuildableName = "FacebookGamingServicesTests.xctest"
                BlueprintName = "FacebookGamingServicesTests"
@@ -249,16 +235,6 @@
                BuildableName = "FBSDKShareKitTests.xctest"
                BlueprintName = "FBSDKShareKitTests"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
-               BuildableName = "FBSDKGamingServicesKitTests.xctest"
-               BlueprintName = "FBSDKGamingServicesKitTests"
-               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference

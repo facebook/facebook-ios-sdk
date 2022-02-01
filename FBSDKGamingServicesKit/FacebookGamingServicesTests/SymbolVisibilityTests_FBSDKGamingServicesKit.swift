@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+import FacebookGamingServices
 import XCTest
 
 class SymbolVisibilityTests_FBSDKGamingServicesKit: XCTestCase { // swiftlint:disable:this type_name

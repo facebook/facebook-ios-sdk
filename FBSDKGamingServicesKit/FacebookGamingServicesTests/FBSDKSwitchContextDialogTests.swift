@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+import FacebookGamingServices
 import TestTools
 import XCTest
 
