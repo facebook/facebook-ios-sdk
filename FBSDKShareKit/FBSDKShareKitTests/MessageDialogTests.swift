@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKShareKit
 import TestTools
 import XCTest
 
-class FBSDKMessageDialogTests: XCTestCase {
+class MessageDialogTests: XCTestCase {
 
   enum Assumptions {
     static let contentValidation = """
@@ -109,20 +109,29 @@ class FBSDKMessageDialogTests: XCTestCase {
     XCTAssertEqual(delegate.capturedError as NSError?, error)
   }
 
-  func testShowInvokesDelegateWhenMissingContent() {
+  func testShowInvokesDelegateWhenMissingContent() throws {
     shareDialogConfiguration.stubbedShouldUseNativeDialogCompletion = true
     appAvailabilityChecker.isMessengerAppInstalled = true
     dialog.show()
 
-    let error = NSError(
-      domain: ShareErrorDomain,
-      code: CoreError.errorInvalidArgument.rawValue,
-      userInfo: [
-        ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Value for shareContent is required."
-      ]
+    let error = try XCTUnwrap(
+      delegate.capturedError,
+      "The delegate should receive a callback with an error"
+    ) as NSError
+
+    XCTAssertEqual(error.domain, ShareErrorDomain, "The share error domain should be used")
+    XCTAssertEqual(error.code, CoreError.errorInvalidArgument.rawValue, "The invalid argument code should be included")
+
+    XCTAssertEqual(
+      error.userInfo[ErrorArgumentNameKey] as? String,
+      "shareContent",
+      "The argument name should be included"
     )
-    XCTAssertEqual(delegate.capturedError as NSError?, error)
+    XCTAssertEqual(
+      error.userInfo[ErrorDeveloperMessageKey] as? String,
+      "Value for shareContent is required.",
+      "The invalid argument message should be used"
+    )
   }
 
   func testShowInvokesDelegateWhenCannotValidate() {

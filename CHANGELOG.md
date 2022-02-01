@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `FBSDKAppLinkResolverRequestBuilder`
 - Removed deprecated URL schemes `.facebookApp`, `.facebookShareExtension` and `.masqueradePlayer`; use `.facebookAPI` instead.
 - Removed deprecated `init` and `new` methods from `FBSDKCrashHandler`
+- Removed `init` from `MessageDialog`; use `init(content:delegate:)` instead
 
 #### AppEvents deprecations
 TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)

@@ -12,7 +12,6 @@
 
 #import "FBSDKAppInviteContent.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
 #import "FBSDKShareDialog+Testing.h"
