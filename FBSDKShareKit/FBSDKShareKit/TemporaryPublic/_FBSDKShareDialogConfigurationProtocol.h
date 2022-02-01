@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ShareDialogConfigurationProtocol)
-@protocol FBSDKShareDialogConfiguration
+NS_SWIFT_NAME(_ShareDialogConfigurationProtocol)
+@protocol _FBSDKShareDialogConfiguration
 
 - (BOOL)shouldUseNativeDialogForDialogName:(NSString *)dialogName;
 

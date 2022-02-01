@@ -15,13 +15,13 @@
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
+#import <FBSDKShareKit/_FBSDKShareDialogConfigurationProtocol.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareDialogConfiguration+Internal.h"
-#import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareVideoContent.h"
 
 #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
@@ -29,7 +29,7 @@
 @interface FBSDKMessageDialog ()
 
 @property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
-@property (nonatomic) id<FBSDKShareDialogConfiguration> shareDialogConfiguration;
+@property (nonatomic) id<_FBSDKShareDialogConfiguration> shareDialogConfiguration;
 
 @end
 
@@ -61,7 +61,7 @@
 - (instancetype)initWithContent:(nullable id<FBSDKSharingContent>)content
                        delegate:(nullable id<FBSDKSharingDelegate>)delegate
          appAvailabilityChecker:(nonnull id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
-       shareDialogConfiguration:(nonnull id<FBSDKShareDialogConfiguration>)shareDialogConfiguration
+       shareDialogConfiguration:(nonnull id<_FBSDKShareDialogConfiguration>)shareDialogConfiguration
 {
   if ((self = [super init])) {
     _shareContent = content;

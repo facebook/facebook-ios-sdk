@@ -16,7 +16,6 @@
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
 #import "FBSDKShareDialog+Testing.h"
-#import "FBSDKShareDialogConfigurationProtocol.h"
 #import "FBSDKShareInternalURLOpening.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"

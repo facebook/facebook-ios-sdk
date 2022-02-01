@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestShareDialogConfiguration: ShareDialogConfigurationProtocol {
+class TestShareDialogConfiguration: _ShareDialogConfigurationProtocol {
 
   var stubbedShouldUseNativeDialogCompletion = false
 

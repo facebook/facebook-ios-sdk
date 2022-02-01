@@ -9,12 +9,11 @@
 #if !TARGET_OS_TV
 
 #import <FBSDKCoreKit/FBSDKShareDialogConfiguration.h>
-
-#import "FBSDKShareDialogConfigurationProtocol.h"
+#import <FBSDKShareKit/_FBSDKShareDialogConfigurationProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKShareDialogConfiguration (ShareDialogConfiguration) <FBSDKShareDialogConfiguration>
+@interface FBSDKShareDialogConfiguration (ShareDialogConfiguration) <_FBSDKShareDialogConfiguration>
 @end
 
 NS_ASSUME_NONNULL_END
