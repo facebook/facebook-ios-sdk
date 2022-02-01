@@ -39,7 +39,7 @@ class GamingVideoUploaderTests: XCTestCase {
       "Should have the expected file handle factory by default"
     )
     XCTAssertTrue(
-      GamingVideoUploader.shared.videoUploaderFactory is _VideoUploaderFactory,
+      GamingVideoUploader.shared.videoUploaderFactory is VideoUploaderFactory,
       "Should have the expected video uploader factory by default"
     )
   }

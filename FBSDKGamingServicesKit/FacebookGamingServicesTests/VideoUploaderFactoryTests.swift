@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+@testable import FacebookGamingServices
 import XCTest
 
 class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
 
   func testCreatingVideoUploader() {
-    let uploader = _VideoUploaderFactory().create(
+    let uploader = VideoUploaderFactory().create(
       videoName: name,
       videoSize: 5,
       parameters: ["foo": "bar"],

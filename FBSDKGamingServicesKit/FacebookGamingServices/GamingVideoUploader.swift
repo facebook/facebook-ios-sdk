@@ -31,7 +31,7 @@ public final class GamingVideoUploader: NSObject {
 
   init(
     fileHandleFactory: FileHandleCreating = FileHandleFactory(),
-    videoUploaderFactory: VideoUploaderCreating = _VideoUploaderFactory()
+    videoUploaderFactory: VideoUploaderCreating = VideoUploaderFactory()
   ) {
     self.fileHandleFactory = fileHandleFactory
     self.videoUploaderFactory = videoUploaderFactory

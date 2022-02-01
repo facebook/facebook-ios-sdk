@@ -8,16 +8,8 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objcMembers
-@objc(_FBSDKVideoUploaderFactory)
-public class _VideoUploaderFactory: NSObject, VideoUploaderCreating {
-  public func create(
+final class VideoUploaderFactory: VideoUploaderCreating {
+  func create(
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
