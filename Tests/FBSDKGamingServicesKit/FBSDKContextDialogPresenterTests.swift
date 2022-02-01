@@ -10,7 +10,7 @@ import FBSDKGamingServicesKit
 import TestTools
 import XCTest
 
-class ContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
+class FBSDKContextDialogPresenterTests: XCTestCase, ContextDialogDelegate {
 
   override func setUp() {
     super.setUp()

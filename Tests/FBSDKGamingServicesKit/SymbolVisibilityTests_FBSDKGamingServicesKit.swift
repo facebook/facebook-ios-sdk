@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
+import FBSDKGamingServicesKit
 import XCTest
 
-class SymbolVisibilityTests: XCTestCase {
-
+class SymbolVisibilityTests_FBSDKGamingServicesKit: XCTestCase { // swiftlint:disable:this type_name
   func testCanSeeReexportedSymbol() {
     _ = Mirror(reflecting: FriendFinderDialog.self)
+    _ = Mirror(reflecting: FBSDKSwitchContextDialog.self)
   }
 }

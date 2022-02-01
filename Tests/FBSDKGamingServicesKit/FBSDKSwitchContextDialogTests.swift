@@ -10,12 +10,12 @@ import FBSDKGamingServicesKit
 import TestTools
 import XCTest
 
-class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
+class FBSDKSwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   func testCreating() {
     let content = SwitchContextContent(contextID: "12345")
     let windowFinder = TestWindowFinder()
 
-    let dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
+    let dialog = FBSDKSwitchContextDialog.dialog(withContent: content, windowFinder: windowFinder, delegate: self)
 
     XCTAssertNotNil(
       dialog,
