@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FacebookGamingServices
 import FBSDKCoreKit
 
 // Internal protocol to enable us to verify that the underlying pure Swift type is
