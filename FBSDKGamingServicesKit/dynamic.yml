@@ -10,7 +10,7 @@ targets:
     platform: iOS
     productName: FacebookGamingServices
     sources:
-      - path: FacebookGamingServices
+      - path: FBSDKGamingServicesKit
     configFiles:
       Debug: Configurations/FacebookGamingServices-Dynamic.xcconfig
       Release: Configurations/FacebookGamingServices-Dynamic.xcconfig
@@ -45,7 +45,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices FBSDKGamingServicesKitTests
+        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit FBSDKGamingServicesKitTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
     transitivelyLinkDependencies: true

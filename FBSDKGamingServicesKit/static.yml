@@ -10,7 +10,7 @@ targets:
     platform: iOS
     productName: FacebookGamingServices
     sources:
-      - path: FacebookGamingServices
+      - path: FBSDKGamingServicesKit
     configFiles:
       Debug: Configurations/FacebookGamingServices-Static.xcconfig
       Release: Configurations/FacebookGamingServices-Static.xcconfig
@@ -23,7 +23,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices
+        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKGamingServicesKit-Static:
@@ -46,6 +46,6 @@ targets:
       - target: FacebookGamingServices-Static
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit
+        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit ../Sources/FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
