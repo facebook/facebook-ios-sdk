@@ -64,7 +64,7 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
     let highlightedColor = UIColor(red: 0.0, green: 111.0 / 255.0, blue: 1.0, alpha: 1.0)
 
     configure(
-      with: _MessengerIcon(),
+      with: MessengerIcon(),
       title: title,
       backgroundColor: backgroundColor,
       highlightedColor: highlightedColor
