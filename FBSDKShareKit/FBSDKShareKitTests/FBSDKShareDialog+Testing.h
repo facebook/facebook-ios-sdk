@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKShareDialog (Testing)
 
 // UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithInternalURLOpener:(id<FBSDKShareInternalURLOpening>)internalURLOpener
++ (void)configureWithInternalURLOpener:(id<_FBSDKShareInternalURLOpening>)internalURLOpener
                        internalUtility:(id<FBSDKInternalUtility>)internalUtility
                               settings:(id<FBSDKSettings>)settings
                           shareUtility:(Class<_FBSDKShareUtility>)shareUtility

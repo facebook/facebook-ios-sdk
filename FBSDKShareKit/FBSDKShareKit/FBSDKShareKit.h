@@ -18,8 +18,10 @@
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 #import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
+#import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
+#import <FBSDKShareKit/_UIApplication+ShareInternalURLOpening.h>
 
 #if !TARGET_OS_TV
  #import <FBSDKShareKit/FBSDKAppInviteContent.h>

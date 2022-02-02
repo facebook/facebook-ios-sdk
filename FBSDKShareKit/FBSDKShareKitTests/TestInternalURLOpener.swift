@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestInternalURLOpener: NSObject, ShareInternalURLOpening {
+final class TestInternalURLOpener: NSObject, _ShareInternalURLOpening {
   var canOpenURL = false
   var computeCanOpenURL: ((URL) -> Bool)?
 

@@ -18,7 +18,10 @@
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
+#import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
+#import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
+#import <FBSDKShareKit/_UIApplication+ShareInternalURLOpening.h>
 #import <objc/runtime.h>
 
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
@@ -27,7 +30,6 @@
 #import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareExtension.h"
-#import "FBSDKShareInternalURLOpening.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharePhoto.h"
@@ -36,8 +38,6 @@
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSocialComposeViewController.h"
 #import "FBSDKSocialComposeViewControllerFactory.h"
-#import "UIApplication+ShareInternalURLOpening.h"
-#import "_FBSDKShareUtilityProtocol.h"
 
 /*
  NOTE: version checking with custom URL schemes is not scalable for Facebook, Inc (Meta, Inc) apps.
@@ -74,14 +74,14 @@ static BOOL _hasBeenConfigured = NO;
   _hasBeenConfigured = hasBeenConfigured;
 }
 
-static _Nullable id<FBSDKShareInternalURLOpening> _internalURLOpener;
+static _Nullable id<_FBSDKShareInternalURLOpening> _internalURLOpener;
 
-+ (nullable id<FBSDKShareInternalURLOpening>)internalURLOpener
++ (nullable id<_FBSDKShareInternalURLOpening>)internalURLOpener
 {
   return _internalURLOpener;
 }
 
-+ (void)setInternalURLOpener:(nullable id<FBSDKShareInternalURLOpening>)internalURLOpener
++ (void)setInternalURLOpener:(nullable id<_FBSDKShareInternalURLOpening>)internalURLOpener
 {
   _internalURLOpener = internalURLOpener;
 }
@@ -185,7 +185,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
 
 #pragma mark - Class Configuration
 
-+ (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
++ (void)configureWithInternalURLOpener:(nonnull id<_FBSDKShareInternalURLOpening>)internalURLOpener
                        internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                               settings:(nonnull id<FBSDKSettings>)settings
                           shareUtility:(nonnull Class<_FBSDKShareUtility>)shareUtility

@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <UIKit/UIApplication.h>
+
+#import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ShareInternalURLOpening)
-@protocol FBSDKShareInternalURLOpening
-
-- (BOOL)canOpenURL:(NSURL *)url;
-
+@interface UIApplication (ShareInternalURLOpening) <_FBSDKShareInternalURLOpening>
 @end
 
 NS_ASSUME_NONNULL_END
