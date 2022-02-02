@@ -1127,7 +1127,9 @@ class LoginManagerTests: XCTestCase {
     }
 
     loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
-    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": SampleAccessTokens.validToken.userID], nil)
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(
+      nil, ["id": SampleAccessTokens.validToken.userID], nil
+    )
 
     XCTAssertNil(capturedError)
     XCTAssertEqual(capturedResult, result)

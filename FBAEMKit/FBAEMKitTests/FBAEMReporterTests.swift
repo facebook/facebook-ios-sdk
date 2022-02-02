@@ -1022,10 +1022,10 @@ class FBAEMReporterTests: XCTestCase {
             AEMReporter.setCatalogMatchingEnabled(catalogMatchingEnabled)
             testInvocation.isOptimizedEvent = isOptimizedEvent
             testInvocation.catalogID = catalogID
-            if conversionFilteringEnabled
-                && catalogMatchingEnabled
-                && isOptimizedEvent
-                && catalogID != nil {
+            if conversionFilteringEnabled,
+               catalogMatchingEnabled,
+               isOptimizedEvent,
+               catalogID != nil {
               XCTAssertTrue(
                 AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
                 "Should expect to report conversion in catalog level"

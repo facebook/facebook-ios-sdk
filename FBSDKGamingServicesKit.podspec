@@ -13,8 +13,10 @@ Pod::Spec.new do |s|
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Gaming Services'
 
   s.description  = <<-DESC
-                   The Facebook SDK for iOS GamingKit framework provides:
-                   * Friend Finder.
+                   The official Facebook SDK for iOS Gaming Services.
+
+                   See full documentation at:
+                   https://developers.facebook.com/docs/games/gaming-services/sdk-ios
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'

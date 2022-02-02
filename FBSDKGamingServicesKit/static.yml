@@ -11,12 +11,6 @@ targets:
     productName: FacebookGamingServices
     sources:
       - path: FacebookGamingServices
-        headerVisibility: public
-        excludes:
-          - Internal
-      - path: FacebookGamingServices/Internal
-        headerVisibility: public
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FacebookGamingServices-Static.xcconfig
       Release: Configurations/FacebookGamingServices-Static.xcconfig
