@@ -31,7 +31,6 @@
 
 #import "FBSDKShareAppEventName.h"
 #import "FBSDKShareCameraEffectContent.h"
-#import "FBSDKShareExtension.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKSharePhoto.h"
@@ -1241,6 +1240,10 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   }
 }
 
+NSString *_Nullable FBSDKShareExtensionInitialText(NSString *_Nullable appID,
+                                                   NSString *_Nullable hashtag,
+                                                   NSString *_Nullable jsonString);
+
 - (nullable NSString *)_calculateInitialText
 {
   NSString *initialText;
@@ -1274,6 +1277,37 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
     }
   }
   return initialText;
+}
+
+NSString *const FBSDKShareExtensionParamAppID = @"app_id"; // application identifier string
+NSString *const FBSDKShareExtensionParamHashtags = @"hashtags"; // array of hashtag strings (max 1)
+NSString *const FBSDKShareExtensionParamQuotes = @"quotes"; // array of quote strings (max 1)
+NSString *const FBSDKShareExtensionParamOGData = @"og_data"; // dictionary of Open Graph data
+
+NSString *_Nullable FBSDKShareExtensionInitialText(NSString *_Nullable appID,
+                                                   NSString *_Nullable hashtag,
+                                                   NSString *_Nullable jsonString)
+{
+  NSMutableString *const initialText = [NSMutableString new];
+
+  // Not all versions of our Share Extension supported JSON.
+  // Adding this text before the JSON payload supports backward compatibility.
+  if (appID.length > 0) {
+    [initialText appendString:[NSString stringWithFormat:@"fb-app-id:%@", appID]];
+  }
+  if (hashtag.length > 0) {
+    if (initialText.length > 0) {
+      [initialText appendString:@" "];
+    }
+    [initialText appendString:hashtag];
+  }
+
+  if (jsonString.length > 0) {
+    [initialText appendString:@"|"]; // JSON start delimiter
+    [initialText appendString:jsonString];
+  }
+
+  return initialText.length > 0 ? initialText : nil;
 }
 
 @end
