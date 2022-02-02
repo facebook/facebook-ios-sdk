@@ -25,11 +25,11 @@ targets:
     platform: iOS
     productName: FBAEMKit
     sources:
-      - path: ../Sources/FBAEMKit
+      - path: FBAEMKit
         headerVisibility: project
         excludes:
           - include
-      - path: ../Sources/FBAEMKit/include
+      - path: FBAEMKit/include
         headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
@@ -41,17 +41,17 @@ targets:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+      GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
   FBAEMKit-Dynamic:
     type: framework
     platform: iOS
     productName: FBAEMKit
     sources:
-      - path: ../Sources/FBAEMKit
+      - path: FBAEMKit
         headerVisibility: project
         excludes:
           - include
-      - path: ../Sources/FBAEMKit/include
+      - path: FBAEMKit/include
         headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
@@ -61,7 +61,7 @@ targets:
       Debug: Configurations/FBAEMKit-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
     settings:
-      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+      GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
@@ -70,11 +70,11 @@ targets:
     platform: tvOS
     productName: FBAEMKit
     sources:
-      - path: ../Sources/FBAEMKit
+      - path: FBAEMKit
         headerVisibility: project
         excludes:
           - include
-      - path: ../Sources/FBAEMKit/include
+      - path: FBAEMKit/include
         headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
@@ -86,17 +86,17 @@ targets:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+      GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
   FBAEMKit_TV-Dynamic:
     type: framework
     platform: tvOS
     productName: FBAEMKit
     sources:
-      - path: ../Sources/FBAEMKit
+      - path: FBAEMKit
         headerVisibility: project
         excludes:
           - include
-      - path: ../Sources/FBAEMKit/include
+      - path: FBAEMKit/include
         headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
@@ -106,7 +106,7 @@ targets:
       Debug: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
     settings:
-      GCC_PREFIX_HEADER: ../Sources/FBAEMKit/FBAEMKit-Prefix-Header.h
+      GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
