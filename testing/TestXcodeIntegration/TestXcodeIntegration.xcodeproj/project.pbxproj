@@ -59,7 +59,7 @@
 			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 4449A7DE6BAB955FAC4802C5;
-			remoteInfo = FacebookGamingServicesTests;
+			remoteInfo = FBSDKGamingServicesKitTests;
 		};
 		0A0F948A26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -327,7 +327,7 @@
 				0A0F947A26EE7DFC009EF9E1 /* FBSDKGamingServicesKit-Static.framework */,
 				0A0F947E26EE7DFC009EF9E1 /* FacebookGamingServices.framework */,
 				0A0F948026EE7DFC009EF9E1 /* FacebookGamingServices-Static.framework */,
-				0A0F948226EE7DFC009EF9E1 /* FacebookGamingServicesTests.xctest */,
+				0A0F948226EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -470,10 +470,10 @@
 			remoteRef = 0A0F947F26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0A0F948226EE7DFC009EF9E1 /* FacebookGamingServicesTests.xctest */ = {
+		0A0F948226EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FacebookGamingServicesTests.xctest;
+			path = FBSDKGamingServicesKitTests.xctest;
 			remoteRef = 0A0F948126EE7DFC009EF9E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

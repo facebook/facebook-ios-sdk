@@ -7,8 +7,8 @@
 #include "Shared/Platform/iOS.xcconfig"
 #include "Shared/Target/LogicTests.xcconfig"
 
-PRODUCT_NAME = FacebookGamingServicesTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FacebookGamingServicesTests
+PRODUCT_NAME = FBSDKGamingServicesKitTests
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKitTests
 
 INFOPLIST_FILE = $(SRCROOT)/Info.plist
 

@@ -9,14 +9,14 @@ projectReferences:
     path: ../TestTools/TestTools.xcodeproj
 
 targets:
-  FacebookGamingServicesTests:
+  FBSDKGamingServicesKitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - FacebookGamingServicesTests
+      - FBSDKGamingServicesKitTests
     configFiles:
-      Debug: Configurations/FacebookGamingServicesTests.xcconfig
-      Release: Configurations/FacebookGamingServicesTests.xcconfig
+      Debug: Configurations/FBSDKGamingServicesKitTests.xcconfig
+      Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
     dependencies:
       - target: TestTools/TestTools
         embed: false

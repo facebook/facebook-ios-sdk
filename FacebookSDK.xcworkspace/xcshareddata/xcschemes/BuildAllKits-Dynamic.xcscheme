@@ -183,8 +183,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
-               BuildableName = "FacebookGamingServicesTests.xctest"
-               BlueprintName = "FacebookGamingServicesTests"
+               BuildableName = "FBSDKGamingServicesKitTests.xctest"
+               BlueprintName = "FBSDKGamingServicesKitTests"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -252,8 +252,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
-               BuildableName = "FacebookGamingServicesTests.xctest"
-               BlueprintName = "FacebookGamingServicesTests"
+               BuildableName = "FBSDKGamingServicesKitTests.xctest"
+               BlueprintName = "FBSDKGamingServicesKitTests"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </TestableReference>

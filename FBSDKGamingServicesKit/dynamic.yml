@@ -45,7 +45,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit FacebookGamingServicesTests
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices FBSDKGamingServicesKitTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
     transitivelyLinkDependencies: true
