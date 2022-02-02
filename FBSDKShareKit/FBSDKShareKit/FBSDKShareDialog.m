@@ -17,6 +17,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>
+#import <FBSDKShareKit/_FBSDKShareBridgeAPIRequestFactory.h>
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
@@ -29,7 +30,6 @@
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKShareAppEventName.h"
-#import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareExtension.h"
 #import "FBSDKShareLinkContent.h"
@@ -218,7 +218,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
                        internalUtility:FBSDKInternalUtility.sharedUtility
                               settings:FBSDKSettings.sharedSettings
                           shareUtility:_FBSDKShareUtility.self
-               bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
+               bridgeAPIRequestFactory:[_FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
     socialComposeViewControllerFactory:[_FBSDKSocialComposeViewControllerFactory new]
                           windowFinder:FBSDKInternalUtility.sharedUtility

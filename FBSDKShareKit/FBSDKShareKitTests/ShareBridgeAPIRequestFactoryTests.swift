@@ -9,7 +9,7 @@
 import XCTest
 
 final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
-  let factory = ShareBridgeAPIRequestFactory()
+  let factory = _ShareBridgeAPIRequestFactory()
 
   func testFactoryMakesRequests() {
     XCTAssertNotNil(

@@ -8,11 +8,10 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKShareBridgeAPIRequestFactory.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKShareKit/_FBSDKShareBridgeAPIRequestFactory.h>
 
-@implementation FBSDKShareBridgeAPIRequestFactory
+@implementation _FBSDKShareBridgeAPIRequestFactory
 
 - (nullable id<FBSDKBridgeAPIRequest>)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                                                 scheme:(nonnull NSString *)scheme
