@@ -84,23 +84,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "34D553EBC357D82AEBA6A9C7"
+               BlueprintIdentifier = "40993C6D7DABEA0A5BDAD8A3"
                BuildableName = "FBSDKGamingServicesKit.framework"
                BlueprintName = "FBSDKGamingServicesKit-Static"
-               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "40993C6D7DABEA0A5BDAD8A3"
-               BuildableName = "FacebookGamingServices.framework"
-               BlueprintName = "FacebookGamingServices-Static"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

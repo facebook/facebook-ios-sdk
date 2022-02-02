@@ -40,20 +40,6 @@
 			remoteGlobalIDString = 7345B321FE1F43D8E26A6EBD;
 			remoteInfo = "FBSDKGamingServicesKit-Static";
 		};
-		0A0F947D26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 485125AF3AE3193C3812E211;
-			remoteInfo = "FacebookGamingServices-Dynamic";
-		};
-		0A0F947F26EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7E52E00C9A5233E3F2685AC7;
-			remoteInfo = "FacebookGamingServices-Static";
-		};
 		0A0F948126EE7DFC009EF9E1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F2B70D24ABD43C0019369E /* FBSDKGamingServicesKit.xcodeproj */;
@@ -325,8 +311,6 @@
 			children = (
 				F4F2B71624ABD43C0019369E /* FBSDKGamingServicesKit.framework */,
 				0A0F947A26EE7DFC009EF9E1 /* FBSDKGamingServicesKit-Static.framework */,
-				0A0F947E26EE7DFC009EF9E1 /* FacebookGamingServices.framework */,
-				0A0F948026EE7DFC009EF9E1 /* FacebookGamingServices-Static.framework */,
 				0A0F948226EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */,
 			);
 			name = Products;
@@ -453,21 +437,6 @@
 			name = "FBSDKGamingServicesKit-Static.framework";
 			path = FBSDKGamingServicesKit.framework;
 			remoteRef = 0A0F947926EE7DFC009EF9E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A0F947E26EE7DFC009EF9E1 /* FacebookGamingServices.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FacebookGamingServices.framework;
-			remoteRef = 0A0F947D26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A0F948026EE7DFC009EF9E1 /* FacebookGamingServices-Static.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = "FacebookGamingServices-Static.framework";
-			path = FacebookGamingServices.framework;
-			remoteRef = 0A0F947F26EE7DFC009EF9E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A0F948226EE7DFC009EF9E1 /* FBSDKGamingServicesKitTests.xctest */ = {

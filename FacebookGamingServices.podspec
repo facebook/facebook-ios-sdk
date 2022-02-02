@@ -7,6 +7,8 @@
 # Use the --use-libraries switch when pushing or linting this podspec
 
 Pod::Spec.new do |s|
+  s.deprecated = true
+  s.deprecated_in_favor_of = 'FBSDKGamingServicesKit'
 
   s.name         = 'FacebookGamingServices'
   s.version      = '12.3.1'
@@ -54,6 +56,5 @@ Pod::Spec.new do |s|
     sha1: 'fcad6213f252eff6a31adc4117fc1af6f6726426'
   }
   s.vendored_frameworks = "XCFrameworks/FacebookGamingServices.xcframework"
-  s.dependency "FBSDKCoreKit_Basics", "#{s.version}"
-  s.dependency "FBSDKCoreKit", "#{s.version}"
+  s.dependency "FBSDKGamingServicesKit", "#{s.version}"
 end

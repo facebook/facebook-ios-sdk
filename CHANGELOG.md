@@ -16,6 +16,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Replaced more `AppEvents.Name` and `AppEvents.ParameterName` types in method signatures
 - Renamed `frictionlessRequestsEnabled` property on `FBSDKGameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
 
+### Deprecated
+
+- The `FacebookGamingServices` CocoaPod has been deprecated. Please use the `FBSDKGamingServicesKit` pod instead. SPM users should continue to use `FacebookGamingServices`.
+
 ### Removed
 
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.

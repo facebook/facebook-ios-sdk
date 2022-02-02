@@ -116,22 +116,6 @@ struct BinaryTargets {
         switch source {
         case .local:
             return .binaryTarget(
-                name: "FacebookGamingServices",
-                path: "build/XCFrameworks/Static/FacebookGamingServices.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FacebookGamingServices",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FacebookGamingServices-Static_XCFramework.zip",
-                checksum: "5ba91a51c7a35185188ed53958ac34882cc389b492a1eee732d4d5896dd2cda6"
-            )
-        }
-    }
-
-    var fbsdkGamingServices: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
                 name: "FBSDKGamingServicesKit",
                 path: "build/XCFrameworks/Static/FBSDKGamingServicesKit.xcframework"
             )
@@ -257,13 +241,16 @@ let package = Package(
             dependencies: ["FacebookCore", "FBSDKShareKit"]
         ),
 
-        // The main Facebook Gaming Services module
+        /*
+          The legacy Objective-C implementation that has been converted to Swift.
+        */
         targets.gamingServices,
 
-        /*
-          Wrappers for backwards compatibility ObjC interfaces.
-        */
-        targets.fbsdkGamingServices,
+        // The main Facebook Gaming Services module
+        .target(
+            name: "FacebookGamingServices",
+            dependencies: ["FBSDKGamingServicesKit"]
+        ),
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )

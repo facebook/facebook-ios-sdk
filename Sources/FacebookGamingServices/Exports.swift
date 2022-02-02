@@ -6,6 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if canImport(FacebookGamingServices)
-@_exported import FacebookGamingServices
+#if canImport(FBSDKGamingServicesKit)
+@_exported import FBSDKGamingServicesKit
 #endif

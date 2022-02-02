@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FacebookGamingServices
+@testable import FBSDKGamingServicesKit
 
 class TestChooseContextDialogFactory: ChooseContextDialogMaking {
   let dialog = TestShowable()

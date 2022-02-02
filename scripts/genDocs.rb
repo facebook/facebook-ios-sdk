@@ -21,7 +21,7 @@ HEADER_PATHS = {
   CORE_KIT => "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKit.h",
   LOGIN_KIT => "FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginKit.h",
   SHARE_KIT => "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
-  GAMING_SERVICES_KIT => "FBSDKGamingServicesKit/FacebookGamingServices/FacebookGamingServices.h",
+  GAMING_SERVICES_KIT => "FBSDKGamingServicesKit/FBSDKGamingServicesKit/FBSDKGamingServicesKit.h",
 }
 
 def base_path

@@ -20,7 +20,7 @@ targets:
     dependencies:
       - target: TestTools/TestTools
         embed: false
-      - target: FacebookGamingServices-Dynamic
+      - target: FBSDKGamingServicesKit-Dynamic
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO

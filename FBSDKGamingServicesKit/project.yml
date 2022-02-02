@@ -37,14 +37,6 @@ settings:
     ENABLE_NS_ASSERTIONS: YES
 
 schemes:
-  FacebookGamingServices-Static:
-    build:
-      targets:
-        FacebookGamingServices-Static: all
-  FacebookGamingServices-Dynamic:
-    build:
-      targets:
-        FacebookGamingServices-Dynamic: all
   FBSDKGamingServicesKit-Static:
     build:
       targets:
@@ -58,5 +50,4 @@ schemes:
       targets:
         - FBSDKGamingServicesKitTests
       coverageTargets:
-        - FacebookGamingServices-Dynamic
         - FBSDKGamingServicesKit-Dynamic

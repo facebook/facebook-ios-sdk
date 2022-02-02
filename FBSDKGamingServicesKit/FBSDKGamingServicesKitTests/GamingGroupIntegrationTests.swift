@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-@testable import FacebookGamingServices
+@testable import FBSDKGamingServicesKit
 
 final class GamingGroupIntegrationTests: XCTestCase {
 

@@ -84,23 +84,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E503762E6371E38D1BD77A42"
+               BlueprintIdentifier = "BAC146DEC49878F3206EDE53"
                BuildableName = "FBSDKGamingServicesKit.framework"
                BlueprintName = "FBSDKGamingServicesKit-Dynamic"
-               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BAC146DEC49878F3206EDE53"
-               BuildableName = "FacebookGamingServices.framework"
-               BlueprintName = "FacebookGamingServices-Dynamic"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -182,7 +168,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
+               BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
                BuildableName = "FBSDKGamingServicesKitTests.xctest"
                BlueprintName = "FBSDKGamingServicesKitTests"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
@@ -251,7 +237,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
+               BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
                BuildableName = "FBSDKGamingServicesKitTests.xctest"
                BlueprintName = "FBSDKGamingServicesKitTests"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">

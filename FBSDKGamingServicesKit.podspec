@@ -54,5 +54,7 @@ Pod::Spec.new do |s|
     sha1: 'fcad6213f252eff6a31adc4117fc1af6f6726426'
   }
   s.vendored_frameworks = "XCFrameworks/FBSDKGamingServicesKit.xcframework"
-  s.dependency "FacebookGamingServices", "#{s.version}"
+  s.dependency "FBSDKCoreKit_Basics", "#{s.version}"
+  s.dependency "FBSDKCoreKit", "#{s.version}"
+  s.dependency "FBSDKShareKit", "#{s.version}"
 end
