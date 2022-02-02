@@ -825,11 +825,11 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   }
   composeViewController.completionHandler = ^(_FBSDKSocialComposeViewControllerResult result) {
     switch (result) {
-      case FBSDKSocialComposeViewControllerResultCancelled: {
+      case _FBSDKSocialComposeViewControllerResultCancelled: {
         [self _invokeDelegateDidCancel];
         break;
       }
-      case FBSDKSocialComposeViewControllerResultDone: {
+      case _FBSDKSocialComposeViewControllerResultDone: {
         [self _invokeDelegateDidCompleteWithResults:@{}];
         break;
       }

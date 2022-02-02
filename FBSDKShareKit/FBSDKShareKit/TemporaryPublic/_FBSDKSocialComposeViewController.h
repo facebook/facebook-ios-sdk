@@ -34,10 +34,10 @@ FOUNDATION_EXPORT NSString *const _FBSDKSocialComposeServiceType;
 
  @warning INTERNAL - DO NOT USE
  */
-typedef NS_ENUM(NSInteger, _FBSDKSocialComposeViewControllerResult) {
-  FBSDKSocialComposeViewControllerResultCancelled,
-  FBSDKSocialComposeViewControllerResultDone,
-};
+typedef NS_CLOSED_ENUM (NSInteger, _FBSDKSocialComposeViewControllerResult) {
+  _FBSDKSocialComposeViewControllerResultCancelled,
+  _FBSDKSocialComposeViewControllerResultDone,
+} NS_SWIFT_NAME(_SocialComposeViewControllerResult);
 
 /**
  Compose view controller completion handler to mirror the
