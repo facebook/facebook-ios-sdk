@@ -31,10 +31,9 @@ NS_SWIFT_NAME(_ShareUtilityProtocol)
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
                 completionHandler:(_FBSDKWebPhotoContentBlock)completion;
 
-+ (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
++ (void)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *_Nonnull *_Nullable)methodNameRef
-                  parameters:(NSDictionary<NSString *, id> *_Nonnull *_Nullable)parametersRef
-                       error:(NSError *_Nullable *)errorRef;
+                  parameters:(NSDictionary<NSString *, id> *_Nonnull *_Nullable)parametersRef;
 
 + (nullable NSString *)hashtagStringFromHashtag:(nullable FBSDKHashtag *)hashtag;
 

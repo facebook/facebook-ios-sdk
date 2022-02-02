@@ -52,10 +52,9 @@
   }
 }
 
-+ (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
++ (void)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *__autoreleasing *)methodNameRef
                   parameters:(NSDictionary<NSString *, id> *__autoreleasing *)parametersRef
-                       error:(NSError *__autoreleasing *)errorRef
 {
   NSString *methodName = @"share";
   NSMutableDictionary<NSString *, id> *parameters = nil;
@@ -79,10 +78,6 @@
   if (parametersRef != NULL) {
     *parametersRef = parameters;
   }
-  if (errorRef != NULL) {
-    *errorRef = nil;
-  }
-  return YES;
 }
 
 + (nullable NSString *)buildWebShareTags:(nullable NSArray<NSString *> *)peopleIDs

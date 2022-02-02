@@ -37,7 +37,7 @@ final class TestShareUtility: NSObject, _ShareUtilityProtocol {
     _ content: SharingContent,
     methodName methodNameRef: AutoreleasingUnsafeMutablePointer<NSString>?,
     parameters parametersRef: AutoreleasingUnsafeMutablePointer<NSDictionary>?
-  ) throws {}
+  ) {}
 
   static func hashtagString(from hashtag: Hashtag?) -> String? {
     stubbedHashtagString ?? ""

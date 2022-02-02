@@ -644,12 +644,9 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   } else {
     NSString *methodName;
     NSDictionary<NSString *, id> *parameters;
-    if (![self.class.shareUtility buildWebShareContent:shareContent
-                                            methodName:&methodName
-                                            parameters:&parameters
-                                                 error:errorRef]) {
-      return NO;
-    }
+    [self.class.shareUtility buildWebShareContent:shareContent
+                                       methodName:&methodName
+                                       parameters:&parameters];
     FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
       [self.class.internalUtility unregisterTransientObject:self];
@@ -856,12 +853,9 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSString *methodName;
   NSDictionary<NSString *, id> *parameters;
-  if (![self.class.shareUtility buildWebShareContent:shareContent
-                                          methodName:&methodName
-                                          parameters:&parameters
-                                               error:errorRef]) {
-    return NO;
-  }
+  [self.class.shareUtility buildWebShareContent:shareContent
+                                     methodName:&methodName
+                                     parameters:&parameters];
   _webDialog = [FBSDKWebDialog createAndShowWithName:methodName
                                           parameters:parameters
                                                frame:CGRectZero
