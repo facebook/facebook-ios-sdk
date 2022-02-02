@@ -10,12 +10,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSocialComposeViewControllerFactoryProtocol.h"
+#import <FBSDKShareKit/_FBSDKSocialComposeViewControllerFactoryProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(SocialComposeViewControllerFactory)
-@interface FBSDKSocialComposeViewControllerFactory : NSObject <FBSDKSocialComposeViewControllerFactory>
+NS_SWIFT_NAME(_SocialComposeViewControllerFactory)
+@interface _FBSDKSocialComposeViewControllerFactory : NSObject <_FBSDKSocialComposeViewControllerFactory>
 @end
 
 NS_ASSUME_NONNULL_END

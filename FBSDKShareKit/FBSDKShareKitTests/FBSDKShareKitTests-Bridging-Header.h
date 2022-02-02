@@ -20,6 +20,3 @@
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingValidation.h"
-#import "FBSDKSocialComposeViewController.h"
-#import "FBSDKSocialComposeViewControllerFactory.h"
-#import "FBSDKSocialComposeViewControllerFactoryProtocol.h"

@@ -14,7 +14,7 @@
 #import "FBSDKShareDialog.h"
 
 @protocol _FBSDKShareUtility;
-@protocol FBSDKSocialComposeViewControllerFactory;
+@protocol _FBSDKSocialComposeViewControllerFactory;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) Class<_FBSDKShareUtility> shareUtility;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestCreating> bridgeAPIRequestFactory;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
-@property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
+@property (class, nullable, nonatomic) id<_FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
 @property (class, nullable, nonatomic) id<FBSDKWindowFinding> windowFinder;
 @property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 

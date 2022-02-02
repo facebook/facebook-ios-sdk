@@ -17,14 +17,24 @@ NS_ASSUME_NONNULL_BEGIN
  Service type for creating social compose view controllers.  There was a symbol
  in the Social framework named `SLServiceTypeFacebook` that was deprecated
  in iOS 11.  This constant replaces that deprecated symbol.
+
+ Internal symbol exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
  */
-FOUNDATION_EXPORT NSString *const FBSDKSocialComposeServiceType;
+FOUNDATION_EXPORT NSString *const _FBSDKSocialComposeServiceType;
 
 /**
  Compose view controller result type to mirror the
  `SLComposeViewControllerResult` type in the Social framework.
+
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
  */
-typedef NS_ENUM(NSInteger, FBSDKSocialComposeViewControllerResult) {
+typedef NS_ENUM(NSInteger, _FBSDKSocialComposeViewControllerResult) {
   FBSDKSocialComposeViewControllerResultCancelled,
   FBSDKSocialComposeViewControllerResultDone,
 };
@@ -32,17 +42,27 @@ typedef NS_ENUM(NSInteger, FBSDKSocialComposeViewControllerResult) {
 /**
  Compose view controller completion handler to mirror the
  `SLComposeViewControllerCompletionHandler` type in the Social framework.
+
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
  */
-typedef void (^FBSDKSocialComposeViewControllerCompletionHandler)(FBSDKSocialComposeViewControllerResult result);
+typedef void (^_FBSDKSocialComposeViewControllerCompletionHandler)(_FBSDKSocialComposeViewControllerResult result);
 
 /**
  Compose view controller interface to provide an abstraction on top of the
  `SLComposeViewController` type in the Social framework.
- */
-NS_SWIFT_NAME(SocialComposeViewControllerProtocol)
-@protocol FBSDKSocialComposeViewController <NSObject>
 
-@property (nonatomic, copy) FBSDKSocialComposeViewControllerCompletionHandler completionHandler;
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_SocialComposeViewControllerProtocol)
+@protocol _FBSDKSocialComposeViewController <NSObject>
+
+@property (nonatomic, copy) _FBSDKSocialComposeViewControllerCompletionHandler completionHandler;
 
 - (BOOL)setInitialText:(NSString *)text;
 - (BOOL)addImage:(UIImage *)image;

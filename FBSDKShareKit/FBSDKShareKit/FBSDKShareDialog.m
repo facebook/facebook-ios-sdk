@@ -21,6 +21,8 @@
 #import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
+#import <FBSDKShareKit/_FBSDKSocialComposeViewController.h>
+#import <FBSDKShareKit/_FBSDKSocialComposeViewControllerFactory.h>
 #import <FBSDKShareKit/_UIApplication+ShareInternalURLOpening.h>
 #import <objc/runtime.h>
 
@@ -36,8 +38,6 @@
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideo.h"
 #import "FBSDKShareVideoContent.h"
-#import "FBSDKSocialComposeViewController.h"
-#import "FBSDKSocialComposeViewControllerFactory.h"
 
 /*
  NOTE: version checking with custom URL schemes is not scalable for Facebook, Inc (Meta, Inc) apps.
@@ -147,14 +147,14 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
 }
 
-static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewControllerFactory;
+static _Nullable id<_FBSDKSocialComposeViewControllerFactory> _socialComposeViewControllerFactory;
 
-+ (nullable id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
++ (nullable id<_FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
 {
   return _socialComposeViewControllerFactory;
 }
 
-+ (void)setSocialComposeViewControllerFactory:(nullable id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
++ (void)setSocialComposeViewControllerFactory:(nullable id<_FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
 {
   _socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 }
@@ -191,7 +191,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
                           shareUtility:(nonnull Class<_FBSDKShareUtility>)shareUtility
                bridgeAPIRequestFactory:(nonnull id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
-    socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
+    socialComposeViewControllerFactory:(nonnull id<_FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
                           windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
                           errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
 {
@@ -220,7 +220,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
                           shareUtility:_FBSDKShareUtility.self
                bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
-    socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]
+    socialComposeViewControllerFactory:[_FBSDKSocialComposeViewControllerFactory new]
                           windowFinder:FBSDKInternalUtility.sharedUtility
                           errorFactory:[FBSDKErrorFactory new]];
 }
@@ -800,7 +800,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   NSArray *URLs = [self _contentURLs];
   NSArray *videoURLs = [self _contentVideoURLs];
 
-  id<FBSDKSocialComposeViewController> composeViewController = [self.class.socialComposeViewControllerFactory makeSocialComposeViewController];
+  id<_FBSDKSocialComposeViewController> composeViewController = [self.class.socialComposeViewControllerFactory makeSocialComposeViewController];
 
   if (!composeViewController || ![composeViewController isKindOfClass:UIViewController.class]) {
     if (canShowErrorRef != NULL) {
@@ -827,7 +827,7 @@ static dispatch_once_t validateAPIURLSchemeRegisteredToken;
   for (NSURL *videoURL in videoURLs) {
     [composeViewController addURL:videoURL];
   }
-  composeViewController.completionHandler = ^(FBSDKSocialComposeViewControllerResult result) {
+  composeViewController.completionHandler = ^(_FBSDKSocialComposeViewControllerResult result) {
     switch (result) {
       case FBSDKSocialComposeViewControllerResultCancelled: {
         [self _invokeDelegateDidCancel];

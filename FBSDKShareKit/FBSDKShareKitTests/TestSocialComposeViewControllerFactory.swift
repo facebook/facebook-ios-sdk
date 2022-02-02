@@ -10,18 +10,18 @@ import Foundation
 import UIKit
 
 @objcMembers
-final class TestSocialComposeViewControllerFactory: NSObject, SocialComposeViewControllerFactoryProtocol {
+final class TestSocialComposeViewControllerFactory: NSObject, _SocialComposeViewControllerFactoryProtocol {
   var canMakeSocialComposeViewController = false
-  var stubbedSocialComposeViewController: (UIViewController & SocialComposeViewControllerProtocol)?
+  var stubbedSocialComposeViewController: (UIViewController & _SocialComposeViewControllerProtocol)?
 
-  func makeSocialComposeViewController() -> SocialComposeViewControllerProtocol? {
+  func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {
     stubbedSocialComposeViewController
   }
 }
 
 @objcMembers
-final class TestSocialComposeViewController: UIViewController, SocialComposeViewControllerProtocol {
-  var completionHandler: FBSDKSocialComposeViewControllerCompletionHandler = { _ in }
+final class TestSocialComposeViewController: UIViewController, _SocialComposeViewControllerProtocol {
+  var completionHandler: _FBSDKSocialComposeViewControllerCompletionHandler = { _ in }
   var stubbedSetInitialText = false
   var capturedInitialText: String?
 

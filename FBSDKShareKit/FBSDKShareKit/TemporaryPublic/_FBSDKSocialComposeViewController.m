@@ -8,8 +8,8 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKSocialComposeViewController.h"
+#import <FBSDKShareKit/_FBSDKSocialComposeViewController.h>
 
-NSString *const FBSDKSocialComposeServiceType = @"com.apple.social.facebook";
+NSString *const _FBSDKSocialComposeServiceType = @"com.apple.social.facebook";
 
 #endif

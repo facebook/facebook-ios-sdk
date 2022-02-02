@@ -30,4 +30,7 @@
  #import <FBSDKShareKit/_FBSDKMessengerIcon.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfiguration+ShareDialogConfiguration.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfigurationProtocol.h>
+ #import <FBSDKShareKit/_FBSDKSocialComposeViewController.h>
+ #import <FBSDKShareKit/_FBSDKSocialComposeViewControllerFactory.h>
+ #import <FBSDKShareKit/_FBSDKSocialComposeViewControllerFactoryProtocol.h>
 #endif
