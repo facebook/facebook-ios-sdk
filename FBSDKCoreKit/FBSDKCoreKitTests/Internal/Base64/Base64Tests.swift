@@ -8,7 +8,7 @@
 
 import XCTest
 
-class Base64Tests: XCTestCase {
+final class Base64Tests: XCTestCase {
 
   func runTests(_ testsDict: [String: String]) {
     for (plainString, base64String) in testsDict {

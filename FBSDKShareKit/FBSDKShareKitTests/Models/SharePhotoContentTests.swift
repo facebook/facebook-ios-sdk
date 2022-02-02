@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class SharePhotoContentTests: XCTestCase {
+final class SharePhotoContentTests: XCTestCase {
 
   func testProperties() {
     let content = ShareModelTestUtility.photoContent

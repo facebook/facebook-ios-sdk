@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class BridgeAPITests: XCTestCase {
+final class BridgeAPITests: XCTestCase {
 
   let sampleSource = "com.example"
   let sampleAnnotation = "foo"

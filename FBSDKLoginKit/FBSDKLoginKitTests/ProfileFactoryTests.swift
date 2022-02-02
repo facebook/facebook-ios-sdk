@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-class ProfileFactoryTests: XCTestCase {
+final class ProfileFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var sampleProfile: Profile!

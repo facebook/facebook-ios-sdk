@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class ShareLinkContentTests: XCTestCase {
+final class ShareLinkContentTests: XCTestCase {
 
   func testProperties() {
     let content = ShareModelTestUtility.linkContent

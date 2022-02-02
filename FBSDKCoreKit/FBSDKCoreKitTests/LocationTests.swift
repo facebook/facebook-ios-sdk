@@ -10,7 +10,7 @@ import XCTest
 
 // MARK: Creation
 
-class LocationTests: XCTestCase {
+final class LocationTests: XCTestCase {
 
   func testCreate() throws {
     let dict = ["id": "110843418940484", "name": "Seattle, Washington"]

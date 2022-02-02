@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class GamingImageUploaderTests: XCTestCase {
+final class GamingImageUploaderTests: XCTestCase {
 
   let factory = TestGamingServiceControllerFactory()
   let connection = TestGraphRequestConnection()

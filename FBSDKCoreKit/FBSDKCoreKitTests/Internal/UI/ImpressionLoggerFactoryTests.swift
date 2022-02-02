@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class ImpressionLoggerFactoryTests: XCTestCase {
+final class ImpressionLoggerFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var factory: ImpressionLoggerFactory!

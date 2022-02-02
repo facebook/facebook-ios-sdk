@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppLinkTargetFactoryTests: XCTestCase {
+final class AppLinkTargetFactoryTests: XCTestCase {
 
   let url = SampleURLs.valid
   let appStoreId = "123"

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class InternalUtilityTests: XCTestCase {
+final class InternalUtilityTests: XCTestCase {
 
   let validParameters = ["foo": "bar"]
   let validPath = "example"

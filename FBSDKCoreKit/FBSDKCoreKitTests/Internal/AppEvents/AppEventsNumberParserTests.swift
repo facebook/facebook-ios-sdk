@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class AppEventsNumberParserTests: XCTestCase {
+final class AppEventsNumberParserTests: XCTestCase {
   func testGetNumberValueDefaultLocale() {
     let parser = AppEventsNumberParser(locale: Locale.current)
     let result = parser.parseNumber(from: "Price: $1,234.56; Buy 1 get 2!")

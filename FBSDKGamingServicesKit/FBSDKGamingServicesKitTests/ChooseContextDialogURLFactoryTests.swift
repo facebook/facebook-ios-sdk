@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class ChooseContextDialogURLFactoryTests: XCTestCase {
+final class ChooseContextDialogURLFactoryTests: XCTestCase {
 
   // swiftlint:disable:next implicitly_unwrapped_optional
   var chooseContent: ChooseContextContent!

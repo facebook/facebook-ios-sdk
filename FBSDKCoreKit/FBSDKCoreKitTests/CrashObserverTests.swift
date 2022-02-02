@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class CrashObserverTests: XCTestCase {
+final class CrashObserverTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let settings = TestSettings()

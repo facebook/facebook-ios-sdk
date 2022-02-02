@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class CustomUpdateMediaTests: XCTestCase {
+final class CustomUpdateMediaTests: XCTestCase {
   let fakeGIF = FacebookGIF(withUrl: SampleURLs.valid)
   let fakeVideo = FacebookVideo(withUrl: SampleURLs.valid)
 

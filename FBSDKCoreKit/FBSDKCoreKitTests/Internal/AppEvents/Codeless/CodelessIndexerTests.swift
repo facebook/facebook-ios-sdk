@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class CodelessIndexerTests: XCTestCase {
+final class CodelessIndexerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let dataStore = UserDefaultsSpy()

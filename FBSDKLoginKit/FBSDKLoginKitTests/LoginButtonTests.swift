@@ -14,7 +14,7 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-class LoginButtonTests: XCTestCase {
+final class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
   let loginProvider = TestLoginProvider()

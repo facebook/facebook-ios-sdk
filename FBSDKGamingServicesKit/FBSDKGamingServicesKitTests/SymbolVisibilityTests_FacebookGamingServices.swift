@@ -9,7 +9,7 @@
 import FacebookGamingServices
 import XCTest
 
-class SymbolVisibilityTests_FacebookGamingServices: XCTestCase { // swiftlint:disable:this type_name
+final class SymbolVisibilityTests_FacebookGamingServices: XCTestCase { // swiftlint:disable:this type_name
 
   func testCanSeeReexportedSymbol() {
     _ = Mirror(reflecting: FriendFinderDialog.self)

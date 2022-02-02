@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ApplicationDelegateTests: XCTestCase {
+final class ApplicationDelegateTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var notificationCenter: TestNotificationCenter!

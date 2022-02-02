@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class ViewHierarchyTests: XCTestCase {
+final class ViewHierarchyTests: XCTestCase {
   let scrollview = UIScrollView()
   let label = UILabel()
   let textField = UITextField()

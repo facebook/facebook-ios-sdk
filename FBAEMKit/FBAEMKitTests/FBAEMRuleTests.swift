@@ -12,7 +12,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBAEMRuleTests: XCTestCase {
+final class FBAEMRuleTests: XCTestCase {
 
   enum Keys {
     static let conversionValue = "conversion_value"

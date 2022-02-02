@@ -8,7 +8,7 @@
 
 import XCTest
 
-class HashtagTests: XCTestCase {
+final class HashtagTests: XCTestCase {
 
   func testValidHashtag() {
     let hashtag = Hashtag("#ValidHashtag")

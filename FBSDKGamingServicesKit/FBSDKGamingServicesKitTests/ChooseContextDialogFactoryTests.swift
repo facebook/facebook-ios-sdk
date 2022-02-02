@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class ChooseContextDialogFactoryTests: XCTestCase {
+final class ChooseContextDialogFactoryTests: XCTestCase {
 
   var content: ChooseContextContent {
     let content = ChooseContextContent()

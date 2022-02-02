@@ -8,7 +8,7 @@
 
 import XCTest
 
-class AppEventsStateManagerTests: XCTestCase {
+final class AppEventsStateManagerTests: XCTestCase {
   private let token = "token"
   private let appID = "1234"
   private var manager = AppEventsStateManager()

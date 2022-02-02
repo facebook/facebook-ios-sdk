@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class EventBindingTests: XCTestCase {
+final class EventBindingTests: XCTestCase {
 
   let window = UIWindow()
   let eventLogger = TestEventLogger()

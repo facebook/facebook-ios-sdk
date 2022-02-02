@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ImageDownloaderTests: XCTestCase {
+final class ImageDownloaderTests: XCTestCase {
 
   let expectedCacheMemory = 1024 * 1024 * 8
   let expectedCacheCapacity = 1024 * 1024 * 100

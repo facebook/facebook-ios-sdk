@@ -8,7 +8,7 @@
 
 import XCTest
 
-class LoginManagerLoggerTests: XCTestCase {
+final class LoginManagerLoggerTests: XCTestCase {
 
   let validParameters = [
     "state": "{\"challenge\":\"ibUuyvhzJW36TvC7BBYpasPHrXk%3D\",\"0_auth_logger_id\":\"A48F8D79-F2DF-4E04-B893-B29879A9A37B\",\"com.facebook.sdk_client_state\":true,\"3_method\":\"sfvc_auth\"}" // swiftlint:disable:this line_length

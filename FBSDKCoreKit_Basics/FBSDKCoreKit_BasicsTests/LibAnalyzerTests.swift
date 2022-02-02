@@ -9,7 +9,7 @@
 import FBSDKCoreKit_Basics
 import XCTest
 
-class LibAnalyzerTests: XCTestCase {
+final class LibAnalyzerTests: XCTestCase {
 
   func testGetMethodsTableFromPrefixesAndFrameworks() {
     let prefixes = ["FBSDK", "_FBSDK"]

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppLinkURLFactoryTests: XCTestCase {
+final class AppLinkURLFactoryTests: XCTestCase {
 
   func testCreatingAppLinkURL() {
     let factory = AppLinkURLFactory()

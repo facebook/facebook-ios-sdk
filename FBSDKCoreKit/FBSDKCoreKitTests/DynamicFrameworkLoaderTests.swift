@@ -15,7 +15,7 @@ import Social
 import XCTest
 
 @available(iOS 12.0, *)
-class DynamicFrameworkLoaderTests: XCTestCase {
+final class DynamicFrameworkLoaderTests: XCTestCase {
 
   #if BUCK
   let expectedOSStatus = errSecNotAvailable

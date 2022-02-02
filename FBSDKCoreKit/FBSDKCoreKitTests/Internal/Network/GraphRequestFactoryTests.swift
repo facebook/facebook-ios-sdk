@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class GraphRequestFactoryTests: XCTestCase {
+final class GraphRequestFactoryTests: XCTestCase {
 
   let factory = GraphRequestFactory()
 

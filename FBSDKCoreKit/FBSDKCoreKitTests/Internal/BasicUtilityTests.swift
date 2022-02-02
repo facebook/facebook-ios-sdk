@@ -11,7 +11,7 @@ import Foundation
 import TestTools
 import XCTest
 
-class BasicUtilityTests: XCTestCase {
+final class BasicUtilityTests: XCTestCase {
 
   func testInvalidObjectToJSONString() throws {
     let invalidObject = TestErrorFactory()

@@ -10,7 +10,7 @@ import Foundation
 import SafariServices
 import XCTest
 
-class BridgeAPIOpenBridgeRequestTests: XCTestCase {
+final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
 
   let sampleUrl = URL(string: "http://example.com")
   let urlOpener = TestInternalURLOpener(canOpenURL: true)

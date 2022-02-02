@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class SettingsTests: XCTestCase {
+final class SettingsTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var logger: TestEventLogger!

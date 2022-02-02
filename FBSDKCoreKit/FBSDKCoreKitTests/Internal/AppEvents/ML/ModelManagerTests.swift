@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class ModelManagerTests: XCTestCase {
+final class ModelManagerTests: XCTestCase {
 
   let manager = ModelManager.shared
   let featureChecker = TestFeatureManager()

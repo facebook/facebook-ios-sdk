@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ProfilePictureViewTests: XCTestCase {
+final class ProfilePictureViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()

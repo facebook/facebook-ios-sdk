@@ -8,7 +8,7 @@
 
 import XCTest
 
-class CodeVerifierTests: XCTestCase {
+final class CodeVerifierTests: XCTestCase {
 
   func testDefaultInitialization() {
     let codeVerifier = CodeVerifier()

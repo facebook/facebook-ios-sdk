@@ -8,7 +8,7 @@
 
 import XCTest
 
-class EventDeactivationTests: XCTestCase {
+final class EventDeactivationTests: XCTestCase {
 
   enum Keys {
     static let ui = AppEvents.ParameterName("_ui")

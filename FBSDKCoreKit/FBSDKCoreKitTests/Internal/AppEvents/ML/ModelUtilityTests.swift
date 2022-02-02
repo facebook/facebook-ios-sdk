@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ModelUtilityTests: XCTestCase {
+final class ModelUtilityTests: XCTestCase {
 
   let normalized = "Foo Bar Baz"
 

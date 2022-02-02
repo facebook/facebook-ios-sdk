@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class WebViewAppLinkResolverTests: XCTestCase {
+final class WebViewAppLinkResolverTests: XCTestCase {
 
   var result: [String: Any]?
   var error: Error?

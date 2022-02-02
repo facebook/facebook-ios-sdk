@@ -10,7 +10,7 @@
 import XCTest
 
 @available(iOS 13.0, *)
-class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
+final class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   let validContextTokenID = "12345"
 
   override func setUp() {

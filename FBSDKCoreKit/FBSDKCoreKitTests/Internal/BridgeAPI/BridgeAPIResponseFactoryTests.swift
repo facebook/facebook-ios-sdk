@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class BridgeAPIResponseFactoryTests: XCTestCase {
+final class BridgeAPIResponseFactoryTests: XCTestCase {
 
   let factory = BridgeAPIResponseFactory()
   let request = TestBridgeAPIRequest(url: SampleURLs.valid)

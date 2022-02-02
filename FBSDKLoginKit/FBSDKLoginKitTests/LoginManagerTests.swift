@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class LoginManagerTests: XCTestCase {
+final class LoginManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var claims: [String: Any]!

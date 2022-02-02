@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class WebViewFactoryTests: XCTestCase {
+final class WebViewFactoryTests: XCTestCase {
 
   let factory = WebViewFactory()
   let frame = CGRect(origin: .zero, size: .init(width: 5, height: 5))

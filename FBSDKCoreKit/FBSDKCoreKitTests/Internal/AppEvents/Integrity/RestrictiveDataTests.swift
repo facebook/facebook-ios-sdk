@@ -8,7 +8,7 @@
 
 import XCTest
 
-class RestrictiveDataTests: XCTestCase {
+final class RestrictiveDataTests: XCTestCase {
 
   let restrictiveParam1 = [
     "restrictive_key_1": "restrictive_value_1",

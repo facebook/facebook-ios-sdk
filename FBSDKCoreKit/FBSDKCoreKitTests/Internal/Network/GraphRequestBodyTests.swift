@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class GraphRequestBodyTests: XCTestCase {
+final class GraphRequestBodyTests: XCTestCase {
 
   func testBodyCreationWithFormValue() throws {
     let body = GraphRequestBody()

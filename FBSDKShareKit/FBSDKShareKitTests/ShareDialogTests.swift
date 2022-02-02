@@ -11,7 +11,7 @@ import TestTools
 import UIKit
 import XCTest
 
-class ShareDialogTests: XCTestCase {
+final class ShareDialogTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var internalURLOpener: TestInternalURLOpener!

@@ -11,7 +11,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBAEMUtilityTests: XCTestCase {
+final class FBAEMUtilityTests: XCTestCase {
 
   enum Keys {
     static let content = "fb_content"

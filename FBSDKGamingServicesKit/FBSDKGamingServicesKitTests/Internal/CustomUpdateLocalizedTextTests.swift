@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class CustomUpdateLocalizedTextTests: XCTestCase {
+final class CustomUpdateLocalizedTextTests: XCTestCase {
   let fakeLocalization = ["es_pa": "spanish"]
 
   func testIntilization() {

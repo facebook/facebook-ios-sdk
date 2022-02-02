@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class GamingServiceControllerTests: XCTestCase {
+final class GamingServiceControllerTests: XCTestCase {
 
   let urlOpener = TestURLOpener()
   let settings = TestSettings()

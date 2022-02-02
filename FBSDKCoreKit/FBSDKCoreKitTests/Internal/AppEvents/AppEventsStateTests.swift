@@ -8,7 +8,7 @@
 
 import XCTest
 
-class AppEventsStateTests: XCTestCase {
+final class AppEventsStateTests: XCTestCase {
 
   let appEventsStateMaxEvents = 1000
   let appId = "appid"

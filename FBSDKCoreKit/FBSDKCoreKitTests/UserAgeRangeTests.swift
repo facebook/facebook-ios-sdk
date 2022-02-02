@@ -10,7 +10,7 @@ import XCTest
 
 import FBSDKCoreKit
 
-class UserAgeRangeTests: XCTestCase {
+final class UserAgeRangeTests: XCTestCase {
 
   func testCreateWithMinOnly() {
     let dict: [String: NSNumber] = ["min": 1]

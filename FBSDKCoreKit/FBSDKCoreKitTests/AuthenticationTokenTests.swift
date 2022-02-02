@@ -8,7 +8,7 @@
 
 import TestTools
 
-class AuthenticationTokenTests: XCTestCase {
+final class AuthenticationTokenTests: XCTestCase {
   private var token: AuthenticationToken?
 
   override func setUp() {

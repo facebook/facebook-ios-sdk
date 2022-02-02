@@ -8,7 +8,7 @@
 
 import XCTest
 
-class NonceTests: XCTestCase {
+final class NonceTests: XCTestCase {
 
   func testInvalidNonces() {
     [

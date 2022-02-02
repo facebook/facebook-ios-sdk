@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import XCTest
 
-class MetadataIndexerTests: XCTestCase {
+final class MetadataIndexerTests: XCTestCase {
   var emailField = UITextField()
   var emailView = UITextView()
   var phoneField = UITextField()

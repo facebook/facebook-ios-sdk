@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppLinkFactoryTests: XCTestCase {
+final class AppLinkFactoryTests: XCTestCase {
 
   let sourceURL = SampleURLs.valid(path: "source")
   let webURL = SampleURLs.valid(path: "webURL")

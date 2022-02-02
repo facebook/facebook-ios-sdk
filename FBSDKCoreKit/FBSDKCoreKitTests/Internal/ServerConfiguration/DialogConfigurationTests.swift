@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import TestTools
 
-class DialogConfigurationTests: XCTestCase {
+final class DialogConfigurationTests: XCTestCase {
 
   let coder = TestCoder()
   let versions = ["1", "2", "3"]

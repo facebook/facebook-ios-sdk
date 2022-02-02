@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class InstrumentManagerTests: XCTestCase {
+final class InstrumentManagerTests: XCTestCase {
 
   var manager = InstrumentManager.shared
   let settings = TestSettings()

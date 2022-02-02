@@ -8,7 +8,7 @@
 
 import TestTools
 
-class AppEventsPublishATETests: XCTestCase {
+final class AppEventsPublishATETests: XCTestCase {
 
   let settings = TestSettings()
 

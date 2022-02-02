@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class FeatureManagerTests: XCTestCase {
+final class FeatureManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var manager: FeatureManager!

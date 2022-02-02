@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AccessTokenProviderTests: XCTestCase {
+final class AccessTokenProviderTests: XCTestCase {
 
   class TestTokenCache: NSObject, TokenCaching {
     var accessToken: AccessToken?

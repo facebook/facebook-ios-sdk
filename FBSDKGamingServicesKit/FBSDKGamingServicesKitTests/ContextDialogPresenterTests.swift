@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ContextDialogPresenterTests: XCTestCase {
+final class ContextDialogPresenterTests: XCTestCase {
 
   let createContextContent = CreateContextContent(playerID: "playerID")
   let switchContextContent = SwitchContextContent(contextID: "contextID")

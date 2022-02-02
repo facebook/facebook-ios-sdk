@@ -10,7 +10,7 @@ import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
-class UrlSessionTaskTests: XCTestCase {
+final class UrlSessionTaskTests: XCTestCase {
 
   let dataTask = TestSessionDataTask()
   let provider = TestSessionProvider()

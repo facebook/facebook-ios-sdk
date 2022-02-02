@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class GamingVideoUploaderTests: XCTestCase {
+final class GamingVideoUploaderTests: XCTestCase {
 
   var videoURL = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
   lazy var configuration = createConfiguration(url: videoURL)

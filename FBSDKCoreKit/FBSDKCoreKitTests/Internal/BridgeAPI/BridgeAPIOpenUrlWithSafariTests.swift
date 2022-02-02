@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
+final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   let loginManager = FBSDKLoginManager()
 
   let logger = TestLogger(loggingBehavior: .developerErrors)

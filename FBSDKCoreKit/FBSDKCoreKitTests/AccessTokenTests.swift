@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class AccessTokenTests: XCTestCase {
+final class AccessTokenTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var tokenCache: TestTokenCache!

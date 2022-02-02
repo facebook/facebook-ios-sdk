@@ -10,7 +10,7 @@
 import XCTest
 
 @available(iOS 13.0, *)
-class CustomUpdateContentTests: XCTestCase {
+final class CustomUpdateContentTests: XCTestCase {
 
   var validMessage = "text"
   var contextToken = "12345"

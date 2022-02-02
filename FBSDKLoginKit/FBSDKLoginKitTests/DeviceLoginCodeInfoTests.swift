@@ -8,7 +8,7 @@
 
 import XCTest
 
-class DeviceLoginCodeInfoTests: XCTestCase {
+final class DeviceLoginCodeInfoTests: XCTestCase {
 
   enum Values {
     static let identifier = "abcd"

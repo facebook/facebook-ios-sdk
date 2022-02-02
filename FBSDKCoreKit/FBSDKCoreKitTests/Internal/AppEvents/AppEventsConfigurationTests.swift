@@ -8,7 +8,7 @@
 
 import XCTest
 
-class AppEventsConfigurationTests: XCTestCase {
+final class AppEventsConfigurationTests: XCTestCase {
 
   private var config = SampleAppEventsConfigurations.valid
 

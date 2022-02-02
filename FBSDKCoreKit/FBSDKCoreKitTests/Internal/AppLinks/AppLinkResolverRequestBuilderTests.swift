@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class AppLinkResolverRequestBuilderTests: XCTestCase {
+final class AppLinkResolverRequestBuilderTests: XCTestCase {
 
   func testAsksForPhoneDataOnPhone() {
     let builder = AppLinkResolverRequestBuilder(userInterfaceIdiom: .phone)

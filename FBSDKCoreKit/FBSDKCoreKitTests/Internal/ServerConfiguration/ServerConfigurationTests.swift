@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ServerConfigurationTests: XCTestCase {
+final class ServerConfigurationTests: XCTestCase {
 
   var config = Fixtures.defaultConfig
 

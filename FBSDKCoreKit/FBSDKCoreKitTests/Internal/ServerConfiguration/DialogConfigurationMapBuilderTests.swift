@@ -8,7 +8,7 @@
 
 import XCTest
 
-class DialogConfigurationMapBuilderTests: XCTestCase {
+final class DialogConfigurationMapBuilderTests: XCTestCase {
 
   enum Keys {
     static let name = "name"

@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class GraphErrorRecoveryProcessorTests: XCTestCase {
+final class GraphErrorRecoveryProcessorTests: XCTestCase {
 
   private enum Keys {
     static let errorKey = "com.facebook.sdk:FBSDKGraphRequestErrorKey"

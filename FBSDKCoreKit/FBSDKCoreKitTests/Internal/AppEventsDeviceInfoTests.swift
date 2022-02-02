@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class AppEventsDeviceInfoTests: XCTestCase {
+final class AppEventsDeviceInfoTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var deviceInfo: AppEventsDeviceInfo!

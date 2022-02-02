@@ -10,7 +10,7 @@ import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
-class FBAEMReporterTests: XCTestCase {
+final class FBAEMReporterTests: XCTestCase {
 
   enum Keys {
     static let defaultCurrency = "default_currency"

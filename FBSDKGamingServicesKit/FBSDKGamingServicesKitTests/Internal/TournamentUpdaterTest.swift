@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class TournamentUpdaterTest: XCTestCase {
+final class TournamentUpdaterTest: XCTestCase {
   let factory = TestGraphRequestFactory()
   let score = 10
   lazy var updater = TournamentUpdater(graphRequestFactory: factory)

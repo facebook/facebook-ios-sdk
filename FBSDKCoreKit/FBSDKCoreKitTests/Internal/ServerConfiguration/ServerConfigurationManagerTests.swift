@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ServerConfigurationManagerTests: XCTestCase {
+final class ServerConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var connection: TestGraphRequestConnection!

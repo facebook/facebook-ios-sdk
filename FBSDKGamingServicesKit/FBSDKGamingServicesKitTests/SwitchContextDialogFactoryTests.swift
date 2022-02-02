@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class SwitchContextDialogFactoryTests: XCTestCase {
+final class SwitchContextDialogFactoryTests: XCTestCase {
 
   let content = SwitchContextContent(contextID: "123")
   let windowFinder = TestWindowFinder()

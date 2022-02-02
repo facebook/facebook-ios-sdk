@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class FeatureExtractorTests: XCTestCase {
+final class FeatureExtractorTests: XCTestCase {
   var rules: [String: Any] = [:]
   let viewHierarchy: [String: Any] = [
     "screenname": "UITabBarController",

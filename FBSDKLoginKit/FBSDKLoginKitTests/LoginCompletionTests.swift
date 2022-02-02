@@ -12,7 +12,7 @@ import XCTest
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 
-class LoginCompletionTests: XCTestCase {
+final class LoginCompletionTests: XCTestCase {
 
   enum Keys {
     static let accessToken = "access_token"

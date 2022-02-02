@@ -11,7 +11,7 @@ import XCTest
 
 @testable import FacebookGamingServices
 
-class GamingGroupIntegrationTests: XCTestCase {
+final class GamingGroupIntegrationTests: XCTestCase {
 
   let factory = TestGamingServiceControllerFactory()
   let settings = TestSettings()

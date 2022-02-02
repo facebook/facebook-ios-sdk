@@ -10,7 +10,7 @@ import TestTools
 import XCTest
 
 @available(iOS 12.2, *)
-class PaymentProductRequestorTests: XCTestCase {
+final class PaymentProductRequestorTests: XCTestCase {
 
   var transaction = TestPaymentTransaction(state: .deferred)
   var graphRequestFactory = TestProductsRequestFactory()

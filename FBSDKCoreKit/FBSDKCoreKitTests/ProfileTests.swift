@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ProfileTests: XCTestCase {
+final class ProfileTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var dataStore: UserDefaultsSpy!
   var notificationCenter: TestNotificationCenter!

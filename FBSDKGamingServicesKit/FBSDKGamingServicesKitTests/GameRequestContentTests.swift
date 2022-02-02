@@ -10,7 +10,7 @@ import FacebookGamingServices
 import FBSDKCoreKit
 import XCTest
 
-class GameRequestContentTests: XCTestCase {
+final class GameRequestContentTests: XCTestCase {
   func testProperties() {
     let content = GameRequestContentTests.contentWithAllProperties()
     XCTAssertEqual(content.recipients, GameRequestContentTests.recipients())

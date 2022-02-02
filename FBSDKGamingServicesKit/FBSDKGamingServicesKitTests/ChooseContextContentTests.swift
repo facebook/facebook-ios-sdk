@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class ChooseContextContentTests: XCTestCase {
+final class ChooseContextContentTests: XCTestCase {
 
   let content = ChooseContextContent()
 

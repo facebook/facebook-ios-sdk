@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppEventsTests: XCTestCase {
+final class AppEventsTests: XCTestCase {
 
   let mockAppID = "mockAppID"
   let mockUserID = "mockUserID"

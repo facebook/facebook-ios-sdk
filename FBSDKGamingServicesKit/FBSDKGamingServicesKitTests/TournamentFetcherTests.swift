@@ -13,7 +13,7 @@ import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
-class TournamentFetcherTests: XCTestCase {
+final class TournamentFetcherTests: XCTestCase {
 
   let factory = TestGraphRequestFactory()
   lazy var fetcher = TournamentFetcher(graphRequestFactory: factory)

@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class PaymentProductRequestorFactoryTests: XCTestCase {
+final class PaymentProductRequestorFactoryTests: XCTestCase {
 
   let settings = TestSettings()
   let eventLogger = TestEventLogger()

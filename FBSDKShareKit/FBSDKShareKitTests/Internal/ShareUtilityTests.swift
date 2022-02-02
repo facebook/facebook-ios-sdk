@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ShareUtilityTests: XCTestCase {
+final class ShareUtilityTests: XCTestCase {
   func testShareLinkContentValidationWithNilValues() throws {
     let content = ShareLinkContent()
     XCTAssertNotNil(content.shareUUID)

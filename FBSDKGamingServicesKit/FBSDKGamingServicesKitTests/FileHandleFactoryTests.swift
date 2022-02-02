@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class FileHandleFactoryTests: XCTestCase {
+final class FileHandleFactoryTests: XCTestCase {
 
   func testCreatingFileHandle() throws {
     let data = "foo".data(using: .utf8)

@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class MessageDialogTests: XCTestCase {
+final class MessageDialogTests: XCTestCase {
 
   enum Assumptions {
     static let contentValidation = """

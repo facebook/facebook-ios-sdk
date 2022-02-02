@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-class LoginRecoveryAttempterTests: XCTestCase {
+final class LoginRecoveryAttempterTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var attempter: LoginRecoveryAttempter!

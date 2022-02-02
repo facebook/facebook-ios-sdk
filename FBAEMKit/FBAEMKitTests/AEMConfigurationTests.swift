@@ -12,7 +12,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class AEMConfigurationTests: XCTestCase {
+final class AEMConfigurationTests: XCTestCase {
 
   enum Keys {
     static let defaultCurrency = "default_currency"

@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class UserDataStoreTests: XCTestCase {
+final class UserDataStoreTests: XCTestCase {
 
   let store = UserDataStore()
   let email = "apptest@fb.com"

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class GateKeeperManagerTests: XCTestCase {
+final class GateKeeperManagerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let connection = TestGraphRequestConnection()

@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class ShareVideoTests: XCTestCase {
+final class ShareVideoTests: XCTestCase {
 
   func testImageProperties() {
     let video = ShareModelTestUtility.videoWithPreviewPhoto

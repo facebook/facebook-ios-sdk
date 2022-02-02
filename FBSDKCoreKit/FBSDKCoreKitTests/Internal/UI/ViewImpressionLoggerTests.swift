@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class ViewImpressionLoggerTests: XCTestCase {
+final class ViewImpressionLoggerTests: XCTestCase {
 
   let graphRequestFactory = TestGraphRequestFactory()
   let logger = TestEventLogger()

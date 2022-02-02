@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import TestTools
 import XCTest
 
-class LoginCompleterFactoryTests: XCTestCase {
+final class LoginCompleterFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var graphConnection: TestGraphRequestConnection!

@@ -8,7 +8,7 @@
 
 import XCTest
 
-class PermissionTests: XCTestCase {
+final class PermissionTests: XCTestCase {
 
   func testInvalidPermissions() {
     let rawPermissions = [

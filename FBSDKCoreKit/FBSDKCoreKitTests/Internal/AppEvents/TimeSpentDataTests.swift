@@ -8,7 +8,7 @@
 
 import XCTest
 
-class TimeSpentDataTests: XCTestCase {
+final class TimeSpentDataTests: XCTestCase {
 
   let applicationName = "someApplication"
   let eventLogger = TestEventLogger()

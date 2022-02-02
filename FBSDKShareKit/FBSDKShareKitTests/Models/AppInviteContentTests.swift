@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class AppInviteContentTests: XCTestCase {
+final class AppInviteContentTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional force_unwrapping
   var content: AppInviteContent!

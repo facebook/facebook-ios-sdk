@@ -10,7 +10,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class GamingRequestPayloadObserverTests: XCTestCase {
+final class GamingRequestPayloadObserverTests: XCTestCase {
 
   let gameRequestDelegate = GameRequestPayloadObserverDelegate()
   lazy var gameRequestObserver = GamingPayloadObserver(delegate: gameRequestDelegate)

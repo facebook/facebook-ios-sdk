@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class AppLinkURLTests: XCTestCase {
+final class AppLinkURLTests: XCTestCase {
 
   override class func setUp() {
     super.setUp()

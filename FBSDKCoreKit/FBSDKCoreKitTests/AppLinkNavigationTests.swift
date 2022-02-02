@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import TestTools
 
-class AppLinkNavigationTests: XCTestCase {
+final class AppLinkNavigationTests: XCTestCase {
 
   struct AppLinkUrlPayload: Codable {
     let userAgent: String

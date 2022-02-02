@@ -9,7 +9,7 @@
 import FBSDKShareKit
 import XCTest
 
-class ShareMediaContentTests: XCTestCase {
+final class ShareMediaContentTests: XCTestCase {
 
   func testProperties() {
     let mediaContentMedia = ShareModelTestUtility.mediaContent.media

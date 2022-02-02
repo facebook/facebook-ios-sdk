@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class BridgeAPIResponseTests: XCTestCase {
+final class BridgeAPIResponseTests: XCTestCase {
   let request = TestBridgeAPIRequest(url: SampleURLs.valid)
   let bridgeProtocol = TestBridgeAPIProtocol()
   let queryItems = [URLQueryItem(name: "foo", value: "bar")]

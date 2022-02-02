@@ -11,7 +11,7 @@ import XCTest
 import FBSDKCoreKit_Basics
 import TestTools
 
-class AuthenticationTokenHeaderTests: XCTestCase {
+final class AuthenticationTokenHeaderTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var header: AuthenticationTokenHeader!

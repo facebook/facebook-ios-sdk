@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class SKAdNetworkReporterTests: XCTestCase {
+final class SKAdNetworkReporterTests: XCTestCase {
 
   let userDefaultsSpy = UserDefaultsSpy()
   let graphRequestFactory = TestGraphRequestFactory()

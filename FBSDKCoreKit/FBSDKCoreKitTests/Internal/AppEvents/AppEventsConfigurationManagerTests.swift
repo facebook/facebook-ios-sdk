@@ -8,7 +8,7 @@
 
 import TestTools
 
-class AppEventsConfigurationManagerTests: XCTestCase {
+final class AppEventsConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var manager: AppEventsConfigurationManager!

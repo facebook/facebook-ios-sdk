@@ -10,7 +10,7 @@
 @testable import FBSDKCoreKit
 import XCTest
 
-class GamingContextPayloadObserverTests: XCTestCase {
+final class GamingContextPayloadObserverTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var gamingContextDelegate: GamingContextPayloadObserverDelegate!
   var gamingContextObserver: GamingPayloadObserver!

@@ -10,7 +10,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class GamingPayloadTests: XCTestCase {
+final class GamingPayloadTests: XCTestCase {
 
   func testGamePayloadWithValidValues() throws {
     let url = try SampleUnparsedAppLinkURLs.validGameRequestUrl()

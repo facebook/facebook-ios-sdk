@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import UIKit
 import XCTest
 
-class ShareVideoContentTests: XCTestCase {
+final class ShareVideoContentTests: XCTestCase {
 
   var content: ShareVideoContent! // swiftlint:disable:this implicitly_unwrapped_optional
 

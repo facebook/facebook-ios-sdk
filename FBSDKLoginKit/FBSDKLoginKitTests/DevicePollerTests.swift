@@ -12,7 +12,7 @@ import FacebookCore
 
 import XCTest
 
-class DevicePollerTests: XCTestCase {
+final class DevicePollerTests: XCTestCase {
   func testScheduleBlock() {
     let poller = DevicePoller()
     let expectation = self.expectation(description: name)

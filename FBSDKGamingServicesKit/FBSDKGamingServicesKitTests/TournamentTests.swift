@@ -9,7 +9,7 @@
 @testable import FacebookGamingServices
 import XCTest
 
-class TournamentTests: XCTestCase {
+final class TournamentTests: XCTestCase {
 
   enum Keys {
     static let tournamentID = "id"

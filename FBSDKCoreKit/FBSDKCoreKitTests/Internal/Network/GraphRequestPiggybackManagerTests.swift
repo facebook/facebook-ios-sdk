@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class GraphRequestPiggybackManagerTests: XCTestCase {
+final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var manager: GraphRequestPiggybackManager!

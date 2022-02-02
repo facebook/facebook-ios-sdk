@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class CreateContextDialogFactoryTests: XCTestCase {
+final class CreateContextDialogFactoryTests: XCTestCase {
 
   let content = CreateContextContent(playerID: "123")
   let windowFinder = TestWindowFinder()

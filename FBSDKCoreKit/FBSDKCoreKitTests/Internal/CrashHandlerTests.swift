@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class CrashHandlerTests: XCTestCase {
+final class CrashHandlerTests: XCTestCase {
 
   let testFileManager = TestFileManager(tempDirectoryURL: URL(fileURLWithPath: "1"))
   let testBundle = TestBundle()

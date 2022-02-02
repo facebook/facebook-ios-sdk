@@ -8,7 +8,7 @@
 
 import XCTest
 
-class DrawableTests: XCTestCase {
+final class DrawableTests: XCTestCase {
   let size = CGSize(width: 100, height: 100)
   let placeholderImageColor = UIColor(
     red: 157.0 / 255.0,

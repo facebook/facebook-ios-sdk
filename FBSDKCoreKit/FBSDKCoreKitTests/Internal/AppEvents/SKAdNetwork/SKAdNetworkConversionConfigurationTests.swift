@@ -8,7 +8,7 @@
 
 #if !os(tvOS)
 
-class SKAdNetworkConversionConfigurationTests: XCTestCase {
+final class SKAdNetworkConversionConfigurationTests: XCTestCase {
   func testInit() {
     // Init with nil
     var config = SKAdNetworkConversionConfiguration(json: nil)

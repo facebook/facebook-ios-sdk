@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppEventsATEPublisherTests: XCTestCase {
+final class AppEventsATEPublisherTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var factory: TestGraphRequestFactory!

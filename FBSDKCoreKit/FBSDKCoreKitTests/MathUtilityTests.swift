@@ -8,7 +8,7 @@
 
 import XCTest
 
-class MathUtilityTests: XCTestCase {
+final class MathUtilityTests: XCTestCase {
   func testCeilForSize() {
     let fixtures: [(size: CGSize, expectedSize: CGSize)] = [
       (CGSize.zero, .zero),

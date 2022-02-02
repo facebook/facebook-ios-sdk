@@ -12,7 +12,7 @@ import XCTest
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 
-class LoginUtilityTests: XCTestCase {
+final class LoginUtilityTests: XCTestCase {
 
   enum Keys {
     static let expiresIn = "expires_in"

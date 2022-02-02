@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class ErrorConfigurationProviderTests: XCTestCase {
+final class ErrorConfigurationProviderTests: XCTestCase {
 
   func testErrorConfigurationRecoveryProvider() {
     XCTAssertTrue(

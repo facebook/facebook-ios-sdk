@@ -12,7 +12,7 @@ import FacebookCore
 
 import XCTest
 
-class LoginConfigurationTests: XCTestCase {
+final class LoginConfigurationTests: XCTestCase {
 
   func testDefaults() {
     guard let config = LoginConfiguration() else {

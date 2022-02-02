@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class ErrorConfigurationTests: XCTestCase {
+final class ErrorConfigurationTests: XCTestCase {
 
   let graphRequest = TestGraphRequest()
   let rawErrorCodeConfiguration = [

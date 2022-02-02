@@ -13,7 +13,7 @@ import FacebookCore
 import TestTools
 import XCTest
 
-class DeviceLoginManagerTests: XCTestCase {
+final class DeviceLoginManagerTests: XCTestCase {
 
   let fakeAppID = "123"
   let fakeClientToken = "abc"

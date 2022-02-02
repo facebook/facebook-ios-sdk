@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ShareDialogConfigurationTests: XCTestCase {
+final class ShareDialogConfigurationTests: XCTestCase {
 
   let serverConfiguration = TestServerConfiguration()
   lazy var provider = TestServerConfigurationProvider(configuration: serverConfiguration)

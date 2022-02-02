@@ -11,7 +11,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
+final class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
 
   let factory = AEMAdvertiserRuleFactory()
 

@@ -13,7 +13,7 @@ import TestTools
 import XCTest
 
 @available(iOS 13.0, *)
-class CustomUpdateGraphRequestTests: XCTestCase {
+final class CustomUpdateGraphRequestTests: XCTestCase {
   let factory = TestGraphRequestFactory()
   lazy var requester = CustomUpdateGraphRequest(graphRequestFactory: factory)
   var validContextTokenID = "12345"

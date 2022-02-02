@@ -8,7 +8,7 @@
 
 import XCTest
 
-class SharePhotoTests: XCTestCase {
+final class SharePhotoTests: XCTestCase {
 
   func testImageProperties() {
     let photo = ShareModelTestUtility.photoWithImage

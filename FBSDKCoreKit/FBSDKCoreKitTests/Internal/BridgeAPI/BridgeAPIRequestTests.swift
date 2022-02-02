@@ -10,7 +10,7 @@ import TestTools
 import UIKit
 import XCTest
 
-class BridgeAPIRequestTests: XCTestCase {
+final class BridgeAPIRequestTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var internalURLOpener: TestInternalURLOpener!

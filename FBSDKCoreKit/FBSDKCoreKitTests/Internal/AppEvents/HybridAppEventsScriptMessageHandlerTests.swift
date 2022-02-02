@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
+final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
 
   enum Keys {
     static let valid = AppEvents.ParameterName("key")

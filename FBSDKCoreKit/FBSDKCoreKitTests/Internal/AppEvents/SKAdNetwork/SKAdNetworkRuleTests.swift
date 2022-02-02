@@ -8,7 +8,7 @@
 
 #if !os(tvOS)
 
-class SKAdNetworkRuleTests: XCTestCase {
+final class SKAdNetworkRuleTests: XCTestCase {
   func testValidCase1() {
     let validData: [String: Any] = [
       "conversion_value": 2,

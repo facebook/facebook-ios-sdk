@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class BackgroundEventLoggerTests: XCTestCase {
+final class BackgroundEventLoggerTests: XCTestCase {
 
   let bundleWithIdentifier = TestBundle(infoDictionary: ["BGTaskSchedulerPermittedIdentifiers": ["123"]])
   let bundleWithoutIdentifier = TestBundle()
