@@ -10,7 +10,7 @@ import Foundation
 
 protocol GamingServiceControllerCreating {
   func create(
-    serviceType: _GamingServiceType,
+    serviceType: GamingServiceType,
     pendingResult: [String: Any]?,
     completion: @escaping GamingServiceResultCompletion
   ) -> GamingServiceControllerProtocol

@@ -10,14 +10,14 @@ import FBSDKCoreKit
 
 class GamingServiceController: NSObject {
 
-  private let serviceType: _GamingServiceType
+  private let serviceType: GamingServiceType
   private var completionHandler: GamingServiceResultCompletion?
   private let pendingResult: [String: Any]
   private let urlOpener: URLOpener
   private let settings: SettingsProtocol
 
   convenience init(
-    serviceType: _GamingServiceType,
+    serviceType: GamingServiceType,
     pendingResult: [String: Any],
     completionHandler completion: @escaping GamingServiceResultCompletion
   ) {
@@ -31,7 +31,7 @@ class GamingServiceController: NSObject {
   }
 
   init(
-    serviceType: _GamingServiceType,
+    serviceType: GamingServiceType,
     pendingResult: [String: Any],
     urlOpener: URLOpener,
     settings: SettingsProtocol,
