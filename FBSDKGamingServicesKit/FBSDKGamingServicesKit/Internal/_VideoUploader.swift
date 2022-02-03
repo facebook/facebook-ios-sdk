@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKVideoUploader)
-public final class _VideoUploader: NSObject, _VideoUploading {
+public final class _VideoUploader: NSObject, VideoUploading {
   private enum Keys {
     static let videoUploaderDefaultGraphNode = "me"
     static let videoUploaderEdge = "videos"

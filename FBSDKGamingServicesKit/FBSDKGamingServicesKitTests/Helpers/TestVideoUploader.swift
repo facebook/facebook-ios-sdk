@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+@testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestVideoUploader: _VideoUploading {
+class TestVideoUploader: VideoUploading {
 
   var delegate: _VideoUploaderDelegate?
   var wasStartCalled = false

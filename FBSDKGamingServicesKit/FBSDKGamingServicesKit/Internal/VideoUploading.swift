@@ -8,11 +8,8 @@
 
 import Foundation
 
-protocol VideoUploaderCreating {
-  func create(
-    videoName: String,
-    videoSize: UInt,
-    parameters: [String: Any],
-    delegate: _VideoUploaderDelegate
-  ) -> VideoUploading
+protocol VideoUploading {
+  var delegate: _VideoUploaderDelegate? { get set }
+
+  func start()
 }

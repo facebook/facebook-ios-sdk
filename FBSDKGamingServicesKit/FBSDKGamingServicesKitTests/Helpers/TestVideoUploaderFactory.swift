@@ -22,7 +22,7 @@ class TestVideoUploaderFactory: VideoUploaderCreating {
     videoSize: UInt,
     parameters: [String: Any],
     delegate: _VideoUploaderDelegate
-  ) -> _VideoUploading {
+  ) -> VideoUploading {
     capturedVideoName = videoName
     capturedVideoSize = videoSize
     capturedParameters = parameters

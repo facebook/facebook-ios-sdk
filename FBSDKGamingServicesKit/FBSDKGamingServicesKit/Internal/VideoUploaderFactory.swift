@@ -14,7 +14,7 @@ final class VideoUploaderFactory: VideoUploaderCreating {
     videoSize: UInt,
     parameters: [String: Any],
     delegate: _VideoUploaderDelegate
-  ) -> _VideoUploading {
+  ) -> VideoUploading {
     _VideoUploader(
       videoName: videoName,
       videoSize: videoSize,
