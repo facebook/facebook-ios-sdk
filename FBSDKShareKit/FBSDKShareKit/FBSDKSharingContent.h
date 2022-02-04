@@ -28,7 +28,7 @@ NS_SWIFT_NAME(SharingContent)
  for App Links (https://developers.facebook.com/docs/applinks/)
  @return URL representation of the content link
  */
-@property (nonatomic, copy) NSURL *contentURL;
+@property (nullable, nonatomic, copy) NSURL *contentURL;
 
 /**
  Hashtag for the content being shared.
