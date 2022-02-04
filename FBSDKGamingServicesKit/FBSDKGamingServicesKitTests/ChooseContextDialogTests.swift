@@ -10,7 +10,7 @@ import FBSDKGamingServicesKit
 import TestTools
 import XCTest
 
-class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
+final class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
 
   var dialogDidCompleteSuccessfully = false
   var dialogDidCancel = false

@@ -13,11 +13,7 @@ protocol WindowMoving {
   func didMoveToWindow()
 }
 
-// swiftformat:disable indent
-class EventBindingManagerTests: XCTestCase,
-                                UITableViewDelegate,
-                                UICollectionViewDelegate {
-  // swiftformat:enable indent
+final class EventBindingManagerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
   lazy var manager = EventBindingManager(
     json: SampleRawRemoteEventBindings.sampleDictionary,

@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
+final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegate {
 
   var dialogDidCompleteSuccessfully = false
   var dialogDidCancel = false

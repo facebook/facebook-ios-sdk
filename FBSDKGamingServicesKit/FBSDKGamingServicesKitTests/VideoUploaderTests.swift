@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
+final class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
 
   let startOffset = "start_offset"
   let endOffset = "end_offset"

@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import XCTest
 
-class VideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
+final class VideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
 
   func testCreatingVideoUploader() {
     let uploader = VideoUploaderFactory().create(

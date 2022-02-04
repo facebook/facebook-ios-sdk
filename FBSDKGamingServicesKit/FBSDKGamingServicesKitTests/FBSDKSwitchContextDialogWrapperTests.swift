@@ -12,7 +12,7 @@ import XCTest
 
 struct SampleError: Error {}
 
-class FBSDKSwitchContextDialogWrapperTests: XCTestCase, ContextDialogDelegate {
+final class FBSDKSwitchContextDialogWrapperTests: XCTestCase, ContextDialogDelegate {
 
   let content = SwitchContextContent(contextID: "123")
   let windowFinder = TestWindowFinder()

@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
+final class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
 
   let factory = URLSessionProxyFactory()
 

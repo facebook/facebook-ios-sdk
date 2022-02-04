@@ -10,7 +10,7 @@ import FBSDKGamingServicesKit
 import TestTools
 import XCTest
 
-class FBSDKSwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
+final class FBSDKSwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   func testCreating() {
     let content = SwitchContextContent(contextID: "12345")
     let windowFinder = TestWindowFinder()

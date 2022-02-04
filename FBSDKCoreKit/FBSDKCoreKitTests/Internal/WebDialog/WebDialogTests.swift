@@ -12,7 +12,7 @@ import XCTest
 
 // swiftlint:disable implicitly_unwrapped_optional
 
-class WebDialogTests: XCTestCase, WebDialogDelegate {
+final class WebDialogTests: XCTestCase, WebDialogDelegate {
 
   var windowFinder: _WindowFinding!
   var dialogView: FBWebDialogView!

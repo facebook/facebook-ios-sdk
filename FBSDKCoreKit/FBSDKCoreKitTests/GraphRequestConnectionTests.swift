@@ -9,7 +9,7 @@
 import UIKit
 import XCTest
 
-class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
+final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDelegate {
 
   let appID = "appid"
   var didInvokeDelegateRequestConnectionDidSendBodyData = false

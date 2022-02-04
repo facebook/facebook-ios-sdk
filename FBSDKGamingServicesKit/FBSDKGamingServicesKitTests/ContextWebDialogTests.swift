@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
+final class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
 
   let contextIDKey = "context_id"
   let contextID = "123"

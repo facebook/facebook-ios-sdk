@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
+final class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var webView: TestWebView!

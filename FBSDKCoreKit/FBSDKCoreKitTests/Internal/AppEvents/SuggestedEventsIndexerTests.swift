@@ -9,7 +9,7 @@
 import TestTools
 import XCTest
 
-class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
+final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var graphRequestFactory: TestGraphRequestFactory!

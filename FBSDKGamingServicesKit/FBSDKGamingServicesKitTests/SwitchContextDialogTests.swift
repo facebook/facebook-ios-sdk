@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
+final class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
 
   var dialogDidCompleteSuccessfully = false
   var dialogDidCancel = false

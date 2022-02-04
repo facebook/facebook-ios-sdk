@@ -71,7 +71,7 @@ custom_rules:
     regex: " let [^\n]*?, let "
     message: "Place each let statement and condition on its own line"
   test_classes_should_be_final:
-    regex: "(?<!final )class.*XCTestCase \\{"
+    regex: "(?<!final )class.*XCTestCase\\b"
     message: "Make test classes final"
 
 only_rules:
