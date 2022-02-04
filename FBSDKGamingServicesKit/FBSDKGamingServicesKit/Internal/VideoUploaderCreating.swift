@@ -13,6 +13,6 @@ protocol VideoUploaderCreating {
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
-    delegate: _VideoUploaderDelegate
+    delegate: VideoUploaderDelegate
   ) -> VideoUploading
 }

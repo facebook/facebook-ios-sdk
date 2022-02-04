@@ -11,7 +11,7 @@ import Foundation
 
 class TestVideoUploader: VideoUploading {
 
-  var delegate: _VideoUploaderDelegate?
+  var delegate: VideoUploaderDelegate?
   var wasStartCalled = false
 
   func start() {

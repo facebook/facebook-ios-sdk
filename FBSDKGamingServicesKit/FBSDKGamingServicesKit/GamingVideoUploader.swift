@@ -195,12 +195,12 @@ public final class GamingVideoUploader: NSObject {
   }
 }
 
-// MARK: - _VideoUploaderDelegate
+// MARK: - VideoUploaderDelegate
 
-extension GamingVideoUploader: _VideoUploaderDelegate {
+extension GamingVideoUploader: VideoUploaderDelegate {
 
-  public func videoChunkData(
-    for videoUploader: _VideoUploader,
+  func videoChunkData(
+    for videoUploader: VideoUploader,
     startOffset: UInt,
     endOffset: UInt
   ) -> Data? {
@@ -218,8 +218,8 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
     return videoChunkData
   }
 
-  public func videoUploader(
-    _ videoUploader: _VideoUploader,
+  func videoUploader(
+    _ videoUploader: VideoUploader,
     didCompleteWithResults results: [String: Any]
   ) {
     safelyHandleProgress(totalBytesSent: totalBytesExpectedToSend)
@@ -240,8 +240,8 @@ extension GamingVideoUploader: _VideoUploaderDelegate {
     )
   }
 
-  public func videoUploader(
-    _ videoUploader: _VideoUploader,
+  func videoUploader(
+    _ videoUploader: VideoUploader,
     didFailWithError error: Error
   ) {
     safelyComplete(

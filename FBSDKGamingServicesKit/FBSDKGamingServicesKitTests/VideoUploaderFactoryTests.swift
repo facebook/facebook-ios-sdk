@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import XCTest
 
-class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
+class VideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
 
   func testCreatingVideoUploader() {
     let uploader = VideoUploaderFactory().create(
@@ -20,7 +20,7 @@ class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
     )
 
     XCTAssertTrue(
-      uploader is _VideoUploader,
+      uploader is VideoUploader,
       "Should create the expected concrete video uploader"
     )
 
@@ -32,10 +32,10 @@ class VideoUploaderFactoryTests: XCTestCase, _VideoUploaderDelegate {
 
   // MARK: - VideoUploaderDelegate conformance
 
-  func videoChunkData(for videoUploader: _VideoUploader, startOffset: UInt, endOffset: UInt) -> Data? {
+  func videoChunkData(for videoUploader: VideoUploader, startOffset: UInt, endOffset: UInt) -> Data? {
     Data()
   }
 
-  func videoUploader(_ videoUploader: _VideoUploader, didCompleteWithResults results: [String: Any]) {}
-  func videoUploader(_ videoUploader: _VideoUploader, didFailWithError error: Error) {}
+  func videoUploader(_ videoUploader: VideoUploader, didCompleteWithResults results: [String: Any]) {}
+  func videoUploader(_ videoUploader: VideoUploader, didFailWithError error: Error) {}
 }

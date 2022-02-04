@@ -9,7 +9,7 @@
 import Foundation
 
 protocol VideoUploading {
-  var delegate: _VideoUploaderDelegate? { get set }
+  var delegate: VideoUploaderDelegate? { get set }
 
   func start()
 }

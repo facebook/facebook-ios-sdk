@@ -153,7 +153,7 @@ final class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
-    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     _ = delegate.videoUploader(dummyUploader, didFailWithError: SampleError())
 
     XCTAssertTrue(wasCompletionCalled)
@@ -171,7 +171,7 @@ final class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
-    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": false])
 
     XCTAssertTrue(wasCompletionCalled)
@@ -186,7 +186,7 @@ final class GamingVideoUploaderTests: XCTestCase {
     }
 
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
-    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
     delegate.videoUploader(dummyUploader, didCompleteWithResults: ["success": "1"])
 
     XCTAssertTrue(wasCompletionCalled)
@@ -213,7 +213,7 @@ final class GamingVideoUploaderTests: XCTestCase {
       progressHandler: verifyProgress
     )
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate)
-    let dummyUploader = _VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
+    let dummyUploader = VideoUploader(videoName: "dummy", videoSize: 0, parameters: [:], delegate: delegate)
 
     // Send first chunk of data
     _ = delegate.videoChunkData(for: dummyUploader, startOffset: 0, endOffset: 500)

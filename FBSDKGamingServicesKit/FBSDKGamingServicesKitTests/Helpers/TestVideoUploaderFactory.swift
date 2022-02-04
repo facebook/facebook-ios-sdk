@@ -14,14 +14,14 @@ class TestVideoUploaderFactory: VideoUploaderCreating {
   var capturedVideoName: String?
   var capturedVideoSize: UInt?
   var capturedParameters = [String: Any]()
-  var capturedDelegate: _VideoUploaderDelegate?
+  var capturedDelegate: VideoUploaderDelegate?
   var stubbedVideoUploader = TestVideoUploader()
 
   func create(
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
-    delegate: _VideoUploaderDelegate
+    delegate: VideoUploaderDelegate
   ) -> VideoUploading {
     capturedVideoName = videoName
     capturedVideoSize = videoSize

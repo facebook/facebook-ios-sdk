@@ -9,9 +9,7 @@
 import FBSDKCoreKit
 import Foundation
 
-@objcMembers
-@objc(FBSDKVideoUploader)
-public final class _VideoUploader: NSObject, VideoUploading {
+final class VideoUploader: VideoUploading {
   private enum Keys {
     static let videoUploaderDefaultGraphNode = "me"
     static let videoUploaderEdge = "videos"
@@ -34,7 +32,7 @@ public final class _VideoUploader: NSObject, VideoUploading {
 
   private let videoName: String
   private let videoSize: UInt
-  public var parameters: [String: Any]
+  let parameters: [String: Any]
   private let graphRequestFactory: GraphRequestFactoryProtocol
 
   private var videoID: Int?
@@ -46,12 +44,12 @@ public final class _VideoUploader: NSObject, VideoUploading {
   /**
    The graph node to which video should be uploaded
    */
-  public var graphNode = Keys.videoUploaderDefaultGraphNode
+  var graphNode = Keys.videoUploaderDefaultGraphNode
 
   /**
    Receiver's delegate
    */
-  public weak var delegate: _VideoUploaderDelegate?
+  weak var delegate: VideoUploaderDelegate?
 
   /**
    Initialize VideoUploader
@@ -60,11 +58,11 @@ public final class _VideoUploader: NSObject, VideoUploading {
    @param parameters Optional parameters for video uploads. See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
    @param delegate Receiver's delegate
    */
-  public convenience init(
+  convenience init(
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
-    delegate: _VideoUploaderDelegate
+    delegate: VideoUploaderDelegate
   ) {
     self.init(
       videoName: videoName,
@@ -79,7 +77,7 @@ public final class _VideoUploader: NSObject, VideoUploading {
     videoName: String,
     videoSize: UInt,
     parameters: [String: Any],
-    delegate: _VideoUploaderDelegate,
+    delegate: VideoUploaderDelegate,
     graphRequestFactory: GraphRequestFactoryProtocol
   ) {
     self.parameters = parameters
@@ -92,7 +90,7 @@ public final class _VideoUploader: NSObject, VideoUploading {
   /**
    Start the upload process
    */
-  public func start() {
+  func start() {
     guard videoSize != 0 else {
       let uploadError = errorWithMessage("Invalid video size: \(videoSize)")
       delegate?.videoUploader(self, didFailWithError: uploadError)
