@@ -18,7 +18,7 @@ class TestCreateContextDialogFactory: CreateContextDialogMaking {
 
   func makeCreateContextDialog(
     content: CreateContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) -> Showable? {
     wasMakeCreateContextDialogCalled = true

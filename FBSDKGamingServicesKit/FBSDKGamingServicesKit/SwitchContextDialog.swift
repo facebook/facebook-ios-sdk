@@ -24,7 +24,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
     static let height: CGFloat = 185.0
   }
 
-  let windowFinder: WindowFinding
+  let windowFinder: _WindowFinding
   var frame: CGRect {
     createWebDialogFrame(
       withWidth: DialogFrame.width,
@@ -42,7 +42,7 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
    */
   public init(
     content: SwitchContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) {
     self.windowFinder = windowFinder

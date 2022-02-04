@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
                bridgeAPIRequestFactory:(id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(id<_FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
-                          windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                          windowFinder:(id<_FBSDKWindowFinding>)windowFinder
                           errorFactory:(id<FBSDKErrorCreating>)errorFactory
 NS_SWIFT_NAME(configure(internalURLOpener:internalUtility:settings:shareUtility:bridgeAPIRequestFactory:bridgeAPIRequestOpener:socialComposeViewControllerFactory:windowFinder:errorFactory:));
 // UNCRUSTIFY_FORMAT_ON

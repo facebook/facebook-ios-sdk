@@ -31,7 +31,7 @@ class TestSwitchContextDialog: SwitchContextDialogProtocol {
   func createWebDialogFrame(
     withWidth: CGFloat,
     height: CGFloat,
-    windowFinder: WindowFinding
+    windowFinder: _WindowFinding
   ) -> CGRect {
     wasCreateWebDialogCalled = true
 

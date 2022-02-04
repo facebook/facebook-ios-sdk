@@ -17,7 +17,7 @@ struct CreateContextDialogFactory: CreateContextDialogMaking {
 
   func makeCreateContextDialog(
     content: CreateContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) throws -> Showable? {
     guard tokenProvider.currentAccessToken != nil else {

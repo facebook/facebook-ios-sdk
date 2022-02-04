@@ -27,7 +27,7 @@ public class CreateContextDialog: ContextWebDialog {
     static let height: CGFloat = 185.0
   }
 
-  let windowFinder: WindowFinding
+  let windowFinder: _WindowFinding
 
   /**
    Builds a context creation web dialog with content and a delegate.
@@ -37,7 +37,7 @@ public class CreateContextDialog: ContextWebDialog {
    */
   public init(
     content: CreateContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) {
     self.windowFinder = windowFinder

@@ -18,7 +18,7 @@ struct SwitchContextDialogFactory: SwitchContextDialogMaking {
 
   func makeSwitchContextDialog(
     content: SwitchContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) throws -> Showable? {
     guard tokenProvider.currentAccessToken != nil else {

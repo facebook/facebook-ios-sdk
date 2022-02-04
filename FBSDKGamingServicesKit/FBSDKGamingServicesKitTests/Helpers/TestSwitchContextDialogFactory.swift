@@ -18,7 +18,7 @@ class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
 
   func makeSwitchContextDialog(
     content: SwitchContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) -> Showable? {
     wasMakeSwitchContextDialogCalled = true

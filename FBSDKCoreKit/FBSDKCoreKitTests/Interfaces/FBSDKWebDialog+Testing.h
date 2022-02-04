@@ -10,13 +10,13 @@
 
 #import "FBSDKWebDialog+Internal.h"
 
-@protocol FBSDKWindowFinding;
+@protocol _FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKWebDialog (Testing)
 
-@property (nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
+@property (nonatomic, strong) id<_FBSDKWindowFinding> windowFinder;
 
 - (NSURL *)_generateURL:(NSError **)errorRef;
 

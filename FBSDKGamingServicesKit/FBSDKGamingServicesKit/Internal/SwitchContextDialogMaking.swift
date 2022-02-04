@@ -11,7 +11,7 @@ import FBSDKCoreKit
 protocol SwitchContextDialogMaking {
   func makeSwitchContextDialog(
     content: SwitchContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) throws -> Showable?
 }

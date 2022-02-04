@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(WindowFinding)
-@protocol FBSDKWindowFinding
+NS_SWIFT_NAME(_WindowFinding)
+@protocol _FBSDKWindowFinding
 
 /**
  Internal Type exposed to facilitate transition to Swift.

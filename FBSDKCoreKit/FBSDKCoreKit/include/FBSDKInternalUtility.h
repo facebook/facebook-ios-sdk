@@ -12,6 +12,7 @@
 #import <FBSDKCoreKit/FBSDKAppAvailabilityChecker.h>
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
+#import <FBSDKCoreKit/_FBSDKWindowFinding.h>
 
 #if !TARGET_OS_TV
  #import <FBSDKCoreKit/FBSDKURLHosting.h>
@@ -33,7 +34,7 @@ FOUNDATION_EXPORT NSString *const FBSDK_CANOPENURL_SHARE_EXTENSION
 NS_SWIFT_NAME(InternalUtility)
 @interface FBSDKInternalUtility : NSObject
 #if !TARGET_OS_TV
-  <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility, FBSDKURLHosting>
+  <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility, FBSDKURLHosting, _FBSDKWindowFinding>
 #else
   <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility>
 #endif

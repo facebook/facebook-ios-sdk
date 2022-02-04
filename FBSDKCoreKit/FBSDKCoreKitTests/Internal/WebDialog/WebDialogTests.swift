@@ -14,7 +14,7 @@ import XCTest
 
 class WebDialogTests: XCTestCase, WebDialogDelegate {
 
-  var windowFinder: WindowFinding!
+  var windowFinder: _WindowFinding!
   var dialogView: FBWebDialogView!
   var errorFactory: ErrorCreating!
   var webDialogDidCancelWasCalled = false

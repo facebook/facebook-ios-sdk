@@ -54,7 +54,7 @@
 
 @end
 
-@interface FBSDKInternalUtility (ShareWindowFinding) <FBSDKWindowFinding>
+@interface FBSDKInternalUtility (ShareWindowFinding) <_FBSDKWindowFinding>
 @end
 
 @implementation FBSDKShareDialog
@@ -158,14 +158,14 @@ static _Nullable id<_FBSDKSocialComposeViewControllerFactory> _socialComposeView
   _socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 }
 
-static _Nullable id<FBSDKWindowFinding> _windowFinder;
+static _Nullable id<_FBSDKWindowFinding> _windowFinder;
 
-+ (nullable id<FBSDKWindowFinding>)windowFinder
++ (nullable id<_FBSDKWindowFinding>)windowFinder
 {
   return _windowFinder;
 }
 
-+ (void)setWindowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
++ (void)setWindowFinder:(nullable id<_FBSDKWindowFinding>)windowFinder
 {
   _windowFinder = windowFinder;
 }
@@ -191,7 +191,7 @@ static _Nullable id<FBSDKErrorCreating> _errorFactory;
                bridgeAPIRequestFactory:(nonnull id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(nonnull id<_FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
-                          windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
+                          windowFinder:(nonnull id<_FBSDKWindowFinding>)windowFinder
                           errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
 {
   self.internalURLOpener = internalURLOpener;

@@ -17,7 +17,7 @@ protocol SwitchContextDialogProtocol: WebDialogDelegate, DialogProtocol {
   func createWebDialogFrame(
     withWidth: CGFloat,
     height: CGFloat,
-    windowFinder: WindowFinding
+    windowFinder: _WindowFinding
   ) -> CGRect
 }
 

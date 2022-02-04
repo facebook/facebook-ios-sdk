@@ -14,7 +14,7 @@
 
 #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
 
-@protocol FBSDKWindowFinding;
+@protocol _FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,7 +41,7 @@ NS_SWIFT_NAME(WebDialog)
 
  @warning INTERNAL - DO NOT USE
  */
-@property (nullable, nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
+@property (nullable, nonatomic, strong) id<_FBSDKWindowFinding> windowFinder;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
@@ -66,7 +66,7 @@ NS_SWIFT_NAME(WebDialog)
                            parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                 frame:(CGRect)frame
                              delegate:(id<FBSDKWebDialogDelegate>)delegate
-                         windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
+                         windowFinder:(nullable id<_FBSDKWindowFinding>)windowFinder
 NS_SWIFT_NAME(createAndShow(name:parameters:frame:delegate:windowFinder:));
 // UNCRUSTIFY_FORMAT_ON
 

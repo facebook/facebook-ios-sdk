@@ -24,9 +24,6 @@ typedef id _Nullable (^ FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
 
 @interface FBSDKInternalUtility (Internal)
-#if !TARGET_OS_TV
-<FBSDKWindowFinding>
-#endif
 
 /**
  Constructs the scheme for apps that come to the current app through the bridge.

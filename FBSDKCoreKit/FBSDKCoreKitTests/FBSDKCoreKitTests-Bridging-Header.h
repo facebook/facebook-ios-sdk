@@ -189,7 +189,6 @@
 #import "FBSDKWebDialog+Testing.h"
 #import "FBSDKWebDialogView+Testing.h"
 #import "FBSDKWebViewFactory.h"
-#import "FBSDKWindowFinding.h"
 #import "FeatureManager+Testing.h"
 #import "ImageDownloader+Testing.h"
 #import "NSNotificationCenter+Extensions.h"

@@ -21,7 +21,6 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKWebDialogView.h"
-#import "FBSDKWindowFinding.h"
 
 #define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
 #define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
@@ -101,7 +100,7 @@ static id<FBSDKErrorCreating> _errorFactory;
                   parameters:(nullable NSDictionary<NSString *, id> *)parameters
                        frame:(CGRect)frame
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
-                windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
+                windowFinder:(nullable id<_FBSDKWindowFinding>)windowFinder
 {
   [self.class configureDefaultClassDependencies];
 
@@ -140,7 +139,7 @@ static id<FBSDKErrorCreating> _errorFactory;
                            parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                 frame:(CGRect)frame
                              delegate:(id<FBSDKWebDialogDelegate>)delegate
-                         windowFinder:(nullable id<FBSDKWindowFinding>)windowFinder
+                         windowFinder:(nullable id<_FBSDKWindowFinding>)windowFinder
 {
   FBSDKWebDialog *dialog = [[self alloc] initWithName:name
                                            parameters:parameters

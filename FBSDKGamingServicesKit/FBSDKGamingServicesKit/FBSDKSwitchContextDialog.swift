@@ -31,7 +31,7 @@ open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol
    */
   public static func dialog(
     withContent content: SwitchContextContent,
-    windowFinder: WindowFinding,
+    windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) -> FBSDKSwitchContextDialog {
     let dialog = SwitchContextDialog(
@@ -99,7 +99,7 @@ open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol
   public func createWebDialogFrame(
     width: CGFloat,
     height: CGFloat,
-    windowFinder: WindowFinding
+    windowFinder: _WindowFinding
   ) -> CGRect {
     dialog.createWebDialogFrame(
       withWidth: width,

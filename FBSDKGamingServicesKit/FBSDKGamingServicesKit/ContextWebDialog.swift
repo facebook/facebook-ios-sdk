@@ -72,7 +72,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
   public func createWebDialogFrame(
     withWidth width: CGFloat,
     height: CGFloat,
-    windowFinder: WindowFinding
+    windowFinder: _WindowFinding
   ) -> CGRect {
     guard let window = windowFinder.findWindow() else {
       return .zero

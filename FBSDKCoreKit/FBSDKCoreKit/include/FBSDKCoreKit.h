@@ -108,5 +108,5 @@
  #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
  #import <FBSDKCoreKit/FBSDKWebDialogView.h>
  #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
- #import <FBSDKCoreKit/FBSDKWindowFinding.h>
+ #import <FBSDKCoreKit/_FBSDKWindowFinding.h>
 #endif
