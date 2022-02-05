@@ -32,6 +32,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `FBSDKAppLinkResolverRequestBuilder`
 - Removed deprecated URL schemes `.facebookApp`, `.facebookShareExtension` and `.masqueradePlayer`; use `.facebookAPI` instead.
 - Removed deprecated `init` and `new` methods from `FBSDKCrashHandler`
+- Removed deprecated `init` and `new` methods from `FBSDKLogger`
+- Removed deprecated `init` and `new` methods from `FBSDKURLSession`
 - Removed `init` from `MessageDialog`; use `init(content:delegate:)` instead
 
 #### AppEvents deprecations
@@ -60,11 +62,11 @@ TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many
 - Removed deprecated `AppEvents.augmentHybridWKWebView(_:)` (use `AppEvents.shared.augmentHybridWebView(_:)` instead)
 - Removed deprecated `AppEvents.setIsUnityInit(_:)` (use `AppEvents.shared.setIsUnityInitialized(_:)` instead)
 - Removed deprecated `AppEvents.sendEventBindingsToUnity()` (use `AppEvents.shared.sendEventBindingsToUnity()` instead)
-- Removed deprecated `AppEvents.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)` (use `AppEvents.shared.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)`
-- Removed deprecated `AppEvents.clearUserData()` (use `AppEvents.shared.clearUserData()`
-- Removed deprecated `AppEvents.getUserData()` (use `AppEvents.shared.getUserData()`
-- Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)`
-- Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)`
+- Removed deprecated `AppEvents.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)` (use `AppEvents.shared.setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:)` instead)
+- Removed deprecated `AppEvents.clearUserData()` (use `AppEvents.shared.clearUserData()` instead)
+- Removed deprecated `AppEvents.getUserData()` (use `AppEvents.shared.getUserData()` instead)
+- Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)` instead)
+- Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)` instead)
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
 

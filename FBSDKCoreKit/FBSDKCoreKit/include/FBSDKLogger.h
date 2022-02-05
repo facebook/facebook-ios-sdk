@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Logger)
 @interface FBSDKLogger : NSObject
 
-- (instancetype)init DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
-+ (instancetype)new DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 // Simple helper to write a single log entry, based upon whether the behavior matches a specified on.
 + (void)singleShotLogEntry:(FBSDKLoggingBehavior)loggingBehavior

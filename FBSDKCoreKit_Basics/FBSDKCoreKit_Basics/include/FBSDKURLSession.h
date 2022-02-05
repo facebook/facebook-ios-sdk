@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, weak) id<NSURLSessionDataDelegate> delegate;
 @property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
 
-- (instancetype)init DEPRECATED_MSG_ATTRIBUTE("`init` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
-+ (instancetype)new DEPRECATED_MSG_ATTRIBUTE("`new` is deprecated and will be removed in the next major release. Please use one of the other available initializers");
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithDelegate:(id<NSURLSessionDataDelegate>)delegate
                    delegateQueue:(NSOperationQueue *)delegateQueue;
