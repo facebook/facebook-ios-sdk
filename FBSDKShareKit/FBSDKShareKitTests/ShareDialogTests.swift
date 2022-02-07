@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKShareKit
+@testable import FBSDKShareKit
 import TestTools
 import UIKit
 import XCTest
@@ -120,7 +120,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNativeDialogWithoutShareContent() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     internalURLOpener.canOpenURL = true
     internalUtility.isFacebookAppInstalled = true
 
@@ -132,7 +132,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNativeLinkContent() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
@@ -142,7 +142,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNativePhotoContent() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     dialog.shareContent = ShareModelTestUtility.photoContent
     TestShareUtility.stubbedValidateShareShouldThrow = true
 
@@ -154,7 +154,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNativePhotoContentWithFileURL() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
     XCTAssertTrue(
       dialog.canShow,
@@ -164,7 +164,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNativeVideoContentWithoutPreviewPhoto() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     internalURLOpener.canOpenURL = true
     dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
 
@@ -176,7 +176,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowNative() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
 
     XCTAssertFalse(
       dialog.canShow,
@@ -186,7 +186,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testShowNativeDoesValidate() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     dialog.shareContent = ShareModelTestUtility.photoContent
     internalURLOpener.canOpenURL = true
 
@@ -195,7 +195,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testValidateShareSheet() throws {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.shareSheet.rawValue
+    dialog.mode = .shareSheet
 
     dialog.shareContent = ShareModelTestUtility.linkContentWithoutQuote
     XCTAssertNoThrow(
@@ -224,7 +224,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowBrowser() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.browser.rawValue
+    dialog.mode = .browser
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without share content should be showable in a browser"
@@ -252,7 +252,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testValidateBrowser() throws {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.browser.rawValue
+    dialog.mode = .browser
 
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
@@ -274,7 +274,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testCanShowWeb() {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.web.rawValue
+    dialog.mode = .web
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without share content should be showable on web"
@@ -306,7 +306,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testValidateWeb() throws {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.web.rawValue
+    dialog.mode = .web
 
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
@@ -355,7 +355,7 @@ final class ShareDialogTests: XCTestCase {
   func testCanShowFeedBrowser() {
     let dialog = createEmptyDialog()
 
-    dialog.mode = ShareDialog.Mode.feedBrowser.rawValue
+    dialog.mode = .feedBrowser
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without content should be showable in a browser feed"
@@ -382,7 +382,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testValidateFeedBrowser() throws {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.feedBrowser.rawValue
+    dialog.mode = .feedBrowser
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
@@ -396,7 +396,7 @@ final class ShareDialogTests: XCTestCase {
   func testCanShowFeedWeb() {
     let dialog = createEmptyDialog()
 
-    dialog.mode = ShareDialog.Mode.feedWeb.rawValue
+    dialog.mode = .feedWeb
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without content should be showable in a web feed"
@@ -423,7 +423,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testValidateFeedWeb() throws {
     let dialog = createEmptyDialog()
-    dialog.mode = ShareDialog.Mode.feedWeb.rawValue
+    dialog.mode = .feedWeb
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
@@ -434,7 +434,7 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertThrowsError(try dialog.validate())
   }
 
-  func testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable() {
+  func testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable() throws {
     let dialog = createEmptyDialog()
     let content = ShareModelTestUtility.linkContent
     content.hashtag = Hashtag("#hashtag")
@@ -448,12 +448,14 @@ final class ShareDialogTests: XCTestCase {
 
     let viewController = UIViewController()
     dialog.fromViewController = viewController
-    dialog.mode = ShareDialog.Mode.shareSheet.rawValue
+    dialog.mode = .shareSheet
     XCTAssertTrue(dialog.show())
 
-    XCTAssertEqual(
-      socialComposeViewController.capturedInitialText,
-      "fb-app-id:appID #hashtag|{\"quotes\":[\"a quote\"],\"app_id\":\"appID\",\"hashtags\":[\"#hashtag\"]}"
+    try validateInitialText(
+      capturedText: socialComposeViewController.capturedInitialText,
+      expectedAppID: "appID",
+      expectedHashtag: "#hashtag",
+      expectedQuotes: ["a quote"]
     )
   }
 
@@ -464,26 +466,26 @@ final class ShareDialogTests: XCTestCase {
     internalUtility.isFacebookAppInstalled = true
 
     // Check supported modes
-    dialog.mode = ShareDialog.Mode.automatic.rawValue
+    dialog.mode = .automatic
     XCTAssertNoThrow(try dialog.validate())
 
-    dialog.mode = ShareDialog.Mode.native.rawValue
+    dialog.mode = .native
     XCTAssertNoThrow(try dialog.validate())
 
     // Check unsupported modes
-    dialog.mode = ShareDialog.Mode.web.rawValue
+    dialog.mode = .web
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.mode = ShareDialog.Mode.browser.rawValue
+    dialog.mode = .browser
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.mode = ShareDialog.Mode.shareSheet.rawValue
+    dialog.mode = .shareSheet
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.mode = ShareDialog.Mode.feedWeb.rawValue
+    dialog.mode = .feedWeb
     XCTAssertThrowsError(try dialog.validate())
 
-    dialog.mode = ShareDialog.Mode.feedBrowser.rawValue
+    dialog.mode = .feedBrowser
     XCTAssertThrowsError(try dialog.validate())
   }
 
@@ -491,7 +493,7 @@ final class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.shareContent = ShareModelTestUtility.cameraEffectContent
 
-    dialog.mode = ShareDialog.Mode.automatic.rawValue
+    dialog.mode = .automatic
     XCTAssertThrowsError(try dialog.validate())
   }
 
@@ -624,7 +626,7 @@ final class ShareDialogTests: XCTestCase {
     let viewController = UIViewController()
     let dialog = createEmptyDialog()
     dialog.shareContent = shareContent
-    dialog.mode = mode.rawValue
+    dialog.mode = mode
     dialog.fromViewController = viewController
 
     if expectValid {
@@ -646,6 +648,78 @@ final class ShareDialogTests: XCTestCase {
       "Showing the dialog should return \(expectShow)",
       file: file,
       line: line
+    )
+  }
+
+  private func validateInitialText(
+    capturedText: String?,
+    expectedAppID: String,
+    expectedHashtag: String,
+    expectedQuotes: [String],
+    file: StaticString = #file,
+    line: UInt = #line
+  ) throws {
+    let capturedComponents = try XCTUnwrap(initialTextComponents(for: capturedText))
+
+    XCTAssertEqual(
+      capturedComponents.appID,
+      "fb-app-id:\(expectedAppID)",
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      capturedComponents.hashtag,
+      expectedHashtag,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      capturedComponents.jsonObject.count,
+      3,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      capturedComponents.jsonObject["quotes"] as? [String],
+      expectedQuotes,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      capturedComponents.jsonObject["app_id"] as? String,
+      expectedAppID,
+      file: file,
+      line: line
+    )
+    XCTAssertEqual(
+      capturedComponents.jsonObject["hashtags"] as? [String],
+      [expectedHashtag],
+      file: file,
+      line: line
+    )
+  }
+
+  private typealias InitialTextComponents = (appID: String, hashtag: String, jsonObject: [String: Any])
+
+  private func initialTextComponents(for potentialText: String?) -> InitialTextComponents? {
+    guard
+      let splitAtVerticalBar = potentialText?.split(separator: "|"),
+      splitAtVerticalBar.count == 2,
+      let beforeJSON = splitAtVerticalBar.first?.split(separator: " "),
+      beforeJSON.count == 2,
+      let appID = beforeJSON.first,
+      let hashtag = beforeJSON.last,
+      let json = splitAtVerticalBar.last,
+      let data = String(json).data(using: .utf8),
+      let jsonObject = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+    else {
+      return nil
+    }
+
+    return (
+      appID: String(appID),
+      hashtag: String(hashtag),
+      jsonObject: jsonObject
     )
   }
 }

@@ -13,7 +13,6 @@
 #import "FBSDKAppInviteContent.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareCameraEffectContent+Testing.h"
-#import "FBSDKShareDialog+Testing.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"

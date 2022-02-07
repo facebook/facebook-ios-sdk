@@ -26,7 +26,6 @@
 #if !TARGET_OS_TV
  #import <FBSDKShareKit/FBSDKAppInviteContent.h>
  #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
- #import <FBSDKShareKit/FBSDKShareDialog.h>
  #import <FBSDKShareKit/_FBSDKShareBridgeAPIRequestFactory.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfiguration+ShareDialogConfiguration.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfigurationProtocol.h>
