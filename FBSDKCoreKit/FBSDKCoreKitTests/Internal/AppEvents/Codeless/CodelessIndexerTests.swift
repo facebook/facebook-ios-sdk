@@ -171,7 +171,7 @@ final class CodelessIndexerTests: XCTestCase {
     )
     XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      [.skipClientToken, .disableErrorRecovery],
+      [.disableErrorRecovery],
       "Should create a request with the expected flags"
     )
   }

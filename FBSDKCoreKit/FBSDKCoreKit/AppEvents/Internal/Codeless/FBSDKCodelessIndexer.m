@@ -261,7 +261,7 @@ static id<FBSDKSettings> _settings;
                                                                                  parameters:parameters
                                                                                 tokenString:nil
                                                                                  HTTPMethod:nil
-                                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 

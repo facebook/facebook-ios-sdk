@@ -1264,10 +1264,10 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request
 {
-  [self warnIfMissingClientToken];
+  [self raiseExceptionIfMissingClientToken];
+
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  FBSDKGraphRequestFlags flags = [request flags];
-  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.class.settings.clientToken length] > 0) {
+  if (!token && [self.class.settings.clientToken length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.class.settings.appID, self.class.settings.clientToken];
     if ([[[self.class.authenticationTokenProvider currentAuthenticationToken] graphDomain] isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
@@ -1285,13 +1285,20 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   }
 }
 
-- (void)warnIfMissingClientToken
+- (void)raiseExceptionIfMissingClientToken
 {
   if (!self.class.settings.clientToken) {
-    NSString *const message = @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
-    "Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.";
+    NSString *reason =
+    @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
+    "Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project to learn how to "
+    "implement this change.";
+
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                 logEntry:message];
+                                 logEntry:reason];
+
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:reason
+                                 userInfo:nil];
   }
 }
 

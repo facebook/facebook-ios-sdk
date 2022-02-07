@@ -17,6 +17,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   // swiftlint:disable implicitly_unwrapped_optional force_unwrapping line_length
   let sampleUrl = URL(string: "https://example.com")!
   let missingTokenData = "{\"error\": {\"message\": \"Token is broken\",\"code\": 190,\"error_subcode\": 463}}".data(using: .utf8)!
+  let clientToken = "client_token"
   var session: TestURLSessionProxy!
   var secondSession: TestURLSessionProxy!
   var sessionFactory: TestURLSessionProxyFactory!
@@ -63,6 +64,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     errorConfigurationProvider = TestErrorConfigurationProvider(configuration: errorConfiguration)
     settings = TestSettings()
     settings.appID = appID
+    settings.clientToken = clientToken
     graphRequestConnectionFactory = TestGraphRequestConnectionFactory()
     eventLogger = TestEventLogger()
     processInfo = TestProcessInfo()
@@ -103,7 +105,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     logger = nil
     connection = nil
     errorFactory = nil
-    didInvokeDelegateRequestConnectionDidSendBodyData = false
     metadata = nil
     piggybackManager = nil
 
@@ -1339,8 +1340,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testAccessTokenWithRequestWithoutFacebookClientToken() {
+    settings.clientToken = nil
     connection.logger = makeLogger()
-    connection.accessToken(with: makeRequestForMeWithEmptyFieldsNoTokenString())
+
+    assertRaisesException(message: "An exception should be raised if a client token is unavailable") {
+      self.connection.accessToken(with: self.makeRequestForMeWithEmptyFieldsNoTokenString())
+    }
 
     XCTAssertEqual(
       TestLogger.capturedLoggingBehavior,
@@ -1349,13 +1354,15 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     )
     XCTAssertEqual(
       TestLogger.capturedLogEntry,
-      "Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.", // swiftlint:disable:this line_length
+      "Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project to learn how to implement this change.", // swiftlint:disable:this line_length
       "Should log the expected error message when a request is started with no client token set"
     )
 
     TestLogger.reset()
 
-    connection.accessToken(with: makeRequestForMeWithEmptyFieldsNoTokenString())
+    assertRaisesException(message: "An exception should be raised if a client token is unavailable") {
+      self.connection.accessToken(with: self.makeRequestForMeWithEmptyFieldsNoTokenString())
+    }
 
     XCTAssertEqual(
       TestLogger.capturedLoggingBehavior,
@@ -1366,8 +1373,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
 
   func testAccessTokenWithRequestWithFacebookClientToken() {
     connection.logger = makeLogger()
-    let clientToken = "client_token"
-    settings.clientToken = clientToken
     let token = connection.accessToken(with: makeRequestForMeWithEmptyFieldsNoTokenString())
 
     let expectedToken = "\(appID)|\(clientToken)"
@@ -1380,7 +1385,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testAccessTokenWithRequestWithGamingClientToken() {
-    let clientToken = "client_token"
     settings.clientToken = clientToken
     let authToken = AuthenticationToken(
       tokenString: "token_string",

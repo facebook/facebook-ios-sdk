@@ -279,7 +279,7 @@ final class GateKeeperManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      [GraphRequestFlags.skipClientToken, GraphRequestFlags.disableErrorRecovery],
+      [.disableErrorRecovery],
       "Should provide the expected graph request flags"
     )
   }

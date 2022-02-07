@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - The minimum supported version of iOS is now 11.0.
+- Client tokens are now required for making Graph requests. An exception is now raised when running apps without a client token. Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project for more information on how to add your app's client token.
 - Replaced more `AppEvents.Name` and `AppEvents.ParameterName` types in method signatures
 - Renamed `frictionlessRequestsEnabled` property on `FBSDKGameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
 - Corrected nullability of `contentURL` in protocol `SharingContent`
@@ -36,6 +37,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `init` and `new` methods from `FBSDKLogger`
 - Removed deprecated `init` and `new` methods from `FBSDKURLSession`
 - Removed `init` and `new` methods from `ShareDialog`; use `init(viewController:content:delegate:)` instead.
+- Removed `GraphRequestFlag.skipClientToken` since a client token is now required
 
 #### AppEvents deprecations
 TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)
