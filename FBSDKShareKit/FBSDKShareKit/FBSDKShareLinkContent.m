@@ -148,20 +148,4 @@
   [encoder encodeObject:_shareUUID forKey:FBSDK_SHARE_STATUS_CONTENT_UUID_KEY];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKShareLinkContent *copy = [FBSDKShareLinkContent new];
-  copy->_contentURL = [_contentURL copy];
-  copy->_hashtag = [_hashtag copy];
-  copy->_peopleIDs = [_peopleIDs copy];
-  copy->_placeID = [_placeID copy];
-  copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
-  copy->_quote = [_quote copy];
-  copy->_shareUUID = [_shareUUID copy];
-  return copy;
-}
-
 @end

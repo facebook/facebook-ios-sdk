@@ -26,13 +26,13 @@ final class HashtagTests: XCTestCase {
     XCTAssertFalse(embeddedSpace.isValid)
   }
 
-  func testCopy() {
+  func testEquatabilityOfCopy() {
     let hashtag = Hashtag("#ToCopy")
-    let copied = hashtag.copy() as! Hashtag // swiftlint:disable:this force_cast
-    XCTAssertEqual(copied, hashtag)
-    XCTAssertNotIdentical(copied, hashtag)
-    copied.stringRepresentation = "#ModifiedCopy"
-    XCTAssertNotEqual(copied, hashtag)
+    let copy = Hashtag("#ToCopy")
+    XCTAssertEqual(copy, hashtag)
+    XCTAssertNotIdentical(copy, hashtag)
+    copy.stringRepresentation = "#ModifiedCopy"
+    XCTAssertNotEqual(copy, hashtag)
     let notCopied = hashtag
     notCopied.stringRepresentation = "#ModifiedOriginal"
     XCTAssertEqual(hashtag.stringRepresentation, "#ModifiedOriginal")

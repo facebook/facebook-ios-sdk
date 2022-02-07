@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  A video for sharing.
  */
 NS_SWIFT_NAME(ShareVideo)
-@interface FBSDKShareVideo : NSObject <NSSecureCoding, NSCopying, NSObject, FBSDKShareMedia, FBSDKSharingValidation>
+@interface FBSDKShareVideo : NSObject <NSSecureCoding, NSObject, FBSDKShareMedia, FBSDKSharingValidation>
 
 /**
  Convenience method to build a new video object from raw data.
@@ -84,7 +84,7 @@ NS_SWIFT_NAME(ShareVideo)
  The photo that represents the video.
  @return The photo
  */
-@property (nullable, nonatomic, copy) FBSDKSharePhoto *previewPhoto;
+@property (nullable, nonatomic) FBSDKSharePhoto *previewPhoto;
 
 /**
  Compares the receiver to another video.

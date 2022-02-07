@@ -62,7 +62,7 @@ typedef void (^_FBSDKSocialComposeViewControllerCompletionHandler)(_FBSDKSocialC
 NS_SWIFT_NAME(_SocialComposeViewControllerProtocol)
 @protocol _FBSDKSocialComposeViewController <NSObject>
 
-@property (nonatomic, copy) _FBSDKSocialComposeViewControllerCompletionHandler completionHandler;
+@property (nonatomic) _FBSDKSocialComposeViewControllerCompletionHandler completionHandler;
 
 - (BOOL)setInitialText:(NSString *)text;
 - (BOOL)addImage:(UIImage *)image;

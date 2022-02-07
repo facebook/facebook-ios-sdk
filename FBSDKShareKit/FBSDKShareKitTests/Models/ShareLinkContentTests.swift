@@ -21,14 +21,13 @@ final class ShareLinkContentTests: XCTestCase {
     XCTAssertEqual(content.quote, ShareModelTestUtility.quote)
   }
 
-  func testCopy() throws {
+  func testEquatabilityOfCopy() throws {
     let content = ShareModelTestUtility.linkContent
-    let contentCopy = try XCTUnwrap(
-      content.copy() as? ShareLinkContent,
-      "Unable to make a copy or casting to 'ShareLinkContent' failed"
-    )
-    XCTAssertEqual(content, contentCopy)
-    XCTAssertNotIdentical(content, contentCopy)
+    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
+    let copy = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareLinkContent.self, from: data)
+
+    XCTAssertEqual(content, copy)
+    XCTAssertNotIdentical(content, copy)
   }
 
   func testCoding() {

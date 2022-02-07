@@ -101,15 +101,6 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   [encoder encodeObject:_arguments forKey:FBSDKCameraEffectArgumentsArgumentsKey];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKCameraEffectArguments *copy = [FBSDKCameraEffectArguments new];
-  copy->_arguments = [_arguments copy];
-  return copy;
-}
-
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
   [FBSDKCameraEffectArguments assertKey:key];

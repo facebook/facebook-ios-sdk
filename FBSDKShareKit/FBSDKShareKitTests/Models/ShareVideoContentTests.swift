@@ -36,9 +36,10 @@ final class ShareVideoContentTests: XCTestCase {
     XCTAssertEqual(content.video.previewPhoto, ShareModelTestUtility.videoWithPreviewPhoto.previewPhoto)
   }
 
-  func testCopy() {
+  func testEquatabilityOfCopy() {
     let content = ShareModelTestUtility.videoContentWithPreviewPhoto
-    XCTAssertEqual(content.copy() as? ShareVideoContent, content)
+    let copy = ShareModelTestUtility.videoContentWithPreviewPhoto
+    XCTAssertEqual(copy, content)
   }
 
   func testCoding() {

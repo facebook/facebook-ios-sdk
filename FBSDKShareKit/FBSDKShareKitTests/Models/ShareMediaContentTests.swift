@@ -28,14 +28,11 @@ final class ShareMediaContentTests: XCTestCase {
     }
   }
 
-  func testCopy() {
+  func testEquatabilityOfCopy() throws {
     let content = ShareModelTestUtility.mediaContent
-    guard let contentCopy = content.copy() as? ShareMediaContent else {
-      XCTFail("Unable to make a copy or casting to 'ShareMediaContent' failed")
-      return
-    }
-    XCTAssertEqual(content, contentCopy)
-    XCTAssertNotIdentical(content, contentCopy)
+    let copy = ShareModelTestUtility.mediaContent
+    XCTAssertEqual(content, copy)
+    XCTAssertNotIdentical(content, copy)
   }
 
   func testCoding() throws {

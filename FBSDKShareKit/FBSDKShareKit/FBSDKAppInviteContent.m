@@ -176,18 +176,6 @@
   [encoder encodeInt:(int)_destination forKey:FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKAppInviteContent *copy = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:[_appLinkURL copy]];
-  copy->_appInvitePreviewImageURL = [_appInvitePreviewImageURL copy];
-  copy->_promotionText = [_promotionText copy];
-  copy->_promotionCode = [_promotionCode copy];
-  copy->_destination = _destination;
-  return copy;
-}
-
 @end
 
 #endif

@@ -169,7 +169,6 @@
     && [FBSDKInternalUtility.sharedUtility object:_media isEqualToObject:content.media]
     && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
     && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
-    && [FBSDKInternalUtility.sharedUtility object:_shareUUID isEqualToObject:content.shareUUID]
     && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
@@ -186,8 +185,9 @@
     _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_MEDIA_CONTENT_CONTENT_URL_KEY];
     _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_MEDIA_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PEOPLE_IDS_KEY];
-    NSSet<Class> *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
-    _media = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_MEDIA_CONTENT_MEDIA_KEY];
+    NSArray<Class> *classes = @[NSArray.class, FBSDKSharePhoto.class, FBSDKShareVideo.class, FBSDKSharePhoto.class];
+    _media = [decoder decodeObjectOfClasses:[NSSet setWithArray:classes] forKey:FBSDK_SHARE_MEDIA_CONTENT_MEDIA_KEY]
+    ?: @[];
     _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_REF_KEY];
     _pageID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PAGE_ID_KEY];
@@ -206,22 +206,6 @@
   [encoder encodeObject:_ref forKey:FBSDK_SHARE_MEDIA_CONTENT_REF_KEY];
   [encoder encodeObject:_pageID forKey:FBSDK_SHARE_MEDIA_CONTENT_PAGE_ID_KEY];
   [encoder encodeObject:_shareUUID forKey:FBSDK_SHARE_MEDIA_CONTENT_UUID_KEY];
-}
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKShareMediaContent *copy = [FBSDKShareMediaContent new];
-  copy->_contentURL = [_contentURL copy];
-  copy->_hashtag = [_hashtag copy];
-  copy->_peopleIDs = [_peopleIDs copy];
-  copy->_media = [_media copy];
-  copy->_placeID = [_placeID copy];
-  copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
-  copy->_shareUUID = [_shareUUID copy];
-  return copy;
 }
 
 @end

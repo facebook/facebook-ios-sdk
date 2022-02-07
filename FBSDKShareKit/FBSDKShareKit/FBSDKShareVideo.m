@@ -251,18 +251,6 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
   [encoder encodeObject:_previewPhoto forKey:kFBSDKShareVideoPreviewPhotoKey];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKShareVideo *copy = [FBSDKShareVideo new];
-  copy->_data = [_data copy];
-  copy->_videoAsset = [_videoAsset copy];
-  copy->_videoURL = [_videoURL copy];
-  copy->_previewPhoto = [_previewPhoto copy];
-  return copy;
-}
-
 @end
 
 @implementation PHAsset (FBSDKShareVideo)

@@ -163,7 +163,6 @@
     && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
     && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
     && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]
-    && [FBSDKInternalUtility.sharedUtility object:_shareUUID isEqualToObject:content.shareUUID]
     && [FBSDKInternalUtility.sharedUtility object:_video isEqualToObject:content.video]);
 }
 
@@ -199,22 +198,6 @@
   [encoder encodeObject:_pageID forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
   [encoder encodeObject:_video forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
   [encoder encodeObject:_shareUUID forKey:FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY];
-}
-
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKShareVideoContent *copy = [FBSDKShareVideoContent new];
-  copy->_contentURL = [_contentURL copy];
-  copy->_hashtag = [_hashtag copy];
-  copy->_peopleIDs = [_peopleIDs copy];
-  copy->_placeID = [_placeID copy];
-  copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
-  copy->_video = [_video copy];
-  copy->_shareUUID = [_shareUUID copy];
-  return copy;
 }
 
 @end

@@ -10,9 +10,10 @@ import XCTest
 
 final class CameraEffectArgumentsTests: XCTestCase {
 
-  func testCopy() {
+  func testEquatabilityOfCopy() {
     let arguments = ShareModelTestUtility.cameraEffectArguments
-    XCTAssertEqual(arguments.copy() as? CameraEffectArguments, arguments)
+    let copy = ShareModelTestUtility.cameraEffectArguments
+    XCTAssertEqual(copy, arguments)
   }
 
   func testCoding() throws {

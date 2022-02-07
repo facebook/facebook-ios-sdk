@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  A base interface for content to be shared.
  */
 NS_SWIFT_NAME(SharingContent)
-@protocol FBSDKSharingContent <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
+@protocol FBSDKSharingContent <NSObject, FBSDKSharingValidation, NSSecureCoding>
 
 /**
  URL for the content being shared.
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(SharingContent)
  Hashtag for the content being shared.
  @return The hashtag for the content being shared.
  */
-@property (nullable, nonatomic, copy) FBSDKHashtag *hashtag;
+@property (nullable, nonatomic) FBSDKHashtag *hashtag;
 
 /**
  List of IDs for taggable people to tag with this content.

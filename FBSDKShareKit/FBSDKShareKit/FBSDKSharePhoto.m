@@ -211,17 +211,4 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
   [encoder encodeObject:_caption forKey:kFBSDKSharePhotoCaptionKey];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKSharePhoto *copy = [FBSDKSharePhoto new];
-  copy->_image = [_image copy];
-  copy->_imageURL = [_imageURL copy];
-  copy->_photoAsset = [_photoAsset copy];
-  copy->_userGenerated = _userGenerated;
-  copy->_caption = [_caption copy];
-  return copy;
-}
-
 @end

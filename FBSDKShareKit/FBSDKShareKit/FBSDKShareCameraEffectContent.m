@@ -276,24 +276,6 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   [encoder encodeObject:_shareUUID forKey:kFBSDKShareCameraEffectContentUUIDKey];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKShareCameraEffectContent *copy = [FBSDKShareCameraEffectContent new];
-  copy->_effectID = [_effectID copy];
-  copy->_effectArguments = [_effectArguments copy];
-  copy->_effectTextures = [_effectTextures copy];
-  copy->_contentURL = [_contentURL copy];
-  copy->_hashtag = [_hashtag copy];
-  copy->_peopleIDs = [_peopleIDs copy];
-  copy->_placeID = [_placeID copy];
-  copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
-  copy->_shareUUID = [_shareUUID copy];
-  return copy;
-}
-
 @end
 
 #endif

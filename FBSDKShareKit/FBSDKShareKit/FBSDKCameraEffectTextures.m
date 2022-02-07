@@ -90,15 +90,6 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   [encoder encodeObject:_textures forKey:FBSDKCameraEffectTexturesTexturesKey];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKCameraEffectTextures *copy = [FBSDKCameraEffectTextures new];
-  copy->_textures = [_textures copy];
-  return copy;
-}
-
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
   if (value) {

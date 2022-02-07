@@ -99,13 +99,4 @@ static NSRegularExpression *HashtagRegularExpression()
   [aCoder encodeObject:_stringRepresentation forKey:FBSDK_HASHTAG_STRING_KEY];
 }
 
-#pragma mark - NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-  FBSDKHashtag *copy = [FBSDKHashtag new];
-  copy.stringRepresentation = [_stringRepresentation copy];
-  return copy;
-}
-
 @end

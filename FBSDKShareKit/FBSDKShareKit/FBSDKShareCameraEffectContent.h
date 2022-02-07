@@ -33,12 +33,12 @@ NS_SWIFT_NAME(ShareCameraEffectContent)
 /**
  Arguments for the effect.
  */
-@property (nonatomic, copy) FBSDKCameraEffectArguments *effectArguments;
+@property (nonatomic) FBSDKCameraEffectArguments *effectArguments;
 
 /**
  Textures for the effect.
  */
-@property (nonatomic, copy) FBSDKCameraEffectTextures *effectTextures;
+@property (nonatomic) FBSDKCameraEffectTextures *effectTextures;
 
 /**
  Compares the receiver to another camera effect content.

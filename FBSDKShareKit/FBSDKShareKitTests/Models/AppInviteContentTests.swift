@@ -29,8 +29,10 @@ final class AppInviteContentTests: XCTestCase {
     XCTAssertEqual(content.appInvitePreviewImageURL, appInvitePreviewImageURL)
   }
 
-  func testCopy() {
-    XCTAssertEqual(content.copy() as? AppInviteContent, content)
+  func testEquatabilityOfCopy() {
+    let copy = AppInviteContent(appLinkURL: appLinkURL)
+    copy.appInvitePreviewImageURL = appInvitePreviewImageURL
+    XCTAssertEqual(copy, content)
   }
 
   func testCoding() {

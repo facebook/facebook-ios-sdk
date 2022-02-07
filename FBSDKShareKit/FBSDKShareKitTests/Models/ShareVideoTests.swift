@@ -20,12 +20,8 @@ final class ShareVideoTests: XCTestCase {
 
   func testCopy() throws {
     let video = ShareModelTestUtility.video
-    guard let videoCopy = video.copy() as? ShareVideo else {
-      XCTFail("unable to make a copy of 'ShareVideo'")
-      return
-    }
-
-    XCTAssertEqual(videoCopy, video)
+    let copy = ShareModelTestUtility.video
+    XCTAssertEqual(copy, video)
   }
 
   func testCoding() throws {

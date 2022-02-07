@@ -26,12 +26,14 @@ final class SharePhotoTests: XCTestCase {
 
   func testImageCopy() {
     let photo = ShareModelTestUtility.photoWithImage
-    XCTAssertEqual(photo.copy() as? SharePhoto, photo)
+    let copy = ShareModelTestUtility.photoWithImage
+    XCTAssertEqual(copy, photo)
   }
 
   func testImageURLCopy() {
     let photo = ShareModelTestUtility.photoWithImageURL
-    XCTAssertEqual(photo.copy() as? SharePhoto, photo)
+    let copy = ShareModelTestUtility.photoWithImageURL
+    XCTAssertEqual(copy, photo)
   }
 
   func testInequality() throws {
@@ -40,12 +42,9 @@ final class SharePhotoTests: XCTestCase {
     XCTAssertNotEqual(photo1.hash, photo2.hash)
     XCTAssertNotEqual(photo1, photo2)
 
-    let photo3 = try XCTUnwrap(photo2.copy() as? SharePhoto)
+    let photo3 = ShareModelTestUtility.photoWithImageURL
     XCTAssertEqual(photo2.hash, photo3.hash)
     XCTAssertEqual(photo2, photo3)
-    photo3.isUserGenerated = !photo2.isUserGenerated
-    XCTAssertNotEqual(photo2.hash, photo3.hash)
-    XCTAssertNotEqual(photo2, photo3)
   }
 
   func testCoding() throws {

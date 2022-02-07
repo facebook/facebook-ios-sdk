@@ -24,7 +24,7 @@ NS_SWIFT_NAME(ShareVideoContent)
  The video to be shared.
  @return The video
  */
-@property (nonatomic, copy) FBSDKShareVideo *video;
+@property (nonatomic) FBSDKShareVideo *video;
 
 /**
  Compares the receiver to another video content.

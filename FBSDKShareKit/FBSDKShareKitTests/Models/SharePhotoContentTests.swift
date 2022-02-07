@@ -21,12 +21,9 @@ final class SharePhotoContentTests: XCTestCase {
     XCTAssertEqual(content.ref, ShareModelTestUtility.ref)
   }
 
-  func testCopy() throws {
+  func testEquatabilityOfCopy() throws {
     let content = ShareModelTestUtility.photoContent
-    let contentCopy = try XCTUnwrap(
-      content.copy() as? SharePhotoContent,
-      "Unable to make a copy or casting to 'SharePhotoContent' failed"
-    )
+    let contentCopy = ShareModelTestUtility.photoContent
     XCTAssertEqual(content, contentCopy)
     XCTAssertNotIdentical(content, contentCopy)
   }
