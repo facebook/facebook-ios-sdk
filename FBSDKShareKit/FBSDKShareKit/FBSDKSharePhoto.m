@@ -12,8 +12,6 @@
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 
-#import "FBSDKHasher.h"
-
 NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
 NSString *const kFBSDKSharePhotoImageKey = @"image";
 NSString *const kFBSDKSharePhotoImageURLKey = @"imageURL";
@@ -69,41 +67,6 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
   _image = nil;
   _imageURL = nil;
   _photoAsset = [photoAsset copy];
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _image.hash,
-    _imageURL.hash,
-    _photoAsset.hash,
-    _caption.hash,
-    (_userGenerated ? 1u : 0u)
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKSharePhoto.class]) {
-    return NO;
-  }
-  return [self isEqualToSharePhoto:(FBSDKSharePhoto *)object];
-}
-
-- (BOOL)isEqualToSharePhoto:(FBSDKSharePhoto *)photo
-{
-  return (photo
-    && (_userGenerated == photo.userGenerated)
-    && [FBSDKInternalUtility.sharedUtility object:_image isEqualToObject:photo.image]
-    && [FBSDKInternalUtility.sharedUtility object:_imageURL isEqualToObject:photo.imageURL]
-    && [FBSDKInternalUtility.sharedUtility object:_photoAsset isEqualToObject:photo.photoAsset]
-    && [FBSDKInternalUtility.sharedUtility object:_caption isEqualToObject:photo.caption]);
 }
 
 #pragma mark - FBSDKSharingValidation

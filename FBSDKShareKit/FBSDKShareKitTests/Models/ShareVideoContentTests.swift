@@ -36,21 +36,24 @@ final class ShareVideoContentTests: XCTestCase {
     XCTAssertEqual(content.video.previewPhoto, ShareModelTestUtility.videoWithPreviewPhoto.previewPhoto)
   }
 
-  func testEquatabilityOfCopy() {
-    let content = ShareModelTestUtility.videoContentWithPreviewPhoto
-    let copy = ShareModelTestUtility.videoContentWithPreviewPhoto
-    XCTAssertEqual(copy, content)
-  }
-
-  func testCoding() {
+  func testCoding() throws {
     let data = NSKeyedArchiver.archivedData(withRootObject: content as Any)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
-    let unarchivedObject = unarchiver.decodeObject(
-      of: ShareVideoContent.self,
-      forKey: NSKeyedArchiveRootObjectKey
+    let unarchivedObject = try XCTUnwrap(
+      unarchiver.decodeObject(of: ShareVideoContent.self, forKey: NSKeyedArchiveRootObjectKey)
     )
-    XCTAssertEqual(unarchivedObject, content)
+
+    XCTAssertEqual(unarchivedObject.contentURL, content.contentURL)
+    XCTAssertEqual(unarchivedObject.hashtag, content.hashtag)
+    XCTAssertEqual(unarchivedObject.peopleIDs, content.peopleIDs)
+    XCTAssertEqual(unarchivedObject.placeID, content.placeID)
+    XCTAssertEqual(unarchivedObject.ref, content.ref)
+    XCTAssertEqual(unarchivedObject.pageID, content.pageID)
+    XCTAssertEqual(unarchivedObject.video.data, content.video.data)
+    XCTAssertEqual(unarchivedObject.video.videoAsset, content.video.videoAsset)
+    XCTAssertEqual(unarchivedObject.video.videoURL, content.video.videoURL)
+    XCTAssertEqual(unarchivedObject.video.previewPhoto, content.video.previewPhoto)
   }
 
   func testValidationWithValidContent() throws {

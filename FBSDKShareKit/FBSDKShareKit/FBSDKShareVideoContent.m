@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-#import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
 
 #define FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY @"contentURL"
@@ -124,46 +123,6 @@
     return NO;
   }
   return [_video validateWithOptions:bridgeOptions error:errorRef];
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _contentURL.hash,
-    _hashtag.hash,
-    _peopleIDs.hash,
-    _placeID.hash,
-    _ref.hash,
-    _pageID.hash,
-    _video.hash,
-    _shareUUID.hash,
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKShareVideoContent.class]) {
-    return NO;
-  }
-  return [self isEqualToShareVideoContent:(FBSDKShareVideoContent *)object];
-}
-
-- (BOOL)isEqualToShareVideoContent:(FBSDKShareVideoContent *)content
-{
-  return (content
-    && [FBSDKInternalUtility.sharedUtility object:_contentURL isEqualToObject:content.contentURL]
-    && [FBSDKInternalUtility.sharedUtility object:_hashtag isEqualToObject:content.hashtag]
-    && [FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
-    && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
-    && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
-    && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]
-    && [FBSDKInternalUtility.sharedUtility object:_video isEqualToObject:content.video]);
 }
 
 #pragma mark - NSCoding

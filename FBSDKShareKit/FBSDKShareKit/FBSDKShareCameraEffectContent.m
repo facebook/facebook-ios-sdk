@@ -16,7 +16,6 @@
 
 #import "FBSDKCameraEffectArguments+Internal.h"
 #import "FBSDKCameraEffectTextures+Internal.h"
-#import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
 
 static NSString *const kFBSDKShareCameraEffectContentEffectIDKey = @"effectID";
@@ -180,62 +179,6 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
   }
 
   return YES;
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _effectID.hash,
-    _effectArguments.hash,
-    _effectTextures.hash,
-    _contentURL.hash,
-    _hashtag.hash,
-    _peopleIDs.hash,
-    _placeID.hash,
-    _ref.hash,
-    _pageID.hash,
-    _shareUUID.hash,
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKShareCameraEffectContent.class]) {
-    return NO;
-  }
-  return [self isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)object];
-}
-
-- (BOOL)isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)content
-{
-  return (content
-    && [self object:_effectID isEqualToObject:content.effectID]
-    && [self object:_effectArguments isEqualToObject:content.effectArguments]
-    && [self object:_effectTextures isEqualToObject:content.effectTextures]
-    && [self object:_contentURL isEqualToObject:content.contentURL]
-    && [self object:_hashtag isEqualToObject:content.hashtag]
-    && [self object:_peopleIDs isEqualToObject:content.peopleIDs]
-    && [self object:_placeID isEqualToObject:content.placeID]
-    && [self object:_ref isEqualToObject:content.ref]
-    && [self object:_shareUUID isEqualToObject:content.shareUUID]
-    && [self object:_pageID isEqualToObject:content.pageID]);
-}
-
-- (BOOL)object:(id)object isEqualToObject:(id)other
-{
-  if (object == other) {
-    return YES;
-  }
-  if (!object || !other) {
-    return NO;
-  }
-  return [object isEqual:other];
 }
 
 #pragma mark - NSCoding

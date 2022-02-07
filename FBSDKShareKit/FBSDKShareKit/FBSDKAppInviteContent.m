@@ -12,8 +12,6 @@
 
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-#import "FBSDKHasher.h"
-
 #define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
 #define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
 #define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
@@ -108,41 +106,6 @@
   }
 
   return YES;
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _appLinkURL.hash,
-    _appInvitePreviewImageURL.hash,
-    _promotionCode.hash,
-    _promotionText.hash,
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKAppInviteContent.class]) {
-    return NO;
-  }
-  return [self isEqualToAppInviteContent:(FBSDKAppInviteContent *)object];
-}
-
-- (BOOL)isEqualToAppInviteContent:(FBSDKAppInviteContent *)content
-{
-  return (content
-    && [FBSDKInternalUtility.sharedUtility object:_appLinkURL isEqualToObject:content.appLinkURL]
-    && [FBSDKInternalUtility.sharedUtility object:_appInvitePreviewImageURL isEqualToObject:content.appInvitePreviewImageURL]
-    && [FBSDKInternalUtility.sharedUtility object:_promotionText isEqualToObject:content.promotionText]
-    && [FBSDKInternalUtility.sharedUtility object:_promotionCode isEqualToObject:content.promotionText]
-    && _destination == content.destination
-  );
 }
 
 #pragma mark - NSCoding

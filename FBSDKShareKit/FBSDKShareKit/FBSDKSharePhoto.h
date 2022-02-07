@@ -81,13 +81,6 @@ NS_SWIFT_NAME(SharePhoto)
  */
 @property (nullable, nonatomic, copy) NSString *caption;
 
-/**
- Compares the receiver to another photo.
- @param photo The other photo
- @return YES if the receiver's values are equal to the other photo's values; otherwise NO
- */
-- (BOOL)isEqualToSharePhoto:(FBSDKSharePhoto *)photo;
-
 @end
 
 NS_ASSUME_NONNULL_END

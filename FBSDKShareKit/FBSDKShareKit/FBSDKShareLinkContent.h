@@ -26,13 +26,6 @@ NS_SWIFT_NAME(ShareLinkContent)
  */
 @property (nullable, nonatomic, copy) NSString *quote;
 
-/**
- Compares the receiver to another link content.
- @param content The other content
- @return YES if the receiver's values are equal to the other content's values; otherwise NO
- */
-- (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content;
-
 @end
 
 NS_ASSUME_NONNULL_END

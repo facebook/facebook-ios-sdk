@@ -28,29 +28,19 @@ final class ShareMediaContentTests: XCTestCase {
     }
   }
 
-  func testEquatabilityOfCopy() throws {
-    let content = ShareModelTestUtility.mediaContent
-    let copy = ShareModelTestUtility.mediaContent
-    XCTAssertEqual(content, copy)
-    XCTAssertNotIdentical(content, copy)
-  }
-
   func testCoding() throws {
-    guard
-      let content = ShareModelTestUtility.mediaContent.media.first as? ShareVideo
-    else {
-      XCTFail("unable to get an item or casting to 'ShareVideo' failed")
-      return
-    }
+    let media = try XCTUnwrap(ShareModelTestUtility.mediaContent)
+    let data = try NSKeyedArchiver.archivedData(withRootObject: media, requiringSecureCoding: true)
+    let unarchivedMedia = try XCTUnwrap(
+      NSKeyedUnarchiver.unarchivedObject(ofClass: ShareMediaContent.self, from: data)
+    )
 
-    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
-    let unarchivedContent = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareVideo.self, from: data)
-
-    guard let unarchivedContent = unarchivedContent else {
-      XCTFail("Unable to unarchive or casting to 'ShareVideo' failed")
-      return
-    }
-
-    XCTAssertEqual(unarchivedContent, content)
+    XCTAssertEqual(unarchivedMedia.contentURL, media.contentURL)
+    XCTAssertEqual(unarchivedMedia.hashtag, media.hashtag)
+    XCTAssertEqual(unarchivedMedia.peopleIDs, media.peopleIDs)
+    XCTAssertEqual(unarchivedMedia.media.count, media.media.count)
+    XCTAssertEqual(unarchivedMedia.placeID, media.placeID)
+    XCTAssertEqual(unarchivedMedia.ref, media.ref)
+    XCTAssertEqual(unarchivedMedia.pageID, media.pageID)
   }
 }

@@ -56,29 +56,6 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   return _arguments;
 }
 
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  return _arguments.hash;
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKCameraEffectArguments.class]) {
-    return NO;
-  }
-  return [self isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object];
-}
-
-- (BOOL)isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object
-{
-  return [FBSDKInternalUtility.sharedUtility object:_arguments isEqualToObject:[object allArguments]];
-}
-
 #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding

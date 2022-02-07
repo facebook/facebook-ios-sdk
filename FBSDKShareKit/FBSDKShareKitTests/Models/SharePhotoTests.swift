@@ -24,35 +24,17 @@ final class SharePhotoTests: XCTestCase {
     XCTAssertEqual(photo.isUserGenerated, ShareModelTestUtility.isPhotoUserGenerated)
   }
 
-  func testImageCopy() {
-    let photo = ShareModelTestUtility.photoWithImage
-    let copy = ShareModelTestUtility.photoWithImage
-    XCTAssertEqual(copy, photo)
-  }
-
-  func testImageURLCopy() {
-    let photo = ShareModelTestUtility.photoWithImageURL
-    let copy = ShareModelTestUtility.photoWithImageURL
-    XCTAssertEqual(copy, photo)
-  }
-
-  func testInequality() throws {
-    let photo1 = ShareModelTestUtility.photoWithImage
-    let photo2 = ShareModelTestUtility.photoWithImageURL
-    XCTAssertNotEqual(photo1.hash, photo2.hash)
-    XCTAssertNotEqual(photo1, photo2)
-
-    let photo3 = ShareModelTestUtility.photoWithImageURL
-    XCTAssertEqual(photo2.hash, photo3.hash)
-    XCTAssertEqual(photo2, photo3)
-  }
-
   func testCoding() throws {
     let photo = ShareModelTestUtility.photoWithImageURL
     let data = NSKeyedArchiver.archivedData(withRootObject: photo)
     let unarchivedPhoto = try XCTUnwrap(
       NSKeyedUnarchiver.unarchivedObject(ofClass: SharePhoto.self, from: data)
     )
-    XCTAssertEqual(unarchivedPhoto, photo)
+
+    XCTAssertEqual(unarchivedPhoto.isUserGenerated, photo.isUserGenerated)
+    XCTAssertEqual(unarchivedPhoto.image, photo.image)
+    XCTAssertEqual(unarchivedPhoto.imageURL, photo.imageURL)
+    XCTAssertEqual(unarchivedPhoto.photoAsset, photo.photoAsset)
+    XCTAssertEqual(unarchivedPhoto.caption, photo.caption)
   }
 }

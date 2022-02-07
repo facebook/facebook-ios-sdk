@@ -11,7 +11,6 @@
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-#import "FBSDKHasher.h"
 #import "FBSDKSharePhoto.h"
 
 NSString *const kFBSDKShareVideoAssetKey = @"videoAsset";
@@ -92,39 +91,6 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
   _videoAsset = nil;
   _videoURL = [videoURL copy];
   _previewPhoto = nil;
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _data.hash,
-    _videoAsset.hash,
-    _videoURL.hash,
-    _previewPhoto.hash,
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKShareVideo.class]) {
-    return NO;
-  }
-  return [self isEqualToShareVideo:(FBSDKShareVideo *)object];
-}
-
-- (BOOL)isEqualToShareVideo:(FBSDKShareVideo *)video
-{
-  return (video
-    && [FBSDKInternalUtility.sharedUtility object:_data isEqualToObject:video.data]
-    && [FBSDKInternalUtility.sharedUtility object:_videoAsset isEqualToObject:video.videoAsset]
-    && [FBSDKInternalUtility.sharedUtility object:_videoURL isEqualToObject:video.videoURL]
-    && [FBSDKInternalUtility.sharedUtility object:_previewPhoto isEqualToObject:video.previewPhoto]);
 }
 
 #pragma mark - FBSDKSharingValidation

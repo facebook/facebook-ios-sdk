@@ -46,29 +46,6 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   return _textures;
 }
 
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  return _textures.hash;
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKCameraEffectTextures.class]) {
-    return NO;
-  }
-  return [self isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object];
-}
-
-- (BOOL)isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object
-{
-  return [FBSDKInternalUtility.sharedUtility object:_textures isEqualToObject:[object allTextures]];
-}
-
 #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding

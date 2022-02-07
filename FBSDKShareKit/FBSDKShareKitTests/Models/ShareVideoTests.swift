@@ -18,23 +18,21 @@ final class ShareVideoTests: XCTestCase {
     XCTAssertEqual(video.previewPhoto, ShareModelTestUtility.photoWithImageURL)
   }
 
-  func testCopy() throws {
-    let video = ShareModelTestUtility.video
-    let copy = ShareModelTestUtility.video
-    XCTAssertEqual(copy, video)
-  }
-
   func testCoding() throws {
     let video = ShareModelTestUtility.videoWithPreviewPhoto
 
     let data = try NSKeyedArchiver.archivedData(withRootObject: video, requiringSecureCoding: true)
-    let unarchivedContent = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareVideo.self, from: data)
+    let unarchivedContent = try XCTUnwrap(
+      NSKeyedUnarchiver.unarchivedObject(ofClass: ShareVideo.self, from: data)
+    )
 
-    guard let unarchivedContent = unarchivedContent else {
-      XCTFail("Unable to unarchive or casting to 'ShareVideo' failed")
-      return
-    }
-
-    XCTAssertEqual(unarchivedContent, video)
+    XCTAssertEqual(unarchivedContent.data, video.data)
+    XCTAssertEqual(unarchivedContent.videoAsset, video.videoAsset)
+    XCTAssertEqual(unarchivedContent.videoURL, video.videoURL)
+    XCTAssertEqual(unarchivedContent.previewPhoto?.image, video.previewPhoto?.image)
+    XCTAssertEqual(unarchivedContent.previewPhoto?.imageURL, video.previewPhoto?.imageURL)
+    XCTAssertEqual(unarchivedContent.previewPhoto?.photoAsset, video.previewPhoto?.photoAsset)
+    XCTAssertEqual(unarchivedContent.previewPhoto?.isUserGenerated, video.previewPhoto?.isUserGenerated)
+    XCTAssertEqual(unarchivedContent.previewPhoto?.caption, video.previewPhoto?.caption)
   }
 }

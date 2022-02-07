@@ -16,28 +16,37 @@ final class SharePhotoContentTests: XCTestCase {
 
     XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL)
     XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs)
-    XCTAssertEqual(content.photos, ShareModelTestUtility.photos)
     XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID)
     XCTAssertEqual(content.ref, ShareModelTestUtility.ref)
+
+    XCTAssertEqual(content.photos.count, ShareModelTestUtility.photos.count)
+    zip(content.photos, ShareModelTestUtility.photos).forEach { photo1, photo2 in
+      XCTAssertEqual(photo1.imageURL, photo2.imageURL)
+      XCTAssertEqual(photo1.isUserGenerated, photo2.isUserGenerated)
+    }
   }
 
-  func testEquatabilityOfCopy() throws {
-    let content = ShareModelTestUtility.photoContent
-    let contentCopy = ShareModelTestUtility.photoContent
-    XCTAssertEqual(content, contentCopy)
-    XCTAssertNotIdentical(content, contentCopy)
-  }
-
-  func testCoding() {
+  func testCoding() throws {
     let content = ShareModelTestUtility.photoContent
     let data = NSKeyedArchiver.archivedData(withRootObject: content)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
-    let unarchivedObject = unarchiver.decodeObject(
-      of: SharePhotoContent.self,
-      forKey: NSKeyedArchiveRootObjectKey
+    let unarchivedObject = try XCTUnwrap(
+      unarchiver.decodeObject(of: SharePhotoContent.self, forKey: NSKeyedArchiveRootObjectKey)
     )
-    XCTAssertEqual(unarchivedObject, content)
+
+    XCTAssertEqual(unarchivedObject.contentURL, content.contentURL)
+    XCTAssertEqual(unarchivedObject.hashtag, content.hashtag)
+    XCTAssertEqual(unarchivedObject.peopleIDs, content.peopleIDs)
+    XCTAssertEqual(unarchivedObject.placeID, content.placeID)
+    XCTAssertEqual(unarchivedObject.ref, content.ref)
+    XCTAssertEqual(unarchivedObject.pageID, content.pageID)
+
+    XCTAssertEqual(content.photos.count, ShareModelTestUtility.photos.count)
+    zip(content.photos, ShareModelTestUtility.photos).forEach { photo1, photo2 in
+      XCTAssertEqual(photo1.imageURL, photo2.imageURL)
+      XCTAssertEqual(photo1.isUserGenerated, photo2.isUserGenerated)
+    }
   }
 
   func testValidationWithValidContent() {

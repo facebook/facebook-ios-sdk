@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-#import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
 
@@ -109,46 +108,6 @@
     }
   }
   return YES;
-}
-
-#pragma mark - Equality
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    _contentURL.hash,
-    _hashtag.hash,
-    _peopleIDs.hash,
-    _photos.hash,
-    _placeID.hash,
-    _ref.hash,
-    _pageID.hash,
-    _shareUUID.hash,
-  };
-  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (self == object) {
-    return YES;
-  }
-  if (![object isKindOfClass:FBSDKSharePhotoContent.class]) {
-    return NO;
-  }
-  return [self isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)object];
-}
-
-- (BOOL)isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)content
-{
-  return (content
-    && [FBSDKInternalUtility.sharedUtility object:_contentURL isEqualToObject:content.contentURL]
-    && [FBSDKInternalUtility.sharedUtility object:_hashtag isEqualToObject:content.hashtag]
-    && [FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
-    && [FBSDKInternalUtility.sharedUtility object:_photos isEqualToObject:content.photos]
-    && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
-    && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
-    && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
 #pragma mark - NSCoding

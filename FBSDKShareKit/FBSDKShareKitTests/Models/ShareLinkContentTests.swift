@@ -21,25 +21,23 @@ final class ShareLinkContentTests: XCTestCase {
     XCTAssertEqual(content.quote, ShareModelTestUtility.quote)
   }
 
-  func testEquatabilityOfCopy() throws {
-    let content = ShareModelTestUtility.linkContent
-    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
-    let copy = try NSKeyedUnarchiver.unarchivedObject(ofClass: ShareLinkContent.self, from: data)
-
-    XCTAssertEqual(content, copy)
-    XCTAssertNotIdentical(content, copy)
-  }
-
-  func testCoding() {
+  func testCoding() throws {
     let content = ShareModelTestUtility.linkContent
     let data = NSKeyedArchiver.archivedData(withRootObject: content)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
-    let unarchivedObject = unarchiver.decodeObject(
-      of: ShareLinkContent.self,
-      forKey: NSKeyedArchiveRootObjectKey
+    let unarchivedObject = try XCTUnwrap(
+      unarchiver.decodeObject(of: ShareLinkContent.self, forKey: NSKeyedArchiveRootObjectKey)
     )
-    XCTAssertEqual(unarchivedObject, content)
+
+    XCTAssertEqual(unarchivedObject.contentURL, content.contentURL)
+    XCTAssertEqual(unarchivedObject.hashtag, content.hashtag)
+    XCTAssertEqual(unarchivedObject.peopleIDs, content.peopleIDs)
+    XCTAssertEqual(unarchivedObject.placeID, content.placeID)
+    XCTAssertEqual(unarchivedObject.ref, content.ref)
+    XCTAssertEqual(unarchivedObject.pageID, content.pageID)
+    XCTAssertEqual(unarchivedObject.shareUUID, content.shareUUID)
+    XCTAssertEqual(unarchivedObject.quote, content.quote)
   }
 
   func testValidationWithValidContent() {

@@ -86,13 +86,6 @@ NS_SWIFT_NAME(ShareVideo)
  */
 @property (nullable, nonatomic) FBSDKSharePhoto *previewPhoto;
 
-/**
- Compares the receiver to another video.
- @param video The other video
- @return YES if the receiver's values are equal to the other video's values; otherwise NO
- */
-- (BOOL)isEqualToShareVideo:(FBSDKShareVideo *)video;
-
 @end
 
 @interface PHAsset (FBSDKShareVideo)

@@ -26,17 +26,17 @@ final class HashtagTests: XCTestCase {
     XCTAssertFalse(embeddedSpace.isValid)
   }
 
-  func testEquatabilityOfCopy() {
+  func testEquatability() {
     let hashtag = Hashtag("#ToCopy")
     let copy = Hashtag("#ToCopy")
     XCTAssertEqual(copy, hashtag)
-    XCTAssertNotIdentical(copy, hashtag)
+
     copy.stringRepresentation = "#ModifiedCopy"
     XCTAssertNotEqual(copy, hashtag)
+
     let notCopied = hashtag
     notCopied.stringRepresentation = "#ModifiedOriginal"
     XCTAssertEqual(hashtag.stringRepresentation, "#ModifiedOriginal")
-    XCTAssertEqual(notCopied, hashtag)
     XCTAssertIdentical(notCopied, hashtag)
   }
 

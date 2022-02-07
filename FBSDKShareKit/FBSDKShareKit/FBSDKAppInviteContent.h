@@ -76,13 +76,6 @@ NS_SWIFT_NAME(AppInviteContent)
  */
 @property (nonatomic, assign) FBSDKAppInviteDestination destination;
 
-/**
- Compares the receiver to another app invite content.
- @param content The other content
- @return YES if the receiver's values are equal to the other content's values; otherwise NO
- */
-- (BOOL)isEqualToAppInviteContent:(FBSDKAppInviteContent *)content;
-
 @end
 
 NS_ASSUME_NONNULL_END

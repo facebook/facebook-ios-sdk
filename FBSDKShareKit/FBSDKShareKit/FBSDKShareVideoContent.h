@@ -26,13 +26,6 @@ NS_SWIFT_NAME(ShareVideoContent)
  */
 @property (nonatomic) FBSDKShareVideo *video;
 
-/**
- Compares the receiver to another video content.
- @param content The other content
- @return YES if the receiver's values are equal to the other content's values; otherwise NO
- */
-- (BOOL)isEqualToShareVideoContent:(FBSDKShareVideoContent *)content;
-
 @end
 
 NS_ASSUME_NONNULL_END
