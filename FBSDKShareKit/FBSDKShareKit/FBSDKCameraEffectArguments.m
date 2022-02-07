@@ -13,8 +13,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
-
 @interface FBSDKCameraEffectArguments ()
 @property (nonatomic) NSMutableDictionary<NSString *, id> *arguments;
 @end
@@ -54,28 +52,6 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 - (NSDictionary<NSString *, id> *)allArguments;
 {
   return _arguments;
-}
-
-#pragma mark - NSCoding
-
-+ (BOOL)supportsSecureCoding
-{
-  return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  if ((self = [self init])) {
-    NSSet<Class> *classes = [NSSet setWithObjects:NSMutableDictionary.class, NSString.class, nil];
-    _arguments = [decoder decodeObjectOfClasses:classes
-                                         forKey:FBSDKCameraEffectArgumentsArgumentsKey];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  [encoder encodeObject:_arguments forKey:FBSDKCameraEffectArgumentsArgumentsKey];
 }
 
 - (void)_setValue:(id)value forKey:(NSString *)key

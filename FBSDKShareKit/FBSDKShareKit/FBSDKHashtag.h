@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  Represents a single hashtag that can be used with the share dialog.
  */
 NS_SWIFT_NAME(Hashtag)
-@interface FBSDKHashtag : NSObject <NSObject, NSSecureCoding>
+@interface FBSDKHashtag : NSObject
 
 /**
  Convenience method to build a new hashtag with a string identifier. Equivalent to setting the

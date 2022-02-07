@@ -12,12 +12,6 @@
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 
-NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
-NSString *const kFBSDKSharePhotoImageKey = @"image";
-NSString *const kFBSDKSharePhotoImageURLKey = @"imageURL";
-NSString *const kFBSDKSharePhotoUserGeneratedKey = @"userGenerated";
-NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
-
 @implementation FBSDKSharePhoto
 
 #pragma mark - Class Methods
@@ -141,37 +135,6 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     }
     return NO;
   }
-}
-
-#pragma mark - NSCoding
-
-+ (BOOL)supportsSecureCoding
-{
-  return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  if ((self = [self init])) {
-    _image = [decoder decodeObjectOfClass:UIImage.class forKey:kFBSDKSharePhotoImageKey];
-    _imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKSharePhotoImageURLKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoAssetKey];
-    if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
-      _photoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
-    }
-    _userGenerated = [decoder decodeBoolForKey:kFBSDKSharePhotoUserGeneratedKey];
-    _caption = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoCaptionKey];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  [encoder encodeObject:_image forKey:kFBSDKSharePhotoImageKey];
-  [encoder encodeObject:_imageURL forKey:kFBSDKSharePhotoImageURLKey];
-  [encoder encodeObject:_photoAsset.localIdentifier forKey:kFBSDKSharePhotoAssetKey];
-  [encoder encodeBool:_userGenerated forKey:kFBSDKSharePhotoUserGeneratedKey];
-  [encoder encodeObject:_caption forKey:kFBSDKSharePhotoCaptionKey];
 }
 
 @end

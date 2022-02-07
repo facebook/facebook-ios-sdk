@@ -9,35 +9,6 @@
 import XCTest
 
 final class CameraEffectArgumentsTests: XCTestCase {
-
-  func testCoding() throws {
-    let arguments = ShareModelTestUtility.cameraEffectArguments
-    let data = NSKeyedArchiver.archivedData(withRootObject: arguments)
-
-    let unarchivedArguments = try XCTUnwrap(
-      NSKeyedUnarchiver.unarchivedObject(ofClass: CameraEffectArguments.self, from: data)
-    )
-
-    let arguments1 = arguments.allArguments()
-    let arguments2 = unarchivedArguments.allArguments()
-
-    guard Set(arguments1.keys) == Set(arguments2.keys) else {
-      return XCTFail("Coding failed")
-    }
-
-    for (key, value) in arguments1 {
-      if let string1 = value as? String,
-         let string2 = arguments2[key] as? String {
-        XCTAssertEqual(string1, string2, "Unequal arguments for key: \(key)")
-      } else if let array1 = value as? [String],
-                let array2 = arguments2[key] as? [String] {
-        XCTAssertEqual(array1, array2, "Unequal arguments for key: \(key)")
-      } else {
-        XCTFail("Invalid argument type: \(type(of: value))")
-      }
-    }
-  }
-
   func testTypes() {
     let arguments = CameraEffectArguments()
 

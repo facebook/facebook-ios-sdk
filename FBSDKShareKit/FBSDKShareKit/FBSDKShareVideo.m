@@ -13,9 +13,6 @@
 
 #import "FBSDKSharePhoto.h"
 
-NSString *const kFBSDKShareVideoAssetKey = @"videoAsset";
-NSString *const kFBSDKShareVideoDataKey = @"data";
-NSString *const kFBSDKShareVideoPreviewPhotoKey = @"previewPhoto";
 NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 
 @implementation FBSDKShareVideo
@@ -186,35 +183,6 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
     }
     return NO;
   }
-}
-
-#pragma mark - NSCoding
-
-+ (BOOL)supportsSecureCoding
-{
-  return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  if ((self = [self init])) {
-    _data = [decoder decodeObjectOfClass:NSData.class forKey:kFBSDKShareVideoDataKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareVideoAssetKey];
-    if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
-      _videoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
-    }
-    _videoURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKShareVideoURLKey];
-    _previewPhoto = [decoder decodeObjectOfClass:FBSDKSharePhoto.class forKey:kFBSDKShareVideoPreviewPhotoKey];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  [encoder encodeObject:_data forKey:kFBSDKShareVideoDataKey];
-  [encoder encodeObject:_videoAsset.localIdentifier forKey:kFBSDKShareVideoAssetKey];
-  [encoder encodeObject:_videoURL forKey:kFBSDKShareVideoURLKey];
-  [encoder encodeObject:_previewPhoto forKey:kFBSDKShareVideoPreviewPhotoKey];
 }
 
 @end

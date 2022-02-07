@@ -12,12 +12,6 @@
 
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
-#define FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY @"appLinkURL"
-#define FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY @"previewImage"
-#define FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY @"promoCode"
-#define FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY @"promoText"
-#define FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY @"destination"
-
 @implementation FBSDKAppInviteContent
 
 - (instancetype)initWithAppLinkURL:(nonnull NSURL *)appLinkURL
@@ -106,37 +100,6 @@
   }
 
   return YES;
-}
-
-#pragma mark - NSCoding
-
-+ (BOOL)supportsSecureCoding
-{
-  return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  NSURL *appLinkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
-  if (appLinkURL && (self = [self initWithAppLinkURL:appLinkURL])) {
-    _appInvitePreviewImageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
-    _promotionCode = [decoder decodeObjectOfClass:NSString.class forKey:
-                      FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY];
-    _promotionText = [decoder decodeObjectOfClass:NSString.class forKey:
-                      FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY];
-    _destination = [decoder decodeIntegerForKey:
-                    FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  [encoder encodeObject:_appLinkURL forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
-  [encoder encodeObject:_appInvitePreviewImageURL forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
-  [encoder encodeObject:_promotionCode forKey:FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY];
-  [encoder encodeObject:_promotionText forKey:FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY];
-  [encoder encodeInt:(int)_destination forKey:FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];
 }
 
 @end

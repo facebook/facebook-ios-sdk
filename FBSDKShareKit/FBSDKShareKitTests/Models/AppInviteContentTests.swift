@@ -29,20 +29,6 @@ final class AppInviteContentTests: XCTestCase {
     XCTAssertEqual(content.appInvitePreviewImageURL, appInvitePreviewImageURL)
   }
 
-  func testCoding() throws {
-    let data = NSKeyedArchiver.archivedData(withRootObject: content as Any)
-    let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-    unarchiver.requiresSecureCoding = true
-    let unarchivedObject = try XCTUnwrap(
-      unarchiver.decodeObject(of: AppInviteContent.self, forKey: NSKeyedArchiveRootObjectKey)
-    )
-    XCTAssertEqual(unarchivedObject.appLinkURL, content.appLinkURL)
-    XCTAssertEqual(unarchivedObject.appInvitePreviewImageURL, content.appInvitePreviewImageURL)
-    XCTAssertEqual(unarchivedObject.promotionText, content.promotionText)
-    XCTAssertEqual(unarchivedObject.promotionCode, content.promotionCode)
-    XCTAssertEqual(unarchivedObject.destination, content.destination)
-  }
-
   func testValidationWithValidContent() throws {
     XCTAssertNoThrow(try content.validate(options: []))
   }

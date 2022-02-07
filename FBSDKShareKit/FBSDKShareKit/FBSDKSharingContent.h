@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  A base interface for content to be shared.
  */
 NS_SWIFT_NAME(SharingContent)
-@protocol FBSDKSharingContent <NSObject, FBSDKSharingValidation, NSSecureCoding>
+@protocol FBSDKSharingContent <NSObject, FBSDKSharingValidation>
 
 /**
  URL for the content being shared.

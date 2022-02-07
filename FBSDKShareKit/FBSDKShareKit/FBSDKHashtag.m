@@ -8,8 +8,6 @@
 
 #import "FBSDKHashtag.h"
 
-#define FBSDK_HASHTAG_STRING_KEY @"hashtag"
-
 static NSRegularExpression *HashtagRegularExpression()
 {
   static NSRegularExpression *hashtagRegularExpression = nil;
@@ -77,26 +75,6 @@ static NSRegularExpression *HashtagRegularExpression()
 {
   return (hashtag
     && [FBSDKInternalUtility.sharedUtility object:_stringRepresentation isEqualToObject:hashtag.stringRepresentation]);
-}
-
-#pragma mark - NSCoding
-
-+ (BOOL)supportsSecureCoding
-{
-  return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-  if ((self = [self init])) {
-    _stringRepresentation = [aDecoder decodeObjectOfClass:NSString.class forKey:FBSDK_HASHTAG_STRING_KEY];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-  [aCoder encodeObject:_stringRepresentation forKey:FBSDK_HASHTAG_STRING_KEY];
 }
 
 @end

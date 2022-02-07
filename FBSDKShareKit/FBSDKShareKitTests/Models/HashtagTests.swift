@@ -39,11 +39,4 @@ final class HashtagTests: XCTestCase {
     XCTAssertEqual(hashtag.stringRepresentation, "#ModifiedOriginal")
     XCTAssertIdentical(notCopied, hashtag)
   }
-
-  func testCoding() throws {
-    let hashtag = Hashtag("#Encoded")
-    let data = NSKeyedArchiver.archivedData(withRootObject: hashtag)
-    let unarchivedHashtag = try NSKeyedUnarchiver.unarchivedObject(ofClass: Hashtag.self, from: data)
-    XCTAssertEqual(hashtag, unarchivedHashtag)
-  }
 }

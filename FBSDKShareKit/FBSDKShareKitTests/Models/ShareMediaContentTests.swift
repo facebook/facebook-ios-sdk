@@ -10,7 +10,6 @@ import FBSDKShareKit
 import XCTest
 
 final class ShareMediaContentTests: XCTestCase {
-
   func testProperties() {
     let mediaContentMedia = ShareModelTestUtility.mediaContent.media
     let media = ShareModelTestUtility.media
@@ -26,21 +25,5 @@ final class ShareMediaContentTests: XCTestCase {
         XCTFail("Unexpected type implementing the ShareMedia protocol. Item1: \(item1), Item2: \(item2)")
       }
     }
-  }
-
-  func testCoding() throws {
-    let media = try XCTUnwrap(ShareModelTestUtility.mediaContent)
-    let data = try NSKeyedArchiver.archivedData(withRootObject: media, requiringSecureCoding: true)
-    let unarchivedMedia = try XCTUnwrap(
-      NSKeyedUnarchiver.unarchivedObject(ofClass: ShareMediaContent.self, from: data)
-    )
-
-    XCTAssertEqual(unarchivedMedia.contentURL, media.contentURL)
-    XCTAssertEqual(unarchivedMedia.hashtag, media.hashtag)
-    XCTAssertEqual(unarchivedMedia.peopleIDs, media.peopleIDs)
-    XCTAssertEqual(unarchivedMedia.media.count, media.media.count)
-    XCTAssertEqual(unarchivedMedia.placeID, media.placeID)
-    XCTAssertEqual(unarchivedMedia.ref, media.ref)
-    XCTAssertEqual(unarchivedMedia.pageID, media.pageID)
   }
 }

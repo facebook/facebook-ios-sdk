@@ -26,29 +26,6 @@ final class SharePhotoContentTests: XCTestCase {
     }
   }
 
-  func testCoding() throws {
-    let content = ShareModelTestUtility.photoContent
-    let data = NSKeyedArchiver.archivedData(withRootObject: content)
-    let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-    unarchiver.requiresSecureCoding = true
-    let unarchivedObject = try XCTUnwrap(
-      unarchiver.decodeObject(of: SharePhotoContent.self, forKey: NSKeyedArchiveRootObjectKey)
-    )
-
-    XCTAssertEqual(unarchivedObject.contentURL, content.contentURL)
-    XCTAssertEqual(unarchivedObject.hashtag, content.hashtag)
-    XCTAssertEqual(unarchivedObject.peopleIDs, content.peopleIDs)
-    XCTAssertEqual(unarchivedObject.placeID, content.placeID)
-    XCTAssertEqual(unarchivedObject.ref, content.ref)
-    XCTAssertEqual(unarchivedObject.pageID, content.pageID)
-
-    XCTAssertEqual(content.photos.count, ShareModelTestUtility.photos.count)
-    zip(content.photos, ShareModelTestUtility.photos).forEach { photo1, photo2 in
-      XCTAssertEqual(photo1.imageURL, photo2.imageURL)
-      XCTAssertEqual(photo1.isUserGenerated, photo2.isUserGenerated)
-    }
-  }
-
   func testValidationWithValidContent() {
     let content = SharePhotoContent()
     content.contentURL = ShareModelTestUtility.contentURL

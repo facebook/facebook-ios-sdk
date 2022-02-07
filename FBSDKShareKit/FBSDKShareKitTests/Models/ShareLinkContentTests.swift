@@ -21,25 +21,6 @@ final class ShareLinkContentTests: XCTestCase {
     XCTAssertEqual(content.quote, ShareModelTestUtility.quote)
   }
 
-  func testCoding() throws {
-    let content = ShareModelTestUtility.linkContent
-    let data = NSKeyedArchiver.archivedData(withRootObject: content)
-    let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-    unarchiver.requiresSecureCoding = true
-    let unarchivedObject = try XCTUnwrap(
-      unarchiver.decodeObject(of: ShareLinkContent.self, forKey: NSKeyedArchiveRootObjectKey)
-    )
-
-    XCTAssertEqual(unarchivedObject.contentURL, content.contentURL)
-    XCTAssertEqual(unarchivedObject.hashtag, content.hashtag)
-    XCTAssertEqual(unarchivedObject.peopleIDs, content.peopleIDs)
-    XCTAssertEqual(unarchivedObject.placeID, content.placeID)
-    XCTAssertEqual(unarchivedObject.ref, content.ref)
-    XCTAssertEqual(unarchivedObject.pageID, content.pageID)
-    XCTAssertEqual(unarchivedObject.shareUUID, content.shareUUID)
-    XCTAssertEqual(unarchivedObject.quote, content.quote)
-  }
-
   func testValidationWithValidContent() {
     XCTAssertNoThrow(
       try _ShareUtility.validateShare(
