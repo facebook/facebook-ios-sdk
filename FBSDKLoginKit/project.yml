@@ -40,9 +40,6 @@ targets:
     platform: iOS
     productName: FBSDKLoginKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKLoginKit/Internal
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
@@ -75,9 +72,6 @@ targets:
     platform: iOS
     productName: FBSDKLoginKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKLoginKit/Internal
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
@@ -110,9 +104,6 @@ targets:
     platform: tvOS
     productName: FBSDKLoginKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKLoginKit/Internal
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
@@ -162,9 +153,6 @@ targets:
     platform: tvOS
     productName: FBSDKLoginKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKLoginKit/Internal
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:

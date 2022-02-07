@@ -40,9 +40,6 @@ targets:
     platform: iOS
     productName: FBSDKShareKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKShareKit/Internal
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
@@ -74,9 +71,6 @@ targets:
     platform: iOS
     productName: FBSDKShareKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKShareKit/Internal
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
@@ -111,9 +105,6 @@ targets:
     platform: tvOS
     productName: FBSDKShareKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKShareKit/Internal
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
@@ -170,9 +161,6 @@ targets:
     platform: tvOS
     productName: FBSDKShareKit
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKShareKit/Internal
       - path: FBSDKShareKit
         headerVisibility: public
         excludes:
