@@ -35,6 +35,8 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nonatomic, readonly, assign) BOOL hasSKAN;
 
+@property (nonatomic, readonly, assign) BOOL isConversionFilteringEligible;
+
 @property (nonatomic, readonly, copy) NSDate *timestamp;
 
 @property (nonatomic, readonly, copy) NSString *configMode;

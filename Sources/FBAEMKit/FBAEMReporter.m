@@ -35,6 +35,7 @@ static NSString *const TOKEN_KEY = @"token";
 static NSString *const HMAC_KEY = @"hmac";
 static NSString *const CONFIG_ID_KEY = @"config_id";
 static NSString *const DELAY_FLOW_KEY = @"delay_flow";
+static NSString *const IS_CONVERSION_FILTERING_KEY = @"is_conversion_filtering";
 
 static NSString *const FB_CONTENT_IDS_KEY = @"fb_content_ids";
 static NSString *const CATALOG_ID_KEY = @"catalog_id";
@@ -706,6 +707,7 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.businessID forKey:BUSINESS_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.isConversionFilteringEligible) forKey:IS_CONVERSION_FILTERING_KEY];
 
   return [conversionParams copy];
 }

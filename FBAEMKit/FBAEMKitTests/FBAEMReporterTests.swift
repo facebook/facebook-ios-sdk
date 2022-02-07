@@ -55,7 +55,8 @@ class FBAEMReporterTests: XCTestCase {
     businessID: nil,
     catalogID: nil,
     isTestMode: false,
-    hasSKAN: false
+    hasSKAN: false,
+    isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
@@ -206,7 +207,8 @@ class FBAEMReporterTests: XCTestCase {
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     ), let invocation2 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
@@ -215,7 +217,8 @@ class FBAEMReporterTests: XCTestCase {
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )
     else { return XCTFail("Unwrapping Error") }
     invocation1.setConfigID(10000)
@@ -497,7 +500,8 @@ class FBAEMReporterTests: XCTestCase {
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false
+      hasSKAN: false,
+      isConversionFilteringEligible: true
     )
     else { return XCTFail("Unwrapping Error") }
     guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)

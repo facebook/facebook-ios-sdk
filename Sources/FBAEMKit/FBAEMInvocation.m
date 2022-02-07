@@ -36,6 +36,7 @@ static NSString *const PRIORITY_KEY = @"priority";
 static NSString *const CONVERSION_TIMESTAMP_KEY = @"conversion_timestamp";
 static NSString *const IS_AGGREGATED_KEY = @"is_aggregated";
 static NSString *const HAS_SKAN_KEY = @"has_skan";
+static NSString *const IS_CONVERSION_FILTERING_ELIGIBLE_KEY = @"is_conversion_filtering_eligible";
 
 static NSString *const FB_CONTENT = @"fb_content";
 static NSString *const FB_CONTENT_ID = @"fb_content_id";
@@ -74,7 +75,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
                                             businessID:businessID
                                              catalogID:catalogID
                                             isTestMode:isTestMode.boolValue
-                                               hasSKAN:hasSKAN.boolValue];
+                                               hasSKAN:hasSKAN.boolValue
+                         isConversionFilteringEligible:YES];
   } @catch (NSException *exception) {
     return nil;
   }
@@ -88,24 +90,26 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
                                   catalogID:(nullable NSString *)catalogID
                                  isTestMode:(BOOL)isTestMode
                                     hasSKAN:(BOOL)hasSKAN
+              isConversionFilteringEligible:(BOOL)isConversionFilteringEligible
 {
   return [self initWithCampaignID:campaignID
-                         ACSToken:ACSToken
-                  ACSSharedSecret:ACSSharedSecret
-                      ACSConfigID:ACSConfigID
-                       businessID:businessID
-                        catalogID:catalogID
-                        timestamp:nil
-                       configMode:@"DEFAULT"
-                         configID:-1
-                   recordedEvents:nil
-                   recordedValues:nil
-                  conversionValue:-1
-                         priority:-1
-              conversionTimestamp:nil
-                     isAggregated:YES
-                       isTestMode:isTestMode
-                          hasSKAN:hasSKAN];
+                               ACSToken:ACSToken
+                        ACSSharedSecret:ACSSharedSecret
+                            ACSConfigID:ACSConfigID
+                             businessID:businessID
+                              catalogID:catalogID
+                              timestamp:nil
+                             configMode:@"DEFAULT"
+                               configID:-1
+                         recordedEvents:nil
+                         recordedValues:nil
+                        conversionValue:-1
+                               priority:-1
+                    conversionTimestamp:nil
+                           isAggregated:YES
+                             isTestMode:isTestMode
+                                hasSKAN:hasSKAN
+          isConversionFilteringEligible:isConversionFilteringEligible];
 }
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
@@ -125,6 +129,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
                                isAggregated:(BOOL)isAggregated
                                  isTestMode:(BOOL)isTestMode
                                     hasSKAN:(BOOL)hasSKAN
+              isConversionFilteringEligible:(BOOL)isConversionFilteringEligible
 {
   if ((self = [super init])) {
     _campaignID = campaignID;
@@ -156,6 +161,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     _isAggregated = isAggregated;
     _isTestMode = isTestMode;
     _hasSKAN = hasSKAN;
+    _isConversionFilteringEligible = isConversionFilteringEligible;
   }
   return self;
 }
@@ -429,23 +435,25 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   NSDate *conversionTimestamp = [decoder decodeObjectOfClass:NSDate.class forKey:CONVERSION_TIMESTAMP_KEY];
   BOOL isAggregated = [decoder decodeBoolForKey:IS_AGGREGATED_KEY];
   BOOL hasSKAN = [decoder decodeBoolForKey:HAS_SKAN_KEY];
+  BOOL isConversionFilteringEligible = [decoder decodeBoolForKey:IS_CONVERSION_FILTERING_ELIGIBLE_KEY];
   return [self initWithCampaignID:campaignID
-                         ACSToken:ACSToken
-                  ACSSharedSecret:ACSSharedSecret
-                      ACSConfigID:ACSConfigID
-                       businessID:businessID
-                        catalogID:catalogID
-                        timestamp:timestamp
-                       configMode:configMode
-                         configID:configID
-                   recordedEvents:recordedEvents
-                   recordedValues:recordedValues
-                  conversionValue:conversionValue
-                         priority:priority
-              conversionTimestamp:conversionTimestamp
-                     isAggregated:isAggregated
-                       isTestMode:NO
-                          hasSKAN:hasSKAN];
+                               ACSToken:ACSToken
+                        ACSSharedSecret:ACSSharedSecret
+                            ACSConfigID:ACSConfigID
+                             businessID:businessID
+                              catalogID:catalogID
+                              timestamp:timestamp
+                             configMode:configMode
+                               configID:configID
+                         recordedEvents:recordedEvents
+                         recordedValues:recordedValues
+                        conversionValue:conversionValue
+                               priority:priority
+                    conversionTimestamp:conversionTimestamp
+                           isAggregated:isAggregated
+                             isTestMode:NO
+                                hasSKAN:hasSKAN
+          isConversionFilteringEligible:isConversionFilteringEligible];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -466,6 +474,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   [encoder encodeObject:_conversionTimestamp forKey:CONVERSION_TIMESTAMP_KEY];
   [encoder encodeBool:_isAggregated forKey:IS_AGGREGATED_KEY];
   [encoder encodeBool:_hasSKAN forKey:HAS_SKAN_KEY];
+  [encoder encodeBool:_isConversionFilteringEligible forKey:IS_CONVERSION_FILTERING_ELIGIBLE_KEY];
 }
 
 #pragma mark - NSCopying
@@ -546,6 +555,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   _conversionTimestamp = [NSDate date];
   _isAggregated = YES;
   _hasSKAN = NO;
+  _isConversionFilteringEligible = YES;
 }
 
 #endif
