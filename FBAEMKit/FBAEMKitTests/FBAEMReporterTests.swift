@@ -928,6 +928,10 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter._loadCatalogOptimization(with: invocation, contentID: nil) {
       blockCall += 1
     }
+    XCTAssertTrue(
+      (networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
+      "Should start the catalog request"
+    )
     XCTAssertEqual(blockCall, 0, "Should not execute the block when contentID is nil")
   }
 
