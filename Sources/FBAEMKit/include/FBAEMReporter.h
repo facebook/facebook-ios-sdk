@@ -32,7 +32,7 @@ NS_SWIFT_NAME(AEMReporter)
  @param appID   An optional Facebook app ID, if it's null, we will get it from info.plist file with key: FacebookAppID
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
-                         appID:(nullable NSString *)appID;
+                         appID:(nullable NSString *)appID __attribute__((deprecated("use configureWithNetworker:appID:reporter: instead.")));
 
 /**
 

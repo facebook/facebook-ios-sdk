@@ -21,6 +21,7 @@
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
+#define FB_AEM_DELAY           3
 
 typedef void (^FBAEMReporterBlock)(NSError *);
 
@@ -40,6 +41,7 @@ static NSString *const CATALOG_ID_KEY = @"catalog_id";
 
 static NSString *const FBAEMConfigurationKey = @"com.facebook.sdk:FBSDKAEMConfiguration";
 static NSString *const FBAEMReporterKey = @"com.facebook.sdk:FBSDKAEMReporter";
+static NSString *const FBAEMMINAggregationRequestTimestampKey = @"com.facebook.sdk:FBAEMMinAggregationRequestTimestamp";
 static NSString *const FBAEMReporterFileName = @"FBSDKAEMReportData.report";
 static NSString *const FBAEMConfigFileName = @"FBSDKAEMReportData.config";
 static NSString *const FBAEMHTTPMethodGET = @"GET";
@@ -54,6 +56,7 @@ static NSString *g_configFile;
 static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *g_configs;
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
+static NSDate *g_minAggregationRequestTimestamp;
 static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
 
 @interface FBAEMReporter ()
@@ -61,6 +64,7 @@ static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
 @property (class, nullable, nonatomic) NSString *appID;
 @property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
+@property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
 
 @end
 
@@ -78,10 +82,22 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
 {
+  [self configureWithNetworker:networker
+                         appID:appID
+                      reporter:reporter
+                         store:NSUserDefaults.standardUserDefaults];
+}
+
++ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
+                         appID:(nullable NSString *)appID
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+                         store:(nullable id<FBSDKDataPersisting>)store
+{
   if (self == FBAEMReporter.class) {
     self.networker = networker;
     self.appID = appID;
     self.reporter = reporter;
+    self.store = store;
   }
 }
 
@@ -121,6 +137,18 @@ static id<FBSKAdNetworkReporting> _reporter;
   _reporter = reporter;
 }
 
+static id<FBSDKDataPersisting> _store;
+
++ (nullable id<FBSDKDataPersisting>)store
+{
+  return _store;
+}
+
++ (void)setStore:(nullable id<FBSDKDataPersisting>)store
+{
+  _store = store;
+}
+
 + (void)enable
 {
   if (@available(iOS 14.0, *)) {
@@ -133,7 +161,8 @@ static id<FBSKAdNetworkReporting> _reporter;
       if (!g_serialQueue) {
         g_serialQueue = dispatch_queue_create(dispatchQueueLabel, DISPATCH_QUEUE_SERIAL);
       }
-      [self dispatchOnQueue:g_serialQueue block:^() {
+      [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
+        g_minAggregationRequestTimestamp = [self _loadMinAggregationRequestTimestamp];
         g_configs = [self _loadConfigs];
         g_invocations = [self _loadReportData];
       }];
@@ -313,7 +342,7 @@ static id<FBSKAdNetworkReporting> _reporter;
 
 + (void)_appendAndSaveInvocation:(FBAEMInvocation *)invocation
 {
-  [self dispatchOnQueue:g_serialQueue block:^() {
+  [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
     [FBSDKTypeUtility array:g_invocations addObject:invocation];
     [self _saveReportData];
   }];
@@ -321,7 +350,7 @@ static id<FBSKAdNetworkReporting> _reporter;
 
 + (void)_loadConfigurationWithBlock:(FBAEMReporterBlock)block
 {
-  [self dispatchOnQueue:g_serialQueue block:^() {
+  [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
     [FBSDKTypeUtility array:g_completionBlocks addObject:block];
     // Executes blocks if there is cache
     if (![self _shouldRefresh]) {
@@ -341,7 +370,7 @@ static id<FBSKAdNetworkReporting> _reporter;
                                        tokenString:nil
                                         HTTPMethod:FBAEMHTTPMethodGET
                                         completion:^(id _Nullable result, NSError *_Nullable error) {
-                                          [self dispatchOnQueue:g_serialQueue block:^() {
+                                          [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
                                             if (error) {
                                               for (FBAEMReporterBlock executionBlock in g_completionBlocks) {
                                                 executionBlock(error);
@@ -380,7 +409,7 @@ static id<FBSKAdNetworkReporting> _reporter;
                                      tokenString:nil
                                       HTTPMethod:FBAEMHTTPMethodGET
                                       completion:^(id _Nullable result, NSError *_Nullable error) {
-                                        [self dispatchOnQueue:g_serialQueue block:^() {
+                                        [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
                                           if (error) {
                                             return;
                                           }
@@ -448,6 +477,11 @@ static id<FBSKAdNetworkReporting> _reporter;
   return (![self _isConfigRefreshTimestampValid]) || (0 == g_configs.count);
 }
 
++ (BOOL)_shouldDelayAggregationRequest
+{
+  return g_minAggregationRequestTimestamp && [[NSDate date] timeIntervalSinceDate:g_minAggregationRequestTimestamp] < 0;
+}
+
 #pragma mark - Deeplink debugging methods
 
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation
@@ -490,6 +524,21 @@ static id<FBSKAdNetworkReporting> _reporter;
 }
 
 #pragma mark - Background methods
+
++ (nullable NSDate *)_loadMinAggregationRequestTimestamp
+{
+  NSDate *timestamp = [self.store objectForKey:FBAEMMINAggregationRequestTimestampKey];
+  if ([timestamp isKindOfClass:NSDate.class]) {
+    return timestamp;
+  }
+  return nil;
+}
+
++ (void)_updateAggregationRequestTimestamp:(NSTimeInterval)timestamp
+{
+  g_minAggregationRequestTimestamp = [NSDate dateWithTimeIntervalSince1970:timestamp];
+  [self.store setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
+}
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs
 {
@@ -601,31 +650,48 @@ static id<FBSKAdNetworkReporting> _reporter;
   if (0 == params.count) {
     return;
   }
-  @try {
-    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:params options:0 error:nil];
-    if (jsonData) {
-      NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", self.appID]
-                                          parameters:@{@"aem_conversions" : reports}
-                                         tokenString:nil
-                                          HTTPMethod:FBAEMHTTPMethodPOST
-                                          completion:^(id _Nullable result, NSError *_Nullable error) {
-                                            if (error) {
-                                              return;
-                                            }
+  dispatch_block_t block = ^{
+    @try {
+      NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:params options:0 error:nil];
+      if (jsonData) {
+        NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-                                            [self dispatchOnQueue:g_serialQueue block:^() {
-                                              for (FBAEMInvocation *invocation in aggregatedInvocations) {
-                                                invocation.isAggregated = YES;
+        [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", self.appID]
+                                            parameters:@{@"aem_conversions" : reports}
+                                           tokenString:nil
+                                            HTTPMethod:FBAEMHTTPMethodPOST
+                                            completion:^(id _Nullable result, NSError *_Nullable error) {
+                                              if (error) {
+                                                return;
                                               }
-                                              [self _saveReportData];
+
+                                              [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
+                                                for (FBAEMInvocation *invocation in aggregatedInvocations) {
+                                                  invocation.isAggregated = YES;
+                                                }
+                                                [self _saveReportData];
+                                              }];
                                             }];
-                                          }];
+      }
+    } @catch (NSException *exception) {
+      NSLog(@"Fail to send AEM reports");
     }
-  } @catch (NSException *exception) {
-    NSLog(@"Fail to send AEM reports");
+  };
+
+  if ([self _shouldDelayAggregationRequest]) {
+    [self dispatchOnQueue:g_serialQueue
+                    delay:MAX(FB_AEM_DELAY, (int64_t)(g_minAggregationRequestTimestamp.timeIntervalSince1970 - [[NSDate date] timeIntervalSince1970]))
+                    block:block];
+  } else {
+    block();
   }
+  [self _updateAggregationRequestTimestamp:
+   MAX(
+     [[NSDate date] timeIntervalSince1970] + FB_AEM_DELAY,
+     g_minAggregationRequestTimestamp.timeIntervalSince1970 + FB_AEM_DELAY
+   )
+  ];
 }
 
 + (NSDictionary<NSString *, id> *)_aggregationRequestParameters:(FBAEMInvocation *)invocation
@@ -644,13 +710,21 @@ static id<FBSKAdNetworkReporting> _reporter;
   return [conversionParams copy];
 }
 
-+ (void)dispatchOnQueue:(dispatch_queue_t)queue block:(dispatch_block_t)block
++ (void)dispatchOnQueue:(dispatch_queue_t)queue
+                  delay:(int64_t)delay
+                  block:(dispatch_block_t)block
 {
   if (block != nil) {
     if (strcmp(dispatch_queue_get_label(queue), dispatchQueueLabel) == 0) {
-      dispatch_async(queue, block);
+      if (delay) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), queue, block);
+      } else {
+        dispatch_async(queue, block);
+      }
     } else {
-      block();
+      if (!delay) {
+        block();
+      }
     }
   }
 }
@@ -802,6 +876,16 @@ static id<FBSKAdNetworkReporting> _reporter;
   g_reportFile = path;
 }
 
++ (void)setMinAggregationRequestTimestamp:(NSDate *)timestamp
+{
+  g_minAggregationRequestTimestamp = timestamp;
+}
+
++ (NSDate *)minAggregationRequestTimestamp
+{
+  return g_minAggregationRequestTimestamp;
+}
+
 + (void)reset
 {
   g_isAEMReportEnabled = NO;
@@ -809,9 +893,11 @@ static id<FBSKAdNetworkReporting> _reporter;
   g_isCatalogReportEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
   g_configs = [NSMutableDictionary new];
+  g_minAggregationRequestTimestamp = nil;
   self.networker = nil;
   self.appID = nil;
   self.reporter = nil;
+  self.store = nil;
   [self _clearCache];
 }
 
