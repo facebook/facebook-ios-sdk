@@ -1170,16 +1170,18 @@ final class ProfileTests: XCTestCase {
       "name": profile.name as Any,
       "link": profile.linkURL as Any,
       "email": profile.email as Any,
-      "friends": ["data": [
-        [
-          "name": "user1",
-          "id": profile.friendIDs?[0]
-        ],
-        [
-          "name": "user2",
-          "id": profile.friendIDs?[1]
+      "friends": [
+        "data": [
+          [
+            "name": "user1",
+            "id": profile.friendIDs?[0]
+          ],
+          [
+            "name": "user2",
+            "id": profile.friendIDs?[1]
+          ]
         ]
-      ]],
+      ],
       "birthday": "01/01/1990",
       "age_range": [
         "min": profile.ageRange?.min
