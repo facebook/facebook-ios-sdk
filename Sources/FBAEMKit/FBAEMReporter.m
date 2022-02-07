@@ -166,7 +166,7 @@ static id<FBSDKDataPersisting> _store;
         g_configs = [self _loadConfigs];
         g_invocations = [self _loadReportData];
       }];
-      [self _loadConfigurationWithBlock:^(NSError *error) {
+      [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
         if (error) {
           return;
         }
@@ -214,6 +214,7 @@ static id<FBSDKDataPersisting> _store;
     return;
   }
 
+  [self _loadConfigurationWithRefreshForced:YES block:nil];
   [self _appendAndSaveInvocation:invocation];
 }
 
@@ -246,7 +247,7 @@ static id<FBSDKDataPersisting> _store;
     if (!g_isAEMReportEnabled || 0 == event.length) {
       return;
     }
-    [self _loadConfigurationWithBlock:^(NSError *error) {
+    [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
       if (0 == g_configs.count || 0 == g_invocations.count) {
         return;
       }
@@ -348,12 +349,12 @@ static id<FBSDKDataPersisting> _store;
   }];
 }
 
-+ (void)_loadConfigurationWithBlock:(FBAEMReporterBlock)block
++ (void)_loadConfigurationWithRefreshForced:(BOOL)forced block:(nullable FBAEMReporterBlock)block
 {
   [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
     [FBSDKTypeUtility array:g_completionBlocks addObject:block];
     // Executes blocks if there is cache
-    if (![self _shouldRefresh]) {
+    if (![self _shouldRefreshWithIsForced:forced]) {
       for (FBAEMReporterBlock executionBlock in g_completionBlocks) {
         executionBlock(nil);
       }
@@ -465,8 +466,11 @@ static id<FBSDKDataPersisting> _store;
   return g_configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:g_configRefreshTimestamp] < FB_AEM_CONFIG_TIME_OUT;
 }
 
-+ (BOOL)_shouldRefresh
++ (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced
 {
+  if (isForced) {
+    return YES;
+  }
   // Refresh if there exists invocation which has business ID
   for (FBAEMInvocation *invocation in g_invocations) {
     if (invocation.businessID) {

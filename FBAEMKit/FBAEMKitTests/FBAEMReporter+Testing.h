@@ -39,7 +39,8 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (nullable FBAEMInvocation *)parseURL:(nullable NSURL *)url;
 
-+ (void)_loadConfigurationWithBlock:(nullable FBAEMReporterBlock)block;
++ (void)_loadConfigurationWithRefreshForced:(BOOL)forced
+                                      block:(nullable FBAEMReporterBlock)block;
 
 + (void)_loadCatalogOptimizationWithInvocation:(FBAEMInvocation *)invocation
                                      contentID:(nullable NSString *)contentID
@@ -75,7 +76,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (BOOL)_isConfigRefreshTimestampValid;
 
-+ (BOOL)_shouldRefresh;
++ (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced;
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs;
 

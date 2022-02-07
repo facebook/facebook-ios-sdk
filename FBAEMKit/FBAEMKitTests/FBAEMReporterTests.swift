@@ -310,6 +310,19 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
+  func testShouldEnforceRefresh() {
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
+    AEMReporter.timestamp = Date()
+    AEMReporter.configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+    ]
+
+    XCTAssertTrue(
+      AEMReporter._shouldRefresh(withIsForced: true),
+      "Should refresh config if it's enforced"
+    )
+  }
+
   func testShouldRefreshWithoutBusinessID1() {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
     AEMReporter.timestamp = Date()
@@ -318,7 +331,7 @@ class FBAEMReporterTests: XCTestCase {
     ]
 
     XCTAssertFalse(
-      AEMReporter._shouldRefresh(),
+      AEMReporter._shouldRefresh(withIsForced: false),
       "Should not refresh config if timestamp is not expired and there is no business ID"
     )
   }
@@ -333,7 +346,7 @@ class FBAEMReporterTests: XCTestCase {
     ]
 
     XCTAssertTrue(
-      AEMReporter._shouldRefresh(),
+      AEMReporter._shouldRefresh(withIsForced: false),
       "Should not refresh config if timestamp is expired"
     )
   }
@@ -346,7 +359,7 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.configs = [:]
 
     XCTAssertTrue(
-      AEMReporter._shouldRefresh(),
+      AEMReporter._shouldRefresh(withIsForced: false),
       "Should not refresh config if configs is empty"
     )
   }
@@ -362,7 +375,7 @@ class FBAEMReporterTests: XCTestCase {
     ]
 
     XCTAssertTrue(
-      AEMReporter._shouldRefresh(),
+      AEMReporter._shouldRefresh(withIsForced: false),
       "Should not refresh config if there exists an invocation with business ID"
     )
   }
@@ -566,6 +579,22 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
+  func testLoadConfigurationWithRefreshEnforced() {
+    guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
+    else { return XCTFail("Unwrapping Error") }
+    AEMReporter.timestamp = Date()
+    AEMReporter.configs = [Values.defaultMode: [config]]
+
+    AEMReporter.isLoadingConfiguration = false
+    AEMReporter._loadConfiguration(withRefreshForced: true, block: nil)
+    guard
+      let path = networker.capturedGraphPath,
+      path.hasSuffix("aem_conversion_configs")
+    else {
+      return XCTFail("Should load configuration when refresh is enforced")
+    }
+  }
+
   func testLoadConfigurationWithBlock() {
     guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
@@ -573,7 +602,7 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.timestamp = Date()
     AEMReporter.configs = [Values.defaultMode: [config]]
 
-    AEMReporter._loadConfiguration { _ in
+    AEMReporter._loadConfiguration(withRefreshForced: false) { _ in
       blockCall += 1
     }
     XCTAssertEqual(
@@ -587,7 +616,7 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.timestamp = date
 
     AEMReporter.isLoadingConfiguration = false
-    AEMReporter._loadConfiguration(block: nil)
+    AEMReporter._loadConfiguration(withRefreshForced: false, block: nil)
     guard
       let path = networker.capturedGraphPath,
       path.hasSuffix("aem_conversion_configs")
