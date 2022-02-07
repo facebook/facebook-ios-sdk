@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination) {
  A model for app invite.
  */
 NS_SWIFT_NAME(AppInviteContent)
-@interface FBSDKAppInviteContent : NSObject <NSObject, FBSDKSharingValidation>
+@interface FBSDKAppInviteContent : NSObject <FBSDKSharingValidation>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

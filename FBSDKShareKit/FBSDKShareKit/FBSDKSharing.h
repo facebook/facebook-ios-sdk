@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see FBSDKMessageDialog
  */
 NS_SWIFT_NAME(Sharing)
-@protocol FBSDKSharing <NSObject>
+@protocol FBSDKSharing
 
 /**
  The receiver's delegate or nil if it doesn't have a delegate.

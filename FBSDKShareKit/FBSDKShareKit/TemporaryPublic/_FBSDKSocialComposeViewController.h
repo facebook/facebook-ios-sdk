@@ -60,7 +60,7 @@ typedef void (^_FBSDKSocialComposeViewControllerCompletionHandler)(_FBSDKSocialC
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(_SocialComposeViewControllerProtocol)
-@protocol _FBSDKSocialComposeViewController <NSObject>
+@protocol _FBSDKSocialComposeViewController
 
 @property (nonatomic) _FBSDKSocialComposeViewControllerCompletionHandler completionHandler;
 

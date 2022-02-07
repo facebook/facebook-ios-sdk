@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed `NSSecureCoding` conformance from multiple types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from Objective-C-centric practices.
 - Removed `NSCopying` conformance from multiple types and the `copy` attributes of numerous properties in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from unnecessary Objective-C-centric practices.
 - Removed custom hashing and `isEqual...` implementations from content types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from unnecessary Objective-C-centric practices.
+- Removed `NSObjectProtocol` conformance/inheritance from multiple types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from Objective-C-centric practices.
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.
 - Removed deprecated `FBSDKReferralCode`, `FBSDKReferralManager`, `FBSDKReferralManagerResult` and related classes.
 - Removed unused `FBSDKAppGroupContent` class, `FBSDKAppGroupPrivacy` enum and `NSStringFromFBSDKAppGroupPrivacy` function.
