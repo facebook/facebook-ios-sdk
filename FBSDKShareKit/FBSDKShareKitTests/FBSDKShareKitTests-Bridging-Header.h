@@ -11,9 +11,7 @@
 #import "XCTestCase+Assertions.h"
 
 #import "FBSDKAppInviteContent.h"
-#import "FBSDKCameraEffectArguments+Internal.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareCameraEffectContent+Testing.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"

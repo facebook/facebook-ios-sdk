@@ -57,6 +57,14 @@ NS_SWIFT_NAME(set(_:forKey:));
  */
 - (nullable NSArray<NSString *> *)arrayForKey:(NSString *)key;
 
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@property (nonatomic) NSDictionary<NSString *, id> *allArguments;
+
 @end
 
 NS_ASSUME_NONNULL_END

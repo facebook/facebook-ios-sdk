@@ -39,6 +39,14 @@ NS_SWIFT_NAME(set(_:forKey:));
  */
 - (nullable UIImage *)imageForKey:(NSString *)key;
 
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@property (nonatomic) NSDictionary<NSString *, UIImage *> *allTextures;
+
 @end
 
 NS_ASSUME_NONNULL_END

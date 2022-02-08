@@ -134,7 +134,7 @@ final class MessageDialogTests: XCTestCase {
     )
   }
 
-  func testShowInvokesDelegateWhenCannotValidate() {
+  func testShowInvokesDelegateWhenCannotValidate() throws {
     dialog = MessageDialog(
       content: ShareModelTestUtility.cameraEffectContent,
       delegate: delegate,
@@ -147,14 +147,23 @@ final class MessageDialogTests: XCTestCase {
 
     dialog.show()
 
-    let error = NSError(
-      domain: ShareErrorDomain,
-      code: CoreError.errorInvalidArgument.rawValue,
-      userInfo: [
-        ErrorArgumentNameKey: "shareContent",
-        ErrorDeveloperMessageKey: "Message dialog does not support FBSDKShareCameraEffectContent."
-      ]
+    let error = try XCTUnwrap(
+      delegate.capturedError,
+      "The delegate should receive a callback with an error"
+    ) as NSError
+
+    XCTAssertEqual(error.domain, ShareErrorDomain, "The share error domain should be used")
+    XCTAssertEqual(error.code, CoreError.errorInvalidArgument.rawValue, "The invalid argument code should be included")
+
+    XCTAssertEqual(
+      error.userInfo[ErrorArgumentNameKey] as? String,
+      "shareContent",
+      "The argument name should be included"
     )
-    XCTAssertEqual(delegate.capturedError as NSError?, error)
+    XCTAssertEqual(
+      error.userInfo[ErrorDeveloperMessageKey] as? String,
+      "Message dialog does not support ShareCameraEffectContent.",
+      "The invalid argument message should be used"
+    )
   }
 }
