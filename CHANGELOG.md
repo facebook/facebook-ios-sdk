@@ -75,7 +75,19 @@ TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many
 - Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)` instead)
 - Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)` instead)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...HEAD)
+
+## 12.3.2
+
+This release contains various fixes for FBAEMKit
+
+###  Fixed
+- Fetched AEM config after AEM URL is received
+- Added delay between AEM conversion requests
+- Moved Catalog Matching logic behind GK
+
+[2022-02-07](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.3.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...v12.3.2)
 
 ## 12.3.1
 
