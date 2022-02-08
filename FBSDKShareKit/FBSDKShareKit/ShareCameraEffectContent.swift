@@ -112,7 +112,7 @@ extension ShareCameraEffectContent: SharingContent {
     // the existing API protocol only allows one value to be put into the pasteboard.
 
     // Convert UIImages to NSData, because UIImage is not archivable.
-    let textureImageData = effectTextures.allTextures.compactMapValues(UIImage.pngData)
+    let textureImageData = effectTextures.textures.compactMapValues(UIImage.pngData)
 
     if let serializedTextureImages = try? NSKeyedArchiver.archivedData(
       withRootObject: textureImageData,
