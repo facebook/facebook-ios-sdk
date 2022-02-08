@@ -8,8 +8,6 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
-#import "XCTestCase+Assertions.h"
-
 #import "FBSDKAppInviteContent.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareLinkContent.h"
