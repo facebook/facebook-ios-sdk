@@ -102,7 +102,7 @@ extension ShareCameraEffectContent: SharingContent {
     updatedParameters["effect_id"] = effectID
 
     if let jsonString = try? BasicUtility.jsonString(
-      for: effectArguments.allArguments,
+      for: effectArguments.arguments,
       invalidObjectHandler: nil
     ) {
       updatedParameters["effect_arguments"] = jsonString

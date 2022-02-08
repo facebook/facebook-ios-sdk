@@ -19,13 +19,7 @@ final class CameraEffectArgumentsTests: XCTestCase {
     XCTAssertEqual(arguments.array(forKey: "string_array"), ["a", "b", "c"])
     arguments.set([], forKey: "empty_array")
     XCTAssertEqual(arguments.array(forKey: "empty_array"), [])
-    assertThrowsSpecificNamed(NSExceptionName.invalidArgumentException) {
-      arguments.setNilValueForKey("nil_string")
-    }
     XCTAssertNil(arguments.string(forKey: "nil_string"))
-    assertThrowsSpecificNamed(NSExceptionName.invalidArgumentException) {
-      arguments.setNilValueForKey("nil_array")
-    }
     XCTAssertNil(arguments.array(forKey: "nil_array"))
   }
 }
