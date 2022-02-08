@@ -1514,9 +1514,9 @@ class AppEventsTests: XCTestCase {
     }
   }
 
-  func testFetchingConfigurationIncludingAEMCatalogReport() {
+  func testFetchingConfigurationIncludingAEMConversionFiltering() {
     if #available(iOS 14.0, *) {
-      featureManager.enable(feature: .aemCatalogReport)
+      featureManager.enable(feature: .aemConversionFiltering)
       appEvents.fetchServerConfiguration(nil)
       appEventsConfigurationProvider.firstCapturedBlock?()
       serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
@@ -1525,12 +1525,33 @@ class AppEventsTests: XCTestCase {
         with: true
       )
       XCTAssertTrue(
-        TestAEMReporter.setCatalogReportEnabledWasCalled,
-        "Should enable or disable the catalog report"
+        TestAEMReporter.setCatalogMatchingEnabledWasCalled,
+        "Should enable or disable the Conversion Filtering"
       )
       XCTAssertTrue(
-        TestAEMReporter.capturedSetCatalogReportEnabled,
-        "AEM Catalog Report should be enabled"
+        TestAEMReporter.capturedConversionFilteringEnabled,
+        "AEM Conversion Filtering should be enabled"
+      )
+    }
+  }
+
+  func testFetchingConfigurationIncludingAEMCatalogMatching() {
+    if #available(iOS 14.0, *) {
+      featureManager.enable(feature: .aemCatalogMatching)
+      appEvents.fetchServerConfiguration(nil)
+      appEventsConfigurationProvider.firstCapturedBlock?()
+      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+      featureManager.completeCheck(
+        forFeature: .AEM,
+        with: true
+      )
+      XCTAssertTrue(
+        TestAEMReporter.setCatalogMatchingEnabledWasCalled,
+        "Should enable or disable the Catalog Matching"
+      )
+      XCTAssertTrue(
+        TestAEMReporter.capturedCatalogMatchingEnabled,
+        "AEM Catalog Matching should be enabled"
       )
     }
   }

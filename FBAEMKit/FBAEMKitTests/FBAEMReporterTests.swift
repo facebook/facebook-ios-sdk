@@ -86,15 +86,26 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
   }
 
-  func testCatalogReportDefaultConfigure() {
-    XCTAssertFalse(AEMReporter.isCatalogReportEnabled, "AEM Catalog Report should be disabled by default")
+  func testConversionFilteringDefaultConfigure() {
+    XCTAssertFalse(AEMReporter.isConversionFilteringEnabled, "AEM Conversion Filtering should be disabled by default")
   }
 
-  func testSetCatalogReportEnabled() {
-    AEMReporter.isCatalogReportEnabled = false
-    AEMReporter.setCatalogReportEnabled(true)
+  func testSetConversionFilteringEnabled() {
+    AEMReporter.isConversionFilteringEnabled = false
+    AEMReporter.setConversionFilteringEnabled(true)
 
-    XCTAssertTrue(AEMReporter.isCatalogReportEnabled, "AEM Catalog Report should be enabled")
+    XCTAssertTrue(AEMReporter.isConversionFilteringEnabled, "AEM Conversion Filtering should be enabled")
+  }
+
+  func testCatalogMatchingDefaultConfigure() {
+    XCTAssertFalse(AEMReporter.isCatalogMatchingEnabled, "AEM Catalog Matching should be disabled by default")
+  }
+
+  func testSetCatalogMatchingEnabled() {
+    AEMReporter.isCatalogMatchingEnabled = false
+    AEMReporter.setCatalogMatchingEnabled(true)
+
+    XCTAssertTrue(AEMReporter.isCatalogMatchingEnabled, "AEM Catalog Matching should be enabled")
   }
 
   func testConfigure() {
@@ -1003,22 +1014,28 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   func testShouldReportConversionInCatalogLevel() {
-    for catalogReportEnabled in [true, false] {
-      for isOptimizedEvent in [true, false] {
-        for catalogID in ["test_catalog", nil] {
-          AEMReporter.setCatalogReportEnabled(catalogReportEnabled)
-          testInvocation.isOptimizedEvent = isOptimizedEvent
-          testInvocation.catalogID = catalogID
-          if catalogReportEnabled && isOptimizedEvent && catalogID != nil {
-            XCTAssertTrue(
-              AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
-              "Should expect to report conversion in catalog level"
-            )
-          } else {
-            XCTAssertFalse(
-              AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
-              "Should expect not to report conversion in catalog level"
-            )
+    for conversionFilteringEnabled in [true, false] {
+      for catalogMatchingEnabled in [true, false] {
+        for isOptimizedEvent in [true, false] {
+          for catalogID in ["test_catalog", nil] {
+            AEMReporter.setConversionFilteringEnabled(conversionFilteringEnabled)
+            AEMReporter.setCatalogMatchingEnabled(catalogMatchingEnabled)
+            testInvocation.isOptimizedEvent = isOptimizedEvent
+            testInvocation.catalogID = catalogID
+            if conversionFilteringEnabled
+                && catalogMatchingEnabled
+                && isOptimizedEvent
+                && catalogID != nil {
+              XCTAssertTrue(
+                AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
+                "Should expect to report conversion in catalog level"
+              )
+            } else {
+              XCTAssertFalse(
+                AEMReporter._shouldReportConversion(inCatalogLevel: testInvocation, event: Values.purchase),
+                "Should expect not to report conversion in catalog level"
+              )
+            }
           }
         }
       }

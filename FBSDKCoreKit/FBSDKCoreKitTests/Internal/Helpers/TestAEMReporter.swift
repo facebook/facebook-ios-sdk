@@ -13,8 +13,10 @@ import UIKit
 class TestAEMReporter: NSObject, AEMReporterProtocol {
 
   static var enableWasCalled = false
-  static var setCatalogReportEnabledWasCalled = false
-  static var capturedSetCatalogReportEnabled = false
+  static var setConversionFilteringEnabledWasCalled = false
+  static var capturedConversionFilteringEnabled = false
+  static var setCatalogMatchingEnabledWasCalled = false
+  static var capturedCatalogMatchingEnabled = false
   static var capturedEvent: String?
   static var capturedCurrency: String?
   static var capturedValue: NSNumber?
@@ -36,15 +38,22 @@ class TestAEMReporter: NSObject, AEMReporterProtocol {
     capturedParameters = parameters
   }
 
-  static func setCatalogReportEnabled(_ enabled: Bool) {
-    setCatalogReportEnabledWasCalled = true
-    capturedSetCatalogReportEnabled = enabled
+  static func setConversionFilteringEnabled(_ enabled: Bool) {
+    setConversionFilteringEnabledWasCalled = true
+    capturedConversionFilteringEnabled = enabled
+  }
+
+  static func setCatalogMatchingEnabled(_ enabled: Bool) {
+    setCatalogMatchingEnabledWasCalled = true
+    capturedCatalogMatchingEnabled = enabled
   }
 
   static func reset() {
     enableWasCalled = false
-    setCatalogReportEnabledWasCalled = false
-    capturedSetCatalogReportEnabled = false
+    setConversionFilteringEnabledWasCalled = false
+    capturedConversionFilteringEnabled = false
+    setCatalogMatchingEnabledWasCalled = false
+    capturedCatalogMatchingEnabled = false
     capturedEvent = nil
     capturedCurrency = nil
     capturedValue = nil

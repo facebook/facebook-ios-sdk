@@ -60,12 +60,18 @@ NS_SWIFT_NAME(AEMReporter)
 + (void)enable;
 
 /**
-
- Control whether to enable catalog reporting
+ Control whether to enable conversion filtering
 
  This function should be called in application(_:open:options:) from ApplicationDelegate
  */
-+ (void)setCatalogReportEnabled:(BOOL)enabled;
++ (void)setConversionFilteringEnabled:(BOOL)enabled;
+
+/**
+ Control whether to enable catalog matching
+
+ This function should be called in application(_:open:options:) from ApplicationDelegate
+ */
++ (void)setCatalogMatchingEnabled:(BOOL)enabled;
 
 /**
 

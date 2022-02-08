@@ -50,7 +50,8 @@ static NSString *const FBAEMHTTPMethodPOST = @"POST";
 
 static BOOL g_isAEMReportEnabled = NO;
 static BOOL g_isLoadingConfiguration = NO;
-static BOOL g_isCatalogReportEnabled = NO;
+static BOOL g_isConversionFilteringEnabled = NO;
+static BOOL g_isCatalogMatchingEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
@@ -195,9 +196,14 @@ static id<FBSDKDataPersisting> _store;
   }
 }
 
-+ (void)setCatalogReportEnabled:(BOOL)enabled
++ (void)setConversionFilteringEnabled:(BOOL)enabled
 {
-  g_isCatalogReportEnabled = enabled;
+  g_isConversionFilteringEnabled = enabled;
+}
+
++ (void)setCatalogMatchingEnabled:(BOOL)enabled
+{
+  g_isCatalogMatchingEnabled = enabled;
 }
 
 + (void)handleURL:(NSURL *)url
@@ -256,9 +262,10 @@ static id<FBSDKDataPersisting> _store;
       FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
       if (attributedInvocation) {
         // We will report conversion in catalog level if
-        // 1. invocation has catalog id
-        // 2. event is optimized
-        // 3. event's content id belongs to the catalog
+        // 1. conversion filtering and catalog matching are enabled
+        // 2. invocation has catalog id
+        // 3. event is optimized
+        // 4. event's content id belongs to the catalog
         if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
           NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
           [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
@@ -274,7 +281,7 @@ static id<FBSDKDataPersisting> _store;
                                    currency:currency
                                       value:value
                                  parameters:parameters
-                        shouldBoostPriority:NO];
+                        shouldBoostPriority:g_isConversionFilteringEnabled];
         }
       }
     }];
@@ -421,7 +428,8 @@ static id<FBSDKDataPersisting> _store;
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
                                         event:(NSString *)event
 {
-  return g_isCatalogReportEnabled
+  return g_isConversionFilteringEnabled
+  && g_isCatalogMatchingEnabled
   && invocation.catalogID
   && [invocation isOptimizedEvent:event configs:g_configs];
 }
@@ -707,7 +715,7 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.businessID forKey:BUSINESS_ID_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.isConversionFilteringEligible) forKey:IS_CONVERSION_FILTERING_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.isConversionFilteringEligible && g_isConversionFilteringEnabled) forKey:IS_CONVERSION_FILTERING_KEY];
 
   return [conversionParams copy];
 }
@@ -838,14 +846,24 @@ static id<FBSDKDataPersisting> _store;
   return g_isAEMReportEnabled;
 }
 
-+ (void)setIsCatalogReportEnabled:(BOOL)enabled
++ (void)setIsConversionFilteringEnabled:(BOOL)enabled
 {
-  g_isCatalogReportEnabled = enabled;
+  g_isConversionFilteringEnabled = enabled;
 }
 
-+ (BOOL)isCatalogReportEnabled
++ (BOOL)isConversionFilteringEnabled
 {
-  return g_isCatalogReportEnabled;
+  return g_isConversionFilteringEnabled;
+}
+
++ (void)setIsCatalogMatchingEnabled:(BOOL)enabled
+{
+  g_isCatalogMatchingEnabled = enabled;
+}
+
++ (BOOL)isCatalogMatchingEnabled
+{
+  return g_isCatalogMatchingEnabled;
 }
 
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
@@ -892,7 +910,8 @@ static id<FBSDKDataPersisting> _store;
 {
   g_isAEMReportEnabled = NO;
   g_isLoadingConfiguration = NO;
-  g_isCatalogReportEnabled = NO;
+  g_isConversionFilteringEnabled = NO;
+  g_isCatalogMatchingEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
   g_configs = [NSMutableDictionary new];
   g_minAggregationRequestTimestamp = nil;
