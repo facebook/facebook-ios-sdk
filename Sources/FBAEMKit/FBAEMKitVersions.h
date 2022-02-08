@@ -6,5 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#define FBAEMKit_VERSION_STRING @"12.3.1"
+#define FBAEMKit_VERSION_STRING @"12.3.2"
 #define FBSDK_DEFAULT_GRAPH_API_VERSION @"v12.0"

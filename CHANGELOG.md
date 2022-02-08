@@ -10,7 +10,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...HEAD)
+
+## 12.3.2
+
+This release contains various fixes for FBAEMKit
+
+###  Fixed
+- Fetched AEM config after AEM URL is received
+- Added delay between AEM conversion requests
+- Moved Catalog Matching logic behind GK
+
+[2022-02-07](https://github.com/facebook/facebook-ios-sdk/releases/tag/v12.3.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.1...v12.3.2)
 
 ## 12.3.1
 
