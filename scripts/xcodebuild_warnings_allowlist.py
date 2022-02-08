@@ -13,4 +13,5 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     # Deprecation Warnings:
     "is deprecated and will be removed in the next major release",
     "warning: Building targets in manual order is deprecated",
+    "warning: 'prefer_self_in_static_references' is not a valid rule identifier",
 ]

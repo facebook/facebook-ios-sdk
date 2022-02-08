@@ -71,7 +71,7 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
     )
     addTarget(
       self,
-      action: #selector(FBSendButton.share),
+      action: #selector(Self.share),
       for: .touchUpInside
     )
     dialog = MessageDialog()

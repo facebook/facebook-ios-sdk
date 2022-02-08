@@ -162,6 +162,7 @@ only_rules:
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
+  - prefer_self_in_static_references
   - private_action
   - private_outlet
   - private_over_fileprivate

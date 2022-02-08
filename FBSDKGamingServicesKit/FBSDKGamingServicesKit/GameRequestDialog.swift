@@ -144,7 +144,7 @@ public final class GameRequestDialog: NSObject {
 
     let appID = Settings.shared.appID ?? ""
     let schemePrefixMatches = scheme.hasPrefix("fb\(appID)")
-    let hostMatches = (host == GameRequestDialog.gameRequestURLHost)
+    let hostMatches = (host == Self.gameRequestURLHost)
     return schemePrefixMatches && hostMatches
   }
 
@@ -207,7 +207,7 @@ public final class GameRequestDialog: NSObject {
       parameters["get_frictionless_recipients"] = true
 
       dialogIsFrictionless = true
-      if GameRequestDialog.recipientCache.recipientsAreFrictionless(content.recipients) {
+      if Self.recipientCache.recipientsAreFrictionless(content.recipients) {
         webDialog.shouldDeferVisibility = true
       }
     }
@@ -281,7 +281,7 @@ public final class GameRequestDialog: NSObject {
     let potentialRequest = BridgeAPIRequest(
       protocolType: .web,
       scheme: .https,
-      methodName: GameRequestDialog.appRequestMethodName,
+      methodName: Self.appRequestMethodName,
       parameters: parameters,
       userInfo: nil
     )
@@ -322,7 +322,7 @@ public final class GameRequestDialog: NSObject {
     }
 
     if dialogIsFrictionless {
-      GameRequestDialog.recipientCache.update(results: results)
+      Self.recipientCache.update(results: results)
     }
 
     cleanUp()

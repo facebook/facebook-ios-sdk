@@ -61,7 +61,7 @@ final class DrawableTests: XCTestCase {
 
     let redIcon = UIImage(
       named: "redSilhouette.png",
-      in: Bundle(for: DrawableTests.self),
+      in: Bundle(for: Self.self),
       compatibleWith: nil
     )
 
@@ -86,7 +86,7 @@ final class DrawableTests: XCTestCase {
     )
     let customIcon = UIImage(
       named: "customColorSilhouette.png",
-      in: Bundle(for: DrawableTests.self),
+      in: Bundle(for: Self.self),
       compatibleWith: nil
     )
 
@@ -111,7 +111,7 @@ final class DrawableTests: XCTestCase {
     )
     let storedImage = UIImage(
       named: "redLogo.png",
-      in: Bundle(for: DrawableTests.self),
+      in: Bundle(for: Self.self),
       compatibleWith: nil
     )
 
@@ -140,7 +140,7 @@ final class DrawableTests: XCTestCase {
 
     let storedImage = UIImage(
       named: "closeIcon.png",
-      in: Bundle(for: DrawableTests.self),
+      in: Bundle(for: Self.self),
       compatibleWith: nil
     )
 

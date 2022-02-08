@@ -68,7 +68,7 @@ public final class FBShareButton: FBButton, SharingButton {
     )
     addTarget(
       self,
-      action: #selector(FBShareButton.share),
+      action: #selector(Self.share),
       for: .touchUpInside
     )
     dialog = ShareDialog(viewController: nil, content: nil, delegate: nil)

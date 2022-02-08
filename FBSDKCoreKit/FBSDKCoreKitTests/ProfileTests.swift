@@ -198,7 +198,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingEnumWithSmallMode() throws {
-    try makeImageURL(mode: .small, size: ProfileTests.validNonSquareSize)
+    try makeImageURL(mode: .small, size: Self.validNonSquareSize)
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
@@ -219,7 +219,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingEnumWithAlbumMode() throws {
-    try makeImageURL(mode: .album, size: ProfileTests.validNonSquareSize)
+    try makeImageURL(mode: .album, size: Self.validNonSquareSize)
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
@@ -240,7 +240,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingEnumWithLargeMode() throws {
-    try makeImageURL(mode: .large, size: ProfileTests.validNonSquareSize)
+    try makeImageURL(mode: .large, size: Self.validNonSquareSize)
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
@@ -261,7 +261,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingEnumWithSquareMode() throws {
-    try makeImageURL(mode: .square, size: ProfileTests.validNonSquareSize)
+    try makeImageURL(mode: .square, size: Self.validNonSquareSize)
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(
@@ -305,7 +305,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingSquareImageURLWithNonSquareSize() throws {
-    try makeImageURL(mode: .square, size: ProfileTests.validNonSquareSize)
+    try makeImageURL(mode: .square, size: Self.validNonSquareSize)
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
     XCTAssertEqual(

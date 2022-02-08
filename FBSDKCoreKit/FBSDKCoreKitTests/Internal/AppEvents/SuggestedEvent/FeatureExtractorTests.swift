@@ -184,7 +184,7 @@ final class FeatureExtractorTests: XCTestCase {
   override func setUpWithError() throws { // swiftlint:disable:this overridden_super_call
     super.setUp()
 
-    let bundle = Bundle(for: FeatureExtractorTests.self)
+    let bundle = Bundle(for: Self.self)
     let fileURL = bundle.path(
       forResource: "FBSDKTextClassifyRules",
       ofType: "json"

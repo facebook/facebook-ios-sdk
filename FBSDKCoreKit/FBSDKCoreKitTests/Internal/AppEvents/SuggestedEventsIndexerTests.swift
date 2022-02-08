@@ -49,7 +49,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   override func setUp() {
     super.setUp()
 
-    SuggestedEventsIndexerTests.reset()
+    Self.reset()
 
     graphRequestFactory = TestGraphRequestFactory()
     settings = TestSettings()
@@ -676,7 +676,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   ) {
     let expected = SwizzleEvidence(
       selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
-      class: SuggestedEventsIndexerTests.self
+      class: Self.self
     )
     XCTAssertTrue(
       TestSwizzler.evidence.contains(expected),
@@ -692,7 +692,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   ) {
     let expected = SwizzleEvidence(
       selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
-      class: SuggestedEventsIndexerTests.self
+      class: Self.self
     )
     XCTAssertTrue(
       TestSwizzler.evidence.contains(expected),

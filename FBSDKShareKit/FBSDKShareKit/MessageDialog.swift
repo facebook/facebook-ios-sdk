@@ -74,8 +74,8 @@ public final class MessageDialog: NSObject, SharingDialog {
     appAvailabilityChecker: AppAvailabilityChecker,
     shareDialogConfiguration: _ShareDialogConfigurationProtocol
   ) {
-    if !MessageDialog.hasCheckedCanOpenURLSchemeRegistered {
-      MessageDialog.hasCheckedCanOpenURLSchemeRegistered = true
+    if !Self.hasCheckedCanOpenURLSchemeRegistered {
+      Self.hasCheckedCanOpenURLSchemeRegistered = true
       InternalUtility.shared.checkRegisteredCanOpenURLScheme(URLScheme.messengerApp.rawValue)
     }
 

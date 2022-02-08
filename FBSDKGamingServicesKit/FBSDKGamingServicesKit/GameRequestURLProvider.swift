@@ -25,7 +25,7 @@ public final class GameRequestURLProvider: NSObject {
     components.scheme = URLScheme.https.rawValue
     components.host = URLValues.host
     components.path = "\(URLValues.path)\(AccessToken.current?.appID ?? "")"
-    components.queryItems = GameRequestURLProvider.getQueryArray(from: queryDictionary)
+    components.queryItems = Self.getQueryArray(from: queryDictionary)
     return components.url
   }
 

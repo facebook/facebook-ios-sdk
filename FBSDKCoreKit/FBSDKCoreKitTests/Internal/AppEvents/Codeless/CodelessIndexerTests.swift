@@ -38,7 +38,7 @@ final class CodelessIndexerTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    CodelessIndexerTests.reset()
+    Self.reset()
 
     settings.appID = name
 

@@ -12,26 +12,26 @@ import XCTest
 
 final class GameRequestContentTests: XCTestCase {
   func testProperties() {
-    let content = GameRequestContentTests.contentWithAllProperties()
-    XCTAssertEqual(content.recipients, GameRequestContentTests.recipients())
-    XCTAssertEqual(content.message, GameRequestContentTests.message())
-    XCTAssertEqual(content.actionType, GameRequestContentTests.actionType())
-    XCTAssertEqual(content.objectID, GameRequestContentTests.objectID())
-    XCTAssertEqual(content.filters, GameRequestContentTests.filters())
-    XCTAssertEqual(content.recipientSuggestions, GameRequestContentTests.recipientSuggestions())
-    XCTAssertEqual(content.data, GameRequestContentTests.data())
-    XCTAssertEqual(content.title, GameRequestContentTests.title())
+    let content = Self.contentWithAllProperties()
+    XCTAssertEqual(content.recipients, Self.recipients())
+    XCTAssertEqual(content.message, Self.message())
+    XCTAssertEqual(content.actionType, Self.actionType())
+    XCTAssertEqual(content.objectID, Self.objectID())
+    XCTAssertEqual(content.filters, Self.filters())
+    XCTAssertEqual(content.recipientSuggestions, Self.recipientSuggestions())
+    XCTAssertEqual(content.data, Self.data())
+    XCTAssertEqual(content.title, Self.title())
   }
 
   func testEquatabilityOfCopy() {
-    let content = GameRequestContentTests.contentWithAllProperties()
-    let contentCopy = GameRequestContentTests.contentWithAllProperties()
+    let content = Self.contentWithAllProperties()
+    let contentCopy = Self.contentWithAllProperties()
     XCTAssertNotIdentical(contentCopy, content)
     XCTAssertEqual(contentCopy, content)
   }
 
   func testCoding() {
-    let content = GameRequestContentTests.contentWithAllProperties()
+    let content = Self.contentWithAllProperties()
     let data = NSKeyedArchiver.archivedData(withRootObject: content)
     let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
     unarchiver.requiresSecureCoding = true
@@ -44,13 +44,13 @@ final class GameRequestContentTests: XCTestCase {
 
   func testValidationWithMinimalProperties() {
     testValidationWithContent(
-      content: GameRequestContentTests.contentWithMinimalProperties()
+      content: Self.contentWithMinimalProperties()
     )
   }
 
   func testValidationWithManyProperties() {
     testValidationWithContent(
-      content: GameRequestContentTests.contentWithManyProperties()
+      content: Self.contentWithManyProperties()
     )
   }
 
@@ -63,13 +63,13 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithTo() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
-    content.recipients = GameRequestContentTests.recipients()
+    let content = Self.contentWithMinimalProperties()
+    content.recipients = Self.recipients()
     testValidationWithContent(content: content)
   }
 
   func testValidationWithActionTypeSend() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .send
     testValidationWithContentAndErrorArgument(
       content: content,
@@ -78,14 +78,14 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithActionTypeSendAndobjectID() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .send
-    content.objectID = GameRequestContentTests.objectID()
+    content.objectID = Self.objectID()
     testValidationWithContent(content: content)
   }
 
   func testValidationWithActionTypeAskFor() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .askFor
     testValidationWithContentAndErrorArgument(
       content: content,
@@ -94,22 +94,22 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithActionTypeAskForAndobjectID() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .askFor
-    content.objectID = GameRequestContentTests.objectID()
+    content.objectID = Self.objectID()
     testValidationWithContent(content: content)
   }
 
   func testValidationWithActionTypeTurn() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .turn
     testValidationWithContent(content: content)
   }
 
   func testValidationWithActionTypeTurnAndobjectID() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.actionType = .turn
-    content.objectID = GameRequestContentTests.objectID()
+    content.objectID = Self.objectID()
     testValidationWithContentAndErrorArgument(
       content: content,
       errorArgumentName: "objectID"
@@ -117,21 +117,21 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithFilterAppUsers() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.filters = .appUsers
     testValidationWithContent(content: content)
   }
 
   func testValidationWithFilterAppNonUsers() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.filters = .appNonUsers
     testValidationWithContent(content: content)
   }
 
   func testValidationWithToAndFilters() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
-    content.filters = GameRequestContentTests.filters()
-    content.recipients = GameRequestContentTests.recipients()
+    let content = Self.contentWithMinimalProperties()
+    content.filters = Self.filters()
+    content.recipients = Self.recipients()
     testValidationWithContentAndErrorArgument(
       content: content,
       errorArgumentName: "recipients"
@@ -139,9 +139,9 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithToAndSuggestions() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
-    content.recipients = GameRequestContentTests.recipients()
-    content.recipientSuggestions = GameRequestContentTests.recipientSuggestions()
+    let content = Self.contentWithMinimalProperties()
+    content.recipients = Self.recipients()
+    content.recipientSuggestions = Self.recipientSuggestions()
     testValidationWithContentAndErrorArgument(
       content: content,
       errorArgumentName: "recipients"
@@ -149,9 +149,9 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithFiltersAndSuggestions() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
-    content.filters = GameRequestContentTests.filters()
-    content.recipientSuggestions = GameRequestContentTests.recipientSuggestions()
+    let content = Self.contentWithMinimalProperties()
+    content.filters = Self.filters()
+    content.recipientSuggestions = Self.recipientSuggestions()
     testValidationWithContentAndErrorArgument(
       content: content,
       errorArgumentName: "recipientSuggestions"
@@ -159,10 +159,10 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithToAndFiltersAndSuggestions() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
-    content.filters = GameRequestContentTests.filters()
-    content.recipients = GameRequestContentTests.recipients()
-    content.recipientSuggestions = GameRequestContentTests.recipientSuggestions()
+    let content = Self.contentWithMinimalProperties()
+    content.filters = Self.filters()
+    content.recipients = Self.recipients()
+    content.recipientSuggestions = Self.recipientSuggestions()
     testValidationWithContentAndErrorArgument(
       content: content,
       errorArgumentName: "recipients"
@@ -170,7 +170,7 @@ final class GameRequestContentTests: XCTestCase {
   }
 
   func testValidationWithLongData() {
-    let content = GameRequestContentTests.contentWithMinimalProperties()
+    let content = Self.contentWithMinimalProperties()
     content.data = String(format: "%.254f", 1)
     testValidationWithContentAndErrorArgument(
       content: content,

@@ -47,7 +47,7 @@ final class CrashObserverTests: XCTestCase {
     crashObserver.didReceiveCrashLogs([])
     XCTAssertEqual(featureChecker.capturedFeatures, [])
 
-    let processedCrashLogs = CrashObserverTests.getCrashLogs()
+    let processedCrashLogs = Self.getCrashLogs()
 
     crashObserver.didReceiveCrashLogs(processedCrashLogs)
 
