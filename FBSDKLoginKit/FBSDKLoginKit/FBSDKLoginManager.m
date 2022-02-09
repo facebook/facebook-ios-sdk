@@ -51,7 +51,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                                profile:FBSDKProfile.class
                              urlOpener:FBSDKBridgeAPI.sharedInstance
                               settings:FBSDKSettings.sharedSettings
-                 loginCompleterFactory:[FBSDKLoginCompleterFactory new] graphRequestFactory:[FBSDKGraphRequestFactory new]];
+                 loginCompleterFactory:[FBSDKLoginCompleterFactory new]
+                   graphRequestFactory:[FBSDKGraphRequestFactory new]];
 }
 
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility

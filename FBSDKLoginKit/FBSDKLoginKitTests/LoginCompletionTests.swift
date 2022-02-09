@@ -40,7 +40,6 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var graphConnection: TestGraphRequestConnection!
   var authenticationTokenFactory: TestAuthenticationTokenFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var internalUtility: TestInternalUtility!
@@ -51,7 +50,6 @@ final class LoginCompletionTests: XCTestCase {
 
     LoginURLCompleter.reset()
 
-    graphConnection = TestGraphRequestConnection()
     authenticationTokenFactory = TestAuthenticationTokenFactory()
     graphRequestFactory = TestGraphRequestFactory()
     internalUtility = TestInternalUtility()
@@ -394,7 +392,7 @@ final class LoginCompletionTests: XCTestCase {
     completer.completeLogin { _ in }
 
     XCTAssertNotNil(completer.parameters.error)
-    XCTAssertNil(graphConnection.capturedRequest)
+    XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
   }
 
@@ -413,7 +411,7 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     XCTAssertNil(completer.parameters.error)
-    XCTAssertNil(graphConnection.capturedRequest)
+    XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertEqual(
       authenticationTokenFactory.capturedTokenString,
       SampleRawLoginCompletionParameters.withIDToken[Keys.idToken] as? String,
@@ -513,7 +511,7 @@ final class LoginCompletionTests: XCTestCase {
 
     XCTAssertTrue(completionWasInvoked, "Handler should be invoked")
     XCTAssertNil(completer.parameters.error)
-    XCTAssertNil(graphConnection.capturedRequest)
+    XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
   }
 
@@ -531,7 +529,7 @@ final class LoginCompletionTests: XCTestCase {
 
     XCTAssert(completionWasInvoked, "Handler should be invoked")
     XCTAssertNil(completer.parameters.error)
-    XCTAssertNil(graphConnection.capturedRequest)
+    XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
   }
 
