@@ -44,6 +44,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed `init` and `new` methods from `ShareDialog`; use `init(viewController:content:delegate:)` instead.
 - Removed `GraphRequestFlag.skipClientToken` since a client token is now required
 - Removed `init` and `new` from `ShareCameraEffectContent`; use `init(effectID:contentURL:)` instead.
+- Removed deprecated `init(appLink:extras:appLinkData:)` from `AppLinkNavigation`; use `init(appLink:extras:appLinkData:settings:)` instead".
 
 #### AppEvents deprecations
 TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)
@@ -110,7 +111,7 @@ TL;DR: Use `FBSDKSettings.sharedSettings` in places where `FBSDKSettings` was us
 
 This release contains various fixes for FBAEMKit
 
-###  Fixed
+### Fixed
 - Fetched AEM config after AEM URL is received
 - Added delay between AEM conversion requests
 - Moved Catalog Matching logic behind GK

@@ -80,14 +80,7 @@ NS_SWIFT_NAME(default);
  */
 @property (nonatomic, readonly) FBSDKAppLinkNavigationType navigationType;
 
-/** Creates an AppLinkNavigation with the given link, extras, and App Link data */
 // UNCRUSTIFY_FORMAT_OFF
-+ (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
-                               extras:(NSDictionary<NSString *, id> *)extras
-                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData
-NS_SWIFT_NAME(init(appLink:extras:appLinkData:))
-DEPRECATED_MSG_ATTRIBUTE("`init(appLink:extras:appLinkData:)` is deprecated and will be removed in the next major release, please use `init(appLink:extras:appLinkData:settings:)` instead");
-
 /** Creates an AppLinkNavigation with the given link, extras, and App Link data */
 + (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
                                extras:(NSDictionary<NSString *, id> *)extras

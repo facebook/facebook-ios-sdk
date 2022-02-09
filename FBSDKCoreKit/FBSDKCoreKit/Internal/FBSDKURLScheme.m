@@ -13,11 +13,3 @@ FBSDKURLScheme const FBSDKURLSchemeMessengerApp = @"fb-messenger-share-api";
 FBSDKURLScheme const FBSDKURLSchemeHTTPS = @"https";
 FBSDKURLScheme const FBSDKURLSchemeHTTP = @"http";
 FBSDKURLScheme const FBSDKURLSchemeWeb = @"web";
-
-// Deprecated symbols previously declared via #define
-
-NSString *const FBSDK_CANOPENURL_FACEBOOK = @"fbauth2";
-NSString *const FBSDK_CANOPENURL_FBAPI = @"fbapi";
-NSString *const FBSDK_CANOPENURL_MESSENGER = @"fb-messenger-share-api";
-NSString *const FBSDK_CANOPENURL_MSQRD_PLAYER = @"msqrdplayer";
-NSString *const FBSDK_CANOPENURL_SHARE_EXTENSION = @"fbshareextension";

@@ -106,13 +106,6 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
 + (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
                                extras:(NSDictionary<NSString *, id> *)extras
                           appLinkData:(NSDictionary<NSString *, id> *)appLinkData
-{
-  return [self navigationWithAppLink:appLink extras:extras appLinkData:appLinkData settings:self.settings];
-}
-
-+ (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
-                               extras:(NSDictionary<NSString *, id> *)extras
-                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData
                              settings:(nonnull id<FBSDKSettings>)settings
 {
   FBSDKAppLinkNavigation *navigation = [self new];
