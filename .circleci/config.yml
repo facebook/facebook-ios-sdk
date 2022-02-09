@@ -38,13 +38,6 @@ commands:
           command: echo 'chruby ruby-2.7' >> ~/.bash_profile
       - run: gem install cocoapods
 
-  publish_cocoapods:
-    description: Pushes all CocoaPods to trunk
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/publish_cocoapods.sh
-
   publish_to_github:
     description: Creates a draft for a release on github
     steps:
@@ -69,10 +62,6 @@ jobs:
     <<: *useMacOS
     steps:
       - setup
-  publish-cocoapods:
-    <<: *useMacOS
-    steps:
-      - publish_cocoapods
   publish-to-github:
     docker:
       - image: cibuilds/github:0.13
@@ -86,6 +75,3 @@ workflows:
           <<: *onlyRunOnTags
       - publish-to-github:
           <<: *onlyRunOnTags
-      - publish-cocoapods:
-          <<: *onlyRunOnTags
-          <<: *requiresSetup
