@@ -10,6 +10,5 @@
 
 #import "FBSDKAppInviteContent.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharingValidation.h"

@@ -8,7 +8,6 @@
 
 #import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareMediaContent.h>
 #import <FBSDKShareKit/FBSDKSharePhoto.h>
 #import <FBSDKShareKit/FBSDKShareVideo.h>

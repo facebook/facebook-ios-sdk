@@ -13,7 +13,6 @@
 #import <FBSDKShareKit/FBSDKShareKit-Swift.h>
 
 #import "FBSDKHashtag.h"
-#import "FBSDKShareLinkContent.h"
 
 @implementation _FBSDKShareUtility
 
