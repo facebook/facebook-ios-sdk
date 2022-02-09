@@ -105,7 +105,7 @@ typedef void (^RPSBlock)(void);
 
   // Check for a 15 digit FB App ID. If the FB App ID is less than 15 digits, display an alert.
 
-  NSString *strFbAppId = [FBSDKSettings appID];
+  NSString *strFbAppId = [FBSDKSettings.sharedSettings appID];
   NSString *strEmptyFBId = @"{your-facebook-app-id}";
 
   if ([strFbAppId isEqualToString:strEmptyFBId]) {

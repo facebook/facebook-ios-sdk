@@ -76,6 +76,33 @@ TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many
 - Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)` instead)
 - Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)` instead)
 
+#### FBSDKSettings deprecations
+TL;DR: Use `FBSDKSettings.sharedSettings` in places where `FBSDKSettings` was used before. (Many class methods and properties in FBSDKSettings have been deprecated in favor of their instance-based equivalents.)
+
+- Removed deprecated `Settings.sdkVersion` (use `Settings.shared.sdkVersion` instead")
+- Removed deprecated `Settings.defaultGraphAPIVersion` (use `Settings.shared.defaultGraphAPIVersion` instead")
+- Removed deprecated `Settings.JPEGCompressionQuality` (use `Settings.shared.JPEGCompressionQuality` instead")
+- Removed deprecated `Settings.isAutoLogAppEventsEnabled` (use `Settings.shared.isAutoLogAppEventsEnabled` instead")
+- Removed deprecated `Settings.isCodelessDebugLogEnabled` (use `Settings.shared.isCodelessDebugLogEnabled` instead")
+- Removed deprecated `Settings.isAdvertiserIDCollectionEnabled` (use `Settings.shared.isAdvertiserIDCollectionEnabled` instead")
+- Removed deprecated `Settings.isSKAdNetworkReportEnabled` (use `Settings.shared.isSKAdNetworkReportEnabled` instead")
+- Removed deprecated `Settings.shouldLimitEventAndDataUsage` (use `Settings.shared.isEventDataUsageLimited` instead")
+- Removed deprecated `Settings.shouldUseCachedValuesForExpensiveMetadata` (use `Settings.shared.shouldUseCachedValuesForExpensiveMetadata` instead")
+- Removed deprecated `Settings.isGraphErrorRecoveryEnabled` (use `Settings.shared.isGraphErrorRecoveryEnabled` instead")
+- Removed deprecated `Settings.appID` (use `Settings.shared.appID` instead")
+- Removed deprecated `Settings.appURLSchemeSuffix` (use `Settings.shared.appURLSchemeSuffix` instead")
+- Removed deprecated `Settings.clientToken` (use `Settings.shared.clientToken` instead")
+- Removed deprecated `Settings.displayName` (use `Settings.shared.displayName` instead")
+- Removed deprecated `Settings.facebookDomainPart` (use `Settings.shared.facebookDomainPart` instead")
+- Removed deprecated `Settings.loggingBehaviors` (use `Settings.shared.loggingBehaviors` instead")
+- Removed deprecated `Settings.graphAPIVersion` (use the `Settings.shared.graphAPIVersion` property instead")
+- Removed deprecated `Settings.isAdvertiserTrackingEnabled()` (use the `Settings.shared.isAdvertiserTrackingEnabled` property instead")
+- Removed deprecated `Settings.setAdvertiserTrackingEnabled(_:)` (use the `Settings.shared.isAdvertiserTrackingEnabled` property to set a value instead")
+- Removed deprecated `Settings.setDataProcessingOptions(_:)` (use the `Settings.shared.setDataProcessingOptions(_:)` method to set the data processing options instead")
+- Removed deprecated `Settings.setDataProcessingOptions(_:_:_:)` (use the `Settings.shared.setDataProcessingOptions(_:_:_:)` method to set the data processing options instead")
+- Removed deprecated `Settings.enableLoggingBehavior()` (use `Settings.shared.enableLoggingBehavior()` instead")
+- Removed deprecated `Settings.disableLoggingBehavior()` (use `Settings.shared.disableLoggingBehavior()` instead")
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...HEAD)
 
 ## 12.3.2

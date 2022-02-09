@@ -41,11 +41,9 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (void)setTokenCache:(nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
-+ (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus;
+- (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus;
 
-+ (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
-
-+ (BOOL)isDataProcessingRestricted;
+- (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
 
 - (void)recordSetAdvertiserTrackingEnabled;
 
@@ -60,8 +58,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 - (void)logWarnings;
 
 - (void)logIfSDKSettingsChanged;
-
-- (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
 
 - (BOOL)isEventDelayTimerExpired;
 

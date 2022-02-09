@@ -215,59 +215,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self logIfSDKSettingsChanged];
 }
 
-+ (NSString *)appID
-{
-  return self.sharedSettings.appID;
-}
-
-+ (void)setAppID:(NSString *)appID
-{
-  self.sharedSettings.appID = appID;
-}
-
-+ (BOOL)isGraphErrorRecoveryEnabled
-{
-  return self.sharedSettings.isGraphErrorRecoveryEnabled;
-}
-
-+ (void)setGraphErrorRecoveryEnabled:(BOOL)graphErrorRecoveryEnabled
-{
-  [self.sharedSettings setIsGraphErrorRecoveryEnabled:graphErrorRecoveryEnabled];
-}
-
-+ (CGFloat)JPEGCompressionQuality
-{
-  return self.sharedSettings.JPEGCompressionQuality;
-}
-
-+ (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
-{
-  [self.sharedSettings setJPEGCompressionQuality:JPEGCompressionQuality];
-}
-
-+ (BOOL)isInstrumentEnabled
-{
-  return self.sharedSettings._instrumentEnabled.boolValue;
-}
-
-+ (void)setInstrumentEnabled:(BOOL)instrumentEnabled
-{
-  [self.sharedSettings _setInstrumentEnabled:@(instrumentEnabled)];
-}
-
-+ (BOOL)isCodelessDebugLogEnabled
-{
-  return self.sharedSettings._codelessDebugLogEnabled.boolValue;
-}
-
 - (BOOL)isCodelessDebugLogEnabled
 {
   return self._codelessDebugLogEnabled.boolValue;
-}
-
-+ (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
-{
-  [self.sharedSettings setCodelessDebugLogEnabled:codelessDebugLogEnabled];
 }
 
 - (void)setCodelessDebugLogEnabled:(BOOL)codelessDebugLogEnabled
@@ -275,19 +225,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self _setCodelessDebugLogEnabled:@(codelessDebugLogEnabled)];
 }
 
-+ (BOOL)isAutoLogAppEventsEnabled
-{
-  return [self.sharedSettings isAutoLogAppEventsEnabled];
-}
-
 - (BOOL)isAutoLogAppEventsEnabled
 {
   return self._autoLogAppEventsEnabled.boolValue;
-}
-
-+ (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
-{
-  [self.sharedSettings setAutoLogAppEventsEnabled:autoLogAppEventsEnabled];
 }
 
 - (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
@@ -295,19 +235,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self _setAutoLogAppEventsEnabled:@(autoLogAppEventsEnabled)];
 }
 
-+ (BOOL)isAdvertiserIDCollectionEnabled
-{
-  return self.sharedSettings.isAdvertiserIDCollectionEnabled;
-}
-
 - (BOOL)isAdvertiserIDCollectionEnabled
 {
   return self._advertiserIDCollectionEnabled.boolValue;
-}
-
-+ (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
-{
-  [self.sharedSettings setAdvertiserIDCollectionEnabled:advertiserIDCollectionEnabled];
 }
 
 - (void)setAdvertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
@@ -315,24 +245,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self _setAdvertiserIDCollectionEnabled:@(advertiserIDCollectionEnabled)];
 }
 
-+ (BOOL)isAdvertiserTrackingEnabled
-{
-  return self.sharedSettings.isAdvertiserTrackingEnabled;
-}
-
 - (BOOL)isAdvertiserTrackingEnabled
 {
   return self.advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed;
-}
-
-+ (BOOL)setAdvertiserTrackingEnabled:(BOOL)enabled;
-{
-  if (@available(iOS 14.0, *)) {
-    [self.sharedSettings setAdvertiserTrackingEnabled:enabled];
-    return YES;
-  } else {
-    return NO;
-  }
 }
 
 - (void)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled
@@ -341,11 +256,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     [self setAdvertiserTrackingStatus:advertiserTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed];
     [self recordSetAdvertiserTrackingEnabled];
   }
-}
-
-+ (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
-{
-  return [self.sharedSettings advertisingTrackingStatus];
 }
 
 - (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
@@ -364,20 +274,10 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status
-{
-  [self.sharedSettings setAdvertiserTrackingStatus:status];
-}
-
 - (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status
 {
   self.advertiserTrackingStatusBacking = @(status);
   [self.store setObject:self.advertiserTrackingStatusBacking forKey:FBSDKSettingsAdvertisingTrackingStatus];
-}
-
-+ (BOOL)isSKAdNetworkReportEnabled
-{
-  return self.sharedSettings.isSKAdNetworkReportEnabled;
 }
 
 - (BOOL)isSKAdNetworkReportEnabled
@@ -401,16 +301,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self logIfSDKSettingsChanged];
 }
 
-+ (void)setSKAdNetworkReportEnabled:(BOOL)SKAdNetworkReportEnabled
-{
-  [self.sharedSettings setSkAdNetworkReportEnabled:SKAdNetworkReportEnabled];
-}
-
-+ (BOOL)shouldLimitEventAndDataUsage
-{
-  return self.sharedSettings.isEventDataUsageLimited;
-}
-
 - (BOOL)isEventDataUsageLimited
 {
   NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
@@ -420,19 +310,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return storedValue.boolValue;
 }
 
-+ (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
-{
-  [self.sharedSettings setIsEventDataUsageLimited:limitEventAndDataUsage];
-}
-
 - (void)setIsEventDataUsageLimited:(BOOL)isEventDataUsageLimited
 {
   [_store setObject:@(isEventDataUsageLimited) forKey:FBSDKSettingsLimitEventAndDataUsage];
-}
-
-+ (BOOL)shouldUseCachedValuesForExpensiveMetadata
-{
-  return [self.sharedSettings shouldUseCachedValuesForExpensiveMetadata];
 }
 
 + (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
@@ -468,16 +348,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   [self.store setObject:@(shouldUseTokenOptimizations) forKey:FBSDKSettingsUseTokenOptimizations];
 }
 
-+ (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
-{
-  return [self.sharedSettings loggingBehaviors];
-}
-
-+ (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
-{
-  [self.sharedSettings setLoggingBehaviors:loggingBehaviors];
-}
-
 - (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
   if (![_loggingBehaviors isEqualToSet:loggingBehaviors]) {
@@ -502,21 +372,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return [_loggingBehaviors copy];
 }
 
-+ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
-{
-  [self.sharedSettings setDataProcessingOptions:options];
-}
-
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
 {
   [self setDataProcessingOptions:options country:0 state:0];
-}
-
-+ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
-                         country:(int)country
-                           state:(int)state
-{
-  [self.sharedSettings setDataProcessingOptions:options country:country state:state];
 }
 
 - (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
@@ -534,16 +392,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     [self.store setObject:data
                    forKey:FBSDKSettingsDataProcessingOptions];
   }
-}
-
-+ (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
-{
-  [self.sharedSettings enableLoggingBehavior:loggingBehavior];
-}
-
-+ (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
-{
-  [self.sharedSettings disableLoggingBehavior:loggingBehavior];
 }
 
 - (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior
@@ -578,11 +426,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return FBSDK_VERSION_STRING;
 }
 
-+ (NSString *)sdkVersion
-{
-  return self.sharedSettings.sdkVersion;
-}
-
 #pragma mark - Configuration Validation
 
 - (void)validateConfiguration
@@ -600,24 +443,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal
 
-+ (void)setGraphAPIVersion:(NSString *)version
-{
-  self.sharedSettings.graphAPIVersion = version ?: self.sharedSettings.defaultGraphAPIVersion;
-}
-
-+ (NSString *)defaultGraphAPIVersion
-{
-  return self.sharedSettings.defaultGraphAPIVersion;
-}
-
 - (NSString *)defaultGraphAPIVersion
 {
   return FBSDK_DEFAULT_GRAPH_API_VERSION;
-}
-
-+ (NSString *)graphAPIVersion
-{
-  return self.sharedSettings.graphAPIVersion;
 }
 
 - (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
@@ -629,11 +457,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     }
   }
   return _persistableDataProcessingOptions;
-}
-
-+ (BOOL)isDataProcessingRestricted
-{
-  return [self.sharedSettings isDataProcessingRestricted];
 }
 
 - (BOOL)isDataProcessingRestricted
@@ -702,11 +525,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (void)recordSetAdvertiserTrackingEnabled
-{
-  [self.sharedSettings recordSetAdvertiserTrackingEnabled];
-}
-
 - (void)recordSetAdvertiserTrackingEnabled
 {
   [self.store setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
@@ -721,11 +539,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return NO;
 }
 
-+ (BOOL)isSetATETimeExceedsInstallTime
-{
-  return [self.sharedSettings isSetATETimeExceedsInstallTime];
-}
-
 - (BOOL)isSetATETimeExceedsInstallTime
 {
   NSDate *installTimestamp = [self installTimestamp];
@@ -736,19 +549,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return NO;
 }
 
-+ (NSDate *_Nullable)getInstallTimestamp
-{
-  return self.sharedSettings.installTimestamp;
-}
-
 - (NSDate *_Nullable)installTimestamp
 {
   return [self.store objectForKey:FBSDKSettingsInstallTimestamp];
-}
-
-+ (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp
-{
-  return [self.sharedSettings advertiserTrackingEnabledTimestamp];
 }
 
 - (NSDate *_Nullable)advertiserTrackingEnabledTimestamp
@@ -767,20 +570,15 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (nullable NSString *)graphAPIDebugParamValue
+- (nullable NSString *)graphAPIDebugParamValue
 {
-  if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
+  if ([self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugInfo]) {
     return @"info";
-  } else if ([[self.sharedSettings loggingBehaviors] containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
+  } else if ([self.loggingBehaviors containsObject:FBSDKLoggingBehaviorGraphAPIDebugWarning]) {
     return @"warning";
   }
 
   return nil;
-}
-
-- (NSString *)graphAPIDebugParamValue
-{
-  return [self.class graphAPIDebugParamValue];
 }
 
 #pragma mark - Testability
