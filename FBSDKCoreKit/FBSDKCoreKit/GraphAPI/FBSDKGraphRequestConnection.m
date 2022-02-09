@@ -1289,9 +1289,12 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 {
   if (!self.class.settings.clientToken) {
     NSString *reason =
-    @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
-    "Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project to learn how to "
-    "implement this change.";
+    [NSString stringWithFormat:
+     @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls.\n"
+     "Visit https://developers.facebook.com/apps/%@/settings/advanced/ to find your client token for this app.\n"
+     "Add a key named FacebookClientToken to your Info.plist, and add your client token as its value.\n"
+     "Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project for more information.",
+     self.class.settings.appID];
 
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:reason];

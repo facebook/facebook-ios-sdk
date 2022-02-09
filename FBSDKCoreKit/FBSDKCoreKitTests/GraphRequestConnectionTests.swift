@@ -1339,7 +1339,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     XCTAssertEqual(token, expectedToken)
   }
 
-  func testAccessTokenWithRequestWithoutFacebookClientToken() {
+  func testAccessTokenWithRequestWithoutFacebookClientToken() throws {
     settings.clientToken = nil
     connection.logger = makeLogger()
 
@@ -1352,9 +1352,10 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       .developerErrors,
       "Should log a developer error when a request is started with no client token set"
     )
-    XCTAssertEqual(
-      TestLogger.capturedLogEntry,
-      "Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project to learn how to implement this change.", // swiftlint:disable:this line_length
+
+    let message = try XCTUnwrap(TestLogger.capturedLogEntry)
+    XCTAssertTrue(
+      message.starts(with: "Starting with v13 of the SDK, a client token must be embedded in your client code"),
       "Should log the expected error message when a request is started with no client token set"
     )
 
