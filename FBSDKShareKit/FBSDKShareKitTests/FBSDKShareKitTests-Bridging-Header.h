@@ -13,5 +13,4 @@
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
-#import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingValidation.h"

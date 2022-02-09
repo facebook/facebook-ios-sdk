@@ -10,6 +10,8 @@
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 
+#import <FBSDKShareKit/FBSDKShareKit-Swift.h>
+
 #import "FBSDKHashtag.h"
 #import "FBSDKShareLinkContent.h"
 
