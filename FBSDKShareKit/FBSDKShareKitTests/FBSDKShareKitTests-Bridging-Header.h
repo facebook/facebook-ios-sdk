@@ -12,5 +12,4 @@
 #import "FBSDKHashtag.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKSharePhoto.h"
-#import "FBSDKSharePhotoContent.h"
 #import "FBSDKSharingValidation.h"

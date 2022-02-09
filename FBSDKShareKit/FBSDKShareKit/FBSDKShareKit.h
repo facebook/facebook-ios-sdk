@@ -11,7 +11,6 @@
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareMediaContent.h>
 #import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
 #import <FBSDKShareKit/FBSDKShareVideo.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 #import <FBSDKShareKit/_FBSDKShareAppEventParameters.h>

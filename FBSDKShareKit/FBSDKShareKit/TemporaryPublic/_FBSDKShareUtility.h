@@ -10,7 +10,7 @@
 
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKSharePhotoContent.h"
+#import "FBSDKSharePhoto.h"
 #import "FBSDKSharingContent.h"
 #import "_FBSDKShareUtilityProtocol.h"
 
