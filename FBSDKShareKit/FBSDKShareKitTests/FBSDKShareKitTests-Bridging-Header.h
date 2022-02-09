@@ -8,7 +8,6 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
-#import "FBSDKAppInviteContent.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharingValidation.h"

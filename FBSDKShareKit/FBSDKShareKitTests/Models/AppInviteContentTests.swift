@@ -61,7 +61,20 @@ final class AppInviteContentTests: XCTestCase {
     XCTAssertNoThrow(try content.validate(options: []))
   }
 
-  func testValidationWithInvalidPromotionText() {
+  func testValidationWithBadPromotionTextLength() {
+    content.promotionText = String(repeating: "_Invalid_promotionText", count: 30)
+
+    XCTAssertThrowsError(
+      try content.validate(options: []),
+      "Should throw an error"
+    ) { error in
+      let nsError = error as NSError
+      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
+      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "promotionText")
+    }
+  }
+
+  func testValidationWithBadPromotionTextContent() {
     content.promotionText = "_Invalid_promotionText"
 
     XCTAssertThrowsError(
@@ -74,9 +87,23 @@ final class AppInviteContentTests: XCTestCase {
     }
   }
 
-  func testValidationWithInvalidPromotionCode() {
+  func testValidationWithBadPromotionCodeLength() {
     content.promotionText = "Some promo text"
     content.promotionCode = "_invalid promo_code"
+
+    XCTAssertThrowsError(
+      try content.validate(options: []),
+      "Should throw an error"
+    ) { error in
+      let nsError = error as NSError
+      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
+      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "promotionCode")
+    }
+  }
+
+  func testValidationWithBadPromotionCodeContent() {
+    content.promotionText = "Some promo text"
+    content.promotionCode = "_invalid"
 
     XCTAssertThrowsError(
       try content.validate(options: []),

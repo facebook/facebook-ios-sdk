@@ -20,7 +20,6 @@
 #import <FBSDKShareKit/_UIApplication+ShareInternalURLOpening.h>
 
 #if !TARGET_OS_TV
- #import <FBSDKShareKit/FBSDKAppInviteContent.h>
  #import <FBSDKShareKit/_FBSDKShareBridgeAPIRequestFactory.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfiguration+ShareDialogConfiguration.h>
  #import <FBSDKShareKit/_FBSDKShareDialogConfigurationProtocol.h>

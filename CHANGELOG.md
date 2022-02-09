@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Replaced more `AppEvents.Name` and `AppEvents.ParameterName` types in method signatures
 - Renamed `frictionlessRequestsEnabled` property on `FBSDKGameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
 - Corrected nullability of `contentURL` in protocol `SharingContent`
+- The `AppInviteDestination` enumeration has been renamed to `AppInviteContent.Destination`
 
 ### Deprecated
 
