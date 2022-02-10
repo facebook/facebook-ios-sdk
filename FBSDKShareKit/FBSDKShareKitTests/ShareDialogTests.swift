@@ -105,7 +105,7 @@ final class ShareDialogTests: XCTestCase {
       "ShareDialog should use the shared bridge API for its default bridge API request opening dependency"
     )
     XCTAssertTrue(
-      ShareDialog.socialComposeViewControllerFactory is _SocialComposeViewControllerFactory,
+      ShareDialog.socialComposeViewControllerFactory is SocialComposeViewControllerFactory,
       "ShareDialog should create a new factory for its social compose view controller factory dependency by default"
     )
     XCTAssertTrue(
