@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  By default, FBSDKGraphRequest will attempt to recover any errors returned from
  Facebook. You can disable this via `disableErrorRecovery:`.
 
- @see FBSDKGraphErrorRecoveryProcessor
+ See FBSDKGraphErrorRecoveryProcessor
  */
 NS_SWIFT_NAME(GraphRequest)
 @interface FBSDKGraphRequest : NSObject <FBSDKGraphRequest>

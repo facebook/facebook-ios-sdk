@@ -81,7 +81,7 @@ NS_SWIFT_NAME(FBTooltipView)
 
  If you need to show a tooltip for login, consider using the `FBSDKLoginTooltipView` view.
 
- @see FBSDKLoginTooltipView
+ See FBSDKLoginTooltipView
  */
 - (instancetype)initWithTagline:(nullable NSString *)tagline
                         message:(nullable NSString *)message

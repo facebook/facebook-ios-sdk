@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // UNCRUSTIFY_FORMAT_OFF
 /**
- @abstract Initializes a new instance
+ Initializes a new instance
  @param identifier the unique id for this login flow instance.
  @param loginCode the short "user_code".
  @param verificationURL the verification URL.

@@ -116,7 +116,7 @@ public final class MessageDialog: NSObject, SharingDialog {
    required but not available.  This method does not validate the content on the receiver, so this can be checked before
    building up the content.
 
-   @see `Sharing.validate()`
+   See `Sharing.validate()`
    @return `true` if the receiver can share, otherwise `false`.
    */
   public var canShow: Bool { canShowNative }

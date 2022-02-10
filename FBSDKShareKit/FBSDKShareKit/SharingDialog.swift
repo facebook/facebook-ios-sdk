@@ -21,7 +21,7 @@ public protocol SharingDialog: Sharing {
    required but not available.  This method does not validate the content on the receiver, so this can be checked before
    building up the content.
 
-   @see `Sharing.validate(error:)`
+   See `Sharing.validate(error:)`
    @return `true` if the receiver can share, otherwise `false`.
    */
   var canShow: Bool { get }

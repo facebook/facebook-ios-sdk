@@ -12,8 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- @abstract Represents a <FBSDKLoginButton /> tag in TVML.
- @discussion You should not need to use this class directly. Instead, make sure you
+ Represents a <FBSDKLoginButton /> tag in TVML.
+ You should not need to use this class directly. Instead, make sure you
  initialize a `FBSDKTVInterfaceFactory` instance correctly.
 
  This element can dispatch the following events to Javascript, which map to corresponding

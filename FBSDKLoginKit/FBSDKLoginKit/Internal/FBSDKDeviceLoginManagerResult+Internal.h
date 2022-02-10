@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKDeviceLoginManagerResult ()
 
 /**
- @abstract Initializes a new instance
+ Initializes a new instance
  @param token The token
  @param cancelled Indicates if the flow was cancelled.
  */

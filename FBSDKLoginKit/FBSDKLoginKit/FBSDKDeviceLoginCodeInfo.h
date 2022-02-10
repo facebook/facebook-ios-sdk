@@ -11,40 +11,40 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- @abstract Describes the initial response when starting the device login flow.
- @discussion This is used by `FBSDKDeviceLoginManager`.
+ Describes the initial response when starting the device login flow.
+ This is used by `FBSDKDeviceLoginManager`.
  */
 NS_SWIFT_NAME(DeviceLoginCodeInfo)
 @interface FBSDKDeviceLoginCodeInfo : NSObject
 
 /**
- @abstract There is no public initializer.
+ There is no public initializer.
  */
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
- @abstract the unique id for this login flow.
+ The unique id for this login flow.
  */
 @property (nonatomic, readonly, copy) NSString *identifier;
 
 /**
- @abstract the short "user_code" that should be presented to the user.
+ The short "user_code" that should be presented to the user.
  */
 @property (nonatomic, readonly, copy) NSString *loginCode;
 
 /**
- @abstract the verification URL.
+ The verification URL.
  */
 @property (nonatomic, readonly, copy) NSURL *verificationURL;
 
 /**
- @abstract the expiration date.
+ The expiration date.
  */
 @property (nonatomic, readonly, copy) NSDate *expirationDate;
 
 /**
- @abstract the polling interval
+ The polling interval
  */
 @property (nonatomic, readonly, assign) NSUInteger pollingInterval;
 

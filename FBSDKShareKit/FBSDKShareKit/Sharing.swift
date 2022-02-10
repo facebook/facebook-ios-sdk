@@ -13,7 +13,7 @@ import Foundation
 /**
  The common interface for components that initiate sharing.
 
- @see ShareDialog, MessageDialog
+ See ShareDialog, MessageDialog
  */
 @objc(FBSDKSharing)
 public protocol Sharing {

@@ -69,8 +69,8 @@ NS_SWIFT_NAME(FBLoginButton)
  */
 @property (nonatomic, weak) IBOutlet id<FBSDKLoginButtonDelegate> delegate;
 /**
- @abstract The permissions to request.
- @discussion To provide the best experience, you should minimize the number of permissions you request, and only ask for them when needed.
+ The permissions to request.
+ To provide the best experience, you should minimize the number of permissions you request, and only ask for them when needed.
  For example, do not ask for "user_location" until you the information is actually used by the app.
 
  Note this is converted to NSSet and is only
