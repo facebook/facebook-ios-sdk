@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKDeviceLoginManagerDelegate;
 
-/*!
+/**
  @abstract Use this class to perform a device login flow.
  @discussion The device login flow starts by requesting a code from the device login API.
    This class informs the delegate when this code is received. You should then present the
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DeviceLoginManager)
 @interface FBSDKDeviceLoginManager : NSObject <NSNetServiceDelegate>
 
-/*!
+/**
  @abstract Initializes a new instance.
  @param permissions permissions to request.
  */
@@ -37,29 +37,29 @@ NS_SWIFT_NAME(DeviceLoginManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/*!
+/**
  @abstract the delegate.
  */
 @property (nonatomic, weak) id<FBSDKDeviceLoginManagerDelegate> delegate;
 
-/*!
+/**
  @abstract the requested permissions.
  */
 @property (nonatomic, readonly, copy) NSArray<NSString *> *permissions;
 
-/*!
+/**
  @abstract the optional URL to redirect the user to after they complete the login.
  @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs
  */
 @property (nullable, nonatomic, copy) NSURL *redirectURL;
 
-/*!
+/**
  @abstract Starts the device login flow
  @discussion This instance will retain self until the flow is finished or cancelled.
  */
 - (void)start;
 
-/*!
+/**
  @abstract Attempts to cancel the device login flow.
  */
 - (void)cancel;

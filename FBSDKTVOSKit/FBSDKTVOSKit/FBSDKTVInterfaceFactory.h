@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  @abstract An implementation of `TVInterfaceCreating` for using FBSDKTVOSKit elements in TVML apps.
  @discussion You should assign an instance of this factory prior to the construction
   of your `TVApplicationController`. For example,
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(TVInterfaceFactory)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/*!
+/**
  @abstract The designated initializer which can chain a `<TVInterfaceCreating>` implementation.
  */
 - (instancetype)initWithInterfaceCreator:(nullable id<TVInterfaceCreating>)interfaceCreator

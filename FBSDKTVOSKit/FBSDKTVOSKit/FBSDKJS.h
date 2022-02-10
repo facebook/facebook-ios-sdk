@@ -13,24 +13,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  @abstract Marker protocol to export native functions to Javascript contexts.
  @discussion see `FBSDKJS` for integration in TVML apps.
  */
 NS_SWIFT_NAME(JSExports)
 @protocol FBSDKJSExports <JSExport>
 
-/*!
+/**
  @abstract Returns the current access token string, if available.
  */
 @property (class, nullable, nonatomic, readonly, copy) NSString *accessTokenString;
 
-/*!
+/**
  @abstract returns true if there is a current access token.
  */
 @property (class, nonatomic, readonly, getter = isLoggedIn, assign) BOOL loggedIn;
 
-/*!
+/**
  @abstract Returns true if there is a current access token and the permission has been granted.
  */
 
@@ -39,14 +39,14 @@ NS_SWIFT_NAME(JSExports)
 NS_SWIFT_NAME(hasGranted(permission:));
 // UNCRUSTIFY_FORMAT_ON
 
-/*!
+/**
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
  @param eventName the event name
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
 + (void)logEvent:(FBSDKAppEventName)eventName;
 
-/*!
+/**
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
  @param eventName the event name
  @param parameters the parameters (optional).
@@ -54,7 +54,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  */
 + (void)logEvent:(FBSDKAppEventName)eventName parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
 
-/*!
+/**
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
  @param purchaseAmount the purchase amount
  @param currency the currency, e.g, "USD"
@@ -62,7 +62,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  */
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency;
 
-/*!
+/**
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
  @param purchaseAmount the purchase amount
  @param currency the currency, e.g, "USD"
@@ -75,7 +75,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
 
 @end
 
-/*!
+/**
  @abstract Utility class to export common native functions to Javascript contexts.
  @discussion You should connect this to your `TVApplicationControllerDelegate`. For example,
  <code>

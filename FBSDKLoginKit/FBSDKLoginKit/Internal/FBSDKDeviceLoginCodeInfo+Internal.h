@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKDeviceLoginCodeInfo ()
 
 // UNCRUSTIFY_FORMAT_OFF
-/*!
+/**
  @abstract Initializes a new instance
  @param identifier the unique id for this login flow instance.
  @param loginCode the short "user_code".

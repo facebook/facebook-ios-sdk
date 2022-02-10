@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKDeviceLoginButtonDelegate;
 
-/*!
+/**
  @abstract A button that initiates a log in or log out flow upon tapping.
  @discussion `FBSDKLoginButton` works with `[FBSDKAccessToken currentAccessToken]` to
  determine what to display, and automatically starts authentication (by presenting
@@ -27,12 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FBDeviceLoginButton)
 @interface FBSDKDeviceLoginButton : FBSDKDeviceButton
 
-/*!
+/**
  @abstract Gets or sets the delegate.
  */
 @property (nullable, nonatomic, weak) IBOutlet id<FBSDKDeviceLoginButtonDelegate> delegate;
 
-/*!
+/**
  @abstract The permissions to request.
  @discussion To provide the best experience, you should minimize the number of permissions you request, and only ask for them when needed.
  For example, do not ask for "user_location" until you the information is actually used by the app.
@@ -44,7 +44,7 @@ NS_SWIFT_NAME(FBDeviceLoginButton)
  */
 @property (nonatomic, copy) NSArray<NSString *> *permissions;
 
-/*!
+/**
  @abstract the optional URL to redirect the user to after they complete the login.
  @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs
  */
@@ -52,19 +52,19 @@ NS_SWIFT_NAME(FBDeviceLoginButton)
 
 @end
 
-/*!
+/**
  @protocol
  @abstract A delegate protocol for `FBSDKDeviceLoginButton`
  */
 NS_SWIFT_NAME(DeviceLoginButtonDelegate)
 @protocol FBSDKDeviceLoginButtonDelegate <NSObject>
 
-/*!
+/**
  @abstract Indicates the login was cancelled or timed out.
  */
 - (void)deviceLoginButtonDidCancel:(FBSDKDeviceLoginButton *)button;
 
-/*!
+/**
  @abstract Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
  */
 
@@ -73,12 +73,12 @@ NS_SWIFT_NAME(DeviceLoginButtonDelegate)
 NS_SWIFT_NAME(deviceLoginButtonDidLogIn(_:));
 // UNCRUSTIFY_FORMAT_ON
 
-/*!
+/**
  @abstract Indicates the logout finished. The `FBSDKAccessToken.currentAccessToken` will be nil.
  */
 - (void)deviceLoginButtonDidLogOut:(FBSDKDeviceLoginButton *)button;
 
-/*!
+/**
  @abstract Indicates an error with the login.
  */
 - (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error;

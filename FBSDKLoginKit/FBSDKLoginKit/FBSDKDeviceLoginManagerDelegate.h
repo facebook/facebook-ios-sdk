@@ -8,13 +8,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  @abstract A delegate for `FBSDKDeviceLoginManager`.
  */
 NS_SWIFT_NAME(DeviceLoginManagerDelegate)
 @protocol FBSDKDeviceLoginManagerDelegate <NSObject>
 
-/*!
+/**
  @abstract Indicates the device login flow has started. You should parse `codeInfo` to present the code to the user to enter.
  @param loginManager the login manager instance.
  @param codeInfo the code info data.
@@ -23,7 +23,7 @@ NS_SWIFT_NAME(DeviceLoginManagerDelegate)
 - (void)deviceLoginManager:(FBSDKDeviceLoginManager *)loginManager
        startedWithCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo;
 
-/*!
+/**
  @abstract Indicates the device login flow has finished.
  @param loginManager the login manager instance.
  @param result the results of the login flow.

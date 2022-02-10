@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  @abstract Represents a '<FBSDKDeviceLoginViewController />' tag in TVML
  @discussion The tag should be part of a document that is
  presented modally. For example,
