@@ -15,13 +15,11 @@ kit = ARGV[0]
 CORE_KIT = 'FBSDKCoreKit'
 LOGIN_KIT = 'FBSDKLoginKit'
 SHARE_KIT = 'FBSDKShareKit'
-GAMING_SERVICES_KIT = 'FBSDKGamingServicesKit'
 
 HEADER_PATHS = {
   CORE_KIT => "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKit.h",
   LOGIN_KIT => "FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginKit.h",
   SHARE_KIT => "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
-  GAMING_SERVICES_KIT => "FBSDKGamingServicesKit/FBSDKGamingServicesKit/FBSDKGamingServicesKit.h",
 }
 
 def base_path
@@ -95,14 +93,23 @@ def combineSourceKittenOutputFor(kit)
     --sourcekitten-sourcefile #{sourcefiles}"
 end
 
+def generateSwiftOnlyDocs(kit)
+  command = "bundle exec jazzy \
+    --config #{base_path + '.jazzy.yaml'} \
+    --output docs/#{kit} \
+    --module #{kit} \
+    --module-version \"#{sdk_version}\" \
+    --build-tool-arguments -scheme,#{kit}-Dynamic"
+  system "#{command}"
+end
+
 case kit
 when /#{CORE_KIT}|#{LOGIN_KIT}|#{SHARE_KIT}/
   generateSourceKittenOutputForSwift(kit)
   generateSourceKittenOutputForObjC(kit)
   combineSourceKittenOutputFor(kit)
 else
-  generateSourceKittenOutputForObjC(kit)
-  combineSourceKittenOutputFor(kit)
+  generateSwiftOnlyDocs(kit)
 end
 
 File.delete("tmpSwift") if File.exist?("tmpSwift")
