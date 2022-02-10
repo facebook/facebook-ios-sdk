@@ -9,7 +9,6 @@
 #if !TARGET_OS_TV
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/_FBSDKShareInternalURLOpening.h>
 
 #import "FBSDKShareDialog.h"
 
@@ -20,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKShareDialog ()
 
-@property (class, nullable, nonatomic) id<_FBSDKShareInternalURLOpening> internalURLOpener;
+@property (class, nullable, nonatomic) id<FBSDKShareInternalURLOpening> internalURLOpener;
 @property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic) Class<_FBSDKShareUtility> shareUtility;

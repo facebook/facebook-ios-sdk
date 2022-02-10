@@ -25,7 +25,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   private static let feedMethodName = "feed"
 
   private static var hasBeenConfigured = false
-  static var internalURLOpener: _ShareInternalURLOpening?
+  static var internalURLOpener: ShareInternalURLOpening?
   static var internalUtility: InternalUtilityProtocol?
   static var settings: SettingsProtocol?
   static var shareUtility: _ShareUtilityProtocol.Type?
@@ -136,7 +136,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
   // swiftlint:disable:next function_parameter_count
   static func configure(
-    internalURLOpener: _ShareInternalURLOpening,
+    internalURLOpener: ShareInternalURLOpening,
     internalUtility: InternalUtilityProtocol,
     settings: SettingsProtocol,
     shareUtility: _ShareUtilityProtocol.Type,
@@ -358,7 +358,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     var canOpenURL = false
     if let url = components.url {
-      canOpenURL = Self.internalURLOpener?.canOpen(url) ?? false
+      canOpenURL = Self.internalURLOpener?.canOpenURL(url) ?? false
     }
 
     return canOpenURL || canUseFBShareSheet
@@ -376,7 +376,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       return false
     }
 
-    return urlOpener.canOpen(url)
+    return urlOpener.canOpenURL(url)
   }
 
   private var contentImages: [UIImage] {

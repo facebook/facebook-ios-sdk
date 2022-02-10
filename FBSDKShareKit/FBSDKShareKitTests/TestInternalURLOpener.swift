@@ -6,14 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
 import Foundation
 
-@objcMembers
-final class TestInternalURLOpener: NSObject, _ShareInternalURLOpening {
+final class TestInternalURLOpener: NSObject, ShareInternalURLOpening {
+
   var canOpenURL = false
   var computeCanOpenURL: ((URL) -> Bool)?
 
-  func canOpen(_ url: URL) -> Bool {
+  func canOpenURL(_ url: URL) -> Bool {
     computeCanOpenURL?(url) ?? canOpenURL
   }
 }
