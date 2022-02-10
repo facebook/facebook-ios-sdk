@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKShareKit/FBSDKSharingContent.h>
 #import <FBSDKShareKit/FBSDKSharingValidation.h>
 
+@class FBSDKHashtag;
 @class FBSDKShareMediaContent;
 @class FBSDKSharePhotoContent;
+@protocol FBSDKSharingContent;
 
 NS_ASSUME_NONNULL_BEGIN
 

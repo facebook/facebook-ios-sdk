@@ -7,6 +7,7 @@
  */
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKSharePhoto.h"
-#import "FBSDKSharingContent.h"
 #import "_FBSDKShareUtilityProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
