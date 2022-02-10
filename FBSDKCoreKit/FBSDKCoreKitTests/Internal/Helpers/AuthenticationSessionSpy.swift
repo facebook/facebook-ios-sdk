@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
+final class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
 
   var capturedURL: URL
   var capturedCallbackURLScheme: String?

@@ -14,7 +14,7 @@ import XCTest
 
 final class AccessTokenProviderTests: XCTestCase {
 
-  class TestTokenCache: NSObject, TokenCaching {
+  final class TestTokenCache: NSObject, TokenCaching {
     var accessToken: AccessToken?
     var authenticationToken: AuthenticationToken?
   }

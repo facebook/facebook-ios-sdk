@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class RawServerConfigurationResponseFixtures: NSObject {
+final class RawServerConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let appEventsFeatureBitmask = "app_events_feature_bitmask"

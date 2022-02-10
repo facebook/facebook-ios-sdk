@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingPayload)
-public class GamingPayload: NSObject {
+public final class GamingPayload: NSObject {
 
   public var URL: AppLinkURL
   var gameEntryData: [String: String] = [:]

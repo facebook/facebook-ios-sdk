@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestVideoUploader: VideoUploading {
+final class TestVideoUploader: VideoUploading {
 
   var delegate: VideoUploaderDelegate?
   var wasStartCalled = false

@@ -73,6 +73,9 @@ custom_rules:
   test_classes_should_be_final:
     regex: "(?<!final )class.*XCTestCase\\b"
     message: "Make test classes final"
+  prefer_final_classes:
+    regex: "(?<!(?:final|open) )class (?!func|var)[^\n]*\\{"
+    message: "Most classes should be declared as final even when not declared as open"
 
 only_rules:
   - array_init

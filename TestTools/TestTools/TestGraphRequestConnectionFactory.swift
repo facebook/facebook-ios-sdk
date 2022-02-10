@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionFactoryProtocol {
+public final class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionFactoryProtocol {
   public var stubbedConnection: GraphRequestConnecting?
 
   public override init() {}

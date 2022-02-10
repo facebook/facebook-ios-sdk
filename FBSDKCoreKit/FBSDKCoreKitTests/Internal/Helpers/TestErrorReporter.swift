@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestErrorReporter: ErrorReporting {
+final class TestErrorReporter: ErrorReporting {
   var wasEnableCalled = false
   var capturedErrorCode: Int?
   var capturedErrorDomain: String?

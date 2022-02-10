@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestAppEvents: AppEvents {
+final class TestAppEvents: AppEvents {
   var capturedParameters: [AppEvents.ParameterName: Any]?
 
   override func logInternalEvent(

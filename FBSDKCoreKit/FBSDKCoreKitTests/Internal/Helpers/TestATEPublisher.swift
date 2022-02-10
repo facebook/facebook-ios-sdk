@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestATEPublisher: NSObject, ATEPublishing {
+final class TestATEPublisher: NSObject, ATEPublishing {
   var publishATEWasCalled = false
 
   func publishATE() {

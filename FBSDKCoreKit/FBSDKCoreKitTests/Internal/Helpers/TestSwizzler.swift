@@ -26,7 +26,7 @@ struct SwizzleEvidence: Equatable {
 }
 
 @objcMembers
-class TestSwizzler: NSObject, Swizzling {
+final class TestSwizzler: NSObject, Swizzling {
   static var evidence = [SwizzleEvidence]()
 
   static func swizzleSelector(

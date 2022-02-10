@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestGraphRequestBody: GraphRequestBody {
+final class TestGraphRequestBody: GraphRequestBody {
   var capturedKey: String?
   var capturedFormValue: String?
   var capturedImage: UIImage?

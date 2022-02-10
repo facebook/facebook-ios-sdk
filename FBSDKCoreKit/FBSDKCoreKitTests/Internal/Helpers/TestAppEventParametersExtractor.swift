@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestAppEventParametersExtractor: AppEventParametersExtracting {
+final class TestAppEventParametersExtractor: AppEventParametersExtracting {
   func activityParametersDictionary(
     forEvent eventCategory: String,
     shouldAccessAdvertisingID: Bool,

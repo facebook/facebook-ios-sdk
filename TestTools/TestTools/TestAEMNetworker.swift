@@ -8,7 +8,7 @@
 
 import FBAEMKit
 
-public class TestAEMNetworker: NSObject, AEMNetworking {
+public final class TestAEMNetworker: NSObject, AEMNetworking {
 
   public var capturedGraphPath: String?
   public var capturedParameters = [String: Any]()

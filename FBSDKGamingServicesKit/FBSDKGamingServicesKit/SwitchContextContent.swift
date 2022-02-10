@@ -16,7 +16,7 @@ import Foundation
  */
 @objcMembers
 @objc(FBSDKSwitchContextContent)
-public class SwitchContextContent: NSObject, ValidatableProtocol {
+public final class SwitchContextContent: NSObject, ValidatableProtocol {
 
   /**
    The context token of the existing context for which this request is being made.

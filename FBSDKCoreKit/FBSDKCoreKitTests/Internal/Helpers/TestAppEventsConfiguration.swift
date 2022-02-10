@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAppEventsConfiguration: NSObject, AppEventsConfigurationProtocol {
+final class TestAppEventsConfiguration: NSObject, AppEventsConfigurationProtocol {
   static var stubbedDefaultConfiguration: TestAppEventsConfiguration?
 
   var defaultATEStatus: AdvertisingTrackingStatus = .unspecified

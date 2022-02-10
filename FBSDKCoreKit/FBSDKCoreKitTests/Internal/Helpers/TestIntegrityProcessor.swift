@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestIntegrityProcessor: IntegrityProcessing {
+final class TestIntegrityProcessor: IntegrityProcessing {
   var stubbedParameters = [String: Bool]()
 
   func processIntegrity(_ potentialParameter: String?) -> Bool {

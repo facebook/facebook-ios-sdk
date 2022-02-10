@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestAppLinkURLFactory: AppLinkURLCreating {
+final class TestAppLinkURLFactory: AppLinkURLCreating {
   var stubbedAppLinkURL: TestAppLinkURL?
 
   func createAppLinkURL(with url: URL) -> AppLinkURLProtocol {

@@ -7,7 +7,7 @@
  */
 
 @available(iOS 12.2, *)
-class TestPayment: SKPayment {
+final class TestPayment: SKPayment {
   let stubbedProductIdentifier: String
   let stubbedQuantity: Int
   let stubbedPaymentDiscount: SKPaymentDiscount?

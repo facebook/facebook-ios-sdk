@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingPayloadObserver)
-public class GamingPayloadObserver: NSObject {
+public final class GamingPayloadObserver: NSObject {
   public weak var delegate: GamingPayloadDelegate? {
     willSet {
       if let sharedInstance = GamingPayloadObserver.shared {

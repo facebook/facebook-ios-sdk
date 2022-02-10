@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CustomUpdateLocalizedText: NSObject, Codable {
+final class CustomUpdateLocalizedText: NSObject, Codable {
   var defaultString: String
   var localizations: [String: String]
 

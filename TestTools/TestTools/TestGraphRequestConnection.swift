@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
 
   public typealias Completion = @convention(block) (GraphRequestConnecting, Any?, Error?) -> Void
 

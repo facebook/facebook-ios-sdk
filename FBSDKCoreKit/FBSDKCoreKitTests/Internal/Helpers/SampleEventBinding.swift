@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class SampleEventBinding: NSObject {
+final class SampleEventBinding: NSObject {
 
   static func createValid(withName name: String) -> EventBinding {
     let logger = TestEventLogger()

@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import Foundation
 
 @objcMembers
-class TestLoginCompleter: NSObject, LoginCompleting {
+final class TestLoginCompleter: NSObject, LoginCompleting {
 
   var capturedCompletionHandler: LoginCompletionParametersBlock?
   var capturedNonce: String?

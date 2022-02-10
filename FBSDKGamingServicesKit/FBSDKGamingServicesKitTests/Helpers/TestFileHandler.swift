@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestFileHandler: FileHandling {
+final class TestFileHandler: FileHandling {
   var stubbedReadData = Data()
   var stubbedSeekToEndOfFile: UInt64 = 0
   var capturedFileOffset: UInt64 = 0

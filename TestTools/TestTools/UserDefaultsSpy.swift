@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class UserDefaultsSpy: UserDefaults {
+public final class UserDefaultsSpy: UserDefaults {
   public var capturedObjectRetrievalKeys = [String]()
   public var capturedSetObjectKeys = [String]()
   public var capturedObjectRetrievalKey: String?

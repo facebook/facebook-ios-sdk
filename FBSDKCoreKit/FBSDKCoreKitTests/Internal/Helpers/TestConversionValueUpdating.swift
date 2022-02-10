@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestConversionValueUpdating: NSObject, ConversionValueUpdating {
+final class TestConversionValueUpdating: NSObject, ConversionValueUpdating {
 
   static var wasUpdateVersionValueCalled = false
 

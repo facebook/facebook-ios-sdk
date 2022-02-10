@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
+final class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
   var configuration: ErrorConfigurationProtocol?
 
   init(configuration: ErrorConfigurationProtocol? = nil) {

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class SampleSKAdNetworkConversionConfiguration: NSObject {
+final class SampleSKAdNetworkConversionConfiguration: NSObject {
 
   static var configJson: [String: Any] {
     [

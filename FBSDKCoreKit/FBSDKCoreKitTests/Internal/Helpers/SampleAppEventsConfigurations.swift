@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class SampleAppEventsConfigurations: NSObject {
+final class SampleAppEventsConfigurations: NSObject {
 
   static let `default` = AppEventsConfiguration.default()
 

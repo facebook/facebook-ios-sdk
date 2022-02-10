@@ -10,7 +10,7 @@
 
 import FBSDKCoreKit
 
-class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
+final class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
   let dialog = TestShowable()
   var wasMakeSwitchContextDialogCalled = false
   var capturedDelegate: ContextDialogDelegate?

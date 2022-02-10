@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
+public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isEventDataUsageLimited = false
   public var shouldUseCachedValuesForExpensiveMetadata = false
   public var isAdvertiserIDCollectionEnabled = false

@@ -10,7 +10,7 @@ import FBSDKLoginKit
 import Foundation
 
 @objcMembers
-class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
+final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
 
   let stubbedLoginCompleter: TestLoginCompleter
   var capturedURLParameters = [String: Any]()

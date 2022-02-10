@@ -16,7 +16,7 @@ public enum TournamentFetchError: Error {
   case invalidAccessToken
 }
 
-public class TournamentFetcher {
+public final class TournamentFetcher {
 
   let graphRequestFactory: GraphRequestFactoryProtocol
   let gamingGraphDomain = "gaming"

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class ServerConfigurationFixtures: NSObject {
+final class ServerConfigurationFixtures: NSObject {
   /// A default configuration with valid inputs. This is the same default configuration used in production code
   static var defaultConfig: ServerConfiguration {
     ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")

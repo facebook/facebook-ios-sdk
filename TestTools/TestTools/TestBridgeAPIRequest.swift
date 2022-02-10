@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
+public final class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
   public var actionID: String
   public var methodName: String?
   public var protocolType: FBSDKBridgeAPIProtocolType
@@ -46,4 +46,4 @@ public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
 }
 
 @objc
-public class FakeBridgeAPIRequestError: NSError {}
+public final class FakeBridgeAPIRequestError: NSError {}

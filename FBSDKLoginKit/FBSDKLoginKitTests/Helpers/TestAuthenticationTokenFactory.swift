@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAuthenticationTokenFactory: NSObject, AuthenticationTokenCreating {
+final class TestAuthenticationTokenFactory: NSObject, AuthenticationTokenCreating {
   var capturedTokenString: String?
   var capturedNonce: String?
   var capturedCompletion: AuthenticationTokenBlock?

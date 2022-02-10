@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class Fuzzer: NSObject {
+public final class Fuzzer: NSObject {
 
   private static let values: [Any] = [
     // Booleans

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestMeasurementEvent: NSObject, AppLinkEventPosting {
+final class TestMeasurementEvent: NSObject, AppLinkEventPosting {
   var capturedEventName: String?
   var capturedArgs = [String: String]()
 

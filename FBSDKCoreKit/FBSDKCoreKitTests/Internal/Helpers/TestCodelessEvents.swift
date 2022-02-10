@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestCodelessEvents: NSObject, CodelessIndexing {
+final class TestCodelessEvents: NSObject, CodelessIndexing {
 
   static var wasEnabledCalled = false
 

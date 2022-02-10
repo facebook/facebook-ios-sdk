@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class SampleRawRemoteEventBindings: NSObject {
+final class SampleRawRemoteEventBindings: NSObject {
 
   static var sampleDictionary: [String: Any] {
     [

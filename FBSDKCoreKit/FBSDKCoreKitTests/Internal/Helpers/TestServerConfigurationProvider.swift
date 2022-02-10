@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
+final class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
 
   var capturedCompletionBlock: ServerConfigurationBlock?
   var secondCapturedCompletionBlock: ServerConfigurationBlock?

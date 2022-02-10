@@ -9,7 +9,7 @@
 import FacebookShare
 import UIKit
 
-class ShareViewController: UITableViewController {
+final class ShareViewController: UITableViewController {
 
     @IBAction func shareLink() {
         guard let url = URL(string: "https://newsroom.fb.com/") else {

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestOperationQueue: OperationQueue {
+final class TestOperationQueue: OperationQueue {
 
   var addOperationWithBlockWasCalled = false
   var capturedOperationBlock: (() -> Void)?

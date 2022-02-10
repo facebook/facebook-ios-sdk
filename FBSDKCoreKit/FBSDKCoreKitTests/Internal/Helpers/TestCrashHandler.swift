@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestCrashHandler: NSObject, CrashHandlerProtocol {
+final class TestCrashHandler: NSObject, CrashHandlerProtocol {
   var wasAddObserverCalled = false
   var observer: CrashObserving?
   var wasClearCrashReportFilesCalled = false

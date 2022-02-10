@@ -12,7 +12,7 @@ import TestTools
 @testable import FBSDKCoreKit
 
 @objcMembers
-class SampleGraphRequestConnections: NSObject {
+final class SampleGraphRequestConnections: NSObject {
 
   static var empty: GraphRequestConnecting {
     TestGraphRequestConnection()

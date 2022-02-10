@@ -8,7 +8,7 @@
 
 import TestTools
 
-class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
+final class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
   var stubbedRequestURL = SampleURLs.valid
   var stubbedRequestURLError: Error?
   var stubbedResponseParameters = [String: Any]()

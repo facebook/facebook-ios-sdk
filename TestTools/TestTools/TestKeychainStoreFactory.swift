@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {
+public final class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {
 
   public var capturedService: String?
   public var capturedAccessGroup: String?

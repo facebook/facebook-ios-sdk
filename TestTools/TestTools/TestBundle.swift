@@ -11,7 +11,7 @@ import FBSDKCoreKit_Basics
 import Foundation
 
 @objcMembers
-public class TestBundle: NSObject, InfoDictionaryProviding {
+public final class TestBundle: NSObject, InfoDictionaryProviding {
   private var stubbedInfoDictionary: [String: Any]?
   var lastCapturedKey: String?
   public var capturedKeys = [String]()

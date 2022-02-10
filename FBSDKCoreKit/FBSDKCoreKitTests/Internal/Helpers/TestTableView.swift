@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TestTableView: UITableView {
+final class TestTableView: UITableView {
   var stubbedWindow: UIWindow?
   var stubbedCellMap = [IndexPath: UITableViewCell]()
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestDevicePoller: DevicePolling {
+final class TestDevicePoller: DevicePolling {
   var capturedInterval: UInt = 0
 
   func scheduleBlock(_ block: @escaping () -> Void, interval: UInt) {

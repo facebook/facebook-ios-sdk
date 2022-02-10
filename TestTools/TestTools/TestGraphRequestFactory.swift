@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
+public final class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
 
   public var capturedGraphPath: String?
   public var capturedParameters = [String: Any]()

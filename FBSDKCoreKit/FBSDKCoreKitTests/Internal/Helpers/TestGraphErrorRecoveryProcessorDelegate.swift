@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestGraphErrorRecoveryProcessorDelegate: NSObject, GraphErrorRecoveryProcessorDelegate {
+final class TestGraphErrorRecoveryProcessorDelegate: NSObject, GraphErrorRecoveryProcessorDelegate {
 
   var wasRecoveryAttempted = false
   var capturedProcessor: GraphErrorRecoveryProcessor?

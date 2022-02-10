@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestKeychainStore: NSObject, KeychainStoreProtocol {
+public final class TestKeychainStore: NSObject, KeychainStoreProtocol {
   public var service: String?
   public var accessGroup: String?
   public var wasStringForKeyCalled = false

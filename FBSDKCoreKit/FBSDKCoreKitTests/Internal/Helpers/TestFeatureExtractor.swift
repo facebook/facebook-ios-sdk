@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class TestFeatureExtractor: FeatureExtracting {
+final class TestFeatureExtractor: FeatureExtracting {
 
   static var stubbedDenseFeatures: UnsafeMutablePointer<Float>?
   static var capturedGetTextFeatureText: String?

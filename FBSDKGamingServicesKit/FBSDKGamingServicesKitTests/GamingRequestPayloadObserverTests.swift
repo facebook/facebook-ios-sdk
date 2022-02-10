@@ -127,7 +127,7 @@ final class GamingRequestPayloadObserverTests: XCTestCase {
   }
 }
 
-class GameRequestPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
+final class GameRequestPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
   var wasGameRequestDelegateCalled = false
   var capturedGameRequestID: String?
   var capturedPayload: GamingPayload?

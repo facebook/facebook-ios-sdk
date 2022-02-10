@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosting {
+final class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosting {
 
   struct ObserverEvidence: Equatable {
     let observer: Any

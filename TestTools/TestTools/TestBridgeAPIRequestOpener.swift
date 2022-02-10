@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+public final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
 
   public var capturedURL: URL?
   public var capturedHandler: SuccessBlock?

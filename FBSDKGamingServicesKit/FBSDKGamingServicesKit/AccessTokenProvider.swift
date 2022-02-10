@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class AccessTokenProvider: AccessTokenProviding {
+final class AccessTokenProvider: AccessTokenProviding {
   static var tokenCache: TokenCaching? {
     get {
       AccessToken.tokenCache

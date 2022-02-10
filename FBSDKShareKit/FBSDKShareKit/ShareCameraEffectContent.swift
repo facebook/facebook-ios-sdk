@@ -61,7 +61,7 @@ public final class ShareCameraEffectContent: NSObject {
   private static var hasBeenConfigured = false
 
   public override init() {
-    ShareCameraEffectContent.configureClassDependencies()
+    Self.configureClassDependencies()
     super.init()
   }
 

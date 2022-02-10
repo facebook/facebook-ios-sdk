@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestURLOpener: NSObject, URLOpener {
+public final class TestURLOpener: NSObject, URLOpener {
 
   public var capturedRequests = [SuccessBlock]()
   public var capturedURL: URL?

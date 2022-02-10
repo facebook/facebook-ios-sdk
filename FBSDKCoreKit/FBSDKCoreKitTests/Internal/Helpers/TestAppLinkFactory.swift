@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestAppLinkFactory: AppLinkCreating {
+final class TestAppLinkFactory: AppLinkCreating {
   func createAppLink(
     sourceURL: URL?,
     targets: [AppLinkTargetProtocol],

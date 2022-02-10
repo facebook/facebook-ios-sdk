@@ -9,14 +9,14 @@
 import TestTools
 
 @available(iOS 12.2, *)
-class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
+final class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
   struct Evidence {
     let requestor: TestPaymentProductRequestor
     let transaction: SKPaymentTransaction
   }
 
   // Dummy class to avoid polluting the shared test gatekeeper manager
-  class PaymentGateKeeperManager: GateKeeperManaging {
+  final class PaymentGateKeeperManager: GateKeeperManaging {
     static func bool(forKey key: String, defaultValue: Bool) -> Bool {
       false
     }

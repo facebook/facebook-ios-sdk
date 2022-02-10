@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestImpressionLoggerFactory: ImpressionLoggerFactoryProtocol {
+final class TestImpressionLoggerFactory: ImpressionLoggerFactoryProtocol {
   let impressionLogger = TestImpressionLogger()
   var capturedEventName: AppEvents.Name?
 

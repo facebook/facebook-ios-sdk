@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestMacCatalystDeterminator: NSObject, MacCatalystDetermining {
+final class TestMacCatalystDeterminator: NSObject, MacCatalystDetermining {
   var stubbedIsMacCatalystApp = false
 
   var isMacCatalystApp: Bool {

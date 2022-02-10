@@ -245,7 +245,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     )
   }
 
-  class TestScriptMessage: WKScriptMessage {
+  final class TestScriptMessage: WKScriptMessage {
     let stubbedName: String
     let stubbedBody: Any
 

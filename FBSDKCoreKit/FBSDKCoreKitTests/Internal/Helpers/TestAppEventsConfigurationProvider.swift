@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
+final class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
   var stubbedConfiguration: AppEventsConfigurationProtocol?
   var didRetrieveCachedConfiguration = false
   var firstCapturedBlock: AppEventsConfigurationProvidingBlock?

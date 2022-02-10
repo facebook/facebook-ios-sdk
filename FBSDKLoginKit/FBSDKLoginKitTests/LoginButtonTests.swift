@@ -633,7 +633,7 @@ final class LoginButtonTests: XCTestCase {
   }
 }
 
-private class TestButton: FBLoginButton {
+private final class TestButton: FBLoginButton {
   var fetchAndSetContentCallCount = 0
   var updateContentForAccessTokenCallCount = 0
   var updateContentForProfileCallCount = 0

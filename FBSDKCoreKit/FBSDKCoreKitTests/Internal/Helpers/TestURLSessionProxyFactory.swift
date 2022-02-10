@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
+final class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   private var stubbedSessions: [TestURLSessionProxy]
 
   init(sessions: [TestURLSessionProxy] = []) {

@@ -12,7 +12,7 @@ import FBSDKCoreKit
  A dialog presenter responsible for creating and showing all the dialogs that create, switch,
  choose and otherwise manipulate the gaming context.
  */
-public class ContextDialogPresenter {
+public final class ContextDialogPresenter {
 
   private(set) var createContextDialogFactory: CreateContextDialogMaking
   private(set) var switchContextDialogFactory: SwitchContextDialogMaking
@@ -90,7 +90,7 @@ public class ContextDialogPresenter {
   }
 
   @available(*, deprecated, message: "showChooseContextDialog is deprecated. Please use the instance method `makeAndShowChooseContextDialog` instead") // swiftlint:disable:this line_length
-  open class func showChooseContextDialog( // swiftlint:disable:this lower_acl_than_parent
+  public class func showChooseContextDialog(
     with content: ChooseContextContent,
     delegate: ContextDialogDelegate
   ) -> ChooseContextDialog {

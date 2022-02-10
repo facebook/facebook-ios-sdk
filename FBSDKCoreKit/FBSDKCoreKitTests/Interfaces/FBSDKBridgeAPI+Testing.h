@@ -16,7 +16,6 @@
 #import "NSProcessInfo+Protocols.h"
 
 @protocol FBSDKLogging;
-@protocol FBSDKURLOpener;
 @protocol FBSDKBridgeAPIResponseCreating;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -56,7 +55,7 @@ NS_SWIFT_NAME(AuthenticationSession);
 @interface FBSDKBridgeAPI (Testing)
 
 @property (nonatomic, readonly, assign) id<FBSDKOperatingSystemVersionComparing> processInfo;
-@property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic, readonly) id<FBSDKInternalURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;

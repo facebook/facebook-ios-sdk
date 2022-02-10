@@ -16,7 +16,7 @@ import Foundation
  */
 @objcMembers
 @objc(FBSDKChooseContextDialog)
-public class ChooseContextDialog: ContextWebDialog, URLOpening {
+public final class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   private enum Constants {
     static let contextKey = "context_id"

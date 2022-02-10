@@ -19,7 +19,7 @@ public enum TournamentUpdaterError: Error {
 /**
  A graph request wrapper to update a tournament
  */
-public class TournamentUpdater {
+public final class TournamentUpdater {
 
   enum GraphRequest {
     static let gamingGraphDomain = "gaming"

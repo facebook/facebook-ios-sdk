@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
+final class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
 
   var disabledFeatures = [SDKFeature]()
   var capturedFeatures = [SDKFeature]()

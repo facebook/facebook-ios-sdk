@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestBridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
+final class TestBridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
 
   var capturedResponseURL: URL?
   var capturedSourceApplication: String?

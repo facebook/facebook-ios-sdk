@@ -138,7 +138,7 @@ final class GamingContextPayloadObserverTests: XCTestCase {
   }
 }
 
-class GamingContextPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
+final class GamingContextPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
   var wasGamingContextDelegateCalled = false
   var capturedPayload: GamingPayload?
 

@@ -210,7 +210,7 @@ final class ProfilePictureViewTests: XCTestCase {
   }
 }
 
-private class TestProfilePictureView: FBProfilePictureView {
+private final class TestProfilePictureView: FBProfilePictureView {
   var updateImageWithAccessTokenCount = 0
   var updateImageWithProfileCount = 0
   var fetchAndSetImageCount = 0

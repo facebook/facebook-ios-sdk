@@ -9,7 +9,7 @@
 import FBSDKGamingServicesKit
 import XCTest
 
-class TestContextDialogDelegate: NSObject, ContextDialogDelegate {
+final class TestContextDialogDelegate: NSObject, ContextDialogDelegate {
   func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
     XCTFail("This should not be invoked")
   }

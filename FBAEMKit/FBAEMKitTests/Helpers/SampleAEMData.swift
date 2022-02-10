@@ -9,7 +9,7 @@
 import FBAEMKit
 import Foundation
 
-class SampleAEMData { // swiftlint:disable:this convenience_type
+final class SampleAEMData { // swiftlint:disable:this convenience_type
 
   enum Keys {
     static let defaultCurrency = "default_currency"

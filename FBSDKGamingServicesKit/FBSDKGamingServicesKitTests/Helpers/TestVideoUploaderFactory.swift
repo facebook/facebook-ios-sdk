@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestVideoUploaderFactory: VideoUploaderCreating {
+final class TestVideoUploaderFactory: VideoUploaderCreating {
 
   var capturedVideoName: String?
   var capturedVideoSize: UInt?

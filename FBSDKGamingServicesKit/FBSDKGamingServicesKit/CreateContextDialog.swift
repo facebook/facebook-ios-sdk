@@ -16,7 +16,7 @@ import Foundation
  */
 @objcMembers
 @objc(FBSDKCreateContextDialog)
-public class CreateContextDialog: ContextWebDialog {
+public final class CreateContextDialog: ContextWebDialog {
 
   private enum Keys {
     static let methodName = "context"

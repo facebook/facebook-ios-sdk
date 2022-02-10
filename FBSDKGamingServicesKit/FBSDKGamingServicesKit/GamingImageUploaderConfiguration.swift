@@ -11,7 +11,7 @@ import UIKit
 
 @objcMembers
 @objc(FBSDKGamingImageUploaderConfiguration)
-public class GamingImageUploaderConfiguration: NSObject {
+public final class GamingImageUploaderConfiguration: NSObject {
   public private(set) var image: UIImage
   public private(set) var caption: String?
   public private(set) var shouldLaunchMediaDialog: Bool

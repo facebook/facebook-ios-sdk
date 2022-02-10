@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingGroupIntegration)
-public class GamingGroupIntegration: NSObject {
+public final class GamingGroupIntegration: NSObject {
 
   let settings: SettingsProtocol
   let serviceControllerFactory: GamingServiceControllerCreating

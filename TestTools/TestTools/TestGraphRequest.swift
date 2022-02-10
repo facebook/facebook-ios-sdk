@@ -10,7 +10,7 @@
 import Foundation
 
 @objcMembers
-public class TestGraphRequest: NSObject, GraphRequestProtocol {
+public final class TestGraphRequest: NSObject, GraphRequestProtocol {
   public var isGraphErrorRecoveryDisabled = false
   public var hasAttachments = false
   public var parameters: [String: Any] = [:]

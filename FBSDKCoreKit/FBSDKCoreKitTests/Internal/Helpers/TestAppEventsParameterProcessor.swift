@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing, EventsProcessing {
+final class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing, EventsProcessing {
   var enableWasCalled = false
   var capturedParameters: [AppEvents.ParameterName: Any]?
   var capturedEventName: AppEvents.Name?

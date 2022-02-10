@@ -10,7 +10,7 @@ import UIKit
 import FBSDKShareKit
 import FBSDKTVOSKit
 
-class FirstViewController: UIViewController {
+final class FirstViewController: UIViewController {
   @IBOutlet fileprivate weak var imageView: UIImageView?
   @IBOutlet fileprivate weak var loginButton: FBDeviceLoginButton?
   @IBOutlet fileprivate weak var shareButton: FBDeviceShareButton?

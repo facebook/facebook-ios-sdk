@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
+final class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
   var didFinishLaunchingCallCount = 0
   var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
   var wasWillResignActiveCalled = false

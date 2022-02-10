@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestProductsRequestFactory: ProductsRequestCreating {
+final class TestProductsRequestFactory: ProductsRequestCreating {
   let request = TestProductsRequest()
   var capturedProductIdentifiers = Set<String>()
 

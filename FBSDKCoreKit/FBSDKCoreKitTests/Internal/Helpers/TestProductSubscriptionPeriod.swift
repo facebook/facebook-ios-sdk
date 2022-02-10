@@ -7,7 +7,7 @@
  */
 
 @available(iOS 11.2, *)
-class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
+final class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
   let stubbedNumberOfUnits: Int
 
   init(numberOfUnits: Int) {

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestPaymentQueue: SKPaymentQueue {
+final class TestPaymentQueue: SKPaymentQueue {
 
   var addTransactionObserverWasCalled = false
   var removeTransactionObserverWasCalled = false

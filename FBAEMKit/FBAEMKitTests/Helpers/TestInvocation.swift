@@ -10,7 +10,7 @@ import FBAEMKit
 import Foundation
 
 @objcMembers
-class TestInvocation: AEMInvocation {
+final class TestInvocation: AEMInvocation {
 
   var attributionCallCount = 0
   var updateConversionCallCount = 0

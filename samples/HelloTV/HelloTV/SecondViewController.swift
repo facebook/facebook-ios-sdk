@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import FBSDKShareKit
 import FBSDKTVOSKit
 
-class SecondViewController: UIViewController {
+final class SecondViewController: UIViewController {
   static let kPort = "9002"
 
   var appController: TVApplicationController?

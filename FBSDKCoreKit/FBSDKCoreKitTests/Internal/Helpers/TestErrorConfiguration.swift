@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestErrorConfiguration: NSObject, ErrorConfigurationProtocol {
+final class TestErrorConfiguration: NSObject, ErrorConfigurationProtocol {
   var capturedRecoveryConfigurationCode: String?
   var capturedRecoveryConfigurationSubcode: String?
   var capturedGraphRequest: GraphRequestProtocol?

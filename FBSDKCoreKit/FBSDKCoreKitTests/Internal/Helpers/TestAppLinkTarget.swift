@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestAppLinkTarget: AppLinkTargetProtocol {
+final class TestAppLinkTarget: AppLinkTargetProtocol {
 
   var url: URL?
   var appStoreId: String?

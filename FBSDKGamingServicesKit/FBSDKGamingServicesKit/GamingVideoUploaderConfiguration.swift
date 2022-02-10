@@ -10,7 +10,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingVideoUploaderConfiguration)
-public class GamingVideoUploaderConfiguration: NSObject {
+public final class GamingVideoUploaderConfiguration: NSObject {
   public private(set) var videoURL: URL
   public private(set) var caption: String?
 

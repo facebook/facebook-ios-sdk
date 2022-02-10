@@ -12,7 +12,7 @@ import Foundation
 #if !os(tvOS)
 
 @objcMembers
-public class TestWindowFinder: NSObject, _WindowFinding {
+public final class TestWindowFinder: NSObject, _WindowFinding {
   public var wasFindWindowCalled = false
   public var window: UIWindow?
 

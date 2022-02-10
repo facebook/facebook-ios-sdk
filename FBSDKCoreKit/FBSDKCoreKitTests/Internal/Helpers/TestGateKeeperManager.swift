@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestGateKeeperManager: NSObject, GateKeeperManaging {
+final class TestGateKeeperManager: NSObject, GateKeeperManaging {
   static var gateKeepers = [String?: Bool]()
   static var loadGateKeepersWasCalled = false
   static var capturedLoadGateKeepersCompletion: GKManagerBlock?

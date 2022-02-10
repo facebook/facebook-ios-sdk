@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestEventLogger: NSObject, EventLogging {
+class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer_final_classes
   var flushCallCount = 0
   var flushBehavior: AppEvents.FlushBehavior = .auto
   var capturedEventName: AppEvents.Name?

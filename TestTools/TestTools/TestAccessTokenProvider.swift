@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-public class TestAccessTokenProvider: AccessTokenProviding {
+public final class TestAccessTokenProvider: AccessTokenProviding {
 
   public static var stubbedAccessToken: AccessToken?
   public static var tokenCache: TokenCaching?

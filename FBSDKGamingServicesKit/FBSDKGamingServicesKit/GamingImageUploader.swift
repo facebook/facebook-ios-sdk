@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingImageUploader)
-public class GamingImageUploader: NSObject {
+public final class GamingImageUploader: NSObject {
 
   private var progressHandler: GamingServiceProgressHandler?
 

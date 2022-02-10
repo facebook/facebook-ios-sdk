@@ -11,12 +11,12 @@ import UIKit
 
 // swiftformat:disable indent
 @objcMembers
-class TestAppEvents: TestEventLogger,
-                     SourceApplicationTracking,
-                     AppEventsConfiguring,
-                     ApplicationActivating,
-                     ApplicationLifecycleObserving,
-                     ApplicationStateSetting {
+final class TestAppEvents: TestEventLogger,
+                           SourceApplicationTracking,
+                           AppEventsConfiguring,
+                           ApplicationActivating,
+                           ApplicationLifecycleObserving,
+                           ApplicationStateSetting {
   // swiftformat:enable indent
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false

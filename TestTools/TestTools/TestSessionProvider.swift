@@ -10,7 +10,7 @@ import FBSDKCoreKit_Basics
 import Foundation
 
 @objcMembers
-public class TestSessionDataTask: NSObject, SessionDataTask {
+public final class TestSessionDataTask: NSObject, SessionDataTask {
   public var resumeCallCount = 0
   public var cancelCallCount = 0
   public var stubbedState: URLSessionTask.State = .completed
@@ -29,7 +29,7 @@ public class TestSessionDataTask: NSObject, SessionDataTask {
 }
 
 @objcMembers
-public class TestSessionProvider: NSObject, SessionProviding {
+public final class TestSessionProvider: NSObject, SessionProviding {
   /// A data task to return from `dataTask(with:completion:)`
   public var stubbedDataTask: SessionDataTask?
   /// The completion handler to be invoked in the test

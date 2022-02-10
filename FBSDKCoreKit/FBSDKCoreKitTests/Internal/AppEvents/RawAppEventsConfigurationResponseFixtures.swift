@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class RawAppEventsConfigurationResponseFixtures: NSObject {
+final class RawAppEventsConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let defaultATEStatus = "default_ate_status"

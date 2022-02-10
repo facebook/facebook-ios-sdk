@@ -37,7 +37,7 @@ public enum ChooseContextFilter: Int, CaseIterable {
  */
 @objcMembers
 @objc(FBSDKChooseContextContent)
-public class ChooseContextContent: NSObject, ValidatableProtocol {
+public final class ChooseContextContent: NSObject, ValidatableProtocol {
 
   /**
    This sets the filter which determines which context will show when the user is app switched to the choose context dialog.

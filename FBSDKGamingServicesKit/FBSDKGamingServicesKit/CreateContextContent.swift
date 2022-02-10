@@ -16,7 +16,7 @@ import Foundation
  */
 @objcMembers
 @objc(FBSDKCreateContextContent)
-public class CreateContextContent: NSObject, ValidatableProtocol {
+public final class CreateContextContent: NSObject, ValidatableProtocol {
 
   /**
    The ID of the player that is being challenged.

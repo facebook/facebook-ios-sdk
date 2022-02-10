@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
+final class TestDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
   var stubSafariViewControllerClass: AnyClass?
   var stubbedASIdentifierManagerClass: AnyClass?
   var didLoadIdentifierManagerClass = false

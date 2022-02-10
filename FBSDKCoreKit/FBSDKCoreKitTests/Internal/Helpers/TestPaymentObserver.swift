@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestPaymentObserver: NSObject, PaymentObserving {
+final class TestPaymentObserver: NSObject, PaymentObserving {
   var didStartObservingTransactions = false
   var didStopObservingTransactions = false
 

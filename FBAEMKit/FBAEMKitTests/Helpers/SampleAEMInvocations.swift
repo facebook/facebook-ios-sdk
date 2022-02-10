@@ -9,7 +9,7 @@
 import FBAEMKit
 import Foundation
 
-class SampleAEMInvocations { // swiftlint:disable:this convenience_type
+final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
   static func createGeneralInvocation1() -> AEMInvocation {
     AEMInvocation(
       campaignID: "test_campaign_1",

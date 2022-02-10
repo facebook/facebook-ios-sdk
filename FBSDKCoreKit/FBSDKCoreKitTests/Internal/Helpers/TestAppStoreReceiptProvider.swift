@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAppStoreReceiptProvider: AppStoreReceiptProviding {
+final class TestAppStoreReceiptProvider: AppStoreReceiptProviding {
   var wasAppStoreReceiptURLRead = false
   var stubbedURL: URL?
 

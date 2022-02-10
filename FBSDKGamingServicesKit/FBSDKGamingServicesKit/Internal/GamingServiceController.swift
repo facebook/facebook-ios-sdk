@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class GamingServiceController: NSObject {
+final class GamingServiceController: NSObject {
 
   private let serviceType: GamingServiceType
   private var completionHandler: GamingServiceResultCompletion?

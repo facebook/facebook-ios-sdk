@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class RPSAutoAppLinkSwiftViewController: UIViewController {
+final class RPSAutoAppLinkSwiftViewController: UIViewController {
     var product: Coffee?
     var data: Dictionary<String, Any>?
 

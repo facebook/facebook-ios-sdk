@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAppEventsState: AppEventsState {
+final class TestAppEventsState: AppEventsState {
   var capturedEventDictionary: [String: Any]?
   var capturedIsImplicit = false
   var isAddEventCalled = false

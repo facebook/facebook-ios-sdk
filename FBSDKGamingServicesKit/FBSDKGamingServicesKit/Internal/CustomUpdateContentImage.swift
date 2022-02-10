@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class CustomUpdateContentImage {
+public final class CustomUpdateContentImage {
 
   var message: String
   var image: UIImage?

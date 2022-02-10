@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
+final class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
 
   required init(
     infoDictionaryProvider: InfoDictionaryProviding = TestBundle(),

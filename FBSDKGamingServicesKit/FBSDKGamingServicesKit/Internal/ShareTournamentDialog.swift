@@ -20,7 +20,7 @@ public enum ShareTournamentDialogError: Error {
   case bridgeError(Error)
 }
 
-public class ShareTournamentDialog: NSObject, URLOpening {
+public final class ShareTournamentDialog: NSObject, URLOpening {
 
   let gamingGraphDomain = "gaming"
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared

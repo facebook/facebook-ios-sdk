@@ -11,10 +11,10 @@ import Foundation
 
 // swiftformat:disable indent
 @objcMembers
-class TestOnDeviceMLModelManager: NSObject,
-                                  EventProcessing,
-                                  IntegrityParametersProcessorProvider,
-                                  RulesFromKeyProvider {
+final class TestOnDeviceMLModelManager: NSObject,
+                                        EventProcessing,
+                                        IntegrityParametersProcessorProvider,
+                                        RulesFromKeyProvider {
   // swiftformat:enable indent
 
   var stubbedRules: [String: Any] = [:]

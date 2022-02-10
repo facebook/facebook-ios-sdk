@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestErrorRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
+final class TestErrorRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
   var capturedError: Error?
   var capturedCompletion: ((Bool) -> Void)?
 

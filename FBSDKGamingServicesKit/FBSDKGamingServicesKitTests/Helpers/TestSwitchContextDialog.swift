@@ -11,7 +11,7 @@
 import FBSDKCoreKit
 import UIKit
 
-class TestSwitchContextDialog: SwitchContextDialogProtocol {
+final class TestSwitchContextDialog: SwitchContextDialogProtocol {
 
   // MARK: Test Evidence
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestLoginProvider: LoginProviding {
+final class TestLoginProvider: LoginProviding {
 
   var defaultAudience: DefaultAudience = .friends
   var capturedCompletion: LoginManagerLoginResultBlock?

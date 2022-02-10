@@ -13,7 +13,7 @@ import FBSDKCoreKit
 /**
  A dialog to switch the current gaming context through a web view
  */
-public class SwitchContextDialog: ContextWebDialog, Showable {
+public final class SwitchContextDialog: ContextWebDialog, Showable {
 
   enum Keys {
     static let contextID = "context_id"

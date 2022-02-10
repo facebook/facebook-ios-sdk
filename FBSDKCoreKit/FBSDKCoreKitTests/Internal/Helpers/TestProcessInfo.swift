@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestProcessInfo: NSObject, OperatingSystemVersionComparing {
+final class TestProcessInfo: NSObject, OperatingSystemVersionComparing {
   var stubbedOperatingSystemCheckResult: Bool
 
   override convenience init() {

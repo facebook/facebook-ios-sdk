@@ -23,7 +23,7 @@ public enum CustomUpdateGraphRequestError: Error {
   case decoding
 }
 
-public class CustomUpdateGraphRequest {
+public final class CustomUpdateGraphRequest {
 
   public let graphRequestFactory: GraphRequestFactoryProtocol
   let graphPath = "me/custom_update"

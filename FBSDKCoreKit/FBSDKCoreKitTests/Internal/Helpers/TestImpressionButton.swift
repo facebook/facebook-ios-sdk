@@ -12,7 +12,7 @@ import XCTest
 
 import Foundation
 
-class TestImpressionButton: ImpressionLoggingButton, FBButtonImpressionLogging {
+final class TestImpressionButton: ImpressionLoggingButton, FBButtonImpressionLogging {
   var analyticsParameters: [AppEvents.ParameterName: Any]? = [.init("foo"): "bar"]
   var impressionTrackingEventName = AppEvents.Name("testImpressionTrackingEventName")
   var impressionTrackingIdentifier = "testImpressionTrackingIdentifier"

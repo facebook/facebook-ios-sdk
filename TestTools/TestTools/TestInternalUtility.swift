@@ -10,13 +10,14 @@ import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
 
+// swiftformat:disable indent
 @objcMembers
-public class TestInternalUtility: NSObject,
-  AppAvailabilityChecker,
-  URLHosting,
-  AppURLSchemeProviding,
-  InternalUtilityProtocol {
-
+public final class TestInternalUtility: NSObject,
+                                        AppAvailabilityChecker,
+                                        URLHosting,
+                                        AppURLSchemeProviding,
+                                        InternalUtilityProtocol {
+  // swiftformat:enable indent
   public var validateURLSchemesCalled = false
   public var isFacebookAppInstalled = false
   public var isMessengerAppInstalled = false

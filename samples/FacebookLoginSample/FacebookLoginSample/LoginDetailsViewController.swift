@@ -10,7 +10,7 @@ import FacebookCore
 import FacebookLogin
 import UIKit
 
-class LoginDetailsViewController: UIViewController {
+final class LoginDetailsViewController: UIViewController {
 
     @IBOutlet private weak var accessTokenLabel: UILabel!
     @IBOutlet private weak var permissionsLabel: UILabel!

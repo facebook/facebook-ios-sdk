@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestPasteboard: NSObject, Pasteboard {
+final class TestPasteboard: NSObject, Pasteboard {
   var name = "pasteboard"
   var stubbedData: Data?
   var capturedData: Data?

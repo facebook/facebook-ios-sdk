@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestDialogConfigurationMapBuilder: DialogConfigurationMapBuilding {
+final class TestDialogConfigurationMapBuilder: DialogConfigurationMapBuilding {
 
   var capturedRawConfigurations: [[String: Any]]?
 

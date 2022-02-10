@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class SampleRawRemotePermissionList: NSObject {
+final class SampleRawRemotePermissionList: NSObject {
 
   static var missingPermissions: [String: Any] {
     [
@@ -103,6 +103,6 @@ class SampleRawRemotePermissionList: NSObject {
 }
 
 @objcMembers
-class SampleRawRemotePermission: NSObject {
+final class SampleRawRemotePermission: NSObject {
   static let missingTopLevelKey: [String: Any] = [:]
 }

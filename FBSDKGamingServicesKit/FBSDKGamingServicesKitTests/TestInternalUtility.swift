@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import TestTools
 
-class TestInternalUtility: InternalUtilityProtocol {
+final class TestInternalUtility: InternalUtilityProtocol {
   var scheme: String?
   var host: String?
   var path: String?
