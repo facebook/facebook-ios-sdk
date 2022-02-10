@@ -393,7 +393,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       tp = @"ios_14_do_not_track";
       break;
     case FBSDKLoginTrackingEnabled:
-      responseType = @"code,signed_request,graph_domain";
+      responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
       [FBSDKTypeUtility dictionary:loginParams setObject:configuration.codeVerifier.challenge forKey:@"code_challenge"];
       [FBSDKTypeUtility dictionary:loginParams setObject:@"S256" forKey:@"code_challenge_method"];
       [self storeExpectedCodeVerifier:configuration.codeVerifier];

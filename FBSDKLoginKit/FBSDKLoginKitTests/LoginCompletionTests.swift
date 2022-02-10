@@ -97,6 +97,13 @@ final class LoginCompletionTests: XCTestCase {
     verifyParameters(actual: completer.parameters, expected: parameters)
   }
 
+  func testInitWithNonce() {
+    let parameters = SampleRawLoginCompletionParameters.withNonce
+    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+
+    verifyParameters(actual: completer.parameters, expected: parameters)
+  }
+
   func testInitWithCode() {
     let parameters = SampleRawLoginCompletionParameters.withCode
     let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
@@ -158,6 +165,177 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   // MARK: Completion
+
+  func testCompleteWithNonceGraphRequestCreation() throws {
+    let completer = createLoginCompleter(
+      parameters: SampleRawLoginCompletionParameters.withNonce,
+      appID: Values.appID
+    )
+    let handler: LoginCompletionParametersBlock = { _ in }
+
+    completer.completeLogin(handler: handler)
+
+    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(authenticationTokenFactory.capturedTokenString)
+    let capturedRequest = try XCTUnwrap(graphRequestFactory.capturedRequests.first)
+    XCTAssertEqual(
+      capturedRequest.graphPath,
+      "oauth/access_token",
+      "Should create a graph request with the expected graph path"
+    )
+    XCTAssertEqual(
+      capturedRequest.parameters["grant_type"] as? String,
+      "fb_exchange_nonce",
+      "Should create a graph request with the expected grant type parameter"
+    )
+    XCTAssertEqual(
+      capturedRequest.parameters["fb_exchange_nonce"] as? String,
+      completer.parameters.nonceString,
+      "Should create a graph request with the expected nonce parameter"
+    )
+    XCTAssertEqual(
+      capturedRequest.parameters["client_id"] as? String,
+      Values.appID,
+      "Should create a graph request with the expected app id parameter"
+    )
+    XCTAssertEqual(
+      capturedRequest.parameters["fields"] as? String,
+      "",
+      "Should create a graph request with the expected fields parameter"
+    )
+    XCTAssertEqual(
+      capturedRequest.flags,
+      [.doNotInvalidateTokenOnError, .disableErrorRecovery],
+      "The graph request should not invalidate the token on error or disable error recovery"
+    )
+  }
+
+  func testNonceExchangeCompletionWithError() {
+    let completer = createLoginCompleter(
+      parameters: SampleRawLoginCompletionParameters.withNonce,
+      appID: Values.appID
+    )
+
+    var completionWasInvoked = false
+    var capturedParameters: LoginCompletionParameters?
+    completer.completeLogin { parameters in
+      capturedParameters = parameters
+      completionWasInvoked = true
+    }
+
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
+
+    XCTAssertEqual(
+      completer.parameters,
+      capturedParameters,
+      "Should call the completion with the provided parameters"
+    )
+    XCTAssertTrue(
+      completer.parameters.error is SampleError,
+      "Should pass through the error from the graph request"
+    )
+
+    XCTAssertTrue(completionWasInvoked)
+  }
+
+  func testNonceExchangeCompletionWithAccessTokenString() {
+    let completer = createLoginCompleter(
+      parameters: SampleRawLoginCompletionParameters.withNonce,
+      appID: Values.appID
+    )
+    let stubbedResult = [Keys.accessToken: name]
+
+    var completionWasInvoked = false
+    var capturedParameters: LoginCompletionParameters?
+    completer.completeLogin { parameters in
+      capturedParameters = parameters
+      completionWasInvoked = true
+    }
+
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
+
+    XCTAssertEqual(
+      completer.parameters,
+      capturedParameters,
+      "Should call the completion with the provided parameters"
+    )
+    XCTAssertEqual(
+      completer.parameters.accessTokenString,
+      name,
+      "Should set the access token string from the graph request's result"
+    )
+    XCTAssertTrue(completionWasInvoked)
+  }
+
+  func testNonceExchangeCompletionWithAccessTokenStringAndAuthenticationTokenString() {
+    let completer = createLoginCompleter(
+      parameters: SampleRawLoginCompletionParameters.withNonce,
+      appID: Values.appID
+    )
+    let nonce = Values.nonce
+    let stubbedResult = [
+      Keys.accessToken: name,
+      Keys.idToken: Values.idToken
+    ]
+
+    completer.completeLogin(
+      handler: { _ in },
+      nonce: nonce,
+      codeVerifier: Values.codeVerifier
+    )
+
+    graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
+
+    XCTAssertEqual(
+      completer.parameters.accessTokenString,
+      name,
+      "Should set the access token string from the graph request's result"
+    )
+    XCTAssertEqual(
+      completer.parameters.authenticationTokenString,
+      Values.idToken,
+      "Should set the authentication token string from the graph request's result"
+    )
+    XCTAssertEqual(
+      authenticationTokenFactory.capturedTokenString,
+      Values.idToken,
+      "Should call AuthenticationTokenFactory with the expected token string"
+    )
+    XCTAssertEqual(
+      authenticationTokenFactory.capturedNonce,
+      nonce,
+      "Should call AuthenticationTokenFactory with the expected nonce"
+    )
+  }
+
+  func testNonceExchangeWithRandomResults() {
+    let completer = createLoginCompleter(
+      parameters: SampleRawLoginCompletionParameters.withNonce,
+      appID: Values.appID
+    )
+
+    let stubbedResult: [String: Any] = [
+      Keys.accessToken: name,
+      "expires_in": "10000",
+      "data_access_expiration_time": 1
+    ]
+
+    var completionWasInvoked = false
+    completer.completeLogin { _ in
+      // Basically just making sure that nothing crashes here when we feed it garbage results
+      completionWasInvoked = true
+    }
+
+    (0 ..< 100).forEach { _ in
+      let mangledResult = stubbedResult
+      let parameters = Fuzzer.randomize(json: mangledResult)
+
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, parameters, nil)
+
+      XCTAssertTrue(completionWasInvoked)
+      completionWasInvoked = false
+    }
+  }
 
   func testCompleteWithCodeGraphRequestCreation() throws {
     let completer = createLoginCompleter(

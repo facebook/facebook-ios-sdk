@@ -31,6 +31,7 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 @property (nullable, nonatomic, readonly) FBSDKProfile *profile;
 
 @property (nullable, nonatomic, readonly, copy) NSString *accessTokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *nonceString;
 @property (nullable, nonatomic, readonly, copy) NSString *authenticationTokenString;
 @property (nullable, nonatomic, readonly, copy) NSString *code;
 
