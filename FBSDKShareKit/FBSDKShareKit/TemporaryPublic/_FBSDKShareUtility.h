@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKShareMediaContent.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharingContent.h"
 #import "_FBSDKShareUtilityProtocol.h"

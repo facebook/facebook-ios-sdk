@@ -10,8 +10,9 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareMediaContent.h>
+#import <FBSDKShareKit/FBSDKShareMedia.h>
 #import <FBSDKShareKit/FBSDKSharingValidation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKSharePhoto;
