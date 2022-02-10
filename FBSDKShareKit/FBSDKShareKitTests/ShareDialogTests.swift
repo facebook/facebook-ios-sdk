@@ -97,7 +97,7 @@ final class ShareDialogTests: XCTestCase {
       "ShareDialog should use the share utility class for its default share utility dependency"
     )
     XCTAssertTrue(
-      ShareDialog.bridgeAPIRequestFactory is _ShareBridgeAPIRequestFactory,
+      ShareDialog.bridgeAPIRequestFactory is ShareBridgeAPIRequestFactory,
       "ShareDialog should create a new factory for its default bridge API request factory dependency"
     )
     XCTAssertTrue(

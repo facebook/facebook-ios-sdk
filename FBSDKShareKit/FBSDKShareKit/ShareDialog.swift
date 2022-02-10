@@ -167,7 +167,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       internalUtility: InternalUtility.shared,
       settings: Settings.shared,
       shareUtility: _ShareUtility.self,
-      bridgeAPIRequestFactory: _ShareBridgeAPIRequestFactory(),
+      bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
       bridgeAPIRequestOpener: BridgeAPI.shared,
       socialComposeViewControllerFactory: _SocialComposeViewControllerFactory(),
       windowFinder: InternalUtility.shared,

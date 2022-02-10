@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
 import XCTest
 
 final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
-  let factory = _ShareBridgeAPIRequestFactory()
+  let factory = ShareBridgeAPIRequestFactory()
 
   func testFactoryMakesRequests() {
     XCTAssertNotNil(
