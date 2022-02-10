@@ -21,9 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DeviceRequestsHelper)
 @interface FBSDKDeviceRequestsHelper : NSObject
 
-/**
- Get device info to include with the GraphRequest
- */
+/// Get device info to include with the GraphRequest
 @property (class, nonatomic, readonly, copy) NSString *getDeviceInfo;
 
 /**

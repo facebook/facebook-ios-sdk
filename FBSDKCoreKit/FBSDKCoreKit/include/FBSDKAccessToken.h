@@ -62,9 +62,7 @@ NS_SWIFT_NAME(AccessTokenChangeNewKey);
 FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidExpireKey
 NS_SWIFT_NAME(AccessTokenDidExpireKey);
 
-/**
- Represents an immutable access token for using Facebook services.
- */
+/// Represents an immutable access token for using Facebook services.
 NS_SWIFT_NAME(AccessToken)
 @interface FBSDKAccessToken : NSObject <NSCopying, NSObject, NSSecureCoding>
 
@@ -76,9 +74,7 @@ NS_SWIFT_NAME(AccessToken)
  */
 @property (class, nullable, nonatomic, copy) FBSDKAccessToken *currentAccessToken;
 
-/**
- Returns YES if currentAccessToken is not nil AND currentAccessToken is not expired
- */
+/// Returns YES if currentAccessToken is not nil AND currentAccessToken is not expired
 @property (class, nonatomic, readonly, getter = isCurrentAccessTokenActive, assign) BOOL currentAccessTokenIsActive;
 
 /**
@@ -89,62 +85,40 @@ NS_SWIFT_NAME(AccessToken)
  */
 @property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
-/**
- Returns the app ID.
- */
+/// Returns the app ID.
 @property (nonatomic, readonly, copy) NSString *appID;
 
-/**
- Returns the expiration date for data access
- */
+/// Returns the expiration date for data access
 @property (nonatomic, readonly, copy) NSDate *dataAccessExpirationDate;
 
-/**
- Returns the known declined permissions.
- */
+/// Returns the known declined permissions.
 @property (nonatomic, readonly, copy) NSSet<NSString *> *declinedPermissions
   NS_REFINED_FOR_SWIFT;
 
-/**
- Returns the known declined permissions.
- */
+/// Returns the known declined permissions.
 @property (nonatomic, readonly, copy) NSSet<NSString *> *expiredPermissions
   NS_REFINED_FOR_SWIFT;
 
-/**
- Returns the expiration date.
- */
+/// Returns the expiration date.
 @property (nonatomic, readonly, copy) NSDate *expirationDate;
 
-/**
- Returns the known granted permissions.
- */
+/// Returns the known granted permissions.
 @property (nonatomic, readonly, copy) NSSet<NSString *> *permissions
   NS_REFINED_FOR_SWIFT;
 
-/**
- Returns the date the token was last refreshed.
- */
+/// Returns the date the token was last refreshed.
 @property (nonatomic, readonly, copy) NSDate *refreshDate;
 
-/**
- Returns the opaque token string.
- */
+/// Returns the opaque token string.
 @property (nonatomic, readonly, copy) NSString *tokenString;
 
-/**
- Returns the user ID.
- */
+/// Returns the user ID.
 @property (nonatomic, readonly, copy) NSString *userID;
 
-/**
- Returns whether the access token is expired by checking its expirationDate property
- */
+/// Returns whether the access token is expired by checking its expirationDate property
 @property (nonatomic, readonly, getter = isExpired, assign) BOOL expired;
 
-/**
- Returns whether user data access is still active for the given access token
- */
+/// Returns whether user data access is still active for the given access token
 @property (nonatomic, readonly, getter = isDataAccessExpired, assign) BOOL dataAccessExpired;
 
 - (instancetype)init NS_UNAVAILABLE;

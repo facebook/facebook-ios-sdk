@@ -15,9 +15,7 @@ typedef void (^FBSDKGKManagerBlock)(NSError *_Nullable error);
 NS_SWIFT_NAME(GateKeeperManaging)
 @protocol FBSDKGateKeeperManaging
 
-/**
- Returns the bool value of a GateKeeper.
- */
+/// Returns the bool value of a GateKeeper.
 + (BOOL)boolForKey:(nonnull NSString *)key defaultValue:(BOOL)defaultValue;
 
 + (void)loadGateKeepers:(nonnull FBSDKGKManagerBlock)completionBlock;

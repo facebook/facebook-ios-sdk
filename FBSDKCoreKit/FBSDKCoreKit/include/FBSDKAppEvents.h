@@ -79,14 +79,10 @@ NS_SWIFT_NAME(AppEvents)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The shared instance of AppEvents.
- */
+/// The shared instance of AppEvents.
 @property (class, nonatomic, readonly, strong) FBSDKAppEvents *shared;
 
-/**
- Control over event batching/flushing
- */
+/// Control over event batching/flushing
 
 /// The current event flushing behavior specifying when events are sent back to Facebook servers.
 @property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
@@ -446,14 +442,10 @@ NS_SWIFT_NAME(requestForCustomAudienceThirdPartyID(accessToken:));
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
 // UNCRUSTIFY_FORMAT_ON
 
-/**
- Returns the set user data else nil
- */
+/// Returns the set user data else nil
 - (nullable NSString *)getUserData;
 
-/**
- Clears the current user data
- */
+/// Clears the current user data
 - (void)clearUserData;
 
 /**
@@ -468,9 +460,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 - (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type;
 
-/**
- Clears the current user data of certain type
- */
+/// Clears the current user data of certain type
 - (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
 #if !TARGET_OS_TV
@@ -497,9 +487,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 - (void)setIsUnityInitialized:(BOOL)isUnityInitialized;
 
-/**
- Send event bindings to Unity
- */
+/// Send event bindings to Unity
 - (void)sendEventBindingsToUnity;
 
 /*

@@ -18,9 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FBSDKSharePhoto;
 @class PHAsset;
 
-/**
- A video for sharing.
- */
+/// A video for sharing.
 NS_SWIFT_NAME(ShareVideo)
 @interface FBSDKShareVideo : NSObject <FBSDKShareMedia, FBSDKSharingValidation>
 

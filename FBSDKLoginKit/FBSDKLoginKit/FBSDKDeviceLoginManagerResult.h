@@ -19,15 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DeviceLoginManagerResult)
 @interface FBSDKDeviceLoginManagerResult : NSObject
 
-/**
- There is no public initializer.
- */
+// There is no public initializer.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The token.
- */
+/// The token.
 @property (nullable, nonatomic, readonly, strong) FBSDKAccessToken *accessToken;
 
 /**

@@ -13,13 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Location)
 @interface FBSDKLocation : NSObject <NSCopying, NSObject, NSSecureCoding>
 
-/**
- Location id
- */
+/// Location id
 @property (nonatomic, readonly, strong) NSString *id;
-/**
- Location name
- */
+/// Location name
 @property (nonatomic, readonly, strong) NSString *name;
 
 - (instancetype)init NS_UNAVAILABLE;

@@ -10,9 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Flags that indicate how a graph request should be treated in various scenarios
- */
+/// Flags that indicate how a graph request should be treated in various scenarios
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
   FBSDKGraphRequestFlagNone = 0,
 

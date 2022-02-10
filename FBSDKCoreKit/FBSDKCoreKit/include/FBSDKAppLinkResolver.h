@@ -46,9 +46,7 @@ NS_SWIFT_NAME(AppLinkResolver)
 - (void)appLinksFromURLs:(NSArray<NSURL *> *)urls handler:(FBSDKAppLinksBlock)handler
     NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 
-/**
- Allocates and initializes a new instance of FBSDKAppLinkResolver.
- */
+/// Allocates and initializes a new instance of FBSDKAppLinkResolver.
 + (instancetype)resolver
   NS_SWIFT_NAME(init());
 

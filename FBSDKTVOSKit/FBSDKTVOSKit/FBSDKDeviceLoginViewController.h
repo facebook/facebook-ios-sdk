@@ -14,25 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKDeviceLoginViewController;
 
-/**
- A delegate for `FBSDKDeviceLoginViewController`
- */
+/// A delegate for `FBSDKDeviceLoginViewController`
 NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
 @protocol FBSDKDeviceLoginViewControllerDelegate <NSObject>
 
-/**
- Indicates the login was cancelled or timed out.
- */
+/// Indicates the login was cancelled or timed out.
 - (void)deviceLoginViewControllerDidCancel:(FBSDKDeviceLoginViewController *)viewController;
 
-/**
- Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
- */
+/// Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
 - (void)deviceLoginViewControllerDidFinish:(FBSDKDeviceLoginViewController *)viewController;
 
-/**
- Indicates an error with the login.
- */
+/// Indicates an error with the login.
 - (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error;
 
 @end
@@ -57,9 +49,7 @@ NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
 NS_SWIFT_NAME(FBDeviceLoginViewController)
 @interface FBSDKDeviceLoginViewController : FBSDKDeviceViewControllerBase
 
-/**
- The delegate.
- */
+/// The delegate.
 @property (nullable, nonatomic, weak) id<FBSDKDeviceLoginViewControllerDelegate> delegate;
 
 /**

@@ -17,9 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- The result of calling navigate on a FBSDKAppLinkNavigation
- */
+/// The result of calling navigate on a FBSDKAppLinkNavigation
 typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
   /** Indicates that the navigation failed and no app was opened */
   FBSDKAppLinkNavigationTypeFailure,

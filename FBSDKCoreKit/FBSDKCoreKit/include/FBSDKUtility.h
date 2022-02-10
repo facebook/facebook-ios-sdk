@@ -10,9 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Class to contain common utility methods.
- */
+/// Class to contain common utility methods.
 NS_SWIFT_NAME(Utility)
 @interface FBSDKUtility : NSObject
 
@@ -91,9 +89,7 @@ NS_SWIFT_NAME(encode(urlString:));
 NS_SWIFT_NAME(sha256Hash(_:));
 // UNCRUSTIFY_FORMAT_ON
 
-/**
- Returns the graphdomain stored in FBSDKAuthenticationToken
- */
+/// Returns the graphdomain stored in FBSDKAuthenticationToken
 + (nullable NSString *)getGraphDomainFromToken;
 
 /**

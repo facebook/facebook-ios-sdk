@@ -11,9 +11,7 @@
 import FBSDKCoreKit
 import Foundation
 
-/**
- A model for an instant games createAsync cross play request.
- */
+/// A model for an instant games createAsync cross play request.
 @objcMembers
 @objc(FBSDKCreateContextContent)
 public final class CreateContextContent: NSObject, ValidatableProtocol {

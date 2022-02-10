@@ -23,14 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CodeVerifier)
 @interface FBSDKCodeVerifier : NSObject
 
-/**
- The string value of the code verifier
- */
+/// The string value of the code verifier
 @property (nonatomic, readonly, copy) NSString *value;
 
-/**
- The SHA256 hashed challenge of the code verifier
- */
+/// The SHA256 hashed challenge of the code verifier
 @property (nonatomic, readonly, copy) NSString *challenge;
 
 /**

@@ -22,9 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FBSDKLoginManagerLogger;
 @class FBSDKPermission;
 
-/**
- Success Block
- */
+/// Success Block
 typedef void (^ FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 

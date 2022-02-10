@@ -37,14 +37,10 @@ NS_SWIFT_NAME(DeviceLoginManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The delegate.
- */
+/// The delegate.
 @property (nonatomic, weak) id<FBSDKDeviceLoginManagerDelegate> delegate;
 
-/**
- The requested permissions.
- */
+/// The requested permissions.
 @property (nonatomic, readonly, copy) NSArray<NSString *> *permissions;
 
 /**
@@ -59,9 +55,7 @@ NS_SWIFT_NAME(DeviceLoginManager)
  */
 - (void)start;
 
-/**
- Attempts to cancel the device login flow.
- */
+/// Attempts to cancel the device login flow.
 - (void)cancel;
 
 @end

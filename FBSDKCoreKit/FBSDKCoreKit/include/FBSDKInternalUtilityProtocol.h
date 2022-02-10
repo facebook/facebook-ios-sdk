@@ -83,24 +83,16 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 
 - (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
-/**
- Validates that the right URL schemes are registered, throws an NSException if not.
- */
+/// Validates that the right URL schemes are registered, throws an NSException if not.
 - (void)validateURLSchemes;
 
-/**
- add data processing options to the dictionary.
- */
+/// add data processing options to the dictionary.
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, NSString *> *)parameters;
 
-/**
- Converts NSData to a hexadecimal UTF8 String.
- */
+/// Converts NSData to a hexadecimal UTF8 String.
 - (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
-/**
- validates that the app ID is non-nil, throws an NSException if nil.
- */
+/// validates that the app ID is non-nil, throws an NSException if nil.
 - (void)validateAppID;
 
 /**
@@ -120,9 +112,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
                    declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions;
 
-/**
- validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
- */
+/// validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
 - (void)validateFacebookReservedURLSchemes;
 
 /**

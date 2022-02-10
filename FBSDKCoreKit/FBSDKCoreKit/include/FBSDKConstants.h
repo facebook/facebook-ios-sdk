@@ -31,15 +31,11 @@ NS_SWIFT_NAME(ErrorDomain);
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey
 NS_SWIFT_NAME(ErrorArgumentCollectionKey);
 
-/**
- The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
- */
+/// The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentNameKey
 NS_SWIFT_NAME(ErrorArgumentNameKey);
 
-/**
- The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
- */
+/// The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentValueKey
 NS_SWIFT_NAME(ErrorArgumentValueKey);
 
@@ -51,15 +47,11 @@ NS_SWIFT_NAME(ErrorArgumentValueKey);
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorDeveloperMessageKey
 NS_SWIFT_NAME(ErrorDeveloperMessageKey);
 
-/**
- The userInfo key describing a localized description that can be presented to the user.
- */
+/// The userInfo key describing a localized description that can be presented to the user.
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedDescriptionKey
 NS_SWIFT_NAME(ErrorLocalizedDescriptionKey);
 
-/**
- The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
- */
+/// The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
 FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey
 NS_SWIFT_NAME(ErrorLocalizedTitleKey);
 
@@ -103,21 +95,15 @@ NS_SWIFT_NAME(GraphRequestErrorParsedJSONResponseKey);
  @methodgroup Common Code Block typedefs
  */
 
-/**
- Success Block
- */
+/// Success Block
 typedef void (^ FBSDKCodeBlock)(void)
 NS_SWIFT_NAME(CodeBlock);
 
-/**
- Error Block
- */
+/// Error Block
 typedef void (^ FBSDKErrorBlock)(NSError *_Nullable error)
 NS_SWIFT_NAME(ErrorBlock);
 
-/**
- Success Block
- */
+/// Success Block
 typedef void (^ FBSDKSuccessBlock)(BOOL success, NSError *_Nullable error)
 NS_SWIFT_NAME(SuccessBlock);
 

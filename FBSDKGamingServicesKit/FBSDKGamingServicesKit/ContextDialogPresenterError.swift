@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- Errors representing a failure to present a context dialog
- */
+/// Errors representing a failure to present a context dialog
 public enum ContextDialogPresenterError: Error {
   case showCreateContext
   case showSwitchContext

@@ -11,9 +11,7 @@
 import FBSDKCoreKit
 import Foundation
 
-/**
- A dialog to create a context through a web view
- */
+/// A dialog to create a context through a web view
 @objcMembers
 @objc(FBSDKCreateContextDialog)
 public final class CreateContextDialog: ContextWebDialog {

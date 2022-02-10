@@ -30,17 +30,13 @@ NS_SWIFT_NAME(GateKeeperManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- Configures the manager with various dependencies that are required to load the gate keepers
- */
+/// Configures the manager with various dependencies that are required to load the gate keepers
 + (void)  configureWithSettings:(id<FBSDKSettings>)settings
             graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
   graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
                           store:(id<FBSDKDataPersisting>)store;
 
-/**
- Returns the locally cached configuration.
- */
+/// Returns the locally cached configuration.
 + (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
 
 /**

@@ -22,19 +22,13 @@ NS_SWIFT_NAME(Settings)
 + (instancetype)new NS_UNAVAILABLE;
 #endif
 
-/**
- The shared settings instance. Prefer this and the exposed instance methods over the class variants.
- */
+/// The shared settings instance. Prefer this and the exposed instance methods over the class variants.
 @property (class, nonatomic, readonly) FBSDKSettings *sharedSettings;
 
-/**
- Retrieve the current iOS SDK version.
- */
+/// Retrieve the current iOS SDK version.
 @property (nonatomic, readonly, copy) NSString *sdkVersion;
 
-/**
- Retrieve the current default Graph API version.
- */
+/// Retrieve the current default Graph API version.
 @property (nonatomic, readonly, copy) NSString *defaultGraphAPIVersion;
 
 /**
@@ -84,9 +78,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  */
 @property (nonatomic) BOOL shouldUseCachedValuesForExpensiveMetadata;
 
-/**
- A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
- */
+/// A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
 @property (nonatomic) BOOL isGraphErrorRecoveryEnabled;
 
 /**

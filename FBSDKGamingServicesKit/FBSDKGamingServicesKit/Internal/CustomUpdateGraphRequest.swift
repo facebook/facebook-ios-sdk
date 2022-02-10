@@ -13,9 +13,7 @@ struct ServerResult: Codable {
   var success: Bool
 }
 
-/**
- Errors representing a failure to send a custom update graph request
- */
+/// Errors representing a failure to send a custom update graph request
 public enum CustomUpdateGraphRequestError: Error {
   case server(Error)
   case invalidAccessToken

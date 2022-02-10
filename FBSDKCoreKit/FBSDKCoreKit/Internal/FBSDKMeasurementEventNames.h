@@ -25,9 +25,7 @@ FOUNDATION_EXPORT NSString *const FBSDKMeasurementEventArgsKey
 NS_SWIFT_NAME(MeasurementEventArgsKey);
 
 /** Events raised by FBSDKMeasurementEvent for Applink */
-/**
- The name of the event posted when [FBSDKURL URLWithURL:] is called successfully. This represents the successful parsing of an app link URL.
- */
+/// The name of the event posted when [FBSDKURL URLWithURL:] is called successfully. This represents the successful parsing of an app link URL.
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkParseEventName
 NS_SWIFT_NAME(AppLinkParseEventName);
 

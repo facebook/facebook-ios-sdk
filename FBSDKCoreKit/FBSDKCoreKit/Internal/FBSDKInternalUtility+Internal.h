@@ -25,9 +25,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 
 @interface FBSDKInternalUtility (Internal)
 
-/**
- Constructs the scheme for apps that come to the current app through the bridge.
- */
+/// Constructs the scheme for apps that come to the current app through the bridge.
 @property (nonatomic, readonly, copy) NSString *appURLScheme;
 
 /**
@@ -38,9 +36,7 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 @property (nonatomic, readonly, assign) uint64_t currentTimeInMilliseconds;
 
-/**
- The version of the operating system on which the process is executing.
- */
+/// The version of the operating system on which the process is executing.
 @property (nonatomic, readonly, assign) NSOperatingSystemVersion operatingSystemVersion;
 
 - (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
@@ -90,21 +86,15 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
 
-/**
- Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
- */
+/// Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
 - (void)deleteFacebookCookies;
 
 #if !TARGET_OS_TV
-/**
- Returns interface orientation for the key window.
- */
+/// Returns interface orientation for the key window.
 - (UIInterfaceOrientation)statusBarOrientation;
 #endif
 
-/**
- Checks if the permission is a publish permission.
- */
+/// Checks if the permission is a publish permission.
 - (BOOL)isPublishPermission:(NSString *)permission;
 
 #define FB_BASE_URL @"facebook.com"

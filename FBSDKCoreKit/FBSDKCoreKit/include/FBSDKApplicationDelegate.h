@@ -32,9 +32,7 @@ NS_SWIFT_NAME(ApplicationDelegate)
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 #endif
 
-/**
- Gets the singleton instance.
- */
+/// Gets the singleton instance.
 @property (class, nonatomic, readonly, strong) FBSDKApplicationDelegate *sharedInstance
 NS_SWIFT_NAME(shared);
 

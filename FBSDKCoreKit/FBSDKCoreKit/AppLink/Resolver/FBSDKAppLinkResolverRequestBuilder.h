@@ -16,9 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
- */
+/// Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
 NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
 @interface FBSDKAppLinkResolverRequestBuilder : NSObject <FBSDKAppLinkResolverRequestBuilding>
 

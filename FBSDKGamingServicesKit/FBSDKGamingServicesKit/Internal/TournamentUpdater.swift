@@ -16,9 +16,7 @@ public enum TournamentUpdaterError: Error {
   case invalidTournamentID
 }
 
-/**
- A graph request wrapper to update a tournament
- */
+/// A graph request wrapper to update a tournament
 public final class TournamentUpdater {
 
   enum GraphRequest {

@@ -124,29 +124,19 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                        HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags;
 
-/**
- The request parameters.
- */
+/// The request parameters.
 @property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
 
-/**
- The access token string used by the request.
- */
+/// The access token string used by the request.
 @property (nullable, nonatomic, readonly, copy) NSString *tokenString;
 
-/**
- The Graph API endpoint to use for the request, for example "me".
- */
+/// The Graph API endpoint to use for the request, for example "me".
 @property (nonatomic, readonly, copy) NSString *graphPath;
 
-/**
- The HTTPMethod to use for the request, for example "GET" or "POST".
- */
+/// The HTTPMethod to use for the request, for example "GET" or "POST".
 @property (nonatomic, readonly, copy) FBSDKHTTPMethod HTTPMethod;
 
-/**
- The Graph API version to use (e.g., "v2.0")
- */
+/// The Graph API version to use (e.g., "v2.0")
 @property (nonatomic, readonly, copy) NSString *version;
 
 /**

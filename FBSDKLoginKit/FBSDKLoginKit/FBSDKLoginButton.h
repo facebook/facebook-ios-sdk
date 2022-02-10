@@ -60,13 +60,9 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior) {
 NS_SWIFT_NAME(FBLoginButton)
 @interface FBSDKLoginButton : FBSDKButton
 
-/**
- The default audience to use, if publish permissions are requested at login time.
- */
+/// The default audience to use, if publish permissions are requested at login time.
 @property (nonatomic, assign) FBSDKDefaultAudience defaultAudience;
-/**
- Gets or sets the delegate.
- */
+/// Gets or sets the delegate.
 @property (nonatomic, weak) IBOutlet id<FBSDKLoginButtonDelegate> delegate;
 /**
  The permissions to request.
@@ -79,30 +75,20 @@ NS_SWIFT_NAME(FBLoginButton)
  See [the permissions guide]( https://developers.facebook.com/docs/facebook-login/permissions/ ) for more details.
  */
 @property (nonatomic, copy) NSArray<NSString *> *permissions;
-/**
- Gets or sets the desired tooltip behavior.
- */
+/// Gets or sets the desired tooltip behavior.
 @property (nonatomic, assign) FBSDKLoginButtonTooltipBehavior tooltipBehavior;
-/**
- Gets or sets the desired tooltip color style.
- */
+/// Gets or sets the desired tooltip color style.
 @property (nonatomic, assign) FBSDKTooltipColorStyle tooltipColorStyle;
-/**
- Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
- */
+/// Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
 @property (nonatomic, assign) FBSDKLoginTracking loginTracking;
 /**
  Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
  An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
  */
 @property (nullable, nonatomic, copy) NSString *nonce;
-/**
- Gets or sets an optional page id to use for login attempts.
- */
+/// Gets or sets an optional page id to use for login attempts.
 @property (nullable, nonatomic, copy) NSString *messengerPageId;
-/**
- Gets or sets the auth_type to use in the login request. Defaults to rerequest.
- */
+/// Gets or sets the auth_type to use in the login request. Defaults to rerequest.
 @property (nullable, nonatomic) FBSDKLoginAuthType authType;
 
 /// The code verifier used in the PKCE process.

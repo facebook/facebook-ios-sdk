@@ -16,9 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A photo for sharing.
- */
+/// A photo for sharing.
 NS_SWIFT_NAME(SharePhoto)
 @interface FBSDKSharePhoto : NSObject <FBSDKShareMedia, FBSDKSharingValidation>
 

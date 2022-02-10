@@ -13,9 +13,7 @@ import FBSDKCoreKit_Basics
 import FBSDKShareKit
 import Foundation
 
-/**
- A dialog for sending game requests.
- */
+/// A dialog for sending game requests.
 @objcMembers
 @objc(FBSDKGameRequestDialog)
 public final class GameRequestDialog: NSObject {

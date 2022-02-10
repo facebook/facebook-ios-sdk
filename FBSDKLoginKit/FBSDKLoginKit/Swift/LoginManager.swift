@@ -16,9 +16,7 @@ import UIKit
 @available(tvOS, unavailable)
 public typealias LoginResultBlock = (LoginResult) -> Void
 
-/**
- Describes the result of a login attempt.
- */
+/// Describes the result of a login attempt.
 @available(tvOS, unavailable)
 @frozen
 public enum LoginResult {

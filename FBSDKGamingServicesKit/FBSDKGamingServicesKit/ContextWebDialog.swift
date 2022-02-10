@@ -10,9 +10,7 @@ import Foundation
 
 import FBSDKCoreKit
 
-/**
- A super class type for the context dialogs classes that show an in-app webview to display content.
- */
+/// A super class type for the context dialogs classes that show an in-app webview to display content.
 @objcMembers
 @objc(FBSDKContextWebDialog) // swiftlint:disable:next prefer_final_classes
 public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {

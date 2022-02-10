@@ -17,35 +17,23 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DeviceLoginCodeInfo)
 @interface FBSDKDeviceLoginCodeInfo : NSObject
 
-/**
- There is no public initializer.
- */
+// There is no public initializer.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The unique id for this login flow.
- */
+/// The unique id for this login flow.
 @property (nonatomic, readonly, copy) NSString *identifier;
 
-/**
- The short "user_code" that should be presented to the user.
- */
+/// The short "user_code" that should be presented to the user.
 @property (nonatomic, readonly, copy) NSString *loginCode;
 
-/**
- The verification URL.
- */
+/// The verification URL.
 @property (nonatomic, readonly, copy) NSURL *verificationURL;
 
-/**
- The expiration date.
- */
+/// The expiration date.
 @property (nonatomic, readonly, copy) NSDate *expirationDate;
 
-/**
- The polling interval
- */
+/// The polling interval
 @property (nonatomic, readonly, assign) NSUInteger pollingInterval;
 
 @end

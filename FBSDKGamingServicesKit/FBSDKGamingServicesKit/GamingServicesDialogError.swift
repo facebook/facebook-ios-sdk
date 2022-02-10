@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- Errors to describe what went wrong with a GamingServicesDialog
- */
+/// Errors to describe what went wrong with a GamingServicesDialog
 public enum GamingServicesDialogError: Error {
   /// Indicates an invalid content type was used with a given dialog
   case invalidContentType

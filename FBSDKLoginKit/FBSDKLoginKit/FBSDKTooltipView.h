@@ -60,14 +60,10 @@ NS_SWIFT_NAME(FBTooltipView)
  */
 @property (nonatomic, assign) FBSDKTooltipColorStyle colorStyle;
 
-/**
- Gets or sets the message.
- */
+/// Gets or sets the message.
 @property (nullable, nonatomic, copy) NSString *message;
 
-/**
- Gets or sets the optional phrase that comprises the first part of the label (and is highlighted differently).
- */
+/// Gets or sets the optional phrase that comprises the first part of the label (and is highlighted differently).
 @property (nullable, nonatomic, copy) NSString *tagline;
 
 /**

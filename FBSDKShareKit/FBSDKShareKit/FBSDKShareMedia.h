@@ -8,9 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A protocol for media content (photo or video) to be shared.
- */
+/// A protocol for media content (photo or video) to be shared.
 NS_SWIFT_NAME(ShareMedia)
 @protocol FBSDKShareMedia
 

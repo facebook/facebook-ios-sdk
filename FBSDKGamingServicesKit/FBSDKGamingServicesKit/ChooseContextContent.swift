@@ -32,9 +32,7 @@ public enum ChooseContextFilter: Int, CaseIterable {
   }
 }
 
-/**
- A model for an instant games choose context app switch dialog
- */
+/// A model for an instant games choose context app switch dialog
 @objcMembers
 @objc(FBSDKChooseContextContent)
 public final class ChooseContextContent: NSObject, ValidatableProtocol {

@@ -27,9 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FBDeviceLoginButton)
 @interface FBSDKDeviceLoginButton : FBSDKDeviceButton
 
-/**
- Gets or sets the delegate.
- */
+/// Gets or sets the delegate.
 @property (nullable, nonatomic, weak) IBOutlet id<FBSDKDeviceLoginButtonDelegate> delegate;
 
 /**
@@ -59,28 +57,20 @@ NS_SWIFT_NAME(FBDeviceLoginButton)
 NS_SWIFT_NAME(DeviceLoginButtonDelegate)
 @protocol FBSDKDeviceLoginButtonDelegate <NSObject>
 
-/**
- Indicates the login was cancelled or timed out.
- */
+/// Indicates the login was cancelled or timed out.
 - (void)deviceLoginButtonDidCancel:(FBSDKDeviceLoginButton *)button;
 
-/**
- Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
- */
+/// Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)deviceLoginButtonDidLogIn:(FBSDKDeviceLoginButton *)button
 NS_SWIFT_NAME(deviceLoginButtonDidLogIn(_:));
 // UNCRUSTIFY_FORMAT_ON
 
-/**
- Indicates the logout finished. The `FBSDKAccessToken.currentAccessToken` will be nil.
- */
+/// Indicates the logout finished. The `FBSDKAccessToken.currentAccessToken` will be nil.
 - (void)deviceLoginButtonDidLogOut:(FBSDKDeviceLoginButton *)button;
 
-/**
- Indicates an error with the login.
- */
+/// Indicates an error with the login.
 - (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error;
 
 @end

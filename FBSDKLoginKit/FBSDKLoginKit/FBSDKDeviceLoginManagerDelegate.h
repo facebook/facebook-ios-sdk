@@ -8,9 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A delegate for `FBSDKDeviceLoginManager`.
- */
+/// A delegate for `FBSDKDeviceLoginManager`.
 NS_SWIFT_NAME(DeviceLoginManagerDelegate)
 @protocol FBSDKDeviceLoginManagerDelegate <NSObject>
 

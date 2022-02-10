@@ -11,9 +11,7 @@
 import FBSDKCoreKit
 import Foundation
 
-/**
- A model for an instant games switchAsync cross play request.
- */
+/// A model for an instant games switchAsync cross play request.
 @objcMembers
 @objc(FBSDKSwitchContextContent)
 public final class SwitchContextContent: NSObject, ValidatableProtocol {

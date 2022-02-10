@@ -29,9 +29,7 @@
 #import "NSProcessInfo+Protocols.h"
 #import "UIApplication+URLOpener.h"
 
-/**
- Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
- */
+/// Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
 typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   /** There is no active authentication session*/
   FBSDKAuthenticationSessionNone,

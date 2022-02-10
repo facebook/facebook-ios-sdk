@@ -20,19 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(JSExports)
 @protocol FBSDKJSExports <JSExport>
 
-/**
- Returns the current access token string, if available.
- */
+/// Returns the current access token string, if available.
 @property (class, nullable, nonatomic, readonly, copy) NSString *accessTokenString;
 
-/**
- returns true if there is a current access token.
- */
+/// returns true if there is a current access token.
 @property (class, nonatomic, readonly, getter = isLoggedIn, assign) BOOL loggedIn;
 
-/**
- Returns true if there is a current access token and the permission has been granted.
- */
+/// Returns true if there is a current access token and the permission has been granted.
 
 // UNCRUSTIFY_FORMAT_OFF
 + (BOOL)hasGranted:(NSString *)permission

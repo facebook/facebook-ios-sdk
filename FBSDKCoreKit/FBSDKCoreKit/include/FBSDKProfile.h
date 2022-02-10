@@ -48,9 +48,7 @@ NS_SWIFT_NAME(ProfileChangeNewKey);
 typedef void (^ FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nullable error)
 NS_SWIFT_NAME(ProfileBlock);
 
-/**
- Represents the unique identifier for an end user
- */
+/// Represents the unique identifier for an end user
 typedef NSString FBSDKUserIdentifier
   NS_SWIFT_NAME(UserIdentifier);
 
@@ -173,25 +171,15 @@ NS_SWIFT_NAME(Profile)
 @property (class, nullable, nonatomic, strong) FBSDKProfile *currentProfile
 NS_SWIFT_NAME(current);
 
-/**
- The user id
- */
+/// The user id
 @property (nonatomic, readonly, copy) FBSDKUserIdentifier *userID;
-/**
- The user's first name
- */
+/// The user's first name
 @property (nullable, nonatomic, readonly, copy) NSString *firstName;
-/**
- The user's middle name
- */
+/// The user's middle name
 @property (nullable, nonatomic, readonly, copy) NSString *middleName;
-/**
- The user's last name
- */
+/// The user's last name
 @property (nullable, nonatomic, readonly, copy) NSString *lastName;
-/**
- The user's complete name
- */
+/// The user's complete name
 @property (nullable, nonatomic, readonly, copy) NSString *name;
 /**
  A URL to the user's profile.
@@ -203,13 +191,9 @@ NS_SWIFT_NAME(current);
  */
 @property (nullable, nonatomic, readonly) NSURL *linkURL;
 
-/**
- The last time the profile data was fetched.
- */
+/// The last time the profile data was fetched.
 @property (nonatomic, readonly) NSDate *refreshDate;
-/**
- A URL to use for fetching a user's profile image.
- */
+/// A URL to use for fetching a user's profile image.
 @property (nullable, nonatomic, readonly) NSURL *imageURL;
 /**
  The user's email.

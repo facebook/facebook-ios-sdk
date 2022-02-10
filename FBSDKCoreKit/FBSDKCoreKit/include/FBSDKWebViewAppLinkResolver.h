@@ -21,9 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(WebViewAppLinkResolver)
 @interface FBSDKWebViewAppLinkResolver : NSObject <FBSDKAppLinkResolving>
 
-/**
- Gets the instance of a FBSDKWebViewAppLinkResolver.
- */
+/// Gets the instance of a FBSDKWebViewAppLinkResolver.
 @property (class, nonatomic, readonly, strong) FBSDKWebViewAppLinkResolver *sharedInstance
 NS_SWIFT_NAME(shared);
 

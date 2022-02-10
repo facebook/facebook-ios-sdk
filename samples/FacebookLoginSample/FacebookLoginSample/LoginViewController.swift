@@ -9,9 +9,7 @@
 import UIKit
 import FacebookCore
 
-/**
- A base class to avoid polluting the UIViewController namespace
- */
+/// A base class to avoid polluting the UIViewController namespace
 final class LoginViewController: UIViewController {
 
     var isLoggedIn: Bool {

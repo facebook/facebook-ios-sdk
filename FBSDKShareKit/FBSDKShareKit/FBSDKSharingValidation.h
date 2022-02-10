@@ -10,9 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Flags to indicate support for newer bridge options beyond the initial 20130410 implementation.
- */
+/// Flags to indicate support for newer bridge options beyond the initial 20130410 implementation.
 typedef NS_OPTIONS(NSUInteger, FBSDKShareBridgeOptions) {
   FBSDKShareBridgeOptionsDefault = 0,
   FBSDKShareBridgeOptionsPhotoAsset = 1 << 0,
@@ -22,9 +20,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKShareBridgeOptions) {
   FBSDKShareBridgeOptionsWebHashtag = 1 << 4, // if set, pass the hashtag as a string value, not an array of one string
 } NS_SWIFT_NAME(ShareBridgeOptions);
 
-/**
- A base interface for validation of content and media.
- */
+/// A base interface for validation of content and media.
 NS_SWIFT_NAME(SharingValidation)
 @protocol FBSDKSharingValidation
 

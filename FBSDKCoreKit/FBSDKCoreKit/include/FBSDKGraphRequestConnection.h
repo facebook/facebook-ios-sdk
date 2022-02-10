@@ -36,19 +36,13 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 NS_SWIFT_NAME(GraphRequestConnection)
 @interface FBSDKGraphRequestConnection : NSObject <FBSDKGraphRequestConnecting>
 
-/**
- The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
- */
+/// The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
 @property (class, nonatomic, assign) NSTimeInterval defaultConnectionTimeout;
 
-/**
- The delegate object that receives updates.
- */
+/// The delegate object that receives updates.
 @property (nullable, nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
-/**
- Gets or sets the timeout interval to wait for a response before giving up.
- */
+/// Gets or sets the timeout interval to wait for a response before giving up.
 @property (nonatomic, assign) NSTimeInterval timeout;
 
 /**
@@ -70,13 +64,9 @@ NS_SWIFT_NAME(GraphRequestConnection)
  */
 @property (nullable, nonatomic) NSOperationQueue *delegateQueue;
 
-/**
- @methodgroup Class methods
- */
+/// @methodgroup Class methods
 
-/**
- @methodgroup Adding requests
- */
+/// @methodgroup Adding requests
 
 /**
  @method
@@ -136,9 +126,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
         parameters:(nullable NSDictionary<NSString *, id> *)parameters
         completion:(FBSDKGraphRequestCompletion)completion;
 
-/**
- @methodgroup Instance methods
- */
+/// @methodgroup Instance methods
 
 /**
  @method

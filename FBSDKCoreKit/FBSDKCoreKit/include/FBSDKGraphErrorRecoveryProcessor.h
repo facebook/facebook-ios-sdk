@@ -17,9 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FBSDKGraphErrorRecoveryProcessor;
 @protocol FBSDKGraphRequest;
 
-/**
- Defines a delegate for `FBSDKGraphErrorRecoveryProcessor`.
- */
+/// Defines a delegate for `FBSDKGraphErrorRecoveryProcessor`.
 NS_SWIFT_NAME(GraphErrorRecoveryProcessorDelegate)
 @protocol FBSDKGraphErrorRecoveryProcessorDelegate <NSObject>
 
@@ -79,9 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GraphErrorRecoveryProcessor)
 @interface FBSDKGraphErrorRecoveryProcessor : NSObject
 
-/**
- Initializes a GraphErrorRecoveryProcessor with an access token string.
- */
+/// Initializes a GraphErrorRecoveryProcessor with an access token string.
 - (instancetype)initWithAccessTokenString:(NSString *)accessTokenString;
 
 /**

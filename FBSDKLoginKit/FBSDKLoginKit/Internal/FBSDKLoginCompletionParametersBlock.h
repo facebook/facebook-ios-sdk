@@ -14,9 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Success Block
- */
+/// Success Block
 typedef void (^ FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
 NS_SWIFT_NAME(LoginCompletionParametersBlock);
 

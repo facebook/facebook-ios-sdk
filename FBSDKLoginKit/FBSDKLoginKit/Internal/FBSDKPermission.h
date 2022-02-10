@@ -16,9 +16,7 @@ NS_SWIFT_NAME(FBPermission)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- The raw string representation of the permission
- */
+/// The raw string representation of the permission
 @property (nonatomic, readonly, copy) NSString *value;
 
 /**

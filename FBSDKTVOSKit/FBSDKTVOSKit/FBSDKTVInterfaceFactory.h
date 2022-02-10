@@ -34,9 +34,7 @@ NS_SWIFT_NAME(TVInterfaceFactory)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The designated initializer which can chain a `<TVInterfaceCreating>` implementation.
- */
+/// The designated initializer which can chain a `<TVInterfaceCreating>` implementation.
 - (instancetype)initWithInterfaceCreator:(nullable id<TVInterfaceCreating>)interfaceCreator
   NS_DESIGNATED_INITIALIZER;
 

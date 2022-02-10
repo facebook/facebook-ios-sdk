@@ -23,9 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^ FBSDKURLBlock)(NSURL *_Nullable url, NSError *_Nullable error)
 NS_SWIFT_NAME(URLBlock);
 
-/**
- Class containing App Links related utility methods.
- */
+/// Class containing App Links related utility methods.
 NS_SWIFT_NAME(AppLinkUtility)
 @interface FBSDKAppLinkUtility : NSObject
 

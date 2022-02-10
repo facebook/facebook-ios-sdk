@@ -55,9 +55,7 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
  */
 @property (nonatomic, readonly, strong) NSURL *targetURL;
 
-/**
- Gets the query parameters for the target, parsed into an NSDictionary.
- */
+/// Gets the query parameters for the target, parsed into an NSDictionary.
 @property (nonatomic, readonly, strong) NSDictionary<NSString *, id> *targetQueryParameters;
 
 /**
@@ -66,29 +64,19 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
  */
 @property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, id> *appLinkData;
 
-/**
- If this link target is an App Link, this is the data found in extras.
- */
+/// If this link target is an App Link, this is the data found in extras.
 @property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, id> *appLinkExtras;
 
-/**
- The App Link indicating how to navigate back to the referer app, if any.
- */
+/// The App Link indicating how to navigate back to the referer app, if any.
 @property (nullable, nonatomic, readonly, strong) id<FBSDKAppLink> appLinkReferer;
 
-/**
- The URL that was used to create this FBSDKURL.
- */
+/// The URL that was used to create this FBSDKURL.
 @property (nonatomic, readonly, strong) NSURL *inputURL;
 
-/**
- The query parameters of the inputURL, parsed into an NSDictionary.
- */
+/// The query parameters of the inputURL, parsed into an NSDictionary.
 @property (nonatomic, readonly, strong) NSDictionary<NSString *, id> *inputQueryParameters;
 
-/**
- The flag indicating whether the URL comes from auto app link
- */
+/// The flag indicating whether the URL comes from auto app link
 @property (nonatomic, readonly, getter = isAutoAppLink) BOOL isAutoAppLink;
 
 @end

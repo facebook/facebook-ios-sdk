@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- AccessToken Extension
- */
+/// AccessToken Extension
 public extension AccessToken {
   /**
    Returns the known granted permissions.

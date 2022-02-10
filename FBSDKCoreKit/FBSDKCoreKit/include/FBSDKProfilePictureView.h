@@ -41,9 +41,7 @@ typedef NS_ENUM(NSUInteger, FBSDKProfilePictureMode) {
   FBSDKProfilePictureModeLarge,
 } NS_SWIFT_NAME(Profile.PictureMode);
 
-/**
- A view to display a profile picture.
- */
+/// A view to display a profile picture.
 NS_SWIFT_NAME(FBProfilePictureView)
 @interface FBSDKProfilePictureView : UIView
 
@@ -63,14 +61,10 @@ NS_SWIFT_NAME(FBProfilePictureView)
  */
 - (instancetype)initWithProfile:(FBSDKProfile *_Nullable)profile;
 
-/**
- The mode for the receiver to determine the aspect ratio of the source image.
- */
+/// The mode for the receiver to determine the aspect ratio of the source image.
 @property (nonatomic, assign) FBSDKProfilePictureMode pictureMode;
 
-/**
- The profile ID to show the picture for.
- */
+/// The profile ID to show the picture for.
 @property (nonatomic, copy) NSString *profileID;
 
 /**

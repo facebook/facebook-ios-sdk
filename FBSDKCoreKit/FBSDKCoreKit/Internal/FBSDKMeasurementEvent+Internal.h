@@ -13,9 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Provides methods for posting notifications from App Links
- */
+/// Provides methods for posting notifications from App Links
 @interface FBSDKMeasurementEvent (Internal) <FBSDKAppLinkEventPosting>
 
 - (void)postNotificationForEventName:(NSString *)name

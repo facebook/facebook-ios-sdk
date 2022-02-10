@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- Errors representing a failure to create a CustomUpdateContent object
- */
+/// Errors representing a failure to create a CustomUpdateContent object
 public enum CustomUpdateContentError: Error {
   case notInGameContext
   case invalidMessage
