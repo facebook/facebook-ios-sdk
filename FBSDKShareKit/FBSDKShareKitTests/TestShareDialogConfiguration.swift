@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestShareDialogConfiguration: _ShareDialogConfigurationProtocol {
+@testable import FBSDKShareKit
+
+final class TestShareDialogConfiguration: ShareDialogConfigurationProtocol {
 
   var stubbedShouldUseNativeDialogCompletion = false
 

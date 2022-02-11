@@ -44,7 +44,7 @@ public final class MessageDialog: NSObject, SharingDialog {
   public var shouldFailOnDataError = false
 
   private let appAvailabilityChecker: AppAvailabilityChecker
-  private let shareDialogConfiguration: _ShareDialogConfigurationProtocol
+  private let shareDialogConfiguration: ShareDialogConfigurationProtocol
 
   private static var hasCheckedCanOpenURLSchemeRegistered = false
 
@@ -72,7 +72,7 @@ public final class MessageDialog: NSObject, SharingDialog {
     content: SharingContent?,
     delegate: SharingDelegate?,
     appAvailabilityChecker: AppAvailabilityChecker,
-    shareDialogConfiguration: _ShareDialogConfigurationProtocol
+    shareDialogConfiguration: ShareDialogConfigurationProtocol
   ) {
     if !Self.hasCheckedCanOpenURLSchemeRegistered {
       Self.hasCheckedCanOpenURLSchemeRegistered = true
