@@ -244,7 +244,7 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidCancel() {
     let parameters: [AppEvents.ParameterName: Any] = [
-      .dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Cancelled
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.cancelled
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -259,7 +259,7 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidComplete(results: [String: Any]) {
     let parameters: [AppEvents.ParameterName: Any] = [
-      .dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Completed
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.completed
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -274,10 +274,10 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidFail(error: Error) {
     var parameters: [AppEvents.ParameterName: Any] = [
-      .dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Failed
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed
     ]
 
-    parameters[.dialogErrorMessage] = String(describing: error)
+    parameters[.errorMessage] = String(describing: error)
 
     AppEvents.shared.logInternalEvent(
       .shareDialogResult,
@@ -293,23 +293,23 @@ public final class MessageDialog: NSObject, SharingDialog {
     let contentType: String
     switch shareContent {
     case is ShareLinkContent:
-      contentType = FBSDKAppEventsDialogShareContentTypeStatus
+      contentType = ShareAppEventsParameters.ContentTypeValue.status
     case is SharePhotoContent:
-      contentType = FBSDKAppEventsDialogShareContentTypePhoto
+      contentType = ShareAppEventsParameters.ContentTypeValue.photo
     case is ShareVideoContent:
-      contentType = FBSDKAppEventsDialogShareContentTypeVideo
+      contentType = ShareAppEventsParameters.ContentTypeValue.video
     default:
-      contentType = FBSDKAppEventsDialogShareContentTypeUnknown
+      contentType = ShareAppEventsParameters.ContentTypeValue.unknown
     }
 
-    var parameters: [AppEvents.ParameterName: Any] = [.dialogShareContentType: contentType]
+    var parameters: [AppEvents.ParameterName: Any] = [.shareContentType: contentType]
 
     if let uuid = shareContent?.shareUUID {
-      parameters[.dialogShareContentUUID] = uuid
+      parameters[.shareContentUUID] = uuid
     }
 
     if let pageID = shareContent?.pageID {
-      parameters[.dialogShareContentPageID] = pageID
+      parameters[.shareContentPageID] = pageID
     }
 
     AppEvents.shared.logInternalEvent(

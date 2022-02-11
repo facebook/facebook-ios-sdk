@@ -1101,7 +1101,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   private func invokeDelegateDidCancel() {
     AppEvents.shared.logInternalEvent(
       .shareDialogResult,
-      parameters: [.dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Cancelled],
+      parameters: [.outcome: ShareAppEventsParameters.DialogOutcomeValue.cancelled],
       isImplicitlyLogged: true,
       accessToken: .current
     )
@@ -1112,7 +1112,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   private func invokeDelegateDidComplete(results: [String: Any]) {
     AppEvents.shared.logInternalEvent(
       .shareDialogResult,
-      parameters: [.dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Completed],
+      parameters: [.outcome: ShareAppEventsParameters.DialogOutcomeValue.completed],
       isImplicitlyLogged: true,
       accessToken: .current
     )
@@ -1123,8 +1123,8 @@ public final class ShareDialog: NSObject, SharingDialog {
   private func invokeDelegateDidFail(error: Error) {
     let nsError = error as NSError
     let parameters: [AppEvents.ParameterName: Any] = [
-      .dialogOutcome: FBSDKAppEventsDialogOutcomeValue_Failed,
-      .dialogErrorMessage: nsError.description
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed,
+      .errorMessage: nsError.description
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -1141,20 +1141,20 @@ public final class ShareDialog: NSObject, SharingDialog {
     let contentType: String
     switch shareContent {
     case is ShareLinkContent:
-      contentType = FBSDKAppEventsDialogShareContentTypeStatus
+      contentType = ShareAppEventsParameters.ContentTypeValue.status
     case is SharePhotoContent:
-      contentType = FBSDKAppEventsDialogShareContentTypePhoto
+      contentType = ShareAppEventsParameters.ContentTypeValue.photo
     case is ShareVideoContent:
-      contentType = FBSDKAppEventsDialogShareContentTypeVideo
+      contentType = ShareAppEventsParameters.ContentTypeValue.video
     case is ShareCameraEffectContent:
-      contentType = FBSDKAppEventsDialogShareContentTypeCamera
+      contentType = ShareAppEventsParameters.ContentTypeValue.camera
     default:
-      contentType = FBSDKAppEventsDialogShareContentTypeUnknown
+      contentType = ShareAppEventsParameters.ContentTypeValue.unknown
     }
 
     let parameters: [AppEvents.ParameterName: Any] = [
-      .dialogMode: mode.description,
-      .dialogShareContentType: contentType
+      .mode: mode.description,
+      .shareContentType: contentType
     ]
 
     AppEvents.shared.logInternalEvent(
