@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 import FacebookCore
 import UIKit
 
@@ -26,5 +25,4 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             annotation: nil
         )
     }
-
 }
