@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1300"
+   LastUpgradeVersion = "1320"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -84,7 +84,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BAC146DEC49878F3206EDE53"
+               BlueprintIdentifier = "E503762E6371E38D1BD77A42"
                BuildableName = "FBSDKGamingServicesKit.framework"
                BlueprintName = "FBSDKGamingServicesKit-Dynamic"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
