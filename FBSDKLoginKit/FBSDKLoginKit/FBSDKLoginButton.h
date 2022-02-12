@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior) {
   /** The default behavior. The tooltip will only be displayed if
    the app is eligible (determined by possible server round trip) */
   FBSDKLoginButtonTooltipBehaviorAutomatic = 0,
-  /** Force display of the tooltip (typically for UI testing) */
+  /// Force display of the tooltip (typically for UI testing)
   FBSDKLoginButtonTooltipBehaviorForceDisplay = 1,
   /** Force disable. In this case you can still exert more refined
    control by manually constructing a `FBSDKLoginTooltipView` instance. */

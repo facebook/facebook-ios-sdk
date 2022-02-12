@@ -16,8 +16,8 @@
 /// typedef for FBSDKAppEventParameterValue
 typedef NSString *const FBSDKAppEventParameterValue NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.ParameterValue);
 
-/** Yes-valued parameter value to be used with parameter keys that need a Yes/No value */
+/// Yes-valued parameter value to be used with parameter keys that need a Yes/No value
 FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes;
 
-/** No-valued parameter value to be used with parameter keys that need a Yes/No value */
+/// No-valued parameter value to be used with parameter keys that need a Yes/No value
 FOUNDATION_EXPORT FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo;

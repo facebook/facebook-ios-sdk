@@ -35,9 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureNone = 0x00000000,
   // Features in CoreKit
-  /** Essential of CoreKit */
+  /// Essential of CoreKit
   FBSDKFeatureCore = 0x01000000,
-  /** App Events */
+  /// App Events
   FBSDKFeatureAppEvents = 0x01010000,
   FBSDKFeatureCodelessEvents = 0x01010100,
   FBSDKFeatureRestrictiveDataFiltering = 0x01010200,
@@ -53,22 +53,22 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureAEM = 0x01010800,
   FBSDKFeatureAEMConversionFiltering = 0x01010801,
   FBSDKFeatureAEMCatalogMatching = 0x01010802,
-  /** Instrument */
+  /// Instrument
   FBSDKFeatureInstrument = 0x01020000,
   FBSDKFeatureCrashReport = 0x01020100,
   FBSDKFeatureCrashShield = 0x01020101,
   FBSDKFeatureErrorReport = 0x01020200,
 
   // Features in LoginKit
-  /** Essential of LoginKit */
+  /// Essential of LoginKit
   FBSDKFeatureLogin = 0x02000000,
 
   // Features in ShareKit
-  /** Essential of ShareKit */
+  /// Essential of ShareKit
   FBSDKFeatureShare = 0x03000000,
 
   // Features in GamingServicesKit
-  /** Essential of GamingServicesKit */
+  /// Essential of GamingServicesKit
   FBSDKFeatureGamingServices = 0x04000000,
 } NS_SWIFT_NAME(SDKFeature);
 

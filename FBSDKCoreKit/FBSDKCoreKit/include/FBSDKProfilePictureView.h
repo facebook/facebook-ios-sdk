@@ -19,25 +19,15 @@ NS_ASSUME_NONNULL_BEGIN
   Defines the aspect ratio mode for the source image of the profile picture.
  */
 typedef NS_ENUM(NSUInteger, FBSDKProfilePictureMode) {
-  /**
-    A square cropped version of the image will be included in the view.
-   */
+  /// A square cropped version of the image will be included in the view.
   FBSDKProfilePictureModeSquare,
-  /**
-    The original picture's aspect ratio will be used for the source image in the view.
-   */
+  /// The original picture's aspect ratio will be used for the source image in the view.
   FBSDKProfilePictureModeNormal,
-  /**
-    The original picture's aspect ratio will be used for the source image in the view.
-   */
+  /// The original picture's aspect ratio will be used for the source image in the view.
   FBSDKProfilePictureModeAlbum,
-  /**
-    The original picture's aspect ratio will be used for the source image in the view.
-   */
+  /// The original picture's aspect ratio will be used for the source image in the view.
   FBSDKProfilePictureModeSmall,
-  /**
-    The original picture's aspect ratio will be used for the source image in the view.
-   */
+  /// The original picture's aspect ratio will be used for the source image in the view.
   FBSDKProfilePictureModeLarge,
 } NS_SWIFT_NAME(Profile.PictureMode);
 

@@ -11,24 +11,14 @@
     Specifies product availability for Product Catalog product item update
  */
 typedef NS_ENUM(NSUInteger, FBSDKProductAvailability) {
-  /**
-   * Item ships immediately
-   */
+  /// Item ships immediately
   FBSDKProductAvailabilityInStock = 0,
-  /**
-   * No plan to restock
-   */
+  /// No plan to restock
   FBSDKProductAvailabilityOutOfStock,
-  /**
-   * Available in future
-   */
+  /// Available in future
   FBSDKProductAvailabilityPreOrder,
-  /**
-   * Ships in 1-2 weeks
-   */
+  /// Ships in 1-2 weeks
   FBSDKProductAvailabilityAvailableForOrder,
-  /**
-   * Discontinued
-   */
+  /// Discontinued
   FBSDKProductAvailabilityDiscontinued,
 } NS_SWIFT_NAME(AppEvents.ProductAvailability);

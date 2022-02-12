@@ -30,34 +30,22 @@ NS_SWIFT_NAME(LoginErrorDomain);
  */
 typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKLoginError)
 {
-  /**
-    Reserved.
-   */
+  /// Reserved.
   FBSDKLoginErrorReserved = 300,
 
-  /**
-    The error code for unknown errors.
-   */
+  /// The error code for unknown errors.
   FBSDKLoginErrorUnknown,
 
-  /**
-    The user's password has changed and must log in again
-  */
+  /// The user's password has changed and must log in again
   FBSDKLoginErrorPasswordChanged,
 
-  /**
-    The user must log in to their account on www.facebook.com to restore access
-  */
+  /// The user must log in to their account on www.facebook.com to restore access
   FBSDKLoginErrorUserCheckpointed,
 
-  /**
-    Indicates a failure to request new permissions because the user has changed.
-   */
+  /// Indicates a failure to request new permissions because the user has changed.
   FBSDKLoginErrorUserMismatch,
 
-  /**
-    The user must confirm their account with Facebook before logging in
-  */
+  /// The user must confirm their account with Facebook before logging in
   FBSDKLoginErrorUnconfirmedUser,
 
   /**
@@ -67,24 +55,16 @@ typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKLoginError)
    */
   FBSDKLoginErrorSystemAccountAppDisabled,
 
-  /**
-    An error occurred related to Facebook system Account store
-  */
+  /// An error occurred related to Facebook system Account store
   FBSDKLoginErrorSystemAccountUnavailable,
 
-  /**
-    The login response was missing a valid challenge string.
-  */
+  /// The login response was missing a valid challenge string.
   FBSDKLoginErrorBadChallengeString,
 
-  /**
-    The ID token returned in login response was invalid
-  */
+  /// The ID token returned in login response was invalid
   FBSDKLoginErrorInvalidIDToken,
 
-  /**
-   A current access token was required and not provided
-   */
+  /// A current access token was required and not provided
   FBSDKLoginErrorMissingAccessToken,
 } NS_SWIFT_NAME(LoginError);
 
@@ -93,21 +73,13 @@ typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKLoginError)
  Error codes for FBSDKDeviceLoginErrorDomain.
  */
 typedef NS_ERROR_ENUM (FBSDKLoginErrorDomain, FBSDKDeviceLoginError) {
-  /**
-   Your device is polling too frequently.
-   */
+  /// Your device is polling too frequently.
   FBSDKDeviceLoginErrorExcessivePolling = 1349172,
-  /**
-   User has declined to authorize your application.
-   */
+  /// User has declined to authorize your application.
   FBSDKDeviceLoginErrorAuthorizationDeclined = 1349173,
-  /**
-   User has not yet authorized your application. Continue polling.
-   */
+  /// User has not yet authorized your application. Continue polling.
   FBSDKDeviceLoginErrorAuthorizationPending = 1349174,
-  /**
-   The code you entered has expired.
-   */
+  /// The code you entered has expired.
   FBSDKDeviceLoginErrorCodeExpired = 1349152
 } NS_SWIFT_NAME(DeviceLoginError);
 

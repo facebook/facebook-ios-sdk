@@ -23,14 +23,10 @@ NS_SWIFT_NAME(TVOSErrorDomain);
  */
 typedef NS_ERROR_ENUM (FBSDKTVOSErrorDomain, FBSDKTVOSError)
 {
-  /**
-   Reserved.
-   */
+  /// Reserved.
   FBSDKTVOSErrorReserved = 400,
 
-  /**
-   The error code for unknown errors.
-   */
+  /// The error code for unknown errors.
   FBSDKTVOSErrorUnknown,
 } NS_SWIFT_NAME(TVOSError);
 

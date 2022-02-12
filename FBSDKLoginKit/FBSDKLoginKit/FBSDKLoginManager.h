@@ -75,11 +75,11 @@ NS_SWIFT_NAME(LoginManagerLoginResultBlock);
  audience to ask the user to grant publish permission for.
  */
 typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
-  /** Indicates that the user's friends are able to see posts made by the application */
+  /// Indicates that the user's friends are able to see posts made by the application
   FBSDKDefaultAudienceFriends = 0,
-  /** Indicates that only the user is able to see posts made by the application */
+  /// Indicates that only the user is able to see posts made by the application
   FBSDKDefaultAudienceOnlyMe,
-  /** Indicates that all Facebook users are able to see posts made by the application */
+  /// Indicates that all Facebook users are able to see posts made by the application
   FBSDKDefaultAudienceEveryone,
 } NS_SWIFT_NAME(DefaultAudience);
 

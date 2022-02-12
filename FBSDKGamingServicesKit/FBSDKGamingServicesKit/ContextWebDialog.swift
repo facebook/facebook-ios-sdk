@@ -64,9 +64,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  /**
-   Depending on the content size within the browser, this method allows for the resizing of web dialog
-   */
+  /// Depending on the content size within the browser, this method allows for the resizing of web dialog
   public func createWebDialogFrame(
     withWidth width: CGFloat,
     height: CGFloat,

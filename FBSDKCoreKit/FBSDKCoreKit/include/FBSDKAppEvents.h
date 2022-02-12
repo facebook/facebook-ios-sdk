@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
-/**  Optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
+/// Optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID`
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
 

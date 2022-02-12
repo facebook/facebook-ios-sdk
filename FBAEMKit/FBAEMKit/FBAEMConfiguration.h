@@ -23,7 +23,7 @@ NS_SWIFT_NAME(AEMConfiguration)
 
 @property (nonatomic, readonly, assign) NSInteger cutoffTime;
 
-/** The UNIX timestamp of config's valid date and works as a unqiue identifier of the config */
+/// The UNIX timestamp of config's valid date and works as a unqiue identifier of the config
 @property (nonatomic, readonly, assign) NSInteger validFrom;
 @property (nonatomic, readonly, copy) NSString *defaultCurrency;
 @property (nonatomic, readonly, copy) NSString *configMode;

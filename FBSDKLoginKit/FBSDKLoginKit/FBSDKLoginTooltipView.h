@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FBLoginTooltipView)
 @interface FBSDKLoginTooltipView : FBSDKTooltipView
 
-/**  the delegate */
+/// the delegate
 @property (nonatomic, weak) id<FBSDKLoginTooltipViewDelegate> delegate;
 
 /**  if set to YES, the view will always be displayed and the delegate's

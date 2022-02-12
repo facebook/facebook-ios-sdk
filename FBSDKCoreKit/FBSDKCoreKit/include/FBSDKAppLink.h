@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** The version of the App Link protocol that this library supports */
+/// The version of the App Link protocol that this library supports
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersion
 NS_SWIFT_NAME(AppLinkVersion);
 
@@ -46,7 +46,7 @@ NS_SWIFT_NAME(AppLink)
 NS_SWIFT_NAME(init(sourceURL:targets:webURL:));
 // UNCRUSTIFY_FORMAT_ON
 
-/** The URL from which this FBSDKAppLink was derived */
+/// The URL from which this FBSDKAppLink was derived
 @property (nullable, nonatomic, readonly, strong) NSURL *sourceURL;
 
 /**
@@ -55,7 +55,7 @@ NS_SWIFT_NAME(init(sourceURL:targets:webURL:));
  */
 @property (nonatomic, readonly, copy) NSArray<id<FBSDKAppLinkTarget>> *targets;
 
-/** The fallback web URL to use if no targets are installed on this device. */
+/// The fallback web URL to use if no targets are installed on this device.
 @property (nullable, nonatomic, readonly, strong) NSURL *webURL;
 
 @end

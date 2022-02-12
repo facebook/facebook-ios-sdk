@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**  NSNotificationCenter name indicating a result of a failed log flush attempt. The posted object will be an NSError instance. */
+/// NSNotificationCenter name indicating a result of a failed log flush attempt. The posted object will be an NSError instance.
 FOUNDATION_EXPORT NSNotificationName const FBSDKAppEventsLoggingResultNotification
 NS_SWIFT_NAME(AppEventsLoggingResult);

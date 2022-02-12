@@ -10,23 +10,17 @@ import Foundation
 
 /// AccessToken Extension
 public extension AccessToken {
-  /**
-   Returns the known granted permissions.
-   */
+  /// Returns the known granted permissions.
   var permissions: Set<Permission> {
     Set(__permissions.map { Permission(stringLiteral: $0) })
   }
 
-  /**
-   Returns the known declined permissions.
-   */
+  /// Returns the known declined permissions.
   var declinedPermissions: Set<Permission> {
     Set(__declinedPermissions.map { Permission(stringLiteral: $0) })
   }
 
-  /**
-   Returns the known expired permissions.
-   */
+  /// Returns the known expired permissions.
   var expiredPermissions: Set<Permission> {
     Set(__expiredPermissions.map { Permission(stringLiteral: $0) })
   }

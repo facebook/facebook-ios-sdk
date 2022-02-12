@@ -123,24 +123,16 @@ NS_SWIFT_NAME(SuccessBlock);
  */
 typedef NS_ERROR_ENUM (FBSDKErrorDomain, FBSDKCoreError)
 {
-  /**
-   Reserved.
-   */
+  /// Reserved.
   FBSDKErrorReserved = 0,
 
-  /**
-   The error code for errors from invalid encryption on incoming encryption URLs.
-   */
+  /// The error code for errors from invalid encryption on incoming encryption URLs.
   FBSDKErrorEncryption,
 
-  /**
-   The error code for errors from invalid arguments to SDK methods.
-   */
+  /// The error code for errors from invalid arguments to SDK methods.
   FBSDKErrorInvalidArgument,
 
-  /**
-   The error code for unknown errors.
-   */
+  /// The error code for unknown errors.
   FBSDKErrorUnknown,
 
   /**
@@ -149,9 +141,7 @@ typedef NS_ERROR_ENUM (FBSDKErrorDomain, FBSDKCoreError)
    */
   FBSDKErrorNetwork,
 
-  /**
-   The error code for errors encountered during an App Events flush.
-   */
+  /// The error code for errors encountered during an App Events flush.
   FBSDKErrorAppEventsFlush,
 
   /**
@@ -184,29 +174,19 @@ typedef NS_ERROR_ENUM (FBSDKErrorDomain, FBSDKCoreError)
    */
   FBSDKErrorDialogUnavailable,
 
-  /**
-   Indicates an operation failed because a required access token was not found.
-   */
+  /// Indicates an operation failed because a required access token was not found.
   FBSDKErrorAccessTokenRequired,
 
-  /**
-   Indicates an app switch (typically for a dialog) failed because the destination app is out of date.
-   */
+  /// Indicates an app switch (typically for a dialog) failed because the destination app is out of date.
   FBSDKErrorAppVersionUnsupported,
 
-  /**
-   Indicates an app switch to the browser (typically for a dialog) failed.
-   */
+  /// Indicates an app switch to the browser (typically for a dialog) failed.
   FBSDKErrorBrowserUnavailable,
 
-  /**
-   Indicates that a bridge api interaction was interrupted.
-   */
+  /// Indicates that a bridge api interaction was interrupted.
   FBSDKErrorBridgeAPIInterruption,
 
-  /**
-   Indicates that a bridge api response creation failed.
-   */
+  /// Indicates that a bridge api response creation failed.
   FBSDKErrorBridgeAPIResponse,
 } NS_SWIFT_NAME(CoreError);
 
@@ -215,11 +195,11 @@ typedef NS_ERROR_ENUM (FBSDKErrorDomain, FBSDKCoreError)
  Describes the category of Facebook error. See `FBSDKGraphRequestErrorKey`.
  */
 typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError) {
-  /** The default error category that is not known to be recoverable. Check `FBSDKLocalizedErrorDescriptionKey` for a user facing message. */
+  /// The default error category that is not known to be recoverable. Check `FBSDKLocalizedErrorDescriptionKey` for a user facing message.
   FBSDKGraphRequestErrorOther = 0,
-  /** Indicates the error is temporary (such as server throttling). While a recoveryAttempter will be provided with the error instance, the attempt is guaranteed to succeed so you can simply retry the operation if you do not want to present an alert.  */
+  /// Indicates the error is temporary (such as server throttling). While a recoveryAttempter will be provided with the error instance, the attempt is guaranteed to succeed so you can simply retry the operation if you do not want to present an alert.
   FBSDKGraphRequestErrorTransient = 1,
-  /** Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action. */
+  /// Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action.
   FBSDKGraphRequestErrorRecoverable = 2,
 } NS_SWIFT_NAME(GraphRequestError);
 

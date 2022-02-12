@@ -11,9 +11,7 @@ import UIKit
 
 public struct TournamentConfig {
 
-  /**
-   Title of the tournament
-   */
+  /// Title of the tournament
   public var title: String?
 
   /**
@@ -22,24 +20,16 @@ public struct TournamentConfig {
    */
   public var endTime: TimeInterval?
 
-  /**
-   The type of score the tournament accepts and ranks. See enum `ScoreType`
-   */
+  /// The type of score the tournament accepts and ranks. See enum `ScoreType`
   public var scoreType: TournamentScoreType?
 
-  /**
-   The sort order of the scores for the tournament
-   */
+  /// The sort order of the scores for the tournament
   public var sortOrder: TournamentSortOrder?
 
-  /**
-   Payload of the tournament
-   */
+  /// Payload of the tournament
   public var payload: String?
 
-  /**
-   The image associated with the tournament
-   */
+  /// The image associated with the tournament
   public var image: UIImage?
 
   /// Creates a new tournament configuration with the given parameters. Passing the created tournament to the `ShareTournamentDialog.show(score:tournamentConfig:)` will share and create the tournament server side.

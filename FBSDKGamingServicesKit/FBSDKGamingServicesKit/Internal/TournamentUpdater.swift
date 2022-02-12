@@ -30,9 +30,7 @@ public final class TournamentUpdater {
 
   let graphRequestFactory: GraphRequestFactoryProtocol
 
-  /**
-   Creates the TournamentUpdater
-   */
+  /// Creates the TournamentUpdater
   public convenience init() {
     self.init(graphRequestFactory: GraphRequestFactory())
   }

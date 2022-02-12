@@ -37,19 +37,13 @@ public enum ChooseContextFilter: Int, CaseIterable {
 @objc(FBSDKChooseContextContent)
 public final class ChooseContextContent: NSObject, ValidatableProtocol {
 
-  /**
-   This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
-   */
+  /// This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
   public var filter = ChooseContextFilter.none
 
-  /**
-   This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
-   */
+  /// This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
   public var maxParticipants = 0
 
-  /**
-   This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
-   */
+  /// This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
   public var minParticipants = 0
 
   public static func filtersName(forFilters filter: ChooseContextFilter) -> String {

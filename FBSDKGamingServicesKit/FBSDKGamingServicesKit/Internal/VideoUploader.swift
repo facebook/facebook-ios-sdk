@@ -41,14 +41,10 @@ final class VideoUploader: VideoUploading {
     "\(graphNode)/\(Keys.videoUploaderEdge)"
   }
 
-  /**
-   The graph node to which video should be uploaded
-   */
+  /// The graph node to which video should be uploaded
   var graphNode = Keys.videoUploaderDefaultGraphNode
 
-  /**
-   Receiver's delegate
-   */
+  /// Receiver's delegate
   weak var delegate: VideoUploaderDelegate?
 
   /**
@@ -87,9 +83,7 @@ final class VideoUploader: VideoUploading {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  /**
-   Start the upload process
-   */
+  /// Start the upload process
   func start() {
     guard videoSize != 0 else {
       let uploadError = errorWithMessage("Invalid video size: \(videoSize)")

@@ -13,14 +13,10 @@ import Foundation
 /// The protocol sdk dialogs must conform to and implement all the following methods.
 @objc(FBSDKDialog)
 public protocol DialogProtocol {
-  /**
-   The receiver's delegate or nil if it doesn't have a delegate.
-   */
+  /// The receiver's delegate or nil if it doesn't have a delegate.
   weak var delegate: ContextDialogDelegate? { get set }
 
-  /**
-   The content object used to create the specific dialog
-   */
+  /// The content object used to create the specific dialog
   var dialogContent: ValidatableProtocol? { get set }
 
   /**
@@ -29,9 +25,7 @@ public protocol DialogProtocol {
    */
   func show() -> Bool
 
-  /**
-   Validates the content for the dialog
-   */
+  /// Validates the content for the dialog
   func validate() throws
 }
 

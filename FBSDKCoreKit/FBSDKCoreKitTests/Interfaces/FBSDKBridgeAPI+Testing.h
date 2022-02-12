@@ -35,15 +35,15 @@ NS_SWIFT_NAME(AuthenticationSessionHandling)
 
 /// Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
 typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
-  /** There is no active authentication session*/
+  /// There is no active authentication session
   FBSDKAuthenticationSessionNone,
-  /** The authentication session has started*/
+  /// The authentication session has started
   FBSDKAuthenticationSessionStarted,
-  /** System dialog ("app wants to use facebook.com  to sign in")  to access facebook.com was presented to the user*/
+  /// System dialog ("app wants to use facebook.com  to sign in")  to access facebook.com was presented to the user
   FBSDKAuthenticationSessionShowAlert,
-  /** Web browser with log in to authentication was presented to the user*/
+  /// Web browser with log in to authentication was presented to the user
   FBSDKAuthenticationSessionShowWebBrowser,
-  /** Authentication session was canceled by system. It happens when app goes to background while alert requesting access to facebook.com is presented*/
+  /// Authentication session was canceled by system. It happens when app goes to background while alert requesting access to facebook.com is presented
   FBSDKAuthenticationSessionCanceledBySystem,
 }
 NS_SWIFT_NAME(AuthenticationSession);

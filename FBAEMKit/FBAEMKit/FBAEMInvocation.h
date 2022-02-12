@@ -41,7 +41,7 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nonatomic, readonly, copy) NSString *configMode;
 
-/** The unique identifier of the config, it's the same as config's validFrom */
+/// The unique identifier of the config, it's the same as config's validFrom
 @property (nonatomic, readonly, assign) NSInteger configID;
 
 @property (nonatomic, readonly) NSMutableSet<NSString *> *recordedEvents;
