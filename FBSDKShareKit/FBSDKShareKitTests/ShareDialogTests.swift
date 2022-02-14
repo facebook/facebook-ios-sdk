@@ -40,7 +40,6 @@ final class ShareDialogTests: XCTestCase {
     socialComposeViewController = TestSocialComposeViewController()
     socialComposeViewControllerFactory = TestSocialComposeViewControllerFactory()
     socialComposeViewControllerFactory.stubbedSocialComposeViewController = socialComposeViewController
-    socialComposeViewControllerFactory.canMakeSocialComposeViewController = true
     windowFinder = TestWindowFinder()
     errorFactory = TestErrorFactory()
 

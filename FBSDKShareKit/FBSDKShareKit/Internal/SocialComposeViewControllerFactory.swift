@@ -11,20 +11,8 @@
 import Social
 
 final class SocialComposeViewControllerFactory: _SocialComposeViewControllerFactoryProtocol {
-  var canMakeSocialComposeViewController: Bool {
-    SLComposeViewController.isAvailable(
-      forServiceType: _FBSDKSocialComposeServiceType
-    )
-  }
-
   func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {
-    if canMakeSocialComposeViewController {
-      return SLComposeViewController(
-        forServiceType: _FBSDKSocialComposeServiceType
-      ) as? _SocialComposeViewControllerProtocol
-    } else {
-      return nil
-    }
+    SLComposeViewController(forServiceType: _FBSDKSocialComposeServiceType) as? _SocialComposeViewControllerProtocol
   }
 }
 #endif

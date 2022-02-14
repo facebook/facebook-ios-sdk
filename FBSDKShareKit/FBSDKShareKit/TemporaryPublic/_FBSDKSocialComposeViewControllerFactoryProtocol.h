@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(_SocialComposeViewControllerFactoryProtocol)
 @protocol _FBSDKSocialComposeViewControllerFactory
 
-@property (nonatomic, readonly) BOOL canMakeSocialComposeViewController;
-
 - (nullable id<_FBSDKSocialComposeViewController>)makeSocialComposeViewController;
 
 @end

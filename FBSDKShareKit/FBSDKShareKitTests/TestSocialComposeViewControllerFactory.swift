@@ -11,7 +11,6 @@ import UIKit
 
 @objcMembers
 final class TestSocialComposeViewControllerFactory: NSObject, _SocialComposeViewControllerFactoryProtocol {
-  var canMakeSocialComposeViewController = false
   var stubbedSocialComposeViewController: (UIViewController & _SocialComposeViewControllerProtocol)?
 
   func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {

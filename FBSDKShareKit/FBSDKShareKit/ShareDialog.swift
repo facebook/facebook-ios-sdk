@@ -342,7 +342,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       return false
     }
 
-    return Self.socialComposeViewControllerFactory?.canMakeSocialComposeViewController ?? false
+    return Self.socialComposeViewControllerFactory != nil
   }
 
   private var canAttributeThroughShareSheet: Bool {
