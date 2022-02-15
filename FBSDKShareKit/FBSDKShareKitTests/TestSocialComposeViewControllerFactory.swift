@@ -7,34 +7,37 @@
  */
 
 @testable import FBSDKShareKit
+
 import Foundation
+import Social
 import UIKit
 
-@objcMembers
-final class TestSocialComposeViewControllerFactory: NSObject, SocialComposeViewControllerFactoryProtocol {
-  var stubbedSocialComposeViewController: (UIViewController & _SocialComposeViewControllerProtocol)?
+final class TestSocialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol {
+  var stubbedSocialComposeViewController: SLComposeViewController?
 
-  func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {
-    stubbedSocialComposeViewController
+  func makeSocialComposeViewController() -> SLComposeViewController {
+    guard let viewController = stubbedSocialComposeViewController else {
+      fatalError("A stubbed view controller is required")
+    }
+
+    return viewController
   }
 }
 
-@objcMembers
-final class TestSocialComposeViewController: UIViewController, _SocialComposeViewControllerProtocol {
-  var completionHandler: _FBSDKSocialComposeViewControllerCompletionHandler = { _ in }
+final class TestSocialComposeViewController: SLComposeViewController {
   var stubbedSetInitialText = false
   var capturedInitialText: String?
 
-  func setInitialText(_ text: String) -> Bool {
+  override func setInitialText(_ text: String) -> Bool {
     capturedInitialText = text
     return stubbedSetInitialText
   }
 
-  func add(_ image: UIImage) -> Bool {
+  override func add(_ image: UIImage) -> Bool {
     false
   }
 
-  func add(_ url: URL) -> Bool {
+  override func add(_ url: URL) -> Bool {
     false
   }
 }

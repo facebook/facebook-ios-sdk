@@ -723,39 +723,31 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    let composeViewController = controllerFactory
-      .makeSocialComposeViewController() as? (_SocialComposeViewControllerProtocol & UIViewController)
-    guard let composer = composeViewController else {
-      throw errorFactory.error(
-        domain: ShareErrorDomain,
-        code: ShareError.dialogNotAvailable.rawValue,
-        userInfo: nil,
-        message: "Error creating social compose view controller.",
-        underlyingError: nil
-      )
-    }
+    let composeViewController = controllerFactory.makeSocialComposeViewController()
 
     if let initialText = try calculateInitialText(),
        !initialText.isEmpty {
-      composer.setInitialText(initialText)
+      composeViewController.setInitialText(initialText)
     }
 
     contentImages.forEach { image in
-      composer.add(image)
+      composeViewController.add(image)
     }
     contentURLs?.forEach { url in
-      composer.add(url)
+      composeViewController.add(url)
     }
     contentVideoURLs.forEach { url in
-      composer.add(url)
+      composeViewController.add(url)
     }
 
-    composer.completionHandler = { [self] result in
+    composeViewController.completionHandler = { [self] result in
       switch result {
       case .cancelled:
         invokeDelegateDidCancel()
       case .done:
         invokeDelegateDidComplete(results: [:])
+      @unknown default:
+        break
       }
 
       DispatchQueue.main.async {
@@ -763,7 +755,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       }
     }
 
-    viewController.present(composer, animated: true)
+    viewController.present(composeViewController, animated: true)
   }
 
   private func showWeb() throws {

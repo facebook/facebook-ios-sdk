@@ -14,7 +14,3 @@
 #import <FBSDKShareKit/_FBSDKShareDefines.h>
 #import <FBSDKShareKit/_FBSDKShareUtility.h>
 #import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
-
-#if !TARGET_OS_TV
- #import <FBSDKShareKit/_FBSDKSocialComposeViewController.h>
-#endif

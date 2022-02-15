@@ -8,8 +8,10 @@
 
 #if !os(tvOS)
 
+import Social
+
 protocol SocialComposeViewControllerFactoryProtocol {
-  func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol?
+  func makeSocialComposeViewController() -> SLComposeViewController
 }
 
 #endif
