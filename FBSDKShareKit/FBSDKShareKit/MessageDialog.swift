@@ -244,7 +244,7 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidCancel() {
     let parameters: [AppEvents.ParameterName: Any] = [
-      .outcome: ShareAppEventsParameters.DialogOutcomeValue.cancelled
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.cancelled,
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -259,7 +259,7 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidComplete(results: [String: Any]) {
     let parameters: [AppEvents.ParameterName: Any] = [
-      .outcome: ShareAppEventsParameters.DialogOutcomeValue.completed
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.completed,
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -274,7 +274,7 @@ public final class MessageDialog: NSObject, SharingDialog {
 
   private func invokeDelegateDidFail(error: Error) {
     var parameters: [AppEvents.ParameterName: Any] = [
-      .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed
+      .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed,
     ]
 
     parameters[.errorMessage] = String(describing: error)

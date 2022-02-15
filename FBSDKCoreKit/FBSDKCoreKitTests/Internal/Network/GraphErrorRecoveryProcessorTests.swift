@@ -31,7 +31,7 @@ final class GraphErrorRecoveryProcessorTests: XCTestCase {
         code: recoverableCode,
         userInfo: [
           Keys.errorKey: recoverableCode,
-          NSRecoveryAttempterErrorKey: attempter
+          NSRecoveryAttempterErrorKey: attempter,
         ]
       )
     }

@@ -57,7 +57,7 @@ final class RawServerConfigurationResponseFixtures: NSObject {
       Keys.eventBindings: Fuzzer.random,
       Keys.suggestedEventsSetting: Fuzzer.random,
       Keys.monitoringConfiguration: Fuzzer.random,
-      Keys.implicitLoggingEnabled: Fuzzer.random
+      Keys.implicitLoggingEnabled: Fuzzer.random,
     ]
   }
 }

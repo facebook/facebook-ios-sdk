@@ -33,7 +33,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack1 = [
       "(4 DEV METHODS)",
       "+[FBSDKMetadataIndexer crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let featureName1 = CrashShield._getFeature(callstack1)
@@ -44,7 +44,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack2 = [
       "(4 DEV METHODS)",
       "+[FBSDKCodelessIndexer crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let featureName2 = CrashShield._getFeature(callstack2)
@@ -55,7 +55,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack3 = [
       "(4 DEV METHODS)",
       "+[FBSDKRestrictiveDataFilterManager crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let featureName3 = CrashShield._getFeature(callstack3)
@@ -66,7 +66,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack4 = [
       "(4 DEV METHODS)",
       "+[FBSDKErrorReport crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let featureName4 = CrashShield._getFeature(callstack4)
@@ -78,7 +78,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack5 = [
       "(4 DEV METHODS)",
       "+[FBSDKVideoUploader crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let featureName5 = CrashShield._getFeature(callstack5)
@@ -89,7 +89,7 @@ final class CrashShieldTests: XCTestCase {
     let callstack = [
       "(4 DEV METHODS)",
       "+[FBSDKVideoUploader crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     for _ in 0 ..< 100 {
@@ -198,7 +198,7 @@ final class CrashShieldTests: XCTestCase {
       "AEM": SDKFeature.AEM,
       "LoginKit": SDKFeature.login,
       "ShareKit": SDKFeature.share,
-      "GamingServicesKit": SDKFeature.gamingServices
+      "GamingServicesKit": SDKFeature.gamingServices,
     ]
 
     for (key, value) in pairs {
@@ -253,7 +253,7 @@ final class CrashShieldTests: XCTestCase {
     let callStack = [
       "(4 DEV METHODS)",
       "+[\(className) crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let crashLogs = [
@@ -265,8 +265,8 @@ final class CrashShieldTests: XCTestCase {
         "app_id": "2416630768476176",
         "device_model": "iPad5,3",
         "device_os": "ios",
-        "device_os_version": "13.1.3"
-      ]
+        "device_os_version": "13.1.3",
+      ],
     ]
     return crashLogs
   }

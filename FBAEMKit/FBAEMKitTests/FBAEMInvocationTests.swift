@@ -109,16 +109,16 @@ final class FBAEMInvocationTests: XCTestCase {
             Keys.values: [
               [
                 Keys.currency: Values.USD,
-                Keys.amount: 100
-              ]
-            ]
+                Keys.amount: 100,
+              ],
+            ],
           ],
           [
             Keys.eventName: Values.unlock,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ])! // swiftlint:disable:this force_unwrapping
 
   var config2 = AEMConfiguration(json: [
@@ -138,8 +138,8 @@ final class FBAEMInvocationTests: XCTestCase {
             Keys.eventName: Values.donate,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ])! // swiftlint:disable:this force_unwrapping
 
   func testInvocationWithInvalidAppLinkData() {
@@ -198,7 +198,7 @@ final class FBAEMInvocationTests: XCTestCase {
       "acs_token": "test_token_12345",
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
-      "catalog_id": "test_catalog_1234"
+      "catalog_id": "test_catalog_1234",
     ])
 
     XCTAssertEqual(
@@ -227,7 +227,7 @@ final class FBAEMInvocationTests: XCTestCase {
     let invocation = AEMInvocation(appLinkData: [
       "acs_token": "test_token_12345",
       "campaign_ids": "test_campaign_1234",
-      "advertiser_id": "test_advertiserid_coffee"
+      "advertiser_id": "test_advertiserid_coffee",
     ])
 
     XCTAssertNotNil(
@@ -245,7 +245,7 @@ final class FBAEMInvocationTests: XCTestCase {
       "acs_token": "debuggingtoken",
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
-      "test_deeplink": 1
+      "test_deeplink": 1,
     ] as [String: Any]
     let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
 
@@ -270,7 +270,7 @@ final class FBAEMInvocationTests: XCTestCase {
       "acs_token": "debuggingtoken",
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
-      "has_skan": true
+      "has_skan": true,
     ] as [String: Any]
     let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
 
@@ -298,14 +298,14 @@ final class FBAEMInvocationTests: XCTestCase {
     let parameters = invocation?.processedParameters([
       Keys.content: #"[{"id": "123", "quantity": 5}]"#,
       Keys.contentID: #"["id123", "id456"]"#,
-      Keys.contentType: "product"
+      Keys.contentType: "product",
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
         Keys.content: [content],
         Keys.contentID: contentIDs,
-        Keys.contentType: "product"
+        Keys.contentType: "product",
       ],
       "Processed parameters are not expected"
     )
@@ -318,14 +318,14 @@ final class FBAEMInvocationTests: XCTestCase {
     let parameters = invocation?.processedParameters([
       Keys.content: #"[{"id": "123", "quantity": 5}]"#,
       Keys.contentID: "001",
-      Keys.contentType: "product"
+      Keys.contentType: "product",
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
         Keys.content: [content],
         Keys.contentID: "001",
-        Keys.contentType: "product"
+        Keys.contentType: "product",
       ],
       "Processed parameters are not expected"
     )
@@ -337,14 +337,14 @@ final class FBAEMInvocationTests: XCTestCase {
     let parameters = invocation?.processedParameters([
       Keys.content: #"[{"id": ,"quantity": 5}]"#,
       Keys.contentID: "001",
-      Keys.contentType: "product"
+      Keys.contentType: "product",
     ]) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
         Keys.content: #"[{"id": ,"quantity": 5}]"#,
         Keys.contentID: "001",
-        Keys.contentType: "product"
+        Keys.contentType: "product",
       ],
       "Processed parameters are not expected"
     )
@@ -386,7 +386,7 @@ final class FBAEMInvocationTests: XCTestCase {
 
     let config = invocation._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID]
+      Values.brandMode: [configWithBusinessID],
     ])
     XCTAssertEqual(
       config?.validFrom,
@@ -409,7 +409,7 @@ final class FBAEMInvocationTests: XCTestCase {
 
     let config = invocation._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID]
+      Values.brandMode: [configWithBusinessID],
     ])
     XCTAssertEqual(
       config?.validFrom,
@@ -439,7 +439,7 @@ final class FBAEMInvocationTests: XCTestCase {
     )
     let config = invocation?._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID]
+      Values.brandMode: [configWithBusinessID],
     ])
     XCTAssertEqual(invocation?.configID, 10000, "Should set the invocation with expected configID")
     XCTAssertEqual(invocation?.configMode, Values.defaultMode, "Should set the invocation with expected configMode")
@@ -476,7 +476,7 @@ final class FBAEMInvocationTests: XCTestCase {
     let config = invocation?._findConfig([
       Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
       Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
-      Values.cpasMode: [cpasConfig]
+      Values.cpasMode: [cpasConfig],
     ])
     XCTAssertEqual(invocation?.configID, 10000, "Should set the invocation with expected configID")
     XCTAssertEqual(invocation?.configMode, Values.cpasMode, "Should set the invocation with expected configMode")
@@ -501,7 +501,7 @@ final class FBAEMInvocationTests: XCTestCase {
     let configs = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
       Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
-      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()]
+      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()],
     ]
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
@@ -614,7 +614,7 @@ final class FBAEMInvocationTests: XCTestCase {
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID]
+      Values.brandMode: [configWithBusinessID],
     ]
     let isAttributed = invocation.attributeEvent(
       Values.purchase,
@@ -623,7 +623,7 @@ final class FBAEMInvocationTests: XCTestCase {
       parameters: [
         Keys.content: #"[{"id": "abc", "quantity": 5}]"#,
         Keys.contentID: "001",
-        Keys.contentType: "product"
+        Keys.contentType: "product",
       ],
       configs: configs,
       shouldUpdateCache: true
@@ -647,7 +647,7 @@ final class FBAEMInvocationTests: XCTestCase {
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID]
+      Values.brandMode: [configWithBusinessID],
     ]
     let isAttributed = invocation.attributeEvent(
       Values.purchase,
@@ -656,7 +656,7 @@ final class FBAEMInvocationTests: XCTestCase {
       parameters: [
         Keys.content: #"[{"id": "123", "quantity": 5}]"#,
         Keys.contentID: "001",
-        Keys.contentType: "product"
+        Keys.contentType: "product",
       ],
       configs: configs,
       shouldUpdateCache: true
@@ -678,7 +678,7 @@ final class FBAEMInvocationTests: XCTestCase {
     )! // swiftlint:disable:this force_unwrapping
     let configs = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
-      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()]
+      Values.cpasMode: [SampleAEMConfigurations.createCpasConfig()],
     ]
     let isAttributed = invocation.attributeEvent(
       Values.purchase,
@@ -689,14 +689,14 @@ final class FBAEMInvocationTests: XCTestCase {
           [
             Keys.identity: "abc",
             Keys.itemPrice: NSNumber(value: 100),
-            Keys.quantity: NSNumber(value: 10)
+            Keys.quantity: NSNumber(value: 10),
           ],
           [
             Keys.identity: "test",
             Keys.itemPrice: NSNumber(value: 200),
-            Keys.quantity: NSNumber(value: 20)
-          ]
-        ]
+            Keys.quantity: NSNumber(value: 20),
+          ],
+        ],
       ],
       configs: configs,
       shouldUpdateCache: true
@@ -895,7 +895,7 @@ final class FBAEMInvocationTests: XCTestCase {
     invocation.setPriority(42) // Set the second highest priority with boost priority in the conversion rules
     invocation.setRecordedEvents([Values.purchase]) // Add the optimzied event
     invocation.setRecordedValues([
-      Values.purchase: [Values.USD: 100]
+      Values.purchase: [Values.USD: 100],
     ])
     XCTAssertTrue(
       invocation.updateConversionValue(withConfigs: configs, event: Values.purchase, shouldBoostPriority: true),
@@ -925,7 +925,7 @@ final class FBAEMInvocationTests: XCTestCase {
     invocation.setRecordedEvents(
       [
         Values.purchase,
-        lowestPriorityRule.events.first!.eventName // swiftlint:disable:this force_unwrapping
+        lowestPriorityRule.events.first!.eventName, // swiftlint:disable:this force_unwrapping
       ]
     )
     XCTAssertFalse(
@@ -1002,7 +1002,7 @@ final class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithoutCatalogID() {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
     let configs = [
-      Values.defaultMode: [config1]
+      Values.defaultMode: [config1],
     ]
 
     XCTAssertFalse(
@@ -1014,7 +1014,7 @@ final class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithoutExpectedEvent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
     let configs = [
-      Values.defaultMode: [config1]
+      Values.defaultMode: [config1],
     ]
 
     XCTAssertFalse(
@@ -1026,7 +1026,7 @@ final class FBAEMInvocationTests: XCTestCase {
   func testIsOptimizedEventWithExpectedEvent() {
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
     let configs = [
-      Values.defaultMode: [config1]
+      Values.defaultMode: [config1],
     ]
 
     XCTAssertTrue(

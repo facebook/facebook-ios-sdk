@@ -68,7 +68,7 @@ final class LoginConfigurationTests: XCTestCase {
   func testCreatingWithTracking() {
     let preferences = [
       LoginTracking.enabled,
-      .limited
+      .limited,
     ]
     preferences.forEach { preference in
       let config = LoginConfiguration(tracking: preference)

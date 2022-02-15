@@ -56,7 +56,7 @@ final class PermissionTests: XCTestCase {
     PermissionMapping(permission: .pagesManageCta, name: "pages_manage_cta"),
     PermissionMapping(permission: .pagesManageInstantArticles, name: "pages_manage_instant_articles"),
     PermissionMapping(permission: .adsRead, name: "ads_read"),
-    PermissionMapping(permission: .custom("test_permission"), name: "test_permission")
+    PermissionMapping(permission: .custom("test_permission"), name: "test_permission"),
   ]
 
   func testCases() {

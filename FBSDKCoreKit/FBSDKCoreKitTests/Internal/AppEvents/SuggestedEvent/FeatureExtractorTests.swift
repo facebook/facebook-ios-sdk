@@ -37,7 +37,7 @@ final class FeatureExtractorTests: XCTestCase {
                           [
                             "classname": "UILabel",
                             "classtypebitmask": "1024",
-                            "text": "Order Summary"
+                            "text": "Order Summary",
                           ],
                           [
                             "classname": "UIStackView",
@@ -45,18 +45,18 @@ final class FeatureExtractorTests: XCTestCase {
                             "childviews": [
                               [
                                 "classname": "UIView",
-                                "classtypebitmask": "0"
+                                "classtypebitmask": "0",
                               ],
                               [
                                 "classname": "UILabel",
                                 "classtypebitmask": "1024",
-                                "text": "Coffee 5"
+                                "text": "Coffee 5",
                               ],
                               [
                                 "classname": "UILabel",
-                                "classtypebitmask": "Price: $5.99"
-                              ]
-                            ]
+                                "classtypebitmask": "Price: $5.99",
+                              ],
+                            ],
                           ],
                           [
                             "classname": "UIStackView",
@@ -64,64 +64,64 @@ final class FeatureExtractorTests: XCTestCase {
                             "childviews": [
                               [
                                 "classname": "UIView",
-                                "classtypebitmask": "0"
+                                "classtypebitmask": "0",
                               ],
                               [
                                 "classname": "UILabel",
                                 "classtypebitmask": "1024",
-                                "text": "Quantity"
+                                "text": "Quantity",
                               ],
                               [
                                 "classname": "UILabel",
-                                "classtypebitmask": "1"
-                              ]
-                            ]
+                                "classtypebitmask": "1",
+                              ],
+                            ],
                           ],
                           [
                             "classname": "UITextField",
                             "classtypebitmask": "2056",
-                            "hint": "Credit Card Credit Card"
+                            "hint": "Credit Card Credit Card",
                           ],
                           [
                             "classname": "UITextField",
                             "classtypebitmask": "2056",
-                            "hint": "Shipping Address Shipping Address"
+                            "hint": "Shipping Address Shipping Address",
                           ],
                           [
                             "classname": "UIButton",
                             "classtypebitmask": "24",
                             "is_interacted": 1,
-                            "hint": "Confirm Order"
-                          ]
-                        ]
-                      ]
-                    ]
-                  ]
-                ]
+                            "hint": "Confirm Order",
+                          ],
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
               ],
               [
                 "classname": "UITabBar",
-                "classtypebitmask": "0"
-              ]
-            ]
-          ]
-        ]
-      ]
-    ]
+                "classtypebitmask": "0",
+              ],
+            ],
+          ],
+        ],
+      ],
+    ],
   ]
 
   let interactedNode: [String: Any] = [
     "classname": "UIButton",
     "classtypebitmask": "24",
     "is_interacted": 1,
-    "hint": "Confirm Order"
+    "hint": "Confirm Order",
   ]
 
   let siblings = [
     [
       "classname": "UILabel",
       "classtypebitmask": "1024",
-      "text": "Order Summary"
+      "text": "Order Summary",
     ],
     [
       "classname": "UIStackView",
@@ -129,18 +129,18 @@ final class FeatureExtractorTests: XCTestCase {
       "childviews": [
         [
           "classname": "UIView",
-          "classtypebitmask": "0"
+          "classtypebitmask": "0",
         ],
         [
           "classname": "UILabel",
           "classtypebitmask": "1024",
-          "text": "Coffee 5"
+          "text": "Coffee 5",
         ],
         [
           "classname": "UILabel",
-          "classtypebitmask": "Price: $5.99"
-        ]
-      ]
+          "classtypebitmask": "Price: $5.99",
+        ],
+      ],
     ],
     [
       "classname": "UIStackView",
@@ -148,35 +148,35 @@ final class FeatureExtractorTests: XCTestCase {
       "childviews": [
         [
           "classname": "UIView",
-          "classtypebitmask": "0"
+          "classtypebitmask": "0",
         ],
         [
           "classname": "UILabel",
           "classtypebitmask": "1024",
-          "text": "Quantity"
+          "text": "Quantity",
         ],
         [
           "classname": "UILabel",
-          "classtypebitmask": "1"
-        ]
-      ]
+          "classtypebitmask": "1",
+        ],
+      ],
     ],
     [
       "classname": "UITextField",
       "classtypebitmask": "2056",
-      "hint": "Credit Card Credit Card"
+      "hint": "Credit Card Credit Card",
     ],
     [
       "classname": "UITextField",
       "classtypebitmask": "2056",
-      "hint": "Shipping Address Shipping Address"
+      "hint": "Shipping Address Shipping Address",
     ],
     [
       "classname": "UIButton",
       "classtypebitmask": "24",
       "is_interacted": 1,
-      "hint": "Confirm Order"
-    ]
+      "hint": "Confirm Order",
+    ],
   ]
 
   let modelManager = TestOnDeviceMLModelManager()
@@ -300,7 +300,7 @@ final class FeatureExtractorTests: XCTestCase {
     let labelNode = [
       "classname": "UILabel",
       "classtypebitmask": "1024",
-      "text": "Coffee 5"
+      "text": "Coffee 5",
     ]
 
     XCTAssertTrue(FeatureExtractor.isButton(interactedNode))

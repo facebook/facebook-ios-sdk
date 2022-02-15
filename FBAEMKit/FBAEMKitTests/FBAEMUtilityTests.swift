@@ -27,19 +27,19 @@ final class FBAEMUtilityTests: XCTestCase {
         [
           Keys.identity: "12345",
           Keys.itemPrice: NSNumber(value: 10),
-          Keys.quantity: NSNumber(value: 2)
+          Keys.quantity: NSNumber(value: 2),
         ],
         [
           Keys.identity: "12345",
           Keys.itemPrice: NSNumber(value: 100),
-          Keys.quantity: NSNumber(value: 3)
+          Keys.quantity: NSNumber(value: 3),
         ],
         [
           Keys.identity: "testing",
           Keys.itemPrice: NSNumber(value: 100),
-          Keys.quantity: NSNumber(value: 2)
+          Keys.quantity: NSNumber(value: 2),
         ],
-      ]
+      ],
     ]
 
     let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
@@ -51,9 +51,9 @@ final class FBAEMUtilityTests: XCTestCase {
       Keys.content: [
         [
           Keys.identity: "12345",
-          Keys.quantity: NSNumber(value: 2)
-        ]
-      ]
+          Keys.quantity: NSNumber(value: 2),
+        ],
+      ],
     ]
 
     let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
@@ -65,9 +65,9 @@ final class FBAEMUtilityTests: XCTestCase {
       Keys.content: [
         [
           Keys.identity: "12345",
-          Keys.itemPrice: NSNumber(value: 100)
-        ]
-      ]
+          Keys.itemPrice: NSNumber(value: 100),
+        ],
+      ],
     ]
 
     let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
@@ -79,7 +79,7 @@ final class FBAEMUtilityTests: XCTestCase {
       Keys.content: getJsonString(object: [
         [Keys.identity: NSNumber(value: 123)],
         [Keys.identity: NSNumber(value: 456)],
-      ])
+      ]),
     ])
     XCTAssertEqual(contentID, #"["123","456"]"#)
   }
@@ -89,14 +89,14 @@ final class FBAEMUtilityTests: XCTestCase {
       Keys.content: getJsonString(object: [
         [Keys.identity: "123"],
         [Keys.identity: "456"],
-      ])
+      ]),
     ])
     XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
   func testGetContentFallback() {
     let contentID = AEMUtility.shared.getContentID([
-      Keys.contentID: #"["123","456"]"#
+      Keys.contentID: #"["123","456"]"#,
     ])
     XCTAssertEqual(contentID, #"["123","456"]"#)
   }

@@ -30,7 +30,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     headerDictionary = [
       "alg": header.alg,
       "typ": header.typ,
-      "kid": header.kid
+      "kid": header.kid,
     ]
   }
 

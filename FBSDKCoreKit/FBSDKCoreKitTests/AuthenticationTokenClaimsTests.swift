@@ -108,7 +108,7 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     let keys = [
       "name", "given_name", "middle_name", "family_name", "email",
       "picture", "user_friends", "user_birthday", "user_age_range",
-      "user_hometown", "user_location", "user_gender", "user_link"
+      "user_hometown", "user_location", "user_gender", "user_link",
     ]
 
     try keys.forEach { key in
@@ -186,11 +186,11 @@ extension AuthenticationTokenClaimsTests {
       userAgeRange: ["min": 21],
       userHometown: [
         "id": "112724962075996",
-        "name": "Martinez, California"
+        "name": "Martinez, California",
       ],
       userLocation: [
         "id": "110843418940484",
-        "name": "Seattle, Washington"
+        "name": "Seattle, Washington",
       ],
       userGender: "male",
       userLink: "facebook.com"
@@ -205,7 +205,7 @@ extension AuthenticationTokenClaimsTests {
       "exp": claims.exp,
       "iat": claims.iat,
       "jti": claims.jti,
-      "sub": claims.sub
+      "sub": claims.sub,
     ]
 
     let optionalValues: [String: Any?] = [
@@ -221,7 +221,7 @@ extension AuthenticationTokenClaimsTests {
       "user_hometown": claims.userHometown,
       "user_location": claims.userLocation,
       "user_gender": claims.userGender,
-      "user_link": claims.userLink
+      "user_link": claims.userLink,
     ]
 
     for (key, potentialValue) in optionalValues {

@@ -35,26 +35,26 @@ final class FBAEMEventTests: XCTestCase {
     Keys.values: [
       [
         Keys.currency: Values.usd,
-        Keys.amount: 100
+        Keys.amount: 100,
       ],
       [
         Keys.currency: Values.JPY,
-        Keys.amount: 1000
-      ]
-    ]
+        Keys.amount: 1000,
+      ],
+    ],
   ]
   var validEventWithValues: FBAEMEvent? = FBAEMEvent(json: [
     Keys.eventName: Values.purchase,
     Keys.values: [
       [
         Keys.currency: Values.usd,
-        Keys.amount: 100
+        Keys.amount: 100,
       ],
       [
         Keys.currency: Values.JPY,
-        Keys.amount: 1000
-      ]
-    ]
+        Keys.amount: 1000,
+      ],
+    ],
   ])
 
   var validEventWithoutValues: FBAEMEvent? = FBAEMEvent(json: [
@@ -80,7 +80,7 @@ final class FBAEMEventTests: XCTestCase {
     )
     let expectedValues: [String: NSNumber] = [
       Values.USD: 100,
-      Values.JPY: 1000
+      Values.JPY: 1000,
     ]
     XCTAssertEqual(
       event?.values,
@@ -96,13 +96,13 @@ final class FBAEMEventTests: XCTestCase {
       Keys.values: [
         [
           Keys.currency: Values.usd,
-          Keys.amount: 100
+          Keys.amount: 100,
         ],
         [
           Keys.currency: Values.JPY,
-          Keys.amount: 1000
-        ]
-      ]
+          Keys.amount: 1000,
+        ],
+      ],
     ]
     XCTAssertNil(FBAEMEvent(json: invalidData))
     invalidData = [
@@ -115,8 +115,8 @@ final class FBAEMEventTests: XCTestCase {
         [
           Keys.currency: 1000,
           Keys.amount: Values.jpy,
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(FBAEMEvent(json: invalidData))
     invalidData = [
@@ -129,8 +129,8 @@ final class FBAEMEventTests: XCTestCase {
         [
           Keys.currency: 1000,
           Keys.amount: Values.jpy,
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(FBAEMEvent(json: invalidData))
   }

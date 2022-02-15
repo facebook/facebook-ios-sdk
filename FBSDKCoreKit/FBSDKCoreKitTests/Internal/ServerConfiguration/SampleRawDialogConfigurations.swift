@@ -22,7 +22,7 @@ enum SampleRawDialogConfigurations {
     [
       Keys.name: name,
       Keys.url: "https://www.example.com",
-      Keys.versions: ["1"]
+      Keys.versions: ["1"],
     ]
   }
 }

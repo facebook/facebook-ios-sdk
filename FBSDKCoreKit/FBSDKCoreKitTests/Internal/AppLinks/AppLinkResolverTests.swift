@@ -42,17 +42,17 @@ final class AppLinkResolverTests: XCTestCase {
   let linkValues1 = [
     Keys.appName: Values.appName,
     Keys.appStoreId: Values.appStoreId,
-    Keys.url: Values.url
+    Keys.url: Values.url,
   ]
   let linkValues2 = [
     Keys.appName: Values.appName,
     Keys.appStoreId: Values.appStoreId2,
-    Keys.url: Values.url
+    Keys.url: Values.url,
   ]
   let androidLinkValues = [
     Keys.appName: Values.appName,
     Keys.package: Values.package,
-    Keys.url: Values.url
+    Keys.url: Values.url,
   ]
 
   let queryParameters = [String: String]()
@@ -97,10 +97,10 @@ final class AppLinkResolverTests: XCTestCase {
       Keys.appLinkURL.absoluteString: [
         Keys.appLinks: [
           Keys.iPhone: [linkValues2],
-          Keys.ios: [linkValues1]
+          Keys.ios: [linkValues1],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -127,10 +127,10 @@ final class AppLinkResolverTests: XCTestCase {
       Keys.appLinkURL.absoluteString: [
         Keys.appLinks: [
           Keys.iPad: [linkValues2],
-          Keys.ios: [linkValues1]
+          Keys.ios: [linkValues1],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -157,10 +157,10 @@ final class AppLinkResolverTests: XCTestCase {
       Keys.appLinkURL.absoluteString: [
         Keys.appLinks: [
           Keys.android: [androidLinkValues],
-          Keys.ios: [linkValues1]
+          Keys.ios: [linkValues1],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -179,8 +179,8 @@ final class AppLinkResolverTests: XCTestCase {
 
     let result = [
       Keys.appLinkURL.absoluteString: [
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -204,11 +204,11 @@ final class AppLinkResolverTests: XCTestCase {
 
     let result = [
       Keys.appLinkURL.absoluteString: [
-        Keys.id: Keys.appLinkURL.absoluteString
+        Keys.id: Keys.appLinkURL.absoluteString,
       ],
       Keys.appLinkURL2.absoluteString: [
-        Keys.id: Keys.appLinkURL2.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL2.absoluteString,
+      ],
     ]
 
     var resolved: [URL: AppLink]?
@@ -235,8 +235,8 @@ final class AppLinkResolverTests: XCTestCase {
 
     let result = [
       Keys.appLinkURL.absoluteString: [
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -262,11 +262,11 @@ final class AppLinkResolverTests: XCTestCase {
         Keys.appLinks: [
           Keys.web: [
             Keys.url: Values.fallbackURL,
-            Keys.shouldFallback: Values.true
-          ]
+            Keys.shouldFallback: Values.true,
+          ],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -288,11 +288,11 @@ final class AppLinkResolverTests: XCTestCase {
       Keys.appLinkURL.absoluteString: [
         Keys.appLinks: [
           Keys.web: [
-            Keys.shouldFallback: Values.true
-          ]
+            Keys.shouldFallback: Values.true,
+          ],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -315,11 +315,11 @@ final class AppLinkResolverTests: XCTestCase {
         Keys.appLinks: [
           Keys.web: [
             Keys.url: Values.fallbackURL,
-            Keys.shouldFallback: Values.false
-          ]
+            Keys.shouldFallback: Values.false,
+          ],
         ],
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) {
@@ -363,8 +363,8 @@ final class AppLinkResolverTests: XCTestCase {
   func testSetsCache() throws {
     let result = [
       Keys.appLinkURL.absoluteString: [
-        Keys.id: Keys.appLinkURL.absoluteString
-      ]
+        Keys.id: Keys.appLinkURL.absoluteString,
+      ],
     ]
 
     resolver.appLink(from: Keys.appLinkURL) { _, _ in }

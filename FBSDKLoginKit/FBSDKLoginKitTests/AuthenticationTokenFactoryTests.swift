@@ -228,7 +228,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
   func testVerifySignatureWithInvalidCertificates() throws {
     let certificates = [
       try createMangledCertificateData(),
-      try createValidIncorrectCertificateData()
+      try createValidIncorrectCertificateData(),
     ]
 
     certificates.forEach { certificateData in
@@ -301,13 +301,13 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
   var validRawCertificateResponse: [String: Any] {
     [
       certificateKey: certificate,
-      "foo": "Not a certificate"
+      "foo": "Not a certificate",
     ]
   }
 
   func createMangledCertificateData() throws -> Data {
     let object = [
-      certificateKey: certificate.replacingOccurrences(of: "a", with: "b")
+      certificateKey: certificate.replacingOccurrences(of: "a", with: "b"),
     ]
 
     return try JSONSerialization.data(withJSONObject: object, options: [])
@@ -319,7 +319,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
 
   func createValidIncorrectCertificateData() throws -> Data {
     let certificates = [
-      certificateKey: incorrectCertificate
+      certificateKey: incorrectCertificate,
     ]
     return try JSONSerialization.data(withJSONObject: certificates, options: [])
   }

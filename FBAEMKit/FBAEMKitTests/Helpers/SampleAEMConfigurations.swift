@@ -55,10 +55,10 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 100
-                  ]
-                ]
-              ]
+                    Keys.amount: 100,
+                  ],
+                ],
+              ],
             ],
           ],
           [
@@ -70,10 +70,10 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 0
-                  ]
-                ]
-              ]
+                    Keys.amount: 0,
+                  ],
+                ],
+              ],
             ],
           ],
           [
@@ -82,7 +82,7 @@ enum SampleAEMConfigurations {
             Keys.events: [
               [
                 Keys.eventName: Values.addToCart,
-              ]
+              ],
             ],
           ],
           [
@@ -91,10 +91,10 @@ enum SampleAEMConfigurations {
             Keys.events: [
               [
                 Keys.eventName: Values.donate,
-              ]
+              ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -124,8 +124,8 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.donate,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -152,8 +152,8 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.purchase,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -181,8 +181,8 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.donate,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -209,8 +209,8 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.purchase,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }

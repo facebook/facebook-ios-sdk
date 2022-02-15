@@ -32,6 +32,8 @@ file_name:
     ShareAppEventNames.swift,
     ShareDialogMode.swift,
   ]
+trailing_comma:
+  mandatory_comma: true
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"
@@ -196,6 +198,7 @@ only_rules:
   - switch_case_alignment
   - syntactic_sugar
   - trailing_closure
+  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace

@@ -12,11 +12,11 @@ final class RestrictiveDataTests: XCTestCase {
 
   let restrictiveParam1 = [
     "restrictive_key_1": "restrictive_value_1",
-    "restrictive_key_2": "restrictive_value_2"
+    "restrictive_key_2": "restrictive_value_2",
   ]
   let restrictiveParam2 = [
     "restrictive_key_1": "restrictive_value_3",
-    "restrictive_key_2": "restrictive_value_4"
+    "restrictive_key_2": "restrictive_value_4",
   ]
   let deprecatedParam1 = ["deprecated_value_1", "deprecated_value_2"]
   let deprecatedParam2 = ["deprecated_value_3", "deprecated_value_4"]
@@ -29,13 +29,13 @@ final class RestrictiveDataTests: XCTestCase {
       testEvent1.rawValue: [
         "restrictive_param": restrictiveParam1,
         "deprecated_param": deprecatedParam1,
-        "is_deprecated_event": true
+        "is_deprecated_event": true,
       ],
       testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": deprecatedParam2,
-        "is_deprecated_event": false
-      ]
+        "is_deprecated_event": false,
+      ],
     ]
 
     let restrictiveData = createRestrictiveData(
@@ -91,7 +91,7 @@ final class RestrictiveDataTests: XCTestCase {
         "deprecated_param": deprecatedParam2,
         "new_filed": "new_filed_string_2",
         "is_deprecated_event": false,
-      ]
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,
@@ -142,7 +142,7 @@ final class RestrictiveDataTests: XCTestCase {
       testEvent2.rawValue: [
         "deprecated_param": deprecatedParam2,
         "is_deprecated_event": false,
-      ]
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,
@@ -194,7 +194,7 @@ final class RestrictiveDataTests: XCTestCase {
       testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "is_deprecated_event": false,
-      ]
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,
@@ -242,8 +242,8 @@ final class RestrictiveDataTests: XCTestCase {
       ],
       testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
-        "deprecated_param": deprecatedParam2
-      ]
+        "deprecated_param": deprecatedParam2,
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,
@@ -295,8 +295,8 @@ final class RestrictiveDataTests: XCTestCase {
       testEvent2.rawValue: [
         "restrictive_param": [:],
         "deprecated_param": deprecatedParam2,
-        "is_deprecated_event": false
-      ]
+        "is_deprecated_event": false,
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,
@@ -349,8 +349,8 @@ final class RestrictiveDataTests: XCTestCase {
       testEvent2.rawValue: [
         "restrictive_param": restrictiveParam2,
         "deprecated_param": [],
-        "is_deprecated_event": false
-      ]
+        "is_deprecated_event": false,
+      ],
     ]
     let restrictiveData = createRestrictiveData(
       events: events,

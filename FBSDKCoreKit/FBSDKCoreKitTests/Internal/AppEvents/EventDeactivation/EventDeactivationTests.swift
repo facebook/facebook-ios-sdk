@@ -21,12 +21,12 @@ final class EventDeactivationTests: XCTestCase {
   let rawConfiguration = [
     "restrictiveParams": [
       "fb_mobile_catalog_update": [
-        "restrictive_param": ["first_name": "6"]
+        "restrictive_param": ["first_name": "6"],
       ],
       "manual_initiated_checkout": [
-        "deprecated_param": ["deprecated_3"]
-      ]
-    ]
+        "deprecated_param": ["deprecated_3"],
+      ],
+    ],
   ]
   lazy var serverConfiguration = ServerConfigurationFixtures.config(withDictionary: rawConfiguration)
   lazy var provider = TestServerConfigurationProvider(configuration: serverConfiguration)

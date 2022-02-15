@@ -229,7 +229,7 @@ public final class GameRequestDialog: NSObject {
       "message": content.message,
       "object_id": content.objectID,
       "title": content.title,
-      "suggestions": content.recipientSuggestions.joined(separator: ",")
+      "suggestions": content.recipientSuggestions.joined(separator: ","),
     ]
 
     if let actionTypeName = GameRequestURLProvider.actionTypeName(for: content.actionType) {
@@ -251,7 +251,7 @@ public final class GameRequestDialog: NSObject {
       "message": content.message,
       "object_id": content.objectID,
       "title": content.title,
-      "cta": content.cta
+      "cta": content.cta,
     ]
 
     if let actionTypeName = GameRequestURLProvider.actionTypeName(for: content.actionType) {

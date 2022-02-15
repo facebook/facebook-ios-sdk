@@ -215,7 +215,7 @@ final class GateKeeperManagerTests: XCTestCase {
       GateKeeperManager.gateKeepers as NSDictionary?,
       [
         "key": "foo",
-        "value": true
+        "value": true,
       ],
       "Loading gatekeepers should update local gatekeepers with those from the persistent store"
     )
@@ -334,7 +334,7 @@ final class GateKeeperManagerTests: XCTestCase {
 
     let expected = [
       "foo": true,
-      "bar": false
+      "bar": false,
     ] as NSDictionary
 
     XCTAssertEqual(

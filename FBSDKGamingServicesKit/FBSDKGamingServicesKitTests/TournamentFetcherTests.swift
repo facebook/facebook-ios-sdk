@@ -261,9 +261,9 @@ final class TournamentFetcherTests: XCTestCase {
         [
           Keys.tournamentTitle: Values.tournamentTitle,
           Keys.tournamentEndTime: Values.tournamentEndTime,
-          Keys.tournamentID: Values.tournamentID
-        ]
-      ]
+          Keys.tournamentID: Values.tournamentID,
+        ],
+      ],
     ]
 
     static let validFull = [
@@ -272,18 +272,18 @@ final class TournamentFetcherTests: XCTestCase {
           Keys.tournamentTitle: Values.tournamentTitle,
           Keys.tournamentEndTime: Values.tournamentEndTime,
           Keys.tournamentID: Values.tournamentID,
-          Keys.tournamentPayload: Values.tournamentPayload
-        ]
-      ]
+          Keys.tournamentPayload: Values.tournamentPayload,
+        ],
+      ],
     ]
 
     static let missingIdentifier = [
       "data": [
         [
           Keys.tournamentTitle: Values.tournamentTitle,
-          Keys.tournamentEndTime: Values.tournamentEndTime
-        ]
-      ]
+          Keys.tournamentEndTime: Values.tournamentEndTime,
+        ],
+      ],
     ]
 
     static let invalidGraphAPIResponse = ["not_data": []]

@@ -119,7 +119,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
 
   func testParsingWithDialogConfigurationsMissingDataKey() {
     let response = [
-      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any]()
+      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any](),
     ]
 
     ServerConfigurationManager.shared.processLoadRequestResponse(
@@ -136,12 +136,12 @@ final class ServerConfigurationManagerTests: XCTestCase {
   func testParsingWithValidDialogConfigurations() {
     let expectedRawConfigurations = [
       SampleRawDialogConfigurations.createValid(name: name),
-      SampleRawDialogConfigurations.createValid(name: "foo")
+      SampleRawDialogConfigurations.createValid(name: "foo"),
     ]
     let response = [
       "ios_dialog_configs": [
-        "data": expectedRawConfigurations
-      ]
+        "data": expectedRawConfigurations,
+      ],
     ]
 
     ServerConfigurationManager.shared.processLoadRequestResponse(

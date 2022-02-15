@@ -109,7 +109,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
       (
         result: createLoginManagerResult(isCancelled: false, declinedPermissions: ["email"]),
         error: nil
-      )
+      ),
     ]
 
     try resultErrorPairs.forEach { pair in

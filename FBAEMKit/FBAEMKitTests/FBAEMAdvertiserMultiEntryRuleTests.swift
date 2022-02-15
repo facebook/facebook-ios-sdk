@@ -27,7 +27,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "platium",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Should expect the parameter matched with the rule"
@@ -36,7 +36,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "platium",
-          "amount": NSNumber(value: 1)
+          "amount": NSNumber(value: 1),
         ]
       ),
       "Should not expect the parameter matched with the rule if the amount is low"
@@ -45,7 +45,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "gold",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Should not expect the parameter matched with the rule if the card type is wrong"
@@ -61,7 +61,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "gold",
-          "amount": NSNumber(value: 1)
+          "amount": NSNumber(value: 1),
         ]
       ),
       "Should not expect the parameter matched with the rule"
@@ -70,7 +70,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "platium",
-          "amount": NSNumber(value: 1)
+          "amount": NSNumber(value: 1),
         ]
       ),
       "Should expect the parameter matched with the rule if the card type is the same"
@@ -79,7 +79,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "gold",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Should expect the parameter matched with the rule if amount is high"
@@ -95,7 +95,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "gold",
-          "amount": NSNumber(value: 1)
+          "amount": NSNumber(value: 1),
         ]
       ),
       "Should expect the parameter matched with the rule"
@@ -104,7 +104,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "platium",
-          "amount": NSNumber(value: 1)
+          "amount": NSNumber(value: 1),
         ]
       ),
       "Should not expect the parameter matched with the rule if the card type is the same"
@@ -113,7 +113,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       rule.isMatchedEventParameters(
         [
           "card_type": "gold",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Should not expect the parameter matched with the rule if amount is high"
@@ -139,7 +139,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
           "URL": "thankyou.do.com",
           "content_category": "demand",
           "card_type": "blue_credit",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Shoule expect the rule is matched"
@@ -150,7 +150,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
           "URL": "thankyou.com",
           "content_category": "demand",
           "card_type": "blue_credit",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Shoule not expect the rule is matched with wrong URL"
@@ -161,7 +161,7 @@ final class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
           "URL": "thankyou.do.com",
           "content_category": "required",
           "card_type": "blue_credit",
-          "amount": NSNumber(value: 100)
+          "amount": NSNumber(value: 100),
         ]
       ),
       "Shoule not expect the rule is matched with wrong content_category"

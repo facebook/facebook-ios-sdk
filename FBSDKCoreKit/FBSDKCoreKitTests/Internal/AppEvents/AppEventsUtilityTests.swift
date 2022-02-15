@@ -168,7 +168,7 @@ final class AppEventsUtilityTests: XCTestCase {
       "ge": Utility.sha256Hash(testGender as NSObject),
       "ct": Utility.sha256Hash(testCity as NSObject),
       "st": Utility.sha256Hash(testState as NSObject),
-      "external_id": Utility.sha256Hash(testExternalId as NSObject)
+      "external_id": Utility.sha256Hash(testExternalId as NSObject),
     ]
 
     let udParam = parameters["ud"] as? String
@@ -438,7 +438,7 @@ final class AppEventsUtilityTests: XCTestCase {
     [
       AdvertisingTrackingStatus.allowed,
       .disallowed,
-      .unspecified
+      .unspecified,
     ]
       .shuffled()
       .forEach { status in
@@ -523,7 +523,7 @@ final class AppEventsUtilityTests: XCTestCase {
       "SubmitApplication",
       "Subscribe",
       "AdImpression",
-      "AdClick"
+      "AdClick",
     ]
 
     for event in standardEvents {

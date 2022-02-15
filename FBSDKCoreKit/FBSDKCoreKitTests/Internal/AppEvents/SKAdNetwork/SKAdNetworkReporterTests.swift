@@ -20,9 +20,9 @@ final class SKAdNetworkReporterTests: XCTestCase {
         "timer_interval": 1000,
         "cutoff_time": 1,
         "default_currency": "usd",
-        "conversion_value_rules": []
-      ]
-    ]
+        "conversion_value_rules": [],
+      ],
+    ],
   ]
   // swiftlint:disable:next force_unwrapping
   lazy var defaultConfiguration = SKAdNetworkConversionConfiguration(json: json)!

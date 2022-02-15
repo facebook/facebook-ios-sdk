@@ -107,7 +107,7 @@ final class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
       [
         AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
         AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
-        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot,
       ]
     ).forEach { opString, expectedOperator in
       let rule: AEMAdvertiserMultiEntryRule? = factory.createMultiEntryRule(
@@ -277,7 +277,7 @@ final class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
     for ruleOperator in [
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
-      AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot
+      AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot,
     ] {
       XCTAssertTrue(
         factory.isOperator(forMultiEntryRule: ruleOperator),
@@ -301,7 +301,7 @@ final class FBAEMAdvertiserRuleFactoryTests: XCTestCase {
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsAny,
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsNotAny,
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
-      AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsNotAny
+      AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsNotAny,
     ] {
       XCTAssertFalse(
         factory.isOperator(forMultiEntryRule: ruleOperator),

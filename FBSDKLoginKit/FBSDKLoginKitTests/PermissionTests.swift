@@ -17,7 +17,7 @@ final class PermissionTests: XCTestCase {
       "PUBLIC_PROFILE",
       "public profile",
       "public-profile",
-      "123_abc"
+      "123_abc",
     ]
 
     rawPermissions.forEach { rawPermission in
@@ -30,7 +30,7 @@ final class PermissionTests: XCTestCase {
     let rawPermissions = [
       "email",
       "public_profile",
-      "pages_manage_ads"
+      "pages_manage_ads",
     ]
 
     rawPermissions.forEach { rawPermission in
@@ -43,7 +43,7 @@ final class PermissionTests: XCTestCase {
     let permissions = Set(
       [
         FBPermission(string: "email"),
-        FBPermission(string: "public_profile")
+        FBPermission(string: "public_profile"),
       ].compactMap { $0 }
     )
     let rawPermissions = FBPermission.rawPermissions(from: permissions)
@@ -58,7 +58,7 @@ final class PermissionTests: XCTestCase {
     let expectedPermissions = Set(
       [
         FBPermission(string: "email"),
-        FBPermission(string: "user_friends")
+        FBPermission(string: "user_friends"),
       ].compactMap { $0 }
     )
     XCTAssertEqual(permissions, expectedPermissions)

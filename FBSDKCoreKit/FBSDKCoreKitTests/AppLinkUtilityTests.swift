@@ -143,9 +143,9 @@ final class AppLinkUtilityTests: XCTestCase {
     let bundleDict = [
       "CFBundleURLTypes": [
         [
-          "CFBundleURLSchemes": ["fb123"]
-        ]
-      ]
+          "CFBundleURLSchemes": ["fb123"],
+        ],
+      ],
     ]
     bundle = TestBundle(infoDictionary: bundleDict)
 

@@ -48,8 +48,8 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
             Keys.eventName: Values.donate,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   static let validConfigData2: [String: Any] = [
@@ -78,8 +78,8 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
             Keys.eventName: Values.purchase,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   static let validConfigData3: [String: Any] = [
@@ -97,7 +97,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
           ],
         ],
       ],
-    ]
+    ],
   ]
 
   static let validAdvertiserSingleEntryRule = AEMAdvertiserSingleEntryRule(

@@ -526,7 +526,7 @@ final class ErrorFactoryTests: XCTestCase {
     static let userInfoKey = "userInfoKey"
     static let userInfoValue = "userInfoValue"
     static let userInfo: [String: Any] = [
-      userInfoKey: userInfoValue
+      userInfoKey: userInfoValue,
     ]
   }
 

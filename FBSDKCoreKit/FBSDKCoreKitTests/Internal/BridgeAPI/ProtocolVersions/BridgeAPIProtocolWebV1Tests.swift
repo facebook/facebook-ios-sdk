@@ -48,7 +48,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     static func validWithErrorCode(_ code: Int) -> [String: Any] {
       [
         Keys.errorCode: code,
-        Keys.bridgeArgs: jsonString(actionID: Values.actionID)
+        Keys.bridgeArgs: jsonString(actionID: Values.actionID),
       ]
     }
   }

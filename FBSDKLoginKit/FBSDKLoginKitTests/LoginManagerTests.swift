@@ -98,13 +98,13 @@ final class LoginManagerTests: XCTestCase {
       hometown: Location(
         from: [
           "id": "112724962075996",
-          "name": "Martinez, California"
+          "name": "Martinez, California",
         ]
       ),
       location: Location(
         from: [
           "id": "110843418940484",
-          "name": "Seattle, Washington"
+          "name": "Seattle, Washington",
         ]
       ),
       gender: "male",

@@ -61,8 +61,8 @@ final class AEMConfigurationTests: XCTestCase {
             Keys.eventName: Values.donate,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   var rulesData = [
@@ -75,13 +75,13 @@ final class AEMConfigurationTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 100
+              Keys.amount: 100,
             ],
             [
               Keys.currency: Values.JPY,
-              Keys.amount: 1000
-            ]
-          ]
+              Keys.amount: 1000,
+            ],
+          ],
         ],
         [
           Keys.eventName: Values.donate,
@@ -105,7 +105,7 @@ final class AEMConfigurationTests: XCTestCase {
           Keys.eventName: Values.purchase,
         ],
       ],
-    ]
+    ],
   ]
 
   let advertiserRuleFactory = AEMAdvertiserRuleFactory()
@@ -179,8 +179,8 @@ final class AEMConfigurationTests: XCTestCase {
               Keys.eventName: Values.donate,
             ],
           ],
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),
@@ -190,7 +190,7 @@ final class AEMConfigurationTests: XCTestCase {
       Keys.defaultCurrency: Values.USD,
       Keys.cutoffTime: 1,
       Keys.validFrom: 10000,
-      Keys.configMode: Values.defaultMode
+      Keys.configMode: Values.defaultMode,
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),
@@ -213,8 +213,8 @@ final class AEMConfigurationTests: XCTestCase {
               Keys.eventName: Values.donate,
             ],
           ],
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),

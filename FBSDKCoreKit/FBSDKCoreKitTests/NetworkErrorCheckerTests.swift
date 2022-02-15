@@ -45,7 +45,7 @@ final class NetworkErrorCheckerTests: XCTestCase {
     .notConnectedToInternet,
     .internationalRoamingOff,
     .callIsActive,
-    .dataNotAllowed
+    .dataNotAllowed,
   ]
 
   // MARK: - Test Fixture

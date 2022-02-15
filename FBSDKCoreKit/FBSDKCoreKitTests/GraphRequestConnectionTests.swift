@@ -403,7 +403,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       GraphRequestConnectionState.started,
       .cancelled,
       .completed,
-      .serialized
+      .serialized,
     ]
       .forEach { state in
         connection.state = state
@@ -712,7 +712,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       .started,
       .cancelled,
       .completed,
-      .serialized
+      .serialized,
     ]
       .forEach { state in
         connection.state = state
@@ -782,7 +782,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     [
       GraphRequestConnectionState.started,
       .cancelled,
-      .completed
+      .completed,
     ]
       .forEach { state in
         connection.state = .created
@@ -813,7 +813,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   func testStartingWithValidStates() {
     [
       GraphRequestConnectionState.created,
-      .serialized
+      .serialized,
     ]
       .forEach { state in
         connection.state = .created

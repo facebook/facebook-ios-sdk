@@ -50,7 +50,7 @@ final class ProfileTests: XCTestCase {
       "last_name": profile.lastName as Any,
       "name": profile.name as Any,
       "link": profile.linkURL as Any,
-      "email": profile.email as Any
+      "email": profile.email as Any,
     ]
 
     Settings.shared.graphAPIVersion = sdkVersion
@@ -797,7 +797,7 @@ final class ProfileTests: XCTestCase {
       "first_name": "firstname",
       "middle_name": "middlename",
       "last_name": "lastname",
-      "name": "name"
+      "name": "name",
     ]
     Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
@@ -1174,27 +1174,27 @@ final class ProfileTests: XCTestCase {
         "data": [
           [
             "name": "user1",
-            "id": profile.friendIDs?[0]
+            "id": profile.friendIDs?[0],
           ],
           [
             "name": "user2",
-            "id": profile.friendIDs?[1]
-          ]
-        ]
+            "id": profile.friendIDs?[1],
+          ],
+        ],
       ],
       "birthday": "01/01/1990",
       "age_range": [
-        "min": profile.ageRange?.min
+        "min": profile.ageRange?.min,
       ],
       "hometown": [
         "id": profile.hometown?.id,
-        "name": profile.hometown?.name
+        "name": profile.hometown?.name,
       ],
       "location": [
         "id": profile.location?.id,
-        "name": profile.location?.name
+        "name": profile.location?.name,
       ],
-      "gender": profile.gender as Any
+      "gender": profile.gender as Any,
     ]
   }
 

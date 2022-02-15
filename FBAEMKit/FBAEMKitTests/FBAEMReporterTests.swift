@@ -258,7 +258,7 @@ final class FBAEMReporterTests: XCTestCase {
     AEMReporter.configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
       Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()]),
-      Values.cpasMode: NSMutableArray(array: [SampleAEMConfigurations.createCpasConfig()])
+      Values.cpasMode: NSMutableArray(array: [SampleAEMConfigurations.createCpasConfig()]),
     ]
 
     AEMReporter._clearConfigs()
@@ -328,7 +328,7 @@ final class FBAEMReporterTests: XCTestCase {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
     AEMReporter.timestamp = Date()
     AEMReporter.configs = [
-      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
     ]
 
     XCTAssertTrue(
@@ -341,7 +341,7 @@ final class FBAEMReporterTests: XCTestCase {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
     AEMReporter.timestamp = Date()
     AEMReporter.configs = [
-      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
     ]
 
     XCTAssertFalse(
@@ -356,7 +356,7 @@ final class FBAEMReporterTests: XCTestCase {
     else { return XCTFail("Date Creation Error") }
     AEMReporter.timestamp = date
     AEMReporter.configs = [
-      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
     ]
 
     XCTAssertTrue(
@@ -381,11 +381,11 @@ final class FBAEMReporterTests: XCTestCase {
   func testShouldRefreshWithBusinessID() {
     AEMReporter.invocations = [
       SampleAEMData.invocationWithoutAdvertiserID,
-      SampleAEMData.invocationWithAdvertiserID1
+      SampleAEMData.invocationWithAdvertiserID1,
     ]
     AEMReporter.timestamp = Date()
     AEMReporter.configs = [
-      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
     ]
 
     XCTAssertTrue(
@@ -416,7 +416,7 @@ final class FBAEMReporterTests: XCTestCase {
         "conversion_data": 0,
         "consumption_hour": 0,
         "token": "debugging_token",
-        "delay_flow": "server"
+        "delay_flow": "server",
       ],
       "Should have expected request parameters for debugging invocation"
     )
@@ -714,11 +714,11 @@ final class FBAEMReporterTests: XCTestCase {
     let invocations = [
       SampleAEMData.invocationWithoutAdvertiserID,
       SampleAEMData.invocationWithAdvertiserID1,
-      SampleAEMData.invocationWithAdvertiserID2
+      SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -743,11 +743,11 @@ final class FBAEMReporterTests: XCTestCase {
     let invocations = [
       SampleAEMData.invocationWithoutAdvertiserID,
       SampleAEMData.invocationWithAdvertiserID1,
-      SampleAEMData.invocationWithAdvertiserID2
+      SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -768,11 +768,11 @@ final class FBAEMReporterTests: XCTestCase {
     let invocations = [
       SampleAEMData.invocationWithoutAdvertiserID,
       SampleAEMData.invocationWithAdvertiserID1,
-      SampleAEMData.invocationWithAdvertiserID2
+      SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -800,7 +800,7 @@ final class FBAEMReporterTests: XCTestCase {
     let invocations = [invocation1, invocation2]
     let configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -824,7 +824,7 @@ final class FBAEMReporterTests: XCTestCase {
     let invocations = [invocation1, invocation2]
     let configs = [
       Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -847,7 +847,7 @@ final class FBAEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     let configs = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()])
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -880,7 +880,7 @@ final class FBAEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
     let configs = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()])
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -983,7 +983,7 @@ final class FBAEMReporterTests: XCTestCase {
 
   func testIsContentOptimized() {
     var data = [
-      "data": [["content_id_belongs_to_catalog_id": true]]
+      "data": [["content_id_belongs_to_catalog_id": true]],
     ]
     XCTAssertTrue(AEMReporter._isContentOptimized(data), "Should expect content is optimized")
     data = ["data": [["content_id_belongs_to_catalog_id": false]]]
@@ -997,7 +997,7 @@ final class FBAEMReporterTests: XCTestCase {
       params as NSDictionary,
       [
         Keys.catalogID: "test_catalog",
-        Keys.contentID: "test_content_id"
+        Keys.contentID: "test_content_id",
       ],
       "Catalog request parameters are not expected"
     )

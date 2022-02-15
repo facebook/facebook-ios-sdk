@@ -61,7 +61,7 @@ final class CrashObserverTests: XCTestCase {
     let callstack = [
       "(4 DEV METHODS)",
       "+[FBSDKCodelessIndexer crash]+84",
-      "(22 DEV METHODS)"
+      "(22 DEV METHODS)",
     ]
 
     let crashLogs = [
@@ -74,7 +74,7 @@ final class CrashObserverTests: XCTestCase {
         "device_model": "iPad5,3",
         "device_os": "ios",
         "device_os_version": "13.1.3",
-      ]
+      ],
     ]
     return crashLogs
   }

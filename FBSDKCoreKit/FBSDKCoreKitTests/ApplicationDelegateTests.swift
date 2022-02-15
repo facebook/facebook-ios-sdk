@@ -451,7 +451,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(
       launchOptions: [
         UIApplication.LaunchOptionsKey.sourceApplication: name,
-        .url: SampleURLs.valid
+        .url: SampleURLs.valid,
       ]
     )
 

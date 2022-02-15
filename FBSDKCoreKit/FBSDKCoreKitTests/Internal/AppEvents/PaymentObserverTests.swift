@@ -84,7 +84,7 @@ final class PaymentObserverTests: XCTestCase {
       purchased,
       failed,
       restored,
-      deferred
+      deferred,
     ]
     observer.paymentQueue(queue, updatedTransactions: transactions)
 

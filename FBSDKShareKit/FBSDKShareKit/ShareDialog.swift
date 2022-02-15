@@ -1116,7 +1116,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     let nsError = error as NSError
     let parameters: [AppEvents.ParameterName: Any] = [
       .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed,
-      .errorMessage: nsError.description
+      .errorMessage: nsError.description,
     ]
 
     AppEvents.shared.logInternalEvent(
@@ -1146,7 +1146,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     let parameters: [AppEvents.ParameterName: Any] = [
       .mode: mode.description,
-      .shareContentType: contentType
+      .shareContentType: contentType,
     ]
 
     AppEvents.shared.logInternalEvent(

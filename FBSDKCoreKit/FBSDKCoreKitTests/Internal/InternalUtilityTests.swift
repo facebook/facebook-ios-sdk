@@ -353,7 +353,7 @@ final class InternalUtilityTests: XCTestCase {
       "#@%(*&#$(^#@!$",
       "////foo",
       "foo: ",
-      "foo: /"
+      "foo: /",
     ]
       .forEach { invalidScheme in
         internalUtility._canOpenURLScheme(invalidScheme)
@@ -371,7 +371,7 @@ final class InternalUtilityTests: XCTestCase {
       "FOO",
       "foo+bar",
       "foo-bar",
-      "foo.bar"
+      "foo.bar",
     ]
       .forEach { validScheme in
         internalUtility._canOpenURLScheme(validScheme)
@@ -587,7 +587,7 @@ final class InternalUtilityTests: XCTestCase {
     let expectedParameters = [
       "foo": "bar",
       "param1": "value1",
-      "param2": "value2"
+      "param2": "value2",
     ]
 
     XCTAssertEqual(
@@ -855,7 +855,7 @@ final class InternalUtilityTests: XCTestCase {
   func testIsBrowserURLWithNonBrowserURL() {
     [
       URL(string: "file://foo")!, // swiftlint:disable:this force_unwrapping
-      URL(string: "example://bar")! // swiftlint:disable:this force_unwrapping
+      URL(string: "example://bar")!, // swiftlint:disable:this force_unwrapping
     ]
       .forEach { url in
         XCTAssertFalse(
@@ -870,7 +870,7 @@ final class InternalUtilityTests: XCTestCase {
       URL(string: "HTTPS://example.com"),
       URL(string: "HTTP://example.com"),
       URL(string: "https://example.com"),
-      URL(string: "http://example.com")
+      URL(string: "http://example.com"),
     ]
       .compactMap { $0 }
       .forEach { url in
@@ -887,7 +887,7 @@ final class InternalUtilityTests: XCTestCase {
       "",
       "foo",
       "com.foo.bar",
-      "com.facebook"
+      "com.facebook",
     ]
       .forEach { identifier in
         XCTAssertFalse(
@@ -902,7 +902,7 @@ final class InternalUtilityTests: XCTestCase {
       "com.facebook.",
       "com.facebook.foo",
       ".com.facebook.",
-      ".com.facebook.foo"
+      ".com.facebook.foo",
     ]
       .forEach { identifier in
         XCTAssertTrue(
@@ -916,7 +916,7 @@ final class InternalUtilityTests: XCTestCase {
     [
       "",
       " ",
-      "com.foo"
+      "com.foo",
     ]
       .forEach { identifier in
         XCTAssertFalse(
@@ -929,7 +929,7 @@ final class InternalUtilityTests: XCTestCase {
   func testSafariBundleIdentifiers() {
     [
       "com.apple.mobilesafari",
-      "com.apple.SafariViewService"
+      "com.apple.SafariViewService",
     ]
       .forEach { identifier in
         XCTAssertTrue(
@@ -1129,7 +1129,7 @@ final class InternalUtilityTests: XCTestCase {
     settings.persistableDataProcessingOptions = [
       "data_processing_options": ["LDU"],
       "data_processing_options_country": 10,
-      "data_processing_options_state": 100
+      "data_processing_options_state": 100,
     ]
 
     let parameters = NSMutableDictionary()
@@ -1160,7 +1160,7 @@ final class InternalUtilityTests: XCTestCase {
       "manageSomething",
       "ads_management",
       "create_event",
-      "rsvp_event"
+      "rsvp_event",
     ]
       .forEach { permission in
         XCTAssertTrue(internalUtility.isPublishPermission(permission))
@@ -1169,7 +1169,7 @@ final class InternalUtilityTests: XCTestCase {
     [
       "",
       "email",
-      "_publish"
+      "_publish",
     ]
       .forEach { permission in
         XCTAssertFalse(internalUtility.isPublishPermission(permission))
@@ -1256,7 +1256,7 @@ final class InternalUtilityTests: XCTestCase {
         .originURL: url,
         .path: url.path,
         .name: name,
-        .value: "Is good"
+        .value: "Is good",
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -1265,8 +1265,8 @@ final class InternalUtilityTests: XCTestCase {
     TestBundle(
       infoDictionary: [
         "CFBundleURLTypes": [
-          ["CFBundleURLSchemes": registeredUrlSchemes]
-        ]
+          ["CFBundleURLSchemes": registeredUrlSchemes],
+        ],
       ]
     )
   }

@@ -76,7 +76,7 @@ enum SampleRawLoginCompletionParameters {
       "nonce",
       "user_id",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -85,7 +85,7 @@ enum SampleRawLoginCompletionParameters {
       "code",
       "user_id",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -96,7 +96,7 @@ enum SampleRawLoginCompletionParameters {
       "denied_scopes",
       "user_id",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -111,7 +111,7 @@ enum SampleRawLoginCompletionParameters {
       "expires_in",
       "data_access_expiration_time",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -119,7 +119,7 @@ enum SampleRawLoginCompletionParameters {
     "access_token": "",
     "id_token": "",
     "nonce": "",
-    "code": ""
+    "code": "",
   ]
 
   static var withStringExpirations = [
@@ -128,7 +128,7 @@ enum SampleRawLoginCompletionParameters {
     "expires_in": String(secondsInDay * 60),
     "data_access_expiration_time": String(dataExpirationDate),
     "state": defaultState,
-    "graph_domain": defaultDomain
+    "graph_domain": defaultDomain,
   ]
 
   static var withError: [String: Any] {

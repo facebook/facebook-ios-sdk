@@ -27,7 +27,7 @@ final class EventBindingManagerTests: XCTestCase, UITableViewDelegate, UICollect
   let expectedEvidenceWithoutReactNative = [
     SwizzleEvidence(selector: #selector(UIControl.didMoveToWindow), class: UIControl.self),
     SwizzleEvidence(selector: #selector(setter: UITableView.delegate), class: UITableView.self),
-    SwizzleEvidence(selector: #selector(setter: UICollectionView.delegate), class: UICollectionView.self)
+    SwizzleEvidence(selector: #selector(setter: UICollectionView.delegate), class: UICollectionView.self),
   ]
 
   override func setUp() {
@@ -94,7 +94,7 @@ final class EventBindingManagerTests: XCTestCase, UITableViewDelegate, UICollect
       "UITableView",
       "UIControl",
       "UICollectionView",
-      "RCTView"
+      "RCTView",
     ])
     XCTAssertEqual(
       classNames,
@@ -164,7 +164,7 @@ final class EventBindingManagerTests: XCTestCase, UITableViewDelegate, UICollect
           "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTImageView)",
           "FBSDKCoreKitTests.SwizzleEvidence(selector: _updateAndDispatchTouches:eventName:, class: RCTTouchHandler)",
           "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UITableView)",
-          "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UICollectionView)"
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UICollectionView)",
         ]
           .joined(separator: ", ")
       )

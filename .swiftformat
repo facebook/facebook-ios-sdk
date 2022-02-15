@@ -76,6 +76,7 @@
 --rules strongOutlets
 --rules todos
 --rules trailingClosures
+--rules trailingCommas
 --rules trailingSpace
 --rules typeSugar
 --rules void
@@ -95,7 +96,6 @@
 # --rules organizeDeclarations # (opt-in) # adds Internal, Private, Lifecycle sections and re-orders a lot of code
 # --rules preferDouble # (opt-in) # Replaces occurrences of CGFloat with Double
 # --rules sortedSwitchCases # (opt-in) # sorts cases in enums
-# --rules trailingCommas # we should enable this
 # --rules unusedArguments # changes unused args to an underscore, too many changes
 # --rules wrapConditionalBodies # (opt-in) # moves the return in a guard on a new line
 # --rules wrapMultilineStatementBraces # puts brace after multiline statement on new line, swiftlint conflict

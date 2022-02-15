@@ -55,7 +55,7 @@ final class CrashHandlerTests: XCTestCase {
       "DATA_DETECTION_ADDRESS_1.weights",
       "SUGGEST_EVENT_3.weights",
       "SUGGEST_EVENT_3.rules",
-      "crash.text"
+      "crash.text",
     ]
 
     let result = crashHandler._getCrashLogFileNames(files)
@@ -153,7 +153,7 @@ final class CrashHandlerTests: XCTestCase {
       "reason": "InvalidOperationException",
       "timestamp": "1585764970",
       "device_model": "iPhone7,2",
-      "device_os_version": "12.4.1"
+      "device_os_version": "12.4.1",
     ] as [String: Any]
 
     let crashLog2 = [
@@ -161,12 +161,12 @@ final class CrashHandlerTests: XCTestCase {
       "callstack": [
         "(3 DEV METHODS)",
         "-[SettingsItemViewController imageWithImage:destination:]+2110632",
-        "(6 DEV METHODS)"
+        "(6 DEV METHODS)",
       ],
       "reason": "NSInvalidArgumentException",
       "timestamp": "1585764970",
       "device_model": "iPad4,1",
-      "device_os_version": "12.4.5"
+      "device_os_version": "12.4.5",
     ] as [String: Any]
 
     return [crashLog1, crashLog2]

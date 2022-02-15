@@ -22,19 +22,19 @@ final class SKAdNetworkEventTests: XCTestCase {
         "values": [
           [
             "currency": "usd",
-            "amount": 100
+            "amount": 100,
           ],
           [
             "currency": "JPY",
-            "amount": 1000
-          ]
-        ]
+            "amount": 1000,
+          ],
+        ],
       ]
     )
     XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
     let expectedValues: [String: NSNumber] = [
       "USD": 100,
-      "JPY": 1000
+      "JPY": 1000,
     ]
     XCTAssertTrue(event?.values == expectedValues)
   }
@@ -46,13 +46,13 @@ final class SKAdNetworkEventTests: XCTestCase {
       "values": [
         [
           "currency": "usd",
-          "amount": 100
+          "amount": 100,
         ],
         [
           "currency": "JPY",
-          "amount": 1000
-        ]
-      ]
+          "amount": 1000,
+        ],
+      ],
     ]
     XCTAssertNil(SKAdNetworkEvent(json: invalidData))
     invalidData = [
@@ -60,13 +60,13 @@ final class SKAdNetworkEventTests: XCTestCase {
       "values": [
         [
           "currency": 100,
-          "amount": "usd"
+          "amount": "usd",
         ],
         [
           "currency": 1000,
-          "amount": "jpy"
-        ]
-      ]
+          "amount": "jpy",
+        ],
+      ],
     ]
     XCTAssertNil(SKAdNetworkEvent(json: invalidData))
   }

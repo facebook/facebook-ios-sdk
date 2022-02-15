@@ -17,17 +17,17 @@ final class SampleRawRemotePermissionList: NSObject {
       "data": [
         [
           "permission": nil,
-          "status": "granted"
+          "status": "granted",
         ],
         [
           "permission": nil,
-          "status": "declined"
+          "status": "declined",
         ],
         [
           "permission": nil,
-          "status": "expired"
-        ]
-      ]
+          "status": "expired",
+        ],
+      ],
     ]
   }
 
@@ -36,9 +36,9 @@ final class SampleRawRemotePermissionList: NSObject {
       "data": [
         [
           "permission": "email",
-          "status": nil
-        ]
-      ]
+          "status": nil,
+        ],
+      ],
     ]
   }
 
@@ -49,9 +49,9 @@ final class SampleRawRemotePermissionList: NSObject {
       "data": [
         [
           "permission": "foo",
-          "status": "granted"
-        ]
-      ]
+          "status": "granted",
+        ],
+      ],
     ]
     return Fuzzer.randomize(json: json) as? [String: Any] ?? [:]
   }
@@ -61,17 +61,17 @@ final class SampleRawRemotePermissionList: NSObject {
       "data": [
         [
           "permission": "email",
-          "status": "granted"
+          "status": "granted",
         ],
         [
           "permission": "birthday",
-          "status": "declined"
+          "status": "declined",
         ],
         [
           "permission": "first_name",
-          "status": "expired"
-        ]
-      ]
+          "status": "expired",
+        ],
+      ],
     ]
   }
 
@@ -83,19 +83,19 @@ final class SampleRawRemotePermissionList: NSObject {
     let grantedPermissions = granted.map {
       [
         "permission": $0,
-        "status": "granted"
+        "status": "granted",
       ]
     }
     let declinedPermissions = declined.map {
       [
         "permission": $0,
-        "status": "declined"
+        "status": "declined",
       ]
     }
     let expiredPermissions = expired.map {
       [
         "permission": $0,
-        "status": "expired"
+        "status": "expired",
       ]
     }
     return ["data": grantedPermissions + expiredPermissions + declinedPermissions]

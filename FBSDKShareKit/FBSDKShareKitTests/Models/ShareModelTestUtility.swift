@@ -76,13 +76,13 @@ enum ShareModelTestUtility {
       SharePhoto(
         imageURL: SampleURLs.validPNG,
         userGenerated: true
-      )
+      ),
     ]
   }
 
   static var photosWithFileURLs: [SharePhoto] {
     [
-      photoWithFileURL
+      photoWithFileURL,
     ]
   }
 
@@ -90,7 +90,7 @@ enum ShareModelTestUtility {
   static var photosWithImages = [
     SharePhoto(image: generatedImage, userGenerated: true),
     SharePhoto(image: generatedImage, userGenerated: true),
-    SharePhoto(image: generatedImage, userGenerated: true)
+    SharePhoto(image: generatedImage, userGenerated: true),
   ]
 
   static var generatedImage: UIImage = {

@@ -147,7 +147,7 @@ public final class GamingImageUploader: NSObject {
         graphPath: "me/photos",
         parameters: [
           "caption": configuration.caption ?? "",
-          "picture": imageData
+          "picture": imageData,
         ],
         httpMethod: .post
       )
