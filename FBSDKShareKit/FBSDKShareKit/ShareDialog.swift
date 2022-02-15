@@ -31,7 +31,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   static var shareUtility: _ShareUtilityProtocol.Type?
   static var bridgeAPIRequestFactory: BridgeAPIRequestCreating?
   static var bridgeAPIRequestOpener: BridgeAPIRequestOpening?
-  static var socialComposeViewControllerFactory: _SocialComposeViewControllerFactoryProtocol?
+  static var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol?
   static var windowFinder: _WindowFinding?
   static var errorFactory: ErrorCreating?
 
@@ -142,7 +142,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     shareUtility: _ShareUtilityProtocol.Type,
     bridgeAPIRequestFactory: BridgeAPIRequestCreating,
     bridgeAPIRequestOpener: BridgeAPIRequestOpening,
-    socialComposeViewControllerFactory: _SocialComposeViewControllerFactoryProtocol,
+    socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol,
     windowFinder: _WindowFinding,
     errorFactory: ErrorCreating
   ) {

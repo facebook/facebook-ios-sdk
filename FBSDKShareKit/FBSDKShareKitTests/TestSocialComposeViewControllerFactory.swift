@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
 import Foundation
 import UIKit
 
 @objcMembers
-final class TestSocialComposeViewControllerFactory: NSObject, _SocialComposeViewControllerFactoryProtocol {
+final class TestSocialComposeViewControllerFactory: NSObject, SocialComposeViewControllerFactoryProtocol {
   var stubbedSocialComposeViewController: (UIViewController & _SocialComposeViewControllerProtocol)?
 
   func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {

@@ -17,5 +17,4 @@
 
 #if !TARGET_OS_TV
  #import <FBSDKShareKit/_FBSDKSocialComposeViewController.h>
- #import <FBSDKShareKit/_FBSDKSocialComposeViewControllerFactoryProtocol.h>
 #endif

@@ -10,7 +10,7 @@
 
 import Social
 
-final class SocialComposeViewControllerFactory: _SocialComposeViewControllerFactoryProtocol {
+final class SocialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol {
   func makeSocialComposeViewController() -> _SocialComposeViewControllerProtocol? {
     SLComposeViewController(forServiceType: _FBSDKSocialComposeServiceType) as? _SocialComposeViewControllerProtocol
   }
