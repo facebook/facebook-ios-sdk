@@ -497,7 +497,7 @@ public final class ShareDialog: NSObject, SharingDialog {
           request,
           useSafariViewController: shouldUseSafariViewController,
           from: fromViewController
-        ) { response in
+        ) { [self] response in
           handleWebResponse(
             parameters: response.responseParameters,
             error: response.error,
