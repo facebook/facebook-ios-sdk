@@ -73,15 +73,15 @@ main() {
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
-      "Sources/FBAEMKit/FBAEMKitVersions.h"
-      "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
+      "FBAEMKit/FBAEMKit/FBAEMKitVersions.h"
+      "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
-      "Sources/FBAEMKit/FBAEMKitVersions.h"
-      "Sources/FBAEMKit/FBAEMNetworker.m"
+      "FBAEMKit/FBAEMKit/FBAEMKitVersions.h"
+      "FBAEMKit/FBAEMKit/FBAEMNetworker.m"
     )
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
@@ -137,7 +137,7 @@ grep_for_old_version() {
   RED='\033[1;31m'
   RESET='\033[0m'
 
-  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|\bbuild/|\bdocs/)')
+  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|Package.swift|\bbuild/|\bdocs/)')
   if [ -n "$FILES_WITH_OLD_VERSION" ]; then
     echo "${RED}ERROR: Grep found the old $old_version version in ${FILES_WITH_OLD_VERSION}${RESET}" 1>&2;
     exit 1

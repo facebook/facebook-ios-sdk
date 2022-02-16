@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.0.0...HEAD)
+
+## 13.0.0
+
 ### Changed
 
 - The minimum supported version of iOS is now 11.0.
@@ -105,7 +109,8 @@ TL;DR: Use `FBSDKSettings.sharedSettings` in places where `FBSDKSettings` was us
 - Removed deprecated `Settings.enableLoggingBehavior()` (use `Settings.shared.enableLoggingBehavior()` instead")
 - Removed deprecated `Settings.disableLoggingBehavior()` (use `Settings.shared.disableLoggingBehavior()` instead")
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...HEAD)
+[2022-02-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v13.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...v13.0.0)
 
 ## 12.3.2
 
