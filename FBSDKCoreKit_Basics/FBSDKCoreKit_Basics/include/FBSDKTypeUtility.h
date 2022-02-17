@@ -92,14 +92,6 @@ NS_SWIFT_NAME(TypeUtility)
 + (nullable NSURL *)coercedToURLValue:(id)object;
 
 /*
- Lightweight wrapper around Foundation's isValidJSONObject:
-
- Returns YES if the given object can be converted to JSON data, NO otherwise.
- Calling this method or attempting a conversion are the definitive ways to tell if a given object can be converted to JSON data.
- */
-+ (BOOL)isValidJSONObject:(id)obj;
-
-/*
  Lightweight safety wrapper around Foundation's NSJSONSerialization:dataWithJSONObject:options:error:
 
  Generate JSON data from a Foundation object.

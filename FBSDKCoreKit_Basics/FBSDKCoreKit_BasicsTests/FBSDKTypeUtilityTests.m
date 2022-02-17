@@ -44,14 +44,14 @@
 - (void)testIsValidJSONWithValidJSON
 {
   for (id object in self.validJSONObjects) {
-    XCTAssertTrue([FBSDKTypeUtility isValidJSONObject:object], @"%@ is not a valid json object", object);
+    XCTAssertTrue([NSJSONSerialization isValidJSONObject:object], @"%@ is not a valid json object", object);
   }
 }
 
 - (void)testIsValidJSONWithInvalidJSON
 {
   for (id object in self.invalidJSONObjects) {
-    XCTAssertFalse([FBSDKTypeUtility isValidJSONObject:object], @"%@ is a valid json object", object);
+    XCTAssertFalse([NSJSONSerialization isValidJSONObject:object], @"%@ is a valid json object", object);
   }
 }
 
@@ -59,7 +59,7 @@
 {
   // Should not crash for any given value
   for (int i = 0; i < 100; i++) {
-    [FBSDKTypeUtility isValidJSONObject:Fuzzer.random];
+    [NSJSONSerialization isValidJSONObject:Fuzzer.random];
   }
 }
 

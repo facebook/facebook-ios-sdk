@@ -617,7 +617,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   // Send event bindings to Unity only Unity is initialized
   if (self._isUnityInitialized
       && self.serverConfiguration
-      && [FBSDKTypeUtility isValidJSONObject:self.serverConfiguration.eventBindings]
+      && [NSJSONSerialization isValidJSONObject:self.serverConfiguration.eventBindings]
   ) {
     NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:self.serverConfiguration.eventBindings ?: @""
                                                     options:0
