@@ -142,7 +142,7 @@ static FBSDKInternalUtility *_shared;
                    declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions
 {
-  NSArray *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
+  NSArray<NSDictionary<NSString *, id> *> *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
   if (resultData.count > 0) {
     for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
       NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
@@ -598,7 +598,7 @@ static NSMapTable *_transientObjects;
 {
   [self validateConfiguration];
 
-  static NSArray *urlTypes = nil;
+  static NSArray<NSDictionary<NSString *, id> *> *urlTypes = nil;
   dispatch_once(&fetchUrlSchemesToken, ^{
     urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
   });

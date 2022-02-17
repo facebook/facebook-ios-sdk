@@ -62,7 +62,7 @@
   if (!appEventsState.events.count) {
     return;
   }
-  NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
+  NSMutableArray<FBSDKAppEventsState *> *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
   [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
 
   [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
@@ -71,7 +71,7 @@
 
 - (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates;
 {
-  NSMutableArray *eventsStates = [NSMutableArray array];
+  NSMutableArray<FBSDKAppEventsState *> *eventsStates = [NSMutableArray array];
   if (!self.canSkipDiskCheck) {
     NSData *data = [[NSData alloc] initWithContentsOfFile:[self filePath] options:NSDataReadingMappedIfSafe error:NULL];
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];

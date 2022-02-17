@@ -110,7 +110,7 @@ static FBSDKAppEventsUtility *_shared;
                         forKey:self.deviceInformationProvider.storageKey];
 
   static dispatch_once_t fetchBundleOnce;
-  static NSMutableArray *urlSchemes;
+  static NSMutableArray<NSString *> *urlSchemes;
 
   dispatch_once(&fetchBundleOnce, ^{
     NSBundle *mainBundle = NSBundle.mainBundle;

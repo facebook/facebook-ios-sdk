@@ -133,7 +133,8 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 }
 
 #pragma mark - Helper functions
-+ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node siblings:(NSMutableArray *)siblings
++ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node
+         siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
   BOOL isInteracted = [[FBSDKTypeUtility dictionary:node
@@ -175,7 +176,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 }
 
 + (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
-                   siblings:(NSMutableArray *)siblings
+                   siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
 {

@@ -129,21 +129,21 @@ static NSString *const kAppLinksKey = @"app_links";
 {
   NSString *idiomSpecificField = [self.requestBuilder getIdiomSpecificField];
 
-  id nestedObject = result[url.absoluteString][kAppLinksKey];
-  NSMutableArray *rawTargets = [NSMutableArray array];
+  NSDictionary<NSString *, id> *nestedObject = result[url.absoluteString][kAppLinksKey];
+  NSMutableArray<NSDictionary<NSString *, id> *> *rawTargets = [NSMutableArray array];
   if (idiomSpecificField) {
     [rawTargets addObjectsFromArray:nestedObject[idiomSpecificField]];
   }
   [rawTargets addObjectsFromArray:nestedObject[kIOSKey]];
 
   NSMutableArray<FBSDKAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
-  for (id rawTarget in rawTargets) {
+  for (NSDictionary<NSString *, id> *rawTarget in rawTargets) {
     [FBSDKTypeUtility array:targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
                                                                             appStoreId:rawTarget[kIOSAppStoreIdKey]
                                                                                appName:rawTarget[kIOSAppNameKey]]];
   }
 
-  id webTarget = nestedObject[kWebKey];
+  NSDictionary<NSString *, id> *webTarget = nestedObject[kWebKey];
   NSString *webFallbackString = webTarget[kURLKey];
   NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
 

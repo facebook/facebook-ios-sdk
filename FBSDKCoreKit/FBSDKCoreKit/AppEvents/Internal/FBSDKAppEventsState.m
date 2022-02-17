@@ -72,9 +72,9 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 {
   NSString *appID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APPEVENTSSTATE_APPID_KEY];
   NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APPEVENTSSTATE_TOKENSTRING_KEY];
-  NSArray *events = [FBSDKTypeUtility arrayValue:[decoder decodeObjectOfClasses:
-                                                  [NSSet setWithArray:@[NSArray.class, NSDictionary.class, NSString.class, NSNumber.class]]
-                                                                         forKey:FBSDK_APPEVENTSSTATE_EVENTS_KEY]];
+  NSArray<NSDictionary<NSString *, id> *> *events = [FBSDKTypeUtility arrayValue:[decoder decodeObjectOfClasses:
+                                                                                  [NSSet setWithArray:@[NSArray.class, NSDictionary.class, NSString.class, NSNumber.class]]
+                                                                                                         forKey:FBSDK_APPEVENTSSTATE_EVENTS_KEY]];
   NSUInteger numSkipped = [[decoder decodeObjectOfClass:NSNumber.class forKey:FBSDK_APPEVENTSSTATE_NUMSKIPPED_KEY] unsignedIntegerValue];
 
   if ((self = [self initWithToken:tokenString appID:appID])) {
@@ -101,7 +101,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 - (void)addEventsFromAppEventState:(FBSDKAppEventsState *)appEventsState
 {
-  NSArray *toAdd = appEventsState->_mutableEvents;
+  NSArray<NSDictionary<NSString *, id> *> *toAdd = appEventsState->_mutableEvents;
   NSInteger excess = _mutableEvents.count + toAdd.count - FBSDK_APPEVENTSSTATE_MAX_EVENTS;
   if (excess > 0) {
     NSInteger range = FBSDK_APPEVENTSSTATE_MAX_EVENTS - _mutableEvents.count;
@@ -177,7 +177,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
       [processor processEvents:_mutableEvents];
     }
   }
-  NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
+  NSMutableArray<NSMutableDictionary<NSString *, id> *> *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
   for (NSDictionary<NSString *, id> *eventAndImplicitFlag in _mutableEvents) {
     const BOOL isImplicitEvent = [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue];
     if (!includeImplicitEvents && isImplicitEvent) {

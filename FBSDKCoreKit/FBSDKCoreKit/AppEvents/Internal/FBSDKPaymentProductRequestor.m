@@ -30,7 +30,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 
 @interface FBSDKPaymentProductRequestor ()
 
-@property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
+@property (class, nonatomic, readonly) NSMutableArray<FBSDKPaymentProductRequestor *> *pendingRequestors;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
 @property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
 @property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
@@ -48,7 +48,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 
 @implementation FBSDKPaymentProductRequestor
 
-static NSMutableArray *_pendingRequestors;
+static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
 
 + (void)initialize
 {
@@ -89,7 +89,7 @@ static NSMutableArray *_pendingRequestors;
   return self;
 }
 
-+ (NSMutableArray *)pendingRequestors
++ (NSMutableArray<FBSDKPaymentProductRequestor *> *)pendingRequestors
 {
   return _pendingRequestors;
 }

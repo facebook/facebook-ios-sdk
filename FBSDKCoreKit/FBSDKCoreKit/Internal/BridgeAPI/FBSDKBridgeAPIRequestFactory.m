@@ -17,8 +17,8 @@
 - (nullable id<FBSDKBridgeAPIRequest>)bridgeAPIRequestWithProtocolType:(FBSDKBridgeAPIProtocolType)protocolType
                                                                 scheme:(NSString *)scheme
                                                             methodName:(NSString *)methodName
-                                                            parameters:(NSDictionary *)parameters
-                                                              userInfo:(NSDictionary *)userInfo
+                                                            parameters:(NSDictionary<NSString *, id> *)parameters
+                                                              userInfo:(NSDictionary<NSString *, id> *)userInfo
 {
   return [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:protocolType
                                                           scheme:scheme

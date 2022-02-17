@@ -30,7 +30,7 @@ static const NSTimeInterval kTimeout = 4.0;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
-@property (nullable, nonatomic) NSMutableArray *completionBlocks;
+@property (nullable, nonatomic) NSMutableArray<FBSDKAppEventsConfigurationManagerBlock> *completionBlocks;
 
 @end
 

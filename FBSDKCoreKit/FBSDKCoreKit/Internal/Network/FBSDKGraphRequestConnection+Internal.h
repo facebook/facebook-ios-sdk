@@ -78,7 +78,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                   timeout:(NSTimeInterval)timeout;
 
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
-           toBatch:(NSMutableArray<id> *)batch
+           toBatch:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)batch
        attachments:(NSMutableDictionary<NSString *, id> *)attachments
         batchToken:(nullable NSString *)batchToken;
 

@@ -244,7 +244,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 {
   NSMutableArray<FBSDKAppLinkTarget *> *linkTargets = [NSMutableArray array];
 
-  NSArray *platformData = nil;
+  NSArray<NSDictionary<NSString *, id> *> *platformData = nil;
   const UIUserInterfaceIdiom idiom = UIDevice.currentDevice.userInterfaceIdiom;
   if (idiom == UIUserInterfaceIdiomPad) {
     platformData = @[appLinkDict[FBSDKWebViewAppLinkResolverIPadKey] ?: @{},

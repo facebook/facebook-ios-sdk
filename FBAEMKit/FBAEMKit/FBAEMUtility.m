@@ -40,9 +40,9 @@ static NSString *const ID_KEY = @"id";
   }
 
   double value = 0;
-  NSArray<NSDictionary *> *contentsData = [FBSDKTypeUtility dictionary:parameters objectForKey:@"fb_content" ofType:NSArray.class];
-  for (NSDictionary *entry in contentsData) {
-    NSDictionary<NSString *, NSArray *> *entryParameters = @{@"fb_content" : @[entry]};
+  NSArray<NSDictionary<NSString *, id> *> *contentsData = [FBSDKTypeUtility dictionary:parameters objectForKey:@"fb_content" ofType:NSArray.class];
+  for (NSDictionary<NSString *, id> *entry in contentsData) {
+    NSDictionary<NSString *, NSArray<NSDictionary<NSString *, id> *> *> *entryParameters = @{@"fb_content" : @[entry]};
     if (![matchingRule isMatchedEventParameters:entryParameters]) {
       continue;
     }
@@ -59,12 +59,12 @@ static NSString *const ID_KEY = @"id";
   @try {
     NSString *content = [FBSDKTypeUtility dictionary:parameters objectForKey:FB_CONTENT_KEY ofType:NSString.class];
     if (content) {
-      NSArray *json = [FBSDKTypeUtility arrayValue:[FBSDKTypeUtility JSONObjectWithData:[content dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                options:0
-                                                                                  error:nil]];
+      NSArray<NSDictionary<NSString *, id> *> *json = [FBSDKTypeUtility arrayValue:[FBSDKTypeUtility JSONObjectWithData:[content dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                                                options:0
+                                                                                                                  error:nil]];
       NSMutableArray<NSString *> *contentIDs = [NSMutableArray new];
-      for (id entry in json) {
-        NSDictionary *item = [FBSDKTypeUtility dictionaryValue:entry];
+      for (NSDictionary<NSString *, id> *entry in json) {
+        NSDictionary<NSString *, id> *item = [FBSDKTypeUtility dictionaryValue:entry];
         id contentID = [FBSDKTypeUtility dictionary:item objectForKey:ID_KEY ofType:NSString.class]
         ?: [FBSDKTypeUtility dictionary:item objectForKey:ID_KEY ofType:NSNumber.class];
         [FBSDKTypeUtility array:contentIDs addObject:[FBSDKTypeUtility coercedToStringValue:contentID]];
