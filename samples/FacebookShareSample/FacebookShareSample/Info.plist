@@ -13,6 +13,8 @@
 	</array>
 	<key>FacebookAppID</key>
 	<string>{your-app-id}</string>
+	<key>FacebookClientToken</key>
+	<string>{your-client-token}</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -24,6 +26,8 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access to photo library</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
