@@ -10,11 +10,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-#### Removed
-
-- Removed class-based factory methods for `ShareVideo`: `+videoWithData:`, `+videoWithData:previewPhoto:`, `+videoWithVideoAsset:`, `+videoWithVideoAsset:previewPhoto:`, `+videoWithVideoURL:`, `+videoWithVideoURL:previewPhoto:`; also removed `init` and `new`; use the new convenience initializers instead.
-- Removed `videoURL` property from `PHAsset`.
-
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.0.0...HEAD)
 
 ## 13.0.0
@@ -107,6 +102,8 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 - Removed deprecated `init(appLink:extras:appLinkData:)` from `AppLinkNavigation`; use `init(appLink:extras:appLinkData:settings:)` instead".
 - Removed class-based factory methods for `SharePhoto`:
 `+photoWithImage:userGenerated:`, `+photoWithImageURL:userGenerated:`, `+photoWithPhotoAsset:userGenerated:`. Also removed `init` and `new`; use the new convenience initializers instead.
+- Removed class-based factory methods for `ShareVideo`: `+videoWithData:`, `+videoWithData:previewPhoto:`, `+videoWithVideoAsset:`, `+videoWithVideoAsset:previewPhoto:`, `+videoWithVideoURL:`, `+videoWithVideoURL:previewPhoto:`. Also removed `init` and `new`; use the new convenience initializers instead.
+- Removed `videoURL` property from `PHAsset`.
 
 #### AppEvents deprecations
 
