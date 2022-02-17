@@ -19,7 +19,9 @@
 
 #pragma mark - Class Methods
 
-+ (void)assertCollection:(id<NSFastEnumeration>)collection ofClassStrings:(NSArray *)classStrings name:(NSString *)name
++ (void)assertCollection:(id<NSFastEnumeration>)collection
+          ofClassStrings:(NSArray<NSString *> *)classStrings
+                    name:(NSString *)name
 {
   for (id item in collection) {
     BOOL validClass = NO;
@@ -280,8 +282,8 @@
   if ([object isKindOfClass:FBSDKSharePhoto.class]) {
     object = [self convertPhoto:(FBSDKSharePhoto *)object];
   } else if ([object isKindOfClass:NSArray.class]) {
-    NSMutableArray *array = [NSMutableArray new];
-    for (id item in (NSArray *)object) {
+    NSMutableArray<id> *array = [NSMutableArray new];
+    for (id item in (NSArray<id> *)object) {
       [FBSDKTypeUtility array:array addObject:[self _convertObject:item]];
     }
     object = array;
@@ -346,7 +348,7 @@
     containsMedia = YES;
     containsVideos = YES;
   } else if ([object isKindOfClass:NSArray.class]) {
-    for (id item in (NSArray *)object) {
+    for (id item in (NSArray<id> *)object) {
       BOOL itemContainsMedia = NO;
       BOOL itemContainsPhotos = NO;
       BOOL itemContainsVideos = NO;
@@ -464,7 +466,7 @@
 {
   if (!value
       || ([value isKindOfClass:NSString.class] && !((NSString *)value).length)
-      || ([value isKindOfClass:NSArray.class] && !((NSArray *)value).count)
+      || ([value isKindOfClass:NSArray.class] && !((NSArray<id> *)value).count)
       || ([value isKindOfClass:[NSDictionary<NSString *, id> class]] && !((NSDictionary<NSString *, id> *)value).count)) {
     if (errorRef != NULL) {
       id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];

@@ -16,8 +16,8 @@
 
 @interface FBSDKTypeUtilityTests : XCTestCase
 
-@property (nonatomic) NSArray *validJSONObjects;
-@property (nonatomic) NSArray *invalidJSONObjects;
+@property (nonatomic) NSArray<id> *validJSONObjects;
+@property (nonatomic) NSArray<id> *invalidJSONObjects;
 
 @end
 
@@ -100,7 +100,7 @@
 
 - (void)testJSONObjectWithDataWithInvalidData
 {
-  NSArray *invalidData = @[
+  NSArray<id> *invalidData = @[
     [@"SomeString" dataUsingEncoding:NSUTF8StringEncoding],
     [[@{ @1 : @"one" } description] dataUsingEncoding:NSUTF8StringEncoding],
     [@"" dataUsingEncoding:NSUTF8StringEncoding],
@@ -118,7 +118,7 @@
 
 - (void)testArrayAccessEmptyArray
 {
-  NSArray *array = @[];
+  NSArray<id> *array = @[];
 
   XCTAssertNil(
     [FBSDKTypeUtility array:array objectAtIndex:5],
@@ -160,7 +160,7 @@
 
 - (void)testAddingArrayObjectAtIndexEmptyArray
 {
-  NSMutableArray *array = [NSMutableArray array];
+  NSMutableArray<NSString *> *array = [NSMutableArray array];
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
 
   XCTAssertEqualObjects(
@@ -172,7 +172,7 @@
 
 - (void)testAddingArrayObjectAtIndexNonEmptyArray
 {
-  NSMutableArray *array = [NSMutableArray array];
+  NSMutableArray<NSString *> *array = [NSMutableArray array];
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
   [FBSDKTypeUtility array:array addObject:@"bar" atIndex:1];
 
@@ -185,7 +185,7 @@
 
 - (void)testAddingArrayObjectAtDuplicateIndex
 {
-  NSMutableArray *array = [NSMutableArray array];
+  NSMutableArray<NSString *> *array = [NSMutableArray array];
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
   [FBSDKTypeUtility array:array addObject:@"bar" atIndex:0];
 
@@ -198,7 +198,7 @@
 
 - (void)testAddingArrayObjectAtUnavailableIndex
 {
-  NSMutableArray *array = [NSMutableArray array];
+  NSMutableArray<NSString *> *array = [NSMutableArray array];
   [FBSDKTypeUtility array:array addObject:@"foo" atIndex:5];
 
   XCTAssertNil(array.firstObject, "Should not be able to insert a valid object at an invalid index");

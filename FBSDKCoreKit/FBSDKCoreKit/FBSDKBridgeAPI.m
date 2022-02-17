@@ -294,7 +294,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       #if FBTEST
         // self.urlOpener should only be nil in test
         NSString *message = @"Cannot login due to urlOpener being nil";
-        NSDictionary *userInfo = @{FBSDKErrorLocalizedDescriptionKey : message};
+        NSDictionary<NSString *, id> *userInfo = @{FBSDKErrorLocalizedDescriptionKey : message};
         NSError *loginError = [self.errorFactory unknownErrorWithMessage:message
                                                                 userInfo:userInfo];
         handler(false, loginError);

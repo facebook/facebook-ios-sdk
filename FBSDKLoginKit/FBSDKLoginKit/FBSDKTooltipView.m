@@ -52,7 +52,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 @property (nonatomic) CGFloat maximumTextWidth;
 @property (nonatomic) CGFloat verticalTextOffset;
 @property (nonatomic) CGFloat verticalCrossOffset;
-@property (nonatomic) NSArray *gradientColors;
+@property (nonatomic) NSArray<id> *gradientColors;
 @property (nonatomic) UIColor *crossCloseGlyphColor;
 
 @end

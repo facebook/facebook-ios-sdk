@@ -132,7 +132,7 @@
            contentType:(NSString *)contentType
           contentBlock:(FBSDKCodeBlock)contentBlock
 {
-  NSMutableArray *disposition = [NSMutableArray new];
+  NSMutableArray<NSString *> *disposition = [NSMutableArray new];
   [FBSDKTypeUtility array:disposition addObject:@"Content-Disposition: form-data"];
   if (key) {
     [FBSDKTypeUtility array:disposition addObject:[[NSString alloc] initWithFormat:@"name=\"%@\"", key]];

@@ -12,15 +12,15 @@
 
 #pragma mark - Class Methods
 
-+ (nullable NSArray *)arrayValue:(nullable id)object
++ (nullable NSArray<id> *)arrayValue:(nullable id)object
 {
   if (!object) {
     return nil;
   }
-  return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
+  return (NSArray<id> *)[self _objectValue:object ofClass:NSArray.class];
 }
 
-+ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
++ (nullable id)array:(NSArray<id> *)array objectAtIndex:(NSUInteger)index
 {
   if ([self arrayValue:array] && index < array.count) {
     return array[index];

@@ -452,7 +452,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // attachments dictionary.
 //
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
-           toBatch:(NSMutableArray *)batch
+           toBatch:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)batch
        attachments:(NSMutableDictionary<NSString *, id> *)attachments
         batchToken:(NSString *)batchToken
 {
@@ -474,7 +474,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [FBSDKTypeUtility dictionary:requestElement setObject:urlString forKey:kBatchRelativeURLKey];
   [FBSDKTypeUtility dictionary:requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
-  NSMutableArray *attachmentNames = [NSMutableArray array];
+  NSMutableArray<NSString *> *attachmentNames = [NSMutableArray array];
 
   [FBSDKTypeUtility dictionary:metadata.request.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     if ([FBSDKGraphRequest isAttachment:value]) {
@@ -525,12 +525,12 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // All the requests are serialized into JSON, with any binary attachments
 // named and referenced by name in the JSON.
 //
-- (void)appendJSONRequests:(NSArray *)requests
+- (void)appendJSONRequests:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                     toBody:(FBSDKGraphRequestBody *)body
         andNameAttachments:(NSMutableDictionary<NSString *, id> *)attachments
                     logger:(FBSDKLogger *)logger
 {
-  NSMutableArray *batch = [NSMutableArray new];
+  NSMutableArray<NSMutableDictionary<NSString *, id> *> *batch = [NSMutableArray new];
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
@@ -571,7 +571,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 }
 
 // Validate that all GET requests after v2.4 have a "fields" param
-- (void)_validateFieldsParamForGetRequests:(NSArray *)requests
+- (void)_validateFieldsParamForGetRequests:(NSArray<FBSDKGraphRequestMetadata *> *)requests
 {
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     id<FBSDKGraphRequest> request = metadata.request;
@@ -591,7 +591,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // options on the request.  Chooses between URL-based request for a single
 // request and JSON-based request for batches.
 //
-- (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
+- (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout
 {
   FBSDKGraphRequestBody *body = [FBSDKGraphRequestBody new];
@@ -761,7 +761,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     self.state = FBSDKGraphRequestConnectionStateCompleted;
   }
 
-  NSArray *results = nil;
+  NSArray<NSDictionary<NSString *, id> *> *results = nil;
   _urlResponse = (NSHTTPURLResponse *)response;
   if (response) {
     NSAssert(
@@ -829,14 +829,14 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // The NSArray looks just like the multiple request case except the body
 // value is converted from a string to parsed JSON.
 //
-- (NSArray *)parseJSONResponse:(NSData *)data
-                         error:(NSError **)error
-                    statusCode:(NSInteger)statusCode
+- (NSArray<NSDictionary<NSString *, id> *> *)parseJSONResponse:(NSData *)data
+                                                         error:(NSError **)error
+                                                    statusCode:(NSInteger)statusCode
 {
   // Graph API can return "true" or "false", which is not valid JSON.
   // Translate that before asking JSON parser to look at it.
   NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-  NSMutableArray *_Nonnull results = [NSMutableArray new];
+  NSMutableArray<NSDictionary<NSString *, id> *> *_Nonnull results = [NSMutableArray new];
   id response = [self parseJSONOrOtherwise:responseUTF8 error:error];
 
   if (responseUTF8 == nil) {
@@ -941,7 +941,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   return parsed;
 }
 
-- (void)_completeWithResults:(NSArray *)results
+- (void)_completeWithResults:(NSArray<NSDictionary<NSString *, id> *> *)results
                 networkError:(NSError *)networkError
 {
   NSUInteger count = self.requests.count;
@@ -1034,7 +1034,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (void)processResultDebugDictionary:(NSDictionary<NSString *, id> *)dict
 {
-  NSArray *messages = [FBSDKTypeUtility arrayValue:dict[@"messages"]];
+  NSArray<NSDictionary<NSString *, id> *> *messages = [FBSDKTypeUtility arrayValue:dict[@"messages"]];
   if (!messages.count) {
     return;
   }

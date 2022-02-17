@@ -87,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (bool)validateWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights forKey:(NSString *)key
 {
-  NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, NSArray<NSNumber *> *> *weightsInfoDict = [NSMutableDictionary new];
   if ([key hasPrefix:MTMLKey]) {
     [weightsInfoDict addEntriesFromDictionary:[self getMTMLWeightsInfo]];
   }
@@ -109,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
   };
 }
 
-+ (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo
++ (NSDictionary<NSString *, NSArray<NSNumber *> *> *)getMTMLWeightsInfo
 {
   return @{
     @"embed.weight" : @[@256, @32],
@@ -131,7 +131,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (bool)checkWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights
-    withExpectedInfo:(NSDictionary<NSString *, NSArray *> *)weightsInfoDict
+    withExpectedInfo:(NSDictionary<NSString *, NSArray<NSNumber *> *> *)weightsInfoDict
 {
   if (weightsInfoDict.count != weights.size()) {
     return false;
@@ -143,7 +143,7 @@ NS_ASSUME_NONNULL_BEGIN
       }
       fbsdk::MTensor tensor = weights[std::string([key UTF8String])];
       const std::vector<int> &actualSize = tensor.sizes();
-      NSArray *expectedSize = weightsInfoDict[key];
+      NSArray<NSNumber *> *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {
         return false;
       }

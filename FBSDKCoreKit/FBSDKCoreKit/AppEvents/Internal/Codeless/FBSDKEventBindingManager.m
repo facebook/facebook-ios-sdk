@@ -96,9 +96,9 @@
   return self;
 }
 
-- (NSArray *)parseArray:(NSArray<NSDictionary<NSString *, id> *> *)array
+- (NSArray<FBSDKEventBinding *> *)parseArray:(NSArray<NSDictionary<NSString *, id> *> *)array
 {
-  NSMutableArray *result = [NSMutableArray array];
+  NSMutableArray<FBSDKEventBinding *> *result = [NSMutableArray array];
 
   for (NSDictionary<NSString *, id> *json in array) {
     FBSDKEventBinding *binding = [[FBSDKEventBinding alloc] initWithJSON:json
@@ -293,8 +293,8 @@
           NSMutableSet<FBSDKEventBinding *> *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
-              NSArray *shortPath = [binding.path
-                                    subarrayWithRange:NSMakeRange(0, binding.path.count - 1)];
+              NSArray<FBSDKCodelessPathComponent *> *shortPath = [binding.path
+                                                                  subarrayWithRange:NSMakeRange(0, binding.path.count - 1)];
               if ([FBSDKEventBinding isPath:shortPath matchViewPath:path]) {
                 [matchedBindings addObject:binding];
               }
@@ -323,8 +323,8 @@
           NSMutableSet<FBSDKEventBinding *> *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
-              NSArray *shortPath = [binding.path
-                                    subarrayWithRange:NSMakeRange(0, binding.path.count - 1)];
+              NSArray<FBSDKCodelessPathComponent *> *shortPath = [binding.path
+                                                                  subarrayWithRange:NSMakeRange(0, binding.path.count - 1)];
               if ([FBSDKEventBinding isPath:shortPath matchViewPath:path]) {
                 [matchedBindings addObject:binding];
               }

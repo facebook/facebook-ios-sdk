@@ -36,7 +36,7 @@ NS_SWIFT_NAME(ModelManager)
 
 - (void)enable;
 - (nullable NSData *)getWeightsForKey:(NSString *)useCase;
-- (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
+- (nullable NSArray<NSNumber *> *)getThresholdsForKey:(NSString *)useCase;
 - (BOOL)processIntegrity:(nullable NSString *)param;
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker

@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKPaymentProductRequestor (Testing)
 
-@property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
+@property (class, nonatomic, readonly) NSMutableArray<FBSDKPaymentProductRequestor *> *pendingRequestors;
 @property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
 @property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;

@@ -271,7 +271,7 @@ static dispatch_once_t setupNonce;
 - (NSString *)getDenseFeaure:(float *)denseData
 {
   // Get dense feature string
-  NSMutableArray *denseDataArray = [NSMutableArray array];
+  NSMutableArray<NSNumber *> *denseDataArray = [NSMutableArray array];
   for (int i = 0; i < 30; i++) {
     [FBSDKTypeUtility array:denseDataArray addObject:@(denseData[i])];
   }

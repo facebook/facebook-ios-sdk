@@ -16,7 +16,7 @@
 
 #pragma mark - Object Lifecycle
 
-- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL appVersions:(NSArray *)appVersions
+- (instancetype)initWithName:(NSString *)name URL:(NSURL *)URL appVersions:(NSArray<id> *)appVersions
 {
   if ((self = [super init])) {
     _name = [name copy];
@@ -38,8 +38,8 @@
   NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_DIALOG_CONFIGURATION_NAME_KEY];
   NSURL *URL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_DIALOG_CONFIGURATION_URL_KEY];
   NSSet<Class> *appVersionsClasses = [NSSet setWithObjects:NSArray.class, NSNumber.class, nil];
-  NSArray *appVersions = [decoder decodeObjectOfClasses:appVersionsClasses
-                                                 forKey:FBSDK_DIALOG_CONFIGURATION_APP_VERSIONS_KEY];
+  NSArray<NSString *> *appVersions = [decoder decodeObjectOfClasses:appVersionsClasses
+                                                             forKey:FBSDK_DIALOG_CONFIGURATION_APP_VERSIONS_KEY];
   return [self initWithName:name URL:URL appVersions:appVersions];
 }
 

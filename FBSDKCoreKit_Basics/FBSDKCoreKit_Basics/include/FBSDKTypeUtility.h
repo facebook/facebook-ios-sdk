@@ -17,14 +17,14 @@ NS_SWIFT_NAME(TypeUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 /// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
-+ (nullable NSArray *)arrayValue:(nullable id)object;
++ (nullable NSArray<id> *)arrayValue:(nullable id)object;
 
 /**
  Return an object at a given index if the index is valid, otherwise return nil
  @param array The array to retrieve the object from.
  @param index The index to retrieve the object from.
  */
-+ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index;
++ (nullable id)array:(NSArray<id> *)array objectAtIndex:(NSUInteger)index;
 
 /**
  Adds an object to an array if it is not nil.

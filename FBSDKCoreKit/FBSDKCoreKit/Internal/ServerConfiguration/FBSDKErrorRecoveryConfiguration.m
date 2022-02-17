@@ -16,7 +16,7 @@
 @implementation FBSDKErrorRecoveryConfiguration
 
 - (instancetype)initWithRecoveryDescription:(NSString *)description
-                         optionDescriptions:(NSArray *)optionDescriptions
+                         optionDescriptions:(NSArray<NSString *> *)optionDescriptions
                                    category:(FBSDKGraphRequestError)category
                          recoveryActionName:(NSString *)recoveryActionName
 {

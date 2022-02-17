@@ -20,7 +20,7 @@
     if (dialogConfigurationDictionary) {
       NSString *name = [FBSDKTypeUtility coercedToStringValue:dialogConfigurationDictionary[@"name"]];
       NSURL *URL = [FBSDKTypeUtility coercedToURLValue:dialogConfigurationDictionary[@"url"]];
-      NSArray *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
+      NSArray<id> *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
       if (name.length && URL && appVersions.count) {
         [FBSDKTypeUtility dictionary:dialogConfigurations setObject:[[FBSDKDialogConfiguration alloc] initWithName:name
                                                                                                                URL:URL

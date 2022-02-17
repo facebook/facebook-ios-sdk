@@ -31,7 +31,7 @@
 
 static BOOL _canLoadGateKeepers = NO;
 static NSDictionary<NSString *, id> *_gateKeepers;
-static NSMutableArray *_completionBlocks;
+static NSMutableArray<FBSDKGKManagerBlock> *_completionBlocks;
 static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
 static BOOL _loadingGateKeepers = NO;
@@ -202,7 +202,7 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)_didProcessGKFromNetwork:(NSError *)error
 {
-  NSArray *completionBlocks = [NSArray arrayWithArray:_completionBlocks];
+  NSArray<FBSDKGKManagerBlock> *completionBlocks = [NSArray arrayWithArray:_completionBlocks];
   [_completionBlocks removeAllObjects];
   for (FBSDKGKManagerBlock completionBlock in completionBlocks) {
     completionBlock(error);
