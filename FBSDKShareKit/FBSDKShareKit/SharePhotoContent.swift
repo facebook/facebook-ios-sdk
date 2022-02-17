@@ -7,6 +7,7 @@
  */
 
 import Foundation
+import Photos
 import UIKit
 
 /// A model for photo content to be shared.

@@ -69,9 +69,9 @@ extension ShareVideoContent: SharingContent {
       if bridgeOptions == .videoAsset {
         // Bridge the PHAsset.localIdentifier
         videoParameters["assetIdentifier"] = asset.localIdentifier
-      } else {
+      } else if let url = asset.requestVideoURL(timeoutInMilliseconds: 500) {
         // Bridge the legacy "assets-library" URL from AVAsset
-        videoParameters["assetURL"] = asset.videoURL
+        videoParameters["assetURL"] = url
       }
     } else if let data = video.data {
       if bridgeOptions == .videoData {

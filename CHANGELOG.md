@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+#### Removed
+
+- Removed class-based factory methods for `ShareVideo`: `+videoWithData:`, `+videoWithData:previewPhoto:`, `+videoWithVideoAsset:`, `+videoWithVideoAsset:previewPhoto:`, `+videoWithVideoURL:`, `+videoWithVideoURL:previewPhoto:`; also removed `init` and `new`; use the new convenience initializers instead.
+- Removed `videoURL` property from `PHAsset`.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.0.0...HEAD)
 
 ## 13.0.0

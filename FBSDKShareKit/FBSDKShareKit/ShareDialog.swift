@@ -391,7 +391,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func contentVideoURL(for video: ShareVideo) -> URL? {
-    if let url = video.videoAsset?.videoURL {
+    if let url = video.videoAsset?.requestVideoURL(timeoutInMilliseconds: 500) {
       return url
     } else if let data = video.data {
       let file = Self.temporaryDirectory.appendingPathComponent(UUID().uuidString)
