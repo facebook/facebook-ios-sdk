@@ -297,7 +297,7 @@
     return nil;
   }
   NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:dictionary setObject:@(photo.userGenerated) forKey:@"user_generated"];
+  [FBSDKTypeUtility dictionary:dictionary setObject:@(photo.isUserGenerated) forKey:@"user_generated"];
   [FBSDKTypeUtility dictionary:dictionary setObject:photo.caption forKey:@"caption"];
 
   [FBSDKTypeUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
+
 import Photos
 import TestTools
 import XCTest

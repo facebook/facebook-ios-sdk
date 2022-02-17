@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSharePhoto.h"
 #import "_FBSDKShareUtilityProtocol.h"
+
+@class FBSDKSharePhoto;
 
 NS_ASSUME_NONNULL_BEGIN
 
