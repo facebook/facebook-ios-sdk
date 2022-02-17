@@ -80,6 +80,7 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 - Renamed `frictionlessRequestsEnabled` property on `GameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
 - Corrected nullability of `contentURL` in protocol `SharingContent`
 - Renamed `AppInviteDestination` to `AppInviteContent.Destination`
+- Renamed `userGenerated` property on `SharePhoto` in Objective-C; use `isUserGenerated` and `setIsUserGenerated:` instead.
 
 ### Deprecated
 
@@ -104,6 +105,8 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 - Removed `GraphRequestFlag.skipClientToken` since a client token is now required
 - Removed `init` and `new` from `ShareCameraEffectContent`; use `init(effectID:contentURL:)` instead.
 - Removed deprecated `init(appLink:extras:appLinkData:)` from `AppLinkNavigation`; use `init(appLink:extras:appLinkData:settings:)` instead".
+- Removed class-based factory methods for `SharePhoto`:
+`+photoWithImage:userGenerated:`, `+photoWithImageURL:userGenerated:`, `+photoWithPhotoAsset:userGenerated:`. Also removed `init` and `new`; use the new convenience initializers instead.
 
 #### AppEvents deprecations
 

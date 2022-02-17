@@ -24,9 +24,9 @@ enum ShareModelTestUtility {
   static let peopleIDs = [String]()
   static let photoImage = generatedImage
   static let photoImageURL = URL(string: "https://fbstatic-a.akamaihd.net/rsrc.php/v2/yC/r/YRwxe7CPWSs.png")!
-  static let photoWithFileURL = SharePhoto(imageURL: fileURL, userGenerated: isPhotoUserGenerated)
-  static let photoWithImage = SharePhoto(image: photoImage, userGenerated: isPhotoUserGenerated)
-  static let photoWithImageURL = SharePhoto(imageURL: photoImageURL, userGenerated: isPhotoUserGenerated)
+  static let photoWithFileURL = SharePhoto(imageURL: fileURL, isUserGenerated: isPhotoUserGenerated)
+  static let photoWithImage = SharePhoto(image: photoImage, isUserGenerated: isPhotoUserGenerated)
+  static let photoWithImageURL = SharePhoto(imageURL: photoImageURL, isUserGenerated: isPhotoUserGenerated)
   static let placeID = "141887372509674"
   static let previewPropertyName = "myObject"
   static let quote = "quote"
@@ -67,15 +67,15 @@ enum ShareModelTestUtility {
     [
       SharePhoto(
         imageURL: SampleURLs.validPNG,
-        userGenerated: false
+        isUserGenerated: false
       ),
       SharePhoto(
         imageURL: SampleURLs.validPNG,
-        userGenerated: false
+        isUserGenerated: false
       ),
       SharePhoto(
         imageURL: SampleURLs.validPNG,
-        userGenerated: true
+        isUserGenerated: true
       ),
     ]
   }
@@ -88,9 +88,9 @@ enum ShareModelTestUtility {
 
   // equality checks are pointer equality for UIImage, so just return the same instance each time
   static var photosWithImages = [
-    SharePhoto(image: generatedImage, userGenerated: true),
-    SharePhoto(image: generatedImage, userGenerated: true),
-    SharePhoto(image: generatedImage, userGenerated: true),
+    SharePhoto(image: generatedImage, isUserGenerated: true),
+    SharePhoto(image: generatedImage, isUserGenerated: true),
+    SharePhoto(image: generatedImage, isUserGenerated: true),
   ]
 
   static var generatedImage: UIImage = {
