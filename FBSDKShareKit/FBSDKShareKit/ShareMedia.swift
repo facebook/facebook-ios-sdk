@@ -6,12 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-NS_ASSUME_NONNULL_BEGIN
-
 /// A protocol for media content (photo or video) to be shared.
-NS_SWIFT_NAME(ShareMedia)
-@protocol FBSDKShareMedia
-
-@end
-
-NS_ASSUME_NONNULL_END
+@objc(FBSDKShareMedia)
+public protocol ShareMedia {}
