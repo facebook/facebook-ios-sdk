@@ -94,11 +94,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
   // MARK: - Helpers
 
   func base64URLEncoded(_ data: Data) throws -> String {
-    let base64 = try XCTUnwrap(
-      Base64.encode(data),
-      "Unable to base 64 encode data"
-    )
-    return base64
+    data.base64EncodedString()
       .replacingOccurrences(of: "+", with: "-")
       .replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")

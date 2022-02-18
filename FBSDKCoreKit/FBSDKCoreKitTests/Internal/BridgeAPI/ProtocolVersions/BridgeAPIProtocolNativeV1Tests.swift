@@ -547,7 +547,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func stubDataSerialized(_ data: Data?, tag: String?) -> [String: Any]? {
-    guard let string = Base64.encode(data) else { return nil }
+    guard let string = data?.base64EncodedString() else { return nil }
 
     return [
       "isBase64": NSNumber(value: true),

@@ -288,7 +288,7 @@ static const struct {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];
         [FBSDKTypeUtility dictionary:dictionary
-                           setObject:[FBSDKBase64 encodeData:data]
+                           setObject:[data base64EncodedStringWithOptions:0]
                               forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
       } else {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isPasteboard] = @YES;

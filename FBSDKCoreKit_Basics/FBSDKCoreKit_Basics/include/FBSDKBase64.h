@@ -28,13 +28,6 @@ NS_SWIFT_NAME(Base64)
 + (nullable NSString *)decodeAsString:(nullable NSString *)string;
 
 /**
- Encodes data into a string.
- @param data The data to be encoded.
- @return The base-64 encoded string.
- */
-+ (nullable NSString *)encodeData:(nullable NSData *)data;
-
-/**
  Encodes string into a base-64 representation.
  @param string The string to be encoded.
  @return The base-64 encoded string.

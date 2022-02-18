@@ -525,9 +525,9 @@ final class LoginManagerTests: XCTestCase {
 
     let rawClaims = try XCTUnwrap(claims)
     let claimsData = try JSONSerialization.data(withJSONObject: rawClaims, options: [])
-    let encodedClaims = try XCTUnwrap(Base64.encode(claimsData))
+    let encodedClaims = claimsData.base64EncodedData()
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
-    let encodedHeader = try XCTUnwrap(Base64.encode(headerData))
+    let encodedHeader = headerData.base64EncodedData()
 
     let tokenString = "\(encodedHeader).\(encodedClaims).signature"
 
@@ -579,9 +579,9 @@ final class LoginManagerTests: XCTestCase {
 
     let rawClaims = try XCTUnwrap(claims)
     let claimsData = try JSONSerialization.data(withJSONObject: rawClaims, options: [])
-    let encodedClaims = try XCTUnwrap(Base64.encode(claimsData))
+    let encodedClaims = claimsData.base64EncodedData()
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
-    let encodedHeader = try XCTUnwrap(Base64.encode(headerData))
+    let encodedHeader = headerData.base64EncodedData()
 
     let tokenString = "\(encodedHeader).\(encodedClaims).signature"
 
