@@ -62,7 +62,6 @@ targets:
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
   FBSDKShareKit-Dynamic:
     type: framework
     platform: iOS
@@ -93,7 +92,6 @@ targets:
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
   FBSDKShareKit_TV-Static:
     type: framework
     platform: tvOS
@@ -145,7 +143,6 @@ targets:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
       DEFINES_MODULE: YES
   FBSDKShareKit_TV-Dynamic:
     type: framework
@@ -199,7 +196,6 @@ targets:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
       DEFINES_MODULE: YES
   FBSDKShareKitTests:
     type: bundle.unit-test
@@ -217,7 +213,6 @@ targets:
     settings:
       ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
       GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
 schemes:
   FBSDKShareKit-Static:
     build:
