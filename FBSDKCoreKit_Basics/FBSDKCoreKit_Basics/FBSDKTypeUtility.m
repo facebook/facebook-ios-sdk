@@ -183,11 +183,6 @@
   }
 }
 
-+ (BOOL)isValidJSONObject:(id)obj
-{
-  return [NSJSONSerialization isValidJSONObject:obj];
-}
-
 + (NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
 {
   NSData *data;

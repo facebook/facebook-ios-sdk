@@ -121,7 +121,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
   }
 
   NSString *viewTreeString;
-  if ([FBSDKTypeUtility isValidJSONObject:viewTree]) {
+  if ([NSJSONSerialization isValidJSONObject:viewTree]) {
     viewTreeString = [[NSString alloc] initWithData:[FBSDKTypeUtility dataWithJSONObject:viewTree options:0 error:nil] encoding:NSUTF8StringEncoding];
   }
 
