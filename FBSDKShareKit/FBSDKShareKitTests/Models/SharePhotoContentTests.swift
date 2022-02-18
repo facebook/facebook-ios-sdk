@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
+
 import FBSDKCoreKit
 import XCTest
 
@@ -34,14 +36,14 @@ final class SharePhotoContentTests: XCTestCase {
     content.placeID = ShareModelTestUtility.placeID
     content.ref = ShareModelTestUtility.ref
 
-    XCTAssertNoThrow(try _ShareUtility.validateShare(content, bridgeOptions: []))
+    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
   }
 
   func testValidationWithNilPhotos() {
     let content = SharePhotoContent()
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -55,7 +57,7 @@ final class SharePhotoContentTests: XCTestCase {
     content.photos = []
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError

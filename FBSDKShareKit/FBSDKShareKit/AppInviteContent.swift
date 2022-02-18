@@ -64,10 +64,10 @@ public final class AppInviteContent: NSObject {
 extension AppInviteContent: SharingValidation {
 
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validateNetworkURL(appLinkURL, name: "appLinkURL")
+    try _ShareUtility.validateNetworkURL(appLinkURL, named: "appLinkURL")
 
     if let url = appInvitePreviewImageURL {
-      try _ShareUtility.validateNetworkURL(url, name: "appInvitePreviewImageURL")
+      try _ShareUtility.validateNetworkURL(url, named: "appInvitePreviewImageURL")
     }
 
     try validatePromoCode()

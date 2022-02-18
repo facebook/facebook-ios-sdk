@@ -72,7 +72,7 @@ extension ShareMediaContent: SharingValidation {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validate(media, minCount: 1, maxCount: 20, name: "photos")
+    try _ShareUtility.validateArray(media, minCount: 1, maxCount: 20, named: "photos")
 
     var hasVideo = false
 
@@ -102,7 +102,7 @@ extension ShareMediaContent: SharingValidation {
 
         hasVideo = true
 
-        try _ShareUtility.validateRequiredValue(video, name: "video")
+        try _ShareUtility.validateRequiredValue(video, named: "video")
         try video.validate(options: bridgeOptions)
       } else {
         throw ErrorFactory().invalidArgumentError(

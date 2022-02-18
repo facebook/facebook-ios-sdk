@@ -103,7 +103,7 @@ extension ShareVideoContent: SharingContent {
 extension ShareVideoContent: SharingValidation {
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validateRequiredValue(video, name: "video")
+    try _ShareUtility.validateRequiredValue(video, named: "video")
     try video.validate(options: bridgeOptions)
   }
 }

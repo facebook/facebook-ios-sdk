@@ -110,7 +110,7 @@ extension SharePhotoContent: SharingValidation {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validate(photos, minCount: 1, maxCount: 6, name: "photos")
+    try _ShareUtility.validateArray(photos, minCount: 1, maxCount: 6, named: "photos")
 
     try photos.forEach { photo in
       try photo.validate(options: bridgeOptions)

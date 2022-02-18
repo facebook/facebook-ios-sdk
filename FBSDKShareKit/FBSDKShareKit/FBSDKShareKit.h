@@ -7,5 +7,4 @@
  */
 
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
-#import <FBSDKShareKit/_FBSDKShareUtility.h>
-#import <FBSDKShareKit/_FBSDKShareUtilityProtocol.h>
+#import <FBSDKShareKit/FBSDKSharingValidation.h>

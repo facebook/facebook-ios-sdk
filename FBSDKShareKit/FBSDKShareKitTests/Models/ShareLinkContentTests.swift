@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
+
 import FBSDKCoreKit
 import XCTest
 
@@ -23,10 +25,7 @@ final class ShareLinkContentTests: XCTestCase {
 
   func testValidationWithValidContent() {
     XCTAssertNoThrow(
-      try _ShareUtility.validateShare(
-        ShareModelTestUtility.linkContent,
-        bridgeOptions: []
-      )
+      try _ShareUtility.validateShareContent(ShareModelTestUtility.linkContent)
     )
   }
 }

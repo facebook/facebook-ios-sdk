@@ -150,9 +150,9 @@ public final class MessageDialog: NSObject, SharingDialog {
     var parameters = [String: Any]()
 
     if let content = shareContent {
-      parameters = _ShareUtility.parameters(
-        forShare: content,
-        bridgeOptions: [],
+      parameters = _ShareUtility.bridgeParameters(
+        for: content,
+        options: [],
         shouldFailOnDataError: shouldFailOnDataError
       )
     }
@@ -220,7 +220,7 @@ public final class MessageDialog: NSObject, SharingDialog {
       )
     }
 
-    try _ShareUtility.validateShare(content, bridgeOptions: [])
+    try _ShareUtility.validateShareContent(content)
   }
 
   private var canShowNative: Bool {

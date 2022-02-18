@@ -39,14 +39,14 @@ final class ShareVideoContentTests: XCTestCase {
   }
 
   func testValidationWithValidContent() throws {
-    XCTAssertNoThrow(try _ShareUtility.validateShare(content, bridgeOptions: []))
+    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
   }
 
   func testValidationWithNilVideo() {
     content = ShareVideoContent()
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -60,7 +60,7 @@ final class ShareVideoContentTests: XCTestCase {
     content.video = ShareVideo()
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -80,7 +80,7 @@ final class ShareVideoContentTests: XCTestCase {
     content.video.videoURL = URL(string: "/")!
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -100,7 +100,7 @@ final class ShareVideoContentTests: XCTestCase {
     XCTAssertNotNil(content)
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -116,7 +116,7 @@ final class ShareVideoContentTests: XCTestCase {
   func testValidationWithNetworkVideoURL() {
     let video = ShareVideo(videoURL: ShareModelTestUtility.videoURL)
     content.video = video
-    XCTAssertNoThrow(try _ShareUtility.validateShare(content, bridgeOptions: []))
+    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
   }
 
   func testValidationWithValidFileVideoURLWhenBridgeOptionIsDefault() throws {
@@ -124,7 +124,7 @@ final class ShareVideoContentTests: XCTestCase {
     content.video = ShareVideo(videoURL: videoURL)
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShare(content, bridgeOptions: []),
+      try _ShareUtility.validateShareContent(content),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -141,6 +141,6 @@ final class ShareVideoContentTests: XCTestCase {
     let videoURL = try XCTUnwrap(Bundle.main.resourceURL?.appendingPathComponent("video.mp4"))
     content.video = ShareVideo(videoURL: videoURL)
 
-    XCTAssertNoThrow(try _ShareUtility.validateShare(content, bridgeOptions: [.videoData]))
+    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content, options: [.videoData]))
   }
 }
