@@ -8,5 +8,4 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
-#import "FBSDKHashtag.h"
 #import "FBSDKSharingValidation.h"

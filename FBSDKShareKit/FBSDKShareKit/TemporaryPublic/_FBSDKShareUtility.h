@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "_FBSDKShareUtilityProtocol.h"
 
 @class FBSDKSharePhoto;
