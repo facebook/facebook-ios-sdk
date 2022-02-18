@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 /// A model for media content (photo or video) to be shared.

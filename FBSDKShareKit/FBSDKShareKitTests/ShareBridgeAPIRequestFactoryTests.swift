@@ -7,6 +7,8 @@
  */
 
 @testable import FBSDKShareKit
+
+import FBSDKCoreKit
 import XCTest
 
 final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
