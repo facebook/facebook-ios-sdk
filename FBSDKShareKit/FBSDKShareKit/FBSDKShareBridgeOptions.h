@@ -20,17 +20,4 @@ typedef NS_OPTIONS(NSUInteger, FBSDKShareBridgeOptions) {
   FBSDKShareBridgeOptionsWebHashtag = 1 << 4, // if set, pass the hashtag as a string value, not an array of one string
 } NS_SWIFT_NAME(ShareBridgeOptions);
 
-/// A base interface for validation of content and media.
-NS_SWIFT_NAME(SharingValidation)
-@protocol FBSDKSharingValidation
-
-/**
- Asks the receiver to validate that its content or media values are valid.
- - Parameter errorRef: Optional, will receive an FBSDKShareError if the values are not valid.
- - Returns: YES if the receiver's values are valid; otherwise NO
- */
-- (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef;
-
-@end
-
 NS_ASSUME_NONNULL_END

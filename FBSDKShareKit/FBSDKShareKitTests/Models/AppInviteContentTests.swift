@@ -7,6 +7,7 @@
  */
 
 import FBSDKCoreKit
+import FBSDKShareKit
 import XCTest
 
 final class AppInviteContentTests: XCTestCase {
