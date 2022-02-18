@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
+
 import XCTest
 
 final class ShareUtilityTests: XCTestCase {
@@ -29,7 +31,7 @@ final class ShareUtilityTests: XCTestCase {
     let content = ShareLinkContent()
     content.contentURL = ShareModelTestUtility.contentURL
     XCTAssertNotNil(content.shareUUID)
-    let parameters = _ShareUtility.parameters(forShare: content, bridgeOptions: [], shouldFailOnDataError: true)
+    let parameters = _ShareUtility.bridgeParameters(for: content, options: [], shouldFailOnDataError: true)
     XCTAssertEqual(
       content.contentURL,
       parameters["messenger_link"] as? URL,

@@ -87,6 +87,6 @@ extension ShareLinkContent: SharingValidation {
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     guard let url = contentURL else { return }
 
-    try _ShareUtility.validateNetworkURL(url, name: "contentURL")
+    try _ShareUtility.validateNetworkURL(url, named: "contentURL")
   }
 }

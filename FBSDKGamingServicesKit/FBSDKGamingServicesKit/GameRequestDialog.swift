@@ -219,7 +219,7 @@ public final class GameRequestDialog: NSObject {
   /// Validates the content on the receiver.
   @objc(validateWithError:)
   public func validate() throws {
-    try _ShareUtility.validateRequiredValue(content, name: "content")
+    try _ShareUtility.validateRequiredValue(content, named: "content")
     try content.validate(options: [])
   }
 

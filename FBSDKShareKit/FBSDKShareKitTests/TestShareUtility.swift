@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKShareKit
+
 import Foundation
 
-@objcMembers
-final class TestShareUtility: NSObject, _ShareUtilityProtocol {
+enum TestShareUtility: ShareUtilityProtocol {
+
   static var stubbedValidateShareShouldThrow = false
   static var stubbedTestShareContainsMedia = false
   static var stubbedTestShareContainsPhotos = false
@@ -30,45 +32,40 @@ final class TestShareUtility: NSObject, _ShareUtilityProtocol {
 
   static func buildAsyncWebPhotoContent(
     _ content: SharePhotoContent,
-    completionHandler completion: _WebPhotoContentBlock
+    completion: WebPhotoContentHandler
   ) {}
 
-  static func buildWebShare(
-    _ content: SharingContent,
-    methodName methodNameRef: AutoreleasingUnsafeMutablePointer<NSString>?,
-    parameters parametersRef: AutoreleasingUnsafeMutablePointer<NSDictionary>?
-  ) {}
+  static func buildWebShareBridgeComponents(for content: SharingContent) -> WebShareBridgeComponents {
+    WebShareBridgeComponents(methodName: "", parameters: [:])
+  }
 
   static func hashtagString(from hashtag: Hashtag?) -> String? {
     stubbedHashtagString ?? ""
   }
 
-  static func parameters(
-    forShare shareContent: SharingContent,
-    bridgeOptions: ShareBridgeOptions = [],
+  static func bridgeParameters(
+    for shareContent: SharingContent,
+    options bridgeOptions: ShareBridgeOptions,
     shouldFailOnDataError: Bool
   ) -> [String: Any] {
     [:]
   }
 
-  static func testShare(
-    _ shareContent: SharingContent,
-    containsMedia containsMediaRef: UnsafeMutablePointer<ObjCBool>?,
-    containsPhotos containsPhotosRef: UnsafeMutablePointer<ObjCBool>,
-    containsVideos containsVideosRef: UnsafeMutablePointer<ObjCBool>
-  ) {
-    containsMediaRef?.pointee = ObjCBool(stubbedTestShareContainsMedia)
-    containsPhotosRef.pointee = ObjCBool(stubbedTestShareContainsPhotos)
-    containsVideosRef.pointee = ObjCBool(stubbedTestShareContainsVideos)
+  static func getContentFlags(for shareContent: SharingContent) -> ContentFlags {
+    ContentFlags(
+      containsMedia: stubbedTestShareContainsMedia,
+      containsPhotos: stubbedTestShareContainsPhotos,
+      containsVideos: stubbedTestShareContainsVideos
+    )
   }
 
   static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
     false
   }
 
-  static func validateShare(
+  static func validateShareContent(
     _ shareContent: SharingContent,
-    bridgeOptions: ShareBridgeOptions = []
+    options bridgeOptions: ShareBridgeOptions = []
   ) throws {
     if stubbedValidateShareShouldThrow {
       struct Error: Swift.Error {}

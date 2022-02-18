@@ -28,7 +28,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   static var internalURLOpener: ShareInternalURLOpening?
   static var internalUtility: InternalUtilityProtocol?
   static var settings: SettingsProtocol?
-  static var shareUtility: _ShareUtilityProtocol.Type?
+  static var shareUtility: ShareUtilityProtocol.Type?
   static var bridgeAPIRequestFactory: BridgeAPIRequestCreating?
   static var bridgeAPIRequestOpener: BridgeAPIRequestOpening?
   static var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol?
@@ -139,7 +139,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     internalURLOpener: ShareInternalURLOpening,
     internalUtility: InternalUtilityProtocol,
     settings: SettingsProtocol,
-    shareUtility: _ShareUtilityProtocol.Type,
+    shareUtility: ShareUtilityProtocol.Type,
     bridgeAPIRequestFactory: BridgeAPIRequestCreating,
     bridgeAPIRequestOpener: BridgeAPIRequestOpening,
     socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol,
@@ -508,19 +508,12 @@ public final class ShareDialog: NSObject, SharingDialog {
         }
       }
     } else {
-      var methodName: NSString = ""
-      var parameters = NSDictionary()
-      shareUtility.buildWebShare(
-        content,
-        methodName: &methodName,
-        parameters: &parameters
-      )
-
+      let components = shareUtility.buildWebShareBridgeComponents(for: content)
       guard let request = requestFactory.bridgeAPIRequest(
         with: .web,
         scheme: URLScheme.https.rawValue,
-        methodName: methodName as String?,
-        parameters: parameters as? [String: Any],
+        methodName: components.methodName,
+        parameters: components.parameters,
         userInfo: nil
       )
       else {
@@ -638,9 +631,9 @@ public final class ShareDialog: NSObject, SharingDialog {
       ? ShareBridgeAPI.MethodName.camera
       : ShareBridgeAPI.MethodName.share
 
-    let parameters = shareUtility.parameters(
-      forShare: content,
-      bridgeOptions: [],
+    let parameters = shareUtility.bridgeParameters(
+      for: content,
+      options: [],
       shouldFailOnDataError: shouldFailOnDataError
     )
 
@@ -769,17 +762,11 @@ public final class ShareDialog: NSObject, SharingDialog {
       throw MissingContentError()
     }
 
-    var methodName: NSString = ""
-    var parameters = NSDictionary()
-    shareUtility.buildWebShare(
-      content,
-      methodName: &methodName,
-      parameters: &parameters
-    )
+    let components = shareUtility.buildWebShareBridgeComponents(for: content)
 
     webDialog = WebDialog.createAndShow(
-      name: methodName as String,
-      parameters: parameters as? [String: Any],
+      name: components.methodName,
+      parameters: components.parameters,
       frame: .zero,
       delegate: self,
       windowFinder: Self.windowFinder
@@ -832,7 +819,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    try shareUtility.validateShare(content, bridgeOptions: [])
+    try shareUtility.validateShareContent(content, options: [])
 
     switch mode {
     case .automatic:
@@ -907,17 +894,9 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    var containsMedia: ObjCBool = false
-    var containsPhotos: ObjCBool = false
-    var containsVideos: ObjCBool = false
-    shareUtility.testShare(
-      content,
-      containsMedia: &containsMedia,
-      containsPhotos: &containsPhotos,
-      containsVideos: &containsVideos
-    )
+    let flags = shareUtility.getContentFlags(for: content)
 
-    if containsPhotos.boolValue {
+    if flags.containsPhotos {
       guard AccessToken.current != nil else {
         throw errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
@@ -941,7 +920,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       }
     }
 
-    if containsVideos.boolValue {
+    if flags.containsVideos {
       guard AccessToken.current != nil else {
         throw errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
@@ -957,7 +936,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       }
     }
 
-    if containsMedia.boolValue,
+    if flags.containsMedia,
        bridgeOptions == .photoImageURL { // a web-based URL is required
       throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
