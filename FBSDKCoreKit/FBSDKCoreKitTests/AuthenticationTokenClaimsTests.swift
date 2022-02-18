@@ -234,7 +234,7 @@ extension AuthenticationTokenClaimsTests {
   }
 
   func base64URLEncodeData(_ data: Data) -> String {
-    Base64.encode(data)! // swiftlint:disable:this force_unwrapping
+    data.base64EncodedString()
       .replacingOccurrences(of: "+", with: "-")
       .replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")

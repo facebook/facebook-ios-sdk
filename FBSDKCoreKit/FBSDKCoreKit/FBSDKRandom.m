@@ -25,7 +25,7 @@ NSString *fb_randomString(NSUInteger numberOfBytes)
   if (!randomStringData) {
     return nil;
   }
-  NSString *randomString = [FBSDKBase64 encodeData:randomStringData];
+  NSString *randomString = [randomStringData base64EncodedStringWithOptions:0];
   // FBSDKCryptoBlankData(randomStringData);
   if (!randomStringData) {
     return nil;
