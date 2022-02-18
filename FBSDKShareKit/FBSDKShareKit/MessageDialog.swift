@@ -160,7 +160,7 @@ public final class MessageDialog: NSObject, SharingDialog {
     guard let request = BridgeAPIRequest(
       protocolType: .native,
       scheme: URLScheme.messengerApp,
-      methodName: FBSDK_SHARE_METHOD_NAME,
+      methodName: ShareBridgeAPI.MethodName.share,
       parameters: parameters,
       userInfo: nil
     ) else {
@@ -231,8 +231,8 @@ public final class MessageDialog: NSObject, SharingDialog {
   }
 
   private func handleCompletion(dialogResults: [String: Any], response: BridgeAPIResponse) {
-    let completionGesture = dialogResults[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY] as? String
-    let isCancelGesture = (completionGesture == FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL)
+    let completionGesture = dialogResults[ShareBridgeAPI.CompletionGesture.key] as? String
+    let isCancelGesture = (completionGesture == ShareBridgeAPI.CompletionGesture.cancelValue)
     if isCancelGesture || response.isCancelled {
       invokeDelegateDidCancel()
     } else if let error = response.error {

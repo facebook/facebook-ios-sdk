@@ -442,8 +442,8 @@ public final class ShareDialog: NSObject, SharingDialog {
       return invokeDelegateDidFail(error: error)
     }
 
-    let completionGesture = parameters?[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY] as? String
-    if (completionGesture == FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL) || isCancelled {
+    let completionGesture = parameters?[ShareBridgeAPI.CompletionGesture.key] as? String
+    if (completionGesture == ShareBridgeAPI.CompletionGesture.cancelValue) || isCancelled {
       invokeDelegateDidCancel()
     } else {
       // Not all web dialogs report cancellation, so assume that the share has completed
@@ -451,8 +451,8 @@ public final class ShareDialog: NSObject, SharingDialog {
       var results = [String: Any]()
 
       // The web response comes back with a different payload, so we need to translate it
-      if let postID = parameters?[FBSDK_SHARE_WEB_PARAM_POST_ID_KEY] {
-        results[FBSDK_SHARE_RESULT_POST_ID_KEY] = postID
+      if let postID = parameters?[ShareBridgeAPI.PostIDKey.webParameters] {
+        results[ShareBridgeAPI.PostIDKey.results] = postID
       }
 
       invokeDelegateDidComplete(results: results)
@@ -635,8 +635,8 @@ public final class ShareDialog: NSObject, SharingDialog {
     try validateShareContentForNative()
 
     let methodName = (content is ShareCameraEffectContent)
-      ? FBSDK_SHARE_CAMERA_METHOD_NAME
-      : FBSDK_SHARE_METHOD_NAME
+      ? ShareBridgeAPI.MethodName.camera
+      : ShareBridgeAPI.MethodName.share
 
     let parameters = shareUtility.parameters(
       forShare: content,
@@ -673,8 +673,8 @@ public final class ShareDialog: NSObject, SharingDialog {
         } catch {}
       }
 
-      let completionGesture = response.responseParameters?[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY] as? String
-      let didCancel = (completionGesture == FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL)
+      let completionGesture = response.responseParameters?[ShareBridgeAPI.CompletionGesture.key] as? String
+      let didCancel = (completionGesture == ShareBridgeAPI.CompletionGesture.cancelValue)
         || response.isCancelled
 
       if didCancel {
@@ -683,8 +683,8 @@ public final class ShareDialog: NSObject, SharingDialog {
         invokeDelegateDidFail(error: error)
       } else {
         var results = [String: Any]()
-        if let postID = response.responseParameters?[FBSDK_SHARE_RESULT_POST_ID_KEY] {
-          results[FBSDK_SHARE_RESULT_POST_ID_KEY] = postID
+        if let postID = response.responseParameters?[ShareBridgeAPI.PostIDKey.results] {
+          results[ShareBridgeAPI.PostIDKey.results] = postID
         }
         invokeDelegateDidComplete(results: results)
       }
