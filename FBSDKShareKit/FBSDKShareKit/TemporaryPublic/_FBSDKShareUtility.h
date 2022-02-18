@@ -7,8 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <UIKit/UIKit.h>
 
 #import "_FBSDKShareUtilityProtocol.h"
 
