@@ -6,5 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKShareKit/FBSDKShareBridgeOptions.h>
 #import <FBSDKShareKit/FBSDKShareErrorDomain.h>
-#import <FBSDKShareKit/FBSDKSharingValidation.h>

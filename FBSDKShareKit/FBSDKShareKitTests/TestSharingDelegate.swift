@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKShareKit
+
 final class TestSharingDelegate: SharingDelegate {
   var capturedError: Error?
 
