@@ -30,6 +30,7 @@ file_name:
     BridgeAPI+ApplicationOpenUrlTests.swift,
     BridgeAPI+SessionCompletionHandlerTests.swift,
     ShareAppEventNames.swift,
+    ShareAppEventParameters.swift,
     ShareDialogMode.swift,
   ]
 trailing_comma:

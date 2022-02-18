@@ -42,12 +42,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Static.xcconfig
       Release: Configurations/FBSDKShareKit-Static.xcconfig
@@ -69,12 +63,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Dynamic.xcconfig
       Release: Configurations/FBSDKShareKit-Dynamic.xcconfig
@@ -99,38 +87,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - FBSDKAppInviteContent*
-          - FBSDKCameraEffectArguments*
-          - FBSDKCameraEffectTextures*
-          - FBSDKGameRequestContent*
-          - FBSDKGameRequestDialog*
-          - FBSDKGameRequestURLProvider*
-          - FBSDKMessageDialog*
-          - FBSDKSendButton*
-          - FBSDKShareButton*
-          - FBSDKShareCameraEffectContent*
-          - FBSDKShareDialog*
-          - FBSDKShareDialogMode*
-          - FBSDKSharingButton*
-          - FBSDKSharingScheme*
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        excludes:
-          - FBSDKCameraEffectArguments+Internal*
-          - FBSDKCameraEffectTextures+Internal*
-          - FBSDKGameRequest*
-          - FBSDKMessenger*
-          - FBSDKShareBridge*
-          - FBSDKShareAppEventNames*
-          - FBSDKShareCamera*
-          - FBSDKShareDialog*
-          - FBSDKShareExtension*
-          - FBSDKShareKit+Internal*
-          - FBSDKSocialCompose*
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
       Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
@@ -151,38 +107,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - FBSDKAppInviteContent*
-          - FBSDKCameraEffectArguments*
-          - FBSDKCameraEffectTextures*
-          - FBSDKGameRequestContent*
-          - FBSDKGameRequestDialog*
-          - FBSDKGameRequestURLProvider*
-          - FBSDKMessageDialog*
-          - FBSDKSendButton*
-          - FBSDKShareButton*
-          - FBSDKShareCameraEffectContent*
-          - FBSDKShareDialog*
-          - FBSDKShareDialogMode*
-          - FBSDKSharingButton*
-          - FBSDKSharingScheme*
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        excludes:
-          - FBSDKCameraEffectArguments+Internal*
-          - FBSDKCameraEffectTextures+Internal*
-          - FBSDKGameRequest*
-          - FBSDKMessenger*
-          - FBSDKShareBridge*
-          - FBSDKShareAppEventNames*
-          - FBSDKShareCamera*
-          - FBSDKShareDialog*
-          - FBSDKShareExtension*
-          - FBSDKShareKit+Internal*
-          - FBSDKSocialCompose*
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
       Release: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
