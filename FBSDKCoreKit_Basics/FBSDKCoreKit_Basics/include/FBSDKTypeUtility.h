@@ -33,15 +33,6 @@ NS_SWIFT_NAME(TypeUtility)
  */
 + (void)array:(NSMutableArray *)array addObject:(nullable id)object;
 
-/**
- Adds an object to an array at a given index if the object is not nil and the index is available.
- Will override objects if  they exist.
- @param array The array to add the object to.
- @param object The object to add to the array.
- @param index The index to try and insert the object into
- */
-+ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index;
-
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
 

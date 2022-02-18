@@ -36,17 +36,6 @@
   }
 }
 
-+ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index
-{
-  if (object && [array isKindOfClass:NSMutableArray.class]) {
-    if (index < array.count) {
-      [array insertObject:object atIndex:index];
-    } else if (index == array.count) {
-      [array addObject:object];
-    }
-  }
-}
-
 + (BOOL)boolValue:(id)object
 {
   if ([object isKindOfClass:NSNumber.class]) {
