@@ -104,6 +104,7 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 `+photoWithImage:userGenerated:`, `+photoWithImageURL:userGenerated:`, `+photoWithPhotoAsset:userGenerated:`. Also removed `init` and `new`; use the new convenience initializers instead.
 - Removed class-based factory methods for `ShareVideo`: `+videoWithData:`, `+videoWithData:previewPhoto:`, `+videoWithVideoAsset:`, `+videoWithVideoAsset:previewPhoto:`, `+videoWithVideoURL:`, `+videoWithVideoURL:previewPhoto:`. Also removed `init` and `new`; use the new convenience initializers instead.
 - Removed `videoURL` property from `PHAsset`.
+- Removed `isEqualToHashtag:` and `hashtagWithString:` methods from Hashtag. Use `isEqual:` and `initWithString:` instead.
 
 #### AppEvents deprecations
 
