@@ -325,7 +325,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
-                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 - (void)_didProcessConfigurationFromNetwork:(FBSDKServerConfiguration *)serverConfiguration

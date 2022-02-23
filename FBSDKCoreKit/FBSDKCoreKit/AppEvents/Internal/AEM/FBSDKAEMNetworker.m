@@ -27,7 +27,7 @@
                                                                          parameters:parameters
                                                                         tokenString:tokenString
                                                                          HTTPMethod:method
-                                                                              flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                              flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [graphRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> _Nullable connection, id _Nullable result, NSError *_Nullable error) {
     completion(result, error);
