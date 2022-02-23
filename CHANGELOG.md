@@ -97,7 +97,6 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 - Removed deprecated `init` and `new` methods from `Logger`
 - Removed deprecated `init` and `new` methods from `FBSDKURLSession`
 - Removed `init` and `new` methods from `ShareDialog`; use `init(viewController:content:delegate:)` instead.
-- Removed `GraphRequestFlag.skipClientToken` since a client token is now required
 - Removed `init` and `new` from `ShareCameraEffectContent`; use `init(effectID:contentURL:)` instead.
 - Removed deprecated `init(appLink:extras:appLinkData:)` from `AppLinkNavigation`; use `init(appLink:extras:appLinkData:settings:)` instead".
 - Removed class-based factory methods for `SharePhoto`:

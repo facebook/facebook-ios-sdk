@@ -1267,7 +1267,8 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [self raiseExceptionIfMissingClientToken];
 
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  if (!token && [self.class.settings.clientToken length] > 0) {
+  FBSDKGraphRequestFlags flags = [request flags];
+  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.class.settings.clientToken length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.class.settings.appID, self.class.settings.clientToken];
     if ([[[self.class.authenticationTokenProvider currentAuthenticationToken] graphDomain] isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
