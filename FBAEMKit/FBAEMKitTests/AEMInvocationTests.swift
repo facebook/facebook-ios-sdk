@@ -9,7 +9,7 @@
 import FBAEMKit
 import XCTest
 
-final class FBAEMInvocationTests: XCTestCase {
+final class AEMInvocationTests: XCTestCase {
 
   enum Keys {
     static let campaignID = "campaign_ids"

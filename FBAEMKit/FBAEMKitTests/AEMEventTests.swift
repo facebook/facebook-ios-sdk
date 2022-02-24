@@ -12,7 +12,7 @@ import XCTest
 
 #if !os(tvOS)
 
-final class FBAEMEventTests: XCTestCase {
+final class AEMEventTests: XCTestCase {
 
   enum Keys {
     static let eventName = "event_name"

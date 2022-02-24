@@ -11,7 +11,7 @@ import XCTest
 
 #if !os(tvOS)
 
-final class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase {
+final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
   enum Keys {
     static let ruleOperator = "operator"
