@@ -18,7 +18,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 #### Supported platform versions have been updated
 
-The minimum supported version of iOS is now 11.0 for all frameworks. The minimum supported version of tvOS is now 11.0 for all frameworks.
+The minimum supported version of iOS is now 11.0 for all frameworks. The minimum supported version of tvOS is now 11.0 for all frameworks. The XCFramework binaries are now built with Xcode 13 so Xcode 12 is no longer supported.
 
 #### Client Tokens are now required
 
