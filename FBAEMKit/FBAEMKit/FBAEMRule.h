@@ -16,6 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AEMRule)
 @interface FBAEMRule : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic) NSInteger conversionValue;

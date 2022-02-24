@@ -223,21 +223,21 @@ final class AEMConfigurationTests: XCTestCase {
   }
 
   func testGetEventSet() {
-    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getEventSet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.purchase, Values.donate], "Should get the expected event set")
   }
 
   func testGetCurrencySet() {
-    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getCurrencySet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.USD, Values.JPY], "Should get the expected event set")
   }
 
   func testParseRules() {
-    let parsedRules: [FBAEMRule]? = AEMConfiguration.parseRules(rulesData)
+    let parsedRules: [AEMRule]? = AEMConfiguration.parseRules(rulesData)
     XCTAssertEqual(
       parsedRules?[0].priority, 15, "Shoule parse the rules in descending priority order"
     )
@@ -363,7 +363,7 @@ final class AEMConfigurationTests: XCTestCase {
       "Should encode the expected param_rule with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.conversionValueRules] as? [FBAEMRule],
+      coder.encodedObject[Keys.conversionValueRules] as? [AEMRule],
       config?.conversionValueRules,
       "Should encode the expected conversion_value_rules with the correct key"
     )
@@ -402,7 +402,7 @@ final class AEMConfigurationTests: XCTestCase {
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
-      [NSArray.self, FBAEMEvent.self, FBAEMRule.self],
+      [NSArray.self, AEMEvent.self, AEMRule.self],
       "Should decode the expected type for the conversion_value_rules key"
     )
   }

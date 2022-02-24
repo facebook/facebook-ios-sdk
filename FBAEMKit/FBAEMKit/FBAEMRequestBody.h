@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(RequestBody)
+NS_SWIFT_NAME(AEMRequestBody)
 @interface FBAEMRequestBody : NSObject
 
 @property (nonatomic, readonly, retain) NSData *data;

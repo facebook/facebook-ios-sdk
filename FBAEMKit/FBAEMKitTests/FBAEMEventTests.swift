@@ -43,7 +43,7 @@ final class FBAEMEventTests: XCTestCase {
       ],
     ],
   ]
-  var validEventWithValues: FBAEMEvent? = FBAEMEvent(json: [
+  var validEventWithValues: AEMEvent? = AEMEvent(json: [
     Keys.eventName: Values.purchase,
     Keys.values: [
       [
@@ -57,7 +57,7 @@ final class FBAEMEventTests: XCTestCase {
     ],
   ])
 
-  var validEventWithoutValues: FBAEMEvent? = FBAEMEvent(json: [
+  var validEventWithoutValues: AEMEvent? = AEMEvent(json: [
     Keys.eventName: Values.purchase,
   ])
 
@@ -91,7 +91,7 @@ final class FBAEMEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(FBAEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(json: invalidData))
     invalidData = [
       Keys.values: [
         [
@@ -104,7 +104,7 @@ final class FBAEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(FBAEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(json: invalidData))
     invalidData = [
       Keys.eventName: Values.purchase,
       Keys.values: [
@@ -118,7 +118,7 @@ final class FBAEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(FBAEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(json: invalidData))
     invalidData = [
       Keys.eventName: [Values.purchase, Values.subscribe],
       Keys.values: [
@@ -132,20 +132,20 @@ final class FBAEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(FBAEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(json: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = FBAEMEvent(json: data)
+        _ = AEMEvent(json: data)
       }
     }
   }
 
   func testSecureCoding() {
     XCTAssertTrue(
-      FBAEMEvent.supportsSecureCoding,
+      AEMEvent.supportsSecureCoding,
       "AEM Events should support secure coding"
     )
   }
@@ -185,7 +185,7 @@ final class FBAEMEventTests: XCTestCase {
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = FBAEMEvent(coder: decoder)
+    _ = AEMEvent(coder: decoder)
 
     XCTAssertTrue(
       decoder.decodedObject[Keys.eventName] is NSString.Type,
