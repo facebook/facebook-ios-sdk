@@ -10,13 +10,12 @@
 
 #import "FBAEMReporter.h"
 
-#include <stdlib.h>
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMAdvertiserRuleFactory.h"
 #import "FBAEMConfiguration.h"
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
-#import "FBAEMSettings.h"
 #import "FBAEMUtility.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
