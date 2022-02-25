@@ -12,6 +12,8 @@
 
 #import <CommonCrypto/CommonHMAC.h>
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBAEMUtility.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
 

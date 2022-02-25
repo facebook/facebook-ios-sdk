@@ -10,6 +10,8 @@
 
 #import "FBAEMAdvertiserMultiEntryRule.h"
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBAEMAdvertiserSingleEntryRule.h"
 
 static NSString *const OPERATOR_KEY = @"operator";

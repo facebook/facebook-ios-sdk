@@ -10,6 +10,8 @@
 
 #import "FBAEMEvent.h"
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const EVENT_NAME_KEY = @"event_name";

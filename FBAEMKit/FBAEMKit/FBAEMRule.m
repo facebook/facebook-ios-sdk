@@ -10,6 +10,8 @@
 
 #import "FBAEMRule.h"
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const CONVERSION_VALUE_KEY = @"conversion_value";

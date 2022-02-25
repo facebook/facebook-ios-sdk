@@ -10,6 +10,8 @@
 
 #import "FBAEMNetworker.h"
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBAEMKitVersions.h"
 #import "FBAEMRequestBody.h"
 #import "FBCoreKitBasicsImportForAEMKit.h"
