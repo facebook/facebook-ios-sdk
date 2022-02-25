@@ -45,7 +45,6 @@
 --rules redundantBreak
 --rules redundantClosure
 --rules redundantExtensionACL
---rules redundantFileprivate
 --rules redundantGet
 --rules redundantInit
 --rules redundantLet
