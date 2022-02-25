@@ -181,7 +181,52 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6C51C77BB91A01A0AC3115DA"
+            BuildableName = "FBSDKShareKit.framework"
+            BlueprintName = "FBSDKShareKit-Dynamic"
+            ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E503762E6371E38D1BD77A42"
+            BuildableName = "FBSDKGamingServicesKit.framework"
+            BlueprintName = "FBSDKGamingServicesKit-Dynamic"
+            ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "95463755E22142396C3ADC06"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKit-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E6BC29DBCBDBCD6E9C7B5EA2"
+            BuildableName = "FBAEMKit.framework"
+            BlueprintName = "FBAEMKit-Dynamic"
+            ReferencedContainer = "container:FBAEMKit/FBAEMKit.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "563D03839E2E11C7E6A47941"
+            BuildableName = "FBSDKCoreKit_Basics.framework"
+            BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8729A2AF427950409E6D975A"
+            BuildableName = "FBSDKLoginKit.framework"
+            BlueprintName = "FBSDKLoginKit-Dynamic"
+            ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
          <TestableReference
             skipped = "NO">

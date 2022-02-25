@@ -45,9 +45,9 @@ schemes:
       targets:
         FBSDKGamingServicesKit-Dynamic: all
     test:
-      gatherCoverageData: true
       targets:
         - FBSDKGamingServicesKitTests
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKGamingServicesKit-Dynamic
 

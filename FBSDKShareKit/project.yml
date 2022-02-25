@@ -149,6 +149,9 @@ schemes:
     test:
       targets:
         - FBSDKShareKitTests
+      gatherCoverageData: true
+      coverageTargets:
+        - FBSDKShareKit-Dynamic
   FBSDKShareKit_TV-Static:
     build:
       targets:

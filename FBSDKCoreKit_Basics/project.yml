@@ -125,6 +125,7 @@ schemes:
         FBSDKCoreKit_Basics-Dynamic: all
     test:
       targets: [FBSDKCoreKit_BasicsTests]
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKCoreKit_Basics-Dynamic
   FBSDKCoreKit_Basics_TV-Static:

@@ -134,6 +134,7 @@ schemes:
         FBAEMKit-Dynamic: all
     test:
       targets: [FBAEMKitTests]
+      gatherCoverageData: true
       coverageTargets:
         - FBAEMKit-Dynamic
   FBAEMKit_TV-Static:

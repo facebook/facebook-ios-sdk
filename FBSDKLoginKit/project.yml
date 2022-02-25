@@ -225,6 +225,7 @@ schemes:
     test:
       targets:
         - FBSDKLoginKitTests
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKLoginKit-Dynamic
   FBSDKLoginKit_TV-Static:
