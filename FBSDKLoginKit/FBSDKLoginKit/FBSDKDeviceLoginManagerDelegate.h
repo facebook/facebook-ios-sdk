@@ -6,6 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <Foundation/Foundation.h>
+
+@class FBSDKDeviceLoginCodeInfo;
+@class FBSDKDeviceLoginManager;
+@class FBSDKDeviceLoginManagerResult;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// A delegate for `FBSDKDeviceLoginManager`.

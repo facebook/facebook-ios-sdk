@@ -6,18 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !TARGET_OS_TV
+#if !os(tvOS)
 
 import FBSDKCoreKit
 
 import UIKit
 
 /// Login Result Block
-@available(tvOS, unavailable)
 public typealias LoginResultBlock = (LoginResult) -> Void
 
 /// Describes the result of a login attempt.
-@available(tvOS, unavailable)
 @frozen
 public enum LoginResult {
   /// User succesfully logged in. Contains granted, declined permissions and access token.
@@ -27,7 +25,7 @@ public enum LoginResult {
   /// Login attempt failed.
   case failed(Error)
 
-  internal init(result: LoginManagerLoginResult?, error: Error?) {
+  init(result: LoginManagerLoginResult?, error: Error?) {
     guard let result = result, error == nil else {
       self = .failed(error ?? LoginError(.unknown))
       return
@@ -55,7 +53,6 @@ public enum LoginResult {
  If you are managing your own token instances outside of `AccessToken.current`, you will need to set
  `current` before calling `logIn()` to authorize further permissions on your tokens.
  */
-@available(tvOS, unavailable)
 public extension LoginManager {
   /**
    Initialize an instance of `LoginManager.`

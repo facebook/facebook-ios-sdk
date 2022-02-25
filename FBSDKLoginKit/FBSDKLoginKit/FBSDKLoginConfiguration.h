@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCodeVerifier.h"
+#if !TARGET_OS_TV
+
+ #import "FBSDKCodeVerifier.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -176,3 +178,5 @@ NS_SWIFT_NAME(LoginConfiguration)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif
