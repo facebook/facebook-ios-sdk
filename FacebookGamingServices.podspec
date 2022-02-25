@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.deprecated_in_favor_of = 'FBSDKGamingServicesKit'
 
   s.name         = 'FacebookGamingServices'
-  s.version      = '12.3.1'
+  s.version      = '13.0.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Gaming Services'
 
   s.description  = <<-DESC
@@ -53,8 +53,10 @@ Pod::Spec.new do |s|
 
   s.source = {
     http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-    sha1: 'fcad6213f252eff6a31adc4117fc1af6f6726426'
+    sha1: '608a15c67bb641d49fc59fc2186cd39c45a3941b'
   }
-  s.vendored_frameworks = "XCFrameworks/FacebookGamingServices.xcframework"
-  s.dependency "FBSDKGamingServicesKit", "#{s.version}"
+  s.vendored_frameworks = "XCFrameworks/FBSDKGamingServicesKit.xcframework"
+  s.dependency "FBSDKCoreKit_Basics", "#{s.version}"
+  s.dependency "FBSDKCoreKit", "#{s.version}"
+  s.dependency "FBSDKShareKit", "#{s.version}"
 end
