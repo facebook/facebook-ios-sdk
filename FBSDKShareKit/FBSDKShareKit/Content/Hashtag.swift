@@ -26,11 +26,11 @@ public final class Hashtag: NSObject {
   }
 
   public override var description: String {
-    if isValid {
-      return stringRepresentation
-    } else {
+    guard isValid else {
       return "Invalid hashtag '\(stringRepresentation)'"
     }
+
+    return stringRepresentation
   }
 
   /**
