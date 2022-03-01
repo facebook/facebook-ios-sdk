@@ -61,7 +61,7 @@ public final class AppInviteContent: NSObject {
   }
 }
 
-extension AppInviteContent: SharingValidation {
+extension AppInviteContent: SharingValidatable {
 
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     try _ShareUtility.validateNetworkURL(appLinkURL, named: "appLinkURL")

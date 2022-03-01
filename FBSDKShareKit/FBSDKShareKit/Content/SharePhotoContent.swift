@@ -104,7 +104,7 @@ extension SharePhotoContent: SharingContent {
   }
 }
 
-extension SharePhotoContent: SharingValidation {
+extension SharePhotoContent: SharingValidatable {
   private struct UnknownValidationError: Error {}
 
   /// Asks the receiver to validate that its content or media values are valid.

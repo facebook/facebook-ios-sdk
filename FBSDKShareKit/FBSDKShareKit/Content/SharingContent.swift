@@ -11,7 +11,7 @@ import Foundation
 
 /// A base interface for content to be shared.
 @objc(FBSDKSharingContent)
-public protocol SharingContent: NSObjectProtocol, SharingValidation {
+public protocol SharingContent: NSObjectProtocol, SharingValidatable {
 
   /**
    URL for the content being shared.
