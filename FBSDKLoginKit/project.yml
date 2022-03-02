@@ -49,10 +49,6 @@ targets:
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
         createIntermediateGroups: true
-      - path: FBSDKLoginKit/Swift
-        excludes:
-          - Exports.swift
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-Static.xcconfig
       Release: Configurations/FBSDKLoginKit-Static.xcconfig
@@ -80,10 +76,6 @@ targets:
           - Swift
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKLoginKit/Swift
-        excludes:
-          - Exports.swift
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-Dynamic.xcconfig
