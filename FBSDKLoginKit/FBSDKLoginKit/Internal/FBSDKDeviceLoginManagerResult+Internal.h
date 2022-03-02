@@ -6,14 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <Foundation/Foundation.h>
+
+#if defined BUCK
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
 #import "FBSDKDeviceLoginManagerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKDeviceLoginManagerResult (Testing)
+@interface FBSDKDeviceLoginManagerResult ()
 
+/**
+ Initializes a new instance
+ @param token The token
+ @param cancelled Indicates if the flow was cancelled.
+ */
 - (instancetype)initWithToken:(nullable FBSDKAccessToken *)token
-                  isCancelled:(BOOL)cancelled;
+                  isCancelled:(BOOL)cancelled NS_DESIGNATED_INITIALIZER;
 
 @end
 

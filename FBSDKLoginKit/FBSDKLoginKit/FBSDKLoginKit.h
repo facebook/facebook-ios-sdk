@@ -9,6 +9,7 @@
 #import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
+#import <FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h>
 #import <FBSDKLoginKit/FBSDKLoginConstants.h>
 
 #import <UIKit/UIKit.h>
