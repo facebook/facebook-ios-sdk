@@ -14,6 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKCodeVerifier;
 @class FBSDKPermission;
 
 /// typedef for FBSDKLoginAuthType

@@ -10,6 +10,8 @@
 
 #if !TARGET_OS_TV
 
+@class FBSDKLoginTooltipView;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
