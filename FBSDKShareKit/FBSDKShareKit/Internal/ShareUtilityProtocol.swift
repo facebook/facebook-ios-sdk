@@ -32,11 +32,6 @@ protocol ShareUtilityProtocol {
   static func getContentFlags(for shareContent: SharingContent) -> ContentFlags
 
   static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool
-
-  static func validateShareContent(
-    _ shareContent: SharingContent,
-    options bridgeOptions: ShareBridgeOptions
-  ) throws
 }
 
 struct WebShareBridgeComponents {

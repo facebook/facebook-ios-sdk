@@ -10,8 +10,7 @@
 
 import Foundation
 
-enum TestShareUtility: ShareUtilityProtocol {
-
+enum TestShareUtility {
   static var stubbedValidateShareShouldThrow = false
   static var stubbedTestShareContainsMedia = false
   static var stubbedTestShareContainsPhotos = false
@@ -25,6 +24,9 @@ enum TestShareUtility: ShareUtilityProtocol {
     stubbedTestShareContainsVideos = false
     stubbedHashtagString = nil
   }
+}
+
+extension TestShareUtility: ShareUtilityProtocol {
 
   static func feedShareDictionary(for content: SharingContent) -> [String: Any]? {
     [:]
@@ -61,6 +63,31 @@ enum TestShareUtility: ShareUtilityProtocol {
 
   static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
     false
+  }
+}
+
+extension TestShareUtility: ShareValidating {
+
+  struct ValidationError: Error {}
+
+  static func validateRequiredValue(_ value: Any, named name: String) throws {
+    throw ValidationError()
+  }
+
+  static func validateArgument<Argument>(
+    _ value: Argument,
+    named name: String,
+    in possibleValues: Set<Argument>
+  ) throws where Argument: Hashable {
+    throw ValidationError()
+  }
+
+  static func validateArray(_ array: [Any], minCount: Int, maxCount: Int, named name: String) throws {
+    throw ValidationError()
+  }
+
+  static func validateNetworkURL(_ url: URL, named name: String) throws {
+    throw ValidationError()
   }
 
   static func validateShareContent(

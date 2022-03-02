@@ -28,7 +28,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   static var internalURLOpener: ShareInternalURLOpening?
   static var internalUtility: InternalUtilityProtocol?
   static var settings: SettingsProtocol?
-  static var shareUtility: ShareUtilityProtocol.Type?
+  static var shareUtility: (ShareUtilityProtocol & ShareValidating).Type?
   static var bridgeAPIRequestFactory: BridgeAPIRequestCreating?
   static var bridgeAPIRequestOpener: BridgeAPIRequestOpening?
   static var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol?
@@ -139,7 +139,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     internalURLOpener: ShareInternalURLOpening,
     internalUtility: InternalUtilityProtocol,
     settings: SettingsProtocol,
-    shareUtility: ShareUtilityProtocol.Type,
+    shareUtility: (ShareUtilityProtocol & ShareValidating).Type,
     bridgeAPIRequestFactory: BridgeAPIRequestCreating,
     bridgeAPIRequestOpener: BridgeAPIRequestOpening,
     socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol,

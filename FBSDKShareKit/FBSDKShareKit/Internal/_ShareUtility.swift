@@ -16,7 +16,9 @@ import Foundation
 
  @warning INTERNAL - DO NOT USE
  */
-public enum _ShareUtility {
+public enum _ShareUtility {}
+
+extension _ShareUtility: ShareValidating {
 
   public static func validateRequiredValue(_ value: Any, named name: String) throws {
     let isValid: Bool
@@ -55,6 +57,43 @@ public enum _ShareUtility {
         underlyingError: nil
       )
     }
+  }
+
+  static func validateArray(
+    _ array: [Any],
+    minCount: Int,
+    maxCount: Int,
+    named name: String
+  ) throws {
+    guard (minCount ... maxCount).contains(array.count) else {
+      throw ErrorFactory().invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: name,
+        value: array,
+        message: "\(name) must have \(minCount) to \(maxCount) values",
+        underlyingError: nil
+      )
+    }
+  }
+
+  static func validateNetworkURL(_ url: URL, named name: String) throws {
+    guard InternalUtility.shared.isBrowserURL(url) else {
+      throw ErrorFactory().invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: name,
+        value: url,
+        message: nil,
+        underlyingError: nil
+      )
+    }
+  }
+
+  static func validateShareContent(
+    _ shareContent: SharingContent,
+    options bridgeOptions: ShareBridgeOptions = []
+  ) throws {
+    try validateRequiredValue(shareContent, named: "shareContent")
+    try shareContent.validate(options: bridgeOptions)
   }
 }
 
@@ -199,14 +238,6 @@ extension _ShareUtility: ShareUtilityProtocol {
     }
   }
 
-  static func validateShareContent(
-    _ shareContent: SharingContent,
-    options bridgeOptions: ShareBridgeOptions = []
-  ) throws {
-    try validateRequiredValue(shareContent, named: "shareContent")
-    try shareContent.validate(options: bridgeOptions)
-  }
-
   static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
     let flags = getContentFlags(for: shareMediaContent)
     return flags.containsVideos && flags.containsPhotos
@@ -270,35 +301,6 @@ extension _ShareUtility: ShareUtilityProtocol {
       return runningFlags
     default:
       return ContentFlags()
-    }
-  }
-
-  static func validateArray(
-    _ array: [Any],
-    minCount: Int,
-    maxCount: Int,
-    named name: String
-  ) throws {
-    guard (minCount ... maxCount).contains(array.count) else {
-      throw ErrorFactory().invalidArgumentError(
-        domain: ShareErrorDomain,
-        name: name,
-        value: array,
-        message: "\(name) must have \(minCount) to \(maxCount) values",
-        underlyingError: nil
-      )
-    }
-  }
-
-  static func validateNetworkURL(_ url: URL, named name: String) throws {
-    guard InternalUtility.shared.isBrowserURL(url) else {
-      throw ErrorFactory().invalidArgumentError(
-        domain: ShareErrorDomain,
-        name: name,
-        value: url,
-        message: nil,
-        underlyingError: nil
-      )
     }
   }
 }
