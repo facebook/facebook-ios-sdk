@@ -23,6 +23,6 @@ final class DevicePollerTests: XCTestCase {
 
     poller.scheduleBlock(block, interval: 1)
 
-    waitForExpectations(timeout: 1, handler: nil)
+    waitForExpectations(timeout: 2, handler: nil)
   }
 }
