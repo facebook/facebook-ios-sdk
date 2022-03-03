@@ -90,6 +90,20 @@ public final class ShareVideo: NSObject, ShareMedia {
   }
 }
 
+// MARK: - Type Dependencies
+
+extension ShareVideo: _ConfigurableType {
+  struct Dependencies {
+    var errorFactory: ErrorCreating
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(errorFactory: ErrorFactory())
+}
+
+// MARK: - Validation
+
 extension ShareVideo: SharingValidatable {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
@@ -105,7 +119,8 @@ extension ShareVideo: SharingValidatable {
     case let .url(url):
       try validateVideoURL(url, options: bridgeOptions)
     default:
-      throw ErrorFactory().invalidArgumentError(
+      let errorFactory = try Self.getDependencies().errorFactory
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "video",
         value: self,
@@ -117,7 +132,8 @@ extension ShareVideo: SharingValidatable {
 
   private func validateData(_ data: Data, options bridgeOptions: ShareBridgeOptions) throws {
     guard bridgeOptions == .videoData else {
-      throw ErrorFactory().invalidArgumentError(
+      let errorFactory = try Self.getDependencies().errorFactory
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "data",
         value: data,
@@ -129,7 +145,8 @@ extension ShareVideo: SharingValidatable {
 
   private func validateVideoAsset(_ asset: PHAsset, options bridgeOptions: ShareBridgeOptions) throws {
     guard asset.mediaType == .video else {
-      throw ErrorFactory().invalidArgumentError(
+      let errorFactory = try Self.getDependencies().errorFactory
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "videoAsset",
         value: videoAsset,
@@ -151,7 +168,8 @@ extension ShareVideo: SharingValidatable {
       return
     }
 
-    throw ErrorFactory().invalidArgumentError(
+    let errorFactory = try Self.getDependencies().errorFactory
+    throw errorFactory.invalidArgumentError(
       domain: ShareErrorDomain,
       name: "videoURL",
       value: videoURL,
