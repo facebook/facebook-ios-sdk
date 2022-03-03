@@ -43,7 +43,7 @@ final class AEMEventTests: XCTestCase {
       ],
     ],
   ]
-  var validEventWithValues: AEMEvent? = AEMEvent(json: [
+  var validEventWithValues: AEMEvent? = AEMEvent(dict: [
     Keys.eventName: Values.purchase,
     Keys.values: [
       [
@@ -57,7 +57,7 @@ final class AEMEventTests: XCTestCase {
     ],
   ])
 
-  var validEventWithoutValues: AEMEvent? = AEMEvent(json: [
+  var validEventWithoutValues: AEMEvent? = AEMEvent(dict: [
     Keys.eventName: Values.purchase,
   ])
 
@@ -78,7 +78,7 @@ final class AEMEventTests: XCTestCase {
       Values.purchase,
       "AEM event name should match the expected event_name in the json"
     )
-    let expectedValues: [String: NSNumber] = [
+    let expectedValues: [String: Int] = [
       Values.USD: 100,
       Values.JPY: 1000,
     ]
@@ -91,7 +91,7 @@ final class AEMEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(AEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.values: [
         [
@@ -104,7 +104,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: Values.purchase,
       Keys.values: [
@@ -118,7 +118,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: [Values.purchase, Values.subscribe],
       Keys.values: [
@@ -132,13 +132,13 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(json: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = AEMEvent(json: data)
+        _ = AEMEvent(dict: data)
       }
     }
   }
@@ -161,7 +161,7 @@ final class AEMEventTests: XCTestCase {
       "Should encode the expected event_name with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.values] as? [String: NSNumber],
+      coder.encodedObject[Keys.values] as? [String: Int],
       event?.values,
       "Should encode the expected values with the correct key"
     )
@@ -178,7 +178,7 @@ final class AEMEventTests: XCTestCase {
       "Should encode the expected event_name with the correct key"
     )
     XCTAssertNil(
-      coder.encodedObject[Keys.values] as? [String: NSNumber],
+      coder.encodedObject[Keys.values] as? [String: Int],
       "Should not encode values"
     )
   }

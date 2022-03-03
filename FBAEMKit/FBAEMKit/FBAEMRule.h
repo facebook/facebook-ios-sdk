@@ -12,7 +12,7 @@
 
  #import <Foundation/Foundation.h>
 
- #import "FBAEMEvent.h"
+@class FBAEMEvent;
 
 NS_ASSUME_NONNULL_BEGIN
 
