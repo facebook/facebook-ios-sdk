@@ -117,7 +117,7 @@ final class ShareVideoTests: XCTestCase {
     video = ShareVideo(data: data, previewPhoto: nil)
 
     XCTAssertThrowsError(
-      try video.validate(options: .excluding(.videoData)),
+      try video.validate(options: []),
       .failsBadOptionsValidationWithDataSource
     ) { error in
       guard let sdkError = error as? TestSDKError else {
@@ -203,7 +203,7 @@ final class ShareVideoTests: XCTestCase {
     video = ShareVideo(videoURL: url, previewPhoto: nil)
 
     XCTAssertThrowsError(
-      try video.validate(options: .excluding(.videoData)),
+      try video.validate(options: []),
       .failsValidationWithFileURLSource
     ) { error in
       guard let sdkError = error as? TestSDKError else {
@@ -276,21 +276,6 @@ fileprivate extension String {
 }
 
 // MARK: - Test Values
-
-fileprivate extension ShareBridgeOptions {
-  static let none: Self = []
-  static let all: Self = [.photoAsset, .photoImageURL, .videoAsset, .videoData, .webHashtag]
-
-  // Randomly selects either all options minus the one specified or no options
-  static func excluding(_ option: Self) -> Self {
-    switch Bool.random() {
-    case true:
-      return all.subtracting(option)
-    case false:
-      return none
-    }
-  }
-}
 
 fileprivate extension URL {
   // swiftlint:disable force_unwrapping
