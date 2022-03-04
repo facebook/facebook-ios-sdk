@@ -12,6 +12,7 @@ import Foundation
 
 enum TestShareUtility {
   static var stubbedValidateShareShouldThrow = false
+  static var stubbedValidateNetworkURLShouldThrow = false
   static var stubbedTestShareContainsMedia = false
   static var stubbedTestShareContainsPhotos = false
   static var stubbedTestShareContainsVideos = false
@@ -24,6 +25,7 @@ enum TestShareUtility {
 
   static func reset() {
     stubbedValidateShareShouldThrow = false
+    stubbedValidateNetworkURLShouldThrow = false
     stubbedTestShareContainsMedia = false
     stubbedTestShareContainsPhotos = false
     stubbedTestShareContainsVideos = false
@@ -104,7 +106,9 @@ extension TestShareUtility: ShareValidating {
   }
 
   static func validateNetworkURL(_ url: URL, named name: String) throws {
-    throw ValidationError()
+    if stubbedValidateNetworkURLShouldThrow {
+      throw ValidationError()
+    }
   }
 
   static func validateShareContent(

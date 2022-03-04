@@ -61,24 +61,43 @@ public final class AppInviteContent: NSObject {
   }
 }
 
+// MARK: - Type Dependencies
+
+extension AppInviteContent: _ConfigurableType {
+  struct Dependencies {
+    var validator: ShareValidating.Type
+    var errorFactory: ErrorCreating
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(
+    validator: _ShareUtility.self,
+    errorFactory: ErrorFactory()
+  )
+}
+
+// MARK: - Validation
+
 extension AppInviteContent: SharingValidatable {
 
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validateNetworkURL(appLinkURL, named: "appLinkURL")
+    let validator = try Self.getDependencies().validator
+    try validator.validateNetworkURL(appLinkURL, named: "appLinkURL")
 
     if let url = appInvitePreviewImageURL {
-      try _ShareUtility.validateNetworkURL(url, named: "appInvitePreviewImageURL")
+      try validator.validateNetworkURL(url, named: "appInvitePreviewImageURL")
     }
 
     try validatePromoCode()
   }
 
   private func validatePromoCode() throws {
+    let errorFactory = try Self.getDependencies().errorFactory
+
     let textIsEmpty = promotionText?.isEmpty ?? true
     let codeIsEmpty = promotionCode?.isEmpty ?? true
     guard !textIsEmpty || !codeIsEmpty else { return }
-
-    let errorFactory: ErrorCreating = ErrorFactory()
 
     guard let text = promotionText,
           (1 ... 80).contains(text.count)
