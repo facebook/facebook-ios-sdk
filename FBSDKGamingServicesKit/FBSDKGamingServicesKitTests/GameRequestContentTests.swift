@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKGamingServicesKit
+
 import FBSDKCoreKit
-import FBSDKGamingServicesKit
 import XCTest
 
 final class GameRequestContentTests: XCTestCase {

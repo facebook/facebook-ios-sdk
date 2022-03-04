@@ -8,6 +8,8 @@
 
 #if !os(tvOS)
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class SKAdNetworkEventTests: XCTestCase {

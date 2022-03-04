@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import XCTest
+@testable import FBSDKLoginKit
 
 import FBSDKCoreKit_Basics
 import TestTools
+import XCTest
 
 final class AuthenticationTokenHeaderTests: XCTestCase {
 

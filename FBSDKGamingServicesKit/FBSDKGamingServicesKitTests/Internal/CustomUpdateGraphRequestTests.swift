@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+@testable import FBSDKGamingServicesKit
 
 import FBSDKCoreKit
 import TestTools

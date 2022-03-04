@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKShareKit
+@testable import FBSDKShareKit
+
 import XCTest
 
 final class ShareMediaContentTests: XCTestCase {

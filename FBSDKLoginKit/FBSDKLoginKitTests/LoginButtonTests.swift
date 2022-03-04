@@ -6,11 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if BUCK
-import FacebookCore
-#endif
+@testable import FBSDKLoginKit
 
-import FBSDKLoginKit
 import TestTools
 import XCTest
 

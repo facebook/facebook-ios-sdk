@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import AuthenticationServices
 import CoreTelephony
-import FBSDKCoreKit
 import SafariServices
 import Security
 import Social

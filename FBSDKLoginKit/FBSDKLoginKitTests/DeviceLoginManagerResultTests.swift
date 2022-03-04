@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
+@testable import FBSDKLoginKit
+
 import TestTools
 import XCTest
 
