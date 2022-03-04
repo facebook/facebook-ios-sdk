@@ -50,6 +50,24 @@ public final class SharePhotoContent: NSObject {
   public let shareUUID: String? = UUID().uuidString
 }
 
+// MARK: - Class Dependencies
+
+extension SharePhotoContent: _ConfigurableType {
+  struct Dependencies {
+    var imageFinder: MediaLibrarySearching
+    var validator: ShareValidating.Type
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static let defaultDependencies: Dependencies? = Dependencies(
+    imageFinder: PHImageManager.default(),
+    validator: _ShareUtility.self
+  )
+}
+
+// MARK: - SharingContent
+
 extension SharePhotoContent: SharingContent {
   /**
    Adds content to an existing dictionary as key/value pairs and returns the
@@ -63,24 +81,15 @@ extension SharePhotoContent: SharingContent {
     _ existingParameters: [String: Any],
     options bridgeOptions: ShareBridgeOptions
   ) -> [String: Any] {
+    guard let imageFinder = try? Self.getDependencies().imageFinder else {
+      return existingParameters
+    }
+
     var images = [UIImage]()
 
     photos.forEach { photo in
       if let asset = photo.photoAsset {
-        // Load the asset and bridge the image
-        let imageRequestOptions = PHImageRequestOptions()
-        imageRequestOptions.resizeMode = .exact
-        imageRequestOptions.deliveryMode = .highQualityFormat
-        imageRequestOptions.isSynchronous = true
-
-        PHImageManager.default().requestImage(
-          for: asset,
-          targetSize: PHImageManagerMaximumSize,
-          contentMode: .default,
-          options: imageRequestOptions
-        ) { potentialImage, _ in
-          guard let image = potentialImage else { return }
-
+        if let image = try? imageFinder.findImage(for: asset) {
           images.append(image)
         }
       } else if let url = photo.imageURL {
@@ -104,13 +113,22 @@ extension SharePhotoContent: SharingContent {
   }
 }
 
-extension SharePhotoContent: SharingValidatable {
-  private struct UnknownValidationError: Error {}
+// MARK: - SharingValidatable
 
-  /// Asks the receiver to validate that its content or media values are valid.
+extension SharePhotoContent: SharingValidatable {
+  // The number of photos that can be shared at once is restricted
+  private static let photosCountRange = 1 ... 6
+
+  /// Validate that this content contains valid values
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validateArray(photos, minCount: 1, maxCount: 6, named: "photos")
+    let validator = try Self.getDependencies().validator
+    try validator.validateArray(
+      photos,
+      minCount: Self.photosCountRange.lowerBound,
+      maxCount: Self.photosCountRange.upperBound,
+      named: "photos"
+    )
 
     try photos.forEach { photo in
       try photo.validate(options: bridgeOptions)

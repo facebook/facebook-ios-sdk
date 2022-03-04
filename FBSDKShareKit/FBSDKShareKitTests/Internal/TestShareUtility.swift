@@ -16,6 +16,11 @@ enum TestShareUtility {
   static var stubbedTestShareContainsPhotos = false
   static var stubbedTestShareContainsVideos = false
   static var stubbedHashtagString: String?
+  static var stubbedValidateArrayShouldThrow = false
+  static var validateArrayArray: [Any]?
+  static var validateArrayMinCount: Int?
+  static var validateArrayMaxCount: Int?
+  static var validateArrayName: String?
 
   static func reset() {
     stubbedValidateShareShouldThrow = false
@@ -23,6 +28,11 @@ enum TestShareUtility {
     stubbedTestShareContainsPhotos = false
     stubbedTestShareContainsVideos = false
     stubbedHashtagString = nil
+    stubbedValidateArrayShouldThrow = false
+    validateArrayArray = nil
+    validateArrayMinCount = nil
+    validateArrayMaxCount = nil
+    validateArrayName = nil
   }
 }
 
@@ -83,7 +93,14 @@ extension TestShareUtility: ShareValidating {
   }
 
   static func validateArray(_ array: [Any], minCount: Int, maxCount: Int, named name: String) throws {
-    throw ValidationError()
+    validateArrayArray = array
+    validateArrayMinCount = minCount
+    validateArrayMaxCount = maxCount
+    validateArrayName = name
+
+    if stubbedValidateArrayShouldThrow {
+      throw ValidationError()
+    }
   }
 
   static func validateNetworkURL(_ url: URL, named name: String) throws {
@@ -95,8 +112,7 @@ extension TestShareUtility: ShareValidating {
     options bridgeOptions: ShareBridgeOptions = []
   ) throws {
     if stubbedValidateShareShouldThrow {
-      struct Error: Swift.Error {}
-      throw Error()
+      throw ValidationError()
     }
   }
 }

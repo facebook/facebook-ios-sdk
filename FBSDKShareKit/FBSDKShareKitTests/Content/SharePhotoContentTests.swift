@@ -9,9 +9,53 @@
 @testable import FBSDKShareKit
 
 import FBSDKCoreKit
+import Photos
 import XCTest
 
 final class SharePhotoContentTests: XCTestCase {
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var imageFinder: TestMediaLibrarySearcher!
+  var validator: TestShareUtility.Type!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    imageFinder = TestMediaLibrarySearcher()
+    validator = TestShareUtility.self
+    validator.reset()
+
+    SharePhotoContent.configure(
+      with: .init(
+        imageFinder: imageFinder,
+        validator: TestShareUtility.self
+      )
+    )
+  }
+
+  override func tearDown() {
+    imageFinder = nil
+    validator.reset()
+    validator = nil
+    SharePhotoContent.unconfigure()
+
+    super.tearDown()
+  }
+
+  func testDefaultDependencies() throws {
+    SharePhotoContent.unconfigure()
+
+    let dependencies = try SharePhotoContent.getDependencies()
+    XCTAssertIdentical(dependencies.imageFinder as AnyObject, PHImageManager.default(), .usesPHImageManagerByDefault)
+    XCTAssertTrue(dependencies.validator is _ShareUtility.Type, .usesShareUtilityByDefault)
+  }
+
+  func testCustomDependencies() throws {
+    let dependencies = try SharePhotoContent.getDependencies()
+    XCTAssertIdentical(dependencies.imageFinder as AnyObject, imageFinder, .usesCustomImageFinder)
+    XCTAssertTrue(dependencies.validator is TestShareUtility.Type, .usesCustomShareValidator)
+  }
 
   func testProperties() {
     let content = ShareModelTestUtility.photoContent
@@ -36,33 +80,34 @@ final class SharePhotoContentTests: XCTestCase {
     content.placeID = ShareModelTestUtility.placeID
     content.ref = ShareModelTestUtility.ref
 
-    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
+    XCTAssertNoThrow(try content.validate(options: []))
+    XCTAssertEqual(validator.validateArrayArray as? [SharePhoto], content.photos, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMinCount, 1, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMaxCount, 6, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayName, "photos", .validationValidatesPhotos)
   }
 
-  func testValidationWithNilPhotos() {
+  func testValidationWithoutPhotos() {
+    validator.stubbedValidateArrayShouldThrow = true
     let content = SharePhotoContent()
 
-    XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
-      "Should throw an error"
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "photos")
-    }
+    XCTAssertThrowsError(try content.validate(options: []), .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayArray as? [SharePhoto], content.photos, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMinCount, 1, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMaxCount, 6, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayName, "photos", .validationValidatesPhotos)
   }
+}
 
-  func testValidationWithEmptyPhotos() {
-    let content = SharePhotoContent()
-    content.photos = []
+// MARK: - Assumptions
 
-    XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
-      "Should throw an error"
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "photos")
-    }
-  }
+fileprivate extension String {
+  static let usesPHImageManagerByDefault = "The default image finder dependency should be the default PHImageManager"
+  static let usesShareUtilityByDefault = "The default share validator dependency should be the _ShareUtility type"
+  static let usesCustomImageFinder = "The image finder dependency should be configurable"
+  static let usesCustomShareValidator = "The share validator dependency should be configurable"
+
+  static let validationValidatesPhotos = """
+    Validating a share photo content should validate its photos using its validator
+    """
 }
