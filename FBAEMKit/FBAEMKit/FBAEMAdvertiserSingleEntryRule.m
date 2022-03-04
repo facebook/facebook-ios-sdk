@@ -10,9 +10,9 @@
 
 #import "FBAEMAdvertiserSingleEntryRule.h"
 
-#import <FBAEMKit/FBAEMKit-Swift.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBCoreKitBasicsImportForAEMKit.h"
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 static NSString *const OPERATOR_KEY = @"operator";
 static NSString *const PARAMKEY_KEY = @"param_key";

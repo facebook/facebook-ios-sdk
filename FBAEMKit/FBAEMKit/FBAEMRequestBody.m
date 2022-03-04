@@ -10,9 +10,9 @@
 
 #import "FBAEMRequestBody.h"
 
-#import <FBAEMKit/FBAEMKit-Swift.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBCoreKitBasicsImportForAEMKit.h"
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 #define kNewline @"\r\n"
 

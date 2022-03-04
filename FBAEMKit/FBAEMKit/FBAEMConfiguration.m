@@ -10,11 +10,12 @@
 
 #import "FBAEMConfiguration.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMAdvertiserMultiEntryRule.h"
 #import "FBAEMAdvertiserSingleEntryRule.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 static NSString *const DEFAULT_CURRENCY_KEY = @"default_currency";
 static NSString *const CUTOFF_TIME_KEY = @"cutoff_time";

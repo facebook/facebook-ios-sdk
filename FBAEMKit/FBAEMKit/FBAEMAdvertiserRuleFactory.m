@@ -10,11 +10,12 @@
 
 #import "FBAEMAdvertiserRuleFactory.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMAdvertiserMultiEntryRule.h"
 #import "FBAEMAdvertiserSingleEntryRule.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 @implementation FBAEMAdvertiserRuleFactory
 

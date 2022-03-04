@@ -11,11 +11,11 @@
 #import "FBAEMInvocation.h"
 
 #import <CommonCrypto/CommonHMAC.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMUtility.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define SEC_IN_DAY 86400
 #define CATALOG_OPTIMIZATION_MODULUS 8

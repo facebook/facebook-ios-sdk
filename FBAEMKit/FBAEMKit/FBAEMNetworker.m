@@ -10,11 +10,12 @@
 
 #import "FBAEMNetworker.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMKitVersions.h"
 #import "FBAEMRequestBody.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define kNewline @"\r\n"
 

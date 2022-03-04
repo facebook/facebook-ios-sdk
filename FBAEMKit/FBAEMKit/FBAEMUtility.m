@@ -12,9 +12,9 @@
 
  #import "FBAEMUtility.h"
 
- #import <FBAEMKit/FBAEMKit-Swift.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
- #import "FBCoreKitBasicsImportForAEMKit.h"
+ #import <FBAEMKit/FBAEMKit-Swift.h>
 
 static NSString *const ITEM_PRICE_KEY = @"item_price";
 static NSString *const QUANTITY_KEY = @"quantity";
