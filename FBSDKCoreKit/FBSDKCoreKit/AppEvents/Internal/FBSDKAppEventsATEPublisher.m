@@ -41,7 +41,7 @@
   if ((self = [self init])) {
     NSString *identifier = [FBSDKTypeUtility coercedToStringValue:appIdentifier];
     if (identifier.length == 0) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishATE:]"];
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing FBSDKAppEvents.appID for [FBSDKAppEvents publishATE:]"];
       return nil;
     }
     _appIdentifier = identifier;

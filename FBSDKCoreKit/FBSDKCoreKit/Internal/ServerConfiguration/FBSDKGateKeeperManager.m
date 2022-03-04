@@ -144,7 +144,7 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];
   [FBSDKTypeUtility dictionary:parameters setObject:_settings.sdkVersion forKey:@"sdk_version"];
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
+  [FBSDKTypeUtility dictionary:parameters setObject:UIDevice.currentDevice.systemVersion forKey:@"os_version"];
 
   return [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                                     _settings.appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
@@ -163,7 +163,7 @@ static id<FBSDKDataPersisting> _store;
       // Update the timestamp only when there is no error
       _timestamp = [NSDate date];
 
-      NSMutableDictionary<NSString *, id> *gateKeeper = [_gateKeepers mutableCopy];
+      NSMutableDictionary<NSString *, id> *gateKeeper = _gateKeepers.mutableCopy;
       if (!gateKeeper) {
         gateKeeper = [NSMutableDictionary new];
       }

@@ -224,7 +224,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   };
 
   if (existingState) {
-    NSMutableDictionary<NSString *, id> *mutableState = [clientState mutableCopy];
+    NSMutableDictionary<NSString *, id> *mutableState = clientState.mutableCopy;
     [mutableState addEntriesFromDictionary:existingState];
     clientState = mutableState;
   }

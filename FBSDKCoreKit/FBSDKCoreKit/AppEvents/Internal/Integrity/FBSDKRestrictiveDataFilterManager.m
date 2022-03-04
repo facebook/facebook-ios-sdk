@@ -87,7 +87,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
       NSMutableDictionary<FBSDKAppEventParameterName, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
       NSMutableDictionary<FBSDKAppEventParameterName, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
 
-      for (NSString *key in [parameters keyEnumerator]) {
+      for (NSString *key in parameters.keyEnumerator) {
         NSString *type = [self getMatchedDataTypeWithEventName:eventName paramKey:key];
         if (type) {
           [FBSDKTypeUtility dictionary:restrictedParams setObject:type forKey:key];
@@ -95,7 +95,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
         }
       }
 
-      if ([[restrictedParams allKeys] count] > 0) {
+      if ([restrictedParams.allKeys count] > 0) {
         NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
                                                                                 error:NULL
                                                                  invalidObjectHandler:NULL];

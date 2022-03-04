@@ -114,7 +114,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 - (void)uploadErrors
 {
   NSArray<NSDictionary<NSString *, id> *> *errorReports = [self loadErrorReports];
-  if ([errorReports count] == 0) {
+  if (errorReports.count == 0) {
     return [self _clearErrorInfo];
   }
   NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:errorReports options:0 error:nil];

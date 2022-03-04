@@ -69,7 +69,7 @@
     }
     for (FBSDKSKAdNetworkEvent *event in rule.events) {
       for (NSString *currency in event.values) {
-        [currencySet addObject:[currency uppercaseString]];
+        [currencySet addObject:currency.uppercaseString];
       }
     }
   }

@@ -163,7 +163,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
     [siblings addObjectsFromArray:childviews];
   } else {
     for (NSMutableDictionary<NSString *, id> *c in childviews) {
-      NSMutableDictionary<NSString *, id> *child = [c mutableCopy];
+      NSMutableDictionary<NSString *, id> *child = c.mutableCopy;
       if ([self pruneTree:child siblings:siblings]) {
         isDescendantInteracted = YES;
         [FBSDKTypeUtility array:newChildren addObject:child];
@@ -241,9 +241,9 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
   NSString *validHint = [FBSDKTypeUtility coercedToStringValue:node[VIEW_HIERARCHY_HINT_KEY]];
   NSString *validClassName = [FBSDKTypeUtility coercedToStringValue:node[VIEW_HIERARCHY_CLASS_NAME_KEY]];
 
-  NSString *text = [validText lowercaseString] ?: @"";
-  NSString *hint = [validHint lowercaseString] ?: @"";
-  NSString *className = [validClassName lowercaseString] ?: @"";
+  NSString *text = validText.lowercaseString ?: @"";
+  NSString *hint = validHint.lowercaseString ?: @"";
+  NSString *className = validClassName.lowercaseString ?: @"";
 
   if ([self foundIndicators:[@"$,amount,price,total" componentsSeparatedByString:@","]
                    inValues:@[text, hint]]) {

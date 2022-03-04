@@ -97,7 +97,7 @@ static const struct {
 {
   id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
   return [self initWithAppScheme:appScheme
-                      pasteboard:[UIPasteboard generalPasteboard]
+                      pasteboard:UIPasteboard.generalPasteboard
              dataLengthThreshold:FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold
                   includeAppIcon:YES
                     errorFactory:errorFactory];

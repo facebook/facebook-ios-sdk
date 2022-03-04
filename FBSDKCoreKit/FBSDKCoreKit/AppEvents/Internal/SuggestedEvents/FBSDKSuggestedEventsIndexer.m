@@ -185,7 +185,7 @@ static dispatch_once_t setupNonce;
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
       UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
       [self predictEventWithUIResponder:cell
-                                   text:[self getTextFromContentView:[cell contentView]]];
+                                   text:[self getTextFromContentView:cell.contentView]];
     };
     [self.swizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
                            onClass:[delegate class]
@@ -196,7 +196,7 @@ static dispatch_once_t setupNonce;
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
       UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
       [self predictEventWithUIResponder:cell
-                                   text:[self getTextFromContentView:[cell contentView]]];
+                                   text:[self getTextFromContentView:cell.contentView]];
     };
     [self.swizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
                            onClass:[delegate class]
@@ -242,7 +242,7 @@ static dispatch_once_t setupNonce;
 
     __weak typeof(self) weakSelf = self;
     dispatch_block_t predictAndLogBlock = ^{
-      NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
+      NSMutableDictionary<NSString *, id> *viewTreeCopy = viewTree.mutableCopy;
       float *denseData = [weakSelf.featureExtractor getDenseFeatures:viewTree];
       NSString *textFeature = [FBSDKModelUtility normalizedText:[weakSelf.featureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
       NSString *event = [weakSelf.eventProcessor processSuggestedEvents:textFeature denseData:denseData];
@@ -281,7 +281,7 @@ static dispatch_once_t setupNonce;
 - (NSString *)getTextFromContentView:(UIView *)contentView
 {
   NSMutableArray<NSString *> *textArray = [NSMutableArray array];
-  for (UIView *subView in [contentView subviews]) {
+  for (UIView *subView in contentView.subviews) {
     NSString *label = [FBSDKViewHierarchy getText:subView];
     if (label.length > 0) {
       [FBSDKTypeUtility array:textArray addObject:label];

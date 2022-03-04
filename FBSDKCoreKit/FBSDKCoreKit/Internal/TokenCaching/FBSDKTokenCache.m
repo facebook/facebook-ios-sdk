@@ -104,7 +104,7 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
 
   [self.keychainStore setDictionary:dict
                              forKey:kFBSDKAccessTokenKeychainKey
-                      accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+                      accessibility:FBSDKDynamicFrameworkLoader.loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
 }
 
 - (nullable FBSDKAuthenticationToken *)authenticationToken
@@ -173,7 +173,7 @@ NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
 
   [self.keychainStore setDictionary:dict
                              forKey:kFBSDKAuthenticationTokenKeychainKey
-                      accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+                      accessibility:FBSDKDynamicFrameworkLoader.loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
 }
 
 - (void)clearAuthenticationTokenCache

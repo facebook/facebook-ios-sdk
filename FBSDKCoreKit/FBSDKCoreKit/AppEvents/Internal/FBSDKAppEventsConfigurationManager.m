@@ -76,7 +76,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
   #pragma clang diagnostic pop
 
   if (!self.configuration) {
-    self.configuration = [FBSDKAppEventsConfiguration defaultConfiguration];
+    self.configuration = FBSDKAppEventsConfiguration.defaultConfiguration;
   }
   self.completionBlocks = [NSMutableArray new];
   self.timestamp = [self.store objectForKey:FBSDKAppEventsConfigurationTimestampKey];
@@ -105,7 +105,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
     self.isLoadingConfiguration = true;
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:appID
                                                                                    parameters:@{
-                                       @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", [UIDevice currentDevice].systemVersion]
+                                       @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", UIDevice.currentDevice.systemVersion]
                                      }];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;

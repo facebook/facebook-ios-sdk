@@ -69,7 +69,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     return [self isMatchedWithAsteriskParam:param eventParameters:eventParams paramPath:paramPath];
   }
   // if data does not contain the key, we should return false directly.
-  if (!param || ![[eventParams allKeys] containsObject:param]) {
+  if (!param || ![eventParams.allKeys containsObject:param]) {
     return NO;
   }
   // Apply operator rule if the last param is reached

@@ -253,7 +253,7 @@
   __weak Class<FBSDKSwizzling> weakSwizzler = self.swizzler;
   __block BOOL hasReactNative = self.hasReactNative;
   fb_dispatch_on_main_thread(^{
-    if (![view window]) {
+    if (!view.window) {
       return;
     }
 

@@ -291,7 +291,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   uname(&systemInfo);
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:@(systemInfo.machine) forKey:kFBSDKDeviceModel];
 
-  [FBSDKTypeUtility dictionary:completeCrashLog setObject:[UIDevice currentDevice].systemVersion forKey:kFBSDKDeviceOSVersion];
+  [FBSDKTypeUtility dictionary:completeCrashLog setObject:UIDevice.currentDevice.systemVersion forKey:kFBSDKDeviceOSVersion];
 
   NSData *data = [FBSDKTypeUtility dataWithJSONObject:completeCrashLog options:0 error:nil];
 

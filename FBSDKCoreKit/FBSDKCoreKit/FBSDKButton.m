@@ -402,7 +402,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
   BOOL forceSizeToFit = CGRectIsEmpty(self.bounds);
 
-  CGFloat scale = [UIScreen mainScreen].scale;
+  CGFloat scale = UIScreen.mainScreen.scale;
   UIImage *backgroundImage;
 
   backgroundImage = [self _backgroundImageWithColor:backgroundColor cornerRadius:3.0 scale:scale];

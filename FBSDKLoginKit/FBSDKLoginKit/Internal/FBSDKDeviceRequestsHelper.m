@@ -48,7 +48,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
   uname(&systemInfo);
   NSDictionary<NSString *, NSString *> *deviceInfo = @{
     FBSDK_DEVICE_INFO_DEVICE : @(systemInfo.machine),
-    FBSDK_DEVICE_INFO_MODEL : [UIDevice currentDevice].model,
+    FBSDK_DEVICE_INFO_MODEL : UIDevice.currentDevice.model,
   };
   NSError *err;
   NSData *jsonDeviceInfo = [FBSDKTypeUtility dataWithJSONObject:deviceInfo

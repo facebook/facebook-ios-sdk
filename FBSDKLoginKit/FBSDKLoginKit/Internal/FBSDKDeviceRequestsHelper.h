@@ -12,17 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #define FBSDK_DEVICE_INFO_PARAM @"device_info"
 
-/*
- @class
-
-  Helper class for device requests mDNS broadcasts. Note this is only intended for
- internal consumption.
- */
+/// Helper class for device requests mDNS broadcasts. Note this is only intended for internal consumption.
 NS_SWIFT_NAME(DeviceRequestsHelper)
 @interface FBSDKDeviceRequestsHelper : NSObject
 
 /// Get device info to include with the GraphRequest
-@property (class, nonatomic, readonly, copy) NSString *getDeviceInfo;
++ (NSString *)getDeviceInfo;
 
 /**
  Start the mDNS advertisement service for a device request

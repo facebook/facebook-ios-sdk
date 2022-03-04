@@ -117,7 +117,7 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
   }
 
   if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
-    NSDictionary<NSString *, id> *header = [httpResponse allHeaderFields];
+    NSDictionary<NSString *, id> *header = httpResponse.allHeaderFields;
     NSString *status = [FBSDKTypeUtility dictionary:header objectForKey:@"fb-s" ofType:NSString.class];
     if ([status isEqualToString:@"not_authorized"]) {
       [self _invalidateCurrentSession];

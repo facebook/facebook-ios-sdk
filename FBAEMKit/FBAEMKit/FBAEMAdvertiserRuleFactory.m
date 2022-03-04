@@ -125,7 +125,7 @@
 
 - (nullable NSString *)primaryKeyForRule:(NSDictionary<NSString *, id> *)rule
 {
-  NSArray<NSString *> *keys = [rule allKeys];
+  NSArray<NSString *> *keys = rule.allKeys;
   NSString *key = keys.firstObject;
   return [FBSDKTypeUtility stringValueOrNil:key];
 }

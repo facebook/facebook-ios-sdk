@@ -119,7 +119,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
     _numSkipped++;
   } else {
     [FBSDKTypeUtility array:_mutableEvents addObject:@{
-       @"event" : [eventDictionary mutableCopy],
+       @"event" : eventDictionary.mutableCopy,
        FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY : @(isImplicit)
      }];
   }
