@@ -57,33 +57,25 @@ public final class ShareCameraEffectContent: NSObject {
 
   /// A unique identifier for a share involving this content, useful for tracking purposes.
   public private(set) var shareUUID: String? = UUID().uuidString
-
-  static var internalUtility: InternalUtilityProtocol?
-  private static var hasBeenConfigured = false
-
-  public override init() {
-    Self.configureClassDependencies()
-    super.init()
-  }
-
-  private class func configureClassDependencies() {
-    guard !hasBeenConfigured else { return }
-
-    configure(internalUtility: InternalUtility.shared)
-  }
-
-  class func configure(internalUtility: InternalUtilityProtocol) {
-    self.internalUtility = internalUtility
-    hasBeenConfigured = true
-  }
-
-  #if DEBUG
-  class func resetClassDependencies() {
-    internalUtility = nil
-    hasBeenConfigured = false
-  }
-  #endif
 }
+
+// MARK: - Type Dependencies
+
+extension ShareCameraEffectContent: DependentType {
+  struct Dependencies {
+    var internalUtility: InternalUtilityProtocol
+    var errorFactory: ErrorCreating
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(
+    internalUtility: InternalUtility.shared,
+    errorFactory: ErrorFactory()
+  )
+}
+
+// MARK: - Sharing
 
 extension ShareCameraEffectContent: SharingContent {
 
@@ -130,7 +122,8 @@ extension ShareCameraEffectContent: SharingContent {
     guard !effectID.isEmpty else { return }
 
     if !CharacterSet(charactersIn: effectID).isSubset(of: .decimalDigits) {
-      throw ErrorFactory().invalidArgumentError(
+      let errorFactory = try Self.getDependencies().errorFactory
+      throw errorFactory.invalidArgumentError(
         name: "effectID",
         value: effectID,
         message: "Invalid value for effectID, effectID can contain only numerical characters.",

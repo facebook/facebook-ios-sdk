@@ -30,7 +30,6 @@ final class ShareDialogTests: XCTestCase {
 
     AccessToken.current = nil
     ShareDialog.resetClassDependencies()
-    ShareCameraEffectContent.resetClassDependencies()
 
     internalURLOpener = TestInternalURLOpener()
     internalUtility = TestInternalUtility()
@@ -55,7 +54,12 @@ final class ShareDialogTests: XCTestCase {
       errorFactory: errorFactory
     )
 
-    ShareCameraEffectContent.configure(internalUtility: internalUtility)
+    ShareCameraEffectContent.setDependencies(
+      .init(
+        internalUtility: internalUtility,
+        errorFactory: errorFactory
+      )
+    )
   }
 
   override func tearDown() {
@@ -71,7 +75,7 @@ final class ShareDialogTests: XCTestCase {
 
     ShareDialog.resetClassDependencies()
     TestShareUtility.reset()
-    ShareCameraEffectContent.resetClassDependencies()
+    ShareCameraEffectContent.resetDependencies()
     AccessToken.current = nil
 
     super.tearDown()
