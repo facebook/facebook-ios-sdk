@@ -28,14 +28,14 @@ if [ -f internal/tools/xcodegen ]; then
     XCODEGEN_BINARY="${CWD}/internal/tools/xcodegen"
 elif ! command -v xcodegen >/dev/null; then
     echo "WARNING: Xcodegen not installed, run 'brew install xcodegen' or visit https://github.com/yonaskolb/XcodeGen"
-    exit
+    exit 1
 fi
 
 VERSION=$( xcodegen --version )
 
 if [ "$VERSION" != "Version: $EXPECTED_XCODEGEN_VERSION" ]; then
     echo "Incorrect xcodegen version. Please install or upgrade to version $EXPECTED_XCODEGEN_VERSION"
-    exit
+    exit 1
 fi
 
 
