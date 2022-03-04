@@ -10,7 +10,7 @@
 
 #import "FBSDKLoginRecoveryAttempter.h"
 
-#import "FBSDKLoginKit+Internal.h"
+#import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 
 @implementation FBSDKLoginRecoveryAttempter
