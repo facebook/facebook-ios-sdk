@@ -150,7 +150,8 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     XCTAssertNil(AuthenticationTokenClaims(fromEncodedString: encoded, nonce: nonce))
   }
 
-  func testDecodeRandomClaims() throws {
+  // swiftlint:disable:next identifier_name
+  func _testDecodeRandomClaims() throws {
     try XCTSkipIf(true) // see T98167812
 
     try (0 ..< 100).forEach { _ in

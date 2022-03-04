@@ -73,7 +73,8 @@ final class ServerConfigurationManagerTests: XCTestCase {
     )
   }
 
-  func testCompleteFetchingServerConfigurationWithoutConnectionResponseOrError() throws {
+  // swiftlint:disable:next identifier_name
+  func _testCompleteFetchingServerConfigurationWithoutConnectionResponseOrError() throws {
     // This test needs more work before it can be included in the regular test suite
     // See T105037698
     try XCTSkipIf(true)
