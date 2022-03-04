@@ -90,11 +90,25 @@ public final class SharePhoto: NSObject, ShareMedia {
   }
 }
 
+// MARK: - Type Dependencies
+
+extension SharePhoto: _ConfigurableType {
+  struct Dependencies {
+    var errorFactory: ErrorCreating
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(errorFactory: ErrorFactory())
+}
+
+// MARK: - Validation
+
 extension SharePhoto: SharingValidatable {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    let errorFactory = ErrorFactory()
+    let errorFactory = try Self.getDependencies().errorFactory
 
     guard bridgeOptions != .photoImageURL else {
       guard let url = source?.url else {
