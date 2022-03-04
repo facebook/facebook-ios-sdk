@@ -4,3 +4,4 @@
     "author" : "xcode"
   }
 }
+pod 'Facebook-iOS-SDK'
