@@ -108,32 +108,41 @@ extension SharePhoto: SharingValidatable {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
+    switch bridgeOptions {
+    case .photoImageURL:
+      try validateRemoteURL()
+    default:
+      try validateSource()
+    }
+  }
+
+  private func validateRemoteURL() throws {
     let errorFactory = try Self.getDependencies().errorFactory
 
-    guard bridgeOptions != .photoImageURL else {
-      guard let url = source?.url else {
-        throw errorFactory.invalidArgumentError(
-          domain: ShareErrorDomain,
-          name: "photo",
-          value: self,
-          message: "imageURL is required.",
-          underlyingError: nil
-        )
-      }
-
-      // a web-based URL is required
-      guard !url.isFileURL else {
-        throw errorFactory.invalidArgumentError(
-          domain: ShareErrorDomain,
-          name: "imageURL",
-          value: url,
-          message: "Cannot refer to a local file resource.",
-          underlyingError: nil
-        )
-      }
-
-      return
+    guard let url = source?.url else {
+      throw errorFactory.invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: "photo",
+        value: self,
+        message: "imageURL is required.",
+        underlyingError: nil
+      )
     }
+
+    // A web-based URL is required
+    guard !url.isFileURL else {
+      throw errorFactory.invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: "imageURL",
+        value: url,
+        message: "Cannot refer to a local file resource.",
+        underlyingError: nil
+      )
+    }
+  }
+
+  private func validateSource() throws {
+    let errorFactory = try Self.getDependencies().errorFactory
 
     switch source {
     case let .asset(asset):
