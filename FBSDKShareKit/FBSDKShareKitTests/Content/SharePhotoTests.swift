@@ -22,21 +22,20 @@ final class SharePhotoTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    SharePhoto.unconfigure()
     errorFactory = TestErrorFactory()
-    SharePhoto.configure(with: .init(errorFactory: errorFactory))
+    SharePhoto.setDependencies(.init(errorFactory: errorFactory))
   }
 
   override func tearDown() {
     errorFactory = nil
-    SharePhoto.unconfigure()
+    SharePhoto.resetDependencies()
     photo = nil
 
     super.tearDown()
   }
 
   func testDefaultDependencies() throws {
-    SharePhoto.unconfigure()
+    SharePhoto.resetDependencies()
 
     let dependencies = try SharePhoto.getDependencies()
     XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesConcreteErrorFactoryByDefault)

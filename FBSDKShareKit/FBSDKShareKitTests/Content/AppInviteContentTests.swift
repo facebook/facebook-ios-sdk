@@ -29,8 +29,8 @@ final class AppInviteContentTests: XCTestCase {
     validator.reset()
     errorFactory = TestErrorFactory()
 
-    AppInviteContent.configure(
-      with: .init(
+    AppInviteContent.setDependencies(
+      .init(
         validator: validator,
         errorFactory: errorFactory
       )
@@ -41,7 +41,7 @@ final class AppInviteContentTests: XCTestCase {
   }
 
   override func tearDown() {
-    AppInviteContent.unconfigure()
+    AppInviteContent.resetDependencies()
 
     validator.reset()
     validator = nil
@@ -52,7 +52,7 @@ final class AppInviteContentTests: XCTestCase {
   }
 
   func testDefaultDependencies() throws {
-    AppInviteContent.unconfigure()
+    AppInviteContent.resetDependencies()
 
     let dependencies = try AppInviteContent.getDependencies()
     XCTAssertTrue(dependencies.validator is _ShareUtility.Type, .usesShareUtilityByDefault)

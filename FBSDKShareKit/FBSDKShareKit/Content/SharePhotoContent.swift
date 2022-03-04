@@ -52,7 +52,7 @@ public final class SharePhotoContent: NSObject {
 
 // MARK: - Class Dependencies
 
-extension SharePhotoContent: _ConfigurableType {
+extension SharePhotoContent: DependentType {
   struct Dependencies {
     var imageFinder: MediaLibrarySearching
     var validator: ShareValidating.Type

@@ -22,21 +22,20 @@ final class ShareVideoTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    ShareVideo.unconfigure()
     errorFactory = TestErrorFactory()
-    ShareVideo.configure(with: .init(errorFactory: errorFactory))
+    ShareVideo.setDependencies(.init(errorFactory: errorFactory))
   }
 
   override func tearDown() {
     errorFactory = nil
-    ShareVideo.unconfigure()
+    ShareVideo.resetDependencies()
     video = nil
 
     super.tearDown()
   }
 
   func testDefaultDependencies() throws {
-    ShareVideo.unconfigure()
+    ShareVideo.resetDependencies()
 
     let dependencies = try ShareVideo.getDependencies()
     XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesConcreteErrorFactoryByDefault)

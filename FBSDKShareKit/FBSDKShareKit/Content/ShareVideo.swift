@@ -92,7 +92,7 @@ public final class ShareVideo: NSObject, ShareMedia {
 
 // MARK: - Type Dependencies
 
-extension ShareVideo: _ConfigurableType {
+extension ShareVideo: DependentType {
   struct Dependencies {
     var errorFactory: ErrorCreating
   }

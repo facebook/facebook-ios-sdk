@@ -27,8 +27,8 @@ final class SharePhotoContentTests: XCTestCase {
     validator = TestShareUtility.self
     validator.reset()
 
-    SharePhotoContent.configure(
-      with: .init(
+    SharePhotoContent.setDependencies(
+      .init(
         imageFinder: imageFinder,
         validator: TestShareUtility.self
       )
@@ -39,14 +39,14 @@ final class SharePhotoContentTests: XCTestCase {
     imageFinder = nil
     validator.reset()
     validator = nil
-    SharePhotoContent.unconfigure()
+    SharePhotoContent.resetDependencies()
     content = nil
 
     super.tearDown()
   }
 
   func testDefaultDependencies() throws {
-    SharePhotoContent.unconfigure()
+    SharePhotoContent.resetDependencies()
 
     let dependencies = try SharePhotoContent.getDependencies()
     XCTAssertIdentical(dependencies.imageFinder as AnyObject, PHImageManager.default(), .usesPHImageManagerByDefault)

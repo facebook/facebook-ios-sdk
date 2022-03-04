@@ -63,7 +63,7 @@ public final class AppInviteContent: NSObject {
 
 // MARK: - Type Dependencies
 
-extension AppInviteContent: _ConfigurableType {
+extension AppInviteContent: DependentType {
   struct Dependencies {
     var validator: ShareValidating.Type
     var errorFactory: ErrorCreating
