@@ -138,4 +138,6 @@ public final class TestInternalUtility: NSObject,
   public func parameters(fromFBURL url: URL) -> [String: Any] {
     stubbedFBURLParameters ?? [:]
   }
+
+  public var bundleForStrings: Bundle { .main }
 }

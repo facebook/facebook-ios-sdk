@@ -52,13 +52,16 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
   }
 
   public func configureButton() {
-    let title = NSLocalizedString(
-      "SendButton.Send",
-      tableName: "FacebookSDK",
-      bundle: InternalUtility.shared.bundleForStrings,
-      value: "Send",
-      comment: "The label for FBSDKSendButton"
-    )
+    var title = ""
+    if let internalUtility = try? Self.getDependencies().internalUtility {
+      title = NSLocalizedString(
+        "SendButton.Send",
+        tableName: "FacebookSDK",
+        bundle: internalUtility.bundleForStrings,
+        value: "Send",
+        comment: "The label for FBSDKSendButton"
+      )
+    }
 
     let backgroundColor = UIColor(red: 0.0, green: 132.0 / 255.0, blue: 1.0, alpha: 1.0)
     let highlightedColor = UIColor(red: 0.0, green: 111.0 / 255.0, blue: 1.0, alpha: 1.0)
@@ -77,7 +80,8 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
     dialog = MessageDialog()
   }
 
-  @IBAction private func share() {
+  // swiftlint:disable:next private_action
+  @IBAction func share() {
     logTapEvent(
       withEventName: .sendButtonDidTap,
       parameters: analyticsParameters
@@ -85,6 +89,16 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
 
     dialog?.show()
   }
+}
+
+extension FBSendButton: DependentType {
+  struct Dependencies {
+    var internalUtility: InternalUtilityProtocol
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(internalUtility: InternalUtility.shared)
 }
 
 #endif

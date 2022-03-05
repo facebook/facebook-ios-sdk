@@ -27,7 +27,7 @@ import FBSDKCoreKit
  */
 @objcMembers
 @objc(FBSDKMessageDialog)
-public final class MessageDialog: NSObject, SharingDialog {
+public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this prefer_final_classes
 
   /// The receiver's delegate or nil if it doesn't have a delegate.
   public weak var delegate: SharingDelegate?

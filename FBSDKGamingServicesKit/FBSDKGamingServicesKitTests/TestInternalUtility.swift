@@ -78,6 +78,8 @@ final class TestInternalUtility: InternalUtilityProtocol {
   func parameters(fromFBURL url: URL) -> [String: Any] {
     [:]
   }
+
+  var bundleForStrings: Bundle { .main }
 }
 
 enum URLConstants {
