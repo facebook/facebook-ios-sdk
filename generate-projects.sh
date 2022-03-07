@@ -31,7 +31,7 @@ elif ! command -v xcodegen >/dev/null; then
     exit 1
 fi
 
-VERSION=$( xcodegen --version )
+VERSION=$( $XCODEGEN_BINARY --version )
 
 if [ "$VERSION" != "Version: $EXPECTED_XCODEGEN_VERSION" ]; then
     echo "Incorrect xcodegen version. Please install or upgrade to version $EXPECTED_XCODEGEN_VERSION"
