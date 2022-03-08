@@ -31,13 +31,18 @@ elif ! command -v xcodegen >/dev/null; then
     exit 1
 fi
 
-VERSION=$( $XCODEGEN_BINARY --version )
-
-if [ "$VERSION" != "Version: $EXPECTED_XCODEGEN_VERSION" ]; then
-    echo "Incorrect xcodegen version. Please install or upgrade to version $EXPECTED_XCODEGEN_VERSION"
-    exit 1
+CURRENT_XCODEGEN_VERSION=$($XCODEGEN_BINARY --version)
+CURRENT_XCODEGEN_VERSION=${CURRENT_XCODEGEN_VERSION#"Version: "} # Strip "Version :" prefix
+if [ "$CURRENT_XCODEGEN_VERSION" != "$EXPECTED_XCODEGEN_VERSION" ]; then
+    echo "${YELLOW}WARNING: Expected xcodegen version is $EXPECTED_XCODEGEN_VERSION. You have $CURRENT_XCODEGEN_VERSION.${RESET}"
+    XCODEGEN_VERSION_BYPASS_FLAG='--force-with-wrong-xcodegen'
+    if [ "$1" != "$XCODEGEN_VERSION_BYPASS_FLAG" ]; then
+        echo "${YELLOW}You may use the $XCODEGEN_VERSION_BYPASS_FLAG flag to bypass this check.${RESET}"
+        exit 1
+    else
+        echo "${YELLOW}Using $XCODEGEN_VERSION_BYPASS_FLAG to bypass version check. Xcode project file generation will proceed but you may encounter unexpected issues.${RESET}"
+    fi
 fi
-
 
 for KIT_DIR in FBSDKCoreKit_Basics FBAEMKit FBSDKCoreKit TestTools FBSDKLoginKit FBSDKShareKit FBSDKGamingServicesKit; do
     cd $KIT_DIR || exit
