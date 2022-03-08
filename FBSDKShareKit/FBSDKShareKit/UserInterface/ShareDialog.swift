@@ -17,23 +17,11 @@ import UIKit
 @objcMembers
 @objc(FBSDKShareDialog)
 public final class ShareDialog: NSObject, SharingDialog {
-  private struct UnconfiguredError: Error {}
   private struct MissingContentError: Error {}
   private struct UnknownValidationError: Error {}
   private struct BridgeRequestCreationError: Error {}
 
   private static let feedMethodName = "feed"
-
-  private static var hasBeenConfigured = false
-  static var internalURLOpener: ShareInternalURLOpening?
-  static var internalUtility: InternalUtilityProtocol?
-  static var settings: SettingsProtocol?
-  static var shareUtility: (ShareUtilityProtocol & ShareValidating).Type?
-  static var bridgeAPIRequestFactory: BridgeAPIRequestCreating?
-  static var bridgeAPIRequestOpener: BridgeAPIRequestOpening?
-  static var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol?
-  static var windowFinder: _WindowFinding?
-  static var errorFactory: ErrorCreating?
 
   private static var hasValidatedURLSchemeRegistration = false
   private static var temporaryDirectory = URL(
@@ -84,8 +72,6 @@ public final class ShareDialog: NSObject, SharingDialog {
     content: SharingContent?,
     delegate: SharingDelegate?
   ) {
-    Self.configureClassDependencies()
-
     fromViewController = viewController
     shareContent = content
     self.delegate = delegate
@@ -131,78 +117,57 @@ public final class ShareDialog: NSObject, SharingDialog {
     dialog.show()
     return dialog
   }
+}
 
-  // MARK: - Class Configuration
+// MARK: - Type Dependencies
 
-  // swiftlint:disable:next function_parameter_count
-  static func configure(
-    internalURLOpener: ShareInternalURLOpening,
-    internalUtility: InternalUtilityProtocol,
-    settings: SettingsProtocol,
-    shareUtility: (ShareUtilityProtocol & ShareValidating).Type,
-    bridgeAPIRequestFactory: BridgeAPIRequestCreating,
-    bridgeAPIRequestOpener: BridgeAPIRequestOpening,
-    socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol,
-    windowFinder: _WindowFinding,
-    errorFactory: ErrorCreating
-  ) {
-    self.internalURLOpener = internalURLOpener
-    self.internalUtility = internalUtility
-    self.settings = settings
-    self.shareUtility = shareUtility
-    self.bridgeAPIRequestFactory = bridgeAPIRequestFactory
-    self.bridgeAPIRequestOpener = bridgeAPIRequestOpener
-    self.socialComposeViewControllerFactory = socialComposeViewControllerFactory
-    self.windowFinder = windowFinder
-    self.errorFactory = errorFactory
-
-    hasBeenConfigured = true
+extension ShareDialog: DependentType {
+  struct Dependencies {
+    var internalURLOpener: ShareInternalURLOpening
+    var internalUtility: InternalUtilityProtocol
+    var settings: SettingsProtocol
+    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
+    var bridgeAPIRequestFactory: BridgeAPIRequestCreating
+    var bridgeAPIRequestOpener: BridgeAPIRequestOpening
+    var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol
+    var windowFinder: _WindowFinding
+    var errorFactory: ErrorCreating
+    var eventLogger: ShareEventLogging
   }
 
-  static func configureClassDependencies() {
-    guard !hasBeenConfigured else { return }
+  static var configuredDependencies: Dependencies?
 
-    configure(
-      internalURLOpener: UIApplication.shared,
-      internalUtility: InternalUtility.shared,
-      settings: Settings.shared,
-      shareUtility: _ShareUtility.self,
-      bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
-      bridgeAPIRequestOpener: BridgeAPI.shared,
-      socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
-      windowFinder: InternalUtility.shared,
-      errorFactory: ErrorFactory()
-    )
-  }
-
-  private static func validateURLSchemeRegistration() throws {
-    guard !Self.hasValidatedURLSchemeRegistration else { return }
-
-    guard let internalUtility = Self.internalUtility else {
-      throw UnconfiguredError()
-    }
-
-    internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.facebookAPI.rawValue)
-    Self.hasValidatedURLSchemeRegistration = true
-  }
+  static var defaultDependencies: Dependencies? = Dependencies(
+    internalURLOpener: ShareUIApplication.shared,
+    internalUtility: InternalUtility.shared,
+    settings: Settings.shared,
+    shareUtility: _ShareUtility.self,
+    bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
+    bridgeAPIRequestOpener: BridgeAPI.shared,
+    socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
+    windowFinder: InternalUtility.shared,
+    errorFactory: ErrorFactory(),
+    eventLogger: AppEvents.shared
+  )
 
   #if DEBUG
-  static func resetClassDependencies() {
-    internalURLOpener = nil
-    internalUtility = nil
-    settings = nil
-    shareUtility = nil
-    bridgeAPIRequestFactory = nil
-    bridgeAPIRequestOpener = nil
-    socialComposeViewControllerFactory = nil
-    windowFinder = nil
-    errorFactory = nil
-
-    Self.hasValidatedURLSchemeRegistration = false
-
-    hasBeenConfigured = false
+  static func resetDependencies() {
+    configuredDependencies = nil
+    hasValidatedURLSchemeRegistration = false
   }
   #endif
+}
+
+extension ShareDialog {
+
+  private static func validateURLSchemeRegistration() throws {
+    guard !hasValidatedURLSchemeRegistration else { return }
+
+    let internalUtility = try getDependencies().internalUtility
+
+    internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.facebookAPI.rawValue)
+    hasValidatedURLSchemeRegistration = true
+  }
 
   public var canShow: Bool {
     guard shareContent != nil else {
@@ -236,7 +201,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
   @discardableResult
   public func show() -> Bool {
-    guard let internalUtility = Self.internalUtility else {
+    guard let internalUtility = try? Self.getDependencies().internalUtility else {
       return false
     }
 
@@ -334,15 +299,19 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private var canShowNative: Bool {
-    Self.internalUtility?.isFacebookAppInstalled ?? false
-  }
-
-  private var canShowShareSheet: Bool {
-    guard Self.internalUtility?.isFacebookAppInstalled == true else {
+    guard let internalUtility = try? Self.getDependencies().internalUtility else {
       return false
     }
 
-    return Self.socialComposeViewControllerFactory != nil
+    return internalUtility.isFacebookAppInstalled
+  }
+
+  private var canShowShareSheet: Bool {
+    guard let internalUtility = try? Self.getDependencies().internalUtility else {
+      return false
+    }
+
+    return internalUtility.isFacebookAppInstalled
   }
 
   private var canAttributeThroughShareSheet: Bool {
@@ -357,24 +326,24 @@ public final class ShareDialog: NSObject, SharingDialog {
     components.path = "/"
 
     var canOpenURL = false
-    if let url = components.url {
-      canOpenURL = Self.internalURLOpener?.canOpenURL(url) ?? false
+    if let url = components.url,
+       let internalURLOpener = try? Self.getDependencies().internalURLOpener {
+      canOpenURL = internalURLOpener.canOpenURL(url)
     }
 
     return canOpenURL || canUseFBShareSheet
   }
 
   private var canUseFBShareSheet: Bool {
+    guard let urlOpener = try? Self.getDependencies().internalURLOpener else {
+      return false
+    }
+
     var components = URLComponents()
     components.scheme = URLScheme.facebookAPI.rawValue
     components.path = "/"
 
-    guard
-      let url = components.url,
-      let urlOpener = Self.internalURLOpener
-    else {
-      return false
-    }
+    guard let url = components.url else { return false }
 
     return urlOpener.canOpenURL(url)
   }
@@ -464,14 +433,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func showBrowser() throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let internalUtility = Self.internalUtility,
-      let requestOpener = Self.bridgeAPIRequestOpener,
-      let requestFactory = Self.bridgeAPIRequestFactory
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
@@ -481,10 +443,10 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     if let photoContent = content as? SharePhotoContent,
        photoContentHasAtLeastOneImage(photoContent) {
-      shareUtility.buildAsyncWebPhotoContent(photoContent) { [self] success, methodName, parameters in
+      dependencies.shareUtility.buildAsyncWebPhotoContent(photoContent) { [self] success, methodName, parameters in
         guard
           success,
-          let request = requestFactory.bridgeAPIRequest(
+          let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
             with: .web,
             scheme: URLScheme.https.rawValue,
             methodName: methodName,
@@ -493,7 +455,7 @@ public final class ShareDialog: NSObject, SharingDialog {
           )
         else { return }
 
-        requestOpener.open(
+        dependencies.bridgeAPIRequestOpener.open(
           request,
           useSafariViewController: shouldUseSafariViewController,
           from: fromViewController
@@ -504,12 +466,12 @@ public final class ShareDialog: NSObject, SharingDialog {
             isCancelled: response.isCancelled
           )
 
-          internalUtility.unregisterTransientObject(self)
+          dependencies.internalUtility.unregisterTransientObject(self)
         }
       }
     } else {
-      let components = shareUtility.buildWebShareBridgeComponents(for: content)
-      guard let request = requestFactory.bridgeAPIRequest(
+      let components = dependencies.shareUtility.buildWebShareBridgeComponents(for: content)
+      guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
         with: .web,
         scheme: URLScheme.https.rawValue,
         methodName: components.methodName,
@@ -520,7 +482,7 @@ public final class ShareDialog: NSObject, SharingDialog {
         throw BridgeRequestCreationError()
       }
 
-      requestOpener.open(
+      dependencies.bridgeAPIRequestOpener.open(
         request,
         useSafariViewController: shouldUseSafariViewController,
         from: fromViewController
@@ -531,29 +493,21 @@ public final class ShareDialog: NSObject, SharingDialog {
           isCancelled: response.isCancelled
         )
 
-        internalUtility.unregisterTransientObject(self)
+        dependencies.internalUtility.unregisterTransientObject(self)
       }
     }
   }
 
   private func showFeedBrowser() throws {
     try validateShareContentForFeed()
-
-    guard
-      let shareUtility = Self.shareUtility,
-      let internalUtility = Self.internalUtility,
-      let requestFactory = Self.bridgeAPIRequestFactory,
-      let requestOpener = Self.bridgeAPIRequestOpener
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
     }
 
-    let parameters = shareUtility.feedShareDictionary(for: content)
-    guard let request = requestFactory.bridgeAPIRequest(
+    let parameters = dependencies.shareUtility.feedShareDictionary(for: content)
+    guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .web,
       scheme: URLScheme.https.rawValue,
       methodName: Self.feedMethodName,
@@ -564,7 +518,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       throw BridgeRequestCreationError()
     }
 
-    requestOpener.open(
+    dependencies.bridgeAPIRequestOpener.open(
       request,
       useSafariViewController: shouldUseSafariViewController,
       from: fromViewController
@@ -575,48 +529,37 @@ public final class ShareDialog: NSObject, SharingDialog {
         isCancelled: response.isCancelled
       )
 
-      internalUtility.unregisterTransientObject(self)
+      dependencies.internalUtility.unregisterTransientObject(self)
     }
   }
 
   private func showFeedWeb() throws {
     try validateShareContentForFeed()
-
-    guard let shareUtility = Self.shareUtility else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
     }
 
-    let parameters = shareUtility.feedShareDictionary(for: content)
+    let parameters = dependencies.shareUtility.feedShareDictionary(for: content)
     webDialog = WebDialog.createAndShow(
       name: Self.feedMethodName,
       parameters: parameters,
       frame: .zero,
       delegate: self,
-      windowFinder: Self.windowFinder
+      windowFinder: dependencies.windowFinder
     )
   }
 
   private func showNative() throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let internalUtility = Self.internalUtility,
-      let errorFactory = Self.errorFactory,
-      let requestFactory = Self.bridgeAPIRequestFactory,
-      let requestOpener = Self.bridgeAPIRequestOpener
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
     }
 
     guard canShowNative else {
-      throw errorFactory.error(
+      throw dependencies.errorFactory.error(
         domain: ShareErrorDomain,
         code: ShareError.dialogNotAvailable.rawValue,
         userInfo: nil,
@@ -631,13 +574,13 @@ public final class ShareDialog: NSObject, SharingDialog {
       ? ShareBridgeAPI.MethodName.camera
       : ShareBridgeAPI.MethodName.share
 
-    let parameters = shareUtility.bridgeParameters(
+    let parameters = dependencies.shareUtility.bridgeParameters(
       for: content,
       options: [],
       shouldFailOnDataError: shouldFailOnDataError
     )
 
-    guard let request = requestFactory.bridgeAPIRequest(
+    guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .native,
       scheme: URLScheme.facebookAPI.rawValue,
       methodName: methodName,
@@ -648,7 +591,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       throw BridgeRequestCreationError()
     }
 
-    requestOpener.open(
+    dependencies.bridgeAPIRequestOpener.open(
       request,
       useSafariViewController: shouldUseSafariViewController,
       from: fromViewController
@@ -682,21 +625,15 @@ public final class ShareDialog: NSObject, SharingDialog {
         invokeDelegateDidComplete(results: results)
       }
 
-      internalUtility.unregisterTransientObject(self)
+      dependencies.internalUtility.unregisterTransientObject(self)
     }
   }
 
   private func showShareSheet() throws {
-    guard
-      let errorFactory = Self.errorFactory,
-      let controllerFactory = Self.socialComposeViewControllerFactory,
-      let internalUtility = Self.internalUtility
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard canShowShareSheet else {
-      throw errorFactory.error(
+      throw dependencies.errorFactory.error(
         domain: ShareErrorDomain,
         code: ShareError.dialogNotAvailable.rawValue,
         userInfo: nil,
@@ -708,7 +645,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     try validateShareContentForShareSheet()
 
     guard let viewController = fromViewController else {
-      throw errorFactory.requiredArgumentError(
+      throw dependencies.errorFactory.requiredArgumentError(
         domain: ShareErrorDomain,
         name: "fromViewController",
         message: nil,
@@ -716,7 +653,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    let composeViewController = controllerFactory.makeSocialComposeViewController()
+    let composeViewController = dependencies.socialComposeViewControllerFactory.makeSocialComposeViewController()
 
     if let initialText = try calculateInitialText(),
        !initialText.isEmpty {
@@ -744,7 +681,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       }
 
       DispatchQueue.main.async {
-        internalUtility.unregisterTransientObject(self)
+        dependencies.internalUtility.unregisterTransientObject(self)
       }
     }
 
@@ -753,23 +690,20 @@ public final class ShareDialog: NSObject, SharingDialog {
 
   private func showWeb() throws {
     try validateShareContentForBrowser(options: .photoImageURL)
-
-    guard let shareUtility = Self.shareUtility else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
     }
 
-    let components = shareUtility.buildWebShareBridgeComponents(for: content)
+    let components = dependencies.shareUtility.buildWebShareBridgeComponents(for: content)
 
     webDialog = WebDialog.createAndShow(
       name: components.methodName,
       parameters: components.parameters,
       frame: .zero,
       delegate: self,
-      windowFinder: Self.windowFinder
+      windowFinder: dependencies.windowFinder
     )
   }
 
@@ -792,12 +726,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   public func validate() throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let errorFactory = Self.errorFactory
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
@@ -811,7 +740,7 @@ public final class ShareDialog: NSObject, SharingDialog {
          is ShareVideoContent:
       break
     default:
-      throw errorFactory.requiredArgumentError(
+      throw dependencies.errorFactory.requiredArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         message: "Share dialog does not support \(type(of: content)).",
@@ -819,7 +748,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    try shareUtility.validateShareContent(content, options: [])
+    try dependencies.shareUtility.validateShareContent(content, options: [])
 
     switch mode {
     case .automatic:
@@ -862,12 +791,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func validateShareContentForBrowser(options bridgeOptions: ShareBridgeOptions = []) throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let errorFactory = Self.errorFactory
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
       throw MissingContentError()
@@ -875,7 +799,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     if let linkContent = content as? ShareLinkContent,
        linkContent.contentURL == nil {
-      throw errorFactory.invalidArgumentError(
+      throw dependencies.errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: linkContent,
@@ -885,7 +809,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     }
 
     guard !(shareContent is ShareCameraEffectContent) else {
-      throw errorFactory.invalidArgumentError(
+      throw dependencies.errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: shareContent,
@@ -894,11 +818,11 @@ public final class ShareDialog: NSObject, SharingDialog {
       )
     }
 
-    let flags = shareUtility.getContentFlags(for: content)
+    let flags = dependencies.shareUtility.getContentFlags(for: content)
 
     if flags.containsPhotos {
       guard AccessToken.current != nil else {
-        throw errorFactory.invalidArgumentError(
+        throw dependencies.errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: content,
@@ -910,7 +834,7 @@ public final class ShareDialog: NSObject, SharingDialog {
       if let photo = content as? SharePhotoContent {
         try photo.validate(options: bridgeOptions)
       } else {
-        throw errorFactory.invalidArgumentError(
+        throw dependencies.errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: content,
@@ -922,7 +846,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     if flags.containsVideos {
       guard AccessToken.current != nil else {
-        throw errorFactory.invalidArgumentError(
+        throw dependencies.errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: content,
@@ -938,7 +862,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     if flags.containsMedia,
        bridgeOptions == .photoImageURL { // a web-based URL is required
-      throw errorFactory.invalidArgumentError(
+      throw dependencies.errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: content,
@@ -949,9 +873,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func validateShareContentForFeed() throws {
-    guard let errorFactory = Self.errorFactory else {
-      throw UnconfiguredError()
-    }
+    let errorFactory = try Self.getDependencies().errorFactory
 
     if let linkContent = shareContent as? ShareLinkContent {
       if linkContent.contentURL == nil {
@@ -975,12 +897,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func validateShareContentForNative() throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let errorFactory = Self.errorFactory
-    else {
-      throw UnconfiguredError()
-    }
+    let dependencies = try Self.getDependencies()
 
     guard let anyContent = shareContent else {
       throw MissingContentError()
@@ -988,8 +905,8 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     switch anyContent {
     case let media as ShareMediaContent:
-      if shareUtility.shareMediaContentContainsPhotosAndVideos(media) {
-        throw errorFactory.invalidArgumentError(
+      if dependencies.shareUtility.shareMediaContentContainsPhotosAndVideos(media) {
+        throw dependencies.errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: media,
@@ -1007,9 +924,7 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func validateShareContentForShareSheet() throws {
-    guard let errorFactory = Self.errorFactory else {
-      throw UnconfiguredError()
-    }
+    let errorFactory = try Self.getDependencies().errorFactory
 
     guard let anyContent = shareContent else { return }
 
@@ -1051,15 +966,12 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func validateShareMediaContentAvailability(content: ShareMediaContent) throws {
-    guard
-      let shareUtility = Self.shareUtility,
-      let errorFactory = Self.errorFactory
-    else { throw UnconfiguredError() }
+    let dependencies = try Self.getDependencies()
 
-    if shareUtility.shareMediaContentContainsPhotosAndVideos(content),
+    if dependencies.shareUtility.shareMediaContentContainsPhotosAndVideos(content),
        mode == .shareSheet,
        !canUseFBShareSheet {
-      throw errorFactory.invalidArgumentError(
+      throw dependencies.errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: content,
@@ -1081,7 +993,8 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func invokeDelegateDidComplete(results: [String: Any]) {
-    AppEvents.shared.logInternalEvent(
+    let eventLogger = try? Self.getDependencies().eventLogger
+    eventLogger?.logInternalEvent(
       .shareDialogResult,
       parameters: [.outcome: ShareAppEventsParameters.DialogOutcomeValue.completed],
       isImplicitlyLogged: true,
@@ -1098,7 +1011,8 @@ public final class ShareDialog: NSObject, SharingDialog {
       .errorMessage: nsError.description,
     ]
 
-    AppEvents.shared.logInternalEvent(
+    let eventLogger = try? Self.getDependencies().eventLogger
+    eventLogger?.logInternalEvent(
       .shareDialogResult,
       parameters: parameters,
       isImplicitlyLogged: true,
@@ -1128,7 +1042,8 @@ public final class ShareDialog: NSObject, SharingDialog {
       .shareContentType: contentType,
     ]
 
-    AppEvents.shared.logInternalEvent(
+    let eventLogger = try? Self.getDependencies().eventLogger
+    eventLogger?.logInternalEvent(
       .shareDialogShow,
       parameters: parameters,
       isImplicitlyLogged: true,
@@ -1143,12 +1058,8 @@ public final class ShareDialog: NSObject, SharingDialog {
   }
 
   private func calculateInitialText() throws -> String? {
-    guard
-      let shareUtility = Self.shareUtility,
-      let settings = Self.settings
-    else { throw UnconfiguredError() }
-
-    let potentialHashtag = shareUtility.hashtagString(from: shareContent?.hashtag)
+    let dependencies = try Self.getDependencies()
+    let potentialHashtag = dependencies.shareUtility.hashtagString(from: shareContent?.hashtag)
     let hashtagIsEmpty = potentialHashtag?.isEmpty ?? true
 
     guard canAttributeThroughShareSheet else {
@@ -1156,7 +1067,7 @@ public final class ShareDialog: NSObject, SharingDialog {
     }
 
     var parameters = [String: Any]()
-    if let appID = settings.appID,
+    if let appID = dependencies.settings.appID,
        !appID.isEmpty {
       parameters[ShareExtensionParameterKeys.appID] = appID
     }
@@ -1172,7 +1083,7 @@ public final class ShareDialog: NSObject, SharingDialog {
 
     if let json = try? BasicUtility.jsonString(for: parameters, invalidObjectHandler: nil) {
       return buildShareExtensionInitialText(
-        appID: settings.appID,
+        appID: dependencies.settings.appID,
         hashtag: potentialHashtag,
         jsonString: json
       )
@@ -1220,8 +1131,7 @@ extension ShareDialog: WebDialogDelegate {
   ) {
     guard
       webDialog === self.webDialog,
-      let errorFactory = Self.errorFactory,
-      let internalUtility = Self.internalUtility
+      let dependencies = try? Self.getDependencies()
     else { return }
 
     self.webDialog = nil
@@ -1230,7 +1140,7 @@ extension ShareDialog: WebDialogDelegate {
     if errorCode == 4201 {
       invokeDelegateDidCancel()
     } else if errorCode != 0 {
-      let error = errorFactory.error(
+      let error = dependencies.errorFactory.error(
         domain: ShareErrorDomain,
         code: ShareError.unknown.rawValue,
         userInfo: [GraphRequestErrorGraphErrorCodeKey: errorCode],
@@ -1243,7 +1153,7 @@ extension ShareDialog: WebDialogDelegate {
       handleWebResponse(parameters: results, isCancelled: false)
     }
 
-    internalUtility.unregisterTransientObject(self)
+    dependencies.internalUtility.unregisterTransientObject(self)
   }
 
   public func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
@@ -1251,7 +1161,9 @@ extension ShareDialog: WebDialogDelegate {
 
     self.webDialog = nil
     invokeDelegateDidFail(error: error)
-    Self.internalUtility?.unregisterTransientObject(self)
+
+    let internalUtility = try? Self.getDependencies().internalUtility
+    internalUtility?.unregisterTransientObject(self)
   }
 
   public func webDialogDidCancel(_ webDialog: WebDialog) {
@@ -1259,7 +1171,9 @@ extension ShareDialog: WebDialogDelegate {
 
     self.webDialog = nil
     invokeDelegateDidCancel()
-    Self.internalUtility?.unregisterTransientObject(self)
+
+    let internalUtility = try? Self.getDependencies().internalUtility
+    internalUtility?.unregisterTransientObject(self)
   }
 }
 

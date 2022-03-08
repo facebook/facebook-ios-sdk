@@ -23,13 +23,13 @@ final class ShareDialogTests: XCTestCase {
   var socialComposeViewControllerFactory: TestSocialComposeViewControllerFactory!
   var windowFinder: TestWindowFinder!
   var errorFactory: TestErrorFactory!
+  var eventLogger: TestShareEventLogger!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     AccessToken.current = nil
-    ShareDialog.resetClassDependencies()
 
     internalURLOpener = TestInternalURLOpener()
     internalUtility = TestInternalUtility()
@@ -41,17 +41,21 @@ final class ShareDialogTests: XCTestCase {
     socialComposeViewControllerFactory.stubbedSocialComposeViewController = socialComposeViewController
     windowFinder = TestWindowFinder()
     errorFactory = TestErrorFactory()
+    eventLogger = TestShareEventLogger()
 
-    ShareDialog.configure(
-      internalURLOpener: internalURLOpener,
-      internalUtility: internalUtility,
-      settings: settings,
-      shareUtility: TestShareUtility.self,
-      bridgeAPIRequestFactory: bridgeAPIRequestFactory,
-      bridgeAPIRequestOpener: bridgeAPIRequestOpener,
-      socialComposeViewControllerFactory: socialComposeViewControllerFactory,
-      windowFinder: windowFinder,
-      errorFactory: errorFactory
+    ShareDialog.setDependencies(
+      .init(
+        internalURLOpener: internalURLOpener,
+        internalUtility: internalUtility,
+        settings: settings,
+        shareUtility: TestShareUtility.self,
+        bridgeAPIRequestFactory: bridgeAPIRequestFactory,
+        bridgeAPIRequestOpener: bridgeAPIRequestOpener,
+        socialComposeViewControllerFactory: socialComposeViewControllerFactory,
+        windowFinder: windowFinder,
+        errorFactory: errorFactory,
+        eventLogger: eventLogger
+      )
     )
 
     ShareCameraEffectContent.setDependencies(
@@ -72,8 +76,9 @@ final class ShareDialogTests: XCTestCase {
     socialComposeViewControllerFactory = nil
     windowFinder = nil
     errorFactory = nil
+    eventLogger = nil
 
-    ShareDialog.resetClassDependencies()
+    ShareDialog.resetDependencies()
     TestShareUtility.reset()
     ShareCameraEffectContent.resetDependencies()
     AccessToken.current = nil
@@ -81,44 +86,49 @@ final class ShareDialogTests: XCTestCase {
     super.tearDown()
   }
 
-  func testDefaultClassDependencies() {
-    ShareDialog.resetClassDependencies()
-    // Creating an empty dialog configures dependencies on the type.
-    // This is a bad pattern and will change in the near future.
-    _ = createEmptyDialog()
+  func testDefaultDependencies() throws {
+    ShareDialog.resetDependencies()
 
+    let dependencies = try ShareDialog.getDependencies()
+    XCTAssertIdentical(dependencies.internalURLOpener, ShareUIApplication.shared, .usesInternalURLOpenerByDefault)
+    XCTAssertIdentical(dependencies.internalUtility, InternalUtility.shared, .usesInternalUtilityByDefault)
+    XCTAssertIdentical(dependencies.settings, Settings.shared, .usesSettingsByDefault)
+    XCTAssertTrue(dependencies.shareUtility is _ShareUtility.Type, .usesShareUtilityByDefault)
     XCTAssertTrue(
-      ShareDialog.internalUtility === InternalUtility.shared,
-      "ShareDialog should use the shared utility for its default internal utility dependency"
+      dependencies.bridgeAPIRequestFactory is ShareBridgeAPIRequestFactory,
+      .usesShareBridgeAPIRequestFactoryByDefault
     )
+    XCTAssertIdentical(dependencies.bridgeAPIRequestOpener, BridgeAPI.shared, .usesBridgeAPIByDefault)
     XCTAssertTrue(
-      ShareDialog.settings === Settings.shared,
-      "ShareDialog should use the shared settings for its default settings dependency"
+      dependencies.socialComposeViewControllerFactory is SocialComposeViewControllerFactory,
+      .usesSocialComposeViewControllerFactoryByDefault
     )
-    XCTAssertTrue(
-      ShareDialog.shareUtility == _ShareUtility.self,
-      "ShareDialog should use the share utility class for its default share utility dependency"
+    XCTAssertIdentical(dependencies.windowFinder, InternalUtility.shared, .usesInternalUtilityAsWindowFinderByDefault)
+    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesErrorFactoryByDefault)
+    XCTAssertIdentical(dependencies.eventLogger as AnyObject, AppEvents.shared, .usesAppEventsByDefault)
+  }
+
+  func testCustomDependencies() throws {
+    let dependencies = try ShareDialog.getDependencies()
+
+    XCTAssertIdentical(dependencies.internalURLOpener, internalURLOpener, .usesCustomInternalURLOpener)
+    XCTAssertIdentical(dependencies.internalUtility, internalUtility, .usesCustomInternalUtility)
+    XCTAssertIdentical(dependencies.settings, settings, .usesCustomSettings)
+    XCTAssertTrue(dependencies.shareUtility is TestShareUtility.Type, .usesCustomShareUtility)
+    XCTAssertIdentical(
+      dependencies.bridgeAPIRequestFactory,
+      bridgeAPIRequestFactory,
+      .usesCustomShareBridgeAPIRequestFactory
     )
-    XCTAssertTrue(
-      ShareDialog.bridgeAPIRequestFactory is ShareBridgeAPIRequestFactory,
-      "ShareDialog should create a new factory for its default bridge API request factory dependency"
+    XCTAssertIdentical(dependencies.bridgeAPIRequestOpener, bridgeAPIRequestOpener, .usesCustomBridgeAPIRequestOpener)
+    XCTAssertIdentical(
+      dependencies.socialComposeViewControllerFactory as AnyObject,
+      socialComposeViewControllerFactory,
+      .usesCustomSocialComposeViewControllerFactory
     )
-    XCTAssertTrue(
-      ShareDialog.bridgeAPIRequestOpener === BridgeAPI.shared,
-      "ShareDialog should use the shared bridge API for its default bridge API request opening dependency"
-    )
-    XCTAssertTrue(
-      ShareDialog.socialComposeViewControllerFactory is SocialComposeViewControllerFactory,
-      "ShareDialog should create a new factory for its social compose view controller factory dependency by default"
-    )
-    XCTAssertTrue(
-      ShareDialog.windowFinder === InternalUtility.shared,
-      "ShareDialog should use the shared internal utility for its default window finding dependency"
-    )
-    XCTAssertTrue(
-      ShareDialog.errorFactory is ErrorFactory,
-      "ShareDialog should use a concrete error factory for its default error factory dependency"
-    )
+    XCTAssertIdentical(dependencies.windowFinder, windowFinder, .usesCustomWindowFinder)
+    XCTAssertIdentical(dependencies.errorFactory, errorFactory, .usesCustomErrorFactory)
+    XCTAssertIdentical(dependencies.eventLogger as AnyObject, eventLogger, .usesCustomEventLogger)
   }
 
   func testCanShowNativeDialogWithoutShareContent() {
@@ -725,4 +735,45 @@ final class ShareDialogTests: XCTestCase {
       jsonObject: jsonObject
     )
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let usesInternalURLOpenerByDefault = """
+    The default internal URL opening dependency should be the shared UIApplication
+    """
+  static let usesInternalUtilityByDefault = """
+    The default internal utility dependency should be the shared InternalUtility
+    """
+  static let usesSettingsByDefault = "The default settings dependency should be the shared Settings"
+  static let usesShareUtilityByDefault = "The default share utility dependency should be the _ShareUtility class"
+  static let usesShareBridgeAPIRequestFactoryByDefault = """
+    The default bridge API request factory dependency should be a concrete ShareBridgeAPIRequestFactory
+    """
+  static let usesBridgeAPIByDefault = """
+    The default bridge API request opening dependency should be the shared BridgeAPI for its default
+    """
+  static let usesSocialComposeViewControllerFactoryByDefault = """
+    The default social compose view controller factory dependency should be a concrete \
+    SocialComposeViewControllerFactory
+    """
+  static let usesInternalUtilityAsWindowFinderByDefault = """
+    The default window finding dependency should be the shared InternalUtility
+    """
+  static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
+  static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
+
+  static let usesCustomInternalURLOpener = "The internal URL opening dependency should be configurable"
+  static let usesCustomInternalUtility = "The internal utility dependency should be configurable"
+  static let usesCustomSettings = "The settings dependency should be configurable"
+  static let usesCustomShareUtility = "The share utility dependency should be configurable"
+  static let usesCustomShareBridgeAPIRequestFactory = "The bridge API request factory dependency should be configurable"
+  static let usesCustomBridgeAPIRequestOpener = "The bridge API request opening dependency should be configurable"
+  static let usesCustomSocialComposeViewControllerFactory = """
+    The social compose view controller factory dependency should be configurable
+    """
+  static let usesCustomWindowFinder = "The window finding dependency should be configurable"
+  static let usesCustomErrorFactory = "The error factory dependency should be configurable"
+  static let usesCustomEventLogger = "The event logging dependency should be configurable"
 }
