@@ -56,7 +56,7 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
 
   func testErrorHandlingWithServerError() throws {
     let url = try XCTUnwrap(URL(string: "graph.facebook.com"))
-    let response = HTTPURLResponse(url: url, statusCode: 400, httpVersion: "HTTP/1.1", headerFields: nil)
+    var response = HTTPURLResponse(url: url, statusCode: 400, httpVersion: "HTTP/1.1", headerFields: nil)
 
     FBSDKTransformerGraphRequestFactory.shared.handleError(
       response: response,
@@ -64,13 +64,24 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
     )
     XCTAssertTrue(
       FBSDKTransformerGraphRequestFactory.shared.transformedEvents.isEmpty,
-      "Should not re-append the events to the cache queue if the request fails for server error"
+      "Should not re-append the events to the cache queue if the request fails for server error with 400"
+    )
+
+    response = HTTPURLResponse(url: url, statusCode: 500, httpVersion: "HTTP/1.1", headerFields: nil)
+
+    FBSDKTransformerGraphRequestFactory.shared.handleError(
+      response: response,
+      events: [[Keys.eventName: Values.testEvent]]
+    )
+    XCTAssertTrue(
+      FBSDKTransformerGraphRequestFactory.shared.transformedEvents.isEmpty,
+      "Should not re-append the events to the cache queue if the request fails for server error with 500"
     )
   }
 
   func testErrorHandlingWithoutServerError() throws {
     let url = try XCTUnwrap(URL(string: "graph.facebook.com"))
-    let response = HTTPURLResponse(url: url, statusCode: 500, httpVersion: "HTTP/1.1", headerFields: nil)
+    let response = HTTPURLResponse(url: url, statusCode: 503, httpVersion: "HTTP/1.1", headerFields: nil)
 
     FBSDKTransformerGraphRequestFactory.shared.transformedEvents = [[Keys.eventName: "purchase"]]
     FBSDKTransformerGraphRequestFactory.shared.handleError(

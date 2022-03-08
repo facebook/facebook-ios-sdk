@@ -15,6 +15,13 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
   let maxCachedEvents = 1000
   let maxProcessedEvents = 10
 
+  let retryEventsHttpResponse = [
+    -1009, // kCFURLErrorNotConnectedToInternet
+    -1004, // kCFURLErrorCannotConnectToHost
+    503, // ServiceUnavailable
+    504, // GatewayTimeout
+  ]
+
   public static let shared = FBSDKTransformerGraphRequestFactory()
 
   private let serialQueue: DispatchQueue
@@ -79,8 +86,8 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
             guard error == nil,
                   let httpResponse = response as? HTTPURLResponse,
                   200...299 ~= httpResponse.statusCode else {
-                  self.handleError(response: response, events: processedEvents)
-                  return
+                    self.handleError(response: response, events: processedEvents)
+                    return
             }
           }
         }.resume()
@@ -123,7 +130,7 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
     // If it's not server error, we'll re-append the events to the event queue
     let response = response as? HTTPURLResponse
     if let statusCode = response?.statusCode {
-      if statusCode == 400 || statusCode == 404 {
+      if !self.retryEventsHttpResponse.contains(statusCode) {
         return
       }
     }
