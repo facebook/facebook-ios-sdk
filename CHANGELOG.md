@@ -81,6 +81,18 @@ AppEvents.logEvent(.purchased, parameters: parameters)
 
 - Deprecated the `FacebookGamingServices` CocoaPod; please use the `FBSDKGamingServicesKit` pod instead. SPM users should continue to use `FacebookGamingServices`.
 
+### Moved
+
+A few types have been moved from FBSDKShareKit to FBSDKGamingServicesKit. If you were using any of these you will have to add `@import FBSDKGamingServicesKit` in order to access these:
+
+- GameRequestActionType
+- GameRequestContent
+- GameRequestDialog
+- GameRequestDialogDelegate
+- GameRequestFilter
+- GameRequestFrictionlessRecipientCache
+- GameRequestURLProvider
+
 ### Removed
 
 - Removed `NSObjectProtocol` conformance/inheritance from multiple types in ShareKit.
