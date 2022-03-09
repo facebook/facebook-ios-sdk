@@ -73,14 +73,16 @@ class FBSDKAppEventsCAPIManagerTests: XCTestCase {
     }
     completion(
       nil,
-      ["data": [
-        [
-          "is_enabled": true,
-          "access_key": Values.accessKey,
-          "dataset_id": Values.datasetID,
-          "endpoint": Values.capiGatewayURL,
+      [
+        "data": [
+          [
+            "is_enabled": true,
+            "access_key": Values.accessKey,
+            "dataset_id": Values.datasetID,
+            "endpoint": Values.capiGatewayURL,
+          ],
         ],
-      ]],
+      ],
       nil
     )
     XCTAssertEqual(
