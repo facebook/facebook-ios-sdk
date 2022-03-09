@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_buttonPressed:(id)sender;
 - (void)_logout;
 - (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -628,6 +628,84 @@ final class LoginButtonTests: XCTestCase {
     XCTAssert(loginProvider.didLogout)
     XCTAssert(delegate.didLoggedOut)
   }
+
+  // MARK: - Tooltip
+
+  func testShowTooltipIfNeeded() {
+    let button = FBLoginButton()
+    button.tooltipBehavior = .forceDisplay
+
+    let window = UIWindow()
+    let rootVC = UIViewController()
+    window.rootViewController = rootVC
+    window.makeKeyAndVisible()
+    rootVC.view.addSubview(button)
+
+    if !rootVC.view.subviews.contains(where: { $0 is FBTooltipView }) {
+      XCTFail(.showsTooltip)
+    }
+  }
+
+  func testShowTooltipIfNeededWithAuthenticated() {
+    AuthenticationToken.current = sampleToken
+
+    let button = FBLoginButton()
+    button.tooltipBehavior = .forceDisplay
+
+    let window = UIWindow()
+    let rootVC = UIViewController()
+    window.rootViewController = rootVC
+    window.makeKeyAndVisible()
+    rootVC.view.addSubview(button)
+
+    if rootVC.view.subviews.contains(where: { $0 is FBTooltipView }) {
+      XCTFail(.doesNotShowTooltipForAuthenticated)
+    }
+  }
+
+  func testShowTooltipIfNeededWithDisabledBehavior() {
+    let button = FBLoginButton()
+    button.tooltipBehavior = .disable
+
+    let window = UIWindow()
+    let rootVC = UIViewController()
+    window.rootViewController = rootVC
+    window.makeKeyAndVisible()
+    rootVC.view.addSubview(button)
+
+    if rootVC.view.subviews.contains(where: { $0 is FBTooltipView }) {
+      XCTFail(.doesNotShowTooltipIfDisabled)
+    }
+  }
+
+  // MARK: - Layout
+
+  func testImageRectForContentRect() {
+
+    let contentRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+    let imageRect = button.imageRect(forContentRect: contentRect)
+    let expectedImageRect = CGRect(x: 6.0, y: 42.0, width: 16.0, height: 16.0)
+
+    XCTAssertEqual(
+      imageRect,
+      expectedImageRect,
+      .hasCustomImageFrame
+    )
+  }
+
+  func testTitleRectForContentRect() {
+
+    let contentRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+    button.frame = contentRect
+    let titleRect = button.titleRect(forContentRect: contentRect)
+    let expectedTitleRect = CGRect(x: 30.0, y: 0.0, width: 62.0, height: 100.0)
+
+    XCTAssertEqual(
+      titleRect,
+      expectedTitleRect,
+      .hasCustomTitleFrame
+    )
+  }
 }
 
 private final class TestButton: FBLoginButton {
@@ -650,4 +728,20 @@ private final class TestButton: FBLoginButton {
   override func _fetchAndSetContent() {
     fetchAndSetContentCallCount += 1
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let hasCustomImageFrame = """
+    The image frame for a button should be vertically centered and \
+    given left padding of 6 points and sized like the logo
+    """
+  static let hasCustomTitleFrame = """
+    The title frame for a button should have a 8 points horizontal padding and no vertical padding. \
+    Size should be as big as content frame minus paddings and image frame
+    """
+  static let showsTooltip = "Shows a tooltip if user is not authenticated or tooltip is not disabled"
+  static let doesNotShowTooltipForAuthenticated = "Does not show a tooltip if user is authenticated"
+  static let doesNotShowTooltipIfDisabled = "Does not show a tooltip if tooltip has been disabled"
 }

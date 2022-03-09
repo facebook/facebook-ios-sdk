@@ -76,7 +76,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
   if (self.window
       && ((self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorForceDisplay) || !_hasShownTooltipBubble)) {
-    [self performSelector:@selector(_showTooltipIfNeeded) withObject:nil afterDelay:0];
+    [self _showTooltipIfNeeded];
     _hasShownTooltipBubble = YES;
   }
 }
