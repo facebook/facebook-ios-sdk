@@ -14,6 +14,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKCodeVerifier
 
 // Number of random bytes generated for the codeVerifier.

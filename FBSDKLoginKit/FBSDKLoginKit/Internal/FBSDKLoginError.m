@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #ifndef NS_ERROR_ENUM
  #define NS_ERROR_ENUM(_domain, _name) \
   enum _name : NSInteger _name; \

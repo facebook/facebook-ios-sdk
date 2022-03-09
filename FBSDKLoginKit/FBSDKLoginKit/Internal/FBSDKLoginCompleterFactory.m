@@ -12,6 +12,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKLoginURLCompleter.h"
 
 NS_ASSUME_NONNULL_BEGIN

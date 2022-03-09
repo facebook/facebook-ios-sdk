@@ -10,6 +10,8 @@
 
 #import "FBSDKLoginCompletionParameters+Internal.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKLoginCompletionParameters
 
 - (instancetype)init

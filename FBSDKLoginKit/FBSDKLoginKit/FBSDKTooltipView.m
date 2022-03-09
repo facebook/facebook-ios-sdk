@@ -14,6 +14,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
 static const CGFloat kZoomInScale = 1.1f;

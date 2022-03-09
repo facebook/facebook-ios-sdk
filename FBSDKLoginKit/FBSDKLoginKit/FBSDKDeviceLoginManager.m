@@ -11,6 +11,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 #import "FBSDKDeviceLoginManagerDelegate.h"
 #import "FBSDKDeviceLoginManagerResult+Internal.h"

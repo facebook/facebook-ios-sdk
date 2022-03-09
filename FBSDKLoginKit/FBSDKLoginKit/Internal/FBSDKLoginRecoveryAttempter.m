@@ -10,6 +10,8 @@
 
 #import "FBSDKLoginRecoveryAttempter.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 

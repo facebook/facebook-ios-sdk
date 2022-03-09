@@ -10,6 +10,8 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKAuthenticationTokenHeader
 
 - (instancetype)initWithAlg:(NSString *)alg

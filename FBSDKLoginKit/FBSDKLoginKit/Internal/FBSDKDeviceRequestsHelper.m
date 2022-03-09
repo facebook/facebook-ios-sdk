@@ -14,6 +14,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <sys/utsname.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKLoginAppEventName.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"

@@ -8,6 +8,8 @@
 
 #import "FBSDKDevicePoller.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKDevicePoller
 
 - (void)scheduleBlock:(dispatch_block_t)block interval:(NSUInteger)interval
