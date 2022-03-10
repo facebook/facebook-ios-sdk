@@ -108,7 +108,7 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
   }
 
   public override func createGraphRequest(withGraphPath graphPath: String) -> GraphRequestProtocol {
-    return factory.createGraphRequest(withGraphPath: graphPath)
+    factory.createGraphRequest(withGraphPath: graphPath)
   }
 
   public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], httpMethod: HTTPMethod) -> GraphRequestProtocol {
