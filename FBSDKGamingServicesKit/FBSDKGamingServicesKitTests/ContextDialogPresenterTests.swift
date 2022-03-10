@@ -14,22 +14,51 @@ import XCTest
 
 final class ContextDialogPresenterTests: XCTestCase {
 
-  let createContextContent = CreateContextContent(playerID: "playerID")
-  let switchContextContent = SwitchContextContent(contextID: "contextID")
-  let chooseContextContent = ChooseContextContent()
-  let delegate = TestContextDialogDelegate()
-  let createContextDialogFactory = TestCreateContextDialogFactory()
-  let switchContextDialogFactory = TestSwitchContextDialogFactory()
-  let chooseContextDialogFactory = TestChooseContextDialogFactory()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var createContextContent: CreateContextContent!
+  var switchContextContent: SwitchContextContent!
+  var chooseContextContent: ChooseContextContent!
+  var delegate: TestContextDialogDelegate!
+  var createContextDialogFactory: TestCreateContextDialogFactory!
+  var switchContextDialogFactory: TestSwitchContextDialogFactory!
+  var chooseContextDialogFactory: TestChooseContextDialogFactory!
+  var presenter: ContextDialogPresenter!
+  // swiftlint:enable implicitly_unwrapped_optional
 
-  lazy var presenter = ContextDialogPresenter(
-    createContextDialogFactory: createContextDialogFactory,
-    switchContextDialogFactory: switchContextDialogFactory,
-    chooseContextDialogFactory: chooseContextDialogFactory
-  )
+  override func setUp() {
+    super.setUp()
+
+    AccessToken.current = nil
+
+    createContextContent = CreateContextContent(playerID: "playerID")
+    switchContextContent = SwitchContextContent(contextID: "contextID")
+    chooseContextContent = ChooseContextContent()
+    delegate = TestContextDialogDelegate()
+    createContextDialogFactory = TestCreateContextDialogFactory()
+    switchContextDialogFactory = TestSwitchContextDialogFactory()
+    chooseContextDialogFactory = TestChooseContextDialogFactory()
+    presenter = ContextDialogPresenter(
+      createContextDialogFactory: createContextDialogFactory,
+      switchContextDialogFactory: switchContextDialogFactory,
+      chooseContextDialogFactory: chooseContextDialogFactory
+    )
+  }
+
+  override func tearDown() {
+    createContextContent = nil
+    switchContextContent = nil
+    chooseContextContent = nil
+    delegate = nil
+    createContextDialogFactory = nil
+    switchContextDialogFactory = nil
+    chooseContextDialogFactory = nil
+    presenter = nil
+
+    super.tearDown()
+  }
 
   func testDefaults() {
-    let presenter = ContextDialogPresenter()
+    presenter = ContextDialogPresenter()
 
     XCTAssertTrue(
       presenter.createContextDialogFactory is CreateContextDialogFactory,
@@ -178,7 +207,6 @@ final class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testMakingChooseContextDialog() {
-    AccessToken.current = SampleAccessTokens.validToken
     _ = presenter.makeChooseContextDialog(
       content: chooseContextContent,
       delegate: delegate
@@ -195,8 +223,6 @@ final class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testShowingChooseContextDialog() throws {
-    AccessToken.current = SampleAccessTokens.validToken
-
     presenter.makeAndShowChooseContextDialog(
       content: chooseContextContent,
       delegate: delegate
