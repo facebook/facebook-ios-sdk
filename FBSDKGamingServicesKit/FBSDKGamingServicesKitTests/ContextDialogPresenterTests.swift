@@ -54,7 +54,13 @@ final class ContextDialogPresenterTests: XCTestCase {
     chooseContextDialogFactory = nil
     presenter = nil
 
+    AccessToken.current = nil
+
     super.tearDown()
+  }
+
+  private func setSampleAccessToken() {
+    AccessToken.current = SampleAccessTokens.validToken
   }
 
   func testDefaults() {
@@ -236,5 +242,56 @@ final class ContextDialogPresenterTests: XCTestCase {
       chooseContextDialogFactory.dialog.wasShowCalled,
       "Should call show on the dialog"
     )
+  }
+
+  // MARK: - Deprecated methods from former wrapper
+
+  func testCreateContextDialog() {
+    setSampleAccessToken()
+    XCTAssertNotNil(
+      ContextDialogPresenter.createContextDialog(
+        withContent: createContextContent,
+        delegate: delegate
+      )
+    )
+  }
+
+  func testShowCreateContextDialog() {
+    setSampleAccessToken()
+    XCTAssertNil(
+      ContextDialogPresenter.showCreateContextDialog(
+        withContent: createContextContent,
+        delegate: delegate
+      )
+    )
+  }
+
+  func testSwitchContextDialog() {
+    setSampleAccessToken()
+    XCTAssertNotNil(
+      ContextDialogPresenter.switchContextDialog(
+        withContent: switchContextContent,
+        delegate: delegate
+      )
+    )
+  }
+
+  func testShowSwitchContextDialog() {
+    setSampleAccessToken()
+    XCTAssertNil(
+      ContextDialogPresenter.showSwitchContextDialog(
+        withContent: switchContextContent,
+        delegate: delegate
+      )
+    )
+  }
+
+  func testShowChooseContextDialog() {
+    let dialog = ContextDialogPresenter.showChooseContextDialog(
+      withContent: chooseContextContent,
+      delegate: delegate
+    )
+    XCTAssertIdentical(dialog.dialogContent, chooseContextContent)
+    XCTAssertIdentical(dialog.delegate, delegate)
   }
 }

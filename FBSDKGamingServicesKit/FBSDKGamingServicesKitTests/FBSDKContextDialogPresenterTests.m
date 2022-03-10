@@ -15,6 +15,9 @@
 @interface FBSDKContextDialogPresenterTests : XCTestCase <FBSDKContextDialogDelegate>
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation FBSDKContextDialogPresenterTests
 
 - (void)setUp
@@ -70,6 +73,8 @@
     [FBSDKContextDialogPresenter showChooseContextDialogWithContent:content delegate:self]
   );
 }
+
+#pragma clang diagnostic pop
 
 // MARK: - FBSDKContextDialogDelegate methods
 
