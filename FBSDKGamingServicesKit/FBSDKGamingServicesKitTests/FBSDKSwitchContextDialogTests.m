@@ -26,9 +26,13 @@
 
   self.content = [[FBSDKSwitchContextContent alloc] initDialogContentWithContextID:@"123"];
   self.windowFinder = [TestWindowFinder new];
+
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.dialog = [FBSDKSwitchContextDialog dialogWithContent:self.content
                                                windowFinder:self.windowFinder
                                                    delegate:self];
+  #pragma clang diagnostic pop
 }
 
 - (void)tearDown

@@ -13,6 +13,5 @@ import XCTest
 final class SymbolVisibilityTests: XCTestCase {
   func testCanSeeReexportedSymbol() {
     _ = Mirror(reflecting: FriendFinderDialog.self)
-    _ = Mirror(reflecting: FBSDKSwitchContextDialog.self)
   }
 }
