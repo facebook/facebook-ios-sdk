@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -50,3 +52,5 @@ NS_SWIFT_NAME(AuthenticationTokenFactory)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

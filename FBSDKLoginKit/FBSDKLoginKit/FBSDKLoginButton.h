@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 #if !TARGET_OS_TV
 

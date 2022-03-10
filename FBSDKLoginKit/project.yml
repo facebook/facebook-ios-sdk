@@ -19,7 +19,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: '11.0'
+    tvOS: "11.0"
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -99,32 +99,10 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
-          - FBSDKCodeVerifier.[h,m]
-          - FBSDKLoginConfiguration.[h,m]
-          - FBSDKReferral*
-          - FBSDKLoginButton*
-          - FBSDKLoginConfiguration
-          - FBSDKLoginManager.[h,m]
-          - FBSDKLoginManagerLoginResult*
-          - FBSDKLoginTooltipView*
-          - FBSDKTooltipView*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationToken*
-          - _FBSDKLoginRecoveryAttempter*
-          - FBSDKLoginCompletion*
-          - FBSDKLoginError*
-          - FBSDKLoginManagerLogger*
-          - FBSDKLoginUtility*
-          - FBSDKMonotonicTime*
-          - FBSDKPermission*
-          - FBSDKProfileFactory*
-          - FBSDKReferral*
-          - FBSDKProfileCreating*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
@@ -148,32 +126,10 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
-          - FBSDKCodeVerifier.[h,m]
-          - FBSDKLoginConfiguration.[h,m]
-          - FBSDKReferral*
-          - FBSDKLoginButton*
-          - FBSDKLoginConfiguration
-          - FBSDKLoginManager.[h,m]
-          - FBSDKLoginManagerLoginResult*
-          - FBSDKLoginTooltipView*
-          - FBSDKTooltipView*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationToken*
-          - _FBSDKLoginRecoveryAttempter*
-          - FBSDKLoginCompletion*
-          - FBSDKLoginError*
-          - FBSDKLoginManagerLogger*
-          - FBSDKLoginUtility*
-          - FBSDKMonotonicTime*
-          - FBSDKPermission*
-          - FBSDKProfileFactory*
-          - FBSDKReferral*
-          - FBSDKProfileCreating*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-tvOS-Dynamic.xcconfig

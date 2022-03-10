@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import "FBSDKAuthenticationTokenFactory.h"
 
 #import <Security/Security.h>
@@ -270,3 +272,5 @@ static BOOL _skipSignatureVerification;
 #endif
 
 @end
+
+#endif
