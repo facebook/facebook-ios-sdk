@@ -100,7 +100,7 @@ extension ShareVideoContent: SharingContent {
   }
 }
 
-extension ShareVideoContent: SharingValidatable {
+extension ShareVideoContent: SharingValidation {
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     try _ShareUtility.validateRequiredValue(video, named: "video")

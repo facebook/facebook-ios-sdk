@@ -104,7 +104,7 @@ extension SharePhoto: DependentType {
 
 // MARK: - Validation
 
-extension SharePhoto: SharingValidatable {
+extension SharePhoto: SharingValidation {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {

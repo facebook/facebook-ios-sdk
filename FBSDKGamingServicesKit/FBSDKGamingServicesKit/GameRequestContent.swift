@@ -15,7 +15,7 @@ import Foundation
 /// A model for a game request.
 @objcMembers
 @objc(FBSDKGameRequestContent)
-public final class GameRequestContent: NSObject, SharingValidatable, NSSecureCoding {
+public final class GameRequestContent: NSObject, SharingValidation, NSSecureCoding {
 
   /**
    Used when defining additional context about the nature of the request.

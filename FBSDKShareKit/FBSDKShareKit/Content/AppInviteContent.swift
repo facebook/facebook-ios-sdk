@@ -79,7 +79,7 @@ extension AppInviteContent: DependentType {
 
 // MARK: - Validation
 
-extension AppInviteContent: SharingValidatable {
+extension AppInviteContent: SharingValidation {
 
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     let validator = try Self.getDependencies().validator
