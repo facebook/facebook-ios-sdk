@@ -37,6 +37,18 @@ NS_SWIFT_NAME(ApplicationDelegate)
 NS_SWIFT_NAME(shared);
 
 /**
+ Call this method from the [UIApplicationDelegate application:continue:restorationHandler:] method
+ of the AppDelegate for your app. It should be invoked in order to properly process the web URL (universal link)
+ once the end user is redirected to your app.
+
+ @param application The application as passed to [UIApplicationDelegate application:continue:restorationHandler:].
+ @param userActivity The user activity as passed to [UIApplicationDelegate application:continue:restorationHandler:].
+
+ @return YES if the URL was intended for the Facebook SDK, NO if not.
+*/
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity;
+
+/**
  Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
  of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
  with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
@@ -49,7 +61,7 @@ NS_SWIFT_NAME(shared);
 
  @param annotation The annotation as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 
- @return YES if the url was intended for the Facebook SDK, NO if not.
+ @return YES if the URL was intended for the Facebook SDK, NO if not.
  */
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -67,7 +79,7 @@ NS_SWIFT_NAME(shared);
 
  @param options The options dictionary as passed to [UIApplicationDelegate application:openURL:options:].
 
- @return YES if the url was intended for the Facebook SDK, NO if not.
+ @return YES if the URL was intended for the Facebook SDK, NO if not.
  */
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url

@@ -189,6 +189,14 @@ static UIApplicationState _applicationState;
 
 #pragma mark - UIApplicationDelegate
 
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+{
+  if (userActivity.activityType != NSUserActivityTypeBrowsingWeb) {
+    return NO;
+  }
+  return [self application:application openURL:userActivity.webpageURL options:@{}];
+}
+
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
