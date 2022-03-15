@@ -14,47 +14,122 @@ import XCTest
 final class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
-  let loginProvider = TestLoginProvider()
-  lazy var factory = TestGraphRequestFactory()
-  lazy var button = FBLoginButton()
-  var sampleToken: AuthenticationToken {
-    AuthenticationToken(tokenString: "abc", nonce: "123")
-  }
-
-  private let delegate = TestLoginButtonDelegate()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var loginProvider: TestLoginProvider!
+  var stringProvider: TestUserInterfaceStringProvider!
+  var elementProvider: TestUserInterfaceElementProvider!
+  var graphRequestFactory: TestGraphRequestFactory!
+  var loginButton: FBLoginButton!
+  var sampleToken: AuthenticationToken!
+  var delegate: TestLoginButtonDelegate!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
+    loginProvider = TestLoginProvider()
+    stringProvider = TestUserInterfaceStringProvider()
+    elementProvider = TestUserInterfaceElementProvider()
+    graphRequestFactory = TestGraphRequestFactory()
+    sampleToken = AuthenticationToken(tokenString: "abc", nonce: "123")
+    delegate = TestLoginButtonDelegate()
+    loginButton = FBLoginButton()
+    loginButton.configure(
+      elementProvider: elementProvider,
+      stringProvider: stringProvider,
+      loginProvider: loginProvider,
+      graphRequestFactory: graphRequestFactory
+    )
+    loginButton.delegate = delegate
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
     AuthenticationToken.current = nil
     Profile.current = nil
-
-    button.delegate = delegate
-    button.setLoginProvider(loginProvider)
-    button.graphRequestFactory = factory
   }
 
-  // MARK: Nonce
+  override func tearDown() {
+    loginProvider = nil
+    stringProvider = nil
+    elementProvider = nil
+    graphRequestFactory = nil
+    sampleToken = nil
+    loginButton = nil
+    delegate = nil
+    super.tearDown()
+  }
+
+  // MARK: - Dependencies
+
+  func testDefaultDependencies() {
+    let loginButton = FBLoginButton()
+    XCTAssertIdentical(
+      loginButton.elementProvider,
+      InternalUtility.shared,
+      .hasDefaultElementProvider
+    )
+
+    XCTAssertIdentical(
+      loginButton.stringProvider,
+      InternalUtility.shared,
+      .hasDefaultStringProvider
+    )
+
+    XCTAssertTrue(
+      loginButton.loginProvider is LoginManager,
+      .hasDefaultLoginProvider
+    )
+
+    XCTAssertTrue(
+      loginButton.graphRequestFactory is GraphRequestFactory,
+      .hasDefaultGraphRequestFactory
+    )
+  }
+
+  func testCustomDependencies() {
+    XCTAssertIdentical(
+      loginButton.elementProvider,
+      elementProvider,
+      .hasCustomElementProvider
+    )
+
+    XCTAssertIdentical(
+      loginButton.stringProvider,
+      stringProvider,
+      .hasCustomStringProvider
+    )
+
+    XCTAssertIdentical(
+      loginButton.loginProvider,
+      loginProvider,
+      .hasCustomLoginProvider
+    )
+
+    XCTAssertIdentical(
+      loginButton.graphRequestFactory,
+      graphRequestFactory,
+      .hasCustomLoginProvider
+    )
+  }
+
+  // MARK: - Nonce
 
   func testDefaultNonce() {
     XCTAssertNil(FBLoginButton().nonce, "Should not have a default nonce")
   }
 
   func testSettingInvalidNonce() {
-    button.nonce = "   "
+    loginButton.nonce = "   "
 
     XCTAssertNil(
-      button.nonce,
+      loginButton.nonce,
       "Should not set an invalid nonce"
     )
   }
 
   func testSettingValidNonce() {
-    button.nonce = validNonce
+    loginButton.nonce = validNonce
 
     XCTAssertEqual(
-      button.nonce,
+      loginButton.nonce,
       validNonce,
       "Should set a valid nonce"
     )
@@ -62,25 +137,25 @@ final class LoginButtonTests: XCTestCase {
 
   func testLoginConfigurationWithoutNonce() {
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should be able to create a login configuration without a provided nonce"
     )
   }
 
   func testLoginConfigurationWithInvalidNonce() {
-    button.nonce = "   "
+    loginButton.nonce = "   "
 
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should not create a login configuration with an invalid nonce"
     )
   }
 
   func testLoginConfigurationWithValidNonce() {
-    button.nonce = validNonce
+    loginButton.nonce = validNonce
 
     XCTAssertEqual(
-      button.loginConfiguration().nonce,
+      loginButton.loginConfiguration().nonce,
       validNonce,
       "Should create a login configuration with valid nonce"
     )
@@ -164,7 +239,7 @@ final class LoginButtonTests: XCTestCase {
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
     XCTAssertTrue(
-      button._isAuthenticated(),
+      loginButton._isAuthenticated(),
       "Should consider a user authenticated if they have a current access token"
     )
   }
@@ -173,7 +248,7 @@ final class LoginButtonTests: XCTestCase {
     AuthenticationToken.current = sampleToken
 
     XCTAssertTrue(
-      button._isAuthenticated(),
+      loginButton._isAuthenticated(),
       "Should consider a user authenticated if they have a current authentication token"
     )
   }
@@ -251,26 +326,26 @@ final class LoginButtonTests: XCTestCase {
   // MARK: - Updating Content
 
   func testUpdatingContentWithMissingProfile() {
-    button._updateContent(forUserProfile: nil)
+    loginButton._updateContent(forUserProfile: nil)
 
     XCTAssertFalse(
-      button.isSelected,
+      loginButton.isSelected,
       "Should not be selected if there is not a profile"
     )
-    XCTAssertNil(button.userName())
-    XCTAssertNil(button.userID())
+    XCTAssertNil(loginButton.userName())
+    XCTAssertNil(loginButton.userID())
   }
 
   func testUpdatingContentWithProfile() {
     let profile = SampleUserProfiles.createValid()
-    button._updateContent(forUserProfile: profile)
+    loginButton._updateContent(forUserProfile: profile)
 
     XCTAssertTrue(
-      button.isSelected,
+      loginButton.isSelected,
       "Should be selected if there is a valid profile"
     )
-    XCTAssertEqual(button.userName(), profile.name)
-    XCTAssertEqual(button.userID(), profile.userID)
+    XCTAssertEqual(loginButton.userName(), profile.name)
+    XCTAssertEqual(loginButton.userID(), profile.userID)
   }
 
   func testUpdatingContentForProfileWithNewId() {
@@ -359,18 +434,18 @@ final class LoginButtonTests: XCTestCase {
   // MARK: - Fetching Content
 
   func testFetchContentGraphRequestCreation() throws {
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let request = try XCTUnwrap(factory.capturedRequests.first)
+    let request = try XCTUnwrap(graphRequestFactory.capturedRequests.first)
     XCTAssertEqual(request.graphPath, "me")
     XCTAssertEqual(request.parameters["fields"] as? String, "id,name")
   }
 
   func testFetchContentCompleteWithError() throws {
     AccessToken.current = SampleAccessTokens.validToken
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    let completion = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completion(
       nil,
       [
@@ -380,35 +455,35 @@ final class LoginButtonTests: XCTestCase {
       NSError(domain: "foo", code: 0, userInfo: nil)
     )
 
-    XCTAssertNil(button.userID())
-    XCTAssertNil(button.userName())
+    XCTAssertNil(loginButton.userID())
+    XCTAssertNil(loginButton.userName())
   }
 
   func testFetchContentCompleteWithNilResponse() throws {
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    let completion = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, nil, nil)
 
-    XCTAssertNil(button.userID())
-    XCTAssertNil(button.userName())
+    XCTAssertNil(loginButton.userID())
+    XCTAssertNil(loginButton.userName())
   }
 
   func testFetchContentCompleteWithEmptyResponse() throws {
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    let completion = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, [], nil)
 
-    XCTAssertNil(button.userID())
-    XCTAssertNil(button.userName())
+    XCTAssertNil(loginButton.userID())
+    XCTAssertNil(loginButton.userName())
   }
 
   func testFetchContentCompleteWithMatchingUID() throws {
     AccessToken.current = SampleAccessTokens.validToken
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    let completion = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completion(
       nil,
       [
@@ -418,15 +493,15 @@ final class LoginButtonTests: XCTestCase {
       nil
     )
 
-    XCTAssertEqual(button.userID(), SampleAccessTokens.validToken.userID)
-    XCTAssertEqual(button.userName(), SampleUserProfiles.defaultName)
+    XCTAssertEqual(loginButton.userID(), SampleAccessTokens.validToken.userID)
+    XCTAssertEqual(loginButton.userName(), SampleUserProfiles.defaultName)
   }
 
   func testFetchContentCompleteWithNonmatchingUID() throws {
     AccessToken.current = SampleAccessTokens.validToken
-    button._fetchAndSetContent()
+    loginButton._fetchAndSetContent()
 
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    let completion = try XCTUnwrap(graphRequestFactory.capturedRequests.first?.capturedCompletionHandler)
     completion(
       nil,
       [
@@ -436,8 +511,8 @@ final class LoginButtonTests: XCTestCase {
       nil
     )
 
-    XCTAssertNil(button.userID())
-    XCTAssertNil(button.userName())
+    XCTAssertNil(loginButton.userID())
+    XCTAssertNil(loginButton.userName())
   }
 
   // MARK: - Setting Messenger Page ID
@@ -447,20 +522,20 @@ final class LoginButtonTests: XCTestCase {
   }
 
   func testSettingMessengerPageId() {
-    button.messengerPageId = "1234"
+    loginButton.messengerPageId = "1234"
 
     XCTAssertEqual(
-      button.messengerPageId,
+      loginButton.messengerPageId,
       "1234",
       "Should set a valid Messenger Page ID"
     )
   }
 
   func testLoginConfigurationWithMessengerPageId() {
-    button.messengerPageId = "1234"
+    loginButton.messengerPageId = "1234"
 
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should be able to create a configuration with Messenger Page Id"
     )
   }
@@ -476,57 +551,57 @@ final class LoginButtonTests: XCTestCase {
   }
 
   func testSettingAuthType() {
-    button.authType = .reauthorize
+    loginButton.authType = .reauthorize
 
     XCTAssertEqual(
-      button.authType,
+      loginButton.authType,
       .reauthorize,
       "Should set a valid auth type"
     )
   }
 
   func testLoginConfigurationWithAuthType() {
-    button.authType = .reauthorize
+    loginButton.authType = .reauthorize
 
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should be able to create a configuration with auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType, .reauthorize)
+    XCTAssertEqual(loginButton.loginConfiguration().authType, .reauthorize)
   }
 
   func testLoginConfigurationWithNilAuthType() {
-    button.authType = nil
+    loginButton.authType = nil
 
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should be able to create a configuration with nil auth type"
     )
-    XCTAssertNil(button.loginConfiguration().authType)
+    XCTAssertNil(loginButton.loginConfiguration().authType)
   }
 
   func testLoginConfigurationWithNoAuthType() {
     XCTAssertNotNil(
-      button.loginConfiguration(),
+      loginButton.loginConfiguration(),
       "Should be able to create a configuration with default auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType, .rerequest)
+    XCTAssertEqual(loginButton.loginConfiguration().authType, .rerequest)
   }
 
   // MARK: default audience
 
   func testDefaultAudience() {
     XCTAssertEqual(
-      button.defaultAudience,
+      loginButton.defaultAudience,
       .friends,
       "Should have a default audience of friends"
     )
   }
 
   func testSettingDefaultAudience() {
-    button.defaultAudience = .onlyMe
+    loginButton.defaultAudience = .onlyMe
     XCTAssertEqual(
-      button.defaultAudience,
+      loginButton.defaultAudience,
       .onlyMe,
       "Should set the default audience to only me"
     )
@@ -541,21 +616,21 @@ final class LoginButtonTests: XCTestCase {
 
   func testDefaultLoginTracking() {
     XCTAssertEqual(
-      button.loginTracking,
+      loginButton.loginTracking,
       .enabled,
       "Should set the default login tracking to be enabled"
     )
   }
 
   func testSettingLoginTracking() {
-    button.loginTracking = .limited
+    loginButton.loginTracking = .limited
     XCTAssertEqual(
-      button.loginTracking,
+      loginButton.loginTracking,
       .limited,
       "Should set the login tracking to limited"
     )
     XCTAssertEqual(
-      button.loginConfiguration().tracking,
+      loginButton.loginConfiguration().tracking,
       .limited,
       "Should created a login configuration with the expected tracking"
     )
@@ -565,14 +640,14 @@ final class LoginButtonTests: XCTestCase {
 
   func testSettingCodeVerifier() {
     let codeVerifier = CodeVerifier()
-    button.codeVerifier = codeVerifier
+    loginButton.codeVerifier = codeVerifier
     XCTAssertEqual(
-      button.codeVerifier.value,
+      loginButton.codeVerifier.value,
       codeVerifier.value,
       "Should set the code verifier to the expected value"
     )
     XCTAssertEqual(
-      button.loginConfiguration().codeVerifier.value,
+      loginButton.loginConfiguration().codeVerifier.value,
       codeVerifier.value,
       "Should create a login configuration with the expected code verifier"
     )
@@ -580,11 +655,11 @@ final class LoginButtonTests: XCTestCase {
 
   func testDefaultCodeVerifier() {
     XCTAssertNotNil(
-      button.codeVerifier,
+      loginButton.codeVerifier,
       "Default code verifier should not be nil"
     )
     XCTAssertNotNil(
-      button.loginConfiguration().codeVerifier,
+      loginButton.loginConfiguration().codeVerifier,
       "Should create a login configuration with the default code verifier"
     )
   }
@@ -594,7 +669,7 @@ final class LoginButtonTests: XCTestCase {
   func testButtonPressNotAuthenticatedLoginNotAllowed() throws {
     delegate.shouldLogin = false
 
-    button._buttonPressed(self)
+    loginButton._buttonPressed(self)
 
     XCTAssert(delegate.willLogin)
 
@@ -603,7 +678,7 @@ final class LoginButtonTests: XCTestCase {
   }
 
   func testButtonPressNotAuthenticatedLoginAllowed() throws {
-    button._buttonPressed(self)
+    loginButton._buttonPressed(self)
 
     XCTAssert(delegate.willLogin)
 
@@ -623,8 +698,28 @@ final class LoginButtonTests: XCTestCase {
     XCTAssertEqual(delegate.capturedResult, result)
   }
 
+  func testButtonPressAuthenticated() throws {
+    AuthenticationToken.current = sampleToken
+    let rootVC = UIViewController()
+    elementProvider.stubbedTopMostViewController = rootVC
+
+    let window = UIWindow()
+    window.rootViewController = rootVC
+    window.makeKeyAndVisible()
+    rootVC.view.addSubview(loginButton)
+
+    loginButton._buttonPressed(self)
+
+    let presentedVC = try XCTUnwrap(window.rootViewController?.presentedViewController, .showsAlertViewController)
+
+    XCTAssertTrue(
+      presentedVC is UIAlertController,
+      .showsAlertViewController
+    )
+  }
+
   func testLogout() {
-    button._logout()
+    loginButton._logout()
     XCTAssert(loginProvider.didLogout)
     XCTAssert(delegate.didLoggedOut)
   }
@@ -683,7 +778,7 @@ final class LoginButtonTests: XCTestCase {
   func testImageRectForContentRect() {
 
     let contentRect = CGRect(x: 0, y: 0, width: 100, height: 100)
-    let imageRect = button.imageRect(forContentRect: contentRect)
+    let imageRect = loginButton.imageRect(forContentRect: contentRect)
     let expectedImageRect = CGRect(x: 6.0, y: 42.0, width: 16.0, height: 16.0)
 
     XCTAssertEqual(
@@ -696,8 +791,8 @@ final class LoginButtonTests: XCTestCase {
   func testTitleRectForContentRect() {
 
     let contentRect = CGRect(x: 0, y: 0, width: 100, height: 100)
-    button.frame = contentRect
-    let titleRect = button.titleRect(forContentRect: contentRect)
+    loginButton.frame = contentRect
+    let titleRect = loginButton.titleRect(forContentRect: contentRect)
     let expectedTitleRect = CGRect(x: 30.0, y: 0.0, width: 62.0, height: 100.0)
 
     XCTAssertEqual(
@@ -744,4 +839,31 @@ fileprivate extension String {
   static let showsTooltip = "Shows a tooltip if user is not authenticated or tooltip is not disabled"
   static let doesNotShowTooltipForAuthenticated = "Does not show a tooltip if user is authenticated"
   static let doesNotShowTooltipIfDisabled = "Does not show a tooltip if tooltip has been disabled"
+  static let showsAlertViewController = """
+    Shows an alert view controller when the login button is pressed, if the user is already authenticated
+    """
+  static let hasDefaultElementProvider = """
+    Should have a default element provider dependency
+    """
+  static let hasDefaultStringProvider = """
+    Should have a default string provider dependency
+    """
+  static let hasDefaultLoginProvider = """
+    Should have a default login provider dependency
+    """
+  static let hasDefaultGraphRequestFactory = """
+    Should have a default graph request factory dependency
+    """
+  static let hasCustomElementProvider = """
+    Should have a custom element provider dependency
+    """
+  static let hasCustomStringProvider = """
+    Should have a custom string provider dependency
+    """
+  static let hasCustomLoginProvider = """
+    Should have a custom login provider dependency
+    """
+  static let hasCustomGraphRequestFactory = """
+    Should have a custom graph request factory dependency
+    """
 }
