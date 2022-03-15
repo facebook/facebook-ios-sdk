@@ -38,6 +38,22 @@ func application(
 }
 ```
 
+If your app is opted into Scenes, then you will also need to add the following code in your Scene Delegate implementation, in `scene(_:willConnectTo:options:)`:
+
+```swift
+func scene(
+  _ scene: UIScene,
+  willConnectTo session: UISceneSession,
+  options connectionOptions: UIScene.ConnectionOptions
+) {
+  if let userActivity = connectionOptions.userActivities.first {
+    ApplicationDelegate.shared.application(UIApplication.shared, continue: userActivity)
+  }
+
+  // Rest of implementation...
+}
+```
+
 ## 13.0.0
 
 ### Notable Changes
