@@ -90,8 +90,13 @@ extension TestShareUtility: ShareValidating {
   // MARK: Validate required value
 
   static var validateRequiredValueShouldThrow = false
+  static var validateRequiredValueValue: Any?
+  static var validateRequiredValueName: String?
 
   static func validateRequiredValue(_ value: Any, named name: String) throws {
+    validateRequiredValueValue = value
+    validateRequiredValueName = name
+
     if validateRequiredValueShouldThrow {
       throw ValidationError()
     }
@@ -99,6 +104,8 @@ extension TestShareUtility: ShareValidating {
 
   static func resetRequiredValueValues() {
     validateRequiredValueShouldThrow = false
+    validateRequiredValueValue = nil
+    validateRequiredValueName = nil
   }
 
   // MARK: Validate argument

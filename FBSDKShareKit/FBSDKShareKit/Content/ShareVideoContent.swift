@@ -48,6 +48,20 @@ public final class ShareVideoContent: NSObject {
   public private(set) var shareUUID: String? = UUID().uuidString
 }
 
+// MARK: - Type Dependencies
+
+extension ShareVideoContent: DependentType {
+  struct Dependencies {
+    var validator: ShareValidating.Type
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(validator: _ShareUtility.self)
+}
+
+// MARK: - Sharing Content
+
 extension ShareVideoContent: SharingContent {
 
   /**
@@ -103,7 +117,8 @@ extension ShareVideoContent: SharingContent {
 extension ShareVideoContent: SharingValidation {
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
-    try _ShareUtility.validateRequiredValue(video, named: "video")
+    let validator = try Self.getDependencies().validator
+    try validator.validateRequiredValue(video, named: "video")
     try video.validate(options: bridgeOptions)
   }
 }

@@ -14,18 +14,43 @@ import XCTest
 
 final class ShareVideoContentTests: XCTestCase {
 
-  var content: ShareVideoContent! // swiftlint:disable:this implicitly_unwrapped_optional
+  // swiftlint:disable implicitly_unwrapped_optional
+  var content: ShareVideoContent!
+  var validator: TestShareUtility.Type!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
+
+    validator = TestShareUtility.self
+    validator.reset()
+    ShareVideoContent.setDependencies(.init(validator: TestShareUtility.self))
 
     content = ShareModelTestUtility.videoContentWithoutPreviewPhoto
   }
 
   override func tearDown() {
+    ShareVideoContent.resetDependencies()
+    validator.reset()
+    validator = nil
     content = nil
 
     super.tearDown()
+  }
+
+  func testDefaultDependencies() throws {
+    ShareVideoContent.resetDependencies()
+
+    let dependencies = try ShareVideoContent.getDependencies()
+    XCTAssertTrue(
+      dependencies.validator is _ShareUtility.Type,
+      .usesShareUtilityAsShareValidatorByDefault
+    )
+  }
+
+  func testCustomDependencies() throws {
+    let dependencies = try ShareVideoContent.getDependencies()
+    XCTAssertTrue(dependencies.validator is TestShareUtility.Type, .usesCustomShareValidator)
   }
 
   func testProperties() {
@@ -39,38 +64,18 @@ final class ShareVideoContentTests: XCTestCase {
   }
 
   func testValidationWithValidContent() throws {
-    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
+    XCTAssertNoThrow(try content.validate(options: []), .validationValidatesVideo)
+    XCTAssertIdentical(validator.validateRequiredValueValue as? ShareVideo, content.video, .validationValidatesVideo)
+    XCTAssertEqual(validator.validateRequiredValueName, "video", .validationValidatesVideo)
   }
 
-  func testValidationWithNilVideo() {
+  func testValidationWithDefaultVideo() {
+    validator.validateRequiredValueShouldThrow = true
     content = ShareVideoContent()
 
-    XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
-      "Should throw an error"
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "video")
-    }
-  }
-
-  func testValidationWithNilVideoURL() {
-    content = ShareVideoContent()
-    content.video = ShareVideo()
-
-    XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
-      "Should throw an error"
-    ) { error in
-      let nsError = error as NSError
-      XCTAssertNotNil(
-        nsError,
-        "Attempting to validate video share content with a missing url should return a general video error"
-      )
-      XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
-      XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "video")
-    }
+    XCTAssertThrowsError(try content.validate(options: []), .validationValidatesVideo)
+    XCTAssertIdentical(validator.validateRequiredValueValue as? ShareVideo, content.video, .validationValidatesVideo)
+    XCTAssertEqual(validator.validateRequiredValueName, "video", .validationValidatesVideo)
   }
 
   func testValidationWithInvalidVideoURL() {
@@ -79,10 +84,7 @@ final class ShareVideoContentTests: XCTestCase {
     // swiftlint:disable:next force_unwrapping
     content.video.videoURL = URL(string: "/")!
 
-    XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
-      "Should throw an error"
-    ) { error in
+    XCTAssertThrowsError(try content.validate(options: []), .validationValidatesVideo) { error in
       let nsError = error as NSError
       XCTAssertNotNil(
         nsError,
@@ -91,6 +93,8 @@ final class ShareVideoContentTests: XCTestCase {
       XCTAssertEqual(nsError.code, CoreError.errorInvalidArgument.rawValue)
       XCTAssertEqual(nsError.userInfo[ErrorArgumentNameKey] as? String, "videoURL")
     }
+    XCTAssertIdentical(validator.validateRequiredValueValue as? ShareVideo, content.video, .validationValidatesVideo)
+    XCTAssertEqual(validator.validateRequiredValueName, "video", .validationValidatesVideo)
   }
 
   func testValidationWithNonVideoURL() {
@@ -100,7 +104,7 @@ final class ShareVideoContentTests: XCTestCase {
     XCTAssertNotNil(content)
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
+      try content.validate(options: []),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -116,7 +120,7 @@ final class ShareVideoContentTests: XCTestCase {
   func testValidationWithNetworkVideoURL() {
     let video = ShareVideo(videoURL: ShareModelTestUtility.videoURL)
     content.video = video
-    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content))
+    XCTAssertNoThrow(try content.validate(options: []))
   }
 
   func testValidationWithValidFileVideoURLWhenBridgeOptionIsDefault() throws {
@@ -124,7 +128,7 @@ final class ShareVideoContentTests: XCTestCase {
     content.video = ShareVideo(videoURL: videoURL)
 
     XCTAssertThrowsError(
-      try _ShareUtility.validateShareContent(content),
+      try content.validate(options: []),
       "Should throw an error"
     ) { error in
       let nsError = error as NSError
@@ -141,6 +145,19 @@ final class ShareVideoContentTests: XCTestCase {
     let videoURL = try XCTUnwrap(Bundle.main.resourceURL?.appendingPathComponent("video.mp4"))
     content.video = ShareVideo(videoURL: videoURL)
 
-    XCTAssertNoThrow(try _ShareUtility.validateShareContent(content, options: [.videoData]))
+    XCTAssertNoThrow(try content.validate(options: [.videoData]))
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let usesShareUtilityAsShareValidatorByDefault = """
+    The default share validator dependency should be the _ShareUtility type
+    """
+  static let usesCustomShareValidator = "The share validator dependency should be configurable"
+
+  static let validationValidatesVideo = """
+    Validating a share video content should validate its video using its validator
+    """
 }
