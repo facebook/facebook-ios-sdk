@@ -157,7 +157,7 @@ final class ShareDialogTests: XCTestCase {
     let dialog = createEmptyDialog()
     dialog.mode = .native
     dialog.shareContent = ShareModelTestUtility.photoContent
-    TestShareUtility.stubbedValidateShareShouldThrow = true
+    TestShareUtility.validateShareContentShouldThrow = true
 
     XCTAssertFalse(
       dialog.canShow,
@@ -301,7 +301,7 @@ final class ShareDialogTests: XCTestCase {
 
     AccessToken.current = SampleAccessTokens.validToken
     TestShareUtility.stubbedTestShareContainsPhotos = true
-    TestShareUtility.stubbedValidateShareShouldThrow = true
+    TestShareUtility.validateShareContentShouldThrow = true
     dialog.shareContent = ShareModelTestUtility.photoContent
     XCTAssertFalse(
       dialog.canShow,
@@ -326,7 +326,7 @@ final class ShareDialogTests: XCTestCase {
 
     AccessToken.current = SampleAccessTokens.validToken
     dialog.shareContent = ShareModelTestUtility.photoContent
-    TestShareUtility.stubbedValidateShareShouldThrow = true
+    TestShareUtility.validateShareContentShouldThrow = true
     XCTAssertThrowsError(
       try dialog.validate(),
       "A dialog with photo content that points to remote urls should not be considered valid on web"
@@ -523,7 +523,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testValidateWithErrorReturnsFalseForMMPIfAValidShareExtensionVersionIsNotAvailable() {
-    TestShareUtility.stubbedValidateShareShouldThrow = true
+    TestShareUtility.validateShareContentShouldThrow = true
 
     validate(
       shareContent: ShareModelTestUtility.mediaContent,
