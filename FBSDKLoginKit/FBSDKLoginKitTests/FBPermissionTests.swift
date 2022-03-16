@@ -10,7 +10,7 @@
 
 import XCTest
 
-final class PermissionTests: XCTestCase {
+final class FBPermissionTests: XCTestCase {
 
   func testInvalidPermissions() {
     let rawPermissions = [
@@ -84,6 +84,9 @@ final class PermissionTests: XCTestCase {
 
     let permission2 = try XCTUnwrap(FBPermission(string: "test_permission"))
     XCTAssertEqual(permission, permission2, "Permissions with equal string values should be equal")
+
+    let string = permission.value as NSString
+    XCTAssertNotEqual(permission, string, "Permissions can only be equal to other Permissions")
   }
 
   func testInequality() throws {
