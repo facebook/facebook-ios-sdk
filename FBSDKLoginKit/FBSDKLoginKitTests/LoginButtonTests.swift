@@ -164,72 +164,94 @@ final class LoginButtonTests: XCTestCase {
   // MARK: - Initial Content Update
 
   func testInitialContentUpdateWithInactiveAccessTokenWithProfile() {
-    let button = TestButton()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
+    let mockedProfile = SampleUserProfiles.createValid()
+    Profile.setCurrent(mockedProfile, shouldPostNotification: false)
 
-    button._initializeContent()
+    loginButton._initializeContent()
 
-    XCTAssertEqual(
-      button.updateContentForProfileCallCount,
-      1,
-      "Should use the profile when there is no access token"
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithProfile
     )
+
     XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      0,
-      "Should not use the access token when there is no access token"
+      loginButton.userName(),
+      mockedProfile.name,
+      .setsUserNameWithProfile
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      mockedProfile.userID,
+      .setsUserIDWithProfile
     )
   }
 
-  func testInitialContentUpdateWithActiveAccessTokenWithProfile() {
-    let button = TestButton()
+  func testInitialContentUpdateWithActiveAccessTokenWithProfile() throws {
+
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-    let profile = Profile(
-      userID: "Sample ID",
-      firstName: nil,
-      middleName: nil,
-      lastName: nil,
-      name: "Sample Name",
-      linkURL: nil,
-      refreshDate: nil
-    )
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    let mockedProfile = SampleUserProfiles.createValid()
+    Profile.setCurrent(mockedProfile, shouldPostNotification: false)
 
-    button._initializeContent()
+    loginButton._initializeContent()
+
+    let request = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first,
+      .createsRequest
+    )
+
+    let result = [
+      "id": SampleAccessTokens.validToken.userID,
+      "name": SampleUserProfiles.defaultName,
+    ]
+
+    let completion = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler,
+      .createsRequest
+    )
+
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithAccessToken
+    )
+
+    XCTAssertEqual(request.graphPath, "me", .createsRequest)
 
     XCTAssertEqual(
-      button.updateContentForProfileCallCount,
-      0,
-      "Should not use the profile when there is an access token"
+      request.parameters["fields"] as? String,
+      "id,name",
+      .createsRequestWithParameters
     )
+
     XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      1,
-      "Should use the access token when there is one available"
+      loginButton.userName(),
+      result["name"],
+      .setsUserNameWithAccessToken
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      result["id"],
+      .setsUserIDWithAccessToken
     )
   }
 
   func testInitialContentUpdateWithoutAccessTokenWithoutProfile() {
-    let button = TestButton()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
     Profile.setCurrent(nil, shouldPostNotification: false)
 
-    button._initializeContent()
+    loginButton._initializeContent()
 
-    XCTAssertEqual(
-      button.updateContentForProfileCallCount,
-      0,
-      "Should not use the profile when there is no access token or current profile"
-    )
-    XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      0,
-      "Should not use the access token when there is no access token or current profile"
-    )
     XCTAssertFalse(
-      button.isSelected,
-      "Should not be selected when there is no access token or current profile"
+      loginButton.isSelected,
+      .doesNotSelectsButtonWithoutAccessToken
     )
   }
 
@@ -255,71 +277,203 @@ final class LoginButtonTests: XCTestCase {
 
   // MARK: - Handling Notifications
 
-  func testReceivingAccessTokenNotificationWithDidChangeUserIdKey() {
-    let button = TestButton()
+  func testReceivingAccessTokenNotificationWithDidChangeUserIdKey() throws {
     let notification = Notification(
       name: .AccessTokenDidChange,
       object: nil,
       userInfo: [AccessTokenDidChangeUserIDKey: "foo"]
     )
 
-    button._accessTokenDidChange(notification)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
+    loginButton._accessTokenDidChange(notification)
+
+    let request = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first,
+      .createsRequest
+    )
+
+    let result = [
+      "id": SampleAccessTokens.validToken.userID,
+      "name": SampleUserProfiles.defaultName,
+    ]
+
+    let completion = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler,
+      .createsRequest
+    )
+
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonNotificationUserIdKey
+    )
+
+    XCTAssertEqual(request.graphPath, "me", .createsRequest)
 
     XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      1,
-      "An access token notification with a changed user id key should trigger a content update"
+      request.parameters["fields"] as? String,
+      "id,name",
+      .createsRequestWithParameters
+    )
+
+    XCTAssertEqual(
+      loginButton.userName(),
+      result["name"],
+      .setsUserNameWithNotificationUserIdKey
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      result["id"],
+      .setsUserIDWithNotificationUserIdKey
     )
   }
 
   func testReceivingAccessTokenNotificationWithTokenDidExpireKey() {
-    let button = TestButton()
     let notification = Notification(
       name: .AccessTokenDidChange,
       object: nil,
       userInfo: [AccessTokenDidExpireKey: "foo"]
     )
 
-    button._accessTokenDidChange(notification)
+    loginButton._accessTokenDidChange(notification)
 
-    XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      1,
-      "An access token notification with an expired token key should trigger a content update"
+    XCTAssertFalse(
+      loginButton.isSelected,
+      .doesNotSelectsButtonWithExpiredKey
     )
   }
 
   func testReceivingAccessTokenNotificationWithoutRelevantUserInfo() {
-    let button = TestButton()
     let notification = Notification(
       name: .AccessTokenDidChange,
       object: nil,
       userInfo: nil
     )
 
-    button._accessTokenDidChange(notification)
+    loginButton.isSelected = true
+    let profile = SampleUserProfiles.createValid(userID: SampleAccessTokens.validToken.userID)
+
+    loginButton._updateContent(forUserProfile: profile)
+    loginButton._accessTokenDidChange(notification)
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .doesNotChangeButtonStateWithoutUserInfo
+    )
 
     XCTAssertEqual(
-      button.updateContentForAccessTokenCallCount,
-      0,
-      "An access token notification without relevant user info should not trigger a content update"
+      loginButton.userName(),
+      profile.name,
+      .doesNotChangeUserNameWithoutUserInfo
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      profile.userID,
+      .doesNotChangeUserIDWithoutUserInfo
+    )
+
+    loginButton.isSelected = false
+    loginButton._accessTokenDidChange(notification)
+
+    XCTAssertFalse(
+      loginButton.isSelected,
+      .doesNotChangeButtonStateWithoutUserInfo
     )
   }
 
-  func testReceivingProfileNotification() {
-    let button = TestButton()
+  func testReceivingProfileNotificationWithNoProfile() {
+    let notification = Notification(
+      name: .ProfileDidChange,
+      object: nil,
+      userInfo: nil
+    )
+    let oldUserName = loginButton.userName()
+    let oldUserId = loginButton.userID()
+
+    loginButton._profileDidChange(notification)
+
+    XCTAssertFalse(
+      loginButton.isSelected,
+      .doesNotSelectsButtonWithNoProfileNotification
+    )
+
+    XCTAssertEqual(
+      loginButton.userName(),
+      oldUserName,
+      .doesNotChangeUserNameWithNoProfileNotification
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      oldUserId,
+      .doesNotChangeUserIDWithNoProfileNotification
+    )
+  }
+
+  func testReceivingProfileNotificationWithProfile() {
     let notification = Notification(
       name: .ProfileDidChange,
       object: nil,
       userInfo: nil
     )
 
-    button._profileDidChange(notification)
+    let mockedProfile = SampleUserProfiles.createValid()
+    Profile.setCurrent(mockedProfile, shouldPostNotification: false)
+
+    loginButton._profileDidChange(notification)
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithProfileNotification
+    )
 
     XCTAssertEqual(
-      button.updateContentForProfileCallCount,
-      1,
-      "An profile change should trigger a content update"
+      loginButton.userName(),
+      mockedProfile.name,
+      .setsUserNameWithProfileNotification
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      mockedProfile.userID,
+      .setsUserIDWithProfileNotification
+    )
+  }
+
+  func testReceivingProfileNotificationWithSameProfile() {
+    let notification = Notification(
+      name: .ProfileDidChange,
+      object: nil,
+      userInfo: nil
+    )
+
+    let mockedProfile = SampleUserProfiles.createValid()
+    Profile.setCurrent(mockedProfile, shouldPostNotification: false)
+    loginButton._updateContent(forUserProfile: mockedProfile)
+    loginButton._profileDidChange(notification)
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithProfileNotification
+    )
+
+    XCTAssertEqual(
+      loginButton.userName(),
+      mockedProfile.name,
+      .doesNotChangeUserNameWithSameProfile
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      mockedProfile.userID,
+      .doesNotChangeUserIdWithSameProfile
     )
   }
 
@@ -349,85 +503,142 @@ final class LoginButtonTests: XCTestCase {
   }
 
   func testUpdatingContentForProfileWithNewId() {
-    let button = TestButton()
-    let profile = SampleUserProfiles.createValid(name: name)
-    button._updateContent(forUserProfile: SampleUserProfiles.createValid())
-    button._updateContent(forUserProfile: profile)
+    let profile = SampleUserProfiles.createValid(userID: "345")
+    loginButton._updateContent(forUserProfile: SampleUserProfiles.createValid())
+    loginButton._updateContent(forUserProfile: profile)
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonForProfileWithNewId
+    )
 
     XCTAssertEqual(
-      button.userName(),
+      loginButton.userName(),
       profile.name,
-      "Should update the user information with the updated profile information"
+      .updatesUserNameForProfileWithNewId
     )
+
     XCTAssertEqual(
-      button.userID(),
+      loginButton.userID(),
       profile.userID,
-      "Should update the user information with the updated profile information"
+      .updatesUserIdForProfileWithNewId
     )
   }
 
   func testUpdatingContentForProfileWithNewName() {
-    let button = TestButton()
-    let profile = SampleUserProfiles.createValid(name: name)
-    button._updateContent(forUserProfile: SampleUserProfiles.createValid())
-    button._updateContent(forUserProfile: profile)
+    let profile = SampleUserProfiles.createValid(userID: "345")
+
+    loginButton._updateContent(
+      forUserProfile: SampleUserProfiles.createValid(userID: "345", name: "Paul Smith")
+    )
+
+    loginButton._updateContent(forUserProfile: profile)
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonForProfileWithNewName
+    )
 
     XCTAssertEqual(
-      button.userName(),
+      loginButton.userName(),
       profile.name,
-      "Should update the user information with the updated profile information"
+      .updatesUserNameForProfileWithNewName
     )
     XCTAssertEqual(
-      button.userID(),
+      loginButton.userID(),
       profile.userID,
-      "Should update the user information with the updated profile information"
+      .updatesUserIdForProfileWithNewName
     )
   }
 
-  func testUpdatingContentWithValidAccessToken() {
-    let button = TestButton()
+  func testUpdatingContentWithValidAccessToken() throws {
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
-    button._updateContentForAccessToken()
+    loginButton._updateContentForAccessToken()
+
+    let request = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first,
+      .createsRequest
+    )
+
+    let result = [
+      "id": SampleAccessTokens.validToken.userID,
+      "name": SampleUserProfiles.defaultName,
+    ]
+
+    let completion = try XCTUnwrap(
+      graphRequestFactory.capturedRequests.first?.capturedCompletionHandler,
+      .createsRequest
+    )
+
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithAccessTokenUpdate
+    )
+
+    XCTAssertEqual(request.graphPath, "me", .createsRequest)
+    XCTAssertEqual(
+      request.parameters["fields"] as? String,
+      "id,name",
+      .createsRequestWithParameters
+    )
 
     XCTAssertEqual(
-      button.fetchAndSetContentCallCount,
-      1,
-      "Should try to fetch content for a valid access token"
+      loginButton.userName(),
+      result["name"],
+      .updatesUserNameWithAccessToken
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      result["id"],
+      .updatesUserIDWithAccessToken
     )
   }
 
   func testUpdatingContentWithInvalidAccessToken() {
-    let button = TestButton()
     AccessToken.setCurrent(SampleAccessTokens.expiredToken, shouldDispatchNotif: false)
 
-    button._updateContentForAccessToken()
-    button._updateContentForAccessToken()
+    loginButton._updateContentForAccessToken()
 
-    XCTAssertEqual(
-      button.fetchAndSetContentCallCount,
-      0,
-      "Should not try to fetch content for an invalid access token"
+    XCTAssertFalse(
+      loginButton.isSelected,
+      .doesNotSelectButtonWithInvalidAccessToken
     )
   }
 
   func testUpdatingContentWithIdenticalAccessToken() {
-    let button = TestButton()
-
     // Make sure the username and id properties on button are set to the same values
     // as the access token. This is an easy way to do with without having to stub
     // a network call
     let profile = SampleUserProfiles.createValid(userID: SampleAccessTokens.validToken.userID)
-    button._updateContent(forUserProfile: profile)
+    loginButton._updateContent(forUserProfile: profile)
 
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
-    button._updateContentForAccessToken()
+    loginButton._updateContentForAccessToken()
+
+    XCTAssertTrue(
+      loginButton.isSelected,
+      .selectsButtonWithIdenticalAccessToken
+    )
 
     XCTAssertEqual(
-      button.fetchAndSetContentCallCount,
-      0,
-      "Should not try to fetch content for a token if the user identifier has not changed"
+      loginButton.userName(),
+      profile.name,
+      .doesNotChangeUserNameWithIdenticalAccessToken
+    )
+
+    XCTAssertEqual(
+      loginButton.userID(),
+      profile.userID,
+      .doesNotChangeUserIdWithIdenticalAccessToken
     )
   }
 
@@ -803,28 +1014,6 @@ final class LoginButtonTests: XCTestCase {
   }
 }
 
-private final class TestButton: FBLoginButton {
-  var fetchAndSetContentCallCount = 0
-  var updateContentForAccessTokenCallCount = 0
-  var updateContentForProfileCallCount = 0
-
-  override func _updateContentForAccessToken() {
-    updateContentForAccessTokenCallCount += 1
-
-    super._updateContentForAccessToken()
-  }
-
-  override func _updateContent(forUserProfile profile: Profile?) {
-    updateContentForProfileCallCount += 1
-
-    super._updateContent(forUserProfile: profile)
-  }
-
-  override func _fetchAndSetContent() {
-    fetchAndSetContentCallCount += 1
-  }
-}
-
 // MARK: - Assumptions
 
 fileprivate extension String {
@@ -865,5 +1054,153 @@ fileprivate extension String {
     """
   static let hasCustomGraphRequestFactory = """
     Should have a custom graph request factory dependency
+    """
+  static let selectsButtonWithProfile = """
+    Login button should be selected when initializing content \
+    and using a profile
+    """
+  static let setsUserNameWithProfile = """
+    User name should be set when initializing content \
+    and using a profile
+    """
+  static let setsUserIDWithProfile = """
+    User id should be set when initializing content \
+    and using a profile
+    """
+  static let selectsButtonWithAccessToken = """
+    Login button should be selected when initializing content \
+    and using an access token
+    """
+  static let setsUserNameWithAccessToken = """
+    User name should be set when initializing content \
+    and using an access token
+    """
+  static let setsUserIDWithAccessToken = """
+    User id should be set when initializing content \
+    and using an access token
+    """
+  static let createsRequest = """
+    Should create a request with the expected path
+    """
+  static let createsRequestWithParameters = """
+    Should create a request with the expected parameters
+    """
+  static let doesNotSelectsButtonWithoutAccessToken = """
+    Login button should not be selected when there is no access token \
+    or current profile
+    """
+  static let selectsButtonNotificationUserIdKey = """
+    Login button should be selected when we receive an access token \
+    change notification with a user id key
+    """
+  static let setsUserNameWithNotificationUserIdKey = """
+    User name should be equal to user name we received in the response \
+    after we receive an access token change notification with \
+    a user id key
+    """
+  static let setsUserIDWithNotificationUserIdKey = """
+    User id should be equal to user id we received in the response \
+    after we receive an access token change notification with \
+    a user id key
+    """
+  static let doesNotSelectsButtonWithExpiredKey = """
+    Login button should not be selected after we receive an \
+    access token change notification with an expired key
+    """
+  static let doesNotChangeButtonStateWithoutUserInfo = """
+    Login button should not change current state after we \
+    receive an access token change notification with no user info
+    """
+  static let doesNotChangeUserNameWithoutUserInfo = """
+    User name should not change after we receive an \
+    access token change notification with no user info
+    """
+  static let doesNotChangeUserIDWithoutUserInfo = """
+    User id should not change after we receive an \
+    access token change notification with no user info
+    """
+  static let selectsButtonWithProfileNotification = """
+    Login button should be selected after we receive a \
+    profile change notification with a valid profile
+    """
+  static let setsUserNameWithProfileNotification = """
+    User name should be changed after we receive a \
+    profile change notification with a different profile
+    """
+  static let setsUserIDWithProfileNotification = """
+    User id should be changed after we receive a \
+    profile change notification with a different profile
+    """
+  static let doesNotSelectsButtonWithNoProfileNotification = """
+    Login button should not be selected after we receive a \
+    profile change notification and there is no profile
+    """
+  static let doesNotChangeUserNameWithNoProfileNotification = """
+    User name should not change after we receive a \
+    profile change notification and there is no profile
+    """
+  static let doesNotChangeUserIDWithNoProfileNotification = """
+    User id should not change after we receive a \
+    profile change notification and there is no profile
+    """
+  static let doesNotChangeUserNameWithSameProfile = """
+    User name should change after we receive a \
+    profile change notification with same profile
+    """
+  static let doesNotChangeUserIdWithSameProfile = """
+    User id should change after we receive a \
+    profile change notification with same profile
+    """
+  static let selectsButtonWithAccessTokenUpdate = """
+    Login button should be selected when updating content \
+    and using an access token
+    """
+  static let updatesUserNameWithAccessToken = """
+    User name should be set when updating content \
+    and using an access token
+    """
+  static let updatesUserIDWithAccessToken = """
+    User id should be set when updating content \
+    and using an access token
+    """
+  static let doesNotSelectButtonWithInvalidAccessToken = """
+    Login button should not be selected when updating content \
+    and using an invalid access token
+    """
+  static let selectsButtonWithIdenticalAccessToken = """
+    Login button should be selected when attempting to update content \
+    with an identical access token
+    """
+  static let doesNotChangeUserNameWithIdenticalAccessToken = """
+    User name should not change when attempting to update content \
+    with an identical access token
+    """
+  static let doesNotChangeUserIdWithIdenticalAccessToken = """
+    User id should not change when attempting to update content \
+    with an identical access token
+    """
+  static let selectsButtonForProfileWithNewId = """
+    Login button should be selected when attempting to update content \
+    with a profile with a new user id
+    """
+  static let updatesUserNameForProfileWithNewId = """
+    User name should change when attempting to update content \
+    with a profile with a new user id
+    """
+  static let updatesUserIdForProfileWithNewId = """
+    User id should change when attempting to update content \
+    with a profile with a new user id
+    """
+  static let selectsButtonForProfileWithNewName = """
+    Login button should be selected when attempting to update content \
+    with a profile with an identical user id but has a new name
+    """
+  static let updatesUserNameForProfileWithNewName = """
+    User name should change when attempting to update content \
+    with a profile with an identical user id has a new name
+    """
+  static let updatesUserIdForProfileWithNewName = """
+    User id should change when attempting to update content \
+    with a profile with an identical user id has a new name
     """
 }
