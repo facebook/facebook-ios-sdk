@@ -35,6 +35,13 @@ final class AEMSettingsTests: XCTestCase {
     let dependencies = try AEMSettings.getDependencies()
     XCTAssertIdentical(dependencies.bundle, bundle, .usesCustomBundle)
   }
+
+  func testIsCorrectAppId() {
+    bundle.stubbedInfoDictionaryObject = "com.facebook.test.appID"
+    let appId = AEMSettings.appID()
+    XCTAssertEqual(bundle.infoDictionaryKey, "FacebookAppID", .findsAppIDInInfoDictionary)
+    XCTAssertEqual(appId, "com.facebook.test.appID", .findsAppIDInInfoDictionary)
+  }
 }
 
 // MARK: - Assumptions
@@ -44,4 +51,5 @@ fileprivate extension String {
     The default bundle dependency should be the Main Bundle.
     """
   static let usesCustomBundle = "The bundle dependency should be configurable"
+  static let findsAppIDInInfoDictionary = "The app ID should exist in info dictionary"
 }

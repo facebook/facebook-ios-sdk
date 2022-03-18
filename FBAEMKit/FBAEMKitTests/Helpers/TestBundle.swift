@@ -8,4 +8,12 @@
 
 import Foundation
 
-final class TestBundle: Bundle {}
+final class TestBundle: Bundle {
+  var infoDictionaryKey: String?
+  var stubbedInfoDictionaryObject: Any?
+
+  override func object(forInfoDictionaryKey key: String) -> Any? {
+    infoDictionaryKey = key
+    return stubbedInfoDictionaryObject
+  }
+}
