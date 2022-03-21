@@ -17,43 +17,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [2022-03-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v13.1.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.0.0...v13.1.0)
 
-### Notable Changes
-
-#### Added an API to support deep linking using Universal Links
-
-In order to ensure that your app properly supports [deep linking from app ads](https://developers.facebook.com/docs/app-ads/deep-linking) with Universal Links, you will need to implement `application(_:continue:restorationHandler:)` in your App Delegate, and call `ApplicationDelegate.shared.application(_:continue:)` from your implementation.
-Your change might look like the following snippet:
-
-```swift
-func application(
-  _ application: UIApplication,
-  continue userActivity: NSUserActivity,
-  restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
-) -> Bool {
-  ApplicationDelegate.shared.application(application, continue: userActivity)
-
-  // Rest of implementation...
-
-  return true
-}
-```
-
-If your app is opted into Scenes, then you will also need to add the following code in your Scene Delegate implementation, in `scene(_:willConnectTo:options:)`:
-
-```swift
-func scene(
-  _ scene: UIScene,
-  willConnectTo session: UISceneSession,
-  options connectionOptions: UIScene.ConnectionOptions
-) {
-  if let userActivity = connectionOptions.userActivities.first {
-    ApplicationDelegate.shared.application(UIApplication.shared, continue: userActivity)
-  }
-
-  // Rest of implementation...
-}
-```
-
 ## 13.0.0
 
 ### Notable Changes
