@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-final class TestUserInterfaceStringProvider: UserInterfaceStringProviding {
+final class TestUserInterfaceStringProvider: _UserInterfaceStringProviding {
   var stubbedBundleForStrings: Bundle?
 
   var bundleForStrings: Bundle {

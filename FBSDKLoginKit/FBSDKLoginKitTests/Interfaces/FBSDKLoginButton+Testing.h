@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKLoginButton (Testing)
 
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
-@property (nonatomic) id<FBSDKUserInterfaceElementProviding> elementProvider;
-@property (nonatomic) id<FBSDKUserInterfaceStringProviding> stringProvider;
+@property (nonatomic) id<_FBSDKUserInterfaceElementProviding> elementProvider;
+@property (nonatomic) id<_FBSDKUserInterfaceStringProviding> stringProvider;
 @property (nonatomic) id<FBSDKLoginProviding> loginProvider;
 - (FBSDKLoginConfiguration *)loginConfiguration;
 - (BOOL)_isAuthenticated;
@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_buttonPressed:(id)sender;
 - (void)_logout;
 // UNCRUSTIFY_FORMAT_OFF
-- (void)configureWithElementProvider:(nonnull id<FBSDKUserInterfaceElementProviding>)elementProvider
-                      stringProvider:(nonnull id<FBSDKUserInterfaceStringProviding>)stringProvider
+- (void)configureWithElementProvider:(nonnull id<_FBSDKUserInterfaceElementProviding>)elementProvider
+                      stringProvider:(nonnull id<_FBSDKUserInterfaceStringProviding>)stringProvider
                        loginProvider:(nonnull id<FBSDKLoginProviding>)loginProvider
                  graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
 NS_SWIFT_NAME(configure(elementProvider:stringProvider:loginProvider:graphRequestFactory:));

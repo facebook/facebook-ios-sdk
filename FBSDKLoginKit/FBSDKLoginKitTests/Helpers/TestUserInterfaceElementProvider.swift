@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-final class TestUserInterfaceElementProvider: UserInterfaceElementProviding {
+final class TestUserInterfaceElementProvider: _UserInterfaceElementProviding {
   var stubbedTopMostViewController: UIViewController?
   var capturedView: UIView?
 

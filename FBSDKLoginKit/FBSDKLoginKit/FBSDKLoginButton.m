@@ -30,8 +30,8 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 @property (nonatomic) BOOL hasShownTooltipBubble;
 @property (nonatomic) NSString *userID;
 @property (nonatomic) NSString *userName;
-@property (nonatomic) id<FBSDKUserInterfaceElementProviding> elementProvider;
-@property (nonatomic) id<FBSDKUserInterfaceStringProviding> stringProvider;
+@property (nonatomic) id<_FBSDKUserInterfaceElementProviding> elementProvider;
+@property (nonatomic) id<_FBSDKUserInterfaceStringProviding> stringProvider;
 @property (nonatomic) id<FBSDKLoginProviding> loginProvider;
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @end
@@ -40,8 +40,8 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 // MARK: - Type Dependencies
 
-- (void)configureWithElementProvider:(nonnull id<FBSDKUserInterfaceElementProviding>)elementProvider
-                      stringProvider:(nonnull id<FBSDKUserInterfaceStringProviding>)stringProvider
+- (void)configureWithElementProvider:(nonnull id<_FBSDKUserInterfaceElementProviding>)elementProvider
+                      stringProvider:(nonnull id<_FBSDKUserInterfaceStringProviding>)stringProvider
                        loginProvider:(nonnull id<FBSDKLoginProviding>)loginProvider
                  graphRequestFactory:(nonnull id<FBSDKGraphRequestFactory>)graphRequestFactory
 {
