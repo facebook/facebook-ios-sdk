@@ -13,8 +13,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
-
 #import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"

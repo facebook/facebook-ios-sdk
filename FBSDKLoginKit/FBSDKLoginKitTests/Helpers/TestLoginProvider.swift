@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestLoginProvider: LoginProviding {
+@testable import FBSDKLoginKit
+
+final class TestLoginProvider: _LoginProviding {
 
   var defaultAudience: DefaultAudience = .friends
   var capturedCompletion: LoginManagerLoginResultBlock?
@@ -24,7 +26,7 @@ final class TestLoginProvider: LoginProviding {
   }
 
   func logIn(
-    withPermissions permissions: [String],
+    permissions: [String],
     from viewController: UIViewController?,
     handler: @escaping LoginManagerLoginResultBlock
   ) {

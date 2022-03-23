@@ -18,8 +18,22 @@
 @objc(FBAEMSettings)
 public final class AEMSettings: NSObject {
   public static func appID() -> String? {
-    Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String
+    guard let bundle = try? getDependencies().bundle else {
+      return nil
+    }
+
+    return bundle.object(forInfoDictionaryKey: "FacebookAppID") as? String
   }
+}
+
+extension AEMSettings: DependentType {
+  struct Dependencies {
+    var bundle: Bundle
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(bundle: .main)
 }
 
 #endif

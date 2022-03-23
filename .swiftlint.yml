@@ -32,6 +32,7 @@ file_name:
     ShareAppEventNames.swift,
     ShareAppEventParameters.swift,
     ShareDialogMode.swift,
+    InternalUtilityExtensions.swift
   ]
 trailing_comma:
   mandatory_comma: true

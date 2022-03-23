@@ -11,30 +11,15 @@
 import Foundation
 
 enum TestShareUtility {
-  static var stubbedValidateShareShouldThrow = false
-  static var stubbedValidateNetworkURLShouldThrow = false
-  static var stubbedTestShareContainsMedia = false
-  static var stubbedTestShareContainsPhotos = false
-  static var stubbedTestShareContainsVideos = false
-  static var stubbedHashtagString: String?
-  static var stubbedValidateArrayShouldThrow = false
-  static var validateArrayArray: [Any]?
-  static var validateArrayMinCount: Int?
-  static var validateArrayMaxCount: Int?
-  static var validateArrayName: String?
-
   static func reset() {
-    stubbedValidateShareShouldThrow = false
-    stubbedValidateNetworkURLShouldThrow = false
-    stubbedTestShareContainsMedia = false
-    stubbedTestShareContainsPhotos = false
-    stubbedTestShareContainsVideos = false
-    stubbedHashtagString = nil
-    stubbedValidateArrayShouldThrow = false
-    validateArrayArray = nil
-    validateArrayMinCount = nil
-    validateArrayMaxCount = nil
-    validateArrayName = nil
+    resetContentFlagValues()
+    resetHashtagValues()
+
+    resetRequiredValueValues()
+    resetValidateArgumentValues()
+    resetValidateArrayValues()
+    resetValidateNetworkURLValues()
+    resetValidateShareContentValues()
   }
 }
 
@@ -53,10 +38,6 @@ extension TestShareUtility: ShareUtilityProtocol {
     WebShareBridgeComponents(methodName: "", parameters: [:])
   }
 
-  static func hashtagString(from hashtag: Hashtag?) -> String? {
-    stubbedHashtagString ?? ""
-  }
-
   static func bridgeParameters(
     for shareContent: SharingContent,
     options bridgeOptions: ShareBridgeOptions,
@@ -64,6 +45,16 @@ extension TestShareUtility: ShareUtilityProtocol {
   ) -> [String: Any] {
     [:]
   }
+
+  static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
+    false
+  }
+
+  // MARK: Content flags
+
+  static var stubbedTestShareContainsMedia = false
+  static var stubbedTestShareContainsPhotos = false
+  static var stubbedTestShareContainsVideos = false
 
   static func getContentFlags(for shareContent: SharingContent) -> ContentFlags {
     ContentFlags(
@@ -73,8 +64,22 @@ extension TestShareUtility: ShareUtilityProtocol {
     )
   }
 
-  static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
-    false
+  static func resetContentFlagValues() {
+    stubbedTestShareContainsMedia = false
+    stubbedTestShareContainsPhotos = false
+    stubbedTestShareContainsVideos = false
+  }
+
+  // MARK: Hashtags
+
+  static var stubbedHashtagString: String?
+
+  static func hashtagString(from hashtag: Hashtag?) -> String? {
+    stubbedHashtagString ?? ""
+  }
+
+  static func resetHashtagValues() {
+    stubbedHashtagString = nil
   }
 }
 
@@ -82,17 +87,52 @@ extension TestShareUtility: ShareValidating {
 
   struct ValidationError: Error {}
 
+  // MARK: Validate required value
+
+  static var validateRequiredValueShouldThrow = false
+  static var validateRequiredValueValue: Any?
+  static var validateRequiredValueName: String?
+
   static func validateRequiredValue(_ value: Any, named name: String) throws {
-    throw ValidationError()
+    validateRequiredValueValue = value
+    validateRequiredValueName = name
+
+    if validateRequiredValueShouldThrow {
+      throw ValidationError()
+    }
   }
+
+  static func resetRequiredValueValues() {
+    validateRequiredValueShouldThrow = false
+    validateRequiredValueValue = nil
+    validateRequiredValueName = nil
+  }
+
+  // MARK: Validate argument
+
+  static var validateArgumentShouldThrow = false
 
   static func validateArgument<Argument>(
     _ value: Argument,
     named name: String,
     in possibleValues: Set<Argument>
   ) throws where Argument: Hashable {
-    throw ValidationError()
+    if validateArgumentShouldThrow {
+      throw ValidationError()
+    }
   }
+
+  static func resetValidateArgumentValues() {
+    validateArgumentShouldThrow = false
+  }
+
+  // MARK: Validate array
+
+  static var validateArrayShouldThrow = false
+  static var validateArrayArray: [Any]?
+  static var validateArrayMinCount: Int?
+  static var validateArrayMaxCount: Int?
+  static var validateArrayName: String?
 
   static func validateArray(_ array: [Any], minCount: Int, maxCount: Int, named name: String) throws {
     validateArrayArray = array
@@ -100,23 +140,47 @@ extension TestShareUtility: ShareValidating {
     validateArrayMaxCount = maxCount
     validateArrayName = name
 
-    if stubbedValidateArrayShouldThrow {
+    if validateArrayShouldThrow {
       throw ValidationError()
     }
   }
 
+  static func resetValidateArrayValues() {
+    validateArrayShouldThrow = false
+    validateArrayArray = nil
+    validateArrayMinCount = nil
+    validateArrayMaxCount = nil
+    validateArrayName = nil
+  }
+
+  // MARK: Validate network URL
+
+  static var validateNetworkURLShouldThrow = false
+
   static func validateNetworkURL(_ url: URL, named name: String) throws {
-    if stubbedValidateNetworkURLShouldThrow {
+    if validateNetworkURLShouldThrow {
       throw ValidationError()
     }
   }
+
+  static func resetValidateNetworkURLValues() {
+    validateNetworkURLShouldThrow = false
+  }
+
+  // MARK: Validate share content
+
+  static var validateShareContentShouldThrow = false
 
   static func validateShareContent(
     _ shareContent: SharingContent,
     options bridgeOptions: ShareBridgeOptions = []
   ) throws {
-    if stubbedValidateShareShouldThrow {
+    if validateShareContentShouldThrow {
       throw ValidationError()
     }
+  }
+
+  static func resetValidateShareContentValues() {
+    validateShareContentShouldThrow = false
   }
 }
