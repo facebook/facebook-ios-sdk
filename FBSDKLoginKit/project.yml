@@ -59,6 +59,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -87,6 +88,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -114,6 +116,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -141,6 +144,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO

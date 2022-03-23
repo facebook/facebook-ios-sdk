@@ -39,6 +39,7 @@ targets:
       Release: Configurations/FBAEMKit-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
@@ -64,6 +65,7 @@ targets:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBAEMKit_TV-Static:
     type: framework
@@ -84,6 +86,7 @@ targets:
       Release: Configurations/FBAEMKit-tvOS-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
@@ -109,6 +112,7 @@ targets:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBAEMKitTests:
     type: bundle.unit-test

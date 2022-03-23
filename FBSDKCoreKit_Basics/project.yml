@@ -34,6 +34,7 @@ targets:
       Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
@@ -58,6 +59,7 @@ targets:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_Basics_TV-Static:
     type: framework
@@ -77,6 +79,7 @@ targets:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_Basics_TV-Dynamic:
     type: framework
@@ -99,6 +102,7 @@ targets:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_BasicsTests:
     type: bundle.unit-test
