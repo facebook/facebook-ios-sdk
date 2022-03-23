@@ -11,8 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "FBSDKPermission.h"
+@class FBSDKPermission;
 
 NS_ASSUME_NONNULL_BEGIN
 

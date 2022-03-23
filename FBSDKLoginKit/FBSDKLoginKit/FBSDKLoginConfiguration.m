@@ -17,7 +17,6 @@
 
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKNonceUtility.h"
-#import "FBSDKPermission.h"
 
 FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
 FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";

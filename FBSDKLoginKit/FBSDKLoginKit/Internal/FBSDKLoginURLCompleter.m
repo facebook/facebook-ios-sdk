@@ -21,7 +21,6 @@
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginUtility.h"
-#import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
 
 @implementation FBSDKLoginURLCompleter
