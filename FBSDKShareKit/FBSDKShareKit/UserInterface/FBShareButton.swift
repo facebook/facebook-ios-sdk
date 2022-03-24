@@ -52,13 +52,17 @@ public final class FBShareButton: FBButton, SharingButton {
   }
 
   public func configureButton() {
-    let title = NSLocalizedString(
-      "ShareButton.Share",
-      tableName: "FacebookSDK",
-      bundle: InternalUtility.shared.bundleForStrings,
-      value: "Share",
-      comment: "The label for FBSDKShareButton"
-    )
+    var title = ""
+
+    if let bundle = try? Self.getDependencies().stringProvider.bundleForStrings {
+      title = NSLocalizedString(
+        "ShareButton.Share",
+        tableName: "FacebookSDK",
+        bundle: bundle,
+        value: "Share",
+        comment: "The label for FBSDKShareButton"
+      )
+    }
 
     configure(
       with: nil,
@@ -82,6 +86,18 @@ public final class FBShareButton: FBButton, SharingButton {
 
     dialog?.show()
   }
+}
+
+// MARK: - Type dependencies
+
+extension FBShareButton: DependentType {
+  struct Dependencies {
+    var stringProvider: UserInterfaceStringProviding
+  }
+
+  static var configuredDependencies: Dependencies?
+
+  static var defaultDependencies: Dependencies? = Dependencies(stringProvider: InternalUtility.shared)
 }
 
 #endif
