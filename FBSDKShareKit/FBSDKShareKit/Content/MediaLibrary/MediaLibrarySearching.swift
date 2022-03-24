@@ -9,6 +9,8 @@
 import Photos
 import UIKit
 
+// This protocol represents an abstraction layer for an extension on an external API,
+// so its methods must start with "fb_" to safeguard against potential conflicts with the API.
 protocol MediaLibrarySearching {
-  func findImage(for asset: PHAsset) throws -> UIImage
+  func fb_findImage(for asset: PHAsset) throws -> UIImage
 }

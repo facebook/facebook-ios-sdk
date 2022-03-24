@@ -14,7 +14,7 @@ final class TestMediaLibrarySearcher: MediaLibrarySearching {
   var stubbedFindImageImage: UIImage?
   var findImageAsset: PHAsset?
 
-  func findImage(for asset: PHAsset) throws -> UIImage {
+  func fb_findImage(for asset: PHAsset) throws -> UIImage {
     findImageAsset = asset
 
     struct UnstubbedImageError: Error {}

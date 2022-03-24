@@ -32,7 +32,7 @@ final class PHImageManagerSearchingTests: XCTestCase {
   }
 
   func testFindImageRequest() throws {
-    _ = try? imageManager.findImage(for: asset)
+    _ = try? imageManager.fb_findImage(for: asset)
 
     XCTAssertIdentical(imageManager.requestImageAsset, asset, .forwardsCallToRequestImage)
     XCTAssertEqual(imageManager.requestImageTargetSize, PHImageManagerMaximumSize, .targetSizeIsMaximum)
@@ -46,7 +46,7 @@ final class PHImageManagerSearchingTests: XCTestCase {
 
   func testFindImageFailure() {
     XCTAssertThrowsError(
-      try imageManager.findImage(for: asset),
+      try imageManager.fb_findImage(for: asset),
       .throwsErrorWhenImageNotAvailable
     ) { anyError in
       guard let error = anyError as? PHImageManagerSearchError else {
@@ -63,7 +63,7 @@ final class PHImageManagerSearchingTests: XCTestCase {
 
     var image: UIImage?
     XCTAssertNoThrow(
-      image = try imageManager.findImage(for: asset),
+      image = try imageManager.fb_findImage(for: asset),
       .returnsImageWhenAvailable
     )
 

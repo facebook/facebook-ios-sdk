@@ -89,7 +89,7 @@ extension SharePhotoContent: SharingContent {
 
     photos.forEach { photo in
       if let asset = photo.photoAsset {
-        if let image = try? imageFinder.findImage(for: asset) {
+        if let image = try? imageFinder.fb_findImage(for: asset) {
           images.append(image)
         }
       } else if let url = photo.imageURL {

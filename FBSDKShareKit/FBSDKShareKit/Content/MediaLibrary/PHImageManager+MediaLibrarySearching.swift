@@ -10,7 +10,7 @@ import Photos
 import UIKit
 
 extension PHImageManager: MediaLibrarySearching {
-  func findImage(for asset: PHAsset) throws -> UIImage {
+  func fb_findImage(for asset: PHAsset) throws -> UIImage {
     let options = PHImageRequestOptions()
     options.resizeMode = .exact
     options.deliveryMode = .highQualityFormat
