@@ -17,7 +17,7 @@ import UIKit
 /// A dialog for sharing content on Facebook.
 @objcMembers
 @objc(FBSDKShareDialog)
-public final class ShareDialog: NSObject, SharingDialog {
+public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this prefer_final_classes
   private struct MissingContentError: Error {}
   private struct UnknownValidationError: Error {}
   private struct BridgeRequestCreationError: Error {}
@@ -97,8 +97,8 @@ public final class ShareDialog: NSObject, SharingDialog {
     viewController: UIViewController?,
     content: SharingContent?,
     delegate: SharingDelegate?
-  ) -> Self {
-    Self(viewController: viewController, content: content, delegate: delegate)
+  ) -> ShareDialog {
+    ShareDialog(viewController: viewController, content: content, delegate: delegate)
   }
 
   /**
@@ -113,8 +113,8 @@ public final class ShareDialog: NSObject, SharingDialog {
     viewController: UIViewController?,
     content: SharingContent?,
     delegate: SharingDelegate?
-  ) -> Self {
-    let dialog = Self(viewController: viewController, content: content, delegate: delegate)
+  ) -> ShareDialog {
+    let dialog = ShareDialog(viewController: viewController, content: content, delegate: delegate)
     dialog.show()
     return dialog
   }

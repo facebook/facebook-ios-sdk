@@ -20,7 +20,7 @@ import Foundation
 @objcMembers
 @objc(FBSDKShareButton)
 public final class FBShareButton: FBButton, SharingButton {
-  private var dialog: ShareDialog?
+  var dialog: ShareDialog?
 
   public var shareContent: SharingContent? {
     get { dialog?.shareContent }
@@ -53,7 +53,6 @@ public final class FBShareButton: FBButton, SharingButton {
 
   public func configureButton() {
     var title = ""
-
     if let bundle = try? Self.getDependencies().stringProvider.bundleForStrings {
       title = NSLocalizedString(
         "ShareButton.Share",
@@ -78,7 +77,8 @@ public final class FBShareButton: FBButton, SharingButton {
     dialog = ShareDialog(viewController: nil, content: nil, delegate: nil)
   }
 
-  @IBAction private func share() {
+  // swiftlint:disable:next private_action
+  @IBAction func share() {
     logTapEvent(
       withEventName: .shareButtonDidTap,
       parameters: analyticsParameters
