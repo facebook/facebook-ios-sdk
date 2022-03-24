@@ -7,6 +7,8 @@
  */
 
 @testable import FBSDKShareKit
+
+import Photos
 import TestTools
 import UIKit
 import XCTest
@@ -24,6 +26,7 @@ final class ShareDialogTests: XCTestCase {
   var windowFinder: TestWindowFinder!
   var errorFactory: TestErrorFactory!
   var eventLogger: TestShareEventLogger!
+  var mediaLibrarySearcher: TestMediaLibrarySearcher!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -42,6 +45,7 @@ final class ShareDialogTests: XCTestCase {
     windowFinder = TestWindowFinder()
     errorFactory = TestErrorFactory()
     eventLogger = TestShareEventLogger()
+    mediaLibrarySearcher = TestMediaLibrarySearcher()
 
     ShareDialog.setDependencies(
       .init(
@@ -54,7 +58,8 @@ final class ShareDialogTests: XCTestCase {
         socialComposeViewControllerFactory: socialComposeViewControllerFactory,
         windowFinder: windowFinder,
         errorFactory: errorFactory,
-        eventLogger: eventLogger
+        eventLogger: eventLogger,
+        mediaLibrarySearcher: mediaLibrarySearcher
       )
     )
 
@@ -77,6 +82,7 @@ final class ShareDialogTests: XCTestCase {
     windowFinder = nil
     errorFactory = nil
     eventLogger = nil
+    mediaLibrarySearcher = nil
 
     ShareDialog.resetDependencies()
     TestShareUtility.reset()
@@ -106,6 +112,11 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertIdentical(dependencies.windowFinder, InternalUtility.shared, .usesInternalUtilityAsWindowFinderByDefault)
     XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesErrorFactoryByDefault)
     XCTAssertIdentical(dependencies.eventLogger as AnyObject, AppEvents.shared, .usesAppEventsByDefault)
+    XCTAssertIdentical(
+      dependencies.mediaLibrarySearcher as AnyObject,
+      PHImageManager.default(),
+      .usesPHImageManagerAsMediaLibrarySearcherByDefault
+    )
   }
 
   func testCustomDependencies() throws {
@@ -129,6 +140,11 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertIdentical(dependencies.windowFinder, windowFinder, .usesCustomWindowFinder)
     XCTAssertIdentical(dependencies.errorFactory, errorFactory, .usesCustomErrorFactory)
     XCTAssertIdentical(dependencies.eventLogger as AnyObject, eventLogger, .usesCustomEventLogger)
+    XCTAssertIdentical(
+      dependencies.mediaLibrarySearcher as AnyObject,
+      mediaLibrarySearcher,
+      .usesCustomMediaLibrarySearcher
+    )
   }
 
   func testCanShowNativeDialogWithoutShareContent() {
@@ -763,6 +779,9 @@ fileprivate extension String {
     """
   static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
   static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
+  static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
+    The default media library searching dependency should be the default PHImageManager
+    """
 
   static let usesCustomInternalURLOpener = "The internal URL opening dependency should be configurable"
   static let usesCustomInternalUtility = "The internal utility dependency should be configurable"
@@ -776,4 +795,5 @@ fileprivate extension String {
   static let usesCustomWindowFinder = "The window finding dependency should be configurable"
   static let usesCustomErrorFactory = "The error factory dependency should be configurable"
   static let usesCustomEventLogger = "The event logging dependency should be configurable"
+  static let usesCustomMediaLibrarySearcher = "The media library searching dependency should be configurable"
 }

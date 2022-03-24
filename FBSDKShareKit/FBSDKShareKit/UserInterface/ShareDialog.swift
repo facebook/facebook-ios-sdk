@@ -11,6 +11,7 @@
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
+import Photos
 import UIKit
 
 /// A dialog for sharing content on Facebook.
@@ -133,6 +134,7 @@ extension ShareDialog: DependentType {
     var windowFinder: _WindowFinding
     var errorFactory: ErrorCreating
     var eventLogger: ShareEventLogging
+    var mediaLibrarySearcher: MediaLibrarySearching
   }
 
   static var configuredDependencies: Dependencies?
@@ -147,7 +149,8 @@ extension ShareDialog: DependentType {
     socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
     windowFinder: InternalUtility.shared,
     errorFactory: ErrorFactory(),
-    eventLogger: AppEvents.shared
+    eventLogger: AppEvents.shared,
+    mediaLibrarySearcher: PHImageManager.default()
   )
 
   #if DEBUG
