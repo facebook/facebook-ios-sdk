@@ -14,4 +14,10 @@ final class TestPHAsset: PHAsset {
   override var mediaType: PHAssetMediaType {
     stubbedMediaType ?? super.mediaType
   }
+
+  var stubbedLocalIdentifier: String?
+
+  override var localIdentifier: String {
+    stubbedLocalIdentifier ?? super.localIdentifier
+  }
 }

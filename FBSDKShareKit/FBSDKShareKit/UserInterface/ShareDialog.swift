@@ -363,8 +363,12 @@ extension ShareDialog {
   }
 
   private func contentVideoURL(for video: ShareVideo) -> URL? {
-    if let url = video.videoAsset?.requestVideoURL(timeoutInMilliseconds: 500) {
-      return url
+    if let asset = video.videoAsset {
+      guard let mediaLibrarySearcher = try? Self.getDependencies().mediaLibrarySearcher else {
+        return nil
+      }
+
+      return try? mediaLibrarySearcher.fb_getVideoURL(for: asset)
     } else if let data = video.data {
       let file = Self.temporaryDirectory.appendingPathComponent(UUID().uuidString)
       temporaryFiles.append(file)

@@ -31,6 +31,8 @@ final class PHImageManagerSearchingTests: XCTestCase {
     super.tearDown()
   }
 
+  // MARK: - Requesting images
+
   func testFindImageRequest() throws {
     _ = try? imageManager.fb_findImage(for: asset)
 
@@ -49,7 +51,7 @@ final class PHImageManagerSearchingTests: XCTestCase {
       try imageManager.fb_findImage(for: asset),
       .throwsErrorWhenImageNotAvailable
     ) { anyError in
-      guard let error = anyError as? PHImageManagerSearchError else {
+      guard let error = anyError as? PHImageManager.MediaLibrarySearchError else {
         return XCTFail(.throwsErrorWhenImageNotAvailable)
       }
 
@@ -59,7 +61,7 @@ final class PHImageManagerSearchingTests: XCTestCase {
 
   func testFindImageSuccess() throws {
     let expectedImage = UIImage()
-    imageManager.stubbedRequestedImage = expectedImage
+    imageManager.stubbedRequestImageImage = expectedImage
 
     var image: UIImage?
     XCTAssertNoThrow(
@@ -68,6 +70,82 @@ final class PHImageManagerSearchingTests: XCTestCase {
     )
 
     XCTAssertIdentical(image, expectedImage, .returnsImageWhenAvailable)
+  }
+
+  // MARK: - Getting video URLs
+
+  func testGetVideoURLRequest() throws {
+    _ = try? imageManager.fb_getVideoURL(for: asset)
+
+    XCTAssertIdentical(imageManager.requestAVAssetAsset, asset, .forwardsCallToRequestAVAsset)
+
+    let options = try XCTUnwrap(imageManager.requestAVAssetOptions, .forwardsCallToRequestAVAsset)
+    XCTAssertEqual(options.version, .current, .versionIsCurrent)
+    XCTAssertEqual(options.deliveryMode, .automatic, .deliveryModeIsAutomatic)
+    XCTAssertTrue(options.isNetworkAccessAllowed, .networkAccessAllowed)
+  }
+
+  func testGetVideoURLAssetFailure() {
+    asset = .withLocalIdentifier
+
+    XCTAssertThrowsError(
+      try imageManager.fb_getVideoURL(for: asset),
+      .throwsErrorWhenVideoURLAssetNotAvailable
+    ) { anyError in
+      guard let error = anyError as? PHImageManager.MediaLibrarySearchError else {
+        return XCTFail(.throwsErrorWhenVideoURLAssetNotAvailable)
+      }
+
+      XCTAssertIdentical(error.asset, asset, .throwsErrorWhenVideoURLAssetNotAvailable)
+    }
+  }
+
+  func testGetVideoURLFileFailure() {
+    asset = .withLocalIdentifier
+    imageManager.stubbedGetVideoURLAsset = AVURLAsset.remote
+
+    XCTAssertThrowsError(
+      try imageManager.fb_getVideoURL(for: asset),
+      .throwsErrorWhenVideoURLAssetNotAvailable
+    ) { anyError in
+      guard let error = anyError as? PHImageManager.MediaLibrarySearchError else {
+        return XCTFail(.throwsErrorWhenVideoURLAssetNotAvailable)
+      }
+
+      XCTAssertIdentical(error.asset, asset, .throwsErrorWhenVideoURLAssetNotAvailable)
+    }
+  }
+
+  func testGetVideoURLIdentifierFailure() {
+    asset = .withoutLocalIdentifier
+    imageManager.stubbedGetVideoURLAsset = AVURLAsset.local
+
+    XCTAssertThrowsError(
+      try imageManager.fb_getVideoURL(for: asset),
+      .throwsErrorWhenVideoURLIdentifierNotAvailable
+    ) { anyError in
+      guard let error = anyError as? PHImageManager.MediaLibrarySearchError else {
+        return XCTFail(.throwsErrorWhenVideoURLIdentifierNotAvailable)
+      }
+
+      XCTAssertIdentical(error.asset, asset, .throwsErrorWhenVideoURLIdentifierNotAvailable)
+    }
+  }
+
+  func testGetVideoURLSuccess() throws {
+    asset = .withLocalIdentifier
+    imageManager.stubbedGetVideoURLAsset = AVURLAsset.local
+
+    var url: URL?
+    XCTAssertNoThrow(
+      url = try imageManager.fb_getVideoURL(for: asset),
+      .returnsVideoURLWhenAvailable
+    )
+
+    let expectedURL = """
+      assets-library://asset/asset.\(String.urlAssetPathExtension)?id=\(String.uuid)&ext=\(String.urlAssetPathExtension)
+      """
+    XCTAssertEqual(url?.absoluteString, expectedURL, .returnsVideoURLWhenAvailable)
   }
 }
 
@@ -85,4 +163,58 @@ fileprivate extension String {
 
   static let throwsErrorWhenImageNotAvailable = "An error should be thrown when an image is not available for an asset"
   static let returnsImageWhenAvailable = "An asset's image should be returned when available"
+
+  static let forwardsCallToRequestAVAsset = """
+    A PHImageManager should forward video URL requests to its video asset request method
+    """
+  static let versionIsCurrent = "The version should be current"
+  static let deliveryModeIsAutomatic = "The delivery mode should be automatic"
+  static let networkAccessAllowed = "Network access should be allowed"
+
+  static let throwsErrorWhenVideoURLAssetNotAvailable = """
+    An error should be thrown when a URL asset is not available for a video asset
+    """
+  static let throwsErrorWhenVideoURLFileURLNotAvailable = """
+    An error should be thrown when a file URL is not available for a video asset
+    """
+  static let throwsErrorWhenVideoURLIdentifierNotAvailable = """
+    An error should be thrown when a local identifier is not available for a video asset
+    """
+  static let returnsVideoURLWhenAvailable = "A URL should be returned when available for a video asset"
+}
+
+// MARK: - Test Values
+
+fileprivate extension String {
+  static let uuid = UUID().uuidString
+  static let localIdentifier = "\(uuid)/more-stuff"
+  static let urlAssetPathExtension = "ext"
+  static let urlAssetURL = "file:///somewhere/over.\(urlAssetPathExtension)"
+}
+
+fileprivate extension URL {
+  // swiftlint:disable force_unwrapping
+  static let video = URL(string: "https://facebook.com")!
+  static let remote = URL(string: "https://facebook.com")!
+  static let local = URL(string: "file:///local/video.\(String.urlAssetPathExtension)")!
+  // swiftlint:enable force_unwrapping
+}
+
+fileprivate extension AVURLAsset {
+  static let remote = AVURLAsset(url: .remote)
+  static let local = AVURLAsset(url: .local)
+}
+
+fileprivate extension PHAsset {
+  static let withLocalIdentifier: PHAsset = {
+    let asset = TestPHAsset()
+    asset.stubbedLocalIdentifier = .localIdentifier
+    return asset
+  }()
+
+  static let withoutLocalIdentifier: PHAsset = {
+    let asset = TestPHAsset()
+    asset.stubbedLocalIdentifier = ""
+    return asset
+  }()
 }

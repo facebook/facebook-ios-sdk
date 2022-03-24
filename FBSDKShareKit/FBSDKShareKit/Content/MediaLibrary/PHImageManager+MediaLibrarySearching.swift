@@ -10,6 +10,10 @@ import Photos
 import UIKit
 
 extension PHImageManager: MediaLibrarySearching {
+  struct MediaLibrarySearchError: Error {
+    let asset: PHAsset
+  }
+
   func fb_findImage(for asset: PHAsset) throws -> UIImage {
     let options = PHImageRequestOptions()
     options.resizeMode = .exact
@@ -17,7 +21,7 @@ extension PHImageManager: MediaLibrarySearching {
     options.isSynchronous = true
 
     // Since this variable is captured by the request closure, we have to initialize it with something.
-    var result: Result<UIImage, PHImageManagerSearchError> = .failure(PHImageManagerSearchError(asset: asset))
+    var result: Result<UIImage, MediaLibrarySearchError> = .failure(.init(asset: asset))
 
     // Since the options specify that this is a synchronous request, we are assured that this method returns only
     // after completing the request. We can thus assume that the result has been populated when we return.
@@ -30,14 +34,44 @@ extension PHImageManager: MediaLibrarySearching {
       if let image = potentialImage {
         result = .success(image)
       } else {
-        result = .failure(PHImageManagerSearchError(asset: asset))
+        result = .failure(MediaLibrarySearchError(asset: asset))
       }
     }
 
     return try result.get()
   }
-}
 
-struct PHImageManagerSearchError: Error {
-  let asset: PHAsset
+  func fb_getVideoURL(for videoAsset: PHAsset) throws -> URL {
+    let semaphore = DispatchSemaphore(value: 0)
+    var url: URL?
+
+    let options = PHVideoRequestOptions()
+    options.version = .current
+    options.deliveryMode = .automatic
+    options.isNetworkAccessAllowed = true
+
+    requestAVAsset(forVideo: videoAsset, options: options) { potentialAsset, _, _ in
+      defer { semaphore.signal() }
+
+      guard
+        let urlAsset = potentialAsset as? AVURLAsset,
+        urlAsset.url.isFileURL,
+        let idTerminator = videoAsset.localIdentifier.firstIndex(of: "/")
+      else { return }
+
+      let id = videoAsset.localIdentifier.prefix(upTo: idTerminator)
+      let pathExtension = urlAsset.url.pathExtension
+      let path = "assets-library://asset/asset.\(pathExtension)?id=\(id)&ext=\(pathExtension)"
+      url = URL(string: path)
+    }
+
+    let timeout = DispatchTime.now() + .milliseconds(500)
+    _ = semaphore.wait(timeout: timeout)
+
+    if let url = url {
+      return url
+    } else {
+      throw MediaLibrarySearchError(asset: videoAsset)
+    }
+  }
 }

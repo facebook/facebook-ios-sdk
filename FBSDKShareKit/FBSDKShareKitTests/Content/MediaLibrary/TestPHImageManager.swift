@@ -9,12 +9,17 @@
 import Photos
 import UIKit
 
+// This test double simply subclasses `PHImageManager` in order to capture calls to itself
 final class TestPHImageManager: PHImageManager {
+
+  // MARK: - Requesting images
+
   var requestImageAsset: PHAsset?
   var requestImageTargetSize: CGSize?
   var requestImageContentMode: PHImageContentMode?
   var requestImageOptions: PHImageRequestOptions?
-  var stubbedRequestedImage: UIImage?
+  var stubbedRequestImageImage: UIImage?
+  var stubbedRequestImageInfo: [AnyHashable: Any]?
 
   override func requestImage(
     for asset: PHAsset,
@@ -28,7 +33,34 @@ final class TestPHImageManager: PHImageManager {
     requestImageContentMode = contentMode
     requestImageOptions = options
 
-    resultHandler(stubbedRequestedImage, nil)
+    resultHandler(stubbedRequestImageImage, stubbedRequestImageInfo)
+
+    return PHImageRequestID(14)
+  }
+
+  // MARK: - Getting video URLs
+
+  typealias RequestAVAssetResultHandler = (AVAsset?, AVAudioMix?, [AnyHashable: Any]?) -> Void
+
+  var requestAVAssetAsset: PHAsset?
+  var requestAVAssetOptions: PHVideoRequestOptions?
+  var stubbedGetVideoURLAsset: AVAsset?
+  var stubbedGetVideoURLAudioMix: AVAudioMix?
+  var stubbedGetVideoURLInfo: [AnyHashable: Any]?
+
+  override func requestAVAsset(
+    forVideo asset: PHAsset,
+    options: PHVideoRequestOptions?,
+    resultHandler: @escaping RequestAVAssetResultHandler
+  ) -> PHImageRequestID {
+    requestAVAssetAsset = asset
+    requestAVAssetOptions = options
+
+    resultHandler(
+      stubbedGetVideoURLAsset,
+      stubbedGetVideoURLAudioMix,
+      stubbedGetVideoURLInfo
+    )
 
     return PHImageRequestID(14)
   }

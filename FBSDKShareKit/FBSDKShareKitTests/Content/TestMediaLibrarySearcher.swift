@@ -11,6 +11,9 @@ import Photos
 import UIKit
 
 final class TestMediaLibrarySearcher: MediaLibrarySearching {
+
+  // MARK: - Requesting images
+
   var stubbedFindImageImage: UIImage?
   var findImageAsset: PHAsset?
 
@@ -23,5 +26,21 @@ final class TestMediaLibrarySearcher: MediaLibrarySearching {
     }
 
     return image
+  }
+
+  // MARK: - Getting video URLs
+
+  var stubbedGetVideoURL: URL?
+  var getVideoURLAsset: PHAsset?
+
+  func fb_getVideoURL(for asset: PHAsset) throws -> URL {
+    getVideoURLAsset = asset
+
+    struct UnstubbedURLError: Error {}
+    guard let url = stubbedGetVideoURL else {
+      throw UnstubbedURLError()
+    }
+
+    return url
   }
 }

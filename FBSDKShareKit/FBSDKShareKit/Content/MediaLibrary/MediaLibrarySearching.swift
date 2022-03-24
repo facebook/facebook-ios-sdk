@@ -13,4 +13,5 @@ import UIKit
 // so its methods must start with "fb_" to safeguard against potential conflicts with the API.
 protocol MediaLibrarySearching {
   func fb_findImage(for asset: PHAsset) throws -> UIImage
+  func fb_getVideoURL(for asset: PHAsset) throws -> URL
 }
