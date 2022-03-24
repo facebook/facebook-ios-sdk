@@ -7,6 +7,7 @@
  */
 
 import Foundation
+import Photos
 
 /// A model for video content to be shared.
 @objcMembers
@@ -53,11 +54,15 @@ public final class ShareVideoContent: NSObject {
 extension ShareVideoContent: DependentType {
   struct Dependencies {
     var validator: ShareValidating.Type
+    var mediaLibrarySearcher: MediaLibrarySearching
   }
 
   static var configuredDependencies: Dependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(validator: _ShareUtility.self)
+  static var defaultDependencies: Dependencies? = Dependencies(
+    validator: _ShareUtility.self,
+    mediaLibrarySearcher: PHImageManager.default()
+  )
 }
 
 // MARK: - Sharing Content

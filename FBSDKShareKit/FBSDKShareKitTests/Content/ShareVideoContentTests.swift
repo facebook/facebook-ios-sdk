@@ -9,6 +9,7 @@
 @testable import FBSDKShareKit
 
 import FBSDKCoreKit
+import Photos
 import TestTools
 import UIKit
 import XCTest
@@ -18,6 +19,7 @@ final class ShareVideoContentTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var content: ShareVideoContent!
   var validator: TestShareUtility.Type!
+  var mediaLibrarySearcher: TestMediaLibrarySearcher!
   var errorFactory: TestErrorFactory!
   var testError: TestSDKError!
   // swiftlint:enable implicitly_unwrapped_optional
@@ -27,7 +29,13 @@ final class ShareVideoContentTests: XCTestCase {
 
     validator = TestShareUtility.self
     validator.reset()
-    ShareVideoContent.setDependencies(.init(validator: TestShareUtility.self))
+    mediaLibrarySearcher = TestMediaLibrarySearcher()
+    ShareVideoContent.setDependencies(
+      .init(
+        validator: TestShareUtility.self,
+        mediaLibrarySearcher: mediaLibrarySearcher
+      )
+    )
 
     errorFactory = TestErrorFactory()
     testError = TestSDKError(type: .unknown)
@@ -42,6 +50,7 @@ final class ShareVideoContentTests: XCTestCase {
     ShareVideoContent.resetDependencies()
     validator.reset()
     validator = nil
+    mediaLibrarySearcher = nil
     errorFactory = nil
     testError = nil
     content = nil
@@ -57,11 +66,21 @@ final class ShareVideoContentTests: XCTestCase {
       dependencies.validator is _ShareUtility.Type,
       .usesShareUtilityAsShareValidatorByDefault
     )
+    XCTAssertIdentical(
+      dependencies.mediaLibrarySearcher as AnyObject,
+      PHImageManager.default(),
+      .usesPHImageManagerAsMediaLibrarySearcherByDefault
+    )
   }
 
   func testCustomDependencies() throws {
     let dependencies = try ShareVideoContent.getDependencies()
     XCTAssertTrue(dependencies.validator is TestShareUtility.Type, .usesCustomShareValidator)
+    XCTAssertIdentical(
+      dependencies.mediaLibrarySearcher as AnyObject,
+      mediaLibrarySearcher,
+      .usesCustomMediaLibrarySearcher
+    )
   }
 
   func testProperties() {
@@ -145,7 +164,11 @@ fileprivate extension String {
   static let usesShareUtilityAsShareValidatorByDefault = """
     The default share validator dependency should be the _ShareUtility type
     """
+  static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
+    The default media library searching dependency should be the default PHImageManager
+    """
   static let usesCustomShareValidator = "The share validator dependency should be configurable"
+  static let usesCustomMediaLibrarySearcher = "The media library searching dependency should be configurable"
 
   static let hasContentURL = "A share video content has a URL"
   static let hasPeopleIDs = "A share video content has people IDs"
