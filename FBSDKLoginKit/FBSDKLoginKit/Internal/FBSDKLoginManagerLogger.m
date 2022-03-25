@@ -17,7 +17,6 @@
 #import "FBSDKLoginAppEventName.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
-#import "FBSDKLoginUtility.h"
 #import "FBSDKMonotonicTime.h"
 
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Native = @"fb_application_web_auth";

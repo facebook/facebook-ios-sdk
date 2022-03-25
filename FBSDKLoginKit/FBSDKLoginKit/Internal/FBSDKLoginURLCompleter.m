@@ -20,7 +20,6 @@
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginUtility.h"
 #import "FBSDKProfileFactory.h"
 
 @implementation FBSDKLoginURLCompleter
