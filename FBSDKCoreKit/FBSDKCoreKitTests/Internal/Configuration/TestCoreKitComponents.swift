@@ -57,7 +57,7 @@ enum TestCoreKitComponents {
 
     // Non-tvOS
     aemNetworker: AEMNetworking? = TestAEMNetworker(),
-    aemReporter: AEMReporterProtocol.Type = TestAEMReporter.self,
+    aemReporter: _AEMReporterProtocol.Type = TestAEMReporter.self,
     appEventParametersExtractor: AppEventParametersExtracting = TestAppEventParametersExtractor(),
     appEventsDropDeterminer: AppEventDropDetermining = TestAppEventsDropDeterminer(),
     appLinkEventPoster: AppLinkEventPosting = TestAppLinkEventPoster(),

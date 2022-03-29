@@ -51,7 +51,7 @@ final class AEMRuleTests: XCTestCase {
     ],
   ]
 
-  var validRule = AEMRule(json: [
+  var validRule = _AEMRule(json: [
     Keys.conversionValue: 10,
     Keys.priority: 7,
     Keys.events: [
@@ -81,7 +81,7 @@ final class AEMRuleTests: XCTestCase {
       ],
     ]
 
-    guard let rule = AEMRule(json: validData) else { return XCTFail("Unwraping Error") }
+    guard let rule = _AEMRule(json: validData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(10, rule.priority)
     XCTAssertEqual(2, rule.events.count)
@@ -96,7 +96,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testValidCase2() {
-    guard let rule = AEMRule(json: sampleData) else { return XCTFail("Unwraping Error") }
+    guard let rule = _AEMRule(json: sampleData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(7, rule.priority)
     XCTAssertEqual(1, rule.events.count)
@@ -108,13 +108,13 @@ final class AEMRuleTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
 
     invalidData = [Keys.conversionValue: 2]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
 
     invalidData = [Keys.priority: 7]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
 
     invalidData = [
       Keys.events: [
@@ -129,7 +129,7 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
 
     invalidData = [
       Keys.conversionValue: 2,
@@ -145,7 +145,7 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
 
     invalidData = [
       Keys.priority: 2,
@@ -161,13 +161,13 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMRule(json: invalidData))
+    XCTAssertNil(_AEMRule(json: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = AEMRule(json: data)
+        _ = _AEMRule(json: data)
       }
     }
   }
@@ -187,7 +187,7 @@ final class AEMRuleTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      AEMRule.supportsSecureCoding,
+      _AEMRule.supportsSecureCoding,
       "AEM Rule should support secure coding"
     )
   }
@@ -210,7 +210,7 @@ final class AEMRuleTests: XCTestCase {
       "Should encode the expected priority with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.events] as? [AEMEvent],
+      coder.encodedObject[Keys.events] as? [_AEMEvent],
       rule.events,
       "Should encode the expected events with the correct key"
     )
@@ -218,7 +218,7 @@ final class AEMRuleTests: XCTestCase {
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = AEMRule(coder: decoder)
+    _ = _AEMRule(coder: decoder)
 
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValue] as? String,
@@ -232,13 +232,13 @@ final class AEMRuleTests: XCTestCase {
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.events] as? NSSet,
-      [NSArray.self, AEMEvent.self],
+      [NSArray.self, _AEMEvent.self],
       "Should decode the expected type for the events key"
     )
   }
 
   func testRuleMatch() {
-    guard let rule = AEMRule(json: [
+    guard let rule = _AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -290,7 +290,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testRuleMatchWithEventBundle() {
-    guard let rule = AEMRule(json: [
+    guard let rule = _AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -344,7 +344,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testRuleMatchWithoutValue() {
-    guard let rule = AEMRule(json: [
+    guard let rule = _AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [

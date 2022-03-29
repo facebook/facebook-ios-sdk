@@ -7,6 +7,7 @@
  */
 
 #if !os(tvOS)
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -15,7 +16,7 @@
  */
 @objcMembers
 @objc(FBAEMEvent)
-public final class AEMEvent: NSObject, NSCopying, NSSecureCoding {
+public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   enum CodingKeys: String, CodingKey {
     case eventName = "event_name"
     case values

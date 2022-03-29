@@ -6,17 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 #if !TARGET_OS_TV
 
  #import <Foundation/Foundation.h>
 
- #import "FBAEMNetworking.h"
+ #import <FBAEMKit/FBAEMNetworking.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AEMNetworker)
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AEMNetworker)
 @interface FBAEMNetworker : NSObject <FBAEMNetworking, NSURLSessionDataDelegate>
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath

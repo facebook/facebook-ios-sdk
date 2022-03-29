@@ -109,24 +109,24 @@ final class AEMConfigurationTests: XCTestCase {
     ],
   ]
 
-  let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+  let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
   override func setUp() {
     super.setUp()
 
-    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+    _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
   }
 
   func testConfiguration() {
     XCTAssertEqual(
-      AEMConfiguration.ruleProvider() as! AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
+      _AEMConfiguration.ruleProvider() as! _AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
       advertiserRuleFactory,
-      "Should configure the AEMConfiguration correctly"
+      "Should configure the _AEMConfiguration correctly"
     )
   }
 
   func testValidCases() {
-    let config = AEMConfiguration(json: sampleData)
+    let config = _AEMConfiguration(json: sampleData)
 
     XCTAssertEqual(
       config?.defaultCurrency,
@@ -162,7 +162,7 @@ final class AEMConfigurationTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(AEMConfiguration(json: invalidData))
+    XCTAssertNil(_AEMConfiguration(json: invalidData))
     invalidData = [
       Keys.defaultCurrency: 100,
       Keys.cutoffTime: 1,
@@ -184,7 +184,7 @@ final class AEMConfigurationTests: XCTestCase {
       ],
     ]
     XCTAssertNil(
-      AEMConfiguration(json: invalidData),
+      _AEMConfiguration(json: invalidData),
       "Should not consider the config json valid with unexpected type for default_currency"
     )
     invalidData = [
@@ -194,7 +194,7 @@ final class AEMConfigurationTests: XCTestCase {
       Keys.configMode: Values.defaultMode,
     ]
     XCTAssertNil(
-      AEMConfiguration(json: invalidData),
+      _AEMConfiguration(json: invalidData),
       "Should not consider the config json valid without any conversion value rules"
     )
     invalidData = [
@@ -218,27 +218,27 @@ final class AEMConfigurationTests: XCTestCase {
       ],
     ]
     XCTAssertNil(
-      AEMConfiguration(json: invalidData),
+      _AEMConfiguration(json: invalidData),
       "Should not consider the config json valid with invalid conversion value rule"
     )
   }
 
   func testGetEventSet() {
-    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [_AEMRule] = _AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
-    let eventSet = AEMConfiguration.getEventSet(from: parsedRules)
+    let eventSet = _AEMConfiguration.getEventSet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.purchase, Values.donate], "Should get the expected event set")
   }
 
   func testGetCurrencySet() {
-    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [_AEMRule] = _AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
-    let eventSet = AEMConfiguration.getCurrencySet(from: parsedRules)
+    let eventSet = _AEMConfiguration.getCurrencySet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.USD, Values.JPY], "Should get the expected event set")
   }
 
   func testParseRules() {
-    let parsedRules: [AEMRule]? = AEMConfiguration.parseRules(rulesData)
+    let parsedRules: [_AEMRule]? = _AEMConfiguration.parseRules(rulesData)
     XCTAssertEqual(
       parsedRules?[0].priority, 15, "Shoule parse the rules in descending priority order"
     )
@@ -253,7 +253,7 @@ final class AEMConfigurationTests: XCTestCase {
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = AEMConfiguration(json: data)
+        _ = _AEMConfiguration(json: data)
       }
     }
   }
@@ -322,14 +322,14 @@ final class AEMConfigurationTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      AEMConfiguration.supportsSecureCoding,
+      _AEMConfiguration.supportsSecureCoding,
       "AEM Configuration should support secure coding"
     )
   }
 
   func testEncoding() {
     let coder = TestCoder()
-    let config = AEMConfiguration(json: sampleData)
+    let config = _AEMConfiguration(json: sampleData)
     config?.encode(with: coder)
 
     XCTAssertEqual(
@@ -360,11 +360,11 @@ final class AEMConfigurationTests: XCTestCase {
       "Should encode the expected business_id with the correct key"
     )
     XCTAssertTrue(
-      coder.encodedObject[Keys.paramRule] is FBAEMAdvertiserRuleMatching,
+      coder.encodedObject[Keys.paramRule] is _AEMAdvertiserRuleMatching,
       "Should encode the expected param_rule with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.conversionValueRules] as? [AEMRule],
+      coder.encodedObject[Keys.conversionValueRules] as? [_AEMRule],
       config?.conversionValueRules,
       "Should encode the expected conversion_value_rules with the correct key"
     )
@@ -372,7 +372,7 @@ final class AEMConfigurationTests: XCTestCase {
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = AEMConfiguration(coder: decoder)
+    _ = _AEMConfiguration(coder: decoder)
 
     XCTAssertTrue(
       decoder.decodedObject[Keys.defaultCurrency] is NSString.Type,
@@ -398,12 +398,12 @@ final class AEMConfigurationTests: XCTestCase {
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.paramRule] as? NSSet,
-      [NSArray.self, AEMAdvertiserMultiEntryRule.self, AEMAdvertiserSingleEntryRule.self],
+      [NSArray.self, _AEMAdvertiserMultiEntryRule.self, _AEMAdvertiserSingleEntryRule.self],
       "Should decode the expected type for the param_rule key"
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
-      [NSArray.self, AEMEvent.self, AEMRule.self],
+      [NSArray.self, _AEMEvent.self, _AEMRule.self],
       "Should decode the expected type for the conversion_value_rules key"
     )
   }

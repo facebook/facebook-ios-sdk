@@ -16,7 +16,7 @@
  */
 @objcMembers
 @objc(FBAEMSettings)
-public final class AEMSettings: NSObject {
+public final class _AEMSettings: NSObject {
   public static func appID() -> String? {
     guard let bundle = try? getDependencies().bundle else {
       return nil
@@ -26,7 +26,7 @@ public final class AEMSettings: NSObject {
   }
 }
 
-extension AEMSettings: DependentType {
+extension _AEMSettings: DependentType {
   struct Dependencies {
     var bundle: Bundle
   }

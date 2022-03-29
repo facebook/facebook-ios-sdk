@@ -11,7 +11,7 @@ import UIKit
 
 // swiftformat:disable indent
 @objcMembers
-final class TestAEMReporter: NSObject, AEMReporterProtocol {
+final class TestAEMReporter: NSObject, _AEMReporterProtocol {
 
   static var enableWasCalled = false
   static var setConversionFilteringEnabledWasCalled = false

@@ -153,7 +153,7 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter.invocations = [invocation]
     AEMReporter._saveReportData()
-    let data = AEMReporter._loadReportData() as? [AEMInvocation]
+    let data = AEMReporter._loadReportData() as? [_AEMInvocation]
     XCTAssertEqual(data?.count, 1)
     XCTAssertEqual(data?[0].acsToken, "test_token_1234567")
     XCTAssertEqual(data?[0].campaignID, "test_campaign_1234")
@@ -166,7 +166,7 @@ final class AEMReporterTests: XCTestCase {
     let loadedConfigs: NSMutableDictionary? = AEMReporter._loadConfigs()
     XCTAssertEqual(loadedConfigs?.count, 1, "Should load the expected number of configs")
 
-    let defaultConfigs: [AEMConfiguration]? = loadedConfigs?[Values.defaultMode] as? [AEMConfiguration]
+    let defaultConfigs: [_AEMConfiguration]? = loadedConfigs?[Values.defaultMode] as? [_AEMConfiguration]
     XCTAssertEqual(
       defaultConfigs?.count, 2, "Should load the expected number of default configs"
     )
@@ -208,10 +208,10 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter._clearCache()
     var configs = AEMReporter.configs
-    var configList: [AEMConfiguration]? = configs[Values.defaultMode] as? [AEMConfiguration]
+    var configList: [_AEMConfiguration]? = configs[Values.defaultMode] as? [_AEMConfiguration]
     XCTAssertEqual(configList?.count, 1, "Should have the expected number of configs")
 
-    guard let invocation1 = AEMInvocation(
+    guard let invocation1 = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -221,7 +221,7 @@ final class AEMReporterTests: XCTestCase {
       isTestMode: false,
       hasSKAN: false,
       isConversionFilteringEligible: true
-    ), let invocation2 = AEMInvocation(
+    ), let invocation2 = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -243,13 +243,13 @@ final class AEMReporterTests: XCTestCase {
       [SampleAEMData.validConfigData1, SampleAEMData.validConfigData2, SampleAEMData.validConfigData3]
     )
     AEMReporter._clearCache()
-    guard let invocations = AEMReporter.invocations as? [AEMInvocation] else {
+    guard let invocations = AEMReporter.invocations as? [_AEMInvocation] else {
       return XCTFail("Should have invocations")
     }
     XCTAssertEqual(invocations.count, 1, "Should clear the expired invocation")
     XCTAssertEqual(invocations[0].configID, 10000, "Should keep the expected invocation")
     configs = AEMReporter.configs
-    configList = configs[Values.defaultMode] as? [AEMConfiguration]
+    configList = configs[Values.defaultMode] as? [_AEMConfiguration]
     XCTAssertEqual(configList?.count, 2, "Should have the expected number of configs")
     XCTAssertEqual(configList?[0].validFrom, 10000, "Should keep the expected config")
     XCTAssertEqual(configList?[1].validFrom, 20000, "Should keep the expected config")
@@ -263,9 +263,9 @@ final class AEMReporterTests: XCTestCase {
     ]
 
     AEMReporter._clearConfigs()
-    let defaultConfigs = AEMReporter.configs[Values.defaultMode] as? [AEMConfiguration]
-    let brandConfigs = AEMReporter.configs[Values.brandMode] as? [AEMConfiguration]
-    let cpasConfigs = AEMReporter.configs[Values.cpasMode] as? [AEMConfiguration]
+    let defaultConfigs = AEMReporter.configs[Values.defaultMode] as? [_AEMConfiguration]
+    let brandConfigs = AEMReporter.configs[Values.brandMode] as? [_AEMConfiguration]
+    let cpasConfigs = AEMReporter.configs[Values.cpasMode] as? [_AEMConfiguration]
     XCTAssertEqual(
       defaultConfigs?.count,
       1,
@@ -504,7 +504,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testRecordAndUpdateEvents() {
     AEMReporter.timestamp = Date()
-    guard let invocation = AEMInvocation(
+    guard let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -516,7 +516,7 @@ final class AEMReporterTests: XCTestCase {
       isConversionFilteringEligible: true
     )
     else { return XCTFail("Unwrapping Error") }
-    guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let config = _AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
 
     AEMReporter.configs = [Values.defaultMode: [config]]
@@ -596,7 +596,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithRefreshEnforced() {
-    guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let config = _AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
     AEMReporter.timestamp = Date()
     AEMReporter.configs = [Values.defaultMode: [config]]
@@ -612,7 +612,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithBlock() {
-    guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let config = _AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
     var blockCall = 0
     AEMReporter.timestamp = Date()

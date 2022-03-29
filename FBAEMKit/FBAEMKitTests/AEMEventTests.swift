@@ -44,7 +44,7 @@ final class AEMEventTests: XCTestCase {
       ],
     ],
   ]
-  var validEventWithValues: AEMEvent? = AEMEvent(dict: [
+  var validEventWithValues: _AEMEvent? = _AEMEvent(dict: [
     Keys.eventName: Values.purchase,
     Keys.values: [
       [
@@ -58,7 +58,7 @@ final class AEMEventTests: XCTestCase {
     ],
   ])
 
-  var validEventWithoutValues: AEMEvent? = AEMEvent(dict: [
+  var validEventWithoutValues: _AEMEvent? = _AEMEvent(dict: [
     Keys.eventName: Values.purchase,
   ])
 
@@ -92,7 +92,7 @@ final class AEMEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(AEMEvent(dict: invalidData))
+    XCTAssertNil(_AEMEvent(dict: invalidData))
     invalidData = [
       Keys.values: [
         [
@@ -105,7 +105,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(dict: invalidData))
+    XCTAssertNil(_AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: Values.purchase,
       Keys.values: [
@@ -119,7 +119,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(dict: invalidData))
+    XCTAssertNil(_AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: [Values.purchase, Values.subscribe],
       Keys.values: [
@@ -133,20 +133,20 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(AEMEvent(dict: invalidData))
+    XCTAssertNil(_AEMEvent(dict: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = AEMEvent(dict: data)
+        _ = _AEMEvent(dict: data)
       }
     }
   }
 
   func testSecureCoding() {
     XCTAssertTrue(
-      AEMEvent.supportsSecureCoding,
+      _AEMEvent.supportsSecureCoding,
       "AEM Events should support secure coding"
     )
   }
@@ -186,7 +186,7 @@ final class AEMEventTests: XCTestCase {
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = AEMEvent(coder: decoder)
+    _ = _AEMEvent(coder: decoder)
 
     XCTAssertTrue(
       decoder.decodedObject[Keys.eventName] is NSString.Type,

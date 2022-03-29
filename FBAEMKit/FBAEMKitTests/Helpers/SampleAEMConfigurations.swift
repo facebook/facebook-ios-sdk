@@ -38,8 +38,8 @@ enum SampleAEMConfigurations {
     static let USD = "USD"
   }
 
-  static func createWithMultipleRules() -> AEMConfiguration {
-    AEMConfiguration(
+  static func createWithMultipleRules() -> _AEMConfiguration {
+    _AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
@@ -99,12 +99,12 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessID() -> AEMConfiguration {
-    let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+  static func createConfigWithBusinessID() -> _AEMConfiguration {
+    let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
-    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+    _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
 
-    return AEMConfiguration(
+    return _AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
@@ -130,12 +130,12 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessIDAndContentRule() -> AEMConfiguration {
-    let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+  static func createConfigWithBusinessIDAndContentRule() -> _AEMConfiguration {
+    let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
-    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+    _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
 
-    return AEMConfiguration(
+    return _AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
@@ -158,12 +158,12 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithoutBusinessID() -> AEMConfiguration {
-    let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+  static func createConfigWithoutBusinessID() -> _AEMConfiguration {
+    let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
-    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+    _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
 
-    return AEMConfiguration(
+    return _AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
@@ -187,12 +187,12 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createCpasConfig() -> AEMConfiguration {
-    let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+  static func createCpasConfig() -> _AEMConfiguration {
+    let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
-    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+    _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
 
-    return AEMConfiguration(
+    return _AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,

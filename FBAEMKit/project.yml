@@ -26,11 +26,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
         link: false
@@ -49,11 +44,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
       - sdk: UIKit.framework
@@ -73,11 +63,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
         link: false
@@ -96,11 +81,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
       - sdk: UIKit.framework

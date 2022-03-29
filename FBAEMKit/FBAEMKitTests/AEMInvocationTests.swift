@@ -62,7 +62,7 @@ final class AEMInvocationTests: XCTestCase {
 
   let boostPriority = 32
 
-  var validInvocation = AEMInvocation(
+  var validInvocation = _AEMInvocation(
     campaignID: "test_campaign_1234",
     acsToken: "test_token_12345",
     acsSharedSecret: "test_shared_secret",
@@ -83,7 +83,7 @@ final class AEMInvocationTests: XCTestCase {
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
-  var config1 = AEMConfiguration(json: [
+  var config1 = _AEMConfiguration(json: [
     Keys.defaultCurrency: Values.USD,
     Keys.cutoffTime: 1,
     Keys.validFrom: 10000,
@@ -122,7 +122,7 @@ final class AEMInvocationTests: XCTestCase {
     ],
   ])! // swiftlint:disable:this force_unwrapping
 
-  var config2 = AEMConfiguration(json: [
+  var config2 = _AEMConfiguration(json: [
     Keys.defaultCurrency: Values.USD,
     Keys.cutoffTime: 1,
     Keys.validFrom: 20000,
@@ -146,39 +146,39 @@ final class AEMInvocationTests: XCTestCase {
   func testInvocationWithInvalidAppLinkData() {
     var invalidData: [String: Any] = [:]
 
-    XCTAssertNil(AEMInvocation(appLinkData: nil))
+    XCTAssertNil(_AEMInvocation(appLinkData: nil))
 
     invalidData = [
       "acs_token": "test_token_12345",
     ]
-    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+    XCTAssertNil(_AEMInvocation(appLinkData: invalidData))
 
     invalidData = [
       "campaign_ids": "test_campaign_1234",
     ]
-    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+    XCTAssertNil(_AEMInvocation(appLinkData: invalidData))
 
     invalidData = [
       "advertiser_id": "test_advertiserid_coffee",
     ]
-    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+    XCTAssertNil(_AEMInvocation(appLinkData: invalidData))
 
     invalidData = [
       "acs_token": 123,
       "campaign_ids": 123,
     ]
-    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+    XCTAssertNil(_AEMInvocation(appLinkData: invalidData))
   }
 
   func testInvocationWithValidAppLinkData() {
     var validData: [String: Any] = [:]
-    var invocation: AEMInvocation?
+    var invocation: _AEMInvocation?
 
     validData = [
       "acs_token": "test_token_12345",
       "campaign_ids": "test_campaign_1234",
     ]
-    invocation = AEMInvocation(appLinkData: validData)
+    invocation = _AEMInvocation(appLinkData: validData)
     XCTAssertEqual(invocation?.acsToken, "test_token_12345")
     XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
     XCTAssertNil(invocation?.businessID)
@@ -188,14 +188,14 @@ final class AEMInvocationTests: XCTestCase {
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
     ]
-    invocation = AEMInvocation(appLinkData: validData)
+    invocation = _AEMInvocation(appLinkData: validData)
     XCTAssertEqual(invocation?.acsToken, "test_token_12345")
     XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
     XCTAssertEqual(invocation?.businessID, "test_advertiserid_coffee")
   }
 
   func testInvocationWithCatalogID() {
-    let invocation = AEMInvocation(appLinkData: [
+    let invocation = _AEMInvocation(appLinkData: [
       "acs_token": "test_token_12345",
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
@@ -225,7 +225,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testInvocationWithoutCatalogID() {
-    let invocation = AEMInvocation(appLinkData: [
+    let invocation = _AEMInvocation(appLinkData: [
       "acs_token": "test_token_12345",
       "campaign_ids": "test_campaign_1234",
       "advertiser_id": "test_advertiserid_coffee",
@@ -248,7 +248,7 @@ final class AEMInvocationTests: XCTestCase {
       "advertiser_id": "test_advertiserid_coffee",
       "test_deeplink": 1,
     ] as [String: Any]
-    let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
+    let invocation = try XCTUnwrap(_AEMInvocation(appLinkData: data))
 
     XCTAssertTrue(
       invocation.isTestMode,
@@ -273,7 +273,7 @@ final class AEMInvocationTests: XCTestCase {
       "advertiser_id": "test_advertiserid_coffee",
       "has_skan": true,
     ] as [String: Any]
-    let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
+    let invocation = try XCTUnwrap(_AEMInvocation(appLinkData: data))
 
     XCTAssertTrue(
       invocation.hasSKAN,
@@ -292,7 +292,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithValidContentAndContentID() {
-    let invocation: AEMInvocation? = validInvocation
+    let invocation: _AEMInvocation? = validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
     let contentIDs: [String] = ["id123", "id456"]
 
@@ -313,7 +313,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithValidContent() {
-    let invocation: AEMInvocation? = validInvocation
+    let invocation: _AEMInvocation? = validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
 
     let parameters = invocation?.processedParameters([
@@ -333,7 +333,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testProcessedParametersWithInvalidContent() {
-    let invocation: AEMInvocation? = validInvocation
+    let invocation: _AEMInvocation? = validInvocation
 
     let parameters = invocation?.processedParameters([
       Keys.content: #"[{"id": ,"quantity": 5}]"#,
@@ -352,7 +352,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testFindConfig() {
-    var invocation: AEMInvocation? = validInvocation
+    var invocation: _AEMInvocation? = validInvocation
     invocation?.reset()
     invocation?.setConfigID(10)
     XCTAssertNil(
@@ -360,7 +360,7 @@ final class AEMInvocationTests: XCTestCase {
       "Should not find the config with unmatched configID"
     )
 
-    invocation = AEMInvocation(
+    invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -427,7 +427,7 @@ final class AEMInvocationTests: XCTestCase {
   func testFindConfigWithBusinessID3() {
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
-    let invocation = AEMInvocation(
+    let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -463,7 +463,7 @@ final class AEMInvocationTests: XCTestCase {
 
   func testFindConfigWithCpas() {
     let cpasConfig = SampleAEMConfigurations.createCpasConfig()
-    let invocation = AEMInvocation(
+    let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -516,7 +516,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventWithValue() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -552,7 +552,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeUnexpectedEventWithoutValue() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -570,7 +570,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeExpectedEventWithoutValue() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -602,7 +602,7 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeEventWithExpectedContent() {
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
-    let invocation = AEMInvocation(
+    let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -635,7 +635,7 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeEventWithUnexpectedContent() {
     let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
-    let invocation = AEMInvocation(
+    let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -666,7 +666,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeCpasEvent() {
-    let invocation = AEMInvocation(
+    let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -719,7 +719,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventWithoutCache() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -737,7 +737,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testAttributeEventAndValueWithoutCache() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -762,7 +762,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testUpdateConversionWithValue() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -822,7 +822,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testUpdateConversionWithouValue() {
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.reset()
     invocation._setConfig(config2)
 
@@ -1038,14 +1038,14 @@ final class AEMInvocationTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      AEMInvocation.supportsSecureCoding,
+      _AEMInvocation.supportsSecureCoding,
       "AEM Invocation should support secure coding"
     )
   }
 
   func testEncoding() {
     let coder = TestCoder()
-    let invocation: AEMInvocation = validInvocation
+    let invocation: _AEMInvocation = validInvocation
     invocation.encode(with: coder)
 
     XCTAssertEqual(
@@ -1132,7 +1132,7 @@ final class AEMInvocationTests: XCTestCase {
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = AEMInvocation(coder: decoder)
+    _ = _AEMInvocation(coder: decoder)
 
     XCTAssertTrue(
       decoder.decodedObject[Keys.campaignID] is NSString.Type,

@@ -16,29 +16,29 @@ final class AEMSettingsTests: XCTestCase {
   override func setUp() {
     super.setUp()
     bundle = TestBundle()
-    AEMSettings.setDependencies(.init(bundle: bundle))
+    _AEMSettings.setDependencies(.init(bundle: bundle))
   }
 
   override func tearDown() {
-    AEMSettings.resetDependencies()
+    _AEMSettings.resetDependencies()
     bundle = nil
     super.tearDown()
   }
 
   func testDefaultDependencies() throws {
-    AEMSettings.resetDependencies()
-    let dependencies = try AEMSettings.getDependencies()
+    _AEMSettings.resetDependencies()
+    let dependencies = try _AEMSettings.getDependencies()
     XCTAssertIdentical(dependencies.bundle, Bundle.main, .usesMainBundle)
   }
 
   func testCustomDependencies() throws {
-    let dependencies = try AEMSettings.getDependencies()
+    let dependencies = try _AEMSettings.getDependencies()
     XCTAssertIdentical(dependencies.bundle, bundle, .usesCustomBundle)
   }
 
   func testIsCorrectAppId() {
     bundle.stubbedInfoDictionaryObject = "com.facebook.test.appID"
-    let appId = AEMSettings.appID()
+    let appId = _AEMSettings.appID()
     XCTAssertEqual(bundle.infoDictionaryKey, "FacebookAppID", .findsAppIDInInfoDictionary)
     XCTAssertEqual(appId, "com.facebook.test.appID", .findsAppIDInInfoDictionary)
   }

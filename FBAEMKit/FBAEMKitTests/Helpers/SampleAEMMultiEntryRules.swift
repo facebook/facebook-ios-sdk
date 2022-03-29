@@ -11,7 +11,7 @@ import Foundation
 
 enum SampleAEMMultiEntryRules {
 
-  private static let factory = AEMAdvertiserRuleFactory()
+  private static let factory = _AEMAdvertiserRuleFactory()
 
   static let contentRule =
     factory.createRule(withJson: #"{"or": [{"fb_content[*].id": {"eq": "12345"}}]}"#)! // swiftlint:disable:this line_length force_unwrapping
