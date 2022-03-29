@@ -12,7 +12,7 @@ import Foundation
 enum SampleAEMSingleEntryRules {
 
   static let urlRule = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_Contains,
+    with: .i_Contains,
     paramKey: "URL",
     linguisticCondition: "thankyou.do",
     numericalCondition: nil,
@@ -20,7 +20,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule1 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "platium",
     numericalCondition: nil,
@@ -28,7 +28,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule2 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "blue_credit",
     numericalCondition: nil,
@@ -36,7 +36,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule3 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "gold_charge",
     numericalCondition: nil,
@@ -44,7 +44,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let contentCategoryRule = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "content_category",
     linguisticCondition: "demand",
     numericalCondition: nil,
@@ -52,7 +52,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let contentNameRule = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith,
+    with: .startsWith,
     paramKey: "content_name",
     linguisticCondition: "exit",
     numericalCondition: nil,
@@ -60,7 +60,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let valueRule = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThan,
+    with: .greaterThan,
     paramKey: "amount",
     linguisticCondition: nil,
     numericalCondition: NSNumber(value: 10),

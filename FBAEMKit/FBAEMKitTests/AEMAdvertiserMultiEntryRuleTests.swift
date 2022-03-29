@@ -21,7 +21,7 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForAnd() {
     let rule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+      with: .and,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertTrue(
@@ -55,7 +55,7 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForOr() {
     let rule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
+      with: .or,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertFalse(
@@ -89,7 +89,7 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForNot() {
     let rule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot,
+      with: .not,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertTrue(
@@ -123,15 +123,15 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForNestedRules() {
     let andRule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+      with: .and,
       rules: [SampleAEMSingleEntryRules.cardTypeRule2, SampleAEMSingleEntryRules.valueRule]
     )
     let orRule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
+      with: .or,
       rules: [SampleAEMSingleEntryRules.contentNameRule, SampleAEMSingleEntryRules.contentCategoryRule]
     )
     let nestedRule = _AEMAdvertiserMultiEntryRule(
-      with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+      with: .and,
       rules: [andRule, orRule, SampleAEMSingleEntryRules.urlRule]
     )
     XCTAssertTrue(

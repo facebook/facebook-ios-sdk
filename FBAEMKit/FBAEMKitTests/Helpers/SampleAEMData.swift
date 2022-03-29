@@ -101,7 +101,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
   ]
 
   static let validAdvertiserSingleEntryRule = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
+    with: .contains,
     paramKey: "test",
     linguisticCondition: "hello",
     numericalCondition: NSNumber(10),
@@ -109,7 +109,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
   )
 
   static let validAdvertiserMultiEntryRule = _AEMAdvertiserMultiEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+    with: .and,
     rules: [validAdvertiserSingleEntryRule]
   )
 
@@ -120,7 +120,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
   static let validAdvertiserSingleEntryRuleJson3: [String: Any] = ["content": ["is_any": ["abc"]]]
 
   static let advertiserSingleEntryRule1 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith,
+    with: .startsWith,
     paramKey: "content",
     linguisticCondition: "abc",
     numericalCondition: nil,
@@ -128,7 +128,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
   )
 
   static let advertiserSingleEntryRule2 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThan,
+    with: .lessThan,
     paramKey: "value",
     linguisticCondition: nil,
     numericalCondition: NSNumber(value: 10),
@@ -136,7 +136,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
   )
 
   static let advertiserSingleEntryRule3 = _AEMAdvertiserSingleEntryRule(
-    with: _AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
+    with: .isAny,
     paramKey: "content",
     linguisticCondition: nil,
     numericalCondition: nil,

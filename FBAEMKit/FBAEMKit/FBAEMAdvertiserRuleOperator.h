@@ -18,7 +18,7 @@
  */
 typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
 {
-  Unknown = 0,
+  FBAEMAdvertiserRuleOperatorUnknown = 0,
   // Multi Entry Rule Operator
   FBAEMAdvertiserRuleOperatorAnd,
   FBAEMAdvertiserRuleOperatorOr,

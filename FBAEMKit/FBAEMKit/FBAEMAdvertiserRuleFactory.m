@@ -93,7 +93,7 @@
   NSNumber *numericalCondition = nil;
   NSArray<NSString *> *arrayCondition = nil;
   switch (operator) {
-    case Unknown:
+    case FBAEMAdvertiserRuleOperatorUnknown:
     default:
       return nil;
     case FBAEMAdvertiserRuleOperatorContains:
@@ -134,7 +134,7 @@
 {
   NSString *key = [self primaryKeyForRule:rule];
   if (!key) {
-    return Unknown;
+    return FBAEMAdvertiserRuleOperatorUnknown;
   }
   NSArray<NSString *> *operatorKeys = @[
     @"unknown",
@@ -160,7 +160,7 @@
     @"is_not_any"
   ];
   NSInteger index = [operatorKeys indexOfObject:key.lowercaseString];
-  return index == NSNotFound ? Unknown : index;
+  return index == NSNotFound ? FBAEMAdvertiserRuleOperatorUnknown : index;
 }
 
 - (BOOL)isOperatorForMultiEntryRule:(FBAEMAdvertiserRuleOperator)operator
