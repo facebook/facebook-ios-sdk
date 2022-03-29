@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Fixed
+
+* Fixed an issue in native sharing where hashtags are not automatically added to a post.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.1.0...HEAD)
 
 ## 13.1.0

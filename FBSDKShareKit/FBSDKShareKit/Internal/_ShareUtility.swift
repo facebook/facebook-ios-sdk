@@ -209,7 +209,7 @@ extension _ShareUtility: ShareUtilityProtocol {
       if bridgeOptions == .webHashtag {
         nullableParameters["hashtag"] = hashtag
       } else {
-        nullableParameters["hashtag"] = [hashtag]
+        nullableParameters["hashtags"] = [hashtag]
       }
     }
 
