@@ -18,6 +18,7 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
   let retryEventsHttpResponse = [
     -1009, // kCFURLErrorNotConnectedToInternet
     -1004, // kCFURLErrorCannotConnectToHost
+    429, // CAPI-G Too many request
     503, // ServiceUnavailable
     504, // GatewayTimeout
   ]

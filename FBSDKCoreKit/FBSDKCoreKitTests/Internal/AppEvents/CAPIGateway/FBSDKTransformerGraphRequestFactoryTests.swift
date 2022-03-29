@@ -81,7 +81,7 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
 
   func testErrorHandlingWithoutServerError() throws {
     let url = try XCTUnwrap(URL(string: "graph.facebook.com"))
-    let response = HTTPURLResponse(url: url, statusCode: 503, httpVersion: "HTTP/1.1", headerFields: nil)
+    var response = HTTPURLResponse(url: url, statusCode: 503, httpVersion: "HTTP/1.1", headerFields: nil)
 
     FBSDKTransformerGraphRequestFactory.shared.transformedEvents = [[Keys.eventName: "purchase"]]
     FBSDKTransformerGraphRequestFactory.shared.handleError(
@@ -91,11 +91,29 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
     XCTAssertEqual(
       FBSDKTransformerGraphRequestFactory.shared.transformedEvents.count,
       2,
-      "Should re-append the events to the cache queue if the request fails for connecty issue"
+      "Should re-append the event to the cache queue if the request fails due to 503 error"
     )
     XCTAssertEqual(
       FBSDKTransformerGraphRequestFactory.shared.transformedEvents.first as? [String: String],
       [Keys.eventName: Values.testEvent],
+      "The appended event is not expected"
+    )
+
+    response = HTTPURLResponse(url: url, statusCode: 429, httpVersion: "HTTP/1.1", headerFields: nil)
+
+    FBSDKTransformerGraphRequestFactory.shared.handleError(
+      response: response,
+      events: [[Keys.eventName: "addToCart"]]
+    )
+    XCTAssertEqual(
+      FBSDKTransformerGraphRequestFactory.shared.transformedEvents.count,
+      3,
+      "Should re-append the event to the cache queue if the request fails due to 429 error"
+    )
+
+    XCTAssertEqual(
+      FBSDKTransformerGraphRequestFactory.shared.transformedEvents.first as? [String: String],
+      [Keys.eventName: "addToCart"],
       "The appended event is not expected"
     )
   }
