@@ -120,34 +120,6 @@ public extension LoginManager {
     __logIn(from: viewController, configuration: configuration, completion: legacyCompletion)
   }
 
-  /**
-   Logs the user in or authorizes additional permissions.
-
-   Use this method when asking for permissions. You should only ask for permissions when they
-   are needed and the value should be explained to the user. You can inspect the result's `declinedPermissions` to also
-   provide more information to the user if they decline permissions.
-
-   This method will present a UI to the user. To reduce unnecessary app switching, you should typically check if
-   `AccessToken.current` already contains the permissions you need. If it does, you probably
-   do not need to call this method.
-
-   You can only perform one login call at a time. Calling a login method before the completion handler is called
-   on a previous login will result in an error.
-
-   - parameter configuration the login configuration to use.
-   - parameter completion: Optional callback.
-   */
-  func logIn(
-    configuration: LoginConfiguration,
-    completion: @escaping LoginResultBlock
-  ) {
-    let legacyCompletion = { (result: LoginManagerLoginResult?, error: Error?) in
-      let result = LoginResult(result: result, error: error)
-      completion(result)
-    }
-    __logIn(from: nil, configuration: configuration, completion: legacyCompletion)
-  }
-
   private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {
     guard let original = completion else {
       return nil
