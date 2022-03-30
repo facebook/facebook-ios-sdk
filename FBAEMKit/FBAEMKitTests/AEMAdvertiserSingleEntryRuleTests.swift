@@ -215,7 +215,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(.i_Contains)
+    rule.setOperator(.caseInsensitiveContains)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -225,7 +225,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(.i_NotContains)
+    rule.setOperator(.caseInsensitiveNotContains)
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
@@ -235,7 +235,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Shoule expect parameter matched with the value"
     )
 
-    rule.setOperator(.i_StartsWith)
+    rule.setOperator(.caseInsensitiveStartsWith)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "HELLOworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -355,7 +355,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Shoule not expect parameter matched with item in the array"
     )
 
-    rule.setOperator(.i_IsAny)
+    rule.setOperator(.caseInsensitiveIsAny)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "abc", numericalValue: nil),
       "Shoule expect parameter matched with item in the array"
@@ -367,7 +367,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Shoule expect parameter matched with item in the array"
     )
 
-    rule.setOperator(.i_IsNotAny)
+    rule.setOperator(.caseInsensitiveIsNotAny)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "ab", numericalValue: nil),
       "Shoule expect parameter matched with item in the array"

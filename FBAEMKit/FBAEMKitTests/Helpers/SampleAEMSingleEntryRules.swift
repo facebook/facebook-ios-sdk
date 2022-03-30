@@ -12,7 +12,7 @@ import Foundation
 enum SampleAEMSingleEntryRules {
 
   static let urlRule = _AEMAdvertiserSingleEntryRule(
-    with: .i_Contains,
+    with: .caseInsensitiveContains,
     paramKey: "URL",
     linguisticCondition: "thankyou.do",
     numericalCondition: nil,

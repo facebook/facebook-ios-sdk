@@ -204,17 +204,17 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
     )
     XCTAssertEqual(
       factory.getOperator(["i_contains": "abc"]),
-      .i_Contains,
-      "Should get the expected I_Contains operator of the dictionary"
+      .caseInsensitiveContains,
+      "Should get the expected i_contains operator of the dictionary"
     )
     XCTAssertEqual(
       factory.getOperator(["i_not_contains": "abc"]),
-      .i_NotContains,
+      .caseInsensitiveNotContains,
       "Should get the expected I_NotContains operator of the dictionary"
     )
     XCTAssertEqual(
       factory.getOperator(["i_starts_with": "abc"]),
-      .i_StartsWith,
+      .caseInsensitiveStartsWith,
       "Should get the expected I_StartsWith operator of the dictionary"
     )
     XCTAssertEqual(
@@ -254,12 +254,12 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
     )
     XCTAssertEqual(
       factory.getOperator(["i_is_any": ["abc"]]),
-      .i_IsAny,
+      .caseInsensitiveIsAny,
       "Should get the expected I_IsAny operator of the dictionary"
     )
     XCTAssertEqual(
       factory.getOperator(["i_is_not_any": ["abc"]]),
-      .i_IsNotAny,
+      .caseInsensitiveIsNotAny,
       "Should get the expected I_IsNotAny operator of the dictionary"
     )
     XCTAssertEqual(
@@ -289,9 +289,9 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
       .contains,
       .notContains,
       .startsWith,
-      .i_Contains,
-      .i_NotContains,
-      .i_StartsWith,
+      .caseInsensitiveContains,
+      .caseInsensitiveNotContains,
+      .caseInsensitiveStartsWith,
       .regexMatch,
       .equal,
       .notEqual,
@@ -299,8 +299,8 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
       .lessThanOrEqual,
       .greaterThan,
       .greaterThanOrEqual,
-      .i_IsAny,
-      .i_IsNotAny,
+      .caseInsensitiveIsAny,
+      .caseInsensitiveIsNotAny,
       .isAny,
       .isNotAny,
     ] as [_AEMAdvertiserRuleOperator] {

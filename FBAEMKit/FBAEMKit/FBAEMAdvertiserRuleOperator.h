@@ -27,9 +27,9 @@ typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
   FBAEMAdvertiserRuleOperatorContains,
   FBAEMAdvertiserRuleOperatorNotContains,
   FBAEMAdvertiserRuleOperatorStartsWith,
-  FBAEMAdvertiserRuleOperatorI_Contains,
-  FBAEMAdvertiserRuleOperatorI_NotContains,
-  FBAEMAdvertiserRuleOperatorI_StartsWith,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveContains,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith,
   FBAEMAdvertiserRuleOperatorRegexMatch,
   FBAEMAdvertiserRuleOperatorEqual,
   FBAEMAdvertiserRuleOperatorNotEqual,
@@ -37,8 +37,8 @@ typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
   FBAEMAdvertiserRuleOperatorLessThanOrEqual,
   FBAEMAdvertiserRuleOperatorGreaterThan,
   FBAEMAdvertiserRuleOperatorGreaterThanOrEqual,
-  FBAEMAdvertiserRuleOperatorI_IsAny,
-  FBAEMAdvertiserRuleOperatorI_IsNotAny,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny,
   FBAEMAdvertiserRuleOperatorIsAny,
   FBAEMAdvertiserRuleOperatorIsNotAny
 } NS_SWIFT_NAME(_AEMAdvertiserRuleOperator);
