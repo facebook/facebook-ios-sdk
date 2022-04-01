@@ -180,6 +180,41 @@ final class ShareDialogTests: XCTestCase {
     )
   }
 
+  // MARK: - Construction
+
+  func testInitializer() {
+    let controller = UIViewController()
+    let content = ShareModelTestUtility.linkContent
+    let delegate = TestSharingDelegate()
+    dialog = ShareDialog(viewController: controller, content: content, delegate: delegate)
+
+    XCTAssertIdentical(dialog.fromViewController, controller, .Construction.createViaClassFactoryMethod)
+    XCTAssertIdentical(dialog.shareContent, content, .Construction.createViaClassFactoryMethod)
+    XCTAssertIdentical(dialog.delegate, delegate, .Construction.createViaClassFactoryMethod)
+  }
+
+  func testClassFactoryMethod() {
+    let controller = UIViewController()
+    let content = ShareModelTestUtility.linkContent
+    let delegate = TestSharingDelegate()
+    dialog = ShareDialog.dialog(viewController: controller, content: content, delegate: delegate)
+
+    XCTAssertIdentical(dialog.fromViewController, controller, .Construction.createViaClassFactoryMethod)
+    XCTAssertIdentical(dialog.shareContent, content, .Construction.createViaClassFactoryMethod)
+    XCTAssertIdentical(dialog.delegate, delegate, .Construction.createViaClassFactoryMethod)
+  }
+
+  func testClassShowMethod() {
+    let controller = UIViewController()
+    let content = ShareModelTestUtility.linkContent
+    let delegate = TestSharingDelegate()
+    dialog = ShareDialog.show(viewController: controller, content: content, delegate: delegate)
+
+    XCTAssertIdentical(dialog.fromViewController, controller, .Construction.createViaClassShowMethod)
+    XCTAssertIdentical(dialog.shareContent, content, .Construction.createViaClassShowMethod)
+    XCTAssertIdentical(dialog.delegate, delegate, .Construction.createViaClassShowMethod)
+  }
+
   // MARK: - Native mode
 
   func testCanShowNativeDialogWithoutShareContent() {
@@ -833,5 +868,10 @@ fileprivate extension String {
     static let usesCustomErrorFactory = "The error factory dependency should be configurable"
     static let usesCustomEventLogger = "The event logging dependency should be configurable"
     static let usesCustomMediaLibrarySearcher = "The media library searching dependency should be configurable"
+  }
+
+  enum Construction {
+    static let createViaClassFactoryMethod = "Can create a dialog with a class factory method"
+    static let createViaClassShowMethod = "Can create and show a dialog with the class `show` method"
   }
 }
