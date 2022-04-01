@@ -16,6 +16,7 @@ import XCTest
 final class ShareDialogTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
+  var dialog: ShareDialog!
   var internalURLOpener: TestInternalURLOpener!
   var internalUtility: TestInternalUtility!
   var settings: TestSettings!
@@ -33,6 +34,7 @@ final class ShareDialogTests: XCTestCase {
     super.setUp()
 
     AccessToken.current = nil
+    TestShareUtility.reset()
 
     internalURLOpener = TestInternalURLOpener()
     internalUtility = TestInternalUtility()
@@ -72,6 +74,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   override func tearDown() {
+    dialog = nil
     internalURLOpener = nil
     internalUtility = nil
     settings = nil
@@ -92,64 +95,95 @@ final class ShareDialogTests: XCTestCase {
     super.tearDown()
   }
 
+  // MARK: - Type Dependencies
+
   func testDefaultDependencies() throws {
     ShareDialog.resetDependencies()
 
     let dependencies = try ShareDialog.getDependencies()
-    XCTAssertIdentical(dependencies.internalURLOpener, ShareUIApplication.shared, .usesInternalURLOpenerByDefault)
-    XCTAssertIdentical(dependencies.internalUtility, InternalUtility.shared, .usesInternalUtilityByDefault)
-    XCTAssertIdentical(dependencies.settings, Settings.shared, .usesSettingsByDefault)
-    XCTAssertTrue(dependencies.shareUtility is _ShareUtility.Type, .usesShareUtilityByDefault)
+    XCTAssertIdentical(
+      dependencies.internalURLOpener,
+      ShareUIApplication.shared,
+      .DefaultDependencies.usesInternalURLOpenerByDefault
+    )
+    XCTAssertIdentical(
+      dependencies.internalUtility,
+      InternalUtility.shared,
+      .DefaultDependencies.usesInternalUtilityByDefault
+    )
+    XCTAssertIdentical(dependencies.settings, Settings.shared, .DefaultDependencies.usesSettingsByDefault)
+    XCTAssertTrue(dependencies.shareUtility is _ShareUtility.Type, .DefaultDependencies.usesShareUtilityByDefault)
     XCTAssertTrue(
       dependencies.bridgeAPIRequestFactory is ShareBridgeAPIRequestFactory,
-      .usesShareBridgeAPIRequestFactoryByDefault
+      .DefaultDependencies.usesShareBridgeAPIRequestFactoryByDefault
     )
-    XCTAssertIdentical(dependencies.bridgeAPIRequestOpener, BridgeAPI.shared, .usesBridgeAPIByDefault)
+    XCTAssertIdentical(
+      dependencies.bridgeAPIRequestOpener,
+      BridgeAPI.shared,
+      .DefaultDependencies.usesBridgeAPIByDefault
+    )
     XCTAssertTrue(
       dependencies.socialComposeViewControllerFactory is SocialComposeViewControllerFactory,
-      .usesSocialComposeViewControllerFactoryByDefault
+      .DefaultDependencies.usesSocialComposeViewControllerFactoryByDefault
     )
-    XCTAssertIdentical(dependencies.windowFinder, InternalUtility.shared, .usesInternalUtilityAsWindowFinderByDefault)
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesErrorFactoryByDefault)
-    XCTAssertIdentical(dependencies.eventLogger as AnyObject, AppEvents.shared, .usesAppEventsByDefault)
+    XCTAssertIdentical(
+      dependencies.windowFinder,
+      InternalUtility.shared,
+      .DefaultDependencies.usesInternalUtilityAsWindowFinderByDefault
+    )
+    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .DefaultDependencies.usesErrorFactoryByDefault)
+    XCTAssertIdentical(
+      dependencies.eventLogger as AnyObject,
+      AppEvents.shared,
+      .DefaultDependencies.usesAppEventsByDefault
+    )
     XCTAssertIdentical(
       dependencies.mediaLibrarySearcher as AnyObject,
       PHImageManager.default(),
-      .usesPHImageManagerAsMediaLibrarySearcherByDefault
+      .DefaultDependencies.usesPHImageManagerAsMediaLibrarySearcherByDefault
     )
   }
 
   func testCustomDependencies() throws {
     let dependencies = try ShareDialog.getDependencies()
 
-    XCTAssertIdentical(dependencies.internalURLOpener, internalURLOpener, .usesCustomInternalURLOpener)
-    XCTAssertIdentical(dependencies.internalUtility, internalUtility, .usesCustomInternalUtility)
-    XCTAssertIdentical(dependencies.settings, settings, .usesCustomSettings)
-    XCTAssertTrue(dependencies.shareUtility is TestShareUtility.Type, .usesCustomShareUtility)
+    XCTAssertIdentical(
+      dependencies.internalURLOpener,
+      internalURLOpener,
+      .CustomDependencies.usesCustomInternalURLOpener
+    )
+    XCTAssertIdentical(dependencies.internalUtility, internalUtility, .CustomDependencies.usesCustomInternalUtility)
+    XCTAssertIdentical(dependencies.settings, settings, .CustomDependencies.usesCustomSettings)
+    XCTAssertTrue(dependencies.shareUtility is TestShareUtility.Type, .CustomDependencies.usesCustomShareUtility)
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestFactory,
       bridgeAPIRequestFactory,
-      .usesCustomShareBridgeAPIRequestFactory
+      .CustomDependencies.usesCustomShareBridgeAPIRequestFactory
     )
-    XCTAssertIdentical(dependencies.bridgeAPIRequestOpener, bridgeAPIRequestOpener, .usesCustomBridgeAPIRequestOpener)
+    XCTAssertIdentical(
+      dependencies.bridgeAPIRequestOpener,
+      bridgeAPIRequestOpener,
+      .CustomDependencies.usesCustomBridgeAPIRequestOpener
+    )
     XCTAssertIdentical(
       dependencies.socialComposeViewControllerFactory as AnyObject,
       socialComposeViewControllerFactory,
-      .usesCustomSocialComposeViewControllerFactory
+      .CustomDependencies.usesCustomSocialComposeViewControllerFactory
     )
-    XCTAssertIdentical(dependencies.windowFinder, windowFinder, .usesCustomWindowFinder)
-    XCTAssertIdentical(dependencies.errorFactory, errorFactory, .usesCustomErrorFactory)
-    XCTAssertIdentical(dependencies.eventLogger as AnyObject, eventLogger, .usesCustomEventLogger)
+    XCTAssertIdentical(dependencies.windowFinder, windowFinder, .CustomDependencies.usesCustomWindowFinder)
+    XCTAssertIdentical(dependencies.errorFactory, errorFactory, .CustomDependencies.usesCustomErrorFactory)
+    XCTAssertIdentical(dependencies.eventLogger as AnyObject, eventLogger, .CustomDependencies.usesCustomEventLogger)
     XCTAssertIdentical(
       dependencies.mediaLibrarySearcher as AnyObject,
       mediaLibrarySearcher,
-      .usesCustomMediaLibrarySearcher
+      .CustomDependencies.usesCustomMediaLibrarySearcher
     )
   }
 
+  // MARK: - Native mode
+
   func testCanShowNativeDialogWithoutShareContent() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     internalURLOpener.canOpenURL = true
     internalUtility.isFacebookAppInstalled = true
 
@@ -160,8 +194,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testCanShowNativeLinkContent() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertTrue(
       dialog.canShow,
@@ -170,8 +203,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testCanShowNativePhotoContent() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.photoContent
     TestShareUtility.validateShareContentShouldThrow = true
 
@@ -182,8 +214,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testCanShowNativePhotoContentWithFileURL() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
     XCTAssertTrue(
       dialog.canShow,
@@ -192,8 +223,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testCanShowNativeVideoContentWithoutPreviewPhoto() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     internalURLOpener.canOpenURL = true
     dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
 
@@ -204,8 +234,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testCanShowNative() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
 
     XCTAssertFalse(
       dialog.canShow,
@@ -214,46 +243,17 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testShowNativeDoesValidate() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .native
+    dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.photoContent
     internalURLOpener.canOpenURL = true
 
     XCTAssertFalse(dialog.show())
   }
 
-  func testValidateShareSheet() throws {
-    let dialog = createEmptyDialog()
-    dialog.mode = .shareSheet
-
-    dialog.shareContent = ShareModelTestUtility.linkContentWithoutQuote
-    XCTAssertNoThrow(
-      try dialog.validate(),
-      "Should not throw an error when validating link content without quotes"
-    )
-
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
-    XCTAssertNoThrow(
-      try dialog.validate(),
-      "Should not throw an error when validating photo content with images"
-    )
-
-    dialog.shareContent = ShareModelTestUtility.photoContent
-    XCTAssertThrowsError(
-      try dialog.validate(),
-      "Should throw an error when validating photo content on a share sheet"
-    )
-
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
-    XCTAssertThrowsError(
-      try dialog.validate(),
-      "Should throw an error when validating video content without a preview photo on a share sheet"
-    )
-  }
+  // MARK: - Browser mode
 
   func testCanShowBrowser() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .browser
+    dialog = createEmptyDialog(mode: .browser)
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without share content should be showable in a browser"
@@ -280,8 +280,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testValidateBrowser() throws {
-    let dialog = createEmptyDialog()
-    dialog.mode = .browser
+    dialog = createEmptyDialog(mode: .browser)
 
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
@@ -301,9 +300,10 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertThrowsError(try dialog.validate())
   }
 
+  // MARK: - Web mode
+
   func testCanShowWeb() {
-    let dialog = createEmptyDialog()
-    dialog.mode = .web
+    dialog = createEmptyDialog(mode: .web)
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without share content should be showable on web"
@@ -334,8 +334,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testValidateWeb() throws {
-    let dialog = createEmptyDialog()
-    dialog.mode = .web
+    dialog = createEmptyDialog(mode: .web)
 
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
@@ -381,10 +380,11 @@ final class ShareDialogTests: XCTestCase {
     )
   }
 
-  func testCanShowFeedBrowser() {
-    let dialog = createEmptyDialog()
+  // MARK: - Feed browser mode
 
-    dialog.mode = .feedBrowser
+  func testCanShowFeedBrowser() {
+    dialog = createEmptyDialog(mode: .feedBrowser)
+
     XCTAssertTrue(
       dialog.canShow,
       "A dialog without content should be showable in a browser feed"
@@ -410,8 +410,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testValidateFeedBrowser() throws {
-    let dialog = createEmptyDialog()
-    dialog.mode = .feedBrowser
+    dialog = createEmptyDialog(mode: .feedBrowser)
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
@@ -422,49 +421,38 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertThrowsError(try dialog.validate())
   }
 
-  func testCanShowFeedWeb() {
-    let dialog = createEmptyDialog()
+  // MARK: - Share sheet mode
 
-    dialog.mode = .feedWeb
-    XCTAssertTrue(
-      dialog.canShow,
-      "A dialog without content should be showable in a web feed"
+  func testValidateShareSheet() throws {
+    dialog = createEmptyDialog(mode: .shareSheet)
+
+    dialog.shareContent = ShareModelTestUtility.linkContentWithoutQuote
+    XCTAssertNoThrow(
+      try dialog.validate(),
+      "Should not throw an error when validating link content without quotes"
     )
 
-    dialog.shareContent = ShareModelTestUtility.linkContent
-    XCTAssertTrue(
-      dialog.canShow,
-      "A dialog with link content should be showable in a web feed"
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
+    XCTAssertNoThrow(
+      try dialog.validate(),
+      "Should not throw an error when validating photo content with images"
     )
 
     dialog.shareContent = ShareModelTestUtility.photoContent
-    XCTAssertFalse(
-      dialog.canShow,
-      "A dialog with photo content should not be showable in a web feed"
+    XCTAssertThrowsError(
+      try dialog.validate(),
+      "Should throw an error when validating photo content on a share sheet"
     )
 
     dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
-    XCTAssertFalse(
-      dialog.canShow,
-      "A dialog with video content and no preview photo should not be showable in a web feed"
+    XCTAssertThrowsError(
+      try dialog.validate(),
+      "Should throw an error when validating video content without a preview photo on a share sheet"
     )
-  }
-
-  func testValidateFeedWeb() throws {
-    let dialog = createEmptyDialog()
-    dialog.mode = .feedWeb
-    dialog.shareContent = ShareModelTestUtility.linkContent
-    XCTAssertNoThrow(try dialog.validate())
-
-    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
-    XCTAssertThrowsError(try dialog.validate())
-
-    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
-    XCTAssertThrowsError(try dialog.validate())
   }
 
   func testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable() throws {
-    let dialog = createEmptyDialog()
+    dialog = createEmptyDialog(mode: .shareSheet)
     let content = ShareModelTestUtility.linkContent
     content.hashtag = Hashtag("#hashtag")
     TestShareUtility.stubbedHashtagString = "#hashtag"
@@ -477,7 +465,6 @@ final class ShareDialogTests: XCTestCase {
 
     let viewController = UIViewController()
     dialog.fromViewController = viewController
-    dialog.mode = .shareSheet
     XCTAssertTrue(dialog.show())
 
     try validateInitialText(
@@ -486,44 +473,6 @@ final class ShareDialogTests: XCTestCase {
       expectedHashtag: "#hashtag",
       expectedQuotes: ["a quote"]
     )
-  }
-
-  func testCameraShareModesWhenNativeAvailable() throws {
-    let dialog = createEmptyDialog()
-    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
-    internalURLOpener.canOpenURL = true
-    internalUtility.isFacebookAppInstalled = true
-
-    // Check supported modes
-    dialog.mode = .automatic
-    XCTAssertNoThrow(try dialog.validate())
-
-    dialog.mode = .native
-    XCTAssertNoThrow(try dialog.validate())
-
-    // Check unsupported modes
-    dialog.mode = .web
-    XCTAssertThrowsError(try dialog.validate())
-
-    dialog.mode = .browser
-    XCTAssertThrowsError(try dialog.validate())
-
-    dialog.mode = .shareSheet
-    XCTAssertThrowsError(try dialog.validate())
-
-    dialog.mode = .feedWeb
-    XCTAssertThrowsError(try dialog.validate())
-
-    dialog.mode = .feedBrowser
-    XCTAssertThrowsError(try dialog.validate())
-  }
-
-  func testCameraShareModesWhenNativeUnavailable() {
-    let dialog = createEmptyDialog()
-    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
-
-    dialog.mode = .automatic
-    XCTAssertThrowsError(try dialog.validate())
   }
 
   func testPassingValidationForLinkQuoteWithValidShareExtensionVersion() {
@@ -572,10 +521,94 @@ final class ShareDialogTests: XCTestCase {
     )
   }
 
+  // MARK: - Feed web mode
+
+  func testCanShowFeedWeb() {
+    dialog = createEmptyDialog(mode: .feedWeb)
+
+    XCTAssertTrue(
+      dialog.canShow,
+      "A dialog without content should be showable in a web feed"
+    )
+
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    XCTAssertTrue(
+      dialog.canShow,
+      "A dialog with link content should be showable in a web feed"
+    )
+
+    dialog.shareContent = ShareModelTestUtility.photoContent
+    XCTAssertFalse(
+      dialog.canShow,
+      "A dialog with photo content should not be showable in a web feed"
+    )
+
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
+    XCTAssertFalse(
+      dialog.canShow,
+      "A dialog with video content and no preview photo should not be showable in a web feed"
+    )
+  }
+
+  func testValidateFeedWeb() throws {
+    dialog = createEmptyDialog(mode: .feedWeb)
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    XCTAssertNoThrow(try dialog.validate())
+
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
+    XCTAssertThrowsError(try dialog.validate())
+
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
+    XCTAssertThrowsError(try dialog.validate())
+  }
+
+  // MARK: - Automatic mode
+
+  func testCameraShareModesWhenNativeUnavailable() {
+    dialog = createEmptyDialog(mode: .automatic)
+    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
+
+    XCTAssertThrowsError(try dialog.validate())
+  }
+
+  // MARK: - Multiple modes
+
+  func testCameraShareModesWhenNativeAvailable() throws {
+    dialog = createEmptyDialog(mode: .automatic)
+    dialog.shareContent = ShareModelTestUtility.cameraEffectContent
+    internalURLOpener.canOpenURL = true
+    internalUtility.isFacebookAppInstalled = true
+
+    // Check supported modes
+    dialog.mode = .automatic
+    XCTAssertNoThrow(try dialog.validate())
+
+    dialog.mode = .native
+    XCTAssertNoThrow(try dialog.validate())
+
+    // Check unsupported modes
+    dialog.mode = .web
+    XCTAssertThrowsError(try dialog.validate())
+
+    dialog.mode = .browser
+    XCTAssertThrowsError(try dialog.validate())
+
+    dialog.mode = .shareSheet
+    XCTAssertThrowsError(try dialog.validate())
+
+    dialog.mode = .feedWeb
+    XCTAssertThrowsError(try dialog.validate())
+
+    dialog.mode = .feedBrowser
+    XCTAssertThrowsError(try dialog.validate())
+  }
+
   // MARK: - Helpers
 
-  func createEmptyDialog() -> ShareDialog {
-    ShareDialog(viewController: nil, content: nil, delegate: nil)
+  func createEmptyDialog(mode: ShareDialog.Mode) -> ShareDialog {
+    let dialog = ShareDialog(viewController: nil, content: nil, delegate: nil)
+    dialog.mode = mode
+    return dialog
   }
 
   func showAndValidate(
@@ -653,9 +686,8 @@ final class ShareDialogTests: XCTestCase {
     }
 
     let viewController = UIViewController()
-    let dialog = createEmptyDialog()
+    dialog = createEmptyDialog(mode: mode)
     dialog.shareContent = shareContent
-    dialog.mode = mode
     dialog.fromViewController = viewController
 
     if expectValid {
@@ -756,44 +788,50 @@ final class ShareDialogTests: XCTestCase {
 // MARK: - Assumptions
 
 fileprivate extension String {
-  static let usesInternalURLOpenerByDefault = """
-    The default internal URL opening dependency should be the shared UIApplication
-    """
-  static let usesInternalUtilityByDefault = """
-    The default internal utility dependency should be the shared InternalUtility
-    """
-  static let usesSettingsByDefault = "The default settings dependency should be the shared Settings"
-  static let usesShareUtilityByDefault = "The default share utility dependency should be the _ShareUtility class"
-  static let usesShareBridgeAPIRequestFactoryByDefault = """
-    The default bridge API request factory dependency should be a concrete ShareBridgeAPIRequestFactory
-    """
-  static let usesBridgeAPIByDefault = """
-    The default bridge API request opening dependency should be the shared BridgeAPI for its default
-    """
-  static let usesSocialComposeViewControllerFactoryByDefault = """
-    The default social compose view controller factory dependency should be a concrete \
-    SocialComposeViewControllerFactory
-    """
-  static let usesInternalUtilityAsWindowFinderByDefault = """
-    The default window finding dependency should be the shared InternalUtility
-    """
-  static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
-  static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
-  static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
-    The default media library searching dependency should be the default PHImageManager
-    """
+  enum DefaultDependencies {
+    static let usesInternalURLOpenerByDefault = """
+      The default internal URL opening dependency should be the shared UIApplication
+      """
+    static let usesInternalUtilityByDefault = """
+      The default internal utility dependency should be the shared InternalUtility
+      """
+    static let usesSettingsByDefault = "The default settings dependency should be the shared Settings"
+    static let usesShareUtilityByDefault = "The default share utility dependency should be the _ShareUtility class"
+    static let usesShareBridgeAPIRequestFactoryByDefault = """
+      The default bridge API request factory dependency should be a concrete ShareBridgeAPIRequestFactory
+      """
+    static let usesBridgeAPIByDefault = """
+      The default bridge API request opening dependency should be the shared BridgeAPI for its default
+      """
+    static let usesSocialComposeViewControllerFactoryByDefault = """
+      The default social compose view controller factory dependency should be a concrete \
+      SocialComposeViewControllerFactory
+      """
+    static let usesInternalUtilityAsWindowFinderByDefault = """
+      The default window finding dependency should be the shared InternalUtility
+      """
+    static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
+    static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
+    static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
+      The default media library searching dependency should be the default PHImageManager
+      """
+  }
 
-  static let usesCustomInternalURLOpener = "The internal URL opening dependency should be configurable"
-  static let usesCustomInternalUtility = "The internal utility dependency should be configurable"
-  static let usesCustomSettings = "The settings dependency should be configurable"
-  static let usesCustomShareUtility = "The share utility dependency should be configurable"
-  static let usesCustomShareBridgeAPIRequestFactory = "The bridge API request factory dependency should be configurable"
-  static let usesCustomBridgeAPIRequestOpener = "The bridge API request opening dependency should be configurable"
-  static let usesCustomSocialComposeViewControllerFactory = """
-    The social compose view controller factory dependency should be configurable
-    """
-  static let usesCustomWindowFinder = "The window finding dependency should be configurable"
-  static let usesCustomErrorFactory = "The error factory dependency should be configurable"
-  static let usesCustomEventLogger = "The event logging dependency should be configurable"
-  static let usesCustomMediaLibrarySearcher = "The media library searching dependency should be configurable"
+  enum CustomDependencies {
+    static let usesCustomInternalURLOpener = "The internal URL opening dependency should be configurable"
+    static let usesCustomInternalUtility = "The internal utility dependency should be configurable"
+    static let usesCustomSettings = "The settings dependency should be configurable"
+    static let usesCustomShareUtility = "The share utility dependency should be configurable"
+    static let usesCustomShareBridgeAPIRequestFactory = """
+      The bridge API request factory dependency should be configurable
+      """
+    static let usesCustomBridgeAPIRequestOpener = "The bridge API request opening dependency should be configurable"
+    static let usesCustomSocialComposeViewControllerFactory = """
+      The social compose view roller factory dependency should be configurable
+      """
+    static let usesCustomWindowFinder = "The window finding dependency should be configurable"
+    static let usesCustomErrorFactory = "The error factory dependency should be configurable"
+    static let usesCustomEventLogger = "The event logging dependency should be configurable"
+    static let usesCustomMediaLibrarySearcher = "The media library searching dependency should be configurable"
+  }
 }
