@@ -8,8 +8,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@protocol FBSDKLoginProviding;
-
+#import "FBSDKLoginProviding.h"
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
