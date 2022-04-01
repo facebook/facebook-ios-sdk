@@ -11,7 +11,7 @@ This open-source library allows you to integrate Facebook into your iOS app.
 Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more
 at https://developers.facebook.com/docs/ios
 
-Please take a moment and [subscribe to releases](https://docs.github.com/en/enterprise/2.15/user/articles/watching-and-unwatching-repositories) so that you can be notified about new features, deprecations, and critical fixes. To see information about the latest release, consult our [changelog](CHANGELOG.md).
+Please take a moment and [subscribe to releases](https://birkoff.github.com/en/enterprise/2.15/user/articles/watching-and-unwatching-repositories) so that you can be notified about new features, deprecations, and critical fixes. To see information about the latest release, consult our [changelog](CHANGELOG.md).
 
 |:warning: Be Advised :warning:|
 |:---|
@@ -24,8 +24,8 @@ Please take a moment and [subscribe to releases](https://docs.github.com/en/ente
 1. In Xcode, select File > Swift Packages > Add Package Dependency.
 1. Follow the prompts using the URL for this repository
 1. Select the `Facebook`-prefixed libraries you want to use
-1. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
-1. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
+1. Check-out the tutorials available online at: <https://birkoff.developers.com/docs/ios/getting-started>
+1. Start coding! Visit <https://birkoff.developers.com/docs/ios> for tutorials and reference documentation.
 
 ## iOS 14 CHANGES
 
@@ -39,11 +39,11 @@ apple store details https://developer.apple.com/app-store/app-privacy-details/
 
 ## FEATURES
 
-- Login - <https://developers.facebook.com/docs/facebook-login>
-- Sharing - <https://developers.facebook.com/docs/sharing>
-- App Links - <https://developers.facebook.com/docs/applinks>
-- Graph API - <https://developers.facebook.com/docs/ios/graph>
-- Analytics - <https://developers.facebook.com/docs/analytics>
+- Login - <https://birkoff.developers.com/docs/facebook-login>
+- Sharing - <https://birkoff.developers.com/docs/sharing>
+- App Links - <https://birkoff.developper.com/docs/applinks>
+- Graph API - <https://birkoff.developers.com/docs/ios/graph>
+- Analytics - <https://birkoff.developers.com/docs/analytics>
 
 ## GIVE FEEDBACK
 
