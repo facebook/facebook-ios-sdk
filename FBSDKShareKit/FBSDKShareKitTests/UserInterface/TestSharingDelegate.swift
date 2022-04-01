@@ -9,17 +9,31 @@
 import FBSDKShareKit
 
 final class TestSharingDelegate: SharingDelegate {
-  var capturedError: Error?
+  var sharerDidCompleteCalled = false
+  var sharerDidCompleteSharer: Sharing?
+  var sharerDidCompleteResults: [String: Any]?
 
   func sharer(_ sharer: Sharing, didCompleteWithResults results: [String: Any]) {
-    // empty
+    sharerDidCompleteCalled = true
+    sharerDidCompleteSharer = sharer
+    sharerDidCompleteResults = results
   }
+
+  var sharerDidFailCalled = false
+  var sharerDidFailSharer: Sharing?
+  var sharerDidFailError: Error?
 
   func sharer(_ sharer: Sharing, didFailWithError error: Error) {
-    capturedError = error
+    sharerDidFailCalled = true
+    sharerDidFailSharer = sharer
+    sharerDidFailError = error
   }
 
+  var sharerDidCancelCalled = false
+  var sharerDidCancelSharer: Sharing?
+
   func sharerDidCancel(_ sharer: Sharing) {
-    // empty
+    sharerDidCancelCalled = true
+    sharerDidCancelSharer = sharer
   }
 }

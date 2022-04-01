@@ -106,7 +106,7 @@ final class MessageDialogTests: XCTestCase {
       code: ShareError.dialogNotAvailable.rawValue,
       userInfo: [ErrorDeveloperMessageKey: "Message dialog is not available."]
     )
-    XCTAssertEqual(delegate.capturedError as NSError?, error)
+    XCTAssertEqual(delegate.sharerDidFailError as NSError?, error)
   }
 
   func testShowInvokesDelegateWhenMissingContent() throws {
@@ -115,7 +115,7 @@ final class MessageDialogTests: XCTestCase {
     dialog.show()
 
     let error = try XCTUnwrap(
-      delegate.capturedError,
+      delegate.sharerDidFailError,
       "The delegate should receive a callback with an error"
     ) as NSError
 
@@ -148,7 +148,7 @@ final class MessageDialogTests: XCTestCase {
     dialog.show()
 
     let error = try XCTUnwrap(
-      delegate.capturedError,
+      delegate.sharerDidFailError,
       "The delegate should receive a callback with an error"
     ) as NSError
 
