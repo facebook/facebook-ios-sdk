@@ -58,7 +58,7 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
    */
   public var shouldFailOnDataError = false
 
-  private var webDialog: WebDialog?
+  var webDialog: WebDialog?
   private var temporaryFiles = [URL]()
 
   /**

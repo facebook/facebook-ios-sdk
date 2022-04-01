@@ -81,7 +81,11 @@ public final class TestInternalUtility: NSObject,
 
   public func registerTransientObject(_ object: Any) {}
 
-  public func unregisterTransientObject(_ object: Any) {}
+  public var unregisterTransientObjectObject: Any?
+
+  public func unregisterTransientObject(_ object: Any) {
+    unregisterTransientObjectObject = object
+  }
 
   public func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 

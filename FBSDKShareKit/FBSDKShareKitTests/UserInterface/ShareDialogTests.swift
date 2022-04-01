@@ -17,6 +17,7 @@ final class ShareDialogTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var dialog: ShareDialog!
+  var delegate: TestSharingDelegate!
   var internalURLOpener: TestInternalURLOpener!
   var internalUtility: TestInternalUtility!
   var settings: TestSettings!
@@ -36,6 +37,7 @@ final class ShareDialogTests: XCTestCase {
     AccessToken.current = nil
     TestShareUtility.reset()
 
+    delegate = TestSharingDelegate()
     internalURLOpener = TestInternalURLOpener()
     internalUtility = TestInternalUtility()
     settings = TestSettings()
@@ -638,10 +640,152 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertThrowsError(try dialog.validate())
   }
 
+  // MARK: - WebDialogDelegate
+
+  func testWebDialogDelegateCancellation() {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    dialog.webDialogDidCancel(webDialog)
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidCancelCalled, .WebDialogDelegate.didCancelCalled)
+    XCTAssertIdentical(delegate.sharerDidCancelSharer, dialog, .WebDialogDelegate.didCancelCalled)
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testWebDialogDelegateFailure() throws {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    let error = TestSDKError(type: .unknown)
+    dialog.webDialog(webDialog, didFailWithError: error)
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidFailCalled, .WebDialogDelegate.didFailCalled)
+    XCTAssertIdentical(delegate.sharerDidFailSharer, dialog, .WebDialogDelegate.didFailCalled)
+    XCTAssertIdentical(delegate.sharerDidFailError as AnyObject, error, .WebDialogDelegate.didFailCalled)
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testWebDialogDelegateCompletionWithCancelErrorCode() {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    dialog.webDialog(webDialog, didCompleteWithResults: ["error_code": 4201])
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidCancelCalled, .WebDialogDelegate.didCancelCalled)
+    XCTAssertIdentical(delegate.sharerDidCancelSharer, dialog, .WebDialogDelegate.didCancelCalled)
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testWebDialogDelegateCompletionWithError() throws {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    dialog.webDialog(
+      webDialog,
+      didCompleteWithResults: [
+        "error_code": 123,
+        "error_message": "message",
+      ]
+    )
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidFailCalled, .WebDialogDelegate.didFailCalled)
+    XCTAssertIdentical(delegate.sharerDidFailSharer, dialog, .WebDialogDelegate.didFailCalled)
+    let error = try XCTUnwrap(delegate.sharerDidFailError as? TestSDKError, .WebDialogDelegate.didFailCalled)
+    XCTAssertEqual(error.domain, ShareErrorDomain, .WebDialogDelegate.didFailCalled)
+    XCTAssertEqual(error.code, ShareError.unknown.rawValue, .WebDialogDelegate.didFailCalled)
+    XCTAssertEqual(error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int, 123, .WebDialogDelegate.didFailCalled)
+    XCTAssertEqual(error.message, "message", .WebDialogDelegate.didFailCalled)
+    XCTAssertNil(error.underlyingError, .WebDialogDelegate.didFailCalled)
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testWebDialogDelegateCompletionWithCompletionGestureCancellation() {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    dialog.webDialog(
+      webDialog,
+      didCompleteWithResults: [
+        ShareBridgeAPI.CompletionGesture.key: ShareBridgeAPI.CompletionGesture.cancelValue,
+        "error_code": 0,
+      ]
+    )
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidCancelCalled, .WebDialogDelegate.didCancelCalled)
+    XCTAssertIdentical(delegate.sharerDidCancelSharer, dialog, .WebDialogDelegate.didCancelCalled)
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testWebDialogDelegateCompletion() throws {
+    dialog = createEmptyDialog(mode: .web)
+    let webDialog = WebDialog(name: "test", delegate: dialog)
+    dialog.webDialog = webDialog
+    dialog.webDialog(
+      webDialog,
+      didCompleteWithResults: [
+        ShareBridgeAPI.PostIDKey.webParameters: "my-post",
+        "error_code": 0,
+      ]
+    )
+
+    XCTAssertNil(dialog.webDialog, .WebDialogDelegate.clearsWebDialog)
+
+    XCTAssertTrue(delegate.sharerDidCompleteCalled, .WebDialogDelegate.didCompleteCalled)
+    XCTAssertIdentical(delegate.sharerDidCompleteSharer, dialog, .WebDialogDelegate.didCompleteCalled)
+    let results = try XCTUnwrap(delegate.sharerDidCompleteResults, .WebDialogDelegate.didCompleteCalled)
+    XCTAssertEqual(
+      results[ShareBridgeAPI.PostIDKey.results] as? String,
+      "my-post",
+      .WebDialogDelegate.didCompleteCalled
+    )
+
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
   // MARK: - Helpers
 
   func createEmptyDialog(mode: ShareDialog.Mode) -> ShareDialog {
-    let dialog = ShareDialog(viewController: nil, content: nil, delegate: nil)
+    let dialog = ShareDialog(viewController: nil, content: nil, delegate: delegate)
     dialog.mode = mode
     return dialog
   }
@@ -873,5 +1017,13 @@ fileprivate extension String {
   enum Construction {
     static let createViaClassFactoryMethod = "Can create a dialog with a class factory method"
     static let createViaClassShowMethod = "Can create and show a dialog with the class `show` method"
+  }
+
+  enum WebDialogDelegate {
+    static let didCancelCalled = "A dialog invokes its delegate's cancellation method"
+    static let didFailCalled = "A dialog invokes its delegate's failure method"
+    static let didCompleteCalled = "A dialog invokes its delegate's completion method"
+    static let clearsWebDialog = "A dialog clears its web dialog"
+    static let unregistersTransientObject = "A dialog unregisters itself as a transient object"
   }
 }
