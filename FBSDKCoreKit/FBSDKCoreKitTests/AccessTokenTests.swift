@@ -153,10 +153,7 @@ final class AccessTokenTests: XCTestCase {
   func testEncodingAndDecoding() throws {
     // Encode and Decode
     let token = SampleAccessTokens.validToken
-    let encodedData = try NSKeyedArchiver.archivedData(withRootObject: token, requiringSecureCoding: false)
-    let decodedToken = try XCTUnwrap(
-      try NSKeyedUnarchiver.unarchivedObject(ofClass: AccessToken.self, from: encodedData)
-    )
+    let decodedToken = try XCTUnwrap(CodabilityTesting.encodeAndDecode(token))
 
     // Test Objects
     XCTAssertEqual(decodedToken, token, .isCodable)

@@ -9,6 +9,7 @@
 @testable import FBAEMKit
 
 import XCTest
+import TestTools
 
 final class AEMInvocationTests: XCTestCase {
 
@@ -1043,165 +1044,38 @@ final class AEMInvocationTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
-    let invocation: _AEMInvocation = validInvocation
-    invocation.encode(with: coder)
+  func testEncodingAndDecoding() throws {
+    // Encode and Decode
+    let object = validInvocation
+    let decodedObject = try CodabilityTesting.encodeAndDecode(object)
 
-    XCTAssertEqual(
-      coder.encodedObject[Keys.campaignID] as? String,
-      invocation.campaignID,
-      "Should encode the expected campaignID with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.ACSToken] as? String,
-      invocation.acsToken,
-      "Should encode the expected acsToken with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.ACSSharedSecret] as? String,
-      invocation.acsSharedSecret,
-      "Should encode the expected ACSSharedSecret with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.ACSConfigID] as? String,
-      invocation.acsConfigID,
-      "Should encode the expected acsConfigID with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.catalogID] as? String,
-      invocation.catalogID,
-      "Should encode the expected catalogID with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.timestamp] as? Date,
-      invocation.timestamp,
-      "Should encode the expected timestamp with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.configMode] as? String,
-      invocation.configMode,
-      "Should encode the expected configMode with the correct key"
-    )
-    let configID = coder.encodedObject[Keys.configID] as? NSNumber
-    XCTAssertEqual(
-      configID?.intValue,
-      invocation.configID,
-      "Should encode the expected configID with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.recordedEvents] as? NSSet,
-      invocation.recordedEvents,
-      "Should encode the expected recordedEvents with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.recordedValues] as? NSDictionary,
-      invocation.recordedValues,
-      "Should encode the expected recordedValues with the correct key"
-    )
-    let conversionValue = coder.encodedObject[Keys.conversionValue] as? NSNumber
-    XCTAssertEqual(
-      conversionValue?.intValue,
-      invocation.conversionValue,
-      "Should encode the expected conversionValue with the correct key"
-    )
-    let priority = coder.encodedObject[Keys.priority] as? NSNumber
-    XCTAssertEqual(
-      priority?.intValue,
-      invocation.priority,
-      "Should encode the expected priority with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.conversionTimestamp] as? Date,
-      invocation.conversionTimestamp,
-      "Should encode the expected conversionTimestamp with the correct key"
-    )
-    let isAggregated = coder.encodedObject[Keys.isAggregated] as? NSNumber
-    XCTAssertEqual(
-      isAggregated?.boolValue,
-      invocation.isAggregated,
-      "Should encode the expected isAggregated with the correct key"
-    )
-    let hasSKAN = coder.encodedObject[Keys.hasSKAN] as? NSNumber
-    XCTAssertEqual(
-      hasSKAN?.boolValue,
-      invocation.hasSKAN,
-      "Should encode the expected hasSKAN with the correct key"
-    )
+    // Test Objects
+    // XCTAssertEqual(decodedObject, invocation, .isCodable) // Doesn't work since isEqual not implemented
+    XCTAssertNotIdentical(decodedObject, object, .isCodable)
+
+    // Test Properties
+    XCTAssertEqual(decodedObject.campaignID, object.campaignID, .isCodable)
+    XCTAssertEqual(decodedObject.acsToken, object.acsToken, .isCodable)
+    XCTAssertEqual(decodedObject.acsSharedSecret, object.acsSharedSecret, .isCodable)
+    XCTAssertEqual(decodedObject.acsConfigID, object.acsConfigID, .isCodable)
+    XCTAssertEqual(decodedObject.businessID, object.businessID, .isCodable)
+    XCTAssertEqual(decodedObject.catalogID, object.catalogID, .isCodable)
+    XCTAssertEqual(decodedObject.timestamp, object.timestamp, .isCodable)
+    XCTAssertEqual(decodedObject.configMode, object.configMode, .isCodable)
+    XCTAssertEqual(decodedObject.configID, object.configID, .isCodable)
+    XCTAssertEqual(decodedObject.recordedEvents, object.recordedEvents, .isCodable)
+    XCTAssertEqual(decodedObject.recordedValues, object.recordedValues, .isCodable)
+    XCTAssertEqual(decodedObject.conversionValue, object.conversionValue, .isCodable)
+    XCTAssertEqual(decodedObject.priority, object.priority, .isCodable)
+    XCTAssertEqual(decodedObject.conversionTimestamp, object.conversionTimestamp, .isCodable)
+    XCTAssertEqual(decodedObject.isAggregated, object.isAggregated, .isCodable)
+    XCTAssertEqual(decodedObject.hasSKAN, object.hasSKAN, .isCodable)
+    XCTAssertEqual(decodedObject.isConversionFilteringEligible, object.isConversionFilteringEligible, .isCodable)
   }
+}
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = _AEMInvocation(coder: decoder)
+// MARK: - Assumptions
 
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.campaignID] is NSString.Type,
-      "Should decode the expected type for the campaign_id key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ACSToken] is NSString.Type,
-      "Should decode the expected type for the acs_token key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ACSSharedSecret] is NSString.Type,
-      "Should decode the expected type for the shared_secret key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ACSConfigID] is NSString.Type,
-      "Should decode the expected type for the acs_config_id key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.businessID] is NSString.Type,
-      "Should decode the expected type for the advertiser_id key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.catalogID] is NSString.Type,
-      "Should decode the expected type for the catalog_id key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.timestamp] is NSDate.Type,
-      "Should decode the expected type for the timestamp key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.configMode] is NSString.Type,
-      "Should decode the expected type for the config_mode key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.configID] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the config_id key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.recordedEvents] is NSSet.Type,
-      "Should decode the expected type for the recorded_events key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.recordedValues] is NSDictionary.Type,
-      "Should decode the expected type for the recorded_values key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.conversionValue] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the conversion_value key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.priority] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the priority key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.conversionTimestamp] is NSDate.Type,
-      "Should decode the expected type for the conversion_timestamp key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.isAggregated] as? String,
-      "decodeBoolForKey",
-      "Should decode the expected type for the is_aggregated key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.hasSKAN] as? String,
-      "decodeBoolForKey",
-      "Should decode the expected type for the has_skan key"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "AEMInvocation should be encodable and decodable"
 }
