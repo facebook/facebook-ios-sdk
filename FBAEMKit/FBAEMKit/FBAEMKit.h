@@ -11,7 +11,6 @@
 #import <FBAEMKit/FBSKAdNetworkReporting.h>
 
 // Temporarily public
-#import <FBAEMKit/FBAEMAdvertiserMultiEntryRule.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleFactory.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleOperator.h>

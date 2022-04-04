@@ -14,7 +14,6 @@
 
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
-#import "FBAEMAdvertiserMultiEntryRule.h"
 #import "FBAEMAdvertiserSingleEntryRule.h"
 
 static NSString *const DEFAULT_CURRENCY_KEY = @"default_currency";

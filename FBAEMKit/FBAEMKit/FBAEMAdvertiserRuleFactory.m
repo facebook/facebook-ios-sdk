@@ -14,7 +14,6 @@
 
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
-#import "FBAEMAdvertiserMultiEntryRule.h"
 #import "FBAEMAdvertiserSingleEntryRule.h"
 
 @implementation FBAEMAdvertiserRuleFactory

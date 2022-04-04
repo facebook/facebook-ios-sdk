@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBAEMAdvertiserMultiEntryRule.h"
+@class FBAEMAdvertiserMultiEntryRule;
+
 #import "FBAEMAdvertiserRuleFactory.h"
 #import "FBAEMAdvertiserSingleEntryRule.h"
 

@@ -181,12 +181,13 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
     let entryRule = SampleAEMData.validAdvertiserMultiEntryRule
     entryRule.encode(with: coder)
 
-    let ruleOperator = coder.encodedObject[Keys.ruleOperator] as? NSNumber
+    let ruleOperator = try XCTUnwrap(coder.encodedObject[Keys.ruleOperator] as? _AEMAdvertiserRuleOperator)
     XCTAssertEqual(
-      ruleOperator?.intValue,
-      entryRule.operator.rawValue,
+      ruleOperator,
+      entryRule.operator,
       "Should encode the expected operator with the correct key"
     )
+
     let rules = try XCTUnwrap(coder.encodedObject[Keys.rules] as? [_AEMAdvertiserRuleMatching])
     let rule = try XCTUnwrap(rules[0] as? _AEMAdvertiserSingleEntryRule)
     let expectedRule = try XCTUnwrap(entryRule.rules[0] as? _AEMAdvertiserSingleEntryRule)
