@@ -16,7 +16,6 @@
 #import <FBAEMKit/FBAEMAdvertiserRuleOperator.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleProviding.h>
 #import <FBAEMKit/FBAEMAdvertiserSingleEntryRule.h>
-#import <FBAEMKit/FBAEMConfiguration.h>
 #import <FBAEMKit/FBAEMInvocation.h>
 #import <FBAEMKit/FBAEMKit.h>
 #import <FBAEMKit/FBAEMKit-Prefix-Header.h>

@@ -12,7 +12,7 @@
 
  #import <Foundation/Foundation.h>
 
- #import <FBAEMKit/FBAEMConfiguration.h>
+@class FBAEMConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
