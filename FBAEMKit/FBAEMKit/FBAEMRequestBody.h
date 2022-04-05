@@ -30,6 +30,10 @@ NS_SWIFT_NAME(_AEMRequestBody)
 
 - (nullable NSData *)compressedData;
 
+ #if FBTEST && DEBUG
+@property (nonatomic, readonly, retain) NSData *multipartData;
+ #endif
+
 @end
 
 NS_ASSUME_NONNULL_END

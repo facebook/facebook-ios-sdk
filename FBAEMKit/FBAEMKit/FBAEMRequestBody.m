@@ -104,6 +104,11 @@ typedef void (^AEMCodeBlock)(void);
   return [FBSDKBasicUtility gzip:self.data];
 }
 
+- (NSData *)multipartData
+{
+  return _data;
+}
+
 @end
 
 #endif

@@ -14,4 +14,5 @@
 #import "FBAEMAdvertiserSingleEntryRule+Testing.h"
 #import "FBAEMInvocation+Testing.h"
 #import "FBAEMReporter+Testing.h"
+#import "FBAEMRequestBody.h"
 #import "FBAEMUtility.h"
