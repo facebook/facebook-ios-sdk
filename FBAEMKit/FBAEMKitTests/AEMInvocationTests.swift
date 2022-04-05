@@ -8,8 +8,8 @@
 
 @testable import FBAEMKit
 
-import XCTest
 import TestTools
+import XCTest
 
 final class AEMInvocationTests: XCTestCase {
 
