@@ -115,48 +115,29 @@ final class AppEventsConfigurationTests: XCTestCase {
 
   // MARK: Coding
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     config = AppEventsConfiguration.default()
-    config.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(config)
 
+    // Test Objects
+    XCTAssertNotIdentical(decodedObject, config, .isCodable)
+    XCTAssertEqual(decodedObject, config, .isCodable)
+
+    // Test Properties
     XCTAssertEqual(
-      coder.encodedObject["default_ate_status"] as? Int,
-      Int(config.defaultATEStatus.rawValue),
-      "Should encode the expected default ate status value as an integer"
+      config.defaultATEStatus,
+      decodedObject.defaultATEStatus,
+      .isCodable
     )
     XCTAssertEqual(
-      coder.encodedObject["advertiser_id_collection_enabled"] as? Bool,
       config.advertiserIDCollectionEnabled,
-      "Should encode the expected advertiser ID collection enabled value"
+      decodedObject.advertiserIDCollectionEnabled,
+      .isCodable
     )
     XCTAssertEqual(
-      coder.encodedObject["event_collection_enabled"] as? Bool,
       config.eventCollectionEnabled,
-      "Should encode the expected eventCollectionEnabled value"
-    )
-  }
-
-  func testDecoding() {
-    let coder = TestCoder()
-    _ = AppEventsConfiguration(coder: coder)
-
-    config.encode(with: coder)
-
-    XCTAssertEqual(
-      coder.decodedObject["default_ate_status"] as? String,
-      "decodeIntegerForKey",
-      "Initializing from a decoder should attempt to decode an int for the ate status key"
-    )
-    XCTAssertEqual(
-      coder.decodedObject["advertiser_id_collection_enabled"] as? String,
-      "decodeBoolForKey",
-      "Initializing from a decoder should attempt to decode an int for the advertiser ID collection enabled key"
-    )
-    XCTAssertEqual(
-      coder.decodedObject["event_collection_enabled"] as? String,
-      "decodeBoolForKey",
-      "Initializing from a decoder should attempt to decode an int for the event collection enabled key"
+      decodedObject.eventCollectionEnabled,
+      .isCodable
     )
   }
 }
@@ -172,4 +153,8 @@ extension AppEventsConfiguration {
       return super.isEqual(object)
     }
   }
+}
+
+fileprivate extension String {
+  static let isCodable = "AppEventsConfiguration should be encodable and decodable"
 }
