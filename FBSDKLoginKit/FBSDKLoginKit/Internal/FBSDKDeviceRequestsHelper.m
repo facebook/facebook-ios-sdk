@@ -32,6 +32,15 @@ static NSMapTable *g_mdnsAdvertisementServices;
 
 @implementation FBSDKDeviceRequestsHelper
 
+#if DEBUG
+
++ (NSMapTable<id<NSNetServiceDelegate>, id> *)mdnsAdvertisementServices
+{
+  return g_mdnsAdvertisementServices;
+}
+
+#endif
+
 #pragma mark - Class Methods
 
 + (void)initialize
