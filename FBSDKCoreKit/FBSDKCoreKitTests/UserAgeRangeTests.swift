@@ -81,40 +81,20 @@ final class UserAgeRangeTests: XCTestCase {
     )
   }
 
-  func testEncoding() throws {
+  func testEncodingAndDecoding() throws {
     let dict: [String: NSNumber] = ["min": 1, "max": 2]
     let ageRange = try XCTUnwrap(
       UserAgeRange(from: dict),
       "Should be able to create UserAgeRange with min value specified"
     )
-
-    let coder = TestCoder()
-    ageRange.encode(with: coder)
-
-    XCTAssertTrue(
-      coder.encodedObject["FBSDKUserAgeRangeMinCodingKey"] as? NSNumber == ageRange.min,
-      "Should encode the expected min value"
-    )
-
-    XCTAssertTrue(
-      coder.encodedObject["FBSDKUserAgeRangeMaxCodingKey"] as? NSNumber == ageRange.max,
-      "Should encode the expected max value"
-    )
+    let decodedObject = try CodabilityTesting.encodeAndDecode(ageRange)
+    XCTAssertEqual(ageRange.min, decodedObject.min, .isCodable)
+    XCTAssertEqual(ageRange.max, decodedObject.max, .isCodable)
   }
+}
 
-  func testDecoding() {
-    let coder = TestCoder()
-    let ageRange = UserAgeRange(coder: coder)
-    XCTAssertNotNil(ageRange)
+// MARK: - Assumptions
 
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKUserAgeRangeMinCodingKey"] as? Any.Type == NSNumber.self,
-      "Should decode a number for the min key"
-    )
-
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKUserAgeRangeMaxCodingKey"] as? Any.Type == NSNumber.self,
-      "Should decode a number for the min key"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "UserAgeRange should be encodable and decodable"
 }
