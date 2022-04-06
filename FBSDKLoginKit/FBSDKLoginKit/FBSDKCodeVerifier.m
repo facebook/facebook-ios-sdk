@@ -14,6 +14,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKCodeVerifier
 
 // Number of random bytes generated for the codeVerifier.
@@ -65,7 +67,7 @@ static NSUInteger const CODE_VERIFIER_BYTES = 72;
 
 + (NSString *)base64URLEncodeDataWithNoPadding:(NSData *)data
 {
-  NSString *base64 = [FBSDKBase64 encodeData:data];
+  NSString *base64 = [data base64EncodedStringWithOptions:0];
   NSString *base64Url = [base64 stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
   base64Url = [base64Url stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
 

@@ -82,7 +82,7 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
 
   @objc(validateWithOptions:error:)
   public func validate(options: ShareBridgeOptions = []) throws {
-    try _ShareUtility.validateRequiredValue(message, name: "message")
+    try _ShareUtility.validateRequiredValue(message, named: "message")
 
     let errorFactory = ErrorFactory()
     let mustHaveObjectID = (actionType == .send) || (actionType == .askFor)
@@ -141,24 +141,16 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
       )
     }
 
-    let validActionTypes = [GameRequestActionType.none, .send, .askFor, .turn, .invite]
-      .map(\.rawValue)
-      .map(NSNumber.init)
-
     try _ShareUtility.validateArgument(
-      withName: "actionType",
-      value: actionType.rawValue,
-      isIn: validActionTypes
+      actionType,
+      named: "actionType",
+      in: [.none, .send, .askFor, .turn, .invite]
     )
 
-    let validFilters = [GameRequestFilter.none, .appUsers, .appNonUsers, .everybody]
-      .map(\.rawValue)
-      .map(NSNumber.init)
-
     try _ShareUtility.validateArgument(
-      withName: "filters",
-      value: filters.rawValue,
-      isIn: validFilters
+      filters,
+      named: "filters",
+      in: [.none, .appUsers, .appNonUsers, .everybody]
     )
   }
 

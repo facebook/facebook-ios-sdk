@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -108,7 +109,7 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     let keys = [
       "name", "given_name", "middle_name", "family_name", "email",
       "picture", "user_friends", "user_birthday", "user_age_range",
-      "user_hometown", "user_location", "user_gender", "user_link"
+      "user_hometown", "user_location", "user_gender", "user_link",
     ]
 
     try keys.forEach { key in
@@ -150,7 +151,8 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     XCTAssertNil(AuthenticationTokenClaims(fromEncodedString: encoded, nonce: nonce))
   }
 
-  func testDecodeRandomClaims() throws {
+  // swiftlint:disable:next identifier_name
+  func _testDecodeRandomClaims() throws {
     try XCTSkipIf(true) // see T98167812
 
     try (0 ..< 100).forEach { _ in
@@ -186,11 +188,11 @@ extension AuthenticationTokenClaimsTests {
       userAgeRange: ["min": 21],
       userHometown: [
         "id": "112724962075996",
-        "name": "Martinez, California"
+        "name": "Martinez, California",
       ],
       userLocation: [
         "id": "110843418940484",
-        "name": "Seattle, Washington"
+        "name": "Seattle, Washington",
       ],
       userGender: "male",
       userLink: "facebook.com"
@@ -205,7 +207,7 @@ extension AuthenticationTokenClaimsTests {
       "exp": claims.exp,
       "iat": claims.iat,
       "jti": claims.jti,
-      "sub": claims.sub
+      "sub": claims.sub,
     ]
 
     let optionalValues: [String: Any?] = [
@@ -221,7 +223,7 @@ extension AuthenticationTokenClaimsTests {
       "user_hometown": claims.userHometown,
       "user_location": claims.userLocation,
       "user_gender": claims.userGender,
-      "user_link": claims.userLink
+      "user_link": claims.userLink,
     ]
 
     for (key, potentialValue) in optionalValues {
@@ -234,7 +236,7 @@ extension AuthenticationTokenClaimsTests {
   }
 
   func base64URLEncodeData(_ data: Data) -> String {
-    Base64.encode(data)! // swiftlint:disable:this force_unwrapping
+    data.base64EncodedString()
       .replacingOccurrences(of: "+", with: "-")
       .replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")

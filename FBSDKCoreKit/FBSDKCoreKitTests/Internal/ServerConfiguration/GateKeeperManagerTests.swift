@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -215,7 +216,7 @@ final class GateKeeperManagerTests: XCTestCase {
       GateKeeperManager.gateKeepers as NSDictionary?,
       [
         "key": "foo",
-        "value": true
+        "value": true,
       ],
       "Loading gatekeepers should update local gatekeepers with those from the persistent store"
     )
@@ -279,7 +280,7 @@ final class GateKeeperManagerTests: XCTestCase {
     )
     XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      [.disableErrorRecovery],
+      [GraphRequestFlags.skipClientToken, GraphRequestFlags.disableErrorRecovery],
       "Should provide the expected graph request flags"
     )
   }
@@ -334,7 +335,7 @@ final class GateKeeperManagerTests: XCTestCase {
 
     let expected = [
       "foo": true,
-      "bar": false
+      "bar": false,
     ] as NSDictionary
 
     XCTAssertEqual(

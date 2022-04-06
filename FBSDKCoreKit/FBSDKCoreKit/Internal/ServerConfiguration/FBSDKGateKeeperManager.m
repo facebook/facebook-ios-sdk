@@ -31,7 +31,7 @@
 
 static BOOL _canLoadGateKeepers = NO;
 static NSDictionary<NSString *, id> *_gateKeepers;
-static NSMutableArray *_completionBlocks;
+static NSMutableArray<FBSDKGKManagerBlock> *_completionBlocks;
 static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
 static BOOL _loadingGateKeepers = NO;
@@ -144,14 +144,14 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];
   [FBSDKTypeUtility dictionary:parameters setObject:_settings.sdkVersion forKey:@"sdk_version"];
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
+  [FBSDKTypeUtility dictionary:parameters setObject:UIDevice.currentDevice.systemVersion forKey:@"os_version"];
 
   return [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                                     _settings.appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
-                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 + (void)processLoadRequestResponse:(id)result error:(NSError *)error
@@ -163,7 +163,7 @@ static id<FBSDKDataPersisting> _store;
       // Update the timestamp only when there is no error
       _timestamp = [NSDate date];
 
-      NSMutableDictionary<NSString *, id> *gateKeeper = [_gateKeepers mutableCopy];
+      NSMutableDictionary<NSString *, id> *gateKeeper = _gateKeepers.mutableCopy;
       if (!gateKeeper) {
         gateKeeper = [NSMutableDictionary new];
       }
@@ -202,7 +202,7 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)_didProcessGKFromNetwork:(NSError *)error
 {
-  NSArray *completionBlocks = [NSArray arrayWithArray:_completionBlocks];
+  NSArray<FBSDKGKManagerBlock> *completionBlocks = [NSArray arrayWithArray:_completionBlocks];
   [_completionBlocks removeAllObjects];
   for (FBSDKGKManagerBlock completionBlock in completionBlocks) {
     completionBlock(error);

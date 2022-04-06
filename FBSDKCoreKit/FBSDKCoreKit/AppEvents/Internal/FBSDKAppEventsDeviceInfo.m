@@ -195,7 +195,7 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   // Keep a bit of precision on density as it's the most likely to become non-integer.
   NSString *densityString = _density ? [NSString stringWithFormat:@"%.02f", _density] : @"";
 
-  NSArray *arr = @[
+  NSArray<id> *arr = @[
     @"i2", // version - starts with 'i' for iOS, we'll use 'a' for Android
     self.bundleIdentifier ?: @"",
     self.longVersion ?: @"",

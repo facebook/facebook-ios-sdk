@@ -34,9 +34,9 @@ Subclasses should generally:
 
 - (void)loadView
 {
-  CGRect frame = [UIScreen mainScreen].bounds;
+  CGRect frame = UIScreen.mainScreen.bounds;
   FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  NSUInteger cachedSmartLoginOptions = [provider cachedSmartLoginOptions];
+  NSUInteger cachedSmartLoginOptions = provider.cachedSmartLoginOptions;
   NSUInteger smartLoginEnabledOption = 1 << 0;
   BOOL smartLoginEnabled = cachedSmartLoginOptions & smartLoginEnabledOption;
   FBSDKDeviceDialogView *deviceView =
@@ -66,7 +66,7 @@ Subclasses should generally:
     UIView *presentedView = [transitionContext viewForKey:UITransitionContextToViewKey];
     // animate the view to slide in from bottom
     presentedView.center = CGPointMake(presentedView.center.x, presentedView.center.y + CGRectGetHeight(presentedView.bounds));
-    UIView *containerView = [transitionContext containerView];
+    UIView *containerView = transitionContext.containerView;
     [containerView addSubview:presentedView];
     [UIView animateWithDuration:kAnimationDurationTimeInterval
                           delay:0

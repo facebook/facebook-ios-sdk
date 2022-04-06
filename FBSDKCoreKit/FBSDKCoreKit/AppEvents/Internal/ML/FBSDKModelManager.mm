@@ -110,7 +110,7 @@ static dispatch_once_t enableNonce;
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-            NSArray *rawModels = resultDictionary[MODEL_DATA_KEY];
+            NSArray<NSDictionary<NSString *, id> *> *rawModels = resultDictionary[MODEL_DATA_KEY];
             if ([rawModels isKindOfClass:NSArray.class]) {
               NSDictionary<NSString *, id> *modelInfo = [weakSelf.class convertToDictionary:rawModels];
               if (modelInfo) {
@@ -172,12 +172,12 @@ static dispatch_once_t enableNonce;
   return nil;
 }
 
-- (nullable NSArray *)getThresholdsForKey:(NSString *)useCase
+- (nullable NSArray<NSNumber *> *)getThresholdsForKey:(NSString *)useCase
 {
   if (!_modelInfo) {
     return nil;
   }
-  NSDictionary<NSString *, id> *modelInfo = _modelInfo[useCase];
+  NSDictionary<NSString *, NSArray<NSNumber *> *> *modelInfo = _modelInfo[useCase];
   if (!modelInfo) {
     return nil;
   }
@@ -200,7 +200,7 @@ static dispatch_once_t enableNonce;
     if ((int)strlen(bytes) == 0) {
       return false;
     }
-    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskIntegrityDetectKey];
+    NSArray<NSNumber *> *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskIntegrityDetectKey];
     if (thresholds.count != integrityMapping.count) {
       return false;
     }
@@ -232,7 +232,7 @@ static dispatch_once_t enableNonce;
       return SUGGESTED_EVENT_OTHER;
     }
 
-    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskAppEventPredKey];
+    NSArray<NSNumber *> *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskAppEventPredKey];
     if (thresholds.count != eventMapping.count) {
       return SUGGESTED_EVENT_OTHER;
     }

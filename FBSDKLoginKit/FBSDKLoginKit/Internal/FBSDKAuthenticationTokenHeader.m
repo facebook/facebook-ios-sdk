@@ -6,9 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import "FBSDKAuthenticationTokenHeader.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 @implementation FBSDKAuthenticationTokenHeader
 
@@ -64,3 +68,5 @@
 }
 
 @end
+
+#endif

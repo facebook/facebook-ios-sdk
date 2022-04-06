@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class IntegrityManagerTests: XCTestCase {
@@ -82,7 +84,7 @@ final class IntegrityManagerTests: XCTestCase {
 
     processor.stubbedParameters = [
       "address": true,
-      "period_starts": true
+      "period_starts": true,
     ]
 
     let processed = try XCTUnwrap(
@@ -109,11 +111,11 @@ final class IntegrityManagerTests: XCTestCase {
 
     let parameters: [AppEvents.ParameterName: Any] = [
       .init("_valueToSum"): 1,
-      .init("_session_id"): "12345"
+      .init("_session_id"): "12345",
     ]
     processor.stubbedParameters = [
       "_valueToSum": false,
-      "_session_id": false
+      "_session_id": false,
     ]
     let processed = try XCTUnwrap(
       manager.processParameters(parameters, eventName: .init(name)),

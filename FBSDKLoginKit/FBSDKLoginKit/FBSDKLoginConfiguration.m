@@ -13,9 +13,10 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKNonceUtility.h"
-#import "FBSDKPermission.h"
 
 FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
 FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";

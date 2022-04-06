@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class BridgeAPIProtocolWebV1Tests: XCTestCase {
@@ -48,7 +50,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     static func validWithErrorCode(_ code: Int) -> [String: Any] {
       [
         Keys.errorCode: code,
-        Keys.bridgeArgs: jsonString(actionID: Values.actionID)
+        Keys.bridgeArgs: jsonString(actionID: Values.actionID),
       ]
     }
   }

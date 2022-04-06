@@ -164,7 +164,7 @@ final class VideoUploader: VideoUploading {
 
   func postFinishRequest() {
     var parameters: [String: Any] = [
-      Keys.videoUploadPhase: Keys.videoUploadPhaseFinish
+      Keys.videoUploadPhase: Keys.videoUploadPhaseFinish,
     ]
     if let uploadSessionID = uploadSessionID {
       parameters[Keys.videoUploadSessionID] = uploadSessionID
@@ -232,7 +232,7 @@ final class VideoUploader: VideoUploading {
 
     let shareResults: [String: Any] = [
       Keys.videoStartOffset: startNum,
-      Keys.videoEndOffset: endNum
+      Keys.videoEndOffset: endNum,
     ]
 
     return shareResults

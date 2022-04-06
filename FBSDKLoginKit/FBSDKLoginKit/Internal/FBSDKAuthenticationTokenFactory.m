@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import "FBSDKAuthenticationTokenFactory.h"
 
 #import <Security/Security.h>
@@ -13,6 +15,8 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKAuthenticationTokenHeader.h"
 
@@ -268,3 +272,5 @@ static BOOL _skipSignatureVerification;
 #endif
 
 @end
+
+#endif

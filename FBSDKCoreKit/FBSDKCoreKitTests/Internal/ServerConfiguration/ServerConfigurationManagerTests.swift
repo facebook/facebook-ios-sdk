@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class ServerConfigurationManagerTests: XCTestCase {
@@ -73,7 +75,8 @@ final class ServerConfigurationManagerTests: XCTestCase {
     )
   }
 
-  func testCompleteFetchingServerConfigurationWithoutConnectionResponseOrError() throws {
+  // swiftlint:disable:next identifier_name
+  func _testCompleteFetchingServerConfigurationWithoutConnectionResponseOrError() throws {
     // This test needs more work before it can be included in the regular test suite
     // See T105037698
     try XCTSkipIf(true)
@@ -119,7 +122,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
 
   func testParsingWithDialogConfigurationsMissingDataKey() {
     let response = [
-      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any]()
+      RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any](),
     ]
 
     ServerConfigurationManager.shared.processLoadRequestResponse(
@@ -136,12 +139,12 @@ final class ServerConfigurationManagerTests: XCTestCase {
   func testParsingWithValidDialogConfigurations() {
     let expectedRawConfigurations = [
       SampleRawDialogConfigurations.createValid(name: name),
-      SampleRawDialogConfigurations.createValid(name: "foo")
+      SampleRawDialogConfigurations.createValid(name: "foo"),
     ]
     let response = [
       "ios_dialog_configs": [
-        "data": expectedRawConfigurations
-      ]
+        "data": expectedRawConfigurations,
+      ],
     ]
 
     ServerConfigurationManager.shared.processLoadRequestResponse(

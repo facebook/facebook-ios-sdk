@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -233,7 +235,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       SwizzleEvidence(
         selector: #selector(setter: UICollectionView.delegate),
         class: UICollectionView.self
-      )
+      ),
     ]
     XCTAssertEqual(
       TestSwizzler.evidence,
@@ -451,7 +453,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
       [
         .init(Keys.isSuggestedEvent): "1",
-        .init(Keys.eventButtonText): Values.buttonText
+        .init(Keys.eventButtonText): Values.buttonText,
       ],
       "Should log an opt-in event with the expected parameters"
     )

@@ -6,18 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 #if !TARGET_OS_TV
 
  #import <Foundation/Foundation.h>
 
- #import "FBAEMAdvertiserRuleMatching.h"
- #import "FBAEMAdvertiserRuleOperator.h"
+ #import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
+ #import <FBAEMKit/FBAEMAdvertiserRuleOperator.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AEMAdvertiserSingleEntryRule)
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AEMAdvertiserSingleEntryRule)
 @interface FBAEMAdvertiserSingleEntryRule : NSObject <FBAEMAdvertiserRuleMatching, NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly, assign)FBAEMAdvertiserRuleOperator operator;

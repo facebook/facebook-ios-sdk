@@ -122,6 +122,14 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
  */
 - (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url;
 
+/**
+ Returns bundle for returning localized strings
+
+ We assume a convention of a bundle named FBSDKStrings.bundle, otherwise we
+ return the main bundle.
+ */
+@property (nonatomic, readonly, strong) NSBundle *bundleForStrings;
+
 @end
 
 NS_ASSUME_NONNULL_END

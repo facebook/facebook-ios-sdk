@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -277,7 +279,7 @@ final class ModelManagerTests: XCTestCase {
         "fb_mobile_complete_registration",
         "fb_mobile_add_to_cart",
         "fb_mobile_purchase",
-        "fb_mobile_initiated_checkout"
+        "fb_mobile_initiated_checkout",
       ]
     )
   }
@@ -289,7 +291,7 @@ final class ModelManagerTests: XCTestCase {
 private enum RemoteModelResponse {
   static let valid: [String: Any] = [
     RawRemoteModelResponse.UseCase.eventPrediction: RawRemoteModelResponse.eventPredictionAsset,
-    RawRemoteModelResponse.UseCase.detection: RawRemoteModelResponse.detectionAsset
+    RawRemoteModelResponse.UseCase.detection: RawRemoteModelResponse.detectionAsset,
   ]
 }
 
@@ -314,9 +316,9 @@ private enum RawRemoteModelResponse {
     Keys.data: [
       [
         Keys.assetURI: nil,
-        Keys.useCase: UseCase.eventPrediction
-      ]
-    ]
+        Keys.useCase: UseCase.eventPrediction,
+      ],
+    ],
   ]
 
   static let eventPredictionAsset: [String: Any] = [
@@ -327,10 +329,10 @@ private enum RawRemoteModelResponse {
       "0.68",
       "0.7",
       "0.5",
-      "0.84"
+      "0.84",
     ],
     Keys.useCase: UseCase.eventPrediction,
-    Keys.versionID: 4
+    Keys.versionID: 4,
   ]
 
   static let detectionAsset: [String: Any] = [
@@ -338,14 +340,14 @@ private enum RawRemoteModelResponse {
     Keys.thresholds: [
       1,
       "0.85",
-      "0.6"
+      "0.6",
     ],
     Keys.useCase: UseCase.detection,
-    Keys.versionID: 1
+    Keys.versionID: 1,
   ]
 
   static let validAssets: [[String: Any]] = [
     eventPredictionAsset,
-    detectionAsset
+    detectionAsset,
   ]
 }

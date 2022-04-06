@@ -10,9 +10,12 @@
 
 #import "FBAEMNetworker.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBAEMKitVersions.h"
 #import "FBAEMRequestBody.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define kNewline @"\r\n"
 
@@ -21,7 +24,7 @@ static NSString *const kUserAgentBase = @"FBiOSAEM";
 
 @implementation FBAEMNetworker
 
-static NSString *const FB_GRAPH_API_ENDPOINT = @"https://graph.facebook.com/v12.0/";
+static NSString *const FB_GRAPH_API_ENDPOINT = @"https://graph.facebook.com/v13.0/";
 static NSString *const FB_GRAPH_API_CONTENT_TYPE = @"application/json";
 NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 

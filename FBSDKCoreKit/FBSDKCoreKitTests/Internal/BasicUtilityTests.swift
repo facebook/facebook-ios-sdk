@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import Foundation
 import TestTools
 import XCTest
@@ -73,7 +74,7 @@ final class BasicUtilityTests: XCTestCase {
     let expectedDictionary = [
       "key1": "",
       "key2": "value2",
-      "key3": "value 3 = foo"
+      "key3": "value 3 = foo",
     ]
     XCTAssertEqual(dictionary, expectedDictionary)
     let queryString = try BasicUtility.queryString(with: dictionary, invalidObjectHandler: nil)

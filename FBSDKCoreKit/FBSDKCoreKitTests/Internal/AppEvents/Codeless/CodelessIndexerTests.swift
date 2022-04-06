@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -149,7 +151,7 @@ final class CodelessIndexerTests: XCTestCase {
 
     let expectedParameters = [
       Keys.fields: autoEventSetupEnabled,
-      Keys.advertiserID: name
+      Keys.advertiserID: name,
     ]
     XCTAssertEqual(
       graphRequestFactory.capturedGraphPath,
@@ -171,7 +173,7 @@ final class CodelessIndexerTests: XCTestCase {
     )
     XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      [.disableErrorRecovery],
+      [.skipClientToken, .disableErrorRecovery],
       "Should create a request with the expected flags"
     )
   }
@@ -479,7 +481,7 @@ final class CodelessIndexerTests: XCTestCase {
         "app_version": appVersion,
         Keys.deviceSessionID: CodelessIndexer.currentSessionDeviceID!, // swiftlint:disable:this force_unwrapping
         "platform": "iOS",
-        "tree": "UIButton"
+        "tree": "UIButton",
       ],
       "Should create a request with the expected parameters"
     )
@@ -579,7 +581,7 @@ final class CodelessIndexerTests: XCTestCase {
 
     let expectedParameters = [
       Keys.deviceSessionID: sessionID,
-      Keys.extInfo: CodelessIndexer.extInfo
+      Keys.extInfo: CodelessIndexer.extInfo,
     ]
 
     XCTAssertEqual(
@@ -713,7 +715,7 @@ final class CodelessIndexerTests: XCTestCase {
         CODELESS_VIEW_TREE_HEIGHT_KEY: 0,
         CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
         CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
-        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0,
       ],
       "Dimension of a non-view should be considered to be zero"
     )
@@ -731,7 +733,7 @@ final class CodelessIndexerTests: XCTestCase {
         CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
         CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
         CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
-        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0,
       ],
       "Should calculate the correct view dimensions"
     )
@@ -751,7 +753,7 @@ final class CodelessIndexerTests: XCTestCase {
         CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
         CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
         CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
-        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0,
       ],
       "Should calculate the correct view dimensions"
     )
@@ -771,7 +773,7 @@ final class CodelessIndexerTests: XCTestCase {
         CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
         CODELESS_VIEW_TREE_OFFSET_X_KEY: 100,
         CODELESS_VIEW_TREE_OFFSET_Y_KEY: 100,
-        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0,
       ],
       "Should calculate the correct view dimensions"
     )
@@ -790,7 +792,7 @@ final class CodelessIndexerTests: XCTestCase {
         CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
         CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
         CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
-        CODELESS_VIEW_TREE_VISIBILITY_KEY: 4
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 4,
       ],
       "Should calculate the correct view dimensions and indicate hidden status"
     )
@@ -805,7 +807,7 @@ final class CodelessIndexerTests: XCTestCase {
     NSKeyedArchiver.archivedData(
       withRootObject: [
         "codeless_setup_enabled": isEnabled,
-        "codeless_setting_timestamp": date
+        "codeless_setting_timestamp": date,
       ]
     )
   }

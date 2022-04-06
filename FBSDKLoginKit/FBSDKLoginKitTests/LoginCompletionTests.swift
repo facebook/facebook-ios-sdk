@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import TestTools
-import XCTest
+@testable import FBSDKLoginKit
 
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
+import TestTools
+import XCTest
 
 final class LoginCompletionTests: XCTestCase {
 
@@ -275,7 +276,7 @@ final class LoginCompletionTests: XCTestCase {
     let nonce = Values.nonce
     let stubbedResult = [
       Keys.accessToken: name,
-      Keys.idToken: Values.idToken
+      Keys.idToken: Values.idToken,
     ]
 
     completer.completeLogin(
@@ -317,7 +318,7 @@ final class LoginCompletionTests: XCTestCase {
     let stubbedResult: [String: Any] = [
       Keys.accessToken: name,
       "expires_in": "10000",
-      "data_access_expiration_time": 1
+      "data_access_expiration_time": 1,
     ]
 
     var completionWasInvoked = false
@@ -495,7 +496,7 @@ final class LoginCompletionTests: XCTestCase {
     )
     let stubbedResult = [
       Keys.accessToken: Values.accessToken,
-      Keys.idToken: Values.idToken
+      Keys.idToken: Values.idToken,
     ]
 
     completer.completeLogin(
@@ -537,7 +538,7 @@ final class LoginCompletionTests: XCTestCase {
     let stubbedResult: [String: Any] = [
       Keys.accessToken: Values.accessToken,
       "expires_in": "10000",
-      "data_access_expiration_time": 1
+      "data_access_expiration_time": 1,
     ]
 
     var completionWasInvoked = false

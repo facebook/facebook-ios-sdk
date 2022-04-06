@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -402,7 +403,7 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithDialogConfigurations() {
     let dialogConfigurations = [
       "dialog": "Hello",
-      "dialog2": "World"
+      "dialog2": "World",
     ]
 
     config = Fixtures.config(withDictionary: ["dialogConfigurations": dialogConfigurations])
@@ -420,11 +421,11 @@ final class ServerConfigurationTests: XCTestCase {
     let expectedDefaultDialogFlows = [
       FBSDKDialogConfigurationNameDefault: [
         FBSDKDialogConfigurationFeatureUseNativeFlow: false,
-        FBSDKDialogConfigurationFeatureUseSafariViewController: true
+        FBSDKDialogConfigurationFeatureUseSafariViewController: true,
       ],
       FBSDKDialogConfigurationNameMessage: [
-        FBSDKDialogConfigurationFeatureUseNativeFlow: true
-      ]
+        FBSDKDialogConfigurationFeatureUseNativeFlow: true,
+      ],
     ]
 
     XCTAssertEqual(
@@ -438,11 +439,11 @@ final class ServerConfigurationTests: XCTestCase {
     let dialogFlows = [
       "foo": [
         FBSDKDialogConfigurationFeatureUseNativeFlow: true,
-        FBSDKDialogConfigurationFeatureUseSafariViewController: true
+        FBSDKDialogConfigurationFeatureUseSafariViewController: true,
       ],
       "bar": [
-        FBSDKDialogConfigurationFeatureUseNativeFlow: false
-      ]
+        FBSDKDialogConfigurationFeatureUseNativeFlow: false,
+      ],
     ]
 
     config = Fixtures.config(withDictionary: ["dialogFlows": dialogFlows])
@@ -660,8 +661,8 @@ final class ServerConfigurationTests: XCTestCase {
   func testRetrievingInvalidDialogConfigurationForDialogName() {
     config = Fixtures.config(withDictionary: [
       "dialogConfigurations": [
-        "foo": "bar"
-      ]
+        "foo": "bar",
+      ],
     ])
 
     XCTAssertEqual(
@@ -680,8 +681,8 @@ final class ServerConfigurationTests: XCTestCase {
 
     config = Fixtures.config(withDictionary: [
       "dialogConfigurations": [
-        "foo": fooConfig
-      ]
+        "foo": fooConfig,
+      ],
     ])
 
     XCTAssertEqual(
@@ -2003,17 +2004,17 @@ final class ServerConfigurationTests: XCTestCase {
     var dialogFlows: [String: Any] = [:]
     if featureValue != nil {
       dialogFlows[name] = [
-        flowKey: featureValue
+        flowKey: featureValue,
       ]
     }
     if sharingValue != nil {
       dialogFlows["sharing"] = [
-        flowKey: sharingValue
+        flowKey: sharingValue,
       ]
     }
     if defaultValue != nil {
       dialogFlows["default"] = [
-        flowKey: defaultValue
+        flowKey: defaultValue,
       ]
     }
 

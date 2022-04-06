@@ -13,13 +13,13 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginUtility.h"
-#import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
 
 @implementation FBSDKLoginURLCompleter

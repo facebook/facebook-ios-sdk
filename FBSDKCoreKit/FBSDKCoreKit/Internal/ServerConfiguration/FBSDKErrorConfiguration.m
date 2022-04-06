@@ -122,7 +122,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSString *suggestion = dictionary[@"recovery_message"];
       NSArray<NSString *> *options = dictionary[@"recovery_options"];
 
-      NSArray *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
+      NSArray<NSDictionary<NSString *, id> *> *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
       for (NSDictionary<NSString *, id> *codeSubcodesDictionary in validItems) {
         NSDictionary<NSString *, id> *validCodeSubcodesDictionary = [FBSDKTypeUtility dictionaryValue:codeSubcodesDictionary];
         if (!validCodeSubcodesDictionary) {
@@ -141,7 +141,7 @@ static NSString *const kErrorCategoryLogin = @"login";
           [FBSDKTypeUtility dictionary:self->_configurationDictionary setObject:currentSubcodes forKey:code];
         }
 
-        NSArray *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
+        NSArray<NSNumber *> *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
         if (validSubcodes.count > 0) {
           for (NSNumber *subcodeNumber in validSubcodes) {
             NSNumber *validSubcodeNumber = [FBSDKTypeUtility numberValue:subcodeNumber];

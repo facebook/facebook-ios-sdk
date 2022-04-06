@@ -10,7 +10,9 @@
 
 #import "FBAEMAdvertiserSingleEntryRule.h"
 
-#import "FBCoreKitBasicsImportForAEMKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 static NSString *const OPERATOR_KEY = @"operator";
 static NSString *const PARAMKEY_KEY = @"param_key";
@@ -67,7 +69,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     return [self isMatchedWithAsteriskParam:param eventParameters:eventParams paramPath:paramPath];
   }
   // if data does not contain the key, we should return false directly.
-  if (!param || ![[eventParams allKeys] containsObject:param]) {
+  if (!param || ![eventParams.allKeys containsObject:param]) {
     return NO;
   }
   // Apply operator rule if the last param is reached
@@ -78,14 +80,14 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
       case FBAEMAdvertiserRuleOperatorContains:
       case FBAEMAdvertiserRuleOperatorNotContains:
       case FBAEMAdvertiserRuleOperatorStartsWith:
-      case FBAEMAdvertiserRuleOperatorI_Contains:
-      case FBAEMAdvertiserRuleOperatorI_NotContains:
-      case FBAEMAdvertiserRuleOperatorI_StartsWith:
+      case FBAEMAdvertiserRuleOperatorCaseInsensitiveContains:
+      case FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains:
+      case FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith:
       case FBAEMAdvertiserRuleOperatorRegexMatch:
       case FBAEMAdvertiserRuleOperatorEqual:
       case FBAEMAdvertiserRuleOperatorNotEqual:
-      case FBAEMAdvertiserRuleOperatorI_IsAny:
-      case FBAEMAdvertiserRuleOperatorI_IsNotAny:
+      case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny:
+      case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny:
       case FBAEMAdvertiserRuleOperatorIsAny:
       case FBAEMAdvertiserRuleOperatorIsNotAny:
         stringValue = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSString.class]; break;
@@ -136,11 +138,11 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
       isMatched = !(stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]); break;
     case FBAEMAdvertiserRuleOperatorStartsWith:
       isMatched = stringValue && [stringValue.lowercaseString hasPrefix:_linguisticCondition.lowercaseString]; break;
-    case FBAEMAdvertiserRuleOperatorI_Contains:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveContains:
       isMatched = stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]; break;
-    case FBAEMAdvertiserRuleOperatorI_NotContains:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains:
       isMatched = !(stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]); break;
-    case FBAEMAdvertiserRuleOperatorI_StartsWith:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith:
       isMatched = stringValue && [stringValue.lowercaseString hasPrefix:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorRegexMatch:
       isMatched = stringValue && [self isRegexMatch:stringValue]; break;
@@ -148,9 +150,9 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
       isMatched = stringValue && [stringValue.lowercaseString isEqualToString:_linguisticCondition.lowercaseString]; break;
     case FBAEMAdvertiserRuleOperatorNotEqual:
       isMatched = !(stringValue && [stringValue.lowercaseString isEqualToString:_linguisticCondition.lowercaseString]); break;
-    case FBAEMAdvertiserRuleOperatorI_IsAny:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny:
       isMatched = stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:YES]; break;
-    case FBAEMAdvertiserRuleOperatorI_IsNotAny:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny:
       isMatched = !(stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:YES]); break;
     case FBAEMAdvertiserRuleOperatorIsAny:
       isMatched = stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:NO]; break;

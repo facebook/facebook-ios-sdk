@@ -97,7 +97,7 @@ static const struct {
 {
   id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
   return [self initWithAppScheme:appScheme
-                      pasteboard:[UIPasteboard generalPasteboard]
+                      pasteboard:UIPasteboard.generalPasteboard
              dataLengthThreshold:FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold
                   includeAppIcon:YES
                     errorFactory:errorFactory];
@@ -229,7 +229,7 @@ static const struct {
   if (!_includeAppIcon) {
     return nil;
   }
-  NSArray *files = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleIcons"]
+  NSArray<NSString *> *files = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleIcons"]
   [@"CFBundlePrimaryIcon"]
   [@"CFBundleIconFiles"];
   if (!files.count) {
@@ -288,7 +288,7 @@ static const struct {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];
         [FBSDKTypeUtility dictionary:dictionary
-                           setObject:[FBSDKBase64 encodeData:data]
+                           setObject:[data base64EncodedStringWithOptions:0]
                               forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
       } else {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isPasteboard] = @YES;

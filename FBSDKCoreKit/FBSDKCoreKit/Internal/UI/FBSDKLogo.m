@@ -17,7 +17,7 @@
 
   CGAffineTransform transformValue = CGAffineTransformMakeScale(size.width / originalCanvasWidth, size.height / originalCanvasHeight);
 
-  UIBezierPath *path = [UIBezierPath bezierPath];
+  UIBezierPath *path = UIBezierPath.bezierPath;
   [path moveToPoint:CGPointMake(1365.33, 682.67)];
   [path addCurveToPoint:CGPointMake(682.67, -0)
           controlPoint1:CGPointMake(1365.33, 305.64)
@@ -55,7 +55,7 @@
   [path closePath];
   [path applyTransform:transformValue];
 
-  return [path CGPath];
+  return path.CGPath;
 }
 
 @end

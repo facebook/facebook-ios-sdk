@@ -25,9 +25,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
           "timer_buckets": 1,
           "timer_interval": 1000,
           "default_currency": "usd",
-          "cutoff_time": 2
-        ]
-      ]
+          "cutoff_time": 2,
+        ],
+      ],
     ]
     config = SKAdNetworkConversionConfiguration(json: invalidData)
     XCTAssertNil(config)
@@ -38,9 +38,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
           "timer_buckets": 1,
           "timer_interval": 1000,
           "cutoff_time": 2,
-          "conversion_value_rules": []
-        ]
-      ]
+          "conversion_value_rules": [],
+        ],
+      ],
     ]
     config = SKAdNetworkConversionConfiguration(json: invalidData)
     XCTAssertNil(config)
@@ -53,9 +53,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
           "timer_interval": 1000,
           "default_currency": "usd",
           "cutoff_time": 2,
-          "conversion_value_rules": []
-        ]
-      ]
+          "conversion_value_rules": [],
+        ],
+      ],
     ]
 
     config = SKAdNetworkConversionConfiguration(json: validData)
@@ -72,9 +72,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
         "conversion_value": 2,
         "events": [
           [
-            "event_name": "fb_mobile_purchase"
-          ]
-        ]
+            "event_name": "fb_mobile_purchase",
+          ],
+        ],
       ],
       [
         "conversion_value": 4,
@@ -84,11 +84,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100
-              ]
-            ]
-          ]
-        ]
+                "amount": 100,
+              ],
+            ],
+          ],
+        ],
       ],
       [
         "conversion_value": 3,
@@ -98,16 +98,16 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100
+                "amount": 100,
               ],
               [
                 "currency": "JPY",
-                "amount": 100
-              ]
-            ]
-          ]
-        ]
-      ]
+                "amount": 100,
+              ],
+            ],
+          ],
+        ],
+      ],
     ]
 
     let conversionBitRules = try XCTUnwrap(SKAdNetworkConversionConfiguration.parseRules(rules))
@@ -122,11 +122,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100
-              ]
-            ]
-          ]
-        ]
+                "amount": 100,
+              ],
+            ],
+          ],
+        ],
       ])
     ))
 
@@ -144,10 +144,10 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
               [
                 "currency": "JPY",
                 "amount": 100,
-              ]
-            ]
-          ]
-        ]
+              ],
+            ],
+          ],
+        ],
       ])
     ))
 
@@ -156,9 +156,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
         "conversion_value": 2,
         "events": [
           [
-            "event_name": "fb_mobile_purchase"
-          ]
-        ]
+            "event_name": "fb_mobile_purchase",
+          ],
+        ],
       ])
     ))
 
@@ -183,11 +183,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "event_name": "fb_mobile_purchase",
             "values": [
               [
-                "amount": 100
-              ]
-            ]
-          ]
-        ]
+                "amount": 100,
+              ],
+            ],
+          ],
+        ],
       ],
       [
         "conversion_value": 3,
@@ -197,12 +197,12 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100
-              ]
-            ]
-          ]
-        ]
-      ]
+                "amount": 100,
+              ],
+            ],
+          ],
+        ],
+      ],
     ]
     XCTAssertEqual(1, SKAdNetworkConversionConfiguration.parseRules(invalidData)?.count)
   }
@@ -214,9 +214,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
         "conversion_value": conv,
         "events": [
           [
-            "event_name": "fb_mobile_purchase"
-          ]
-        ]
+            "event_name": "fb_mobile_purchase",
+          ],
+        ],
       ])
     }
     let expectedConvs = [Int](0 ... 10)
@@ -243,9 +243,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
               "conversion_value": 2,
               "events": [
                 [
-                  "event_name": "fb_mobile_purchase"
-                ]
-              ]
+                  "event_name": "fb_mobile_purchase",
+                ],
+              ],
             ],
             [
               "conversion_value": 4,
@@ -255,18 +255,18 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
                 [
                   "event_name": "fb_mobile_complete_registration",
                   "values": [
                     [
                       "currency": "EU",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
               ],
             ],
@@ -278,22 +278,22 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100
+                      "amount": 100,
                     ],
                     [
                       "currency": "JPY",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
                 [
                   "event_name": "fb_mobile_search",
-                ]
+                ],
               ],
             ],
-          ]
-        ]
-      ]
+          ],
+        ],
+      ],
     ]
 
     let config = SKAdNetworkConversionConfiguration(json: data)
@@ -315,7 +315,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
               "events": [
                 [
                   "event_name": "fb_mobile_purchase",
-                ]
+                ],
               ],
             ],
             [
@@ -326,18 +326,18 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
                 [
                   "event_name": "fb_mobile_complete_registration",
                   "values": [
                     [
                       "currency": "eu",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
               ],
             ],
@@ -349,22 +349,22 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "usd",
-                      "amount": 100
+                      "amount": 100,
                     ],
                     [
                       "currency": "jpy",
-                      "amount": 100
-                    ]
-                  ]
+                      "amount": 100,
+                    ],
+                  ],
                 ],
                 [
                   "event_name": "fb_mobile_search",
-                ]
+                ],
               ],
             ],
-          ]
-        ]
-      ]
+          ],
+        ],
+      ],
     ]
 
     let config = SKAdNetworkConversionConfiguration(json: data)

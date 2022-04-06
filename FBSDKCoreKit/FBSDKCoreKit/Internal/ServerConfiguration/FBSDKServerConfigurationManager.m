@@ -46,7 +46,7 @@
 
 @interface FBSDKServerConfigurationManager ()
 
-@property (nonatomic) NSMutableArray *completionBlocks;
+@property (nonatomic) NSMutableArray<FBSDKServerConfigurationBlock> *completionBlocks;
 @property (nonatomic) BOOL loadingServerConfiguration;
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) NSError *serverConfigurationError;
@@ -325,14 +325,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
-                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 - (void)_didProcessConfigurationFromNetwork:(FBSDKServerConfiguration *)serverConfiguration
                                       appID:(NSString *)appID
                                       error:(NSError *)error
 {
-  NSMutableArray *completionBlocks = [NSMutableArray new];
+  NSMutableArray<FBSDKServerConfigurationBlock> *completionBlocks = [NSMutableArray new];
   @synchronized(self) {
     if (error) {
       // Only set the error if we don't have previously fetched app settings.

@@ -8,6 +8,8 @@
 
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKDeviceLoginCodeInfo
 
 static int const FBDeviceLoginMinPollingInterval = 5;

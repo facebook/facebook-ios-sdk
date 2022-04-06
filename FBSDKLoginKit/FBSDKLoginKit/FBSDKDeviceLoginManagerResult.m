@@ -8,6 +8,8 @@
 
 #import "FBSDKDeviceLoginManagerResult+Internal.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKDeviceLoginManagerResult
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token

@@ -152,11 +152,11 @@ static _Nullable id<FBSDKSettings> _settings;
       BOOL audMatched = [aud isEqualToString:self.class.settings.appID];
 
       NSNumber *expValue = [FBSDKTypeUtility numberValue:claimsDict[@"exp"]];
-      NSTimeInterval exp = [expValue doubleValue];
+      NSTimeInterval exp = expValue.doubleValue;
       BOOL isExpired = expValue == nil || exp <= currentTime;
 
       NSNumber *iatValue = [FBSDKTypeUtility numberValue:claimsDict[@"iat"]];
-      NSTimeInterval iat = [iatValue doubleValue];
+      NSTimeInterval iat = iatValue.doubleValue;
       BOOL issuedRecently = iatValue != nil && iat >= currentTime - MaxTimeSinceTokenIssued;
 
       NSString *nonce = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"nonce"]];

@@ -16,7 +16,7 @@
 
 + (NSString *)normalizedText:(NSString *)text
 {
-  NSMutableArray *tokens = [[text componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] mutableCopy];
+  NSMutableArray<NSString *> *tokens = [[text componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] mutableCopy];
   [tokens removeObject:@""];
   return [tokens componentsJoinedByString:@" "];
 }

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class DialogConfigurationMapBuilderTests: XCTestCase {
@@ -51,8 +53,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     let rawConfigurations = [
       [
         Keys.name: name,
-        Keys.url: Values.empty
-      ]
+        Keys.url: Values.empty,
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -64,8 +66,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     let rawConfigurations = [
       [
         Keys.name: name,
-        Keys.url: Values.urlString
-      ]
+        Keys.url: Values.urlString,
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -78,8 +80,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: name,
         Keys.url: Values.urlString,
-        Keys.versions: []
-      ]
+        Keys.versions: [],
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -92,8 +94,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: name,
         Keys.url: Values.urlString,
-        Keys.versions: ["1", "2"]
-      ]
+        Keys.versions: ["1", "2"],
+      ],
     ]
     let configurationMap = builder.buildDialogConfigurationMap(from: rawConfigurations)
 
@@ -114,13 +116,13 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: configuration.name,
         Keys.url: configuration.url.absoluteString,
-        Keys.versions: configuration.appVersions
+        Keys.versions: configuration.appVersions,
       ],
       [
         Keys.name: otherConfiguration.name,
         Keys.url: otherConfiguration.url.absoluteString,
-        Keys.versions: otherConfiguration.appVersions
-      ]
+        Keys.versions: otherConfiguration.appVersions,
+      ],
     ]
     let configurationMap = builder.buildDialogConfigurationMap(from: rawConfigurations)
 

@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if BUCK
-import FacebookCore
-#endif
+@testable import FBSDKLoginKit
 
 import TestTools
 import XCTest
@@ -169,7 +167,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "user_code": expectedCodeInfo.loginCode,
       "verification_uri": expectedCodeInfo.verificationURL.absoluteString,
       "expires_in": String(expectedCodeInfo.expirationDate.timeIntervalSinceNow),
-      "interval": expectedCodeInfo.pollingInterval
+      "interval": expectedCodeInfo.pollingInterval,
     ] as [String: Any]
 
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
@@ -245,7 +243,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "expires_in": String(SampleAccessTokens.validToken.expirationDate.timeIntervalSinceNow),
       "data_access_expiration_time": String(
         SampleAccessTokens.validToken.dataAccessExpirationDate.timeIntervalSince1970
-      )
+      ),
     ]
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, result, nil)
@@ -343,7 +341,7 @@ final class DeviceLoginManagerTests: XCTestCase {
     )
 
     let result: [String: Any] = [
-      "id": "123"
+      "id": "123",
     ]
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(
@@ -366,8 +364,8 @@ final class DeviceLoginManagerTests: XCTestCase {
     let response: [String: Any] = [
       "id": "123",
       "permissions": [
-        "marker": true
-      ]
+        "marker": true,
+      ],
     ]
     let granted = ["public_profile", "email"]
     let declined = ["user_friends"]

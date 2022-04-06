@@ -112,7 +112,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray array];
   unsigned int count = 0;
-  const char **classes = objc_copyClassNamesForImage([image UTF8String], &count);
+  const char **classes = objc_copyClassNamesForImage(image.UTF8String, &count);
   for (unsigned int i = 0; i < count; i++) {
     NSString *className = [NSString stringWithUTF8String:classes[i]];
     if (prefixes.count > 0) {

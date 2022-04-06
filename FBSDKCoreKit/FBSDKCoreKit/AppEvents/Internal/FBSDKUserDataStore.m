@@ -79,7 +79,7 @@ static dispatch_queue_t serialQueue;
   }
 
   dispatch_async(serialQueue, ^{
-    hashedUserData = [ud mutableCopy];
+    hashedUserData = ud.mutableCopy;
     [NSUserDefaults.standardUserDefaults setObject:[self stringByHashedData:hashedUserData]
                                             forKey:FBSDKUserDataKey];
   });

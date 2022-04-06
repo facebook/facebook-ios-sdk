@@ -35,11 +35,6 @@ static FBSDKBase64 *_encoder;
   return [_decoder decodeAsString:string];
 }
 
-+ (nullable NSString *)encodeData:(nullable NSData *)data
-{
-  return [_encoder encodeData:data];
-}
-
 + (nullable NSString *)encodeString:(nullable NSString *)string
 {
   return [_encoder encodeString:string];
@@ -82,18 +77,9 @@ static FBSDKBase64 *_encoder;
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (nullable NSString *)encodeData:(nullable NSData *)data
-{
-  if (!data) {
-    return nil;
-  }
-
-  return [data base64EncodedStringWithOptions:0];
-}
-
 - (nullable NSString *)encodeString:(nullable NSString *)string
 {
-  return [self encodeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  return [[string dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
 }
 
 @end

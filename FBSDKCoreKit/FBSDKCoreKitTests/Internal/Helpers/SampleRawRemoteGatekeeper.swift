@@ -11,25 +11,25 @@ enum SampleRawRemoteGatekeeper {
   static func valid(name: String, enabled: Bool) -> [String: Any] {
     [
       "key": name,
-      "value": enabled
+      "value": enabled,
     ]
   }
 
   static let validEnabled = [
     "key": "foo",
-    "value": true
+    "value": true,
   ] as [String: Any]
 
   static let validDisabled = [
     "key": "foo",
-    "value": false
+    "value": false,
   ] as [String: Any]
 
   static let missingKey = [
-    "value": false
+    "value": false,
   ]
 
   static let missingValue = [
-    "key": "foo"
+    "key": "foo",
   ]
 }

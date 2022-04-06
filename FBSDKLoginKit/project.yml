@@ -19,7 +19,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: '11.0'
+    tvOS: "11.0"
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -49,10 +49,6 @@ targets:
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
         createIntermediateGroups: true
-      - path: FBSDKLoginKit/Swift
-        excludes:
-          - Exports.swift
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-Static.xcconfig
       Release: Configurations/FBSDKLoginKit-Static.xcconfig
@@ -63,6 +59,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -81,10 +78,6 @@ targets:
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
         createIntermediateGroups: true
-      - path: FBSDKLoginKit/Swift
-        excludes:
-          - Exports.swift
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-Dynamic.xcconfig
       Release: Configurations/FBSDKLoginKit-Dynamic.xcconfig
@@ -95,6 +88,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -107,32 +101,10 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
-          - FBSDKCodeVerifier.[h,m]
-          - FBSDKLoginConfiguration.[h,m]
-          - FBSDKReferral*
-          - FBSDKLoginButton*
-          - FBSDKLoginConfiguration
-          - FBSDKLoginManager.[h,m]
-          - FBSDKLoginManagerLoginResult*
-          - FBSDKLoginTooltipView*
-          - FBSDKTooltipView*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationToken*
-          - _FBSDKLoginRecoveryAttempter*
-          - FBSDKLoginCompletion*
-          - FBSDKLoginError*
-          - FBSDKLoginManagerLogger*
-          - FBSDKLoginUtility*
-          - FBSDKMonotonicTime*
-          - FBSDKPermission*
-          - FBSDKProfileFactory*
-          - FBSDKReferral*
-          - FBSDKProfileCreating*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-tvOS-Static.xcconfig
@@ -144,6 +116,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -156,32 +129,10 @@ targets:
       - path: FBSDKLoginKit
         headerVisibility: public
         excludes:
-          - FBSDKCodeVerifier.[h,m]
-          - FBSDKLoginConfiguration.[h,m]
-          - FBSDKReferral*
-          - FBSDKLoginButton*
-          - FBSDKLoginConfiguration
-          - FBSDKLoginManager.[h,m]
-          - FBSDKLoginManagerLoginResult*
-          - FBSDKLoginTooltipView*
-          - FBSDKTooltipView*
           - Internal
           - Info.plist
-          - Swift/*.swift
       - path: FBSDKLoginKit/Internal
         headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationToken*
-          - _FBSDKLoginRecoveryAttempter*
-          - FBSDKLoginCompletion*
-          - FBSDKLoginError*
-          - FBSDKLoginManagerLogger*
-          - FBSDKLoginUtility*
-          - FBSDKMonotonicTime*
-          - FBSDKPermission*
-          - FBSDKProfileFactory*
-          - FBSDKReferral*
-          - FBSDKProfileCreating*
         createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKLoginKit-tvOS-Dynamic.xcconfig
@@ -193,6 +144,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -225,6 +177,7 @@ schemes:
     test:
       targets:
         - FBSDKLoginKitTests
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKLoginKit-Dynamic
   FBSDKLoginKit_TV-Static:

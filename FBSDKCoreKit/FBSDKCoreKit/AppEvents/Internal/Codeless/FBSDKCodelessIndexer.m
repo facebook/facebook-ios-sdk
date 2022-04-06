@@ -261,7 +261,7 @@ static id<FBSDKSettings> _settings;
                                                                                  parameters:parameters
                                                                                 tokenString:nil
                                                                                  HTTPMethod:nil
-                                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 
@@ -443,7 +443,7 @@ static id<FBSDKSettings> _settings;
 
 + (nullable NSString *)currentViewTree
 {
-  NSMutableArray *trees = [NSMutableArray array];
+  NSMutableArray<NSDictionary<NSString *, id> *> *trees = [NSMutableArray array];
 
   NSArray<__kindof UIWindow *> *windows = UIApplication.sharedApplication.windows;
   for (UIWindow *window in windows) {

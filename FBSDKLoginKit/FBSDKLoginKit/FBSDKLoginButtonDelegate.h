@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -43,3 +47,5 @@ NS_SWIFT_NAME(LoginButtonDelegate)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(init(paymentQueue:paymentProductRequestorFactory:));
 // UNCRUSTIFY_FORMAT_ON
 
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions;
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions;
 
 @end
 

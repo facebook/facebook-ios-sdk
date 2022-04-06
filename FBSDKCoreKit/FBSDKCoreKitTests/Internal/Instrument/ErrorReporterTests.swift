@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -24,7 +25,7 @@ final class ErrorReporterTests: XCTestCase {
   let timeInterval = 10.0
   let validReportNames = [
     "error_report_1.json",
-    "error_report_2.json"
+    "error_report_2.json",
   ]
 
   override func setUp() {

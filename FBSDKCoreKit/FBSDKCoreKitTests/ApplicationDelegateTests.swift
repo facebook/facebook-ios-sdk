@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -451,7 +452,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(
       launchOptions: [
         UIApplication.LaunchOptionsKey.sourceApplication: name,
-        .url: SampleURLs.valid
+        .url: SampleURLs.valid,
       ]
     )
 
@@ -522,6 +523,33 @@ final class ApplicationDelegateTests: XCTestCase {
       options: [:]
     )
     XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  func testOpeningUniversalLinkChecksAEMFeatureAvailability() {
+    // See https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
+    let userActivity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  func testOpeningUniversalLinkNonBrowsingWebDoesNotCheckAEMAvailability() {
+    let userActivity = NSUserActivity(activityType: "Example")
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertFalse(
       featureChecker.capturedFeaturesContains(.AEM),
       "Opening a deep link should check if the AEM feature is enabled"
     )

@@ -48,8 +48,8 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
             Keys.eventName: Values.donate,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   static let validConfigData2: [String: Any] = [
@@ -78,8 +78,8 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
             Keys.eventName: Values.purchase,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   static let validConfigData3: [String: Any] = [
@@ -97,19 +97,19 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
           ],
         ],
       ],
-    ]
+    ],
   ]
 
-  static let validAdvertiserSingleEntryRule = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
+  static let validAdvertiserSingleEntryRule = _AEMAdvertiserSingleEntryRule(
+    with: .contains,
     paramKey: "test",
     linguisticCondition: "hello",
     numericalCondition: NSNumber(10),
     arrayCondition: ["abv"]
   )
 
-  static let validAdvertiserMultiEntryRule = AEMAdvertiserMultiEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+  static let validAdvertiserMultiEntryRule = _AEMAdvertiserMultiEntryRule(
+    with: .and,
     rules: [validAdvertiserSingleEntryRule]
   )
 
@@ -119,31 +119,31 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
 
   static let validAdvertiserSingleEntryRuleJson3: [String: Any] = ["content": ["is_any": ["abc"]]]
 
-  static let advertiserSingleEntryRule1 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith,
+  static let advertiserSingleEntryRule1 = _AEMAdvertiserSingleEntryRule(
+    with: .startsWith,
     paramKey: "content",
     linguisticCondition: "abc",
     numericalCondition: nil,
     arrayCondition: nil
   )
 
-  static let advertiserSingleEntryRule2 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThan,
+  static let advertiserSingleEntryRule2 = _AEMAdvertiserSingleEntryRule(
+    with: .lessThan,
     paramKey: "value",
     linguisticCondition: nil,
     numericalCondition: NSNumber(value: 10),
     arrayCondition: nil
   )
 
-  static let advertiserSingleEntryRule3 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
+  static let advertiserSingleEntryRule3 = _AEMAdvertiserSingleEntryRule(
+    with: .isAny,
     paramKey: "content",
     linguisticCondition: nil,
     numericalCondition: nil,
     arrayCondition: ["abc"]
   )
 
-  static let invocationWithAdvertiserID1 = AEMInvocation(
+  static let invocationWithAdvertiserID1 = _AEMInvocation(
     campaignID: "test_campaign_1234",
     acsToken: "test_token_1234567",
     acsSharedSecret: "test_shared_secret",
@@ -155,7 +155,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
-  static let invocationWithAdvertiserID2 = AEMInvocation(
+  static let invocationWithAdvertiserID2 = _AEMInvocation(
     campaignID: "test_campaign_1235",
     acsToken: "test_token_2345678",
     acsSharedSecret: "test_shared_secret_124",
@@ -167,7 +167,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
-  static let invocationWithoutAdvertiserID = AEMInvocation(
+  static let invocationWithoutAdvertiserID = _AEMInvocation(
     campaignID: "test_campaign_4321",
     acsToken: "test_token_7654",
     acsSharedSecret: "test_shared_secret_123",

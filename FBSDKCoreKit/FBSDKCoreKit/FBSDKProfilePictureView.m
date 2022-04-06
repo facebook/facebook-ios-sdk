@@ -380,7 +380,7 @@
 - (FBSDKProfilePictureViewState *)_state
 {
   BOOL imageShouldFit = [self _imageShouldFit];
-  UIScreen *screen = self.window.screen ?: [UIScreen mainScreen];
+  UIScreen *screen = self.window.screen ?: UIScreen.mainScreen;
   CGFloat scale = screen.scale;
   CGSize imageSize = [self _imageSize:imageShouldFit scale:scale];
   return [[FBSDKProfilePictureViewState alloc] initWithProfileID:_profileID

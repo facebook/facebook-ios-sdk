@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -104,7 +105,7 @@ final class FeatureManagerTests: XCTestCase {
       (.instrument, "Instrument"),
       (.login, "LoginKit"),
       (.share, "ShareKit"),
-      (.gamingServices, "GamingServicesKit")
+      (.gamingServices, "GamingServicesKit"),
     ]
     testData.forEach { data in
       manager.check(data.feature) { _ in }
@@ -142,7 +143,7 @@ final class FeatureManagerTests: XCTestCase {
       (.ateLogging, "AppEvents", "ATELogging"),
       (.crashReport, "Instrument", "CrashReport"),
       (.crashShield, "Instrument", "CrashShield"),
-      (.errorReport, "Instrument", "ErrorReport")
+      (.errorReport, "Instrument", "ErrorReport"),
     ]
     testData.forEach { data in
       manager.check(data.feature) { _ in }
@@ -185,7 +186,7 @@ final class FeatureManagerTests: XCTestCase {
       (.ateLogging, "ATELogging"),
       (.crashReport, "CrashReport"),
       (.crashShield, "CrashShield"),
-      (.errorReport, "ErrorReport")
+      (.errorReport, "ErrorReport"),
     ]
     testData.forEach { data in
       var capturedKey: String?
@@ -223,7 +224,7 @@ final class FeatureManagerTests: XCTestCase {
       .suggestedEvents,
       .intelligentIntegrity,
       .eventDeactivation,
-      .skAdNetworkConversionValue
+      .skAdNetworkConversionValue,
     ]
 
     testData.forEach { featureName in

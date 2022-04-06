@@ -10,28 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if TARGET_OS_TV
-
-// This is an unfortunate hack for Swift Package Manager support.
-// SPM does not allow us to conditionally exclude Swift files for compilation by platform.
-//
-// So to support tvOS with SPM we need to use runtime availability checks in the Swift files.
-// This means that even though the code in `LoginManager.swift` will never be run for tvOS
-// targets, it still needs to be able to compile. Hence we need to declare it here.
-//
-// The way to fix this is to remove extensions of ObjC types in Swift.
-
-@interface LoginManagerLoginResult : NSObject
-
-@property (nullable, nonatomic, copy) FBSDKAccessToken *token;
-@property (nullable, nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
-@property (nonatomic, readonly) BOOL isCancelled;
-@property (nonatomic, copy) NSSet<NSString *> *grantedPermissions;
-@property (nonatomic, copy) NSSet<NSString *> *declinedPermissions;
-
-@end
-
-#else
+#if !TARGET_OS_TV
 
 @class FBSDKAccessToken;
 @class FBSDKAuthenticationToken;

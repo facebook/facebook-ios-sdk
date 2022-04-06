@@ -16,8 +16,8 @@
 
 @interface FBSDKTypeUtilityTests : XCTestCase
 
-@property (nonatomic) NSArray *validJSONObjects;
-@property (nonatomic) NSArray *invalidJSONObjects;
+@property (nonatomic) NSArray<id> *validJSONObjects;
+@property (nonatomic) NSArray<id> *invalidJSONObjects;
 
 @end
 
@@ -44,14 +44,14 @@
 - (void)testIsValidJSONWithValidJSON
 {
   for (id object in self.validJSONObjects) {
-    XCTAssertTrue([FBSDKTypeUtility isValidJSONObject:object], @"%@ is not a valid json object", object);
+    XCTAssertTrue([NSJSONSerialization isValidJSONObject:object], @"%@ is not a valid json object", object);
   }
 }
 
 - (void)testIsValidJSONWithInvalidJSON
 {
   for (id object in self.invalidJSONObjects) {
-    XCTAssertFalse([FBSDKTypeUtility isValidJSONObject:object], @"%@ is a valid json object", object);
+    XCTAssertFalse([NSJSONSerialization isValidJSONObject:object], @"%@ is a valid json object", object);
   }
 }
 
@@ -59,7 +59,7 @@
 {
   // Should not crash for any given value
   for (int i = 0; i < 100; i++) {
-    [FBSDKTypeUtility isValidJSONObject:Fuzzer.random];
+    [NSJSONSerialization isValidJSONObject:Fuzzer.random];
   }
 }
 
@@ -100,7 +100,7 @@
 
 - (void)testJSONObjectWithDataWithInvalidData
 {
-  NSArray *invalidData = @[
+  NSArray<id> *invalidData = @[
     [@"SomeString" dataUsingEncoding:NSUTF8StringEncoding],
     [[@{ @1 : @"one" } description] dataUsingEncoding:NSUTF8StringEncoding],
     [@"" dataUsingEncoding:NSUTF8StringEncoding],
@@ -118,7 +118,7 @@
 
 - (void)testArrayAccessEmptyArray
 {
-  NSArray *array = @[];
+  NSArray<id> *array = @[];
 
   XCTAssertNil(
     [FBSDKTypeUtility array:array objectAtIndex:5],
@@ -156,52 +156,6 @@
     @3,
     "Should be able to retrive a valid object at a valid index of an array"
   );
-}
-
-- (void)testAddingArrayObjectAtIndexEmptyArray
-{
-  NSMutableArray *array = [NSMutableArray array];
-  [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
-
-  XCTAssertEqualObjects(
-    array.firstObject,
-    @"foo",
-    "Should be able to insert a valid object into an empty array"
-  );
-}
-
-- (void)testAddingArrayObjectAtIndexNonEmptyArray
-{
-  NSMutableArray *array = [NSMutableArray array];
-  [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
-  [FBSDKTypeUtility array:array addObject:@"bar" atIndex:1];
-
-  XCTAssertEqualObjects(
-    [array objectAtIndex:1],
-    @"bar",
-    "Should be able to insert a valid object into an available position in a non empty array"
-  );
-}
-
-- (void)testAddingArrayObjectAtDuplicateIndex
-{
-  NSMutableArray *array = [NSMutableArray array];
-  [FBSDKTypeUtility array:array addObject:@"foo" atIndex:0];
-  [FBSDKTypeUtility array:array addObject:@"bar" atIndex:0];
-
-  XCTAssertEqualObjects(
-    array.firstObject,
-    @"bar",
-    "Should be able to insert a valid object at a non-empty index"
-  );
-}
-
-- (void)testAddingArrayObjectAtUnavailableIndex
-{
-  NSMutableArray *array = [NSMutableArray array];
-  [FBSDKTypeUtility array:array addObject:@"foo" atIndex:5];
-
-  XCTAssertNil(array.firstObject, "Should not be able to insert a valid object at an invalid index");
 }
 
 @end

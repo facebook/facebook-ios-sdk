@@ -29,7 +29,7 @@ final class TournamentTests: XCTestCase {
     let tournamentInfo: [String: Any] = [
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -48,7 +48,7 @@ final class TournamentTests: XCTestCase {
       Keys.tournamentID: 123,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -63,7 +63,7 @@ final class TournamentTests: XCTestCase {
     let tournamentInfo: [String: Any] = [
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -79,7 +79,7 @@ final class TournamentTests: XCTestCase {
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: 123,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -94,7 +94,7 @@ final class TournamentTests: XCTestCase {
     let tournamentInfo: [String: Any] = [
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: Values.tournamentEndTime,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -110,7 +110,7 @@ final class TournamentTests: XCTestCase {
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentTitle: 123,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -125,7 +125,7 @@ final class TournamentTests: XCTestCase {
     let tournamentInfo: [String: Any] = [
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: Values.tournamentEndTime,
-      Keys.tournamentTitle: Values.tournamentTitle
+      Keys.tournamentTitle: Values.tournamentTitle,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -141,7 +141,7 @@ final class TournamentTests: XCTestCase {
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: 123
+      Keys.tournamentPayload: 123,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
@@ -157,7 +157,7 @@ final class TournamentTests: XCTestCase {
       Keys.tournamentID: Values.tournamentID,
       Keys.tournamentEndTime: Values.tournamentEndTime,
       Keys.tournamentTitle: Values.tournamentTitle,
-      Keys.tournamentPayload: Values.tournamentPayload
+      Keys.tournamentPayload: Values.tournamentPayload,
     ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {

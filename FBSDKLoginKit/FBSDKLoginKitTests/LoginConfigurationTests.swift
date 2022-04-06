@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if BUCK
-import FacebookCore
-#endif
+@testable import FBSDKLoginKit
 
 import XCTest
 
@@ -68,7 +66,7 @@ final class LoginConfigurationTests: XCTestCase {
   func testCreatingWithTracking() {
     let preferences = [
       LoginTracking.enabled,
-      .limited
+      .limited,
     ]
     preferences.forEach { preference in
       let config = LoginConfiguration(tracking: preference)

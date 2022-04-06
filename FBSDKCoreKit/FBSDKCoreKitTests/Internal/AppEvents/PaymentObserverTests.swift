@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 @available(iOS 12.2, *)
@@ -84,7 +86,7 @@ final class PaymentObserverTests: XCTestCase {
       purchased,
       failed,
       restored,
-      deferred
+      deferred,
     ]
     observer.paymentQueue(queue, updatedTransactions: transactions)
 

@@ -125,7 +125,7 @@
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
-  NSMutableDictionary<NSString *, id> *resultParameters = [queryParameters mutableCopy];
+  NSMutableDictionary<NSString *, id> *resultParameters = queryParameters.mutableCopy;
   [resultParameters removeObjectForKey:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY];
   resultParameters[@"didComplete"] = @YES;
   return resultParameters;

@@ -14,6 +14,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
 static const CGFloat kZoomInScale = 1.1f;
@@ -52,7 +54,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 @property (nonatomic) CGFloat maximumTextWidth;
 @property (nonatomic) CGFloat verticalTextOffset;
 @property (nonatomic) CGFloat verticalCrossOffset;
-@property (nonatomic) NSArray *gradientColors;
+@property (nonatomic) NSArray<id> *gradientColors;
 @property (nonatomic) UIColor *crossCloseGlyphColor;
 
 @end
@@ -498,7 +500,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 - (CGRect)layoutSubviewsAndDetermineFrame
 {
   // Compute the positioning of the arrow.
-  CGRect screenBounds = [UIScreen mainScreen].bounds;
+  CGRect screenBounds = UIScreen.mainScreen.bounds;
   UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
   if (!UIInterfaceOrientationIsPortrait(orientation)) {
     screenBounds = CGRectMake(0, 0, screenBounds.size.height, screenBounds.size.width);

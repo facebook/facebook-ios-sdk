@@ -28,7 +28,7 @@ enum SampleAppLinkResolverData {
 
   static let invalid = [
     Keys.ios: [fields],
-    Keys.iphone: [fields]
+    Keys.iphone: [fields],
   ]
 
   static func withShouldFallback(_ shouldFallbackString: String) -> [String: Any] {
@@ -37,16 +37,16 @@ enum SampleAppLinkResolverData {
         [
           Keys.url: [
             [
-              Keys.value: urlString
-            ]
+              Keys.value: urlString,
+            ],
           ],
           Keys.shouldFallback: [
             [
-              Keys.value: shouldFallbackString
-            ]
-          ]
-        ]
-      ]
+              Keys.value: shouldFallbackString,
+            ],
+          ],
+        ],
+      ],
     ]
   }
 
@@ -56,19 +56,19 @@ enum SampleAppLinkResolverData {
 
   static func urlField(value: Any) -> [String: Any] {
     [
-      Keys.url: value
+      Keys.url: value,
     ]
   }
 
   static func appStoreIdField(value: Any) -> [String: Any] {
     [
-      Keys.appStoreID: value
+      Keys.appStoreID: value,
     ]
   }
 
   static func appNameField(value: Any) -> [String: Any] {
     [
-      Keys.appName: value
+      Keys.appName: value,
     ]
   }
 }

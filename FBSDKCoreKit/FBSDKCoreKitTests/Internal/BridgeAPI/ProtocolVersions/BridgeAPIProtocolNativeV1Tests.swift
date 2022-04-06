@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import Foundation
 
 final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
@@ -25,7 +26,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   func testRequestURL() {
     let parameters = [
       "api_key_1": "value1",
-      "api_key_2": "value2"
+      "api_key_2": "value2",
     ]
 
     do {
@@ -87,9 +88,9 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     var cancelled: ObjCBool = true
     var queryParameters: [String: Any] = [
       "bridge_args": [
-        "action_id": actionID
+        "action_id": actionID,
       ],
-      "method_results": [:]
+      "method_results": [:],
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
 
@@ -114,14 +115,14 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       "result_key_2": "two",
       "result_key_3": [
         "result_key_4": 4,
-        "result_key_5": "five"
-      ]
+        "result_key_5": "five",
+      ],
     ]
     var queryParameters: [String: Any] = [
       "bridge_args": [
-        "action_id": actionID
+        "action_id": actionID,
       ],
-      "method_results": responseParameters
+      "method_results": responseParameters,
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
 
@@ -144,14 +145,14 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       "result_key_2": "two",
       "result_key_3": [
         "result_key_4": 4,
-        "result_key_5": "five"
-      ]
+        "result_key_5": "five",
+      ],
     ]
     var queryParameters: [String: Any] = [
       "bridge_args": [
-        "action_id": UUID().uuidString
+        "action_id": UUID().uuidString,
       ],
-      "method_results": responseParameters
+      "method_results": responseParameters,
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
@@ -175,8 +176,8 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       "bridge_args": bridgeArgs,
       "method_results": [
         "result_key_1": 1,
-        "result_key_2": "two"
-      ]
+        "result_key_2": "two",
+      ],
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
@@ -205,9 +206,9 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let methodResults = "this is an invalid method_results value"
     var queryParameters: [String: Any] = [
       "bridge_args": [
-        "action_id": actionID
+        "action_id": actionID,
       ],
-      "method_results": methodResults
+      "method_results": methodResults,
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
@@ -237,7 +238,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let domain = "my custom error domain"
     let userInfo: [String: Any] = [
       "key_1": 1,
-      "key_2": "two"
+      "key_2": "two",
     ]
     var queryParameters: [String: Any] = [
       "bridge_args": [
@@ -245,13 +246,13 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
         "error": [
           "code": code,
           "domain": domain,
-          "user_info": userInfo
-        ]
+          "user_info": userInfo,
+        ],
       ],
       "method_results": [
         "result_key_1": 1,
-        "result_key_2": "two"
-      ]
+        "result_key_2": "two",
+      ],
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
@@ -276,11 +277,11 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     var queryParameters: [String: Any] = [
       "bridge_args": [
-        "action_id": actionID
+        "action_id": actionID,
       ],
       "method_results": [
-        "completionGesture": "cancel"
-      ]
+        "completionGesture": "cancel",
+      ],
     ]
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
@@ -308,7 +309,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let parameters: [String: Any] = [
       "api_key_1": "value1",
       "api_key_2": "value2",
-      "data": stubData()
+      "data": stubData(),
     ]
 
     do {
@@ -360,7 +361,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let parameters: [String: Any] = [
       "api_key_1": "value1",
       "api_key_2": "value2",
-      "image": stubImage()
+      "image": stubImage(),
     ]
 
     do {
@@ -417,7 +418,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let parameters: [String: Any] = [
       "api_key_1": "value1",
       "api_key_2": "value2",
-      "data": data
+      "data": data,
     ]
 
     do {
@@ -469,7 +470,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let parameters: [String: Any] = [
       "api_key_1": "value1",
       "api_key_2": "value2",
-      "image": image
+      "image": image,
     ]
 
     do {
@@ -538,7 +539,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     [
       "isPasteboard": NSNumber(value: true),
       "tag": tag ?? "",
-      "fbAppBridgeType_jsonReadyValue": pasteboardName ?? ""
+      "fbAppBridgeType_jsonReadyValue": pasteboardName ?? "",
     ]
   }
 
@@ -547,12 +548,12 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func stubDataSerialized(_ data: Data?, tag: String?) -> [String: Any]? {
-    guard let string = Base64.encode(data) else { return nil }
+    guard let string = data?.base64EncodedString() else { return nil }
 
     return [
       "isBase64": NSNumber(value: true),
       "tag": tag ?? "",
-      "fbAppBridgeType_jsonReadyValue": string
+      "fbAppBridgeType_jsonReadyValue": string,
     ]
   }
 

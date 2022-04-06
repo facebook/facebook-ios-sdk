@@ -57,7 +57,7 @@ public final class Fuzzer: NSObject {
     ["": [1, 2, 3]],
     ["Foo": true],
     ["Foo": ["Bar": "Baz"]],
-    ["Foo": ["a", 1, [:]]]
+    ["Foo": ["a", 1, [:]]],
   ]
 
   public class var random: AnyObject {

@@ -13,10 +13,10 @@ enum SampleRawRemoteGatekeeperList {
         [
           "gatekeepers": [
             SampleRawRemoteGatekeeper.validEnabled,
-            SampleRawRemoteGatekeeper.validDisabled
-          ]
-        ]
-      ]
+            SampleRawRemoteGatekeeper.validDisabled,
+          ],
+        ],
+      ],
     ]
   }()
 
@@ -26,16 +26,16 @@ enum SampleRawRemoteGatekeeperList {
         [
           "gatekeepers": [
             SampleRawRemoteGatekeeper.valid(name: "foo", enabled: true),
-            SampleRawRemoteGatekeeper.valid(name: "bar", enabled: false)
-          ]
-        ]
-      ]
+            SampleRawRemoteGatekeeper.valid(name: "bar", enabled: false),
+          ],
+        ],
+      ],
     ]
   }()
 
   static let missingGatekeepers: [String: Any] = {
     [
-      "data": []
+      "data": [],
     ]
   }()
 
@@ -43,9 +43,9 @@ enum SampleRawRemoteGatekeeperList {
     [
       "data": [
         [
-          "gatekeepers": []
-        ]
-      ]
+          "gatekeepers": [],
+        ],
+      ],
     ]
   }()
 }

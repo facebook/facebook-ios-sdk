@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import XCTest
+@testable import FBSDKLoginKit
 
 import FBSDKCoreKit_Basics
 import TestTools
+import XCTest
 
 final class AuthenticationTokenHeaderTests: XCTestCase {
 
@@ -30,7 +31,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     headerDictionary = [
       "alg": header.alg,
       "typ": header.typ,
-      "kid": header.kid
+      "kid": header.kid,
     ]
   }
 
@@ -94,11 +95,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
   // MARK: - Helpers
 
   func base64URLEncoded(_ data: Data) throws -> String {
-    let base64 = try XCTUnwrap(
-      Base64.encode(data),
-      "Unable to base 64 encode data"
-    )
-    return base64
+    data.base64EncodedString()
       .replacingOccurrences(of: "+", with: "-")
       .replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")

@@ -22,7 +22,7 @@
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
 #ifndef FBSDK_VERSION_STRING
- #define FBSDK_VERSION_STRING @"12.3.1"
+ #define FBSDK_VERSION_STRING @"13.1.0"
 #endif
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
@@ -291,7 +291,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   uname(&systemInfo);
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:@(systemInfo.machine) forKey:kFBSDKDeviceModel];
 
-  [FBSDKTypeUtility dictionary:completeCrashLog setObject:[UIDevice currentDevice].systemVersion forKey:kFBSDKDeviceOSVersion];
+  [FBSDKTypeUtility dictionary:completeCrashLog setObject:UIDevice.currentDevice.systemVersion forKey:kFBSDKDeviceOSVersion];
 
   NSData *data = [FBSDKTypeUtility dataWithJSONObject:completeCrashLog options:0 error:nil];
 

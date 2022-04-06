@@ -42,15 +42,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/TemporaryPublic
-        headerVisibility: public
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Static.xcconfig
       Release: Configurations/FBSDKShareKit-Static.xcconfig
@@ -61,11 +52,11 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
   FBSDKShareKit-Dynamic:
     type: framework
     platform: iOS
@@ -73,15 +64,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/TemporaryPublic
-        headerVisibility: public
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-Dynamic.xcconfig
       Release: Configurations/FBSDKShareKit-Dynamic.xcconfig
@@ -95,11 +77,11 @@ targets:
         weak: true
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
   FBSDKShareKit_TV-Static:
     type: framework
     platform: tvOS
@@ -107,41 +89,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - FBSDKAppInviteContent*
-          - FBSDKCameraEffectArguments*
-          - FBSDKCameraEffectTextures*
-          - FBSDKGameRequestContent*
-          - FBSDKGameRequestDialog*
-          - FBSDKGameRequestURLProvider*
-          - FBSDKMessageDialog*
-          - FBSDKSendButton*
-          - FBSDKShareButton*
-          - FBSDKShareCameraEffectContent*
-          - FBSDKShareDialog*
-          - FBSDKShareDialogMode*
-          - FBSDKSharingButton*
-          - FBSDKSharingScheme*
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/TemporaryPublic
-        headerVisibility: public
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        excludes:
-          - FBSDKCameraEffectArguments+Internal*
-          - FBSDKCameraEffectTextures+Internal*
-          - FBSDKGameRequest*
-          - FBSDKMessenger*
-          - FBSDKShareBridge*
-          - FBSDKShareAppEventNames*
-          - FBSDKShareCamera*
-          - FBSDKShareDialog*
-          - FBSDKShareExtension*
-          - FBSDKShareKit+Internal*
-          - FBSDKSocialCompose*
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
       Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
@@ -152,9 +99,9 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
       DEFINES_MODULE: YES
   FBSDKShareKit_TV-Dynamic:
     type: framework
@@ -163,41 +110,6 @@ targets:
     sources:
       - path: FBSDKShareKit
         headerVisibility: public
-        excludes:
-          - FBSDKAppInviteContent*
-          - FBSDKCameraEffectArguments*
-          - FBSDKCameraEffectTextures*
-          - FBSDKGameRequestContent*
-          - FBSDKGameRequestDialog*
-          - FBSDKGameRequestURLProvider*
-          - FBSDKMessageDialog*
-          - FBSDKSendButton*
-          - FBSDKShareButton*
-          - FBSDKShareCameraEffectContent*
-          - FBSDKShareDialog*
-          - FBSDKShareDialogMode*
-          - FBSDKSharingButton*
-          - FBSDKSharingScheme*
-          - Internal
-          - Info.plist
-      - path: FBSDKShareKit/TemporaryPublic
-        headerVisibility: public
-        createIntermediateGroups: true
-      - path: FBSDKShareKit/Internal
-        headerVisibility: project
-        excludes:
-          - FBSDKCameraEffectArguments+Internal*
-          - FBSDKCameraEffectTextures+Internal*
-          - FBSDKGameRequest*
-          - FBSDKMessenger*
-          - FBSDKShareBridge*
-          - FBSDKShareAppEventNames*
-          - FBSDKShareCamera*
-          - FBSDKShareDialog*
-          - FBSDKShareExtension*
-          - FBSDKShareKit+Internal*
-          - FBSDKSocialCompose*
-        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
       Release: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
@@ -209,9 +121,9 @@ targets:
       - sdk: Photos.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
       DEFINES_MODULE: YES
   FBSDKShareKitTests:
     type: bundle.unit-test
@@ -229,7 +141,6 @@ targets:
     settings:
       ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
       GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKShareKit/Internal/FBSDKShareKit-Prefix-Header.h
 schemes:
   FBSDKShareKit-Static:
     build:
@@ -242,6 +153,9 @@ schemes:
     test:
       targets:
         - FBSDKShareKitTests
+      gatherCoverageData: true
+      coverageTargets:
+        - FBSDKShareKit-Dynamic
   FBSDKShareKit_TV-Static:
     build:
       targets:

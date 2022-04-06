@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -15,13 +17,13 @@ final class ErrorConfigurationTests: XCTestCase {
   let rawErrorCodeConfiguration = [
     [
       "name": "other",
-      "items": [["code": 190, "subcodes": [459]]]
+      "items": [["code": 190, "subcodes": [459]]],
     ],
     [
       "name": "login",
       "items": [["code": 1, "subcodes": [12312]]],
       "recovery_message": "somemessage",
-      "recovery_options": ["Yes", "No thanks"]
+      "recovery_options": ["Yes", "No thanks"],
     ],
   ]
 
@@ -177,7 +179,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": [["code": 1, "subcodes": [12312]]],
           "recovery_message": "somemessage",
-          "recovery_options": ["Yes", "No thanks"]
+          "recovery_options": ["Yes", "No thanks"],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -190,13 +192,13 @@ final class ErrorConfigurationTests: XCTestCase {
       let array = [
         [
           "name": "other",
-          "items": [["code": 190, "subcodes": [Fuzzer.random]]]
+          "items": [["code": 190, "subcodes": [Fuzzer.random]]],
         ],
         [
           "name": "login",
           "items": [["code": 1, "subcodes": [Fuzzer.random]]],
           "recovery_message": "somemessage",
-          "recovery_options": ["Yes", "No thanks"]
+          "recovery_options": ["Yes", "No thanks"],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -215,7 +217,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": [["code": Fuzzer.random, "subcodes": [12312]]],
           "recovery_message": "somemessage",
-          "recovery_options": ["Yes", "No thanks"]
+          "recovery_options": ["Yes", "No thanks"],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -234,7 +236,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": Fuzzer.random,
           "recovery_message": "somemessage",
-          "recovery_options": ["Yes", "No thanks"]
+          "recovery_options": ["Yes", "No thanks"],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -253,7 +255,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": [["code": 1, "subcodes": [12312]]],
           "recovery_message": "somemessage",
-          "recovery_options": [Fuzzer.random, Fuzzer.random]
+          "recovery_options": [Fuzzer.random, Fuzzer.random],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -272,7 +274,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": [["code": 1, "subcodes": [12312]]],
           "recovery_message": "somemessage",
-          "recovery_options": Fuzzer.random
+          "recovery_options": Fuzzer.random,
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)
@@ -291,7 +293,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "name": "login",
           "items": [["code": 1, "subcodes": [12312]]],
           "recovery_message": "somemessage",
-          "recovery_options": ["Yes", "No thanks"]
+          "recovery_options": ["Yes", "No thanks"],
         ],
       ]
       let configuration = ErrorConfiguration(dictionary: nil)

@@ -26,11 +26,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
         link: false
@@ -39,6 +34,7 @@ targets:
       Release: Configurations/FBAEMKit-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
@@ -48,11 +44,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
       - sdk: UIKit.framework
@@ -64,6 +55,7 @@ targets:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBAEMKit_TV-Static:
     type: framework
@@ -71,11 +63,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
         link: false
@@ -84,6 +71,7 @@ targets:
       Release: Configurations/FBAEMKit-tvOS-Static.xcconfig
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
@@ -93,11 +81,6 @@ targets:
     productName: FBAEMKit
     sources:
       - path: FBAEMKit
-        headerVisibility: project
-        excludes:
-          - include
-      - path: FBAEMKit/include
-        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
       - sdk: UIKit.framework
@@ -109,6 +92,7 @@ targets:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
   FBAEMKitTests:
     type: bundle.unit-test
@@ -134,6 +118,7 @@ schemes:
         FBAEMKit-Dynamic: all
     test:
       targets: [FBAEMKitTests]
+      gatherCoverageData: true
       coverageTargets:
         - FBAEMKit-Dynamic
   FBAEMKit_TV-Static:

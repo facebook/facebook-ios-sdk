@@ -10,6 +10,8 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @implementation FBSDKNonceUtility
 
 + (BOOL)isValidNonce:(NSString *)nonce
@@ -18,7 +20,7 @@
   NSRange whiteSpaceRange = [string rangeOfCharacterFromSet:NSCharacterSet.whitespaceCharacterSet];
   BOOL containsWhitespace = (whiteSpaceRange.location != NSNotFound);
 
-  return (([string length] > 0) && !containsWhitespace);
+  return ((string.length > 0) && !containsWhitespace);
 }
 
 @end

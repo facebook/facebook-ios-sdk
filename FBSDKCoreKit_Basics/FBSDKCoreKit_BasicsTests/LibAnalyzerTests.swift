@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit_Basics
+@testable import FBSDKCoreKit_Basics
+
 import XCTest
 
 final class LibAnalyzerTests: XCTestCase {
@@ -23,7 +24,7 @@ final class LibAnalyzerTests: XCTestCase {
     let methodMapping = [
       "0x0109cbd02e": "-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+3110632",
       "0x0110cbd02e": "-[NSNib _instantiateWithOwner:options:topLevelObjects:] + 136",
-      "0x0111cbd02e": "-[NSStoryboard instantiateControllerWithIdentifier:] + 236"
+      "0x0111cbd02e": "-[NSStoryboard instantiateControllerWithIdentifier:] + 236",
     ]
     var result = LibAnalyzer.symbolicateCallstack(callstack, methodMapping: methodMapping)
 

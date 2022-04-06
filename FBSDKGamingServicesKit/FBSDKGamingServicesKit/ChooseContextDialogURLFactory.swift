@@ -39,7 +39,7 @@ struct ChooseContextDialogURLFactory: DialogDeeplinkURLCreating {
     components.queryItems = [
       URLQueryItem(name: QueryKeys.filter, value: ChooseContextContent.filtersName(forFilters: content.filter)),
       URLQueryItem(name: QueryKeys.minSize, value: String(content.minParticipants)),
-      URLQueryItem(name: QueryKeys.maxSize, value: String(content.maxParticipants))
+      URLQueryItem(name: QueryKeys.maxSize, value: String(content.maxParticipants)),
     ]
     guard let url = components.url else {
       throw GamingServicesDialogError.deeplinkURLCreation

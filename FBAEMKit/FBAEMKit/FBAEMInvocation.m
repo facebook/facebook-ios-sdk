@@ -11,9 +11,12 @@
 #import "FBAEMInvocation.h"
 
 #import <CommonCrypto/CommonHMAC.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
+#import "FBAEMRule.h"
 #import "FBAEMUtility.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define SEC_IN_DAY 86400
 #define CATALOG_OPTIMIZATION_MODULUS 8
@@ -190,7 +193,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     isAttributed = YES;
   }
   // Change currency to default currency if currency is not found in currencySet
-  NSString *valueCurrency = [currency uppercaseString];
+  NSString *valueCurrency = currency.uppercaseString;
   if (![config.currencySet containsObject:valueCurrency]) {
     valueCurrency = config.defaultCurrency;
   }
@@ -293,7 +296,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     NSMutableData *hmac = [NSMutableData dataWithLength:CC_SHA512_DIGEST_LENGTH];
     NSString *text = [NSString stringWithFormat:@"%@|%@|%@|%@", _campaignID, @(_conversionValue), @(delay), @"server"];
     NSData *clearTextData = [text dataUsingEncoding:NSUTF8StringEncoding];
-    CCHmac(kCCHmacAlgSHA512, [secretData bytes], [secretData length], [clearTextData bytes], [clearTextData length], hmac.mutableBytes);
+    CCHmac(kCCHmacAlgSHA512, secretData.bytes, secretData.length, clearTextData.bytes, clearTextData.length, hmac.mutableBytes);
     NSString *base64UrlSafeString = [hmac base64EncodedStringWithOptions:0];
     base64UrlSafeString = [base64UrlSafeString stringByReplacingOccurrencesOfString:@"/"
                                                                          withString:@"_"];
@@ -376,7 +379,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
     return nil;
   } else {
     FBAEMConfiguration *config = nil;
-    for (FBAEMConfiguration *c in [configList reverseObjectEnumerator]) {
+    for (FBAEMConfiguration *c in configList.reverseObjectEnumerator) {
       if (c.validFrom <= _timestamp.timeIntervalSince1970 && [c isSameBusinessID:_businessID]) {
         config = c;
         break;

@@ -31,4 +31,5 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh

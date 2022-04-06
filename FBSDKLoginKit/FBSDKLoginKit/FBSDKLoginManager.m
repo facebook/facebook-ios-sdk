@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
@@ -20,9 +22,7 @@
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
-#import "FBSDKLoginUtility.h"
 #import "FBSDKMonotonicTime.h"
-#import "FBSDKPermission.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";

@@ -30,8 +30,12 @@ file_name:
     BridgeAPI+ApplicationOpenUrlTests.swift,
     BridgeAPI+SessionCompletionHandlerTests.swift,
     ShareAppEventNames.swift,
+    ShareAppEventParameters.swift,
     ShareDialogMode.swift,
+    InternalUtilityExtensions.swift
   ]
+trailing_comma:
+  mandatory_comma: true
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"
@@ -191,11 +195,11 @@ only_rules:
   - sorted_first_last
   - sorted_imports
   - statement_position
-  - strict_fileprivate
   - superfluous_disable_command
   - switch_case_alignment
   - syntactic_sugar
   - trailing_closure
+  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace

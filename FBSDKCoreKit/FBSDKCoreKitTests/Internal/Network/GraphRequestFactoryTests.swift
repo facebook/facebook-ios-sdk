@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
 
 final class GraphRequestFactoryTests: XCTestCase {
 
@@ -18,7 +18,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       parameters: ["some": "thing"],
       tokenString: "foo",
       httpMethod: .get,
-      flags: [.disableErrorRecovery]
+      flags: [.skipClientToken, .disableErrorRecovery]
     )
     guard let graphRequest = request as? GraphRequest else {
       return XCTFail("Should create a request of the correct concrete type")

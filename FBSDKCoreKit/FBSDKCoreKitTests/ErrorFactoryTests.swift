@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class ErrorFactoryTests: XCTestCase {
@@ -526,7 +527,7 @@ final class ErrorFactoryTests: XCTestCase {
     static let userInfoKey = "userInfoKey"
     static let userInfoValue = "userInfoValue"
     static let userInfo: [String: Any] = [
-      userInfoKey: userInfoValue
+      userInfoKey: userInfoValue,
     ]
   }
 

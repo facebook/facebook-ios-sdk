@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -245,7 +246,7 @@ final class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
     [
       (URLs.connectURLWithQuery, ["bar": "baz"]),
       (URLs.connectURLWithFragment, ["fragment": ""]),
-      (URLs.connectURLWithQueryAndFragment, ["bar": "baz", "fragment": ""])
+      (URLs.connectURLWithQueryAndFragment, ["bar": "baz", "fragment": ""]),
     ].forEach {
       let (url, expectedResults) = $0
       capturedDidCompleteResults = nil

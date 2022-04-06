@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if BUCK
-import FacebookCore
-#endif
+@testable import FBSDKLoginKit
 
 import XCTest
 
@@ -23,6 +21,6 @@ final class DevicePollerTests: XCTestCase {
 
     poller.scheduleBlock(block, interval: 1)
 
-    waitForExpectations(timeout: 1, handler: nil)
+    waitForExpectations(timeout: 2, handler: nil)
   }
 }

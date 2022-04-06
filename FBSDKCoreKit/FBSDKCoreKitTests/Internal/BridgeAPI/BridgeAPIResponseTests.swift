@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -59,7 +61,7 @@ final class BridgeAPIResponseTests: XCTestCase {
     request.protocol = bridgeProtocol
     [
       FBSDKBridgeAPIProtocolType.native,
-      .web
+      .web,
     ]
       .forEach { protocolType in
         request.protocolType = protocolType
@@ -81,7 +83,7 @@ final class BridgeAPIResponseTests: XCTestCase {
 
     let pairs: [(type: FBSDKBridgeAPIProtocolType, sources: [String])] = [
       (.native, ["com.facebook.foo", ".com.facebook.foo"]),
-      (.web, ["com.apple.mobilesafari", "com.apple.SafariViewService"])
+      (.web, ["com.apple.mobilesafari", "com.apple.SafariViewService"]),
     ]
 
     pairs.forEach { pair in

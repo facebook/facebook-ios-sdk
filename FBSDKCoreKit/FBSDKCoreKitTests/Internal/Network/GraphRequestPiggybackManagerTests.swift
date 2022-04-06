@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -170,7 +172,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   func testAddingRequestsForConnectionWithSafeAndUnsafeRequests() {
     let connection = SampleGraphRequestConnections.with(requests: [
       SampleGraphRequests.valid,
-      SampleGraphRequests.withAttachment
+      SampleGraphRequests.withAttachment,
     ])
     manager.addPiggybackRequests(connection)
     XCTAssertFalse(serverConfigurationProvider.requestToLoadConfigurationCallWasCalled)
@@ -360,7 +362,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
           "access_token": Fuzzer.random,
           "expires_at": Fuzzer.random,
           "data_access_expiration_time": Fuzzer.random,
-          "graph_domain": Fuzzer.random
+          "graph_domain": Fuzzer.random,
         ]
       )
     }
@@ -697,7 +699,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let configuration = ServerConfigurationFixtures.config(
       withDictionary: [
         "defaults": true,
-        "timestamp": twoDaysAgo
+        "timestamp": twoDaysAgo,
       ]
     )
 
@@ -721,7 +723,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let configuration = ServerConfigurationFixtures.config(
       withDictionary: [
         "defaults": true,
-        "timestamp": Date()
+        "timestamp": Date(),
       ]
     )
     let graphRequest = GraphRequest(graphPath: name)
@@ -742,7 +744,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let configuration = ServerConfigurationFixtures.config(
       withDictionary: [
         "defaults": true,
-        "timestamp": twoDaysAgo
+        "timestamp": twoDaysAgo,
       ]
     )
     let graphRequest = GraphRequest(graphPath: name)
@@ -763,7 +765,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let configuration = ServerConfigurationFixtures.config(
       withDictionary: [
         "defaults": false,
-        "timestamp": Date()
+        "timestamp": Date(),
       ]
     )
     let graphRequest = GraphRequest(graphPath: name)

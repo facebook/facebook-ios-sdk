@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKLoginKit
+
 import TestTools
 import XCTest
 
@@ -98,13 +100,13 @@ final class LoginManagerTests: XCTestCase {
       hometown: Location(
         from: [
           "id": "112724962075996",
-          "name": "Martinez, California"
+          "name": "Martinez, California",
         ]
       ),
       location: Location(
         from: [
           "id": "110843418940484",
-          "name": "Seattle, Washington"
+          "name": "Seattle, Washington",
         ]
       ),
       gender: "male",
@@ -525,9 +527,9 @@ final class LoginManagerTests: XCTestCase {
 
     let rawClaims = try XCTUnwrap(claims)
     let claimsData = try JSONSerialization.data(withJSONObject: rawClaims, options: [])
-    let encodedClaims = try XCTUnwrap(Base64.encode(claimsData))
+    let encodedClaims = claimsData.base64EncodedData()
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
-    let encodedHeader = try XCTUnwrap(Base64.encode(headerData))
+    let encodedHeader = headerData.base64EncodedData()
 
     let tokenString = "\(encodedHeader).\(encodedClaims).signature"
 
@@ -579,9 +581,9 @@ final class LoginManagerTests: XCTestCase {
 
     let rawClaims = try XCTUnwrap(claims)
     let claimsData = try JSONSerialization.data(withJSONObject: rawClaims, options: [])
-    let encodedClaims = try XCTUnwrap(Base64.encode(claimsData))
+    let encodedClaims = claimsData.base64EncodedData()
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
-    let encodedHeader = try XCTUnwrap(Base64.encode(headerData))
+    let encodedHeader = headerData.base64EncodedData()
 
     let tokenString = "\(encodedHeader).\(encodedClaims).signature"
 

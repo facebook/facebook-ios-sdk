@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class DefaultCoreKitComponentsTests: XCTestCase {
@@ -472,7 +474,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   @available(iOS 14, *)
   func testAEMNetworker() {
     XCTAssertNotNil(
-      components.aemNetworker as? AEMNetworker,
+      components.aemNetworker as? _AEMNetworker,
       "The default components should use an instance of AEMNetworker as its AEM networker"
     )
   }

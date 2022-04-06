@@ -59,7 +59,7 @@ final class TestAppEvents: TestEventLogger,
   var capturedMetadataIndexer: MetadataIndexing?
   var capturedSKAdNetworkReporter: AppEventsReporter?
   var capturedUserDataStore: UserDataPersisting?
-  var capturedAEMReporter: AEMReporterProtocol.Type?
+  var capturedAEMReporter: _AEMReporterProtocol.Type?
   // swiftlint:disable:next line_length
   var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
   var capturedInternalUtility: InternalUtilityProtocol?
@@ -115,7 +115,7 @@ final class TestAppEvents: TestEventLogger,
     skAdNetworkReporter: AppEventsReporter?,
     codelessIndexer: CodelessIndexing.Type,
     swizzler: Swizzling.Type,
-    aemReporter: AEMReporterProtocol.Type
+    aemReporter: _AEMReporterProtocol.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer

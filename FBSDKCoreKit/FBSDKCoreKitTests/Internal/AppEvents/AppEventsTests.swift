@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import FBAEMKit
-import FBSDKCoreKit
 import TestTools
 import XCTest
 
@@ -333,7 +334,7 @@ final class AppEventsTests: XCTestCase {
       .init("fb_product_mpn"): "BLUE MOUNTAIN",
       .init("fb_product_price_amount"): "1.000",
       .init("fb_product_price_currency"): "USD",
-      .init("fb_product_title"): "title"
+      .init("fb_product_title"): "title",
     ]
 
     let capturedParameters = try XCTUnwrap(
@@ -688,7 +689,7 @@ final class AppEventsTests: XCTestCase {
       { self.appEvents.sendEventBindingsToUnity() },
       { self.appEvents.activateApp() },
       { _ = self.appEvents.userID },
-      { self.appEvents.userID = foo }
+      { self.appEvents.userID = foo },
     ]
 
     exceptionRaisingClosures.forEach { closure in

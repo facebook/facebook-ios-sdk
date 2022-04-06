@@ -55,9 +55,9 @@ NS_ASSUME_NONNULL_END
                                      error:(NSError *__autoreleasing *)errorRef
                       invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
-  if (invalidObjectHandler || ![FBSDKTypeUtility isValidJSONObject:object]) {
+  if (invalidObjectHandler || ![NSJSONSerialization isValidJSONObject:object]) {
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
-    if (![FBSDKTypeUtility isValidJSONObject:object]) {
+    if (![NSJSONSerialization isValidJSONObject:object]) {
       if (errorRef != NULL) {
         Class FBSDKErrorFactory = NSClassFromString(@"FBSDKErrorFactory");
         id factory = [FBSDKErrorFactory new];
@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_END
     object = dictionary;
   } else if ([object isKindOfClass:NSArray.class]) {
     NSMutableArray<id> *array = [NSMutableArray new];
-    for (id obj in (NSArray *)object) {
+    for (id obj in (NSArray<id> *)object) {
       id convertedObj = [self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop];
       [FBSDKTypeUtility array:array addObject:convertedObj];
       if (stop) {

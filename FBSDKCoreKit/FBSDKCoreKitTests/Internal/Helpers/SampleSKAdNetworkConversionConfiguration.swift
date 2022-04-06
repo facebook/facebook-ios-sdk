@@ -24,13 +24,13 @@ final class SampleSKAdNetworkConversionConfiguration: NSObject {
               "conversion_value": 2,
               "events": [
                 [
-                  "event_name": "fb_test"
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
+                  "event_name": "fb_test",
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
     ]
   }
 }

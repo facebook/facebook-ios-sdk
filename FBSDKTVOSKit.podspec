@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '12.3.1'
+  s.version      = '13.1.0'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
@@ -51,6 +51,7 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = 'XCFrameworks/FBSDKTVOSKit.xcframework'
 
   s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
+  s.dependency 'FBAEMKit', "#{s.version}"
   s.dependency 'FBSDKCoreKit', "#{s.version}"
   s.dependency 'FBSDKShareKit', "#{s.version}"
   s.dependency 'FBSDKLoginKit', "#{s.version}"

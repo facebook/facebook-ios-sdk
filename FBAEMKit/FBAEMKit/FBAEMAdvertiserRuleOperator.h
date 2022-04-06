@@ -6,13 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 #if !TARGET_OS_TV
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
 {
-  Unknown = 0,
+  FBAEMAdvertiserRuleOperatorUnknown = 0,
   // Multi Entry Rule Operator
   FBAEMAdvertiserRuleOperatorAnd,
   FBAEMAdvertiserRuleOperatorOr,
@@ -21,9 +27,9 @@ typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
   FBAEMAdvertiserRuleOperatorContains,
   FBAEMAdvertiserRuleOperatorNotContains,
   FBAEMAdvertiserRuleOperatorStartsWith,
-  FBAEMAdvertiserRuleOperatorI_Contains,
-  FBAEMAdvertiserRuleOperatorI_NotContains,
-  FBAEMAdvertiserRuleOperatorI_StartsWith,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveContains,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith,
   FBAEMAdvertiserRuleOperatorRegexMatch,
   FBAEMAdvertiserRuleOperatorEqual,
   FBAEMAdvertiserRuleOperatorNotEqual,
@@ -31,10 +37,10 @@ typedef NS_CLOSED_ENUM (NSInteger, FBAEMAdvertiserRuleOperator)
   FBAEMAdvertiserRuleOperatorLessThanOrEqual,
   FBAEMAdvertiserRuleOperatorGreaterThan,
   FBAEMAdvertiserRuleOperatorGreaterThanOrEqual,
-  FBAEMAdvertiserRuleOperatorI_IsAny,
-  FBAEMAdvertiserRuleOperatorI_IsNotAny,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny,
+  FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny,
   FBAEMAdvertiserRuleOperatorIsAny,
   FBAEMAdvertiserRuleOperatorIsNotAny
-} NS_SWIFT_NAME(AEMAdvertiserRuleOperator);
+} NS_SWIFT_NAME(_AEMAdvertiserRuleOperator);
 
 #endif

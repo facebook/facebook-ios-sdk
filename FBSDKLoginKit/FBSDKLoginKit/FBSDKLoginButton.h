@@ -8,17 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
-#if TARGET_OS_TV
-
-@interface FBLoginButton : UIView
-
-@property (nonatomic, copy) NSArray<NSString *> *permissions;
-
-@end
-
-#else
+#if !TARGET_OS_TV
 
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>

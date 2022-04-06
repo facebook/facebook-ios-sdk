@@ -24,9 +24,7 @@
 #import "FBSDKLoginProviding.h"
 #import "FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginURLCompleter+Testing.h"
-#import "FBSDKLoginUtility.h"
 #import "FBSDKNonceUtility.h"
-#import "FBSDKPermission.h"
 #import "FBSDKProfileFactory.h"
 
 // +Testing.h files

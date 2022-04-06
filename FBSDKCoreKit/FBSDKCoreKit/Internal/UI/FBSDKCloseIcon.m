@@ -37,7 +37,7 @@
 
   // shadow
   rect = CGRectIntegral(CGRectInset(rect, step, step));
-  NSArray *colors = @[
+  NSArray<id> *colors = @[
     (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.7].CGColor,
     (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.3].CGColor,
     (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.1].CGColor,

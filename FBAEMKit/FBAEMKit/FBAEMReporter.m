@@ -10,15 +10,15 @@
 
 #import "FBAEMReporter.h"
 
-#include <stdlib.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMAdvertiserRuleFactory.h"
-#import "FBAEMConfiguration.h"
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
-#import "FBAEMSettings.h"
+#import "FBAEMRule.h"
 #import "FBAEMUtility.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
 #define FB_AEM_DELAY           3

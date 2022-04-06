@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -193,7 +195,7 @@ final class BridgeAPITests: XCTestCase {
       AuthenticationSession.none,
       .showAlert,
       .showWebBrowser,
-      .canceledBySystem
+      .canceledBySystem,
     ]
       .shuffled()
       .forEach { state in
@@ -227,7 +229,7 @@ final class BridgeAPITests: XCTestCase {
       .started,
       .showAlert,
       .showWebBrowser,
-      .canceledBySystem
+      .canceledBySystem,
     ]
       .shuffled()
       .forEach { state in
@@ -323,7 +325,7 @@ final class BridgeAPITests: XCTestCase {
       .started,
       .showAlert,
       .showWebBrowser,
-      .canceledBySystem
+      .canceledBySystem,
     ]
       .shuffled()
       .forEach { state in
@@ -359,7 +361,7 @@ final class BridgeAPITests: XCTestCase {
       AuthenticationSession.none,
       .started,
       .showWebBrowser,
-      .canceledBySystem
+      .canceledBySystem,
     ]
       .shuffled()
       .forEach { state in
@@ -402,7 +404,7 @@ final class BridgeAPITests: XCTestCase {
     let options: [UIApplication.LaunchOptionsKey: Any] = [
       UIApplication.LaunchOptionsKey.url: sampleURL,
       UIApplication.LaunchOptionsKey.sourceApplication: sampleSource,
-      UIApplication.LaunchOptionsKey.annotation: sampleAnnotation
+      UIApplication.LaunchOptionsKey.annotation: sampleAnnotation,
     ]
 
     FBSDKLoginManager.stubbedOpenURLSuccess = true

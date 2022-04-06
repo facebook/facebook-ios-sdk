@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
+@testable import FBSDKLoginKit
+
 import TestTools
 import XCTest
 
@@ -109,7 +110,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
       (
         result: createLoginManagerResult(isCancelled: false, declinedPermissions: ["email"]),
         error: nil
-      )
+      ),
     ]
 
     try resultErrorPairs.forEach { pair in

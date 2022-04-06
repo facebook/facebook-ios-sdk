@@ -45,9 +45,9 @@ schemes:
       targets:
         FBSDKGamingServicesKit-Dynamic: all
     test:
-      gatherCoverageData: true
       targets:
         - FBSDKGamingServicesKitTests
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKGamingServicesKit-Dynamic
 
@@ -69,6 +69,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit FBSDKGamingServicesKitTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
@@ -91,6 +92,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
+        showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO

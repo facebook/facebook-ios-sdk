@@ -150,7 +150,7 @@ static id<FBSDKSettings> _settings;
     return;
   }
   if (disabledFeatures.count > 0) {
-    NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names" : [disabledFeatures allObjects],
+    NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names" : disabledFeatures.allObjects,
                                                          @"timestamp" : [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]], };
     NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:disabledFeatureLog options:0 error:nil];
     if (jsonData) {

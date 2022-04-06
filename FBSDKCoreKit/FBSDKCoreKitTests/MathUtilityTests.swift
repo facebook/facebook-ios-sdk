@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class MathUtilityTests: XCTestCase {
@@ -14,7 +16,7 @@ final class MathUtilityTests: XCTestCase {
       (CGSize.zero, .zero),
       (CGSize(width: 10.1, height: 10.1), CGSize(width: 11, height: 11)),
       (CGSize(width: 10.5, height: 10.5), CGSize(width: 11, height: 11)),
-      (CGSize(width: 10.7, height: 10.7), CGSize(width: 11, height: 11))
+      (CGSize(width: 10.7, height: 10.7), CGSize(width: 11, height: 11)),
     ]
 
     fixtures.forEach { fixture in
@@ -31,7 +33,7 @@ final class MathUtilityTests: XCTestCase {
       (CGSize.zero, .zero),
       (CGSize(width: 10.1, height: 10.1), CGSize(width: 10, height: 10)),
       (CGSize(width: 10.5, height: 10.5), CGSize(width: 10, height: 10)),
-      (CGSize(width: 10.7, height: 10.7), CGSize(width: 10, height: 10))
+      (CGSize(width: 10.7, height: 10.7), CGSize(width: 10, height: 10)),
     ]
 
     fixtures.forEach { fixture in

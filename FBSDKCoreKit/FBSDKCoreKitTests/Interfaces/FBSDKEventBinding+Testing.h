@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
 
-+ (NSString *)findParameterOfPath:(NSArray *)path
++ (NSString *)findParameterOfPath:(NSArray<FBSDKCodelessPathComponent *> *)path
                          pathType:(NSString *)pathType
                        sourceView:(UIView *)sourceView;
 

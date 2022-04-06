@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKLoginKit
+
 import XCTest
 
 final class CodeVerifierTests: XCTestCase {
@@ -20,7 +22,7 @@ final class CodeVerifierTests: XCTestCase {
       "",
       "abcdefg", // too short
       String(repeating: "a", count: 129), // too long
-      "OB6imf0pt3YLueBtNlljrdJZXdFk8gKJ97UQEpz1ojlEUL4p=" // invalid character
+      "OB6imf0pt3YLueBtNlljrdJZXdFk8gKJ97UQEpz1ojlEUL4p=", // invalid character
     ].forEach { codeVerifier in
       XCTAssertNil(
         CodeVerifier(string: codeVerifier),
@@ -34,7 +36,7 @@ final class CodeVerifierTests: XCTestCase {
       String(repeating: "a", count: 43),
       String(repeating: "a", count: 128),
       "OB6imf0pt3YLueBtNlljrdJZXdFk8gKJ97UQEpz1ojlEUL4p",
-      "OB6imf0pt3YLueBtNlljrdJZXdFk8gKJ97UQEpz1ojlEUL4p-._~"
+      "OB6imf0pt3YLueBtNlljrdJZXdFk8gKJ97UQEpz1ojlEUL4p-._~",
     ].forEach { codeVerifier in
       XCTAssertNotNil(
         CodeVerifier(string: codeVerifier),

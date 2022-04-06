@@ -10,6 +10,8 @@
 
 #import "FBSDKProfileFactory.h"
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 #import "FBSDKLoginKit.h"
 
 @implementation FBSDKProfileFactory

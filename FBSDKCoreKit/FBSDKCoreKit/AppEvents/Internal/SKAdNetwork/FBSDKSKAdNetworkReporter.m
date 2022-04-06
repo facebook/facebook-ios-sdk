@@ -198,7 +198,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     isCacheUpdated = true;
   }
   // Change currency to default currency if currency is not found in currencySet
-  NSString *valueCurrency = [currency uppercaseString];
+  NSString *valueCurrency = currency.uppercaseString;
   if (![self.config.currencySet containsObject:valueCurrency]) {
     valueCurrency = self.config.defaultCurrency;
   }

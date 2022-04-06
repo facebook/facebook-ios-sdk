@@ -31,9 +31,9 @@
       NSNumber *defaultATEStatus = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_DEFAULT_ATE_STATUS_KEY]] ?: @(FBSDKAdvertisingTrackingUnspecified);
       NSNumber *advertiserIDCollectionEnabled = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY]] ?: @(YES);
       NSNumber *eventCollectionEnabled = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY]] ?: @(NO);
-      _defaultATEStatus = [defaultATEStatus integerValue];
-      _advertiserIDCollectionEnabled = [advertiserIDCollectionEnabled boolValue];
-      _eventCollectionEnabled = [eventCollectionEnabled boolValue];
+      _defaultATEStatus = defaultATEStatus.integerValue;
+      _advertiserIDCollectionEnabled = advertiserIDCollectionEnabled.boolValue;
+      _eventCollectionEnabled = eventCollectionEnabled.boolValue;
     } @catch (NSException *exception) {
       return FBSDKAppEventsConfiguration.defaultConfiguration;
     }

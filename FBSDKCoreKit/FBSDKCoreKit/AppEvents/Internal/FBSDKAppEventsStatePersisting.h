@@ -17,7 +17,7 @@ NS_SWIFT_NAME(AppEventsStatePersisting)
 - (void)clearPersistedAppEventsStates;
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState;
 // patternlint-disable-next-line objc-headers-collection-generics
-- (NSArray *)retrievePersistedAppEventsStates; // NSArray<FBSDKAppEventsState *>
+- (NSArray<id> *)retrievePersistedAppEventsStates; // NSArray<FBSDKAppEventsState *>
 
 @end
 NS_ASSUME_NONNULL_END

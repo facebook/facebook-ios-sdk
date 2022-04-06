@@ -10,7 +10,7 @@ import FBAEMKit
 import Foundation
 
 @objcMembers
-final class TestInvocation: AEMInvocation {
+final class TestInvocation: _AEMInvocation {
 
   var attributionCallCount = 0
   var updateConversionCallCount = 0
@@ -22,7 +22,7 @@ final class TestInvocation: AEMInvocation {
     currency: String?,
     value: NSNumber?,
     parameters: [String: Any]?,
-    configs: [String: [AEMConfiguration]]?,
+    configs: [String: [_AEMConfiguration]]?,
     shouldUpdateCache: Bool
   ) -> Bool {
     attributionCallCount += 1
@@ -30,7 +30,7 @@ final class TestInvocation: AEMInvocation {
   }
 
   override func updateConversionValue(
-    withConfigs configs: [String: [AEMConfiguration]]?,
+    withConfigs configs: [String: [_AEMConfiguration]]?,
     event: String,
     shouldBoostPriority: Bool
   ) -> Bool {
@@ -41,7 +41,7 @@ final class TestInvocation: AEMInvocation {
 
   override func isOptimizedEvent(
     _ event: String,
-    configs: [String: [AEMConfiguration]]?
+    configs: [String: [_AEMConfiguration]]?
   ) -> Bool {
     isOptimizedEvent
   }

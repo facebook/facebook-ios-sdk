@@ -10,7 +10,9 @@
 
 #import "FBAEMRule.h"
 
-#import "FBCoreKitBasicsImportForAEMKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 static NSString *const CONVERSION_VALUE_KEY = @"conversion_value";
 static NSString *const PRIORITY_KEY = @"priority";

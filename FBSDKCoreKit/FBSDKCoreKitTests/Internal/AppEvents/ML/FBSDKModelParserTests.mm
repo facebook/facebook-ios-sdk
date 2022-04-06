@@ -16,13 +16,13 @@ using std::vector;
 
 @interface FBSDKModelParser ()
 
-+ (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo;
++ (NSDictionary<NSString *, NSArray<NSNumber *> *> *)getMTMLWeightsInfo;
 
 @end
 
 @interface FBSDKModelParserTests : XCTestCase
 
-@property (nonatomic) NSMutableDictionary<NSString *, NSArray *> *mockWeightsInfoDict;
+@property (nonatomic) NSMutableDictionary<NSString *, NSArray<NSNumber *> *> *mockWeightsInfoDict;
 
 @end
 
@@ -69,7 +69,7 @@ using std::vector;
   XCTAssertFalse(validatedRes);
 }
 
-- (unordered_map<string, MTensor>)_mockWeightsWithRefDict:(NSDictionary<NSString *, NSArray *> *)dict
+- (unordered_map<string, MTensor>)_mockWeightsWithRefDict:(NSDictionary<NSString *, NSArray<NSNumber *> *> *)dict
 {
   unordered_map<string, MTensor> weights;
   for (NSString *key in dict) {

@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 @interface FBSDKLoginManagerLoginResult ()
 @property (nonatomic) NSMutableDictionary<NSString *, id> *mutableLoggingExtras;
 @end

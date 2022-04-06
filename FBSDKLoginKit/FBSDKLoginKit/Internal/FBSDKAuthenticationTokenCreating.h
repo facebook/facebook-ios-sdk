@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,3 +29,5 @@ NS_SWIFT_NAME(createToken(tokenString:nonce:graphDomain:completion:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

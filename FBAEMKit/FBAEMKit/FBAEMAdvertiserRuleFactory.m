@@ -10,9 +10,11 @@
 
 #import "FBAEMAdvertiserRuleFactory.h"
 
-#import "FBAEMAdvertiserMultiEntryRule.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
+
 #import "FBAEMAdvertiserSingleEntryRule.h"
-#import "FBCoreKitBasicsImportForAEMKit.h"
 
 @implementation FBAEMAdvertiserRuleFactory
 
@@ -90,15 +92,15 @@
   NSNumber *numericalCondition = nil;
   NSArray<NSString *> *arrayCondition = nil;
   switch (operator) {
-    case Unknown:
+    case FBAEMAdvertiserRuleOperatorUnknown:
     default:
       return nil;
     case FBAEMAdvertiserRuleOperatorContains:
     case FBAEMAdvertiserRuleOperatorNotContains:
     case FBAEMAdvertiserRuleOperatorStartsWith:
-    case FBAEMAdvertiserRuleOperatorI_Contains:
-    case FBAEMAdvertiserRuleOperatorI_NotContains:
-    case FBAEMAdvertiserRuleOperatorI_StartsWith:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveContains:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith:
     case FBAEMAdvertiserRuleOperatorRegexMatch:
     case FBAEMAdvertiserRuleOperatorEqual:
     case FBAEMAdvertiserRuleOperatorNotEqual:
@@ -108,8 +110,8 @@
     case FBAEMAdvertiserRuleOperatorGreaterThan:
     case FBAEMAdvertiserRuleOperatorGreaterThanOrEqual:
       numericalCondition = [FBSDKTypeUtility dictionary:rawRule objectForKey:encodedOperator ofType:NSNumber.class]; break;
-    case FBAEMAdvertiserRuleOperatorI_IsAny:
-    case FBAEMAdvertiserRuleOperatorI_IsNotAny:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny:
+    case FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny:
     case FBAEMAdvertiserRuleOperatorIsAny:
     case FBAEMAdvertiserRuleOperatorIsNotAny:
       arrayCondition = [FBSDKTypeUtility dictionary:rawRule objectForKey:encodedOperator ofType:NSArray.class]; break;
@@ -122,7 +124,7 @@
 
 - (nullable NSString *)primaryKeyForRule:(NSDictionary<NSString *, id> *)rule
 {
-  NSArray<NSString *> *keys = [rule allKeys];
+  NSArray<NSString *> *keys = rule.allKeys;
   NSString *key = keys.firstObject;
   return [FBSDKTypeUtility stringValueOrNil:key];
 }
@@ -131,33 +133,35 @@
 {
   NSString *key = [self primaryKeyForRule:rule];
   if (!key) {
-    return Unknown;
+    return FBAEMAdvertiserRuleOperatorUnknown;
   }
   NSArray<NSString *> *operatorKeys = @[
-    @"unknown",
-    @"and",
-    @"or",
-    @"not",
-    @"contains",
-    @"not_contains",
-    @"starts_with",
-    @"i_contains",
-    @"i_not_contains",
-    @"i_starts_with",
-    @"regex_match",
-    @"eq",
-    @"neq",
-    @"lt",
-    @"lte",
-    @"gt",
-    @"gte",
-    @"i_is_any",
-    @"i_is_not_any",
-    @"is_any",
-    @"is_not_any"
+    // UNCRUSTIFY_FORMAT_OFF
+    @"unknown",        // FBAEMAdvertiserRuleOperatorUnknown
+    @"and",            // FBAEMAdvertiserRuleOperatorAnd
+    @"or",             // FBAEMAdvertiserRuleOperatorOr
+    @"not",            // FBAEMAdvertiserRuleOperatorNot
+    @"contains",       // FBAEMAdvertiserRuleOperatorContains
+    @"not_contains",   // FBAEMAdvertiserRuleOperatorNotContains
+    @"starts_with",    // FBAEMAdvertiserRuleOperatorStartsWith
+    @"i_contains",     // FBAEMAdvertiserRuleOperatorCaseInsensitiveContains
+    @"i_not_contains", // FBAEMAdvertiserRuleOperatorCaseInsensitiveNotContains
+    @"i_starts_with",  // FBAEMAdvertiserRuleOperatorCaseInsensitiveStartsWith
+    @"regex_match",    // FBAEMAdvertiserRuleOperatorRegexMatch
+    @"eq",             // FBAEMAdvertiserRuleOperatorEqual
+    @"neq",            // FBAEMAdvertiserRuleOperatorNotEqual
+    @"lt",             // FBAEMAdvertiserRuleOperatorLessThan
+    @"lte",            // FBAEMAdvertiserRuleOperatorLessThanOrEqual
+    @"gt",             // FBAEMAdvertiserRuleOperatorGreaterThan
+    @"gte",            // FBAEMAdvertiserRuleOperatorGreaterThanOrEqual
+    @"i_is_any",       // FBAEMAdvertiserRuleOperatorCaseInsensitiveIsAny
+    @"i_is_not_any",   // FBAEMAdvertiserRuleOperatorCaseInsensitiveIsNotAny
+    @"is_any",         // FBAEMAdvertiserRuleOperatorIsAny
+    @"is_not_any"      // FBAEMAdvertiserRuleOperatorIsNotAny
+    // UNCRUSTIFY_FORMAT_ON
   ];
   NSInteger index = [operatorKeys indexOfObject:key.lowercaseString];
-  return index == NSNotFound ? Unknown : index;
+  return index == NSNotFound ? FBAEMAdvertiserRuleOperatorUnknown : index;
 }
 
 - (BOOL)isOperatorForMultiEntryRule:(FBAEMAdvertiserRuleOperator)operator

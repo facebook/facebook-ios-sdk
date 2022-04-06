@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -14,7 +15,7 @@ final class GraphRequestTests: XCTestCase {
 
   let path = "me"
   let parameters = ["fields": ""]
-  let version = "v12.0"
+  let version = "v13.0"
   let prefix = "graph."
   let settings = TestSettings()
   var factory = TestGraphRequestConnectionFactory()
@@ -134,7 +135,7 @@ final class GraphRequestTests: XCTestCase {
     [
       GraphRequest(graphPath: path, parameters: [:]),
       GraphRequest(graphPath: path, parameters: [:], flags: []),
-      GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .get)
+      GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .get),
     ]
       .forEach {
         verifyRequest(
@@ -152,7 +153,7 @@ final class GraphRequestTests: XCTestCase {
     [
       GraphRequest(graphPath: path, parameters: parameters),
       GraphRequest(graphPath: path, parameters: parameters, flags: []),
-      GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .get)
+      GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .get),
     ]
       .forEach {
         verifyRequest(
@@ -181,7 +182,7 @@ final class GraphRequestTests: XCTestCase {
   func testGraphRequestPOSTWithEmptyParameters() {
     [
       GraphRequest(graphPath: path, parameters: [:], httpMethod: .post),
-      GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .post)
+      GraphRequest(graphPath: path, parameters: [:], tokenString: nil, version: version, httpMethod: .post),
     ]
       .forEach {
         verifyRequest(
@@ -198,7 +199,7 @@ final class GraphRequestTests: XCTestCase {
   func testGraphRequestPOSTWithNonEmptyParameters() {
     [
       GraphRequest(graphPath: path, parameters: parameters, httpMethod: .post),
-      GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .post)
+      GraphRequest(graphPath: path, parameters: parameters, tokenString: nil, version: version, httpMethod: .post),
     ]
       .forEach {
         verifyRequest(

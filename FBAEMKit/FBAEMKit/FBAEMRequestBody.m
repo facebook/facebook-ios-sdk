@@ -10,7 +10,9 @@
 
 #import "FBAEMRequestBody.h"
 
-#import "FBCoreKitBasicsImportForAEMKit.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import <FBAEMKit/FBAEMKit-Swift.h>
 
 #define kNewline @"\r\n"
 
@@ -100,6 +102,11 @@ typedef void (^AEMCodeBlock)(void);
   }
 
   return [FBSDKBasicUtility gzip:self.data];
+}
+
+- (NSData *)multipartData
+{
+  return _data;
 }
 
 @end

@@ -89,7 +89,7 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 - (void)emitToNSLog
 {
   if (_active) {
-    for (NSString *key in [g_stringsToReplace keyEnumerator]) {
+    for (NSString *key in g_stringsToReplace.keyEnumerator) {
       [_internalContents replaceOccurrencesOfString:key
                                          withString:g_stringsToReplace[key]
                                             options:NSLiteralSearch

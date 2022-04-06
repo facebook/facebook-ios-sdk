@@ -15,6 +15,8 @@
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
+#import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
 static uint64_t _get_time_nanoseconds(void)
 {
   static struct mach_timebase_info tb_info = {0};

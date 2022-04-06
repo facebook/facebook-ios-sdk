@@ -64,7 +64,7 @@ internal enum ShareTournamentDialogURLBuilder {
       components.queryItems = [
         URLQueryItem(name: QueryKeys.tournamentID, value: tournament.identifier),
         URLQueryItem(name: QueryKeys.score, value: "\(score)"),
-        URLQueryItem(name: QueryKeys.payload, value: tournament.payload)
+        URLQueryItem(name: QueryKeys.payload, value: tournament.payload),
       ]
     }
     if case let .create(config) = self {

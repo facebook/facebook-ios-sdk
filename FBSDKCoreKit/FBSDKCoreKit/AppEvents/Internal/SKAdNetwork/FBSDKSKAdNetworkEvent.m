@@ -39,7 +39,7 @@
         if (!currency || amount == nil) {
           return nil;
         }
-        [FBSDKTypeUtility dictionary:valueDict setObject:amount forKey:[currency uppercaseString]];
+        [FBSDKTypeUtility dictionary:valueDict setObject:amount forKey:currency.uppercaseString];
       }
       _values = [valueDict copy];
     }

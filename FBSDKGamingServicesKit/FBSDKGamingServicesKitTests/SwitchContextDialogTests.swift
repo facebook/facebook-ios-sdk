@@ -15,31 +15,38 @@ final class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCompleteSuccessfully = false
   var dialogDidCancel = false
   var dialogError: NSError?
-  let windowFinder = TestWindowFinder()
-  let content = SwitchContextContent(contextID: "1234567890")
-  lazy var dialog = SwitchContextDialog(
-    content: content,
-    windowFinder: windowFinder,
-    delegate: self
-  )
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var windowFinder: TestWindowFinder!
+  var content: SwitchContextContent!
+  var dialog: SwitchContextDialog!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    dialogDidCompleteSuccessfully = false
-    dialogDidCancel = false
-    dialogError = nil
+    windowFinder = TestWindowFinder()
+    content = SwitchContextContent(contextID: "1234567890")
+    dialog = SwitchContextDialog(
+      content: content,
+      windowFinder: windowFinder,
+      delegate: self
+    )
   }
 
   override func tearDown() {
     GamingContext.current = nil
+    dialogError = nil
+    windowFinder = nil
+    content = nil
+    dialog = nil
 
     super.tearDown()
   }
 
   func testShowDialogWithInvalidContent() {
-    let content = SwitchContextContent(contextID: "")
-    let dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
+    content = SwitchContextContent(contextID: "")
+    dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
     _ = dialog.show()
     XCTAssertNotNil(dialog)
     XCTAssertNotNil(dialogError)
@@ -48,7 +55,7 @@ final class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
 
   func testShowingDialogWithInvalidContentType() throws {
     let invalidContent = ChooseContextContent()
-    let dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
+    dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
     dialog.dialogContent = invalidContent
     _ = dialog.show()
     XCTAssertNotNil(dialog)
@@ -169,6 +176,32 @@ final class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertFalse(dialogDidCompleteSuccessfully)
     XCTAssertFalse(dialogDidCancel)
     XCTAssertNotNil(dialogError)
+  }
+
+  // MARK: - Deprecated methods from former wrapper
+
+  func testCreatingWithFactoryMethod() {
+    dialog = SwitchContextDialog.dialog(
+      content: content,
+      windowFinder: windowFinder,
+      delegate: self
+    )
+
+    XCTAssertIdentical(
+      dialog.dialogContent,
+      content,
+      "The dialog should be created with the provided content"
+    )
+    XCTAssertIdentical(
+      dialog.windowFinder,
+      windowFinder,
+      "The dialog should be created with the provided window finder"
+    )
+    XCTAssertIdentical(
+      dialog.delegate,
+      self,
+      "The dialog should be created with the provided delegate"
+    )
   }
 
   // MARK: - Delegate Methods
