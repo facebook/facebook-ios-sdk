@@ -54,6 +54,21 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
     )
   }
 
+  func testCapiGatewayRequestDictionary() throws {
+    FBSDKTransformerGraphRequestFactory.shared.configure(
+      datasetID: Values.datasetID,
+      url: Values.cloudbridgeURL,
+      accessKey: Values.accessKey
+    )
+
+    let event = [["_eventName": "fb_mobile_add_to_cart"]] as [[String: String]]
+
+    let dictionary = FBSDKTransformerGraphRequestFactory.shared.capiGatewayRequestDictionary(with: event)
+
+    XCTAssertEqual(dictionary["accessKey"] as? String, "key123")
+    XCTAssertEqual(dictionary["data"] as? [[String: String]], event)
+  }
+
   func testErrorHandlingWithServerError() throws {
     let url = try XCTUnwrap(URL(string: "graph.facebook.com"))
     var response = HTTPURLResponse(url: url, statusCode: 400, httpVersion: "HTTP/1.1", headerFields: nil)

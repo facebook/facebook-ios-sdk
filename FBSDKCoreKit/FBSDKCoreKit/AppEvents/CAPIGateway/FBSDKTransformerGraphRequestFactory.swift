@@ -45,37 +45,24 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
     credentials = .init(accessKey: accessKey, capiGatewayURL: url, datasetID: datasetID)
   }
 
-  func capiGatewayEndpoint(with appID: Int) -> String? {
-    guard let credentials = credentials else {
-      return nil
-    }
-    return String(format: "%@/capi/%@/events?accessKey=%@", credentials.capiGatewayURL, credentials.datasetID, credentials.accessKey)
-  }
-
   public func callCapiGatewayAPI(with graphPath: String, parameters: [String: Any]) {
-    serialQueue.async {
-      let graphPathComponents = graphPath.components(separatedBy: "/")
-      guard graphPathComponents.count == 2,
-            let appID = Int(graphPathComponents[0]) else {
-        return
-      }
-      let cbEndpoint = self.capiGatewayEndpoint(with: appID)
-      let transformed = AppEventsConversionsAPITransformer.conversionsAPICompatibleEvent(from: parameters)
-
-      guard cbEndpoint != nil,
-            transformed != nil else {
+    serialQueue.async { [weak self] in
+      guard let self = self,
+            let cbEndpoint = self.capiGatewayEndpoint(from: graphPath),
+            let url = URL(string: cbEndpoint) else {
         return
       }
 
       do {
+        let transformed = AppEventsConversionsAPITransformer.conversionsAPICompatibleEvent(from: parameters)
         self.appendEvents(events: transformed)
         let count = min(self.transformedEvents.count, self.maxProcessedEvents)
         let processedEvents = Array(self.transformedEvents[0..<count])
         self.transformedEvents.removeSubrange(0..<count)
-        let jsonData = try JSONSerialization.data(withJSONObject: processedEvents, options: [])
-        guard let url = URL(string: cbEndpoint!) else {
-          return
-        }
+
+        let requestDictionary = self.capiGatewayRequestDictionary(with: processedEvents)
+        let jsonData = try JSONSerialization.data(withJSONObject: requestDictionary, options: [])
+
         var request = URLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: TimeInterval(self.timeoutInterval))
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue(self.contentType, forHTTPHeaderField: "Content-Type")
@@ -125,6 +112,21 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
   public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], flags: GraphRequestFlags) -> GraphRequestProtocol {
     callCapiGatewayAPI(with: graphPath, parameters: parameters)
     return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters, flags: flags)
+  }
+
+  internal func capiGatewayRequestDictionary(with events: [[String: Any]]) -> [String: Any] {
+    guard let accessKey = self.credentials?.accessKey else { return [:] }
+
+    return [
+      "data": events,
+      "accessKey": accessKey,
+    ]
+  }
+
+  private func capiGatewayEndpoint(from graphPath: String) -> String? {
+    guard let credentials = credentials else { return nil }
+
+    return String(format: "%@/capi/%@/events", credentials.capiGatewayURL, credentials.datasetID)
   }
 
   internal func handleError(response: URLResponse?, events: [[String: Any]]?) {
