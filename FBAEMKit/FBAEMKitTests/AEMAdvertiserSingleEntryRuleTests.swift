@@ -457,67 +457,35 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
   }
 
-  func testEncoding() throws {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let entryRule = SampleAEMData.validAdvertiserSingleEntryRule
-    entryRule.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(entryRule)
 
-    let ruleOperator = coder.encodedObject[Keys.ruleOperator] as? NSNumber
+    // Test Objects
+    XCTAssertNotIdentical(entryRule, decodedObject, .isCodable)
+    XCTAssertEqual(entryRule, decodedObject, .isCodable)
+
+    // Test Properties
+    XCTAssertEqual(entryRule.operator.rawValue, decodedObject.operator.rawValue, .isCodable)
+    XCTAssertEqual(entryRule.paramKey, decodedObject.paramKey, .isCodable)
     XCTAssertEqual(
-      ruleOperator?.intValue,
-      entryRule.operator.rawValue,
-      "Should encode the expected operator with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.ruleParamKey] as? String,
-      entryRule.paramKey,
-      "Should encode the expected param_key with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.ruleStringValue] as? String,
       entryRule.linguisticCondition,
-      "Should encode the expected string_value with the correct key"
+      decodedObject.linguisticCondition,
+      .isCodable
     )
-    let numberValue = try XCTUnwrap(coder.encodedObject[Keys.ruleNumberValue] as? NSNumber)
-    XCTAssertTrue(
-      entryRule.numericalCondition?.isEqual(to: numberValue) == true,
-      "Should encode the expected content with the correct key"
-    )
-    let arrayValue = try XCTUnwrap(coder.encodedObject[Keys.ruleArrayValue] as? NSArray)
-    let expectedArrayValue = try XCTUnwrap(entryRule.arrayCondition as NSArray?)
     XCTAssertEqual(
-      arrayValue,
-      expectedArrayValue,
-      "Should encode the expected array_value with the correct key"
+      entryRule.numericalCondition,
+      decodedObject.numericalCondition,
+      .isCodable
     )
+    XCTAssertEqual(entryRule.arrayCondition, decodedObject.arrayCondition, .isCodable)
   }
+}
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = _AEMAdvertiserSingleEntryRule(coder: decoder)
+// MARK: - Assumptions
 
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.ruleOperator] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the operator key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ruleParamKey] is NSString.Type,
-      "Should decode the expected type for the param_key key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ruleStringValue] is NSString.Type,
-      "Should decode the expected type for the string_value key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ruleNumberValue] is NSNumber.Type,
-      "Should decode the expected type for the number_value key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.ruleArrayValue] is NSArray.Type,
-      "Should decode the expected type for the array_value key"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
 }
 
 #endif
