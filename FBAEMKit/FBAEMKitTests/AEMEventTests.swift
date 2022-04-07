@@ -158,7 +158,7 @@ final class AEMEventTests: XCTestCase {
 
     // Test Objects
     XCTAssertNotIdentical(decodedObject, event, .isCodable)
-    XCTAssertNotEqual(decodedObject, event, .isCodable) // NotEqual since isEqual is not implemented
+    XCTAssertEqual(decodedObject, event, .isCodable)
 
     // Test Properties
     XCTAssertEqual(event?.eventName, decodedObject.eventName)
@@ -172,7 +172,7 @@ final class AEMEventTests: XCTestCase {
 
     // Test Objects
     XCTAssertNotIdentical(decodedObject, event, .isCodable)
-    XCTAssertNotEqual(decodedObject, event, .isCodable) // NotEqual since isEqual is not implemented
+    XCTAssertEqual(decodedObject, event, .isCodable)
 
     // Test Properties
     XCTAssertEqual(event?.eventName, decodedObject.eventName)

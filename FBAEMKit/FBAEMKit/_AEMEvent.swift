@@ -86,6 +86,15 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   public func copy(with zone: NSZone? = nil) -> Any {
     self
   }
+
+  // MARK: - NSObject
+
+  public override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? _AEMEvent else { return false }
+
+    return eventName == other.eventName
+      && values == other.values
+  }
 }
 
 #endif

@@ -192,49 +192,18 @@ final class AEMRuleTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let rule = validRule
-    rule.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(rule)
 
-    let encodedConversionValue = coder.encodedObject[Keys.conversionValue] as? NSNumber
-    XCTAssertEqual(
-      encodedConversionValue?.intValue,
-      rule.conversionValue,
-      "Should encode the expected conversion_value with the correct key"
-    )
-    let encodedPriority = coder.encodedObject[Keys.priority] as? NSNumber
-    XCTAssertEqual(
-      encodedPriority?.intValue,
-      rule.priority,
-      "Should encode the expected priority with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.events] as? [_AEMEvent],
-      rule.events,
-      "Should encode the expected events with the correct key"
-    )
-  }
+    // Test Objects
+    XCTAssertNotIdentical(decodedObject, rule, .isCodable)
+    XCTAssertNotEqual(decodedObject, rule, .isCodable) // NotEqual since isEqual is not implemented
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = _AEMRule(coder: decoder)
-
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.conversionValue] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the conversion_value key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.priority] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the priority key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.events] as? NSSet,
-      [NSArray.self, _AEMEvent.self],
-      "Should decode the expected type for the events key"
-    )
+    // Test Properties
+    XCTAssertEqual(decodedObject.conversionValue, rule.conversionValue, .isCodable)
+    XCTAssertEqual(decodedObject.priority, rule.priority, .isCodable)
+    XCTAssertEqual(rule.events, decodedObject.events, .isCodable)
   }
 
   func testRuleMatch() {
@@ -382,6 +351,12 @@ final class AEMRuleTests: XCTestCase {
       "Should match the expected events and values for the rule"
     )
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "AEMRule should be encodable and decodable"
 }
 
 #endif
