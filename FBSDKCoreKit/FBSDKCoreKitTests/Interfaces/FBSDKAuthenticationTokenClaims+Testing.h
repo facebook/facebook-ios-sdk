@@ -23,7 +23,7 @@ NS_SWIFT_NAME(configure(settings:));
 
 + (void)configureClassDependencies;
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

@@ -278,7 +278,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     [self.userDataStore setInternalHashData:[weakStore[key] componentsJoinedByString:FIELD_K_DELIMITER]
                                     forType:key];
   };
-#if FBTEST
+#if DEBUG
   checkAndAppendDataBlock();
 #else
   dispatch_async(_serialQueue, checkAndAppendDataBlock);

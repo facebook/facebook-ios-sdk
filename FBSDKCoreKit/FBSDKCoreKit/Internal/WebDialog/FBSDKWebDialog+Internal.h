@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(configure(errorFactory:));
 // UNCRUSTIFY_FORMAT_ON
 
-#if FBTEST && DEBUG
+#if DEBUG
 
 + (void)resetClassDependencies;
 

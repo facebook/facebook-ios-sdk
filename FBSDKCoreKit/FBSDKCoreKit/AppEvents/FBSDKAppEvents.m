@@ -810,7 +810,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
       [self flushOnMainQueue:copy forReason:flushReason];
     };
 
-  #if DEBUG && FBTEST
+  #if DEBUG
     block();
   #else
     dispatch_async(dispatch_get_main_queue(), block);
@@ -886,7 +886,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
   self.atePublisher = self.atePublisher ?: [self.atePublisherFactory createPublisherWithAppID:self.appID];
 
-#if FBTEST
+#if DEBUG
   [self.atePublisher publishATE];
 #else
   __weak FBSDKAppEvents *weakSelf = self;
@@ -1435,7 +1435,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)reset
 {

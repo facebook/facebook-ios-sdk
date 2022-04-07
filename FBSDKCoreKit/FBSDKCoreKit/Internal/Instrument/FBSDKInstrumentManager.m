@@ -68,7 +68,7 @@ static dispatch_once_t sharedInstanceNonce;
   }];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

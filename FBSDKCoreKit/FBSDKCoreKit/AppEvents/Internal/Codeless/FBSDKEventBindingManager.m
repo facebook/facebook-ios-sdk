@@ -312,7 +312,7 @@
                                     named:@"handle_table_view"];
           }
         };
-      #if FBTEST
+      #if DEBUG
         tableViewBlock();
       #else
         fb_dispatch_on_default_thread(tableViewBlock);
@@ -342,7 +342,7 @@
                                     named:@"handle_collection_view"];
           }
         };
-      #if FBTEST
+      #if DEBUG
         collectionViewBlock();
       #else
         fb_dispatch_on_default_thread(collectionViewBlock);
@@ -350,7 +350,7 @@
       }
     };
 
-  #if FBTEST
+  #if DEBUG
     matchBlock();
   #else
     fb_dispatch_on_default_thread(matchBlock);
@@ -467,7 +467,7 @@
   return _validClasses;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)setReactBindings:(NSMutableDictionary<NSNumber *, id> *)bindings
 {

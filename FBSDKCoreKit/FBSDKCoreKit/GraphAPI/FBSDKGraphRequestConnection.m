@@ -276,7 +276,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.hasBeenConfigured = YES;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {
@@ -1398,7 +1398,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 // MARK: - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 /// Resets the default connection timeout to 60 seconds
 + (void)resetDefaultConnectionTimeout

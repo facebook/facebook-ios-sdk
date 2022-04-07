@@ -295,7 +295,7 @@ static id<FBSDKGraphRequestConnectionFactory> class_graphRequestConnectionFactor
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

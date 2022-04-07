@@ -226,7 +226,7 @@ static id<FBSDKAppLinkEventPosting> _appLinkEventPoster;
   return [NSDictionary<NSString *, id> dictionaryWithDictionary:parameters];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

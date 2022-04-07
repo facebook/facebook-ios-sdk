@@ -322,7 +322,7 @@ static id<FBSDKErrorCreating> g_errorFactory;
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

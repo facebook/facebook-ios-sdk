@@ -808,7 +808,7 @@ static id<FBSDKDataPersisting> _store;
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
 {

@@ -259,7 +259,7 @@ static id<FBSDKErrorCreating> _errorFactory;
   [self.delegate webDialogViewDidFinishLoad:self];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

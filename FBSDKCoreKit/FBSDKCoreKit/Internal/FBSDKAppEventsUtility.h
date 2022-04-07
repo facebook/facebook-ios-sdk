@@ -51,7 +51,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 NS_SWIFT_NAME(configure(appEventsConfigurationProvider:deviceInformationProvider:settings:internalUtility:errorFactory:));
 // UNCRUSTIFY_FORMAT_ON
 
-#if DEBUG && FBTEST
+#if DEBUG
 - (void)reset;
 #endif
 

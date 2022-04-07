@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

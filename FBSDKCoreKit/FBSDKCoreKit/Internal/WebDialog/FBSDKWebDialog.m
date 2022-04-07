@@ -84,7 +84,7 @@ static id<FBSDKErrorCreating> _errorFactory;
   [self configureWithErrorFactory:[[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared]];
 }
 
-#if FBTEST && DEBUG
+#if DEBUG
 
 + (void)resetClassDependencies
 {
@@ -291,12 +291,12 @@ static id<FBSDKErrorCreating> _errorFactory;
 - (void)_failWithError:(NSError *)error
 {
   // defer so that the consumer is guaranteed to have an opportunity to set the delegate before we fail
-#ifndef FBTEST
+#ifndef DEBUG
   dispatch_async(dispatch_get_main_queue(), ^{
 #endif
   [self _dismissAnimated:YES];
   [self->_delegate webDialog:self didFailWithError:error];
-#ifndef FBTEST
+#ifndef DEBUG
 });
 #endif
 }

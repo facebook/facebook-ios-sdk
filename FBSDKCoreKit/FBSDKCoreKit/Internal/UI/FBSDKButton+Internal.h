@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (class, nullable, nonatomic, readonly) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

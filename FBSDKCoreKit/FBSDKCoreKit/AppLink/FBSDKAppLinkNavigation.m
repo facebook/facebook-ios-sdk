@@ -389,7 +389,7 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
   return FBSDKAppLinkNavigationTypeFailure;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

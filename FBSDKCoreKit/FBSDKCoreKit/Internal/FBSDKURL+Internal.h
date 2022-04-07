@@ -34,7 +34,7 @@ NS_SWIFT_NAME(configure(settings:appLinkFactory:appLinkTargetFactory:appLinkEven
 
 + (FBSDKURL *)URLForRenderBackToReferrerBarURL:(NSURL *)url;
 
-#if DEBUG && FBTEST
+#if DEBUG
 + (void)reset;
 #endif
 

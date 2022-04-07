@@ -757,7 +757,7 @@ static id<FBSDKURLHosting> _urlHoster;
 
 #pragma clang diagnostic pop
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetCurrentProfileCache
 {

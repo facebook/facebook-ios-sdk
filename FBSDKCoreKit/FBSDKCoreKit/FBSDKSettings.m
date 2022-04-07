@@ -583,7 +583,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)reset
 {

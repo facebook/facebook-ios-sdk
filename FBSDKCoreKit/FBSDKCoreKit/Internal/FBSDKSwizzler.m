@@ -353,7 +353,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
   }
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)setSwizzleQueue:(dispatch_queue_t)queue
 {

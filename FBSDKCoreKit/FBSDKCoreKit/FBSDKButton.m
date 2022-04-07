@@ -68,7 +68,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   self.accessTokenProvider = accessTokenProvider;
 }
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies
 {
   self.applicationActivationNotifier = nil;

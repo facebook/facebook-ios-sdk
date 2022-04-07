@@ -488,7 +488,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigCpasMode = @"CPAS";
   return self;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)setRecordedEvents:(NSMutableSet<NSString *> *)recordedEvents
 {

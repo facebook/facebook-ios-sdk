@@ -315,7 +315,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {

@@ -151,7 +151,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
   return self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < 3600;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)resetDependencies
 {

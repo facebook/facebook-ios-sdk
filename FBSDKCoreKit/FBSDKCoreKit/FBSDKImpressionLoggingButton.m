@@ -45,7 +45,7 @@ static id<FBSDKImpressionLoggerFactory> _impressionLoggerFactory;
   [super layoutSubviews];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

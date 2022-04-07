@@ -291,7 +291,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
           handler(success, nil);
         }];
       } else {
-      #if FBTEST
+      #if DEBUG
         // self.urlOpener should only be nil in test
         NSString *message = @"Cannot login due to urlOpener being nil";
         NSDictionary<NSString *, id> *userInfo = @{FBSDKErrorLocalizedDescriptionKey : message};
@@ -305,7 +305,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       handler(opened, nil);
     }
   };
-#if FBTEST
+#if DEBUG
   block();
 #else
   dispatch_async(dispatch_get_main_queue(), block);
@@ -568,7 +568,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)setActive:(BOOL)isActive
 {

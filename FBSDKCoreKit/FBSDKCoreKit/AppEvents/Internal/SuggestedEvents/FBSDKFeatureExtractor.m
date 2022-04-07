@@ -389,7 +389,7 @@ void sum(float *val0, float *val1)
   return [self regextMatch:pattern text:matchText];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

@@ -40,7 +40,7 @@ NS_SWIFT_NAME(AuthenticationStatusUtility)
  */
 + (void)checkAuthenticationStatus;
 
-#if FBTEST && DEBUG
+#if DEBUG
 
 + (void)resetClassDependencies;
 

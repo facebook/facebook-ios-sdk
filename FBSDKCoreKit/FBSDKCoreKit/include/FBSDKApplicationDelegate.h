@@ -23,12 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ApplicationDelegate)
 @interface FBSDKApplicationDelegate : NSObject
 
-#if !FBTEST
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 #endif
 
-#if DEBUG && FBTEST
+#if DEBUG
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 #endif
 

@@ -404,7 +404,7 @@ static NSDateFormatter *_dateFormatter;
 
 // MARK: Test Helpers
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (id<FBSDKProfileCreating>)profileFactory
 {

@@ -23,7 +23,7 @@ NS_SWIFT_NAME(FeatureManager)
 
 @property (class, nonatomic, readonly, strong) FBSDKFeatureManager *shared;
 
-#if !FBTEST
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 #endif

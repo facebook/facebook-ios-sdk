@@ -102,7 +102,7 @@
     self.isProcessing = NO;
   }];
 
-#if FBTEST
+#if DEBUG
   self.isProcessing = NO;
 #endif
 }

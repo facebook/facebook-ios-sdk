@@ -123,7 +123,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 
 #pragma mark - Test methods
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetCurrentAuthenticationTokenCache
 {

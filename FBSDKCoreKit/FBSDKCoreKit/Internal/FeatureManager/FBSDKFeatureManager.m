@@ -193,7 +193,7 @@ static FBSDKFeatureManager * sharedInstance;
   }
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)resetDependencies
 {

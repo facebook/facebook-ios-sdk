@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)configureWithImpressionLoggerFactory     :(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
   NS_SWIFT_NAME(configure(impressionLoggerFactory:));
 
-#if DEBUG && FBTEST
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

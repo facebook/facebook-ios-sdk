@@ -125,7 +125,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
  */
 - (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
 
-#if DEBUG && FBTEST
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

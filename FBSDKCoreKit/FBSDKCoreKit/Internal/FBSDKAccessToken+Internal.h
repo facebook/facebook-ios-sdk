@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
           shouldDispatchNotif:(BOOL)shouldDispatchNotif;
 
-#if DEBUG && FBTEST
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

@@ -26,7 +26,7 @@ NS_SWIFT_NAME(AppEventsConfigurationManager)
 
 @property (nonatomic, readonly) id<FBSDKAppEventsConfiguration> cachedAppEventsConfiguration;
 
-#if !FBTEST
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 #endif

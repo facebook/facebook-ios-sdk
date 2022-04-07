@@ -421,7 +421,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   };
 }
 
-#if FBTEST
+#if DEBUG
 
 - (void)reset
 {

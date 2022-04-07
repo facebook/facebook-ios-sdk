@@ -488,7 +488,7 @@ static UIApplicationState _applicationState;
 
 // MARK: - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetHasInitializeBeenCalled
 {

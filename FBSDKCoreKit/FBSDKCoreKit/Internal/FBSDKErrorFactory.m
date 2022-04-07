@@ -33,7 +33,7 @@ static id<FBSDKErrorReporting> _defaultReporter;
   self.defaultReporter = defaultReporter;
 }
 
-#if FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

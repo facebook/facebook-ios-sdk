@@ -21,14 +21,14 @@ NS_SWIFT_NAME(AppEventsDeviceInfo)
 
 @property (nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 
-#if !FBTEST
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 #endif
 
 - (void)configureWithSettings:(id<FBSDKSettings>)settings;
 
-#if FBTEST && DEBUG
+#if DEBUG
 - (void)resetDependencies;
 #endif
 

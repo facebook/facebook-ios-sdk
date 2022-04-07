@@ -310,7 +310,7 @@ static BOOL _isConfigured = NO;
 #endif
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

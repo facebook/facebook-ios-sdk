@@ -202,7 +202,7 @@ static id<FBSDKSettings> _settings;
   return className;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

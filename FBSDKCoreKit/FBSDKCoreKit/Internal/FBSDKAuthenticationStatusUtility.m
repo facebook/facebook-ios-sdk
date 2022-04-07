@@ -73,7 +73,7 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
   self.authenticationTokenWallet = authenticationTokenWallet;
 }
 
-#if FBTEST && DEBUG
+#if DEBUG
 
 + (void)resetClassDependencies
 {

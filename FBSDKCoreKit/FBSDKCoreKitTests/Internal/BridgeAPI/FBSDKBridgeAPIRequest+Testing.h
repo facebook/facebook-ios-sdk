@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(configure(internalURLOpener:internalUtility:settings:));
 // UNCRUSTIFY_FORMAT_ON
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

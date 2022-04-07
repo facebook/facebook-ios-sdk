@@ -68,7 +68,7 @@ static _Nullable id<FBSDKSettings> _settings;
   self.hasBeenConfigured = YES;
 }
 
-#if FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

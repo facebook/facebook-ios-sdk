@@ -473,7 +473,7 @@ static FBSDKAppEventsUtility *_shared;
   return matches > 0;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)reset
 {

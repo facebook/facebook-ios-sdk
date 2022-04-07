@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(configure(defaultReporter:));
 // UNCRUSTIFY_FORMAT_ON
 
-#if FBTEST
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

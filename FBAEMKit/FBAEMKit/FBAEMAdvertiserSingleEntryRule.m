@@ -49,9 +49,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     return [self isMatchedEventParameters:eventParams paramPath:paramPath];
   } @catch (NSException *exception) {
   #if DEBUG
-  #if FBTEST
     @throw exception;
-  #endif
   #endif
     return NO;
   }
@@ -241,7 +239,7 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
   return self;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)setOperator:(FBAEMAdvertiserRuleOperator)operator
 {
