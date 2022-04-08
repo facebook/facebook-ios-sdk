@@ -28,46 +28,31 @@ final class DialogConfigurationTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
+  func testEncodingAndDecoding() throws {
     let dialog = DialogConfiguration(
       name: name,
       url: SampleURLs.valid,
       appVersions: versions
     )
+    let decodedObject = try CodabilityTesting.encodeAndDecode(dialog)
 
-    dialog.encode(with: coder)
+    // Test Objects
+    XCTAssertNotIdentical(decodedObject, dialog, .isCodable)
+    XCTAssertNotEqual(decodedObject, dialog, .isCodable) // isEqual method not set yet
 
+    // Test Properties
+    XCTAssertEqual(decodedObject.name, dialog.name, .isCodable)
+    XCTAssertEqual(decodedObject.url, dialog.url, .isCodable)
     XCTAssertEqual(
-      coder.encodedObject[Keys.name] as? String,
-      name,
-      "Should encode the dialog name with the expected key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.url] as? URL,
-      SampleURLs.valid,
-      "Should encode the dialog url with the expected key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.versions] as? [String],
-      versions,
-      "Should encode the dialog app versions with the expected key"
+      decodedObject.appVersions as? [String],
+      dialog.appVersions as? [String],
+      .isCodable
     )
   }
+}
 
-  func testDecoding() {
-    _ = DialogConfiguration(coder: coder)
+// MARK: - Assumptions
 
-    XCTAssertTrue(
-      coder.decodedObject[Keys.name] is NSString.Type,
-      "Should attempt to decode the name as a string"
-    )
-    XCTAssertTrue(
-      coder.decodedObject[Keys.url] is NSURL.Type,
-      "Should attempt to decode the url as a URL"
-    )
-    XCTAssertTrue(
-      coder.decodedObject[Keys.versions] is NSSet,
-      "Should attempt to decode the versions as a set of strings"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "DialogConfiguration should be encodable and decodable"
 }
