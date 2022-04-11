@@ -894,194 +894,30 @@ final class ProfileTests: XCTestCase {
 
   // MARK: Storage
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let profile = SampleUserProfiles.validLimited
-    profile.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(profile)
 
-    XCTAssertEqual(
-      coder.encodedObject["userID"] as? String,
-      profile.userID,
-      "Should encode the expected user identifier"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["firstName"] as? String,
-      profile.firstName,
-      "Should encode the expected first name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["middleName"] as? String,
-      profile.middleName,
-      "Should encode the expected middle name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["lastName"] as? String,
-      profile.lastName,
-      "Should encode the expected last name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["name"] as? String,
-      profile.name,
-      "Should encode the expected name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["linkURL"] as? URL,
-      profile.linkURL,
-      "Should encode the expected link URL"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["refreshDate"] as? Date,
-      profile.refreshDate,
-      "Should encode the expected refresh date"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["imageURL"] as? URL,
-      profile.imageURL,
-      "Should encode the expected image URL"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["email"] as? String,
-      profile.email,
-      "Should encode the expected email address"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["friendIDs"] as? [String],
-      profile.friendIDs,
-      "Should encode the expected list of friend identifiers"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["birthday"] as? Date,
-      profile.birthday,
-      "Should encode the expected user birthday"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["ageRange"] as? UserAgeRange,
-      profile.ageRange,
-      "Should encode the expected user age range"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["hometown"] as? Location,
-      profile.hometown,
-      "Should encode the expected user hometown"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["location"] as? Location,
-      profile.location,
-      "Should encode the expected user location"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["gender"] as? String,
-      profile.gender,
-      "Should encode the expected user gender"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["isLimited"] as? Bool,
-      true,
-      "isLimited should be true"
-    )
-  }
+    // Test Objects
+    XCTAssertEqual(decodedObject, profile, .isCodable)
+    XCTAssertNotIdentical(decodedObject, profile, .isCodable)
 
-  func testDecodingEntryWithMethodName() {
-    let coder = TestCoder()
-    _ = Profile(coder: coder)
-
-    decodeObjectCheck(
-      decodedObject: "userID",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the userID key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "firstName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the firstName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "middleName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the middleName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "lastName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the lastName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "name",
-      objectType: NSString.self,
-      failureMessage:
-      "Should decode a string for the name key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "linkURL",
-      objectType: NSURL.self,
-      failureMessage: "Should decode a url for the linkURL key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "refreshDate",
-      objectType: NSDate.self,
-      failureMessage: "Should decode a date for the refreshDate key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "imageURL",
-      objectType: NSURL.self,
-      failureMessage: "Should decode a url for the imageURL key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "email",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the email key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "friendIDs",
-      objectType: NSArray.self,
-      failureMessage: "Should decode an array for the friendIDs key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "birthday",
-      objectType: NSDate.self,
-      failureMessage: "Should decode a date for the birthday key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "ageRange",
-      objectType: UserAgeRange.self,
-      failureMessage:
-      "Should decode a UserAgeRange object for the ageRange key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "hometown",
-      objectType: Location.self,
-      failureMessage: "Should decode a Location object for the hometown key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "location",
-      objectType: Location.self,
-      failureMessage: "Should decode a Location object for the location key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "gender",
-      objectType: NSString.self,
-      failureMessage:
-      "Should decode a string for the gender key"
-    )
-    XCTAssertEqual(
-      coder.decodedObject["isLimited"] as? String,
-      "decodeBoolForKey",
-      "Should decode a boolean for the isLimited key"
-    )
+    // Test Properites
+    XCTAssertEqual(decodedObject.userID, profile.userID, .isCodable)
+    XCTAssertEqual(decodedObject.firstName, profile.firstName, .isCodable)
+    XCTAssertEqual(decodedObject.middleName, profile.middleName, .isCodable)
+    XCTAssertEqual(decodedObject.lastName, profile.lastName, .isCodable)
+    XCTAssertEqual(decodedObject.name, profile.name, .isCodable)
+    XCTAssertEqual(decodedObject.linkURL, profile.linkURL, .isCodable)
+    XCTAssertEqual(decodedObject.refreshDate, profile.refreshDate, .isCodable)
+    XCTAssertEqual(decodedObject.imageURL, profile.imageURL, .isCodable)
+    XCTAssertEqual(decodedObject.email, profile.email, .isCodable)
+    XCTAssertEqual(decodedObject.friendIDs, profile.friendIDs, .isCodable)
+    XCTAssertEqual(decodedObject.birthday, profile.birthday, .isCodable)
+    XCTAssertEqual(decodedObject.ageRange, profile.ageRange, .isCodable)
+    XCTAssertEqual(decodedObject.hometown, profile.hometown, .isCodable)
+    XCTAssertEqual(decodedObject.location, profile.location, .isCodable)
+    XCTAssertEqual(decodedObject.gender, profile.gender, .isCodable)
   }
 
   func testDefaultDataStore() {
@@ -1226,4 +1062,10 @@ final class ProfileTests: XCTestCase {
       line: line
     )
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "Profile should be encodable and decodable"
 }
