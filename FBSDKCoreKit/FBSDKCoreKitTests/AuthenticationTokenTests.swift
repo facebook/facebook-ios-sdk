@@ -40,52 +40,27 @@ final class AuthenticationTokenTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
+  func testEncodingAndDecoding() throws {
     let expectedTokenString = "expectedTokenString"
     let expectedNonce = "expectedNonce"
     let expectedGraphDomain = "expectedGraphDomain"
 
-    let coder = TestCoder()
-    token = AuthenticationToken(
+    let token = AuthenticationToken(
       tokenString: expectedTokenString,
       nonce: expectedNonce,
       graphDomain: expectedGraphDomain
     )
-    token?.encode(with: coder)
 
-    XCTAssertEqual(
-      coder.encodedObject["FBSDKAuthenticationTokenTokenStringCodingKey"] as? String,
-      expectedTokenString,
-      "Should encode the expected token string"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["FBSDKAuthenticationTokenNonceCodingKey"] as? String,
-      expectedNonce,
-      "Should encode the expected nonce string"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["FBSDKAuthenticationTokenGraphDomainCodingKey"] as? String,
-      expectedGraphDomain,
-      "Should encode the expected graph domain"
-    )
-  }
+    let decodedObject = try CodabilityTesting.encodeAndDecode(token)
 
-  func testDecodingEntryWithMethodName() {
-    let coder = TestCoder()
-    token = AuthenticationToken(coder: coder)
+    // Test Objects
+    XCTAssertNotEqual(decodedObject, token, .isCodable) // isEqual method not implemented yet
+    XCTAssertNotIdentical(decodedObject, token, .isCodable)
 
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKAuthenticationTokenTokenStringCodingKey"] as? Any.Type == NSString.self,
-      "Initializing from a decoder should attempt to decode a String for the token string key"
-    )
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKAuthenticationTokenNonceCodingKey"] as? Any.Type == NSString.self,
-      "Initializing from a decoder should attempt to decode a String for the nonce key"
-    )
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKAuthenticationTokenGraphDomainCodingKey"] as? Any.Type == NSString.self,
-      "Initializing from a decoder should attempt to decode a String for the graph domain key"
-    )
+    // Test Properties
+    XCTAssertEqual(decodedObject.tokenString, token.tokenString, .isCodable)
+    XCTAssertEqual(decodedObject.nonce, token.nonce, .isCodable)
+    XCTAssertEqual(decodedObject.graphDomain, token.graphDomain, .isCodable)
   }
 
   func testTokenCacheIsNilByDefault() {
@@ -101,4 +76,10 @@ final class AuthenticationTokenTests: XCTestCase {
       "Authentication token cache should be settable"
     )
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "AuthenticationToken should be encodable and decodable"
 }
