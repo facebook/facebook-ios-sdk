@@ -60,7 +60,8 @@ NS_SWIFT_NAME(ServerConfigurationProvider)
 
  @warning INTERNAL - DO NOT USE
  */
-- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKLoginTooltipBlock)completionBlock;
+- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKLoginTooltipBlock)completionBlock
+  NS_SWIFT_NAME(loadServerConfiguration(completion:));
 @end
 
 NS_ASSUME_NONNULL_END

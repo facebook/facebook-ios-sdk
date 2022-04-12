@@ -18,21 +18,40 @@
 #import "FBSDKLoginTooltipViewDelegate.h"
 
 @interface FBSDKLoginTooltipView ()
+
+@property (nonatomic) id<_FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic) id<_FBSDKUserInterfaceStringProviding> stringProvider;
+
 @end
 
 @implementation FBSDKLoginTooltipView
 
 - (instancetype)init
 {
+  return [self initWithServerConfigurationProvider:[FBSDKServerConfigurationProvider new]
+                                    stringProvider:FBSDKInternalUtility.sharedUtility];
+}
+
+// MARK: - Instance Dependencies
+
+- (instancetype)initWithServerConfigurationProvider:(nonnull id<_FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                     stringProvider:(nonnull id<_FBSDKUserInterfaceStringProviding>)stringProvider
+{
   NSString *tooltipMessage =
   NSLocalizedStringWithDefaultValue(
     @"LoginTooltip.Message",
     @"FacebookSDK",
-    [FBSDKInternalUtility.sharedUtility bundleForStrings],
+    [stringProvider bundleForStrings],
     @"You're in control - choose what info you want to share with apps.",
     @"The message of the FBSDKLoginTooltipView"
   );
-  return [super initWithTagline:nil message:tooltipMessage colorStyle:FBSDKTooltipColorStyleFriendlyBlue];
+
+  if ((self = [super initWithTagline:nil message:tooltipMessage colorStyle:FBSDKTooltipColorStyleFriendlyBlue])) {
+    _serverConfigurationProvider = serverConfigurationProvider;
+    _stringProvider = stringProvider;
+  }
+
+  return self;
 }
 
 - (void)presentInView:(UIView *)view withArrowPosition:(CGPoint)arrowPosition direction:(FBSDKTooltipViewArrowDirection)arrowDirection
@@ -40,25 +59,29 @@
   if (self.forceDisplay) {
     [super presentInView:view withArrowPosition:arrowPosition direction:arrowDirection];
   } else {
-    FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-    [provider loadServerConfigurationWithCompletionBlock:^(FBSDKLoginTooltip *_Nullable loginTooltip, NSError *_Nullable error) {
-      self.message = loginTooltip.text;
-      BOOL shouldDisplay = loginTooltip.isEnabled;
-      if ([self.delegate respondsToSelector:@selector(loginTooltipView:shouldAppear:)]) {
-        shouldDisplay = [self.delegate loginTooltipView:self shouldAppear:shouldDisplay];
-      }
-      if (shouldDisplay) {
-        [super presentInView:view withArrowPosition:arrowPosition direction:arrowDirection];
-        if ([self.delegate respondsToSelector:@selector(loginTooltipViewWillAppear:)]) {
-          [self.delegate loginTooltipViewWillAppear:self];
-        }
-      } else {
-        if ([self.delegate respondsToSelector:@selector(loginTooltipViewWillNotAppear:)]) {
-          [self.delegate loginTooltipViewWillNotAppear:self];
-        }
-      }
-    }];
+    [self fetchTooltipConfigurationWithView:view arrowPosition:arrowPosition direction:arrowDirection];
   }
+}
+
+- (void)fetchTooltipConfigurationWithView:(UIView *)view arrowPosition:(CGPoint)arrowPosition direction:(FBSDKTooltipViewArrowDirection)arrowDirection
+{
+  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKLoginTooltip *_Nullable loginTooltip, NSError *_Nullable error) {
+    self.message = loginTooltip.text;
+    BOOL shouldDisplay = loginTooltip.isEnabled;
+    if ([self.delegate respondsToSelector:@selector(loginTooltipView:shouldAppear:)]) {
+      shouldDisplay = [self.delegate loginTooltipView:self shouldAppear:shouldDisplay];
+    }
+    if (shouldDisplay) {
+      [super presentInView:view withArrowPosition:arrowPosition direction:arrowDirection];
+      if ([self.delegate respondsToSelector:@selector(loginTooltipViewWillAppear:)]) {
+        [self.delegate loginTooltipViewWillAppear:self];
+      }
+    } else {
+      if ([self.delegate respondsToSelector:@selector(loginTooltipViewWillNotAppear:)]) {
+        [self.delegate loginTooltipViewWillNotAppear:self];
+      }
+    }
+  }];
 }
 
 @end
