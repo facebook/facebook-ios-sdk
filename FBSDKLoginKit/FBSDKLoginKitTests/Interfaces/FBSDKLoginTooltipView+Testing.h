@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKLoginTooltipView (Testing)
 
 - (void)presentInView:(UIView *)view withArrowPosition:(CGPoint)arrowPosition direction:(FBSDKTooltipViewArrowDirection)arrowDirection;
+- (instancetype)initWithServerConfigurationProvider:(nonnull id<_FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                     stringProvider:(nonnull id<_FBSDKUserInterfaceStringProviding>)stringProvider;
 
 @end
 
