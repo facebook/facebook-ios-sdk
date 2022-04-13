@@ -141,7 +141,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithCodeVerifier() {
     let codeVerifier = CodeVerifier()
-    let config = LoginConfiguration(codeVerifier: codeVerifier)
+    let config = LoginConfiguration(permissions: [], codeVerifier: codeVerifier)
     XCTAssertEqual(
       config?.codeVerifier.value,
       codeVerifier.value,

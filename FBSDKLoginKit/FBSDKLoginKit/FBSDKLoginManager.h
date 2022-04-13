@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKLoginKit/FBSDKDefaultAudience.h>
-#import <FBSDKLoginKit/FBSDKLoginConfiguration.h>
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResultBlock.h>
 #import <FBSDKLoginKit/FBSDKLoginProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #if !TARGET_OS_TV
+
+@class FBSDKLoginConfiguration;
 
 /**
  `FBSDKLoginManager` provides methods for logging the user in and out.

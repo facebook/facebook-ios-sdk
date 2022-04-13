@@ -8,6 +8,8 @@
 
 #if !TARGET_OS_TV
 
+ #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
  #import "FBSDKLoginManager+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
