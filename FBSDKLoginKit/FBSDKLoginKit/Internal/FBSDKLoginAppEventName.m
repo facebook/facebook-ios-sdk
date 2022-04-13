@@ -12,10 +12,6 @@
 
 FBSDKAppEventName const FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_login_service";
 
-// MARK: - Login Button
-
-FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
-
 // MARK: - Login Manager
 
 /// Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10

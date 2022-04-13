@@ -33,6 +33,7 @@ file_name:
     ShareAppEventParameters.swift,
     ShareDialogMode.swift,
     InternalUtilityExtensions.swift,
+    LoginAppEventNames.swift,
   ]
 trailing_comma:
   mandatory_comma: true

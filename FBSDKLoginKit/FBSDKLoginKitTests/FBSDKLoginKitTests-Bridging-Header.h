@@ -35,7 +35,6 @@
 #import "FBSDKDeviceLoginManagerResult+Testing.h"
 #import "FBSDKDeviceRequestsHelper+Testing.h"
 #import "FBSDKInternalUtility+Testing.h"
-#import "FBSDKLoginButton+Testing.h"
 #import "FBSDKLoginManager+Testing.h"
 #import "FBSDKLoginTooltipView+Testing.h"
 #import "FBSDKProfile+Testing.h"

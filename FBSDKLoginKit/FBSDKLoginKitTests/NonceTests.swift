@@ -18,7 +18,7 @@ final class NonceTests: XCTestCase {
       "foo bar",
     ].forEach { nonce in
       XCTAssertFalse(
-        Nonce.isValidNonce(nonce),
+        _Nonce.isValidNonce(nonce),
         "Should not consider: \(nonce) to be a valid nonce"
       )
     }
@@ -31,7 +31,7 @@ final class NonceTests: XCTestCase {
       "asdfasdfasdfasdfasdfasdfasdf",
     ].forEach { nonce in
       XCTAssertTrue(
-        Nonce.isValidNonce(nonce),
+        _Nonce.isValidNonce(nonce),
         "Should consider: \(nonce) to be a valid nonce"
       )
     }

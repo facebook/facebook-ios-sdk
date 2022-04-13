@@ -660,7 +660,7 @@ final class LoginManagerTests: XCTestCase {
     internalUtility.stubbedAppURL = sampleURL
     internalUtility.stubbedFacebookURL = sampleURL
 
-    loginManager.logIn(withPermissions: ["public_profile"], from: UIViewController()) { _, _ in }
+    loginManager.logIn(permissions: ["public_profile"], from: UIViewController()) { _, _ in }
 
     XCTAssertTrue(
       urlOpener.wasOpenURLWithSVCCalled,
@@ -684,7 +684,7 @@ final class LoginManagerTests: XCTestCase {
     loginManager.state = .start
 
     var didInvokeCompletionSynchronously = false
-    loginManager.logIn(withPermissions: ["public_profile"], from: UIViewController()) { _, _ in
+    loginManager.logIn(permissions: ["public_profile"], from: UIViewController()) { _, _ in
       didInvokeCompletionSynchronously = true
     }
 

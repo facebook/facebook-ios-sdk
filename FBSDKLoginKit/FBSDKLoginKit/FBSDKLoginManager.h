@@ -8,41 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKLoginKit/FBSDKDefaultAudience.h>
 #import <FBSDKLoginKit/FBSDKLoginConfiguration.h>
+#import <FBSDKLoginKit/FBSDKLoginManagerLoginResultBlock.h>
+#import <FBSDKLoginKit/FBSDKLoginProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 #if !TARGET_OS_TV
-
-@class FBSDKLoginManagerLoginResult;
-
-/**
- Describes the call back to the FBSDKLoginManager
- @param result the result of the authorization
- @param error the authorization error, if any.
- */
-typedef void (^ FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
-  NSError *_Nullable error)
-NS_SWIFT_NAME(LoginManagerLoginResultBlock);
-
-/**
- FBSDKDefaultAudience enum
-
-  Passed to openURL to indicate which default audience to use for sessions that post data to Facebook.
-
- Certain operations such as publishing a status or publishing a photo require an audience. When the user
- grants an application permission to perform a publish operation, a default audience is selected as the
- publication ceiling for the application. This enumerated value allows the application to select which
- audience to ask the user to grant publish permission for.
- */
-typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
-  /// Indicates that the user's friends are able to see posts made by the application
-  FBSDKDefaultAudienceFriends = 0,
-  /// Indicates that only the user is able to see posts made by the application
-  FBSDKDefaultAudienceOnlyMe,
-  /// Indicates that all Facebook users are able to see posts made by the application
-  FBSDKDefaultAudienceEveryone,
-} NS_SWIFT_NAME(DefaultAudience);
 
 /**
  `FBSDKLoginManager` provides methods for logging the user in and out.
@@ -58,7 +31,7 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
  `AccessToken.current` before calling any of the login methods to authorize further permissions on your tokens.
  */
 NS_SWIFT_NAME(LoginManager)
-@interface FBSDKLoginManager : NSObject
+@interface FBSDKLoginManager : NSObject <FBSDKLoginProviding>
 
 /**
  the default audience.

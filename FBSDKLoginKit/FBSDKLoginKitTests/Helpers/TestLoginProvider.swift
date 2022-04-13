@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestLoginProvider: LoginProviding {
+final class TestLoginProvider: _LoginProviding {
 
   var defaultAudience: DefaultAudience = .friends
   var capturedCompletion: LoginManagerLoginResultBlock?
@@ -14,7 +14,7 @@ final class TestLoginProvider: LoginProviding {
   var capturedPermissions: [String]?
   var didLogout = false
 
-  func logIn(
+  func __logIn( // swiftlint:disable:this identifier_name
     from viewController: UIViewController?,
     configuration: LoginConfiguration,
     completion: @escaping LoginManagerLoginResultBlock
@@ -24,7 +24,7 @@ final class TestLoginProvider: LoginProviding {
   }
 
   func logIn(
-    withPermissions permissions: [String],
+    permissions: [String],
     from viewController: UIViewController?,
     handler: @escaping LoginManagerLoginResultBlock
   ) {

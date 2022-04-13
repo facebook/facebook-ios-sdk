@@ -10,6 +10,9 @@
 
 #if !TARGET_OS_TV
 
+@class FBSDKLoginButton;
+@class FBSDKLoginManagerLoginResult;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**

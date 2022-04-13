@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   FBSDKLoginManagerStatePerformingLogin,
 };
 
-@interface FBSDKLoginManager () <FBSDKURLOpening, FBSDKLoginProviding>
+@interface FBSDKLoginManager () <FBSDKURLOpening>
 
 @property (nullable, nonatomic) FBSDKLoginManagerLoginResultBlock handler;
 @property (nullable, nonatomic) FBSDKLoginConfiguration *configuration;

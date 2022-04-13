@@ -12,10 +12,6 @@
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBSDKSmartLoginService;
 
-// MARK: - Login Button
-
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap;
-
 // MARK: - Login Manager
 
 /// Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10
