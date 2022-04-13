@@ -174,7 +174,7 @@ public final class LoginConfiguration: NSObject {
     codeVerifier: CodeVerifier
   ) {
 
-    guard _Nonce.isValidNonce(nonce) else {
+    guard NonceValidator.isValid(nonce: nonce) else {
       let message = "Invalid nonce:\(nonce) provided to login configuration. Returning nil"
       Logger.singleShotLogEntry(.developerErrors, logEntry: message)
       return nil

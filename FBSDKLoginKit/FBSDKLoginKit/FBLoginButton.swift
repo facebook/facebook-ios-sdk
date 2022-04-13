@@ -68,7 +68,7 @@ public final class FBLoginButton: FBButton {
 
     set {
       if let nonce = newValue,
-         _Nonce.isValidNonce(nonce) {
+         NonceValidator.isValid(nonce: nonce) {
         nonceValue = nonce
       } else {
         nonceValue = nil
