@@ -39,3 +39,4 @@
 #import "FBSDKLoginTooltipView+Testing.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKSettings+Testing.h"
+#import "FBSDKTooltipView+Testing.h"
