@@ -14,6 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(LoginErrorFactory)
 @interface FBSDKLoginErrorFactory : NSObject
 
 + (NSError *)fbErrorForFailedLoginWithCode:(FBSDKLoginError)code;

@@ -19,7 +19,7 @@
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginConstants.h"
-#import "FBSDKLoginError.h"
+#import "FBSDKLoginErrorFactory.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 #import "FBSDKMonotonicTime.h"

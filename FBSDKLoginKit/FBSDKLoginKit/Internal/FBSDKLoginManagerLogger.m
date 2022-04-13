@@ -15,7 +15,7 @@
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKLoginAppEventName.h"
-#import "FBSDKLoginError.h"
+#import "FBSDKLoginErrorFactory.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 #import "FBSDKMonotonicTime.h"
 

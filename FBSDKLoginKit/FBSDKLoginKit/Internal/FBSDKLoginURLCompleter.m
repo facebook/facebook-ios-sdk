@@ -18,7 +18,7 @@
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKLoginCompletionParameters+Internal.h"
 #import "FBSDKLoginConstants.h"
-#import "FBSDKLoginError.h"
+#import "FBSDKLoginErrorFactory.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKProfileFactory.h"
 
