@@ -18,10 +18,7 @@ NS_SWIFT_NAME(LoginErrorFactory)
 @interface FBSDKLoginErrorFactory : NSObject
 
 + (NSError *)fbErrorForFailedLoginWithCode:(FBSDKLoginError)code;
-+ (NSError *)fbErrorForSystemPasswordChange:(NSError *)innerError;
-
 + (nullable NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters;
-+ (nullable NSError *)fbErrorFromServerError:(NSError *)serverError;
 
 @end
 
