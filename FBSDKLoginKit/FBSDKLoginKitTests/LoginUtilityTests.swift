@@ -224,4 +224,25 @@ final class LoginUtilityTests: XCTestCase {
     XCTAssertNil(parameters[Keys.errorCode])
     XCTAssertNil(parameters[Keys.errorDescription])
   }
+
+  func testStringForAudienceOnlyMe() {
+    let audienceString = _LoginUtility.string(forAudience: .onlyMe)
+    XCTAssertEqual(audienceString, "only_me", .providesStringForAudience)
+  }
+
+  func testStringForAudienceFriends() {
+    let audienceString = _LoginUtility.string(forAudience: .friends)
+    XCTAssertEqual(audienceString, "friends", .providesStringForAudience)
+  }
+
+  func testStringForAudienceEveryone() {
+    let audienceString = _LoginUtility.string(forAudience: .everyone)
+    XCTAssertEqual(audienceString, "everyone", .providesStringForAudience)
+  }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let providesStringForAudience = "Utility provides strings for default audience values"
 }
