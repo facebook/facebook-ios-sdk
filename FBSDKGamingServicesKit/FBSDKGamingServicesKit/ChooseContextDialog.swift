@@ -169,7 +169,10 @@ public final class ChooseContextDialog: ContextWebDialog, URLOpening {
     guard let appID = Settings.shared.appID else {
       return false
     }
-    return url.scheme?.hasPrefix("fb\(appID)") ?? false
+    let isCorrectScheme = url.scheme?.hasPrefix("fb\(appID)") ?? false
+    let isCorrectHost = url.host?.elementsEqual("gaming") ?? false
+    let isCorrectPath = url.path.elementsEqual("/contextchoose")
+    return isCorrectScheme && isCorrectHost && isCorrectPath
   }
 
   public func applicationDidBecomeActive(_ application: UIApplication) {

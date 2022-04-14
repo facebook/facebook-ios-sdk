@@ -153,6 +153,15 @@ final class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     }
   }
 
+  func testCanOpenURLWithIncorrectHostAndPath() throws {
+    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
+    let incorrectHostURL = try XCTUnwrap(URL(string: "fbabc123://invalid/contextchoose/?context_id=123456789&context_size=3"))
+    XCTAssertFalse(dialog.canOpen(incorrectHostURL, for: nil, sourceApplication: "", annotation: nil))
+
+    let incorrectPathURL = try XCTUnwrap(URL(string: "fbabc123://gaming/invalid/?context_id=123456789&context_size=3"))
+    XCTAssertFalse(dialog.canOpen(incorrectPathURL, for: nil, sourceApplication: "", annotation: nil))
+  }
+
   // MARK: - Delegate Methods
 
   func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
