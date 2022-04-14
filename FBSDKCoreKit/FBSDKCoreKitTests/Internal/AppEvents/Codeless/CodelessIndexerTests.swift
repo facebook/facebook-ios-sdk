@@ -675,11 +675,19 @@ final class CodelessIndexerTests: XCTestCase {
 
   // MARK: - Miscellaneous
 
-  func testExtraInfo() {
+  func testExtraInfo() throws {
+    var systemInfo = utsname()
+    uname(&systemInfo)
+    let data = Data(bytes: &systemInfo.machine, count: Int(_SYS_NAMELEN))
+    let machine = try XCTUnwrap(
+      String(bytes: data, encoding: .ascii)?.trimmingCharacters(in: .controlCharacters),
+      "Unable to find host architecture"
+    )
+
     XCTAssertEqual(
       CodelessIndexer.extInfo,
       """
-      ["x86_64","","1","1","en_US"]
+      ["\(machine)","","1","1","en_US"]
       """,
       "Should be able to provide extra info as a string representation of an array of strings"
     )
