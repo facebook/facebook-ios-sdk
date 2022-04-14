@@ -95,7 +95,36 @@ final class LoginConfigurationTests: XCTestCase {
     XCTAssertEqual(
       config?.messengerPageId,
       messengerPageId,
-      "Should create a configuration with the provided Messenger Page Id"
+      .createsConfigWithMessengerID
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingAndMessengerPageId() {
+    let messengerPageId = "12345"
+    let permissions = ["email"]
+
+    let config = LoginConfiguration(
+      permissions: permissions,
+      tracking: .enabled,
+      messengerPageId: messengerPageId
+    )
+
+    XCTAssertEqual(
+      config?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      .createsConfigWithMessengerID
+    )
+
+    XCTAssertEqual(
+      config?.tracking,
+      LoginTracking.enabled,
+      .createsConfigWithMessengerID
+    )
+
+    XCTAssertEqual(
+      config?.messengerPageId,
+      messengerPageId,
+      .createsConfigWithMessengerID
     )
   }
 
@@ -105,7 +134,44 @@ final class LoginConfigurationTests: XCTestCase {
     XCTAssertEqual(
       config?.authType,
       authType,
-      "Should create a configuration with the provided auth_type"
+      .createsConfigWithAuthType
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingAndAuthType() {
+    let authType = LoginAuthType.rerequest
+    let permissions = ["email"]
+    let messengerPageId = "12345"
+
+    let config = LoginConfiguration(
+      permissions: permissions,
+      tracking: .enabled,
+      messengerPageId: messengerPageId,
+      authType: authType
+    )
+
+    XCTAssertEqual(
+      config?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      .createsConfigWithAuthType
+    )
+
+    XCTAssertEqual(
+      config?.tracking,
+      LoginTracking.enabled,
+      .createsConfigWithAuthType
+    )
+
+    XCTAssertEqual(
+      config?.messengerPageId,
+      messengerPageId,
+      .createsConfigWithAuthType
+    )
+
+    XCTAssertEqual(
+      config?.authType,
+      authType,
+      .createsConfigWithAuthType
     )
   }
 
@@ -148,4 +214,11 @@ final class LoginConfigurationTests: XCTestCase {
       "Should create a configuration with the provided code verifier"
     )
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let createsConfigWithAuthType = "Creates a configuration with the provided auth_type"
+  static let createsConfigWithMessengerID = "Creates a configuration with the provided Messenger Page Id"
 }
