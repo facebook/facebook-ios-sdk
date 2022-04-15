@@ -30,7 +30,8 @@
 
 #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request error:(NSError *)error
++ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request
+                                       error:(nullable NSError *)error
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -123,7 +124,7 @@
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
-                          error:(NSError *)error
+                          error:(nullable NSError *)error
 {
   if ((self = [super init])) {
     _request = [request copy];
