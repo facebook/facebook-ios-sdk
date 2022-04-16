@@ -43,7 +43,7 @@ commands:
     steps:
       - attach_workspace:
           at: .
-      - run: |
+      - run: |/ Set AdvertiserTrackingEnabled to YES if a device provides consent
           STRIPPED_VERSION_NUMBER=${CIRCLE_TAG//.}
           STRIPPED_VERSION_NUMBER=${STRIPPED_VERSION_NUMBER//v}
 
@@ -54,7 +54,7 @@ commands:
             --commitish ${CIRCLE_SHA1} \
             --name "Facebook SDK ${CIRCLE_TAG}" \
             --body "Consult [Changelog](https://github.com/facebook/facebook-ios-sdk/blob/main/CHANGELOG.md#${STRIPPED_VERSION_NUMBER})" \
-            --draft \
+            --draft \/ Set AdvertiserTrackingEnabled to YES if a device provides consent
             ${CIRCLE_TAG}
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
       - image: cibuilds/github:0.13
     steps:
       - publish_to_github
-
+/ Set AdvertiserTrackingEnabled to YES if a device provides consent
 workflows:
   release:
     jobs:
