@@ -8,6 +8,8 @@
 
 #import "FBSDKCoreKitConfigurator.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
@@ -76,6 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureInternalUtility];
   [self configureServerConfigurationManager];
   [self configureSettings];
+  [self configureCloudBridge];
 
 #if !TARGET_OS_TV
   [self configureAEMReporter];
@@ -124,7 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
                                    advertiserIDProvider:self.components.advertiserIDProvider
                                           userDataStore:self.components.userDataStore
                                        appEventsUtility:self.components.appEventsUtility
-                                        internalUtility:self.components.internalUtility];
+                                        internalUtility:self.components.internalUtility
+                                           capiReporter:self.components.capiReporter];
 }
 
 - (void)configureAppEventsConfigurationManager
@@ -248,6 +252,12 @@ NS_ASSUME_NONNULL_BEGIN
                     appEventsConfigurationProvider:self.components.appEventsConfigurationProvider
                             infoDictionaryProvider:self.components.infoDictionaryProvider
                                        eventLogger:self.components.eventLogger];
+}
+
+- (void)configureCloudBridge
+{
+  [FBSDKAppEventsCAPIManager.shared configureWithFactory:self.components.graphRequestFactory
+                                                settings:self.components.settings];
 }
 
 // MARK: - Non-tvOS

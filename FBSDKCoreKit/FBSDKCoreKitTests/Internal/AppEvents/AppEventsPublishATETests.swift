@@ -71,7 +71,8 @@ final class AppEventsPublishATETests: XCTestCase {
       advertiserIDProvider: TestAdvertiserIDProvider(),
       userDataStore: TestUserDataStore(),
       appEventsUtility: TestAppEventsUtility(),
-      internalUtility: TestInternalUtility()
+      internalUtility: TestInternalUtility(),
+      capiReporter: TestCAPIReporter()
     )
 
     appEvents.publishATE()

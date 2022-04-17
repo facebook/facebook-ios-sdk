@@ -14,6 +14,8 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublishing.h"
 #import "FBSDKAccessToken.h"
@@ -64,6 +66,8 @@
  #import "FBSDKIntegrityParametersProcessorProvider.h"
 
 #endif
+
+@protocol FBSDKCAPIReporter;
 
 // Event parameter values internal to this file
 
@@ -125,6 +129,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKUserDataPersisting> userDataStore;
 @property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
 @property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
+@property (nullable, nonatomic) id<FBSDKCAPIReporter> capiReporter;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -654,6 +659,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                             userDataStore:(nonnull id<FBSDKUserDataPersisting>)userDataStore
                          appEventsUtility:(nonnull id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
                           internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
+                             capiReporter:(id<FBSDKCAPIReporter>)capiReporter
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -674,6 +680,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.userDataStore = userDataStore;
   self.appEventsUtility = appEventsUtility;
   self.internalUtility = internalUtility;
+  self.capiReporter = capiReporter;
 
   NSString *appID = self.appID;
   if (appID) {
@@ -861,6 +868,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                                                                                                userID:self.userID
                                                                                                              userData:[self getUserData]];
     [self appendInstallTimestamp:params];
+    [self.capiReporter recordEvent:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
                                                                                    parameters:params
@@ -966,6 +974,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
           }
         }];
       }
+      [self.featureChecker checkFeature:FBSDKFeatureAppEventsCloudbridge completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.capiReporter enable];
+        }
+      }];
     #if !TARGET_OS_TV
       [self.featureChecker checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
         if (enabled) {
@@ -1263,6 +1276,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                       paramsForPrinting,
                       prettyPrintedJsonEvents];
     }
+    [self.capiReporter recordEvent:postParameters];
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
                                                                                    parameters:postParameters
                                                                                   tokenString:appEventsState.tokenString

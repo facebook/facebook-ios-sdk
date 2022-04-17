@@ -63,6 +63,7 @@ final class TestAppEvents: TestEventLogger,
   // swiftlint:disable:next line_length
   var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
   var capturedInternalUtility: InternalUtilityProtocol?
+  var capturedCAPIReporter: CAPIReporter?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -85,7 +86,8 @@ final class TestAppEvents: TestEventLogger,
     userDataStore: UserDataPersisting,
     // swiftlint:disable:next line_length
     appEventsUtility: AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying,
-    internalUtility: InternalUtilityProtocol
+    internalUtility: InternalUtilityProtocol,
+    capiReporter: CAPIReporter
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -106,6 +108,7 @@ final class TestAppEvents: TestEventLogger,
     capturedUserDataStore = userDataStore
     capturedAppEventsUtility = appEventsUtility
     capturedInternalUtility = internalUtility
+    capturedCAPIReporter = capiReporter
   }
 
   // swiftlint:disable:next function_parameter_count

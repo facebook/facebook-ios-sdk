@@ -68,6 +68,8 @@
 #import "FBSDKWebViewProviding.h"
 #import "__FBSDKLoggerCreating.h"
 
+@protocol FBSDKCAPIReporter;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(CoreKitComponents)
@@ -118,6 +120,7 @@ NS_SWIFT_NAME(default);
 @property (nonatomic, readonly) id<FBSDKTokenCaching> tokenCache;
 @property (nonatomic, readonly) id<FBSDKURLSessionProxyProviding> urlSessionProxyFactory;
 @property (nonatomic, readonly) id<FBSDKUserDataPersisting> userDataStore;
+@property (nonatomic, readonly) id<FBSDKCAPIReporter> capiReporter;
 
 #if !TARGET_OS_TV
 
@@ -195,6 +198,7 @@ NS_SWIFT_NAME(default);
                                 tokenCache:(id<FBSDKTokenCaching>)tokenCache
                     urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                              userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker

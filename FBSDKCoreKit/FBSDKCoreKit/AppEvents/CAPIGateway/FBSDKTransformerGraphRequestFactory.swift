@@ -9,7 +9,7 @@
 import FBSDKCoreKit_Basics
 
 @objcMembers
-public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
+public class FBSDKTransformerGraphRequestFactory: NSObject {
   let contentType = "application/json"
   let timeoutInterval = 60
   let maxCachedEvents = 1000
@@ -45,10 +45,10 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
     credentials = .init(accessKey: accessKey, capiGatewayURL: url, datasetID: datasetID)
   }
 
-  public func callCapiGatewayAPI(with graphPath: String, parameters: [String: Any]) {
+  public func callCapiGatewayAPI(with parameters: [String: Any]) {
     serialQueue.async { [weak self] in
       guard let self = self,
-            let cbEndpoint = self.capiGatewayEndpoint(from: graphPath),
+            let cbEndpoint = self.capiGatewayEndpoint(),
             let url = URL(string: cbEndpoint) else {
         return
       }
@@ -85,35 +85,6 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
     }
   }
 
-  public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], tokenString: String?, httpMethod: HTTPMethod?, flags: GraphRequestFlags) -> GraphRequestProtocol {
-    callCapiGatewayAPI(with: graphPath, parameters: parameters)
-    return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters, tokenString: tokenString, httpMethod: httpMethod, flags: flags)
-  }
-
-  public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any]) -> GraphRequestProtocol {
-    callCapiGatewayAPI(with: graphPath, parameters: parameters)
-    return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters)
-  }
-
-  public override func createGraphRequest(withGraphPath graphPath: String) -> GraphRequestProtocol {
-    factory.createGraphRequest(withGraphPath: graphPath)
-  }
-
-  public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], httpMethod: HTTPMethod) -> GraphRequestProtocol {
-    callCapiGatewayAPI(with: graphPath, parameters: parameters)
-    return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters, httpMethod: httpMethod)
-  }
-
-  public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], tokenString: String?, version: String?, httpMethod: HTTPMethod) -> GraphRequestProtocol {
-    callCapiGatewayAPI(with: graphPath, parameters: parameters)
-    return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters, tokenString: tokenString, version: version, httpMethod: httpMethod)
-  }
-
-  public override func createGraphRequest(withGraphPath graphPath: String, parameters: [String: Any], flags: GraphRequestFlags) -> GraphRequestProtocol {
-    callCapiGatewayAPI(with: graphPath, parameters: parameters)
-    return factory.createGraphRequest(withGraphPath: graphPath, parameters: parameters, flags: flags)
-  }
-
   internal func capiGatewayRequestDictionary(with events: [[String: Any]]) -> [String: Any] {
     guard let accessKey = self.credentials?.accessKey else { return [:] }
 
@@ -123,7 +94,7 @@ public class FBSDKTransformerGraphRequestFactory: GraphRequestFactory {
     ]
   }
 
-  private func capiGatewayEndpoint(from graphPath: String) -> String? {
+  private func capiGatewayEndpoint() -> String? {
     guard let credentials = credentials else { return nil }
 
     return String(format: "%@/capi/%@/events", credentials.capiGatewayURL, credentials.datasetID)

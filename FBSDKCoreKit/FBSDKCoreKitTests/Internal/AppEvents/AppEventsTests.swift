@@ -45,6 +45,7 @@ final class AppEventsTests: XCTestCase {
   var userDataStore: TestUserDataStore!
   var appEventsUtility: TestAppEventsUtility!
   var internalUtility: TestInternalUtility!
+  var capiReporter: TestCAPIReporter!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -83,6 +84,7 @@ final class AppEventsTests: XCTestCase {
     userDataStore = TestUserDataStore()
     appEventsUtility = TestAppEventsUtility()
     internalUtility = TestInternalUtility()
+    capiReporter = TestCAPIReporter()
     appEventsUtility.stubbedIsIdentifierValid = true
 
     // Must be stubbed before the configure method is called
@@ -117,6 +119,7 @@ final class AppEventsTests: XCTestCase {
     userDataStore = nil
     appEventsUtility = nil
     internalUtility = nil
+    capiReporter = nil
 
     resetTestHelpers()
 
@@ -150,7 +153,8 @@ final class AppEventsTests: XCTestCase {
       advertiserIDProvider: advertiserIDProvider,
       userDataStore: userDataStore,
       appEventsUtility: appEventsUtility,
-      internalUtility: internalUtility
+      internalUtility: internalUtility,
+      capiReporter: capiReporter
     )
 
     appEvents.configureNonTVComponents(
@@ -569,6 +573,7 @@ final class AppEventsTests: XCTestCase {
       request.parameters["event"] as? String,
       "MOBILE_APP_INSTALL"
     )
+    XCTAssertNotNil(capiReporter.capturedEvent)
   }
 
   func testApplicationBecomingActiveRestoresTimeSpentRecording() {
@@ -1553,6 +1558,21 @@ final class AppEventsTests: XCTestCase {
         "AEM Catalog Matching should be enabled"
       )
     }
+  }
+
+  func testFetchingConfigurationIncludingCloudBridge() {
+    featureManager.enable(feature: .appEventsCloudbridge)
+      appEvents.fetchServerConfiguration(nil)
+      appEventsConfigurationProvider.firstCapturedBlock?()
+      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+      featureManager.completeCheck(
+        forFeature: .appEventsCloudbridge,
+        with: true
+      )
+      XCTAssertTrue(
+        self.capiReporter.enabledWasCalled,
+        "Should enable the CloudBridge"
+      )
   }
 
   func testFetchingConfigurationIncludingPrivacyProtection() {

@@ -19,7 +19,7 @@ enum SettingsAPIFields: String {
 }
 
 @objcMembers
-public class FBSDKAppEventsCAPIManager: NSObject {
+public class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
   private static let settingsPath = "cloudbridge_settings"
 
   public static let shared = FBSDKAppEventsCAPIManager()
@@ -66,4 +66,10 @@ public class FBSDKAppEventsCAPIManager: NSObject {
       self.isEnabled = TypeUtility.boolValue(TypeUtility.dictionary(config, objectForKey: SettingsAPIFields.enabled.rawValue, ofType: NSNumber.self) ?? false)
     }
   }
+
+    public func recordEvent(_ parameters: [String: Any]) {
+        if self.isEnabled {
+            FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
+        }
+    }
 }

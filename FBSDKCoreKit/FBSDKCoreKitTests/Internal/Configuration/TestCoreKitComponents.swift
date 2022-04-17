@@ -54,6 +54,7 @@ enum TestCoreKitComponents {
     tokenCache: TokenCaching = TestTokenCache(),
     urlSessionProxyFactory: URLSessionProxyProviding = TestURLSessionProxyFactory(),
     userDataStore: UserDataPersisting = TestUserDataStore(),
+    capiReporter: CAPIReporter = TestCAPIReporter(),
 
     // Non-tvOS
     aemNetworker: AEMNetworking? = TestAEMNetworker(),
@@ -126,6 +127,7 @@ enum TestCoreKitComponents {
       tokenCache: tokenCache,
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
+      capiReporter: capiReporter,
 
       // Non-tvOS
       aemNetworker: aemNetworker,

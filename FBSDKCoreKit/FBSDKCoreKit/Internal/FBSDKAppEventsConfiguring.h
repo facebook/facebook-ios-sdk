@@ -30,6 +30,7 @@
 @protocol FBSDKLoggingNotifying;
 @protocol FBSDKAppEventsUtility;
 @protocol FBSDKAppEventDropDetermining;
+@protocol FBSDKCAPIReporter;
 
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
@@ -62,7 +63,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                             userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
                          appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
-                          internalUtility:(id<FBSDKInternalUtility>)internalUtility;
+                          internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                             capiReporter:(id<FBSDKCAPIReporter>)capiReporter;
 
 #if !TARGET_OS_TV
 

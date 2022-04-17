@@ -153,6 +153,7 @@ static FBSDKFeatureManager * sharedInstance;
     case FBSDKFeatureAEM: featureName = @"AEM"; break;
     case FBSDKFeatureAEMConversionFiltering: featureName = @"AEMConversionFiltering"; break;
     case FBSDKFeatureAEMCatalogMatching: featureName = @"AEMCatalogMatching"; break;
+    case FBSDKFeatureAppEventsCloudbridge: featureName = @"AppEventsCloudbridge"; break;
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
     case FBSDKFeatureShare: featureName = @"ShareKit"; break;
     case FBSDKFeatureGamingServices: featureName = @"GamingServicesKit"; break;
@@ -179,6 +180,7 @@ static FBSDKFeatureManager * sharedInstance;
     case FBSDKFeatureAEM:
     case FBSDKFeatureAEMConversionFiltering:
     case FBSDKFeatureAEMCatalogMatching:
+    case FBSDKFeatureAppEventsCloudbridge:
     case FBSDKFeatureSKAdNetwork:
     case FBSDKFeatureSKAdNetworkConversionValue:
       return NO;

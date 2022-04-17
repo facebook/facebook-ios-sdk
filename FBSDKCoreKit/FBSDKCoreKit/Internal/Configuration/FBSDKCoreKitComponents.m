@@ -8,6 +8,8 @@
 
 #import "FBSDKCoreKitComponents.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKAEMNetworker.h"
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessTokenExpirer.h"
@@ -101,6 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
                                 tokenCache:(id<FBSDKTokenCaching>)tokenCache
                     urlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)urlSessionProxyFactory
                              userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
 #if !TARGET_OS_TV
   // UNCRUSTIFY_FORMAT_OFF
                              aemNetworker:(nullable id<FBAEMNetworking>)aemNetworker
@@ -175,6 +178,7 @@ NS_ASSUME_NONNULL_BEGIN
     _tokenCache = tokenCache;
     _urlSessionProxyFactory = urlSessionProxyFactory;
     _userDataStore = userDataStore;
+    _capiReporter = capiReporter;
 
   #if !TARGET_OS_TV
     _aemNetworker = aemNetworker;
@@ -253,6 +257,7 @@ static FBSDKCoreKitComponents *_default;
       id<FBSDKTokenCaching> tokenCache = [[FBSDKTokenCache alloc] initWithSettings:FBSDKSettings.sharedSettings
                                                                      keychainStore:keychainStore];
       id<FBSDKUserDataPersisting> userDataStore = [FBSDKUserDataStore new];
+      id<FBSDKCAPIReporter> capiReporter = FBSDKAppEventsCAPIManager.shared;
 
     #if !TARGET_OS_TV
       id<FBAEMNetworking> _Nullable aemNetworker;
@@ -322,6 +327,7 @@ static FBSDKCoreKitComponents *_default;
                                            tokenCache:tokenCache
                                urlSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
                                         userDataStore:userDataStore
+                                         capiReporter:capiReporter
                 #if !TARGET_OS_TV
                                          aemNetworker:aemNetworker
                                           aemReporter:FBAEMReporter.class
