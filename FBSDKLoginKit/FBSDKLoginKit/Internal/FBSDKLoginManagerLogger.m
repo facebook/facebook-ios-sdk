@@ -54,10 +54,61 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 @property (nonatomic) NSError *lastError;
 @property (nonatomic) NSString *authMethod;
 @property (nonatomic) NSString *loggingToken;
+@property (class, nonatomic) BOOL hasBeenConfigured;
 
 @end
 
 @implementation FBSDKLoginManagerLogger
+
+// MARK: - Type Dependencies
+
+static BOOL _hasBeenConfigured = false;
+static id<_FBSDKLoginEventLogging> _eventLogger;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
++ (id<_FBSDKLoginEventLogging>)eventLogger
+{
+  return _eventLogger;
+}
+
++ (void)setEventLogger:(id<_FBSDKLoginEventLogging>)eventLogger
+{
+  _eventLogger = eventLogger;
+}
+
++ (void)configureWithEventLogger:(id<_FBSDKLoginEventLogging>)eventLogger
+{
+  self.eventLogger = eventLogger;
+  self.hasBeenConfigured = true;
+}
+
++ (void)configureDefaultTypeDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithEventLogger:FBSDKAppEvents.shared];
+}
+
+#if DEBUG
+
++ (void)resetTypeDependencies
+{
+  self.eventLogger = nil;
+  self.hasBeenConfigured = false;
+}
+
+#endif
 
 + (nullable FBSDKLoginManagerLogger *)loggerFromParameters:(nullable NSDictionary<NSString *, id> *)parameters
                                                   tracking:(FBSDKLoginTracking)tracking
@@ -80,6 +131,8 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (nullable instancetype)initWithLoggingToken:(NSString *)loggingToken
                                      tracking:(FBSDKLoginTracking)tracking
 {
+  [self.class configureDefaultTypeDependencies];
+
   switch (tracking) {
     case FBSDKLoginTrackingEnabled:
       break;
@@ -117,8 +170,8 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (void)endSession
 {
   [self logEvent:FBSDKAppEventNameFBSessionAuthEnd result:_lastResult error:_lastError];
-  if (FBSDKAppEvents.shared.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [FBSDKAppEvents.shared flush];
+  if (self.class.eventLogger.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+    [self.class.eventLogger flush];
   }
 }
 
@@ -261,9 +314,9 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
     }
     [_extras removeAllObjects];
 
-    [FBSDKAppEvents.shared logInternalEvent:eventName
-                                 parameters:params
-                         isImplicitlyLogged:YES];
+    [self.class.eventLogger logInternalEvent:eventName
+                                  parameters:params
+                          isImplicitlyLogged:YES];
   }
 }
 
