@@ -27,13 +27,14 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
 
   private let serialQueue: DispatchQueue
   private let factory = GraphRequestFactory()
-  internal var credentials: CbCredentials?
+
+  public private(set) var credentials: CapiGCredentials?
   internal var transformedEvents: [[String: Any]] = []
 
-  public struct CbCredentials {
-    let accessKey: String
-    let capiGatewayURL: String
-    let datasetID: String
+  public struct CapiGCredentials {
+    public let accessKey: String
+    public let capiGatewayURL: String
+    public let datasetID: String
   }
 
   public override init() {
@@ -42,7 +43,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
   }
 
   public func configure(datasetID: String, url: String, accessKey: String) {
-    credentials = .init(accessKey: accessKey, capiGatewayURL: url, datasetID: datasetID)
+    credentials = CapiGCredentials(accessKey: accessKey, capiGatewayURL: url, datasetID: datasetID)
   }
 
   public func callCapiGatewayAPI(with parameters: [String: Any]) {

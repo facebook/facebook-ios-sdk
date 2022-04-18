@@ -25,8 +25,6 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-
-    FBSDKTransformerGraphRequestFactory.shared.credentials = nil
     FBSDKTransformerGraphRequestFactory.shared.transformedEvents = []
   }
 
