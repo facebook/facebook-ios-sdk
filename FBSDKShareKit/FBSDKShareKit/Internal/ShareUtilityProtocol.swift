@@ -37,4 +37,9 @@ protocol ShareUtilityProtocol {
 struct WebShareBridgeComponents {
   var methodName: String
   var parameters: [String: Any]
+
+  init(methodName: String, parameters: [String: Any]) {
+    self.methodName = methodName
+    self.parameters = parameters
+  }
 }

@@ -10,7 +10,7 @@ import Foundation
 
 @objcMembers
 public final class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
-  public var actionID: String
+  public var actionID = "1"
   public var methodName: String?
   public var protocolType: FBSDKBridgeAPIProtocolType
   public var `protocol`: BridgeAPIProtocol?
@@ -18,11 +18,14 @@ public final class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
 
   public let url: URL?
 
-  public init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String = "1") {
+  public init(
+    url: URL? = nil,
+    protocolType: FBSDKBridgeAPIProtocolType = .native,
+    scheme: String = "1"
+  ) {
     self.url = url
     self.protocolType = protocolType
     self.scheme = scheme
-    actionID = "1"
   }
 
   public func copy(with zone: NSZone? = nil) -> Any {

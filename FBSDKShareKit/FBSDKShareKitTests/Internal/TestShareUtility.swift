@@ -29,13 +29,27 @@ extension TestShareUtility: ShareUtilityProtocol {
     [:]
   }
 
+  static var capturedAsyncWebPhotoContentContent: SharePhotoContent?
+  static var capturedAsyncWebPhotoContentCompletion: WebPhotoContentHandler?
+
   static func buildAsyncWebPhotoContent(
     _ content: SharePhotoContent,
-    completion: WebPhotoContentHandler
-  ) {}
+    completion: @escaping WebPhotoContentHandler
+  ) {
+    capturedAsyncWebPhotoContentContent = content
+    capturedAsyncWebPhotoContentCompletion = completion
+  }
+
+  static var stubbedWebShareBridgeComponents: WebShareBridgeComponents?
+  static var capturedWebShareBridgeComponentsContent: SharingContent?
 
   static func buildWebShareBridgeComponents(for content: SharingContent) -> WebShareBridgeComponents {
-    WebShareBridgeComponents(methodName: "", parameters: [:])
+    guard let components = stubbedWebShareBridgeComponents else {
+      fatalError("Missing stubbed components")
+    }
+
+    capturedWebShareBridgeComponentsContent = content
+    return components
   }
 
   static func bridgeParameters(

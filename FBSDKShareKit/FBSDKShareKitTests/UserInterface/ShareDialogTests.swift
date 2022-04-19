@@ -8,6 +8,7 @@
 
 @testable import FBSDKShareKit
 
+import FBSDKCoreKit
 import Photos
 import TestTools
 import UIKit
@@ -337,6 +338,108 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertThrowsError(try dialog.validate())
   }
 
+  func testSharingViaBrowserWithoutContent() {
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = TestBridgeAPIRequest()
+    dialog = createEmptyDialog(mode: .browser)
+    XCTAssertFalse(dialog.show(), .Showing.showingRequiresValidContent)
+    XCTAssertTrue(delegate.sharerDidFailCalled, .Showing.showingRequiresValidContent)
+  }
+
+  func testSharingViaBrowserWithInvalidLinkContent() {
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = TestBridgeAPIRequest()
+    dialog = createEmptyDialog(mode: .browser)
+    let content = ShareModelTestUtility.linkContent
+    content.contentURL = nil
+    dialog.shareContent = content
+    XCTAssertFalse(dialog.show(), .Showing.showingRequiresValidContent)
+    XCTAssertTrue(delegate.sharerDidFailCalled, .Showing.showingRequiresValidContent)
+  }
+
+  func testSharingViaBrowserWithValidLinkContent() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    let components = WebShareBridgeComponents(methodName: "test", parameters: ["key": "value"])
+    TestShareUtility.stubbedWebShareBridgeComponents = components
+    let content = ShareModelTestUtility.linkContent
+
+    validate(
+      shareContent: content,
+      expectValid: true,
+      expectShow: true,
+      mode: .browser
+    )
+
+    XCTAssertIdentical(
+      TestShareUtility.capturedWebShareBridgeComponentsContent,
+      content,
+      .Showing.webShareBridgeComponents
+    )
+
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, components.methodName, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(
+      bridgeAPIRequestFactory.capturedParameters as? [String: String],
+      components.parameters as? [String: String],
+      .Showing.bridgeAPIRequest
+    )
+    XCTAssertNil(bridgeAPIRequestFactory.capturedUserInfo, .Showing.bridgeAPIRequest)
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(delegate.sharerDidCompleteCalled, .WebDialogDelegate.didCompleteCalled)
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
+  func testSharingViaBrowserWithValidPhotoContent() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    let components = WebShareBridgeComponents(methodName: "test", parameters: ["key": "value"])
+    TestShareUtility.stubbedWebShareBridgeComponents = components
+    let content = ShareModelTestUtility.photoContentWithImages
+
+    validate(
+      shareContent: content,
+      expectValid: true,
+      expectShow: true,
+      mode: .browser
+    )
+
+    XCTAssertIdentical(
+      TestShareUtility.capturedAsyncWebPhotoContentContent,
+      content,
+      .Showing.webPhotoContent
+    )
+
+    let parameters = ["key": "value"]
+    TestShareUtility.capturedAsyncWebPhotoContentCompletion?(true, "test", parameters)
+
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, "test", .Showing.bridgeAPIRequest)
+    XCTAssertEqual(
+      bridgeAPIRequestFactory.capturedParameters as? [String: String],
+      parameters,
+      .Showing.bridgeAPIRequest
+    )
+    XCTAssertNil(bridgeAPIRequestFactory.capturedUserInfo, .Showing.bridgeAPIRequest)
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(delegate.sharerDidCompleteCalled, .WebDialogDelegate.didCompleteCalled)
+    XCTAssertIdentical(
+      internalUtility.unregisterTransientObjectObject as AnyObject,
+      dialog,
+      .WebDialogDelegate.unregistersTransientObject
+    )
+  }
+
   // MARK: - Web mode
 
   func testCanShowWeb() {
@@ -519,8 +622,7 @@ final class ShareDialogTests: XCTestCase {
       shareContent: ShareModelTestUtility.linkContent,
       expectValid: true,
       expectShow: true,
-      mode: .shareSheet,
-      nonSupportedScheme: nil
+      mode: .shareSheet
     )
   }
 
@@ -543,8 +645,7 @@ final class ShareDialogTests: XCTestCase {
       shareContent: ShareModelTestUtility.mediaContent,
       expectValid: true,
       expectShow: true,
-      mode: .shareSheet,
-      nonSupportedScheme: nil
+      mode: .shareSheet
     )
   }
 
@@ -553,8 +654,7 @@ final class ShareDialogTests: XCTestCase {
       shareContent: ShareModelTestUtility.multiVideoMediaContent,
       expectValid: false,
       expectShow: false,
-      mode: .shareSheet,
-      nonSupportedScheme: nil
+      mode: .shareSheet
     )
   }
 
@@ -790,73 +890,12 @@ final class ShareDialogTests: XCTestCase {
     return dialog
   }
 
-  func showAndValidate(
-    nativeDialog dialog: ShareDialog,
-    nonSupportedScheme: String?,
-    expectRequestScheme scheme: String?,
-    methodName: String,
-    _ file: StaticString = #file,
-    _ line: UInt = #line
-  ) {
-    internalURLOpener.computeCanOpenURL = { url in
-      url.absoluteString != nonSupportedScheme
-    }
-    settings.appID = "AppID"
-    let stubbedRequest = TestBridgeAPIRequest(
-      url: nil,
-      protocolType: .native,
-      scheme: "1"
-    )
-    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = stubbedRequest
-
-    let viewController = UIViewController()
-    dialog.fromViewController = viewController
-    XCTAssertTrue(
-      dialog.show(),
-      "Should be able to show the dialog",
-      file: file,
-      line: line
-    )
-
-    XCTAssertEqual(
-      bridgeAPIRequestFactory.capturedMethodName,
-      methodName,
-      "Should create the request with the expected method name",
-      file: file,
-      line: line
-    )
-
-    if let expectedScheme = scheme {
-      XCTAssertEqual(
-        bridgeAPIRequestFactory.capturedScheme,
-        expectedScheme,
-        "Should create the request with the expected scheme",
-        file: file,
-        line: line
-      )
-    } else {
-      XCTAssertNil(
-        bridgeAPIRequestFactory.capturedScheme,
-        "Should not create the request with a scheme",
-        file: file,
-        line: line
-      )
-    }
-
-    XCTAssertTrue(
-      bridgeAPIRequestOpener.capturedRequest === stubbedRequest,
-      "Should pass the created request to the opener",
-      file: file,
-      line: line
-    )
-  }
-
   func validate(
     shareContent: SharingContent,
     expectValid: Bool,
     expectShow: Bool,
     mode: ShareDialog.Mode,
-    nonSupportedScheme: String?,
+    nonSupportedScheme: String? = nil,
     file: StaticString = #file,
     line: UInt = #line
   ) {
@@ -883,9 +922,9 @@ final class ShareDialogTests: XCTestCase {
       )
     }
     XCTAssertEqual(
-      expectShow,
       dialog.show(),
-      "Showing the dialog should return \(expectShow)",
+      expectShow,
+      "Showing the dialog should \(expectShow ? "succeed" : "fail")",
       file: file,
       line: line
     )
@@ -1025,5 +1064,13 @@ fileprivate extension String {
     static let didCompleteCalled = "A dialog invokes its delegate's completion method"
     static let clearsWebDialog = "A dialog clears its web dialog"
     static let unregistersTransientObject = "A dialog unregisters itself as a transient object"
+  }
+
+  enum Showing {
+    static let showingRequiresValidContent = "A share dialog will only show with valid share content"
+    static let showsWithValidContent = "A share dialog shows with valid content"
+    static let bridgeAPIRequest = "A bridge API request is created with the appropriate values"
+    static let webShareBridgeComponents = "A bridge API request needs components derived from its content"
+    static let webPhotoContent = "A bridge API request needs values generated for web photo content"
   }
 }
