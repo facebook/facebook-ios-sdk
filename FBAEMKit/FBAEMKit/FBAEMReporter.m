@@ -65,6 +65,7 @@ static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
 
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
 @property (class, nullable, nonatomic) NSString *appID;
+@property (class, nullable, nonatomic) NSString *analyticsAppID;
 @property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
 @property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
 
@@ -87,18 +88,32 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   [self configureWithNetworker:networker
                          appID:appID
                       reporter:reporter
+                analyticsAppID:nil];
+}
+
++ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
+                         appID:(nullable NSString *)appID
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+                analyticsAppID:(nullable NSString *)analyticsAppID
+{
+  [self configureWithNetworker:networker
+                         appID:appID
+                      reporter:reporter
+                analyticsAppID:analyticsAppID
                          store:NSUserDefaults.standardUserDefaults];
 }
 
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+                analyticsAppID:(nullable NSString *)analyticsAppID
                          store:(nullable id<FBSDKDataPersisting>)store
 {
   if (self == FBAEMReporter.class) {
     self.networker = networker;
     self.appID = appID;
     self.reporter = reporter;
+    self.analyticsAppID = analyticsAppID;
     self.store = store;
   }
 }
@@ -125,6 +140,18 @@ static NSString *_appID;
 + (void)setAppID:(nullable NSString *)appID
 {
   _appID = appID;
+}
+
+static NSString *_analyticsAppID;
+
++ (nullable NSString *)analyticsAppID
+{
+  return _analyticsAppID;
+}
+
++ (void)setAnalyticsAppID:(nullable NSString *)analyticsAppID
+{
+  _analyticsAppID = analyticsAppID;
 }
 
 static id<FBSKAdNetworkReporting> _reporter;
@@ -179,7 +206,9 @@ static id<FBSDKDataPersisting> _store;
       // or pass nil for networker,
       // we use default networker in FBAEMKit
       if (!self.networker) {
-        self.networker = [FBAEMNetworker new];
+        FBAEMNetworker *networker = [FBAEMNetworker new];
+        [networker setUserAgentSuffix:self.analyticsAppID];
+        self.networker = networker;
       }
       // If developers forget to call configureWithNetworker:appID:,
       // we will look up app id in plist file, key is FacebookAppID

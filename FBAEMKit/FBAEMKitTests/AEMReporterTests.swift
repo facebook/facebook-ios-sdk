@@ -63,6 +63,7 @@ final class AEMReporterTests: XCTestCase {
   let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
   let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
   let aggregationRequestTimestampToNotDelay = Date().addingTimeInterval(-100)
+  let analyticsAppID = "analytics_123"
 
   override class func setUp() {
     super.setUp()
@@ -73,7 +74,13 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter.reset()
     removeReportFile()
-    AEMReporter.configure(withNetworker: networker, appID: "123", reporter: reporter, store: userDefaultsSpy)
+    AEMReporter.configure(
+      withNetworker: networker,
+      appID: "123",
+      reporter: reporter,
+      analyticsAppID: analyticsAppID,
+      store: userDefaultsSpy
+    )
     // Actual queue doesn't matter as long as it's not the same as the designated queue name in the class
     AEMReporter.queue = DispatchQueue(label: name, qos: .background)
     AEMReporter.isEnabled = true
@@ -124,6 +131,11 @@ final class AEMReporterTests: XCTestCase {
       userDefaultsSpy,
       AEMReporter.store as? UserDefaultsSpy,
       "Should configure with the expected data store"
+    )
+    XCTAssertEqual(
+      AEMReporter.analyticsAppID,
+      analyticsAppID,
+      "Should configure with the expected analytics app id"
     )
   }
 

@@ -28,12 +28,14 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) NSString *reportFilePath;
 @property (class, nullable, nonatomic) NSDate *minAggregationRequestTimestamp;
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
+@property (class, nullable, nonatomic) NSString *analyticsAppID;
 @property (class, nullable, nonatomic) id<FBSKAdNetworkReporting> reporter;
 @property (class, nullable, nonatomic) id<FBSDKDataPersisting> store;
 
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+                analyticsAppID:(nullable NSString *)analyticsAppID
                          store:(nullable id<FBSDKDataPersisting>)store;
 
 + (void)enable;

@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(_AEMNetworker)
 @interface FBAEMNetworker : NSObject <FBAEMNetworking, NSURLSessionDataDelegate>
 
+@property (nullable, nonatomic, copy) NSString *userAgentSuffix;
+
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
                             parameters:(NSDictionary<NSString *, id> *)parameters
                            tokenString:(nullable NSString *)tokenString

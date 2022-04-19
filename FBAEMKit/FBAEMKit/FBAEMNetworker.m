@@ -28,6 +28,8 @@ static NSString *const FB_GRAPH_API_ENDPOINT = @"https://graph.facebook.com/v13.
 static NSString *const FB_GRAPH_API_CONTENT_TYPE = @"application/json";
 NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 
+@synthesize userAgentSuffix = _userAgentSuffix;
+
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
                             parameters:(NSDictionary<NSString *, id> *)parameters
                            tokenString:(nullable NSString *)tokenString
@@ -130,12 +132,16 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
   dispatch_once(&onceToken, ^{
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBAEMKit_VERSION_STRING];
   });
+  NSString *agentWithSuffix = agent;
+  if (_userAgentSuffix) {
+    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, _userAgentSuffix];
+  }
   if (@available(iOS 13.0, *)) {
     if (NSProcessInfo.processInfo.isMacCatalystApp) {
-      return [NSString stringWithFormat:@"%@/%@", agent, @"macOS"];
+      return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }
-  return agent;
+  return agentWithSuffix;
 }
 
 @end
