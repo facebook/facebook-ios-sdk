@@ -176,43 +176,30 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
     )
   }
 
-  func testEncoding() throws {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let entryRule = SampleAEMData.validAdvertiserMultiEntryRule
-    entryRule.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(entryRule)
 
-    let ruleOperator = try XCTUnwrap(coder.encodedObject[Keys.ruleOperator] as? _AEMAdvertiserRuleOperator)
-    XCTAssertEqual(
-      ruleOperator,
-      entryRule.operator,
-      "Should encode the expected operator with the correct key"
-    )
+    // Test Objects
+    XCTAssertNotIdentical(decodedObject, entryRule, .isCodable)
+    XCTAssertNotEqual(decodedObject, entryRule, .isCodable) // isEqual Method hasn't been implemented
 
-    let rules = try XCTUnwrap(coder.encodedObject[Keys.rules] as? [_AEMAdvertiserRuleMatching])
-    let rule = try XCTUnwrap(rules[0] as? _AEMAdvertiserSingleEntryRule)
-    let expectedRule = try XCTUnwrap(entryRule.rules[0] as? _AEMAdvertiserSingleEntryRule)
-    XCTAssertEqual(
-      rule,
-      expectedRule,
-      "Should encode the expected rule with the correct key"
+    // Test Properties
+    XCTAssertEqual(decodedObject.operator.rawValue, entryRule.operator.rawValue)
+    let rules = try XCTUnwrap(
+      entryRule.rules as? [_AEMAdvertiserSingleEntryRule]
     )
+    let decodedRules = try XCTUnwrap(
+      decodedObject.rules as? [_AEMAdvertiserSingleEntryRule]
+    )
+    XCTAssertEqual(decodedRules, rules)
   }
+}
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = _AEMAdvertiserMultiEntryRule(coder: decoder)
+// MARK: - Assumptions
 
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.ruleOperator] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the operator key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.rules] as? NSSet,
-      [NSArray.self, _AEMAdvertiserMultiEntryRule.self, _AEMAdvertiserSingleEntryRule.self],
-      "Should decode the expected type for the rules key"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "AEMAdvertiserMultiEntryRule should be encodable and decodable"
 }
 
 #endif

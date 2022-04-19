@@ -71,7 +71,7 @@ public final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMat
   }
 
   public func encode(with coder: NSCoder) {
-    coder.encode(`operator`, forKey: CodingKeys.operator.rawValue)
+    coder.encode(`operator`.rawValue, forKey: CodingKeys.operator.rawValue)
     coder.encode(rules, forKey: CodingKeys.rules.rawValue)
   }
 
