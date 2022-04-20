@@ -12,8 +12,6 @@
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKAuthenticationTokenFactory+Testing.h"
-#import "FBSDKAuthenticationTokenHeader.h"
-#import "FBSDKAuthenticationTokenHeader+Testing.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKDeviceLoginCodeInfo+Testing.h"
 #import "FBSDKDevicePoller.h"

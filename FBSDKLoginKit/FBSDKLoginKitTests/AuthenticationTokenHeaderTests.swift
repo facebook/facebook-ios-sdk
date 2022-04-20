@@ -15,24 +15,27 @@ import XCTest
 final class AuthenticationTokenHeaderTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var header: AuthenticationTokenHeader!
   var headerDictionary: [String: Any]!
+  var header: _AuthenticationTokenHeader!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    header = AuthenticationTokenHeader(
-      alg: "RS256",
-      typ: "JWT",
-      kid: "abcd1234"
-    )
-
     headerDictionary = [
-      "alg": header.alg,
-      "typ": header.typ,
-      "kid": header.kid,
+      "alg": "RS256",
+      "typ": "JWT",
+      "kid": "abcd1234",
     ]
+
+    guard
+      let headerData = try? JSONSerialization.data(withJSONObject: headerDictionary as Any, options: []),
+      let encodedHeader = try? base64URLEncoded(headerData)
+    else {
+      return
+    }
+
+    header = _AuthenticationTokenHeader(fromEncodedString: encodedHeader)
   }
 
   override func tearDown() {
@@ -45,30 +48,17 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
   // MARK: - Decoding Header
 
   func testDecodeValidHeader() throws {
-    let headerData = try JSONSerialization.data(withJSONObject: headerDictionary as Any, options: [])
-    let encodedHeader = try base64URLEncoded(headerData)
-
-    let decodedHeader = AuthenticationTokenHeader(fromEncodedString: encodedHeader)
-
-    XCTAssertEqual(header, decodedHeader)
+    XCTAssertEqual(header.kid, "abcd1234")
   }
 
   func testDecodeInvalidFormatHeader() throws {
     let headerData = try XCTUnwrap("invalid_header".data(using: .utf8))
     let encodedHeader = try base64URLEncoded(headerData)
 
-    XCTAssertNil(AuthenticationTokenHeader(fromEncodedString: encodedHeader))
+    XCTAssertNil(_AuthenticationTokenHeader(fromEncodedString: encodedHeader))
   }
 
   func testDecodeInvalidHeader() throws {
-    try assertDecodeHeaderFailWithInvalidEntry(key: "alg", value: "wrong_algorithm")
-    try assertDecodeHeaderFailWithInvalidEntry(key: "alg", value: nil)
-    try assertDecodeHeaderFailWithInvalidEntry(key: "alg", value: "")
-
-    try assertDecodeHeaderFailWithInvalidEntry(key: "typ", value: "some_type")
-    try assertDecodeHeaderFailWithInvalidEntry(key: "typ", value: nil)
-    try assertDecodeHeaderFailWithInvalidEntry(key: "typ", value: "")
-
     try assertDecodeHeaderFailWithInvalidEntry(key: "kid", value: nil)
     try assertDecodeHeaderFailWithInvalidEntry(key: "kid", value: "")
   }
@@ -78,7 +68,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
     let encodedHeader = try base64URLEncoded(headerData)
 
-    XCTAssertNil(AuthenticationTokenHeader(fromEncodedString: encodedHeader))
+    XCTAssertNil(_AuthenticationTokenHeader(fromEncodedString: encodedHeader))
   }
 
   func testDecodeRandomHeader() throws {
@@ -88,7 +78,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
 
       let headerData = try JSONSerialization.data(withJSONObject: randomizedHeader, options: [])
       let encodedHeader = try base64URLEncoded(headerData)
-      _ = AuthenticationTokenHeader(fromEncodedString: encodedHeader)
+      _ = _AuthenticationTokenHeader(fromEncodedString: encodedHeader)
     }
   }
 
@@ -113,7 +103,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     let encodedHeader = try base64URLEncoded(headerData)
 
     XCTAssertNil(
-      AuthenticationTokenHeader(fromEncodedString: encodedHeader),
+      _AuthenticationTokenHeader(fromEncodedString: encodedHeader),
       """
       Should not be able to create a token from a dictionary
       with the value: \(String(describing: value)) for the key: \(key)

@@ -18,7 +18,7 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
-#import "FBSDKAuthenticationTokenHeader.h"
+@class FBSDKAuthenticationTokenHeader;
 
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end
@@ -103,7 +103,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
   claims = [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:nonce];
-  header = [FBSDKAuthenticationTokenHeader headerFromEncodedString:encodedHeader];
+  header = [[FBSDKAuthenticationTokenHeader alloc] initFromEncodedString:encodedHeader];
 
   if (!claims || !header) {
     completion(nil);
