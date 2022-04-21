@@ -233,14 +233,14 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertEqual(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expected,
       "Should set the current access token to the cached access token when it exists"
     )
   }
 
   func testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     TestAccessTokenWallet.tokenCache = TestTokenCache(
       accessToken: nil,
       authenticationToken: nil
@@ -249,7 +249,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Should set the current access token to nil access token when there isn't a cached token"
     )
   }

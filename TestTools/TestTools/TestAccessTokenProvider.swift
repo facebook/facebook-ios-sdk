@@ -12,7 +12,7 @@ public final class TestAccessTokenProvider: AccessTokenProviding {
 
   public static var stubbedAccessToken: AccessToken?
   public static var tokenCache: TokenCaching?
-  public static var currentAccessToken: AccessToken? {
+  public static var current: AccessToken? {
     stubbedAccessToken
   }
 

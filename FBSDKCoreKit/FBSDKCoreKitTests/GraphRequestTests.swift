@@ -63,7 +63,7 @@ final class GraphRequestTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     let request = GraphRequest(graphPath: path)
 
     XCTAssertTrue(

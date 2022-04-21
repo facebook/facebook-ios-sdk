@@ -40,7 +40,7 @@ final class AccessTokenProviderTests: XCTestCase {
     AccessToken.current = token
 
     XCTAssertTrue(
-      AccessTokenProvider.currentAccessToken === token,
+      AccessTokenProvider.current === token,
       "The current access token should match that on the AccessToken singleton"
     )
   }

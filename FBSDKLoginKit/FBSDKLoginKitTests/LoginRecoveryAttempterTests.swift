@@ -80,7 +80,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
   }
 
   func testAttemptingRecoveryFromErrorFails() throws {
-    accessTokenWallet.currentAccessToken = SampleAccessTokens.create(withPermissions: ["foo"])
+    accessTokenWallet.current = SampleAccessTokens.create(withPermissions: ["foo"])
 
     let resultErrorPairs: [(result: LoginManagerLoginResult, error: Error?)] = [
       (
@@ -128,7 +128,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
   }
 
   func testAttemptingRecoveryFromErrorSucceeds() throws {
-    accessTokenWallet.currentAccessToken = SampleAccessTokens.create(withPermissions: ["foo"])
+    accessTokenWallet.current = SampleAccessTokens.create(withPermissions: ["foo"])
 
     var capturedSuccess = false
     attempter.attemptRecovery(fromError: SampleError()) { success in

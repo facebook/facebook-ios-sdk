@@ -18,7 +18,7 @@ final class AccessTokenProvider: AccessTokenProviding {
     }
   }
 
-  static var currentAccessToken: AccessToken? {
+  static var current: AccessToken? {
     AccessToken.current
   }
 }

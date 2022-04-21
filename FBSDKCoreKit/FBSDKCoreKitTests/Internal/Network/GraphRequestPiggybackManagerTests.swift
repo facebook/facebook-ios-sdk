@@ -145,7 +145,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     settings.appID = "abc123"
 
     let connection = SampleGraphRequestConnections.with(requests: [SampleGraphRequests.valid])
-    TestAccessTokenWallet.currentAccessToken = twoDayOldToken
+    TestAccessTokenWallet.current = twoDayOldToken
     manager.addPiggybackRequests(connection)
 
     XCTAssertTrue(
@@ -159,7 +159,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     settings.appID = "abc123"
     let connection = SampleGraphRequestConnections.with(requests: [SampleGraphRequests.withAttachment])
 
-    TestAccessTokenWallet.currentAccessToken = twoDayOldToken
+    TestAccessTokenWallet.current = twoDayOldToken
     manager.addPiggybackRequests(connection)
 
     XCTAssertFalse(
@@ -182,7 +182,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testAddsTokenExtensionRequest() throws {
     settings.appID = "abc123"
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     let connection = TestGraphRequestConnection()
 
     manager.addRefreshPiggyback(connection, permissionHandler: nil)
@@ -221,7 +221,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     )
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedTokenString: SampleAccessTokens.validToken.tokenString
     )
   }
@@ -233,7 +233,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     )
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedTokenString: ""
     )
   }
@@ -245,7 +245,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     )
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedTokenString: "    "
     )
   }
@@ -256,14 +256,14 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
       results: ["expires_at": "0"]
     )
 
-    try validateRefreshedToken(TestAccessTokenWallet.currentAccessToken)
+    try validateRefreshedToken(TestAccessTokenWallet.current)
 
     completeAccessTokenRefresh(
       token: SampleAccessTokens.validToken,
       results: ["expires_at": "-1000"]
     )
 
-    try validateRefreshedToken(TestAccessTokenWallet.currentAccessToken)
+    try validateRefreshedToken(TestAccessTokenWallet.current)
   }
 
   func testCompletingTokenExtensionRequestWithUnreasonableValidExpirationDate() throws {
@@ -275,7 +275,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let expectedExpirationDate = Date(timeIntervalSince1970: 100)
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedExpirationDate: expectedExpirationDate
     )
   }
@@ -293,7 +293,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let expectedExpirationDate = Date(timeIntervalSince1970: oneWeekFromNow.timeIntervalSince1970)
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedExpirationDate: expectedExpirationDate
     )
   }
@@ -304,14 +304,14 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
       results: ["data_access_expiration_time": "0"]
     )
 
-    try validateRefreshedToken(TestAccessTokenWallet.currentAccessToken)
+    try validateRefreshedToken(TestAccessTokenWallet.current)
 
     completeAccessTokenRefresh(
       token: SampleAccessTokens.validToken,
       results: ["data_access_expiration_time": "-1000"]
     )
 
-    try validateRefreshedToken(TestAccessTokenWallet.currentAccessToken)
+    try validateRefreshedToken(TestAccessTokenWallet.current)
   }
 
   func testCompletingTokenExtensionRequestWithUnreasonableValidDataExpirationDate() throws {
@@ -323,7 +323,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let expectedExpirationDate = Date(timeIntervalSince1970: 100)
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedDataExpirationDate: expectedExpirationDate
     )
   }
@@ -340,7 +340,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     let expectedExpirationDate = Date(timeIntervalSince1970: oneWeekFromNow.timeIntervalSince1970)
 
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedDataExpirationDate: expectedExpirationDate
     )
   }
@@ -351,7 +351,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
       results: ["graph_domain": ""]
     )
 
-    try validateRefreshedToken(TestAccessTokenWallet.currentAccessToken)
+    try validateRefreshedToken(TestAccessTokenWallet.current)
   }
 
   func testCompletingTokenExtensionRequestWithFuzzyValues() throws {
@@ -372,7 +372,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testAddsPermissionsRefreshRequest() {
     settings.appID = "abc123"
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     let connection = TestGraphRequestConnection()
 
     manager.addRefreshPiggyback(connection, permissionHandler: nil)
@@ -407,7 +407,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token clears permissions when there is no error
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: [],
       expectedDeclinedPermissions: [],
       expectedExpiredPermissions: []
@@ -429,7 +429,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token uses permissions from current access token when there is an error on permissions refresh
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: token.permissions,
       expectedDeclinedPermissions: token.declinedPermissions,
       expectedExpiredPermissions: token.expiredPermissions
@@ -449,7 +449,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: ["foo"],
       expectedDeclinedPermissions: [],
       expectedExpiredPermissions: []
@@ -476,7 +476,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: [],
       expectedDeclinedPermissions: ["foo"],
       expectedExpiredPermissions: []
@@ -484,7 +484,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   }
 
   func testCompletingPermissionsRefreshRequestWithNewExpiredPermissions() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.create(
+    TestAccessTokenWallet.current = SampleAccessTokens.create(
       withPermissions: ["email"],
       declinedPermissions: ["publish"],
       expiredPermissions: ["friends"]
@@ -503,7 +503,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: [],
       expectedDeclinedPermissions: [],
       expectedExpiredPermissions: ["foo"]
@@ -530,7 +530,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
     try validateRefreshedToken(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expectedPermissions: ["foo"],
       expectedDeclinedPermissions: ["bar"],
       expectedExpiredPermissions: ["baz"]
@@ -539,7 +539,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithoutError() throws {
     let expectation = XCTestExpectation(description: name)
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.create(
+    TestAccessTokenWallet.current = SampleAccessTokens.create(
       withPermissions: ["email"],
       declinedPermissions: ["publish"],
       expiredPermissions: ["friends"]
@@ -577,7 +577,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithError() throws {
     let expectation = XCTestExpectation(description: name)
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.create(
+    TestAccessTokenWallet.current = SampleAccessTokens.create(
       withPermissions: ["email"],
       declinedPermissions: ["publish"],
       expiredPermissions: ["friends"]
@@ -624,7 +624,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   }
 
   func testRefreshIfStaleWithAccessTokenWithoutRefreshDate() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     // Should not add the refresh if the access token is missing a refresh date
     manager.addRefreshPiggybackIfStale(SampleGraphRequestConnections.empty)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)
@@ -633,7 +633,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   // | Last refresh try > an hour ago | Token refresh date > a day ago | should refresh |
   // | true                           | true                           | true           |
   func testRefreshIfStaleWithOldRefreshWithOldTokenRefresh() {
-    TestAccessTokenWallet.currentAccessToken = twoDayOldToken
+    TestAccessTokenWallet.current = twoDayOldToken
     manager.lastRefreshTry = Date.distantPast
     manager.addRefreshPiggybackIfStale(SampleGraphRequestConnections.empty)
 
@@ -645,7 +645,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   func testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh() {
     manager.lastRefreshTry = Date.distantPast
 
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     manager.addRefreshPiggybackIfStale(SampleGraphRequestConnections.empty)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)
   }
@@ -664,7 +664,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   // | false                          | true                           | false          |
   func testRefreshIfStaleWithRecentLastRefreshOldTokenRefresh() {
     // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
-    TestAccessTokenWallet.currentAccessToken = twoDayOldToken
+    TestAccessTokenWallet.current = twoDayOldToken
     manager.lastRefreshTry = Date.distantFuture
     manager.addRefreshPiggybackIfStale(SampleGraphRequestConnections.empty)
     XCTAssertNil(graphRequestFactory.capturedGraphPath)
@@ -672,7 +672,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testRefreshIfStaleSideEffects() {
     // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
-    TestAccessTokenWallet.currentAccessToken = twoDayOldToken
+    TestAccessTokenWallet.current = twoDayOldToken
     manager.lastRefreshTry = Date.distantPast
     manager.addRefreshPiggybackIfStale(SampleGraphRequestConnections.empty)
     XCTAssertNotNil(graphRequestFactory.capturedGraphPath)
@@ -832,7 +832,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     results: [String: Any]?
   ) {
     settings.appID = token.appID
-    TestAccessTokenWallet.currentAccessToken = token
+    TestAccessTokenWallet.current = token
     let connection = TestGraphRequestConnection()
 
     manager.addRefreshPiggyback(connection, permissionHandler: nil)
@@ -921,7 +921,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     permissionHandler: GraphRequestCompletion? = nil
   ) {
     settings.appID = token.appID
-    TestAccessTokenWallet.currentAccessToken = token
+    TestAccessTokenWallet.current = token
     let connection = TestGraphRequestConnection()
 
     manager.addRefreshPiggyback(

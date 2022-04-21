@@ -144,7 +144,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingImageURLWithAccessTokenNoClientToken() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     try makeImageURL()
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
@@ -171,7 +171,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingImageURLWithAccessTokenAndClientToken() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     settings.clientToken = validClientToken
     try makeImageURL()
 

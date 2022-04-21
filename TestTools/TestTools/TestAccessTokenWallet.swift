@@ -16,7 +16,7 @@ public final class TestAccessTokenWallet: NSObject, AccessTokenProviding, Access
   public static var stubbedCurrentAccessToken: AccessToken?
   public static var wasTokenRead = false
 
-  public static var currentAccessToken: AccessToken? {
+  public static var current: AccessToken? {
     get {
       wasTokenRead = true
       return stubbedCurrentAccessToken
@@ -27,12 +27,12 @@ public final class TestAccessTokenWallet: NSObject, AccessTokenProviding, Access
   }
 
   public static var tokenString: String? {
-    currentAccessToken?.tokenString
+    current?.tokenString
   }
 
   public static func reset() {
     tokenCache = nil
-    currentAccessToken = nil
+    current = nil
     wasTokenRead = false
   }
 }

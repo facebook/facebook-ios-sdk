@@ -101,7 +101,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     )
 
     XCTAssertNotNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Should not reset the current access token on failure to check the status of an authentication token"
     )
     XCTAssertNotNil(
@@ -139,7 +139,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       "Authentication token should be cleared when not authorized"
     )
     XCTAssertNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Access token should be cleared when not authorized"
     )
     XCTAssertNil(
@@ -164,7 +164,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Access token should not be cleared when connected"
     )
     XCTAssertNotNil(
@@ -188,7 +188,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Access token should not be cleared when connected"
     )
     XCTAssertNotNil(

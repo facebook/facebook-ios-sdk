@@ -78,7 +78,7 @@ final class LoginManagerTests: XCTestCase {
     TestProfileProvider.current = testUser
 
     AuthenticationToken.current = nil
-    TestAccessTokenWallet.currentAccessToken = nil
+    TestAccessTokenWallet.current = nil
 
     claims = createClaims()
   }
@@ -258,7 +258,7 @@ final class LoginManagerTests: XCTestCase {
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertFalse(result.isCancelled)
-    let tokenAfterAuth = try XCTUnwrap(TestAccessTokenWallet.currentAccessToken)
+    let tokenAfterAuth = try XCTUnwrap(TestAccessTokenWallet.current)
     XCTAssertEqual(
       tokenAfterAuth.tokenString,
       "accessTokenString"
@@ -295,7 +295,7 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func testCompletingAuthenticationWithCancellation() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
@@ -310,7 +310,7 @@ final class LoginManagerTests: XCTestCase {
     loginManager.completeAuthentication(parameters, expectChallenge: true)
 
     XCTAssertEqual(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       SampleAccessTokens.validToken,
       "Handling a cancelled auth attempt should not affect the current access token"
     )
@@ -323,7 +323,7 @@ final class LoginManagerTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile&denied_scopes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949")
     )
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
 
     _ = loginManager.application(nil, open: url, sourceApplication: "com.apple.mobilesafari", annotation: nil)
 
@@ -336,7 +336,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.accessTokenString = "sometoken"
     completerHandler(parameters)
 
-    let actualToken = try XCTUnwrap(TestAccessTokenWallet.currentAccessToken)
+    let actualToken = try XCTUnwrap(TestAccessTokenWallet.current)
     XCTAssertEqual(actualToken.userID, "user123", "failed to parse userID")
     XCTAssertEqual(actualToken.declinedPermissions, [], "unexpected permissions")
   }
@@ -410,7 +410,7 @@ final class LoginManagerTests: XCTestCase {
   // verify that a reauth for already granted permissions is not treated as a cancellation.
   func testCompletingReauthenticationSamePermissionsIsNotCancelled() throws {
     let existingToken = SampleAccessTokens.create(withPermissions: ["public_profile", "read_stream"])
-    TestAccessTokenWallet.currentAccessToken = existingToken
+    TestAccessTokenWallet.current = existingToken
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
@@ -919,13 +919,13 @@ final class LoginManagerTests: XCTestCase {
   // MARK: Logout
 
   func testLogout() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     TestAuthenticationTokenWallet.currentAuthenticationToken = SampleAuthenticationToken.validToken
     TestProfileProvider.current = testUser
 
     loginManager.logOut()
 
-    XCTAssertNil(TestAccessTokenWallet.currentAccessToken)
+    XCTAssertNil(TestAccessTokenWallet.current)
     XCTAssertNil(TestAuthenticationTokenWallet.currentAuthenticationToken)
     XCTAssertNil(TestProfileProvider.current)
   }
@@ -956,7 +956,7 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func testReauthorizingWithAccessToken() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
 
     XCTAssertNil(loginManager.configuration)
 
@@ -999,14 +999,14 @@ final class LoginManagerTests: XCTestCase {
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
 
     let recentlyGrantedPermissions = loginManager.recentlyGrantedPermissions(fromGrantedPermissions: grantedPermissions)
     XCTAssertEqual(recentlyGrantedPermissions, grantedPermissions)
   }
 
   func testRecentlyGrantedPermissionsWithRequestedPermissions() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.create(withPermissions: [])
+    TestAccessTokenWallet.current = SampleAccessTokens.create(withPermissions: [])
 
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
@@ -1018,7 +1018,7 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func testRecentlyGrantedPermissionsWithPreviouslyGrantedAndRequestedPermissions() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.create(withPermissions: ["email"])
+    TestAccessTokenWallet.current = SampleAccessTokens.create(withPermissions: ["email"])
 
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])

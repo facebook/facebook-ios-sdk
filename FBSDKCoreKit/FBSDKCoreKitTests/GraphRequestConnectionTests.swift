@@ -1139,14 +1139,14 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       refreshDate: nil,
       dataAccessExpirationDate: nil
     )
-    TestAccessTokenWallet.currentAccessToken = accessToken
+    TestAccessTokenWallet.current = accessToken
 
     connection.add(makeRequest(tokenString: accessToken.tokenString)) { _, result, error in
       XCTAssertNil(result)
       let testError = error as? TestSDKError
       XCTAssertEqual("Token is broken", testError?.message)
       XCTAssertNil(
-        TestAccessTokenWallet.currentAccessToken,
+        TestAccessTokenWallet.current,
         "Should clear the current stored access token"
       )
       expectation.fulfill()
@@ -1162,7 +1162,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
 
   func testUnsettingAccessTokenSkipped() {
     let expectation = expectation(description: name)
-    TestAccessTokenWallet.currentAccessToken = AccessToken(
+    TestAccessTokenWallet.current = AccessToken(
       tokenString: "token",
       permissions: ["public_profile"],
       declinedPermissions: [],
@@ -1183,7 +1183,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       XCTAssertNil(result)
       let testError = error as? TestSDKError
       XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken)
+      XCTAssertNotNil(TestAccessTokenWallet.current)
       expectation.fulfill()
     }
     connection.start()
@@ -1197,7 +1197,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
 
   func testUnsettingAccessTokenFlag() {
     let expectation = expectation(description: name)
-    TestAccessTokenWallet.currentAccessToken = AccessToken(
+    TestAccessTokenWallet.current = AccessToken(
       tokenString: "token",
       permissions: ["public_profile"],
       declinedPermissions: [],
@@ -1218,7 +1218,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       XCTAssertNil(result)
       let testError = error as? TestSDKError
       XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.currentAccessToken)
+      XCTAssertNotNil(TestAccessTokenWallet.current)
       expectation.fulfill()
     }
     connection.start()

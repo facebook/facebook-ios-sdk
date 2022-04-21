@@ -25,7 +25,7 @@ final class ViewImpressionLoggerTests: XCTestCase {
     super.setUp()
 
     ViewImpressionLogger.reset()
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     tracker = createImpressionLogger(named: sharedTrackerName)
   }
 
