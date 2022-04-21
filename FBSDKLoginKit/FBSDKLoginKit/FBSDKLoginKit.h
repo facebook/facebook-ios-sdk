@@ -16,8 +16,6 @@
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResultBlock.h>
 #import <FBSDKLoginKit/FBSDKLoginProviding.h>
-#import <FBSDKLoginKit/FBSDKLoginTooltipView.h>
 #import <FBSDKLoginKit/FBSDKLoginTooltipViewDelegate.h>
-#import <FBSDKLoginKit/FBSDKTooltipView.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
