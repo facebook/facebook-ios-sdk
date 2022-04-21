@@ -51,15 +51,15 @@ public final class ShareVideoContent: NSObject {
 
 // MARK: - Type Dependencies
 
-extension ShareVideoContent: DependentType {
-  struct Dependencies {
+extension ShareVideoContent: DependentAsType {
+  struct TypeDependencies {
     var validator: ShareValidating.Type
     var mediaLibrarySearcher: MediaLibrarySearching
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
     validator: _ShareUtility.self,
     mediaLibrarySearcher: PHImageManager.default()
   )

@@ -26,14 +26,14 @@ public final class _AEMSettings: NSObject {
   }
 }
 
-extension _AEMSettings: DependentType {
-  struct Dependencies {
+extension _AEMSettings: DependentAsType {
+  struct TypeDependencies {
     var bundle: Bundle
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(bundle: .main)
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(bundle: .main)
 }
 
 #endif

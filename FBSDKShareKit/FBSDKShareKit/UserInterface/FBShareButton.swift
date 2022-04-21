@@ -90,14 +90,14 @@ public final class FBShareButton: FBButton, SharingButton {
 
 // MARK: - Type dependencies
 
-extension FBShareButton: DependentType {
-  struct Dependencies {
+extension FBShareButton: DependentAsType {
+  struct TypeDependencies {
     var stringProvider: UserInterfaceStringProviding
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(stringProvider: InternalUtility.shared)
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(stringProvider: InternalUtility.shared)
 }
 
 #endif

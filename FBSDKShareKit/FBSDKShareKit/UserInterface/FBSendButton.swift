@@ -91,14 +91,14 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
   }
 }
 
-extension FBSendButton: DependentType {
-  struct Dependencies {
+extension FBSendButton: DependentAsType {
+  struct TypeDependencies {
     var internalUtility: InternalUtilityProtocol
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(internalUtility: InternalUtility.shared)
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(internalUtility: InternalUtility.shared)
 }
 
 #endif

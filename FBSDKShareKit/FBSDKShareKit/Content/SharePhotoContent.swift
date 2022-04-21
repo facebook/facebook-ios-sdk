@@ -52,15 +52,15 @@ public final class SharePhotoContent: NSObject {
 
 // MARK: - Class Dependencies
 
-extension SharePhotoContent: DependentType {
-  struct Dependencies {
+extension SharePhotoContent: DependentAsType {
+  struct TypeDependencies {
     var imageFinder: MediaLibrarySearching
     var validator: ShareValidating.Type
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static let defaultDependencies: Dependencies? = Dependencies(
+  static let defaultDependencies: TypeDependencies? = TypeDependencies(
     imageFinder: PHImageManager.default(),
     validator: _ShareUtility.self
   )

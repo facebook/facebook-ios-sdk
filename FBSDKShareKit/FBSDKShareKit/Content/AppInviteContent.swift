@@ -63,15 +63,15 @@ public final class AppInviteContent: NSObject {
 
 // MARK: - Type Dependencies
 
-extension AppInviteContent: DependentType {
-  struct Dependencies {
+extension AppInviteContent: DependentAsType {
+  struct TypeDependencies {
     var validator: ShareValidating.Type
     var errorFactory: ErrorCreating
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
     validator: _ShareUtility.self,
     errorFactory: ErrorFactory()
   )

@@ -122,8 +122,8 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
 
 // MARK: - Type Dependencies
 
-extension ShareDialog: DependentType {
-  struct Dependencies {
+extension ShareDialog: DependentAsType {
+  struct TypeDependencies {
     var internalURLOpener: ShareInternalURLOpening
     var internalUtility: InternalUtilityProtocol
     var settings: SettingsProtocol
@@ -137,9 +137,9 @@ extension ShareDialog: DependentType {
     var mediaLibrarySearcher: MediaLibrarySearching
   }
 
-  static var configuredDependencies: Dependencies?
+  static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: Dependencies? = Dependencies(
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
     internalURLOpener: ShareUIApplication.shared,
     internalUtility: InternalUtility.shared,
     settings: Settings.shared,

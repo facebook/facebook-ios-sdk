@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBAEMKit
+@testable import FBSDKShareKit
 import XCTest
 
-final class DependentTypeTests: XCTestCase {
+final class DependentAsTypeTests: XCTestCase {
 
   let defaultDependencies = TestDependencies(value: 14)
   let customDependencies = TestDependencies(value: 28)
@@ -94,18 +94,18 @@ final class DependentTypeTests: XCTestCase {
   }
 }
 
-// MARK: - Test Configurable Types
+// MARK: - Test Types
 
 struct TestDependencies: Equatable {
   let value: Int
 }
 
-enum DefaultImplementationDependent: DependentType {
+enum DefaultImplementationDependent: DependentAsType {
   static var configuredDependencies: TestDependencies?
   static var defaultDependencies: TestDependencies?
 }
 
-enum CustomImplementationDependent: DependentType {
+enum CustomImplementationDependent: DependentAsType {
   static var configuredDependencies: TestDependencies?
   static var defaultDependencies: TestDependencies?
 
@@ -125,26 +125,26 @@ enum CustomImplementationDependent: DependentType {
 
 fileprivate extension String {
   static let missingDependencies = """
-    Attempting to get the missing dependencies of a dependent type should throw a missing type dependencies error
+    Attempting to get the missing dependencies of a dependent should throw a missing type dependencies error
     """
   static let defaultDependencies = """
-    If a dependent type's configured dependencies are missing, its default dependencies should be provided
+    If a dependent's configured dependencies are missing, its default dependencies should be provided
     """
   static let customDependencies = """
-    If a dependent type has configured dependencies, those dependencies should be provided
+    If a dependent has configured dependencies, those dependencies should be provided
     """
 
   static let defaultSetDependenciesImplementation = """
-    A dependent type should have a default `setDependencies(_:)` implementation that sets its configured dependencies
+    A dependent should have a default `setDependencies(_:)` implementation that sets its configured dependencies
     """
   static let customSetDependenciesImplementation = """
-    A dependent type should be able to override the default `setDependencies(_:)` implementation
+    A dependent should be able to override the default `setDependencies(_:)` implementation
     """
 
   static let defaultResetDependenciesImplementation = """
-    A dependent type should have a default `resetDependencies()` implementation that clears its configured dependencies
+    A dependent should have a default `resetDependencies()` implementation that clears its configured dependencies
     """
   static let customResetDependenciesImplementation = """
-    A dependent type should be able to override the default `resetDependencies()` implementation
+    A dependent should be able to override the default `resetDependencies()` implementation
     """
 }
