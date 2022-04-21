@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-public struct SampleError: Error {
+public struct SampleError: Error, Equatable {
+  private let uuid = UUID()
+
   public init() {}
 }

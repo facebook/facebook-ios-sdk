@@ -241,7 +241,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     return shouldUseNativeDialog && internalUtility.isMessengerAppInstalled
   }
 
-  private func handleCompletion(dialogResults: [String: Any], response: BridgeAPIResponse) {
+  func handleCompletion(dialogResults: [String: Any], response: BridgeAPIResponse) {
     let completionGesture = dialogResults[ShareBridgeAPI.CompletionGesture.key] as? String
     let isCancelGesture = (completionGesture == ShareBridgeAPI.CompletionGesture.cancelValue)
     if isCancelGesture || response.isCancelled {
