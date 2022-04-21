@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKDeviceLoginManagerDelegate;

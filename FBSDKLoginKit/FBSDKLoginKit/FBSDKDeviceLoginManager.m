@@ -13,7 +13,6 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
-#import "FBSDKDeviceLoginCodeInfo+Internal.h"
 #import "FBSDKDeviceLoginManagerDelegate.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"

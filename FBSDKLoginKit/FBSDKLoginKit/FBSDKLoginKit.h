@@ -8,7 +8,6 @@
 
 #import <FBSDKLoginKit/FBSDKCodeVerifier.h>
 #import <FBSDKLoginKit/FBSDKDefaultAudience.h>
-#import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>

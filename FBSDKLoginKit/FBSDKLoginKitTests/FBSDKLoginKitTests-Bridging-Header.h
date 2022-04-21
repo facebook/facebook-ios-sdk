@@ -13,7 +13,6 @@
 #import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKAuthenticationTokenFactory+Testing.h"
 #import "FBSDKCodeVerifier.h"
-#import "FBSDKDeviceLoginCodeInfo+Testing.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKLoginCompleterFactory.h"
@@ -27,7 +26,6 @@
 
 // +Testing.h files
 #import "FBSDKAccessToken+Testing.h"
-#import "FBSDKDeviceLoginCodeInfo+Testing.h"
 #import "FBSDKDeviceLoginManager+Testing.h"
 #import "FBSDKDeviceLoginManagerResult+Testing.h"
 #import "FBSDKDeviceRequestsHelper+Testing.h"
