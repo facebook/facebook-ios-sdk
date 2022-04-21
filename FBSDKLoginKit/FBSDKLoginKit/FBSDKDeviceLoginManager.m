@@ -15,7 +15,6 @@
 
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 #import "FBSDKDeviceLoginManagerDelegate.h"
-#import "FBSDKDeviceLoginManagerResult+Internal.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKDeviceRequestsHelper.h"

@@ -11,7 +11,6 @@
 #import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
-#import <FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>
 #import <FBSDKLoginKit/FBSDKLoginConstants.h>
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
