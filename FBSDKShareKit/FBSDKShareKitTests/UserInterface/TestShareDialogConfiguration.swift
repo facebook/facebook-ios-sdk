@@ -10,9 +10,17 @@
 
 final class TestShareDialogConfiguration: ShareDialogConfigurationProtocol {
 
-  var stubbedShouldUseNativeDialogCompletion = false
+  var stubbedShouldUseNativeDialog = false
 
   func shouldUseNativeDialog(forDialogName dialogName: String) -> Bool {
-    stubbedShouldUseNativeDialogCompletion
+    stubbedShouldUseNativeDialog
+  }
+
+  var capturedShouldUseSafariViewControllerDialogName: String?
+  var stubbedShouldUseSafariViewController = false
+
+  func shouldUseSafariViewController(forDialogName dialogName: String) -> Bool {
+    capturedShouldUseSafariViewControllerDialogName = dialogName
+    return stubbedShouldUseSafariViewController
   }
 }

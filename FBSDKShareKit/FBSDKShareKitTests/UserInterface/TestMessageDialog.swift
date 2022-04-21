@@ -21,7 +21,6 @@ final class TestMessageDialog: MessageDialog {
     self.init(
       content: nil,
       delegate: nil,
-      appAvailabilityChecker: TestInternalUtility(),
       shareDialogConfiguration: TestShareDialogConfiguration()
     )
   }

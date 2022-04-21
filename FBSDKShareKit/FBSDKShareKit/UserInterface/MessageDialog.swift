@@ -43,7 +43,6 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
    */
   public var shouldFailOnDataError = false
 
-  private let appAvailabilityChecker: AppAvailabilityChecker
   private let shareDialogConfiguration: ShareDialogConfigurationProtocol
 
   private static var hasCheckedCanOpenURLSchemeRegistered = false
@@ -63,7 +62,6 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     self.init(
       content: content,
       delegate: delegate,
-      appAvailabilityChecker: InternalUtility.shared,
       shareDialogConfiguration: ShareDialogConfiguration()
     )
   }
@@ -71,17 +69,22 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
   init(
     content: SharingContent?,
     delegate: SharingDelegate?,
-    appAvailabilityChecker: AppAvailabilityChecker,
     shareDialogConfiguration: ShareDialogConfigurationProtocol
   ) {
+    let internalUtility: InternalUtilityProtocol
+    do {
+      internalUtility = try Self.getDependencies().internalUtility
+    } catch {
+      fatalError(String(describing: error))
+    }
+
     if !Self.hasCheckedCanOpenURLSchemeRegistered {
       Self.hasCheckedCanOpenURLSchemeRegistered = true
-      InternalUtility.shared.checkRegisteredCanOpenURLScheme(URLScheme.messengerApp.rawValue)
+      internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.messengerApp.rawValue)
     }
 
     shareContent = content
     self.delegate = delegate
-    self.appAvailabilityChecker = appAvailabilityChecker
     self.shareDialogConfiguration = shareDialogConfiguration
 
     super.init()
@@ -127,8 +130,10 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
    */
   @discardableResult
   public func show() -> Bool {
+    guard let dependencies = try? Self.getDependencies() else { return false }
+
     guard canShow else {
-      let error = ErrorFactory().error(
+      let error = dependencies.errorFactory.error(
         domain: ShareErrorDomain,
         code: ShareError.dialogNotAvailable.rawValue,
         userInfo: nil,
@@ -150,16 +155,16 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     var parameters = [String: Any]()
 
     if let content = shareContent {
-      parameters = _ShareUtility.bridgeParameters(
+      parameters = dependencies.shareUtility.bridgeParameters(
         for: content,
         options: [],
         shouldFailOnDataError: shouldFailOnDataError
       )
     }
 
-    guard let request = BridgeAPIRequest(
-      protocolType: .native,
-      scheme: URLScheme.messengerApp,
+    guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
+      with: .native,
+      scheme: URLScheme.messengerApp.rawValue,
       methodName: ShareBridgeAPI.MethodName.share,
       parameters: parameters,
       userInfo: nil
@@ -169,10 +174,10 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       return true
     }
 
-    let shouldUseSafariViewController = ShareDialogConfiguration()
+    let shouldUseSafariViewController = shareDialogConfiguration
       .shouldUseSafariViewController(forDialogName: FBSDKDialogConfigurationNameMessage)
 
-    BridgeAPI.shared.open(
+    dependencies.bridgeAPIRequestOpener.open(
       request,
       useSafariViewController: shouldUseSafariViewController,
       from: nil
@@ -181,11 +186,11 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
         dialogResults: response.responseParameters ?? [:],
         response: response
       )
-      InternalUtility.shared.unregisterTransientObject(self)
+      dependencies.internalUtility.unregisterTransientObject(self)
     }
 
     logDialogShow()
-    InternalUtility.shared.registerTransientObject(self)
+    dependencies.internalUtility.registerTransientObject(self)
 
     return true
   }
@@ -195,8 +200,10 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
    @return `true` if the content is valid, otherwise `false`.
    */
   public func validate() throws {
+    let dependencies = try Self.getDependencies()
+
     guard let content = shareContent else {
-      let error = ErrorFactory().requiredArgumentError(
+      let error = dependencies.errorFactory.requiredArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         message: nil,
@@ -212,7 +219,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     guard isContentSupported else {
       let type = String(describing: type(of: content))
       let message = "Message dialog does not support \(type)."
-      throw ErrorFactory().requiredArgumentError(
+      throw dependencies.errorFactory.requiredArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         message: message,
@@ -220,14 +227,18 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       )
     }
 
-    try _ShareUtility.validateShareContent(content)
+    try dependencies.shareUtility.validateShareContent(content, options: [])
   }
 
   private var canShowNative: Bool {
+    guard let internalUtility = try? Self.getDependencies().internalUtility else {
+      return false
+    }
+
     let shouldUseNativeDialog = shareDialogConfiguration.shouldUseNativeDialog(
       forDialogName: FBSDKDialogConfigurationNameMessage
     )
-    return shouldUseNativeDialog && appAvailabilityChecker.isMessengerAppInstalled
+    return shouldUseNativeDialog && internalUtility.isMessengerAppInstalled
   }
 
   private func handleCompletion(dialogResults: [String: Any], response: BridgeAPIResponse) {
@@ -247,11 +258,13 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       .outcome: ShareAppEventsParameters.DialogOutcomeValue.cancelled,
     ]
 
-    AppEvents.shared.logInternalEvent(
+    let dependencies = try? Self.getDependencies()
+
+    dependencies?.eventLogger.logInternalEvent(
       .messengerShareDialogResult,
       parameters: parameters,
       isImplicitlyLogged: true,
-      accessToken: AccessToken.current
+      accessToken: dependencies?.accessTokenWallet.current
     )
 
     delegate?.sharerDidCancel(self)
@@ -262,28 +275,31 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       .outcome: ShareAppEventsParameters.DialogOutcomeValue.completed,
     ]
 
-    AppEvents.shared.logInternalEvent(
+    let dependencies = try? Self.getDependencies()
+
+    dependencies?.eventLogger.logInternalEvent(
       .messengerShareDialogResult,
       parameters: parameters,
       isImplicitlyLogged: true,
-      accessToken: AccessToken.current
+      accessToken: dependencies?.accessTokenWallet.current
     )
 
     delegate?.sharer(self, didCompleteWithResults: results)
   }
 
   private func invokeDelegateDidFail(error: Error) {
-    var parameters: [AppEvents.ParameterName: Any] = [
+    let parameters: [AppEvents.ParameterName: Any] = [
       .outcome: ShareAppEventsParameters.DialogOutcomeValue.failed,
+      .errorMessage: String(describing: error),
     ]
 
-    parameters[.errorMessage] = String(describing: error)
+    let dependencies = try? Self.getDependencies()
 
-    AppEvents.shared.logInternalEvent(
+    dependencies?.eventLogger.logInternalEvent(
       .shareDialogResult,
       parameters: parameters,
       isImplicitlyLogged: true,
-      accessToken: AccessToken.current
+      accessToken: dependencies?.accessTokenWallet.current
     )
 
     delegate?.sharer(self, didFailWithError: error)
@@ -312,13 +328,39 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       parameters[.shareContentPageID] = pageID
     }
 
-    AppEvents.shared.logInternalEvent(
+    guard let dependencies = try? Self.getDependencies() else { return }
+
+    dependencies.eventLogger.logInternalEvent(
       .shareDialogShow,
       parameters: parameters,
       isImplicitlyLogged: true,
-      accessToken: AccessToken.current
+      accessToken: dependencies.accessTokenWallet.current
     )
   }
+}
+
+extension MessageDialog: DependentAsType {
+  struct TypeDependencies {
+    var accessTokenWallet: AccessTokenProviding.Type
+    var bridgeAPIRequestFactory: BridgeAPIRequestCreating
+    var bridgeAPIRequestOpener: BridgeAPIRequestOpening
+    var errorFactory: ErrorCreating
+    var eventLogger: ShareEventLogging
+    var internalUtility: InternalUtilityProtocol & AppAvailabilityChecker
+    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
+  }
+
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
+    accessTokenWallet: AccessToken.self,
+    bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
+    bridgeAPIRequestOpener: BridgeAPI.shared,
+    errorFactory: ErrorFactory(),
+    eventLogger: AppEvents.shared,
+    internalUtility: InternalUtility.shared,
+    shareUtility: _ShareUtility.self
+  )
+
+  static var configuredDependencies: TypeDependencies?
 }
 
 #endif

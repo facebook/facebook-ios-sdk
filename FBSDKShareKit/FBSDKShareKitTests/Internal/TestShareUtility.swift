@@ -12,6 +12,10 @@ import Foundation
 
 enum TestShareUtility {
   static func reset() {
+    resetAsyncWebPhotoContentValues()
+    resetWebShareBridgeComponentsValues()
+    resetBridgeParametersValues()
+
     resetContentFlagValues()
     resetHashtagValues()
 
@@ -29,6 +33,8 @@ extension TestShareUtility: ShareUtilityProtocol {
     [:]
   }
 
+  // MARK: Async web photo content
+
   static var capturedAsyncWebPhotoContentContent: SharePhotoContent?
   static var capturedAsyncWebPhotoContentCompletion: WebPhotoContentHandler?
 
@@ -39,6 +45,13 @@ extension TestShareUtility: ShareUtilityProtocol {
     capturedAsyncWebPhotoContentContent = content
     capturedAsyncWebPhotoContentCompletion = completion
   }
+
+  static func resetAsyncWebPhotoContentValues() {
+    capturedAsyncWebPhotoContentContent = nil
+    capturedAsyncWebPhotoContentCompletion = nil
+  }
+
+  // MARK: Web share bridge components
 
   static var stubbedWebShareBridgeComponents: WebShareBridgeComponents?
   static var capturedWebShareBridgeComponentsContent: SharingContent?
@@ -52,13 +65,38 @@ extension TestShareUtility: ShareUtilityProtocol {
     return components
   }
 
+  static func resetWebShareBridgeComponentsValues() {
+    stubbedWebShareBridgeComponents = nil
+    capturedWebShareBridgeComponentsContent = nil
+  }
+
+  // MARK: Bridge parameters
+
+  static var capturedBridgeParametersShareContent: SharingContent?
+  static var capturedBridgeParametersBridgeOptions: ShareBridgeOptions?
+  static var capturedBridgeParametersShouldFailOnDataError: Bool? // swiftlint:disable:this discouraged_optional_boolean
+  static var stubbedBridgeParameters: [String: Any]?
+
   static func bridgeParameters(
     for shareContent: SharingContent,
     options bridgeOptions: ShareBridgeOptions,
     shouldFailOnDataError: Bool
   ) -> [String: Any] {
-    [:]
+    capturedBridgeParametersShareContent = shareContent
+    capturedBridgeParametersBridgeOptions = bridgeOptions
+    capturedBridgeParametersShouldFailOnDataError = shouldFailOnDataError
+
+    return stubbedBridgeParameters ?? [:]
   }
+
+  static func resetBridgeParametersValues() {
+    capturedBridgeParametersShareContent = nil
+    capturedBridgeParametersBridgeOptions = nil
+    capturedBridgeParametersShouldFailOnDataError = nil
+    stubbedBridgeParameters = nil
+  }
+
+  // MARK: Share media content
 
   static func shareMediaContentContainsPhotosAndVideos(_ shareMediaContent: ShareMediaContent) -> Bool {
     false

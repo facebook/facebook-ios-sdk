@@ -13,6 +13,7 @@ import Foundation
 
 protocol ShareDialogConfigurationProtocol {
   func shouldUseNativeDialog(forDialogName dialogName: String) -> Bool
+  func shouldUseSafariViewController(forDialogName dialogName: String) -> Bool
 }
 
 extension ShareDialogConfiguration: ShareDialogConfigurationProtocol {}
