@@ -151,6 +151,8 @@ extension _ShareUtility: ShareUtilityProtocol {
 
       if let tags = buildWebShareTags(peopleIDs: content.peopleIDs) {
         parameters["tags"] = tags
+      } else {
+        parameters.removeValue(forKey: "tags")
       }
 
       completion(true, ShareBridgeAPI.MethodName.share, parameters)
