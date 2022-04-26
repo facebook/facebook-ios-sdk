@@ -53,8 +53,6 @@ NS_SWIFT_NAME(init(loggingToken:tracking:));
 
 - (void)willAttemptAppSwitchingBehaviorWithUrlScheme:(NSString *)urlScheme;
 
-- (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
-
 @end
 
 #endif

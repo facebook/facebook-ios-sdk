@@ -215,27 +215,6 @@ static id<_FBSDKLoginEventLogging> _eventLogger;
   [self logEvent:FBSDKAppEventNameFBSessionAuthHeartbeat result:_lastResult error:_lastError];
 }
 
-+ (NSDictionary<NSString *, id> *)parametersWithTimeStampAndClientState:(NSDictionary<NSString *, id> *)loginParams
-                                                          forAuthMethod:(NSString *)authMethod
-                                                                 logger:(FBSDKLoginManagerLogger *)logger
-{
-  NSMutableDictionary<NSString *, id> *params = [loginParams mutableCopy];
-
-  NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
-  NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
-                                                                  error:NULL
-                                                   invalidObjectHandler:NULL];
-  [FBSDKTypeUtility dictionary:params setObject:e2eTimestampString forKey:@"e2e"];
-
-  NSDictionary<id, id> *existingState = [FBSDKBasicUtility objectForJSONString:params[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
-  [FBSDKTypeUtility dictionary:params
-                     setObject:[FBSDKLoginManagerLogger clientStateForAuthMethod:authMethod
-                                                                andExistingState:existingState
-                                                                          logger:logger]
-                        forKey:FBSDKLoginManagerLoggingClientStateKey];
-  return params;
-}
-
 - (void)willAttemptAppSwitchingBehaviorWithUrlScheme:(NSString *)urlScheme
 {
   BOOL isURLSchemeRegistered = [FBSDKInternalUtility.sharedUtility isRegisteredURLScheme:urlScheme];
@@ -248,16 +227,6 @@ static id<_FBSDKLoginEventLogging> _eventLogger;
      @"isFacebookAppCanOpenURLSchemeRegistered" : @(isFacebookAppCanOpenURLSchemeRegistered),
      @"isMessengerAppCanOpenURLSchemeRegistered" : @(isMessengerAppCanOpenURLSchemeRegistered),
    }];
-}
-
-- (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration
-{
-  NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
-  if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
-    [FBSDKTypeUtility dictionary:_extras setObject:@(dialogDuration) forKey:@"native_app_login_dialog_duration"];
-    [FBSDKTypeUtility dictionary:_extras setObject:@(result) forKey:@"native_app_login_dialog_result"];
-    [self logEvent:FBSDKAppEventNameFBSessionFASLoginDialogResult params:[self _parametersForNewEvent]];
-  }
 }
 
 #pragma mark - Private
