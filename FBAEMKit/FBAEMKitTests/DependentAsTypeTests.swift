@@ -16,27 +16,24 @@ final class DependentAsTypeTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-
-    DefaultImplementationDependent.configuredDependencies = nil
-    DefaultImplementationDependent.defaultDependencies = nil
-
-    CustomImplementationDependent.configuredDependencies = nil
-    CustomImplementationDependent.wasSetDependenciesCalled = false
-    CustomImplementationDependent.wasResetDependenciesCalled = false
+    resetDependencies()
   }
 
   override func tearDown() {
+    resetDependencies()
+    super.tearDown()
+  }
+
+  private func resetDependencies() {
     DefaultImplementationDependent.configuredDependencies = nil
     DefaultImplementationDependent.defaultDependencies = nil
 
     CustomImplementationDependent.configuredDependencies = nil
     CustomImplementationDependent.wasSetDependenciesCalled = false
     CustomImplementationDependent.wasResetDependenciesCalled = false
-
-    super.tearDown()
   }
 
-  func testMissingDependencies() throws {
+  func testMissingDependencies() {
     XCTAssertThrowsError(
       try DefaultImplementationDependent.getDependencies(),
       .missingDependencies
@@ -49,7 +46,7 @@ final class DependentAsTypeTests: XCTestCase {
     }
   }
 
-  func testDefaultDependencies() throws {
+  func testDefaultDependencies() {
     DefaultImplementationDependent.defaultDependencies = defaultDependencies
     XCTAssertEqual(
       try DefaultImplementationDependent.getDependencies(),
@@ -58,7 +55,7 @@ final class DependentAsTypeTests: XCTestCase {
     )
   }
 
-  func testConfiguredDependencies() throws {
+  func testConfiguredDependencies() {
     DefaultImplementationDependent.defaultDependencies = defaultDependencies
     DefaultImplementationDependent.configuredDependencies = customDependencies
     XCTAssertEqual(
@@ -68,7 +65,7 @@ final class DependentAsTypeTests: XCTestCase {
     )
   }
 
-  func testDefaultSetDependencies() throws {
+  func testDefaultSetDependencies() {
     DefaultImplementationDependent.setDependencies(customDependencies)
     XCTAssertEqual(
       DefaultImplementationDependent.configuredDependencies,
@@ -77,7 +74,7 @@ final class DependentAsTypeTests: XCTestCase {
     )
   }
 
-  func testCustomSetDependencies() throws {
+  func testCustomSetDependencies() {
     CustomImplementationDependent.setDependencies(customDependencies)
     XCTAssertTrue(CustomImplementationDependent.wasSetDependenciesCalled, .customSetDependenciesImplementation)
   }
