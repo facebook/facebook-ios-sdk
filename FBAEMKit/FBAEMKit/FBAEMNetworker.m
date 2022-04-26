@@ -15,7 +15,6 @@
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMKitVersions.h"
-#import "FBAEMRequestBody.h"
 
 #define kNewline @"\r\n"
 

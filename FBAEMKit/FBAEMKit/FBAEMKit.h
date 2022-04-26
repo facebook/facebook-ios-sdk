@@ -21,6 +21,5 @@
 #import <FBAEMKit/FBAEMKit-Prefix-Header.h>
 #import <FBAEMKit/FBAEMKitVersions.h>
 #import <FBAEMKit/FBAEMNetworker.h>
-#import <FBAEMKit/FBAEMRequestBody.h>
 #import <FBAEMKit/FBAEMRule.h>
 #import <FBAEMKit/FBAEMUtility.h>
