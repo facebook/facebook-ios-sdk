@@ -18,7 +18,6 @@
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
 #import "FBAEMRule.h"
-#import "FBAEMUtility.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
 #define FB_AEM_DELAY           3

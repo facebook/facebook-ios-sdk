@@ -16,7 +16,6 @@
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
 #import "FBAEMRule.h"
-#import "FBAEMUtility.h"
 
 #define SEC_IN_DAY 86400
 #define CATALOG_OPTIMIZATION_MODULUS 8

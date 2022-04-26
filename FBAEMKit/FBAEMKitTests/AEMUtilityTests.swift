@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBAEMKit
 import Foundation
 import XCTest
 
 #if !os(tvOS)
 
 final class AEMUtilityTests: XCTestCase {
-
   enum Keys {
     static let content = "fb_content"
     static let contentID = "fb_content_id"
@@ -43,7 +43,7 @@ final class AEMUtilityTests: XCTestCase {
     ]
 
     let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
-    XCTAssertTrue(value.isEqual(to: NSNumber(value: 320)), "Don't get the expected in segment value")
+    XCTAssertEqual(value.intValue, 320, "Didn't get the expected in-segment value")
   }
 
   func testGetInSegmentValueWithDefaultPrice() {
@@ -57,7 +57,7 @@ final class AEMUtilityTests: XCTestCase {
     ]
 
     let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
-    XCTAssertTrue(value.isEqual(to: NSNumber(value: 0)), "Don't get the expected in segment value")
+    XCTAssertEqual(value.intValue, 0, "Didn't get the expected in-segment value")
   }
 
   func testGetInSegmentValueWithDefaultQuantity() {
@@ -71,7 +71,7 @@ final class AEMUtilityTests: XCTestCase {
     ]
 
     let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
-    XCTAssertTrue(value.isEqual(to: NSNumber(value: 100)), "Don't get the expected in segment value")
+    XCTAssertEqual(value.intValue, 100, "Didn't get the expected in-segment value")
   }
 
   func testGetContentWithIntID() {
