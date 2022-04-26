@@ -31,5 +31,6 @@
 #import "FBSDKDeviceRequestsHelper+Testing.h"
 #import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKLoginManager+Testing.h"
+#import "FBSDKLoginManagerLogger+Testing.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKSettings+Testing.h"

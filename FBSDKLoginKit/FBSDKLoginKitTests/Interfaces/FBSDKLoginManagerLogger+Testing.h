@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKLoginManagerLogger (Testing)
 
 @property (class, nonatomic) id<_FBSDKLoginEventLogging> eventLogger;
+@property (nonatomic) NSString *identifier;
 
 + (void)configureWithEventLogger:(id<_FBSDKLoginEventLogging>)eventLogger;
 

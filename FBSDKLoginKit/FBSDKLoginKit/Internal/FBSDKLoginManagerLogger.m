@@ -207,10 +207,10 @@ static id<_FBSDKLoginEventLogging> _eventLogger;
 
 - (void)postLoginHeartbeat
 {
-  [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(heartbestTimerDidFire) userInfo:nil repeats:NO];
+  [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(heartbeatTimerDidFire) userInfo:nil repeats:NO];
 }
 
-- (void)heartbestTimerDidFire
+- (void)heartbeatTimerDidFire
 {
   [self logEvent:FBSDKAppEventNameFBSessionAuthHeartbeat result:_lastResult error:_lastError];
 }
