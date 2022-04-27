@@ -14,7 +14,6 @@
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKDeviceLoginManagerDelegate.h"
-#import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKDeviceRequestsHelper.h"
 #import "FBSDKLoginConstants.h"

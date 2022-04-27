@@ -10,6 +10,7 @@
 #import <FBSDKLoginKit/FBSDKDefaultAudience.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
+#import <FBSDKLoginKit/FBSDKDevicePolling.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>
 #import <FBSDKLoginKit/FBSDKLoginConstants.h>
 #import <FBSDKLoginKit/FBSDKLoginManager.h>

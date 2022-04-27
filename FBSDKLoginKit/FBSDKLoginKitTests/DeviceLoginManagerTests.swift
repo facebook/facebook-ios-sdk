@@ -96,7 +96,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "A device login manager should be created with a concrete graph request factory by default"
     )
     XCTAssertTrue(
-      manager.devicePoller is DevicePoller,
+      manager.devicePoller is _DevicePoller,
       "A device login manager should be created with a concrete device poller by default"
     )
     XCTAssertIdentical(
