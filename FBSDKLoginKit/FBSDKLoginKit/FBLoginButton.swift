@@ -81,7 +81,8 @@ public final class FBLoginButton: FBButton {
   /// Gets or sets an optional page id to use for login attempts.
   public var messengerPageId: String?
 
-  /// Gets or sets the auth_type to use in the login request. Defaults to `rerequest`.
+  /// Gets or sets the login authorization type to use in the login request. Defaults to `rerequest`. Use `nil` to avoid
+  /// requesting permissions that were previously denied.
   public var authType: LoginAuthType? = .rerequest
 
   /// The code verifier used in the PKCE process.

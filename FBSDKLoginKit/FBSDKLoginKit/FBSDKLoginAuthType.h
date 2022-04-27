@@ -10,14 +10,13 @@
 
 #if !TARGET_OS_TV
 
-/// typedef for FBSDKLoginAuthType
-/// See: https://developers.facebook.com/docs/reference/javascript/FB.login/v10.0#options
+/// Login authorization types.
 typedef NSString *const FBSDKLoginAuthType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoginAuthType);
 
-/// Rerequest
+/// The default login authorization type for login buttons; requests previously declined user permissions.
 FOUNDATION_EXPORT FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest;
 
-/// Reauthorize
+/// Requests permissions when the user's data access has expired.
 FOUNDATION_EXPORT FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize;
 
 #endif
