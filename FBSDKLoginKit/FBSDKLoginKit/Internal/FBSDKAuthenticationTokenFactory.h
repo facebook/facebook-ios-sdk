@@ -37,18 +37,6 @@ NS_SWIFT_NAME(AuthenticationTokenFactory)
                        graphDomain:(NSString *_Nonnull)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion;
 
-/**
- Create an `AuthenticationToken` for facebook graph domain given a valid token string.
- Returns nil to the completion handler if the token string is invalid
- An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
- @param tokenString the raw ID token string
- @param nonce the nonce string used to associate a client session with the token
- @param completion the completion handler
- */
-- (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
-                             nonce:(NSString *_Nonnull)nonce
-                        completion:(FBSDKAuthenticationTokenBlock)completion;
-
 @end
 
 NS_ASSUME_NONNULL_END

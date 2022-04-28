@@ -33,8 +33,9 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     }
 
     AuthenticationTokenFactory().createToken(
-      fromTokenString: "invalid_token",
+      tokenString: "invalid_token",
       nonce: "123456789",
+      graphDomain: "facebook",
       completion: completion
     )
 

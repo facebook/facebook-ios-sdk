@@ -70,16 +70,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
                              nonce:(NSString *_Nonnull)nonce
-                        completion:(FBSDKAuthenticationTokenBlock)completion
-{
-  [self createTokenFromTokenString:tokenString
-                             nonce:nonce
-                       graphDomain:@"facebook"
-                        completion:completion];
-}
-
-- (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
-                             nonce:(NSString *_Nonnull)nonce
                        graphDomain:(NSString *)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion
 {
@@ -133,12 +123,10 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
              completion:(FBSDKVerifySignatureCompletionBlock)completion
 {
 #if DEBUG
-#if DEBUG
   // skip signature checking for tests
   if (_skipSignatureVerification && completion) {
     completion(YES);
   }
-#endif
 #endif
 
   NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:signature]];
