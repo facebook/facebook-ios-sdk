@@ -198,7 +198,7 @@ final class AEMRuleTests: XCTestCase {
 
     // Test Objects
     XCTAssertNotIdentical(decodedObject, rule, .isCodable)
-    XCTAssertNotEqual(decodedObject, rule, .isCodable) // NotEqual since isEqual is not implemented
+    XCTAssertEqual(decodedObject, rule, .isCodable)
 
     // Test Properties
     XCTAssertEqual(decodedObject.conversionValue, rule.conversionValue, .isCodable)

@@ -327,86 +327,33 @@ final class AEMConfigurationTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
-    let config = _AEMConfiguration(json: sampleData)
-    config?.encode(with: coder)
+  func testEncodingAndDecoding() throws {
+    // swiftlint:disable:next force_unwrapping
+    let config = _AEMConfiguration(json: sampleData)!
+    let decodedObject = try CodabilityTesting.encodeAndDecode(config)
 
+    // Test Object
+    XCTAssertNotIdentical(config, decodedObject)
+    XCTAssertNotEqual(config, decodedObject) // isEqual method not added yet
+
+    // Test Properties
+    XCTAssertEqual(config.defaultCurrency, decodedObject.defaultCurrency, .isCodable)
+    XCTAssertEqual(config.cutoffTime, decodedObject.cutoffTime, .isCodable)
+    XCTAssertEqual(config.validFrom, decodedObject.validFrom, .isCodable)
+    XCTAssertEqual(config.configMode, decodedObject.configMode, .isCodable)
+    XCTAssertEqual(config.businessID, decodedObject.businessID, .isCodable)
     XCTAssertEqual(
-      coder.encodedObject[Keys.defaultCurrency] as? String,
-      config?.defaultCurrency,
-      "Should encode the expected default_currency with the correct key"
-    )
-    let cutoffTime = coder.encodedObject[Keys.cutoffTime] as? NSNumber
-    XCTAssertEqual(
-      cutoffTime?.intValue,
-      config?.cutoffTime,
-      "Should encode the expected cutoff_time with the correct key"
-    )
-    let validFrom = coder.encodedObject[Keys.validFrom] as? NSNumber
-    XCTAssertEqual(
-      validFrom?.intValue,
-      config?.validFrom,
-      "Should encode the expected valid_from with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.configMode] as? String,
-      config?.configMode,
-      "Should encode the expected config_mode with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.businessID] as? String,
-      config?.businessID,
-      "Should encode the expected business_id with the correct key"
-    )
-    XCTAssertTrue(
-      coder.encodedObject[Keys.paramRule] is _AEMAdvertiserRuleMatching,
-      "Should encode the expected param_rule with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.conversionValueRules] as? [_AEMRule],
-      config?.conversionValueRules,
-      "Should encode the expected conversion_value_rules with the correct key"
+      config.conversionValueRules,
+      decodedObject.conversionValueRules,
+      .isCodable
     )
   }
+}
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = _AEMConfiguration(coder: decoder)
+// MARK: - Assumptions
 
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.defaultCurrency] is NSString.Type,
-      "Should decode the expected type for the default_currency key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.cutoffTime] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the cutoff_time key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.validFrom] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the valid_from key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.configMode] is NSString.Type,
-      "Should decode the expected type for the config_mode key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.businessID] is NSString.Type,
-      "Should decode the expected type for the business_id key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.paramRule] as? NSSet,
-      [NSArray.self, _AEMAdvertiserMultiEntryRule.self, _AEMAdvertiserSingleEntryRule.self],
-      "Should decode the expected type for the param_rule key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
-      [NSArray.self, _AEMEvent.self, _AEMRule.self],
-      "Should decode the expected type for the conversion_value_rules key"
-    )
-  }
+fileprivate extension String {
+  static let isCodable = "AEMConfiguration should be encodable and decodable"
 }
 
 #endif

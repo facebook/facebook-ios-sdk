@@ -139,6 +139,21 @@ static NSString *const EVENTS_KEY = @"events";
   return self;
 }
 
+- (BOOL)isEqual:(id)object
+{
+  if (self == object) {
+    return YES;
+  }
+  if (![object isKindOfClass:FBAEMRule.class]) {
+    return NO;
+  }
+  FBAEMRule *rule = (FBAEMRule *)object;
+  return (rule
+    && self.conversionValue == rule.conversionValue
+    && self.priority == rule.priority
+    && ((!self.events && !rule.events) || [self.events isEqual:rule.events]));
+}
+
 @end
 
 #endif
