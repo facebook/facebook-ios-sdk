@@ -56,7 +56,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)init
 {
-  self = [self initWithSessionProvider:[NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration delegate:self delegateQueue:nil]];
+  self = [self initWithSessionProvider:[NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration
+                                                                     delegate:nil
+                                                                delegateQueue:nil]];
   return self;
 }
 
