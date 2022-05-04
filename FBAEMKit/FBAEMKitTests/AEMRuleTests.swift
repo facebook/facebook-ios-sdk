@@ -44,7 +44,7 @@ final class AEMRuleTests: XCTestCase {
         Keys.values: [
           [
             Keys.currency: Values.USD,
-            Keys.amount: 100,
+            Keys.amount: 100.0,
           ],
         ],
       ],
@@ -60,7 +60,7 @@ final class AEMRuleTests: XCTestCase {
         Keys.values: [
           [
             Keys.currency: Values.USD,
-            Keys.amount: 100,
+            Keys.amount: 100.0,
           ],
         ],
       ],
@@ -103,7 +103,7 @@ final class AEMRuleTests: XCTestCase {
 
     let event = rule.events[0]
     XCTAssertEqual(event.eventName, Values.purchase)
-    XCTAssertEqual(event.values, [Values.USD: 100])
+    XCTAssertEqual(event.values, [Values.USD: 100.0])
   }
 
   func testInvalidCases() {
@@ -216,11 +216,11 @@ final class AEMRuleTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 100,
+              Keys.amount: 100.0,
             ],
             [
               Keys.currency: Values.EU,
-              Keys.amount: 100,
+              Keys.amount: 100.0,
             ],
           ],
         ],
@@ -231,28 +231,28 @@ final class AEMRuleTests: XCTestCase {
     XCTAssertTrue(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp, Values.purchase],
-        recordedValues: [Values.purchase: [Values.USD: 1000]]
+        recordedValues: [Values.purchase: [Values.USD: 1000.0]]
       ),
       "Should match the expected events and values for the rule"
     )
     XCTAssertTrue(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp, Values.purchase],
-        recordedValues: [Values.purchase: [Values.EU: 1000]]
+        recordedValues: [Values.purchase: [Values.EU: 1000.0]]
       ),
       "Should match the expected events and values for the rule"
     )
     XCTAssertFalse(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp],
-        recordedValues: [Values.purchase: [Values.USD: 1000]]
+        recordedValues: [Values.purchase: [Values.USD: 1000.0]]
       ),
       "Should not match the unexpected events for the rule"
     )
     XCTAssertFalse(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp, Values.purchase],
-        recordedValues: [Values.purchase: [Values.JPY: 1000]]
+        recordedValues: [Values.purchase: [Values.JPY: 1000.0]]
       ),
       "Should not match the unexpected values for the rule"
     )
@@ -271,7 +271,7 @@ final class AEMRuleTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 100,
+              Keys.amount: 100.0,
             ],
           ],
         ],
@@ -285,7 +285,7 @@ final class AEMRuleTests: XCTestCase {
     XCTAssertTrue(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp, Values.purchase, Values.testEvent],
-        recordedValues: [Values.purchase: [Values.USD: 1000]]
+        recordedValues: [Values.purchase: [Values.USD: 1000.0]]
       ),
       "Should match the expected events and values for the rule"
     )
@@ -299,7 +299,7 @@ final class AEMRuleTests: XCTestCase {
     XCTAssertFalse(
       rule.isMatched(
         withRecordedEvents: [Values.activateApp, Values.purchase],
-        recordedValues: [Values.purchase: [Values.USD: 1000]]
+        recordedValues: [Values.purchase: [Values.USD: 1000.0]]
       ),
       "Should not match the unexpected events for the rule"
     )
@@ -325,7 +325,7 @@ final class AEMRuleTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 0,
+              Keys.amount: 0.0,
             ],
           ],
         ],

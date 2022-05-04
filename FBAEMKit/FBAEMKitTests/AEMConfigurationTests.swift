@@ -76,11 +76,11 @@ final class AEMConfigurationTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 100,
+              Keys.amount: 100.0,
             ],
             [
               Keys.currency: Values.JPY,
-              Keys.amount: 1000,
+              Keys.amount: 1000.0,
             ],
           ],
         ],

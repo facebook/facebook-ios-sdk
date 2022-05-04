@@ -17,7 +17,6 @@
 #import "FBAEMAdvertiserRuleFactory.h"
 #import "FBAEMInvocation.h"
 #import "FBAEMNetworker.h"
-#import "FBAEMRule.h"
 
 #define FB_AEM_CONFIG_TIME_OUT 86400
 #define FB_AEM_DELAY           3

@@ -49,11 +49,11 @@ final class AEMEventTests: XCTestCase {
     Keys.values: [
       [
         Keys.currency: Values.usd,
-        Keys.amount: 100,
+        Keys.amount: 100.0,
       ],
       [
         Keys.currency: Values.JPY,
-        Keys.amount: 1000,
+        Keys.amount: 1000.0,
       ],
     ],
   ])
@@ -79,7 +79,7 @@ final class AEMEventTests: XCTestCase {
       Values.purchase,
       "AEM event name should match the expected event_name in the json"
     )
-    let expectedValues: [String: Int] = [
+    let expectedValues: [String: Double] = [
       Values.USD: 100,
       Values.JPY: 1000,
     ]

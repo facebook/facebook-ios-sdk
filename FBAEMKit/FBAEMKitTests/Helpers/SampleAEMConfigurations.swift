@@ -55,7 +55,7 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 100,
+                    Keys.amount: 100.0,
                   ],
                 ],
               ],
@@ -70,7 +70,7 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 0,
+                    Keys.amount: 0.0,
                   ],
                 ],
               ],

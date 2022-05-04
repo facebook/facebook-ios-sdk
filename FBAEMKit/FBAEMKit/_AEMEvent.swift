@@ -25,7 +25,7 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   }
 
   public private(set) var eventName: String
-  public private(set) var values: [String: Int]?
+  public private(set) var values: [String: Double]?
 
   @objc(initWithJSON:)
   public init?(dict: [String: Any]?) {
@@ -41,11 +41,11 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
     guard let valueEntries = dict[CodingKeys.values.rawValue] as? [[String: Any]] else { return }
 
     if !valueEntries.isEmpty {
-      var valuesDict: [String: Int] = [:]
+      var valuesDict: [String: Double] = [:]
 
       for valueEntry in valueEntries {
         guard let currency = valueEntry[CodingKeys.currency.rawValue] as? String,
-              let amount = valueEntry[CodingKeys.amount.rawValue] as? Int,
+              let amount = valueEntry[CodingKeys.amount.rawValue] as? Double,
               !currency.isEmpty else {
           return nil
         }
@@ -56,7 +56,7 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
     }
   }
 
-  private init(eventName: String, values: [String: Int]?) {
+  private init(eventName: String, values: [String: Double]?) {
     self.eventName = eventName
     self.values = values
   }
@@ -72,7 +72,7 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
     let decodedValues = coder.decodeObject(
       of: [NSDictionary.self, NSNumber.self, NSString.self],
       forKey: CodingKeys.values.rawValue
-    ) as? [String: Int]
+    ) as? [String: Double]
     self.init(eventName: decodedEventName, values: decodedValues)
   }
 
