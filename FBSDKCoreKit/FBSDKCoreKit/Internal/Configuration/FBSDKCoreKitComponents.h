@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #if !TARGET_OS_TV
- #import <FBAEMKit/FBAEMKit.h>
+@import FBAEMKit;
 
  #import "FBSDKAEMReporterProtocol.h"
 #endif
