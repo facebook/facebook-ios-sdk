@@ -18,10 +18,9 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
-@class FBSDKAuthenticationTokenHeader;
+#import "NSURLSession+Internal.h"
 
-@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
-@end
+@class FBSDKAuthenticationTokenHeader;
 
 static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
 static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";
@@ -29,21 +28,6 @@ static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";
 typedef void (^FBSDKPublicCertCompletionBlock)(SecCertificateRef cert);
 typedef void (^FBSDKPublicKeyCompletionBlock)(SecKeyRef key);
 typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
-
-@interface FBSDKAuthenticationToken (FactoryInitializer)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                        graphDomain:(NSString *)graphDomain;
-
-@end
-
-@interface FBSDKAuthenticationTokenClaims (Internal)
-
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
-                                                               nonce:(nonnull NSString *)expectedNonce;
-
-@end
 
 @interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
 

@@ -17,6 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AuthenticationToken)
 @interface FBSDKAuthenticationToken : NSObject <NSCopying, NSObject, NSSecureCoding>
 
+/**
+ Internal init method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                        graphDomain:(NSString *)graphDomain;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
