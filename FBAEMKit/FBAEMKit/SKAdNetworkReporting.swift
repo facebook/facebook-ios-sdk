@@ -11,7 +11,7 @@
 import Foundation
 
 @objc(FBSKAdNetworkReporting)
-public protocol SKAdNetworkReporting: NSObjectProtocol {
+public protocol SKAdNetworkReporting {
   @objc
   func shouldCutoff() -> Bool
 
