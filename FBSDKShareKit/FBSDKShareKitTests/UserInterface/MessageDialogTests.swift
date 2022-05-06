@@ -266,6 +266,13 @@ final class MessageDialogTests: XCTestCase {
     XCTAssertNil(error.underlyingError, .failureIsHandled)
   }
 
+  func testFailingToShowWithoutBridgeAPIRequest() {
+    internalUtility.isMessengerAppInstalled = true
+    shareDialogConfiguration.stubbedShouldUseNativeDialog = true
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    XCTAssertFalse(dialog.show(), .showingFailsWithoutBridgeAPIRequest)
+  }
+
   func testShowingDialog() throws {
     shareDialogConfiguration.stubbedShouldUseNativeDialog = true
     shareDialogConfiguration.stubbedShouldUseSafariViewController = true
@@ -424,5 +431,6 @@ fileprivate extension String {
   static let cancellationIsHandled = "Cancellation is sent to a dialog's delegate and logged"
   static let failureIsHandled = "Failure is sent to a dialog's delegate and logged"
   static let successIsHandled = "Success is sent to a dialog's delegate and logged"
+  static let showingFailsWithoutBridgeAPIRequest = "A dialog does not show if a bridge API request cannot be created"
   static let showingValidDialog = "A dialog shows valid content by creating a bridge API request an opening it"
 }

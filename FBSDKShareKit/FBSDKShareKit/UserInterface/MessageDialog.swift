@@ -168,11 +168,8 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
       methodName: ShareBridgeAPI.MethodName.share,
       parameters: parameters,
       userInfo: nil
-    ) else {
-      // This should probably return false instead; it's true because there wasn't
-      // a false return after this in the original Objective-C.
-      return true
-    }
+    )
+    else { return false }
 
     let shouldUseSafariViewController = shareDialogConfiguration
       .shouldUseSafariViewController(forDialogName: FBSDKDialogConfigurationNameMessage)
