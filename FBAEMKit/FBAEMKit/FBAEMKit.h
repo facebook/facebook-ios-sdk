@@ -8,7 +8,6 @@
 
 #import <FBAEMKit/FBAEMNetworking.h>
 #import <FBAEMKit/FBAEMReporter.h>
-#import <FBAEMKit/FBSKAdNetworkReporting.h>
 
 // Temporarily public
 #import <FBAEMKit/FBAEMAdvertiserRuleFactory.h>

@@ -46,6 +46,8 @@ NS_SWIFT_NAME(init(graphRequestFactory:dataStore:conversionValueUpdater:));
 
 - (BOOL)isReportingEvent:(NSString *)event;
 
+- (void)checkAndRevokeTimer;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -13,7 +13,8 @@
  #import <Foundation/Foundation.h>
 
  #import <FBAEMKit/FBAEMNetworking.h>
- #import <FBAEMKit/FBSKAdNetworkReporting.h>
+
+@protocol FBSKAdNetworkReporting;
 
 NS_ASSUME_NONNULL_BEGIN
 
