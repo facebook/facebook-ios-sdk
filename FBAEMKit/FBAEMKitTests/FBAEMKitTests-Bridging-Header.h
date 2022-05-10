@@ -10,7 +10,6 @@
 
 #import <TestTools/TestTools-Swift.h>
 
-#import "FBAEMAdvertiserRuleFactory+Testing.h"
 #import "FBAEMAdvertiserSingleEntryRule+Testing.h"
 #import "FBAEMInvocation+Testing.h"
 #import "FBAEMReporter+Testing.h"

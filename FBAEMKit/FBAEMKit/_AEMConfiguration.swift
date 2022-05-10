@@ -53,7 +53,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     }
     let businessID = dict[CodingKeys.advertiserID.rawValue] as? String
     let paramRuleJson = dict[CodingKeys.paramRule.rawValue] as? String
-    let matchingRule = _AEMConfiguration.ruleProvider?.createRule(withJson: paramRuleJson)
+    let matchingRule = _AEMConfiguration.ruleProvider?.createRule(json: paramRuleJson)
     guard let rules = _AEMConfiguration.parseRules(dict[CodingKeys.conversionValueRules.rawValue] as? [[String: Any]]),
           !rules.isEmpty,
           businessID == nil || matchingRule != nil else { return nil }

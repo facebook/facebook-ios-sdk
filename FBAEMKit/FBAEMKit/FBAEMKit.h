@@ -10,10 +10,8 @@
 #import <FBAEMKit/FBAEMReporter.h>
 
 // Temporarily public
-#import <FBAEMKit/FBAEMAdvertiserRuleFactory.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
 #import <FBAEMKit/FBAEMAdvertiserRuleOperator.h>
-#import <FBAEMKit/FBAEMAdvertiserRuleProviding.h>
 #import <FBAEMKit/FBAEMAdvertiserSingleEntryRule.h>
 #import <FBAEMKit/FBAEMInvocation.h>
 #import <FBAEMKit/FBAEMKit.h>
