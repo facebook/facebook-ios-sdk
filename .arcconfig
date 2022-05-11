@@ -1,0 +1,3711 @@
+{
+  "conduit_uri": "https://phabricator.intern.facebook.com/api/",
+  "arcanist_configuration": "FBSourceArcanistConfiguration",
+  "project_id": "facebook-ios-sdk-git",
+  "history.immutable": false,
+  "phutil_libraries": {
+    "fbsource-arcanist": "tools/arcanist/"
+  },
+  "base": "hg:.^",
+  "lint_engine": "fbsource",
+  "lint_engines": {
+    "adunit": "tools/arcanist/lint/adunit-lint-engine.toml",
+    "androidlint": "tools/arcanist/lint/androidlint-lint-engine.toml",
+    "arfx": "tools/arcanist/lint/arfx-lint-engine.toml",
+    "extra": "tools/arcanist/lint/extra-lint-engine.toml",
+    "fbcodecodemods": "tools/arcanist/lint/fbcodecodemods-lint-engine.toml",
+    "fbsource": "tools/arcanist/lint/fbsource-lint-engine.toml",
+    "fixit": "tools/arcanist/lint/fixit-lint-engine.toml",
+    "nullsafe": "tools/arcanist/lint/nullsafe-lint-engine.toml",
+    "pyre": "tools/arcanist/lint/pyre-lint-engine.toml",
+    "smartplatform": "tools/arcanist/lint/smartplatform-lint-engine.toml",
+    "terraform": "tools/arcanist/lint/terraform-lint-engine.toml",
+    "vscodeinfra": "tools/arcanist/lint/vscodeinfra-lint-engine.toml"
+  },
+  "arc.feature.start.options": [
+    "remote/fbsource/stable",
+    "remote/master"
+  ],
+  "lint.clang-format.binary": "tools/third-party/clang-format/clang-format",
+  "linttool.binary": "tools/arcanist/linttool",
+  "nuclide.templates": {
+    "^arvr/js/(apps|libraries)/.*/__tests__/.*\\.js$": [
+      {
+        "name": "JavaScript Unit Test (without React)",
+        "path": "arvr/js/scripts/nuclide-templates/jest.js.template"
+      },
+      {
+        "name": "React VR Unit Test",
+        "path": "arvr/js/scripts/nuclide-templates/jest-reactvr.js.template"
+      },
+      {
+        "name": "React VR Relay Mock Test",
+        "path": "arvr/js/scripts/nuclide-templates/jest-reactrelay.js.template"
+      }
+    ],
+    "^arvr/js/apps/Home/src/ReactNative/App/stores/.*\\.js$": [
+      {
+        "name": "Home Redux Reducer",
+        "path": "arvr/js/scripts/nuclide-templates/panelapp/HomeReduxReducer.js.template"
+      },
+      {
+        "name": "Home Redux Reducer with Thunks",
+        "path": "arvr/js/scripts/nuclide-templates/panelapp/HomeReduxReducerWithThunks.js.template"
+      }
+    ],
+    "^arvr/js/apps/[^/]+/src/ReactNative/App/(?!(.*/)*__tests__).*\\.js$": [
+      {
+        "name": "Empty JavaScript Module",
+        "path": "arvr/js/scripts/nuclide-templates/panelapp/emptyModule.js.template"
+      },
+      {
+        "name": "React Function Component",
+        "path": "arvr/js/scripts/nuclide-templates/panelapp/ReactFunctionComponent.js.template"
+      }
+    ],
+    "^arvr/js/scripts/codeshifts/.*\\.js$": [
+      {
+        "name": "jscodeshift Codemod",
+        "path": "arvr/js/scripts/nuclide-templates/scripts/jscodeshift.js.template"
+      }
+    ],
+    "^arvr/js/libraries/ocui/.*\\.js$": [
+      {
+        "name": "OCUI Component",
+        "path": "arvr/js/scripts/nuclide-templates/ocui/OCUIComponent.js.template"
+      },
+      {
+        "name": "OCUI Component Example",
+        "path": "arvr/js/scripts/nuclide-templates/ocui/OCUIComponentExample.js.template"
+      }
+    ],
+    "^arvr/js/eslint/rules/.*\\.js$": [
+      {
+        "name": "ESLint Rule",
+        "path": "arvr/js/scripts/nuclide-templates/eslint/ESLintRule.js.template"
+      }
+    ],
+    "^arvr/js/eslint/rules/__tests__/.*\\-test.js$": [
+      {
+        "name": "ESLint Rule Test",
+        "path": "arvr/js/scripts/nuclide-templates/eslint/ESLintRuleTest.js.template"
+      }
+    ],
+    "^arvr/js/projects/milan/gauntlet/__e2e__.*-mtest\\.js$": [
+      {
+        "name": "Wearable Test",
+        "path": "arvr/js/scripts/nuclide-templates/jest-wearable.js.template"
+      }
+    ],
+    "^arvr/js/.*/__e2e__/.*-gauntlet\\.js$|^.*__e2e__/.*-mtest\\.js$": [
+      {
+        "name": "Gauntlet Test",
+        "path": "arvr/js/scripts/nuclide-templates/jest-gauntlet.js.template"
+      }
+    ],
+    "^arvr/js/apps/Explore/.*/__e2e__/.*-mtest\\.js$": [
+      {
+        "name": "Explore Gauntlet Test",
+        "path": "arvr/js/scripts/nuclide-templates/jest-explore.js.template"
+      }
+    ],
+    "^arvr/js/apps/Assistant/__e2e__/.*/.*-mtest\\.js$": [
+      {
+        "name": "Oculus Assistant Template",
+        "path": "arvr/js/scripts/nuclide-templates/assistant/assistantTemplate.js.template"
+      }
+    ],
+    "^arvr/js/.*\\.js$": [
+      {
+        "name": "Blank JavaScript File",
+        "path": "arvr/js/scripts/nuclide-templates/empty.js.template"
+      },
+      {
+        "name": "Relay Container",
+        "path": "arvr/js/scripts/nuclide-templates/RelayContainer.js.template"
+      }
+    ],
+    "^fbandroid/.*\\.java$": [
+      {
+        "name": "Java Class",
+        "path": "fbandroid/nuclide-templates/JavaClass.java.template"
+      }
+    ],
+    "^fbandroid/.*\\.graphql$": [
+      {
+        "name": "GraphQL Query",
+        "path": "fbandroid/nuclide-templates/GraphQLQuery.graphql.template"
+      },
+      {
+        "name": "GraphQL Fragment",
+        "path": "fbandroid/nuclide-templates/GraphQLFragment.graphql.template"
+      },
+      {
+        "name": "GraphQL Mutation",
+        "path": "fbandroid/nuclide-templates/GraphQLMutation.graphql.template"
+      },
+      {
+        "name": "GraphQL Subscription",
+        "path": "fbandroid/nuclide-templates/GraphQLSubscription.graphql.template"
+      }
+    ],
+    "^fbcode/cathode/.*\\.thrift$": [
+      {
+        "name": "Cathode Thrift Template",
+        "path": "fbcode/cathode/tools/vscode/thrift.template"
+      }
+    ],
+    "^fbcode/extensions/chrome/facehub/.*\\.js$": [
+      {
+        "name": "JavaScript File",
+        "path": "xplat/js/nuclide-templates/js.js.template"
+      }
+    ],
+    "^fbcode/security/maleficent/procedures/.*\\.yaml$": [
+      {
+        "name": "Maleficent Procedure Template",
+        "path": "fbcode/security/maleficent/templates/procedure.template"
+      }
+    ],
+    "^fbcode/security/maleficent/scenarios/.*\\.yaml$": [
+      {
+        "name": "Maleficent Scenario Template",
+        "path": "fbcode/security/maleficent/templates/scenario.template"
+      }
+    ],
+    "^fbcode/eden/.*Test\\.cpp$": [
+      {
+        "name": "Eden C++ Test File",
+        "path": "fbcode/eden/facebook/templates/cpptest.template"
+      }
+    ],
+    "^fbcode/eden/.*\\.cpp$": [
+      {
+        "name": "Eden C++ Source File",
+        "path": "fbcode/eden/facebook/templates/cpp.template"
+      }
+    ],
+    "^fbcode/eden/.*\\.h$": [
+      {
+        "name": "Eden Header File",
+        "path": "fbcode/eden/facebook/templates/header.template"
+      }
+    ],
+    "^fbcode/mui/nodes/.*\\.cpp$": [
+      {
+        "name": "MUI Node C++ Source File",
+        "path": "fbcode/mui/nodes/mui_node_cpp.template"
+      }
+    ],
+    "^fbcode/mui/nodes/.*\\.h$": [
+      {
+        "name": "MUI Node C++ Header File",
+        "path": "fbcode/mui/nodes/mui_node_header.template"
+      }
+    ],
+    "^fbcode/fbenclave/edls/.*\\.edl$": [
+      {
+        "name": "Harpocrates EDL template",
+        "path": "fbcode/nuclide/templates/harpocrates_edl.template"
+      }
+    ],
+    "^fbcode/flow/.*\\.ml$": [
+      {
+        "name": "Flow OCaml Module",
+        "path": "fbcode/flow/facebook/nuclide/templates/flow-ml.template"
+      }
+    ],
+    "^fbcode/flow/.*\\.mli$": [
+      {
+        "name": "Flow OCaml Module Interface",
+        "path": "fbcode/flow/facebook/nuclide/templates/flow-mli.template"
+      }
+    ],
+    "^fbcode/flow/src(/.*)?/TARGETS$": [
+      {
+        "name": "Flow TARGETS file",
+        "path": "fbcode/flow/facebook/nuclide/templates/TARGETS.template"
+      }
+    ],
+    "^fbcode/hphp/.*\\.ml$": [
+      {
+        "name": "Hack OCaml Module",
+        "path": "fbcode/hphp/facebook/templates/hack-ml.template"
+      }
+    ],
+    "^fbcode/hphp/.*\\.mli$": [
+      {
+        "name": "Hack OCaml Module Interface",
+        "path": "fbcode/hphp/facebook/templates/hack-mli.template"
+      }
+    ],
+    "^fbcode/hphp/.*\\.rs$": [
+      {
+        "name": "Hack Rust Source File",
+        "path": "fbcode/hphp/facebook/templates/hack-rs.template"
+      }
+    ],
+    "^fbcode/hphp/hack/.*\\.py$": [
+      {
+        "name": "Hack Python script",
+        "path": "fbcode/hphp/facebook/templates/hack-py.template"
+      }
+    ],
+    "^fbcode/hphp/hack/.*\\.models$": [
+      {
+        "name": "Zoncolan taint_config file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/taint_config.models.template"
+      },
+      {
+        "name": "Zoncolan sinks file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/sinks.models.template"
+      },
+      {
+        "name": "Zoncolan sources file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/sources.models.template"
+      },
+      {
+        "name": "Zoncolan model_generators file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/model_generators.models.template"
+      },
+      {
+        "name": "Zoncolan sanitizers file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/sanitizers.models.template"
+      },
+      {
+        "name": "Zoncolan passthroughs file",
+        "path": "fbcode/hphp/hack/src/facebook/ai/presets/templates/passthroughs.models.template"
+      }
+    ],
+    "^fbcode/security/lionhead/.*\\.cpp$": [
+      {
+        "name": "Fuzzing Harness",
+        "path": "fbcode/security/lionhead/harnesses/FuzzingHarness.template"
+      }
+    ],
+    "^fbcode/security/blackbird/.*\\.cpp": [
+      {
+        "name": "Blackbird C++ Source File",
+        "path": "fbcode/security/blackbird/scripts/nuclide.cpp.template"
+      },
+      {
+        "name": "Blackbird Test C++ File",
+        "path": "fbcode/security/blackbird/scripts/nuclide.cpptest.template"
+      }
+    ],
+    "^fbcode/security/blackbird/.*\\.h": [
+      {
+        "name": "Blackbird C++ Header File",
+        "path": "fbcode/security/blackbird/scripts/nuclide.header.template"
+      }
+    ],
+    "^fbcode/security/starfish/.*\\.py": [
+      {
+        "name": "Starfish Workflow File",
+        "path": "fbcode/security/starfish/starfish_workflow.py.template"
+      }
+    ],
+    "^fbcode/datascience/hypotheses/watson/.*\\.py$": [
+      {
+        "name": "Pyre Strict Python File",
+        "path": "fbcode/datascience/hypotheses/watson/templates/nuclide.py.template"
+      }
+    ],
+    "^fbcode/tupperware/resourcebroker/.*\\.cpp": [
+      {
+        "name": "C++ Source File",
+        "path": "fbcode/tupperware/resourcebroker/scripts/nuclide.cpp.template"
+      },
+      {
+        "name": "Test C++ file",
+        "path": "fbcode/tupperware/resourcebroker/scripts/nuclide.cpptest.template"
+      }
+    ],
+    "^fbcode/tupperware/resourcebroker/.*\\.h": [
+      {
+        "name": "Header file",
+        "path": "fbcode/tupperware/resourcebroker/scripts/nuclide.header.template"
+      }
+    ],
+    "^fbcode/tupperware/.*\\.cpp": [
+      {
+        "name": "C++ Source File",
+        "path": "fbcode/tupperware/scripts/nuclide.cpp.template"
+      },
+      {
+        "name": "Test C++ file",
+        "path": "fbcode/tupperware/scripts/nuclide.cpptest.template"
+      }
+    ],
+    "^fbcode/tupperware/.*\\.h": [
+      {
+        "name": "Header file",
+        "path": "fbcode/tupperware/scripts/nuclide.header.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/commerce/catalog/.*\\.py$": [
+      {
+        "name": "Catalog DE Simple Template",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/catalog_de_simple.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/arvr/arvr_marketing/(fact|core|dimension|staging)/.*\\.py$": [
+      {
+        "name": "ARVR Marketing DE Dataswarm Template",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/arvr_marketing_de.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/(tasks|tasks_adhoc)/arvr/xros/.*\\.py$": [
+      {
+        "name": "XROS DE Dataswarm Template",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/xros_de.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/ad_metrics/curated_ads_data/.*\\.py$": [
+      {
+        "name": "CDS Hive Dataswarm Template",
+        "path": "fbcode/dataswarm-pipelines/tasks/ad_metrics/curated_ads_data/cds_hive_container.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/consumer_hardware/devices_data_analytics/(warehouse|sandbox).*\\.py$": [
+      {
+        "name": "RL Ops Analytics Base Pipeline",
+        "path": "fbcode/dataswarm-pipelines/tasks/consumer_hardware/devices_data_analytics/common/templates/rl_ops_analytics_base_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.bi.mpp_ai.*\\.py$": [
+      {
+        "name": "Kazusa Tests",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_test.template"
+      },
+      {
+        "name": "Kazusa Ops",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_op.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks_adhoc.fbc.*\\.py$": [
+      {
+        "name": "Kazusa Tests",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_test.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks_adhoc.bi.mpp_ai.*\\.py$": [
+      {
+        "name": "Kazusa Tests",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_test.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.fbc.*\\.py$": [
+      {
+        "name": "Kazusa Ops",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_op.template"
+      },
+      {
+        "name": "Kazusa Tests",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_test.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/dataswarm_commons.kazusa.operator.*\\.py$": [
+      {
+        "name": "Kazusa Ops",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/kazusa_op.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.bi.ecosystem.forecast.*\\.py$": [
+      {
+        "name": "Ecosystem Forecast Config Tempalte",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/ecosystem_forecast_config.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.ad_metrics.adreview.training.*\\.py$": [
+      {
+        "name": "Label Config Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/business_integrity_label_config.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/di/scribe/.*\\.py$": [
+      {
+        "name": "Scribe Base Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/scribe_pipeline_config.py.template"
+      },
+      {
+        "name": "Scribe ScribeShell based Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/scribe_scribeshell_pipeline_config.py.template"
+      },
+      {
+        "name": "Scribe Per Scope Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/scribe_per_scope_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/bi/data_insights/.*\\.py$": [
+      {
+        "name": "Base Pipeline",
+        "path": "fbcode/dataswarm-pipelines/tasks/bi/data_insights/_templates/basic_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/infrastructure/production_matrix/.*\\.py$": [
+      {
+        "name": "Production Matrix Metric Pipeline",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/production_matrix/__templates/pm_metric_base_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/locations/places/pvd.*\\.py$": [
+      {
+        "name": "PVD Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/pvd_pipelines_template.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks(_adhoc)?.si.(care|careml).*\\.py$": [
+      {
+        "name": "Care Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/care_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks(_adhoc)?/libra_risk.*\\.py$": [
+      {
+        "name": "Libra Risk DE Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra_risk/templates/libra_risk_de_pipeline.py.template"
+      },
+      {
+        "name": "Libra Risk D&D Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra_risk/templates/libra_risk_d_and_d_pipeline.py.template"
+      },
+      {
+        "name": "Libra Risk DI Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra_risk/templates/libra_risk_di_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks(_adhoc)?/libra_care.*\\.py$": [
+      {
+        "name": "Libra Care DE Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra_care/templates/libra_care_de_pipeline.py.template"
+      },
+      {
+        "name": "Libra Care ML Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra_care/templates/libra_care_ml_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks(_adhoc)?/libra.*\\.py$": [
+      {
+        "name": "Libra DE Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/libra/templates/libra_de_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks(_adhoc)?.instagram.(wait|wellbeing|bullying).*\\.py$": [
+      {
+        "name": "IG Well-being ML Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/igwb_ml_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks_adhoc.*\\.py$": [
+      {
+        "name": "Column Backfill",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/column_backfill.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.*\\.py$": [
+      {
+        "name": "Base Pipeline - Python 3",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/pipeline_template_py3.py.template"
+      },
+      {
+        "name": "Base Pipeline Detailed - Python 3",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/pipeline_template_py3_detailed.py.template"
+      },
+      {
+        "name": "PS DE Pipeline Template",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/ps_de_pipeline_template.py.template"
+      },
+      {
+        "name": "FGF DateList",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/FGFDateList.py.template"
+      },
+      {
+        "name": "FGF Core",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/FGFCore.py.template"
+      },
+      {
+        "name": "FGF Cube",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/FGFCube.py.template"
+      },
+      {
+        "name": "PF Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/product_foundation.py.template"
+      },
+      {
+        "name": "Search Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/search_pipeline.py.template"
+      },
+      {
+        "name": "PPT Propagation Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/ppt_propagation.py.template"
+      },
+      {
+        "name": "DOD Subgraph Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/dod_subgraph.py.template"
+      },
+      {
+        "name": "UPM Generic Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/upm_generic.py.template"
+      },
+      {
+        "name": "UPM Datelist Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/upm_datelist.py.template"
+      },
+      {
+        "name": "UPM Retention Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/upm_retention.py.template"
+      },
+      {
+        "name": "Video Product Consumption Graduation Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/video_product_consumption_graduation.py.template"
+      },
+      {
+        "name": "Clean Agg Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/clean_agg_pipeline.py.template"
+      },
+      {
+        "name": "IG C$ DE Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/ig_creator_monetization_de_pipeline_template.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.*/test_.*\\.py$": [
+      {
+        "name": "Pipeline Test",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/pipeline_test.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks.*/TARGETS$": [
+      {
+        "name": "Pipeline Test TARGETS",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/TARGETS.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/[tasks|dataswarm_commons].*\\.py$": [
+      {
+        "name": "DEPA Offline Discovery Grammar",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/discovery_grammar.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics.*\\.py$": [
+      {
+        "name": "ISOS Tableau Refresh - With Helper Comments",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics/templates/isos_tableau_refresh_with_helper_comments.py.template"
+      },
+      {
+        "name": "ISOS Tableau Refresh - Without Helper Comments",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics/templates/isos_tableau_refresh_without_comments.py.template"
+      },
+      {
+        "name": "ISOS Details Table - With Helper Comments",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics/templates/isos_details_table_with_helper_comments.py.template"
+      },
+      {
+        "name": "ISOS Details Table - Without Helper Comments",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics/templates/isos_details_table_without_helper_comments.py.template"
+      },
+      {
+        "name": "ISOS Convert From GSheet To Hive",
+        "path": "fbcode/dataswarm-pipelines/tasks/infrastructure/isos_network_analytics/templates/isos_import_gsheet_to_hive_table.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/tasks/instagram.*\\.py$": [
+      {
+        "name": "IG Interests DE Pipeline",
+        "path": "fbcode/dataswarm-pipelines/dataswarm_commons/templates/ig_interests_de_pipeline.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/upm_data/graphs/.*\\.py$": [
+      {
+        "name": "Graph Model Template",
+        "path": "fbcode/dataswarm-pipelines/upm_data/graphs/examples/basic_example.py.template"
+      }
+    ],
+    "^fbcode/dataswarm-pipelines/upm_data/datasets/.*\\.py$": [
+      {
+        "name": "Hive DataSet",
+        "path": "fbcode/dataswarm-pipelines/upm_data/datasets/templates/basic_hive.py.template"
+      }
+    ],
+    "^fbcode/dper3/dper3/modules/[^/]*\\.py$": [
+      {
+        "name": "DPER3 Mid Level Module",
+        "path": "fbcode/dper3/dper3/modules/templates/new_module.py.template"
+      }
+    ],
+    "^fbcode/dper3/dper3/modules/low_level_modules/.*\\.py$": [
+      {
+        "name": "DPER3 Low Level Module",
+        "path": "fbcode/dper3/dper3/modules/low_level_modules/templates/new_low_level_module.py.template"
+      }
+    ],
+    "^fbcode/f6/pipelines/.*\\.py$": [
+      {
+        "name": "[f6 Template] BI",
+        "path": "fbcode/f6/pipelines/templates/bi.py"
+      },
+      {
+        "name": "[f6 Template] BI with f3",
+        "path": "fbcode/f6/pipelines/templates/bi_with_f3.py"
+      },
+      {
+        "name": "[f6 Template] DC",
+        "path": "fbcode/f6/pipelines/templates/dc.py"
+      },
+      {
+        "name": "[f6 Template] Whatsapp Integrity",
+        "path": "fbcode/f6/pipelines/templates/wa_integrity.py"
+      }
+    ],
+    "^fbcode/xstream_pipelines/.*/TARGETS$": [
+      {
+        "name": "Pet Popularity TARGETS",
+        "path": "fbcode/xstream_pipelines/upm/pets/example/TARGETS_template"
+      }
+    ],
+    "^fbcode/xstream_pipelines/.*.py$": [
+      {
+        "name": "Pet Popularity",
+        "path": "fbcode/xstream_pipelines/upm/pets/example/pet_popularity_template.py"
+      }
+    ],
+    "^fbcode/xstream_pipelines/.*.xsconf$": [
+      {
+        "name": "XStream Configuration File",
+        "path": "fbcode/xstream_pipelines/upm/xsconf_template.xsconf"
+      }
+    ],
+    "^fbcode/jef_clients/authentic_presence/data_infra/projects/.*/__init__.py$": [
+      {
+        "name": "Data Project __init__ Template",
+        "path": "fbcode/jef_clients/authentic_presence/data_infra/projects/_templates/__init__.py.template"
+      }
+    ],
+    "^fbcode/jef_clients/authentic_presence/data_infra/projects/.*/config.py$": [
+      {
+        "name": "Data Project Config Template",
+        "path": "fbcode/jef_clients/authentic_presence/data_infra/projects/_templates/config.py.template"
+      }
+    ],
+    "^fbcode/jef_clients/authentic_presence/data_infra/projects/.*/data_project.py$": [
+      {
+        "name": "Data Project Template",
+        "path": "fbcode/jef_clients/authentic_presence/data_infra/projects/_templates/data_project.py.template"
+      }
+    ],
+    "^fbcode/calibra(/.*)?/TARGETS$": [
+      {
+        "name": "calibra TARGETS file",
+        "path": "fbcode/calibra/dev/templates/TARGETS.template"
+      }
+    ],
+    "^fbcode/calibra/.+/tests/test_.+\\.py$": [
+      {
+        "name": "calibra unit test",
+        "path": "fbcode/calibra/dev/templates/tester.template"
+      }
+    ],
+    "^fbcode/calibra/cogwheel_tests(/.+)?/test_.+\\.py$": [
+      {
+        "name": "calibra cogwheel test",
+        "path": "fbcode/calibra/dev/templates/cogwheel_test.template"
+      }
+    ],
+    "^fbcode/reliable_volumes/.*\\.h$": [
+      {
+        "name": "Reliable Volume C++ Header File",
+        "path": "fbcode/reliable_volumes/tools/templates/cppheader.template"
+      }
+    ],
+    "^fbcode/reliable_volumes/.*\\.cpp$": [
+      {
+        "name": "Reliable Volume C++ Source File",
+        "path": "fbcode/reliable_volumes/tools/templates/cpp.template"
+      },
+      {
+        "name": "Reliable Volume C++ Test File",
+        "path": "fbcode/reliable_volumes/tools/templates/cpptest.template"
+      }
+    ],
+    "^fbcode/papaya/.*\\.cpp$": [
+      {
+        "name": "C++ Source File",
+        "path": "fbcode/papaya/nuclide/templates/cpp.template"
+      },
+      {
+        "name": "C++ Test File",
+        "path": "fbcode/papaya/nuclide/templates/cpptest.template"
+      }
+    ],
+    "^fbcode/papaya/.*\\.h$": [
+      {
+        "name": "C++ Header File",
+        "path": "fbcode/papaya/nuclide/templates/cppheader.template"
+      }
+    ],
+    "^fbcode/papaya/.*\\.py$": [
+      {
+        "name": "Papaya Python File",
+        "path": "fbcode/papaya/nuclide/templates/py.template"
+      },
+      {
+        "name": "Papaya Python Test",
+        "path": "fbcode/papaya/nuclide/templates/py_test.template"
+      }
+    ],
+    "^fbcode/ctp/.*\\.rs$": [
+      {
+        "name": "CTP Rust Source File",
+        "path": "fbcode/ctp/templates/ctp-rs.template"
+      }
+    ],
+    "^fbcode(/.*)?/TARGETS$": [
+      {
+        "name": "TARGETS file",
+        "path": "fbcode/nuclide/templates/TARGETS.template"
+      }
+    ],
+    "^fbcode/.*\\.h$": [
+      {
+        "name": "C++ Header File",
+        "path": "fbcode/nuclide/templates/cppheader.template"
+      }
+    ],
+    "^fbcode/.*\\.cpp$": [
+      {
+        "name": "C++ Source File",
+        "path": "fbcode/nuclide/templates/cpp.template"
+      },
+      {
+        "name": "C++ Test File",
+        "path": "fbcode/nuclide/templates/cpptest.template"
+      }
+    ],
+    "^fbcode/.*\\.java$": [
+      {
+        "name": "Java Class",
+        "path": "fbcode/nuclide/templates/java.template"
+      }
+    ],
+    "^fbcode/.*Test\\.hs$": [
+      {
+        "name": "HUnit Test",
+        "path": "fbcode/nuclide/templates/hunit.template"
+      }
+    ],
+    "^fbcode/.*\\.hsc?$": [
+      {
+        "name": "Haskell Module",
+        "path": "fbcode/nuclide/templates/hs.template"
+      }
+    ],
+    "^fbcode/nodeapi/projects/.*\\.yaml": [
+      {
+        "name": "NodeAPI Project",
+        "path": "fbcode/nodeapi/projects/project.template"
+      }
+    ],
+    "^fbcode/videos/react-media/.*\\.js": [
+      {
+        "name": "React Media Composition",
+        "path": "fbcode/videos/react-media/templates/composition.rm.jsx.template"
+      },
+      {
+        "name": "Blank JavaScript File",
+        "path": "fbcode/videos/react-media/templates/js.template"
+      }
+    ],
+    "^fbcode/videos/react-media-gfx/.*\\.js": [
+      {
+        "name": "React Media Composition",
+        "path": "fbcode/videos/react-media/templates/composition.rm.jsx.template"
+      },
+      {
+        "name": "Blank JavaScript File",
+        "path": "fbcode/videos/react-media/templates/js.template"
+      }
+    ],
+    "^fbcode/videos/react-media-gfx/.*\\.rm.json": [
+      {
+        "name": "React Media Manifest",
+        "path": "fbcode/videos/react-media/templates/manifest.json.template"
+      }
+    ],
+    "^fbobjc/.*\\.graphql$": [
+      {
+        "name": "GraphQL Query",
+        "path": "fbobjc/nuclide-templates/GraphQLQuery.graphql.template"
+      },
+      {
+        "name": "GraphQL Fragment",
+        "path": "fbobjc/nuclide-templates/GraphQLFragment.graphql.template"
+      },
+      {
+        "name": "GraphQL Mutation",
+        "path": "fbobjc/nuclide-templates/GraphQLMutation.graphql.template"
+      },
+      {
+        "name": "GraphQL Subscription",
+        "path": "fbobjc/nuclide-templates/GraphQLSubscription.graphql.template"
+      }
+    ],
+    "^fbobjc/.*ComponentSpec\\.h$": [
+      {
+        "name": "Component Spec Header",
+        "path": "fbobjc/nuclide-templates/ckcomponentspecinterface.template"
+      }
+    ],
+    "^fbobjc/.*\\.h$": [
+      {
+        "name": "C Header File",
+        "path": "fbobjc/nuclide-templates/cheader.template"
+      },
+      {
+        "name": "C++ Header File",
+        "path": "fbobjc/nuclide-templates/cppheader.template"
+      },
+      {
+        "name": "Objective-C(++) Class",
+        "path": "fbobjc/nuclide-templates/objcinterface.template"
+      },
+      {
+        "name": "Composite Component Class",
+        "path": "fbobjc/nuclide-templates/ckcompositecomponentinterface.template"
+      }
+    ],
+    "^fbobjc/.*\\.swift$": [
+      {
+        "name": "Swift Source File",
+        "path": "fbobjc/nuclide-templates/swiftimpl.template"
+      }
+    ],
+    "^fbobjc/.*Tests?\\.swift$": [
+      {
+        "name": "Swift Test File",
+        "path": "fbobjc/nuclide-templates/swifttest.template"
+      }
+    ],
+    "^fbobjc/Tools/cAST/mods/.*\\.cpp$": [
+      {
+        "name": "cAST Codemod File",
+        "path": "fbobjc/nuclide-templates/cast_codemod_cpp.template"
+      }
+    ],
+    "^fbobjc/.*\\.cpp$": [
+      {
+        "name": "C++ Source File",
+        "path": "fbobjc/nuclide-templates/cpp.template"
+      },
+      {
+        "name": "C++ Test File",
+        "path": "fbobjc/nuclide-templates/cpptest.template"
+      }
+    ],
+    "^fbobjc/.*/SOCKETS\\.bzl$": [
+      {
+        "name": "Plugin Socket",
+        "path": "fbobjc/nuclide-templates/socketsbzl.template"
+      }
+    ],
+    "^fbobjc/Apps/Instagram/.*BUCK$": [
+      {
+        "name": "ig_apple_library Buck Target",
+        "path": "fbobjc/nuclide-templates/ig_apple_library.template"
+      }
+    ],
+    "^fbobjc/Apps/LightSpeed/.*Tests?\\.m$": [
+      {
+        "name": "Objective-C LightSpeed Test",
+        "path": "fbobjc/nuclide-templates/ls-objctest.template"
+      }
+    ],
+    "^fbobjc/Apps/LightSpeed/.*Tests?\\.mm$": [
+      {
+        "name": "Objective-C++ LightSpeed Test",
+        "path": "fbobjc/nuclide-templates/ls-objcpptest.template"
+      }
+    ],
+    "^fbobjc/.*Tests?\\.mm?$": [
+      {
+        "name": "Objective-C(++) Test",
+        "path": "fbobjc/nuclide-templates/objctest.template"
+      }
+    ],
+    "^fbobjc/.*ComponentSpec\\.mm$": [
+      {
+        "name": "Component Spec Implementation",
+        "path": "fbobjc/nuclide-templates/ckcomponentspecimpl.template"
+      }
+    ],
+    "^fbobjc/.*Component\\.mm$": [
+      {
+        "name": "Composite Component Class fbobjc/nuclide-templates",
+        "path": "fbobjc/nuclide-templates/ckcompositecomponentimpl.template"
+      }
+    ],
+    "^fbobjc/.*\\.mm?$": [
+      {
+        "name": "Objective-C(++) Class Implementation",
+        "path": "fbobjc/nuclide-templates/objcimpl.template"
+      },
+      {
+        "name": "iOS Plugin Implementation",
+        "path": "fbobjc/nuclide-templates/objcplugin.template"
+      }
+    ],
+    "^ovrsource-legacy/unity/socialvr/_js/.*\\.react\\.js$": [
+      {
+        "name": "ReactVR Component",
+        "path": "ovrsource-legacy/unity/socialvr/_js/src/nuclide_templates/ReactVRComponent.js.template"
+      }
+    ],
+    "^tools/.*\\.td$": [
+      {
+        "name": "UTD File",
+        "path": "tools/utd/migrated_nbtd_jobs/example.td.template"
+      }
+    ],
+    "xplat/endtoend/jest-e2e/apps/facebook_xplat/GroupChat/__tests__/.*\\.js": [
+      {
+        "name": "CMB Jest E2E Test",
+        "path": "/xplat/endtoend/jest-e2e/apps/facebook_xplat/GroupChat/__test_utils__/GroupChatInbox-test.js.template"
+      },
+      {
+        "name": "CMB Jest iOS E2E Test",
+        "path": "/xplat/endtoend/jest-e2e/apps/facebook_xplat/GroupChat/__test_utils__/GroupChatInbox-test-ios-e2e.js.template"
+      },
+      {
+        "name": "CMB Jest Android E2E Test",
+        "path": "/xplat/endtoend/jest-e2e/apps/facebook_xplat/GroupChat/__test_utils__/GroupChatInbox-test-android-e2e.js.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/apps/fb4a/*__tests__/notification_types/push/.*-e2e\\.js$": [
+      {
+        "name": "Push Notification Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-notification-android-push.js.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/apps/fb4a/*__tests__/notification_types/.*-e2e\\.js$": [
+      {
+        "name": "Notification Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-notification-android.js.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/apps/wilde/*__tests__/notification_types/.*-e2e\\.js$": [
+      {
+        "name": "Notification Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-notification-ios.js.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/apps/fb4a/*__tests__/feed/comments/.*-e2e\\.js$": [
+      {
+        "name": "Comments Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-comments-android.js.template"
+      }
+    ],
+    "^xplat/.*\\.js$": [
+      {
+        "name": "JavaScript File",
+        "path": "xplat/js/nuclide-templates/js.js.template"
+      }
+    ],
+    "^xplat/.*\\.ts$": [
+      {
+        "name": "TypeScript File",
+        "path": "xplat/js/nuclide-templates/ts.ts.template"
+      }
+    ],
+    "^xplat/.*\\.tsx$": [
+      {
+        "name": "TypeScript File",
+        "path": "xplat/js/nuclide-templates/tsx.tsx.template"
+      },
+      {
+        "name": "Functional Component",
+        "path": "xplat/js/nuclide-templates/FunctionalComponent.tsx.template"
+      },
+      {
+        "name": "React Native Functional Component",
+        "path": "xplat/js/nuclide-templates/ReactNativeFunctionalComponent.tsx.template"
+      }
+    ],
+    "^xplat/archon/packages/rn/.*\\.tsx$": [
+      {
+        "name": "Archon Functional Component",
+        "path": "xplat/archon/nuclide-templates/FunctionalComponent.tsx.template"
+      }
+    ],
+    "^xplat/archon/packages/rn/.*\\.test.tsx$": [
+      {
+        "name": "Jest Test",
+        "path": "xplat/archon/nuclide-templates/JestTest.tsx.template"
+      }
+    ],
+    "^xplat/bucklint/rules/.*\\.py$": [
+      {
+        "name": "bucklint rule",
+        "path": "xplat/bucklint/rules/example.py"
+      }
+    ],
+    "^xplat/bucklint/rules/.*\\.external-linter-test$": [
+      {
+        "name": "bucklint external linter test",
+        "path": "xplat/bucklint/templates/external-linter-test.template"
+      }
+    ],
+    "^xplat/build_infra/buck_client/(src|test)/.*\\.java$": [
+      {
+        "name": "Java source file",
+        "path": "xplat/build_infra/buck_client/config/java.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/.*__tests__/groups/.*-e2e\\.js$": [
+      {
+        "name": "Forum Admin Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/forum-admin-jest-e2e.js.template"
+      },
+      {
+        "name": "Forum Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/forum-member-jest-e2e.js.template"
+      },
+      {
+        "name": "Forum Non Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/forum-non-member-jest-e2e.js.template"
+      },
+      {
+        "name": "Private Group Admin Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/private-admin-jest-e2e.js.template"
+      },
+      {
+        "name": "Private Group Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/private-member-jest-e2e.js.template"
+      },
+      {
+        "name": "Private Group Non Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/private-non-member-jest-e2e.js.template"
+      },
+      {
+        "name": "Hidden Private Group Admin Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/hidden-private-admin-jest-e2e.js.template"
+      },
+      {
+        "name": "Hidden Private Group Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/hidden-private-member-jest-e2e.js.template"
+      },
+      {
+        "name": "Hidden Private Group Non Member Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/hidden-private-non-member-jest-e2e.js.template"
+      }
+    ],
+    "^xplat/endtoend/jest-e2e/.*__tests__/.*-e2e\\.js$": [
+      {
+        "name": "Android Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-android.js.template"
+      },
+      {
+        "name": "Zero Rating FB4A Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/zero-fb4a-jest-e2e.js.template"
+      },
+      {
+        "name": "Zero Rating FBLite Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/zero-fblite-jest-e2e.js.template"
+      },
+      {
+        "name": "iOS Jest E2E Test",
+        "path": "xplat/js/nuclide-templates/jest-e2e-ios.js.template"
+      },
+      {
+        "name": "React Native Jest E2E Test - FB4A",
+        "path": "xplat/js/nuclide-templates/jest-e2e-react-native-fb4a.js.template"
+      },
+      {
+        "name": "React Native Jest E2E Test - FBiOS",
+        "path": "xplat/js/nuclide-templates/jest-e2e-react-native-fbios.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/.*/__tests__/.*\\.js$": [
+      {
+        "name": "Test",
+        "path": "xplat/js/nuclide-templates/test.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Marketplace/.*/__tests__/.*\\.js$": [
+      {
+        "name": "Relay Mock Fragment Test",
+        "path": "xplat/js/nuclide-templates/RelayMockTest.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Apps/Verse/.*Mutation\\.js$": [
+      {
+        "name": "Verse Mutation",
+        "path": "xplat/js/nuclide-templates/verse/Mutation.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Apps/Verse/.*\\.js$": [
+      {
+        "name": "Memoized Functional Component",
+        "path": "xplat/js/nuclide-templates/ReactFunctionalMemoizedComponent.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Apps/Oculus/.*\\.js$": [
+      {
+        "name": "Oculus Relay Container",
+        "path": "xplat/js/nuclide-templates/OCRelayContainer.js.template"
+      },
+      {
+        "name": "Oculus Relay Mutation",
+        "path": "xplat/js/nuclide-templates/OCRelayMutation.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Apps/AdsLWI/.*\\.js$": [
+      {
+        "name": "AdsLWI Functional Component",
+        "path": "xplat/js/nuclide-templates/AdsLWIFunctionalComponent.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Marketplace/.*\\.js$": [
+      {
+        "name": "Marketplace/FB Shops Functional Component",
+        "path": "xplat/js/nuclide-templates/FBShopsMallFunctionalComponent.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/.*specs/.*\\.js$": [
+      {
+        "name": "React NativeModule",
+        "path": "xplat/js/nuclide-templates/ReactNativeModule.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Libraries/FDS/.*\\.js$": [
+      {
+        "name": "FDS Component",
+        "path": "xplat/js/nuclide-templates/ReactNativeFDSComponent.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Libraries/Geodesic.*/.*\\.react\\.((android|ios)\\.)?js$": [
+      {
+        "name": "Geo Component",
+        "path": "xplat/js/nuclide-templates/GeoComponent.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/Libraries/Geodesic.*/.*ServerSnapshotTests\\.js$": [
+      {
+        "name": "Geo Server Snapshots",
+        "path": "xplat/js/nuclide-templates/GeoServerSnapshots.js.template"
+      }
+    ],
+    "^xplat/design-tools/reference-components/src/design-systems/geodesic/.*/components/.*\\.react\\.js$": [
+      {
+        "name": "Geo Figma Reference Component",
+        "path": "xplat/design-tools/reference-components/src/design-systems/geodesic/utils/GeodesicFigmaReferenceComponent.react.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/.*\\.js$": [
+      {
+        "name": "Functional React Component",
+        "path": "xplat/js/nuclide-templates/FunctionalReactComponent.js.template"
+      },
+      {
+        "name": "Functional Relay Component",
+        "path": "xplat/js/nuclide-templates/ReactFunctionalMemoizedRelayComponent.js.template"
+      },
+      {
+        "name": "JavaScript File",
+        "path": "xplat/js/nuclide-templates/js.js.template"
+      }
+    ],
+    "^xplat/js/RKJSModules/.*Context\\.js$": [
+      {
+        "name": "React Context",
+        "path": "xplat/js/nuclide-templates/ReactContext.js.template"
+      }
+    ],
+    "^xplat/js/tools/eslint/rules/__tests__/.*\\.js$": [
+      {
+        "name": "ESLint Rule Test",
+        "path": "xplat/js/nuclide-templates/ESLintRuleTest.js.template"
+      }
+    ],
+    "^xplat/js/tools/eslint/rules/[^/]*\\.js$": [
+      {
+        "name": "ESLint Rule",
+        "path": "xplat/js/nuclide-templates/ESLintRule.js.template"
+      }
+    ],
+    "^xplat/mobileconfigschemas/.*\\.schema$": [
+      {
+        "name": "MobileConfig Schema",
+        "path": "xplat/mobileconfig/tools/nuclide-templates/MobileConfigSchema.schema.template"
+      }
+    ],
+    "^xplat/vscode/vscode-extensions/[^/]+/package\\.json$": [
+      {
+        "name": "VS Code Extension package.json",
+        "path": "xplat/vscode/resources/fb-templates/vscode-extension-package.json.template"
+      }
+    ],
+    "^xplat/vscode/.*\\.react.tsx$": [
+      {
+        "name": "React Component",
+        "path": "xplat/vscode/resources/fb-templates/react-component.tsx.template"
+      },
+      {
+        "name": "Functional React Component",
+        "path": "xplat/vscode/resources/fb-templates/functional-react-component.tsx.template"
+      }
+    ],
+    "^xplat/vscode/.*\\.tsx$": [
+      {
+        "name": "TypeScript File",
+        "path": "xplat/vscode/resources/fb-templates/tsx.tsx.template"
+      }
+    ],
+    "^xplat/vscode/.*/(__tests__|__atom_tests__|__vscode_e2e_tests__)/.*\\.tsx?$": [
+      {
+        "name": "Typescript Test",
+        "path": "xplat/vscode/resources/fb-templates/tsx-test.tsx.template"
+      }
+    ],
+    "^xplat/arfx/.*\\.hpp$": [
+      {
+        "name": "Spark AR - Empty Header",
+        "path": "xplat/arfx/tools/nuclide-templates/Empty.hpp.template"
+      },
+      {
+        "name": "Spark AR - Class Header",
+        "path": "xplat/arfx/tools/nuclide-templates/Class.hpp.template"
+      }
+    ],
+    "^xplat/arfx/.*\\.cpp$": [
+      {
+        "name": "Spark AR - Empty Implementation",
+        "path": "xplat/arfx/tools/nuclide-templates/Empty.cpp.template"
+      },
+      {
+        "name": "Spark AR - Class Implementation",
+        "path": "xplat/arfx/tools/nuclide-templates/Class.cpp.template"
+      }
+    ],
+    "^xplat/arfx/skylight/.*\\.hpp$": [
+      {
+        "name": "Skylight - Empty Header",
+        "path": "xplat/arfx/skylight/tools/templates/Empty.hpp.template"
+      },
+      {
+        "name": "Skylight - Class Header",
+        "path": "xplat/arfx/skylight/tools/templates/Class.hpp.template"
+      }
+    ],
+    "^xplat/arfx/skylight/.*\\.qml$": [
+      {
+        "name": "Skylight - QML File",
+        "path": "xplat/arfx/skylight/tools/templates/UI.qml.template"
+      }
+    ],
+    "^xplat/arfx/skylight/.*\\.cpp$": [
+      {
+        "name": "Skylight - Empty Implementation",
+        "path": "xplat/arfx/skylight/tools/templates/Empty.cpp.template"
+      },
+      {
+        "name": "Skylight - Class Implementation",
+        "path": "xplat/arfx/skylight/tools/templates/Class.cpp.template"
+      },
+      {
+        "name": "Skylight - Unit Test",
+        "path": "xplat/arfx/skylight/tools/templates/UnitTest.cpp.template"
+      }
+    ],
+    "^xplat/arfx/creation/.*\\.hpp$": [
+      {
+        "name": "AR Creation - Empty Header",
+        "path": "xplat/arfx/creation/tools/templates/Empty.hpp.template"
+      },
+      {
+        "name": "AR Creation - Class Header",
+        "path": "xplat/arfx/creation/tools/templates/Class.hpp.template"
+      }
+    ],
+    "^xplat/arfx/creation/.*\\.cpp$": [
+      {
+        "name": "AR Creation - Empty Implementation",
+        "path": "xplat/arfx/creation/tools/templates/Empty.cpp.template"
+      },
+      {
+        "name": "AR Creation - Class Implementation",
+        "path": "xplat/arfx/creation/tools/templates/Class.cpp.template"
+      },
+      {
+        "name": "AR Creation - Unit Test",
+        "path": "xplat/arfx/creation/tools/templates/UnitTest.cpp.template"
+      }
+    ],
+    "^xplat/arfx/desktop_player/.*\\.hpp$": [
+      {
+        "name": "Skylight - Empty Header",
+        "path": "xplat/arfx/skylight/tools/templates/Empty.hpp.template"
+      },
+      {
+        "name": "Skylight - Class Header",
+        "path": "xplat/arfx/skylight/tools/templates/Class.hpp.template"
+      }
+    ],
+    "^xplat/arfx/desktop_player/.*\\.cpp$": [
+      {
+        "name": "Skylight - Empty Implementation",
+        "path": "xplat/arfx/skylight/tools/templates/Empty.cpp.template"
+      },
+      {
+        "name": "Skylight - Class Implementation",
+        "path": "xplat/arfx/skylight/tools/templates/Class.cpp.template"
+      },
+      {
+        "name": "Skylight - Unit Test",
+        "path": "xplat/arfx/skylight/tools/templates/UnitTest.cpp.template"
+      }
+    ],
+    "^xplat/arfx/delivery/.*\\.hpp$": [
+      {
+        "name": "ARD - Empty Header",
+        "path": "xplat/arfx/delivery/tools/templates/Empty.hpp.template"
+      },
+      {
+        "name": "ARD - Class Header",
+        "path": "xplat/arfx/delivery/tools/templates/Class.hpp.template"
+      }
+    ],
+    "^xplat/arfx/delivery/.*\\.cpp$": [
+      {
+        "name": "ARD - Empty Implementation",
+        "path": "xplat/arfx/delivery/tools/templates/Empty.cpp.template"
+      },
+      {
+        "name": "ARD - Class Implementation",
+        "path": "xplat/arfx/delivery/tools/templates/Class.cpp.template"
+      }
+    ],
+    "^xplat/rsys/(?!foundation\\/).*\\.h$": [
+      {
+        "name": "rsys SDK - C Header",
+        "path": "xplat/rsys/tools/templates/CHeader.h.template"
+      },
+      {
+        "name": "rsys SDK - C++ Header",
+        "path": "xplat/rsys/tools/templates/CppHeader.h.template"
+      },
+      {
+        "name": "rsys SDK - Bridged Type Template",
+        "path": "xplat/rsys/tools/templates/BridgedType.h.template"
+      }
+    ],
+    "^xplat/rsys/(?!foundation\\/).*\\.hpp$": [
+      {
+        "name": "rsys SDK - C++ Header",
+        "path": "xplat/rsys/tools/templates/CppHeader.hpp.template"
+      }
+    ],
+    "^xplat/rsys/(?!foundation\\/).*\\.c$": [
+      {
+        "name": "rsys SDK - C Implementation",
+        "path": "xplat/rsys/tools/templates/CImplementation.c.template"
+      }
+    ],
+    "^xplat/rsys/(?!foundation\\/).*\\.cpp$": [
+      {
+        "name": "rsys SDK - C Implementation",
+        "path": "xplat/rsys/tools/templates/CImplementation.cpp.template"
+      },
+      {
+        "name": "rsys SDK - C++ Implementation",
+        "path": "xplat/rsys/tools/templates/CppImplementation.cpp.template"
+      },
+      {
+        "name": "rsys SDK - Bridged Type Implementation Template",
+        "path": "xplat/rsys/tools/templates/BridgedTypeImpl.cpp.template"
+      }
+    ],
+    "^xplat/rsys/(?!foundation\\/).*\\Tests.cpp$": [
+      {
+        "name": "rsys SDK - Unit Test Template",
+        "path": "xplat/rsys/tools/templates/UnitTest.cpp.template"
+      }
+    ]
+  },
+  "node_path": "xplat/third-party/node/bin/node",
+  "prettier_path": "tools/third-party/prettier/prettier-rpc.js",
+  "prettier_add_directive_on_format": true,
+  "workflows": {
+    "acrank-daemon": {
+      "description": "Run acrank daemon.",
+      "owner": "https://fb.workplace.com/groups/492293408066319/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/bigcode/autocomplete/acrank_daemon"
+      ]
+    },
+    "add-buck-deps": {
+      "description": "Adds BUCK deps to the given targets, or targets of modified files, and cleans up redundant added ones using fixmydeps.",
+      "owner": "https://fb.workplace.com/groups/387455791839404/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/add_buck_deps/run"
+      ]
+    },
+    "allpaths": {
+      "description": "Generate a DGW vizualization of the allpaths query between two supermodules (or arbitrary sets of buck targets).",
+      "owner": "https://fb.workplace.com/groups/2000677233573747/",
+      "command": [
+        "buck",
+        "run",
+        "fbsource//xplat/modularity:dgw_allpaths_helper",
+        "--"
+      ]
+    },
+    "android-install": {
+      "description": "Delegates to fbandroid/scripts/install_wrapper.py.",
+      "owner": "https://fb.workplace.com/groups/392546017460686/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}}/fbandroid && PYTHONPATH={{VCS_ROOT}}/fbandroid/scripts/ python3.6 -m install_wrapper \"$@\"",
+        "--"
+      ]
+    },
+    "appjobs": [
+      {
+        "description": "Perform various functions relating to AppJobs for iOS.",
+        "owner": "https://fb.workplace.com/groups/1617060138411471/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/AppJobs/appjobs.sh"
+        ]
+      }
+    ],
+    "appjobs-sanity": [
+      {
+        "description": "Sanity check for an iOS AppJob.",
+        "owner": "https://fb.workplace.com/groups/1617060138411471/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/AppJobs/sanity.py"
+        ]
+      }
+    ],
+    "arfxbuild": {
+      "description": "Invoke common workflow build tool for Spark AR codebase.",
+      "owner": "https://fb.workplace.com/groups/sparkplatformfeedback",
+      "command": [
+        "{{VCS_ROOT}}/xplat/arfx/tools/bin/arfxbuild"
+      ]
+    },
+    "arfxgen": {
+      "description": "Invoke common codegen tool for Spark AR codebase.",
+      "owner": "https://fb.workplace.com/groups/sparkplatformfeedback",
+      "command": [
+        "{{VCS_ROOT}}/xplat/arfx/tools/bin/arfxgen"
+      ]
+    },
+    "asic-build": {
+      "description": "Run RTL build on ASIC IPs.",
+      "owner": "https://fb.workplace.com/groups/asic.dev.support/",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/infra_asic_fpga/common/arcanist/rtl_build_wrapper.py"
+      ]
+    },
+    "asic-emu": {
+      "description": "Emulation workflow for ASIC.",
+      "owner": "https://fb.workplace.com/groups/asic.dev.support/",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/infra_asic_fpga/common/arcanist/emu/emu.py"
+      ]
+    },
+    "autopuller": {
+      "description": "Set up autopuller job that pulls new code and does a cold build every morning.",
+      "owner": "https://fb.workplace.com/groups/493869158431587/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/autopuller/dotslash/autopuller_init"
+      ]
+    },
+    "autopuller-test": {
+      "description": "Start or stop a test run of autopuller job.",
+      "owner": "https://fb.workplace.com/groups/493869158431587/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/autopuller/dotslash/autopuller_test_run"
+      ]
+    },
+    "bad-practices-autofix": {
+      "description": "Run the bad practices autofix script.",
+      "owner": "https://fb.workplace.com/groups/1879090572221507/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/build_defs/bad_practices/autofix/autofix.py"
+      ]
+    },
+    "bridge": {
+      "description": "Helper function to advise the user to run with a certain parameter.",
+      "owner": "https://fb.workplace.com/groups/2153988557978134/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/bridge.sh"
+      ]
+    },
+    "bridge-bloks": [
+      {
+        "description": "Bridges a style in Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/bloks/script/arc/bridge_android.sh"
+        ]
+      },
+      {
+        "description": "Bridges a style in Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/bloks/script/arc/bridge_ios.sh"
+        ]
+      }
+    ],
+    "bridge-bloks-controller": [
+      {
+        "description": "Bridges a controller (screen or action) in Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/bloks/script:bridge-screen-android",
+          "--"
+        ]
+      },
+      {
+        "description": "Bridges a controller (screen or action) in Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/bloks/script:bridge-screen-ios",
+          "--"
+        ]
+      }
+    ],
+    "buck-auto-mode": {
+      "description": "Get mode files for a given target or path.",
+      "owner": "https://fb.workplace.com/groups/buckautomode",
+      "command": [
+        "{{VCS_ROOT}}/xplat/python/interntools/build_combo/scripts/buck_auto_mode"
+      ]
+    },
+    "buckclippy": [
+      {
+        "description": "Runs Clippy via Buck for given targets.",
+        "owner": "https://fb.workplace.com/groups/learningrust/",
+        "scope": "fbcode/",
+        "command": [
+          "{{VCS_ROOT}}/fbcode/common/rust/tools/scripts/buckclippy.sh"
+        ]
+      }
+    ],
+    "buildifier": {
+      "description": "Runs Buildifier, which is used to format build files.",
+      "owner": "https://fb.workplace.com/groups/askbuck/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/third-party/buildifier/run_buildifier.py"
+      ]
+    },
+    "buildozer": {
+      "description": "Modify BUCK files using Buildozer.",
+      "owner": "https://fb.workplace.com/groups/askbuck/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/buildifier/run_buildozer.sh"
+      ]
+    },
+    "buildpilot": {
+      "description": "Track BUCK build status in CTP.",
+      "owner": "https://fb.workplace.com/groups/967178219989117",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/buildpilot"
+      ]
+    },
+    "cast": {
+      "description": "Run a codemod using cAST.",
+      "owner": "https://fb.workplace.com/groups/387455791839404/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/cAST/cast_msdk"
+      ]
+    },
+    "clang-format": {
+      "description": "Run clang-format.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/clang-format/clang-format"
+      ]
+    },
+    "clang-query-watch": {
+      "description": "Run clang-query-watch.",
+      "owner": "https://fb.workplace.com/groups/nativelinters",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/cAST/clang-query-watch/build/clang-query-watch"
+      ]
+    },
+    "codemod-service": {
+      "description": "Run CodemodService client.",
+      "owner": "https://fb.workplace.com/groups/387455791839404/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/codemod_service/msdk/bin/codemod-service"
+      ]
+    },
+    "comments-e2e": {
+      "description": "Runs UI automation (jest-e2e) test suite for fb4a conversations (comments/likes/reactions).",
+      "owner": "https://fb.workplace.com/groups/318237259476571/",
+      "command": [
+        "python3",
+        "{{VCS_ROOT}}/xplat/scripts/commentse2e/comments_e2e_tests.py"
+      ]
+    },
+    "deppy": {
+      "description": "Tool to inspect (and prioritize modifications to) the Buck dependency graph.",
+      "owner": "https://fb.workplace.com/groups/166634924772313",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/deppy"
+      ]
+    },
+    "diffing-service": {
+      "description": "An if-this-then-that framework, powered by diffing data.",
+      "owner": "https://fb.workplace.com/groups/708676486759296",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/xplat/diffing_service/runner.py"
+      ]
+    },
+    "dsfmt": {
+      "description": "Run dsfmt (Python and SQL formatter).",
+      "owner": "https://fb.workplace.com/groups/sqlformatting/",
+      "command": [
+        "{{VCS_ROOT}}/tools/lint/pyfmt/dsfmt"
+      ]
+    },
+    "dsfmtd": {
+      "description": "Run dsfmt in server mode (Python and SQL formatter).",
+      "owner": "https://fb.workplace.com/groups/sqlformatting/",
+      "command": [
+        "{{VCS_ROOT}}/tools/lint/pyfmt/dsfmtd"
+      ]
+    },
+    "dylibs": {
+      "description": "Commands to control how iOS apps are built locally with dylibs.",
+      "owner": "https://fburl.com/arc-dylibs",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/dependency_aggregator/arc-dylibs.py"
+      ]
+    },
+    "dylibs-dev": {
+      "description": "Same as 'dylibs', but runs dependency_aggregator from source. Use for dependency_aggregator development only.",
+      "owner": "https://fburl.com/arc-dylibs",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/dependency_aggregator/arc-dylibs.py",
+        "--run-from-source"
+      ]
+    },
+    "everstore": {
+      "description": "Store or fetch files from everstore.",
+      "owner": "https://fb.workplace.com/groups/everstore/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/python/everstore/everstore"
+      ]
+    },
+    "external-linter-test": {
+      "description": "Test ExternalLinter .external-linter-test tests.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/linttool",
+        "external-linter-test"
+      ]
+    },
+    "f": {
+      "description": "Apply only the `arc lint` formatter fixes.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/linttool",
+        "lint",
+        "--caller",
+        "arc_f",
+        "--lintall",
+        "--apply-patches",
+        "--take",
+        "BLACK,BUCKFORMAT,CLANGFORMAT,DARTFORMAT,GOFMT,GOOGLEJAVAFORMAT,JSONFORMAT,KTFMT,OCAMLFORMAT,PRETTIERGRAPHQL,PRETTIERJAVASCRIPT,PRETTIERMARKDOWN,PRETTIERXML,RUSTFMT,THRIFTFORMAT,UNCRUSTIFY"
+      ]
+    },
+    "falco-schema": {
+      "description": "Print Falco schema file.",
+      "owner": "https://fb.workplace.com/groups/269737853735367",
+      "command": [
+        "buck",
+        "run",
+        "//xplat/tools/logginginfra/util:print_schema"
+      ]
+    },
+    "fbios-lg-query": [
+      {
+        "description": "Query for rdeps to understand why an FBiOS target is in a platform/infra link group.",
+        "owner": "https://fb.workplace.com/groups/636570733825670/",
+        "scope": "fbobjc/",
+        "command": [
+          "python3",
+          "{{VCS_ROOT}}/fbobjc/Tools/focus_2/fbios_linkgroup_query.py",
+          "--config-path",
+          "{{VCS_ROOT}}/fbobjc/Tools/focus_2/fbios_link_group_config.json"
+        ]
+      }
+    ],
+    "fieldstats-sync": [
+      {
+        "description": "Sync WAFieldstats schema to Configerator.",
+        "owner": "https://fb.workplace.com/groups/479818642535877",
+        "scope": "fbcode/",
+        "command": [
+          "buck",
+          "run",
+          "//whatsapp/data_infra/chronos_sync:fieldstats_sync",
+          "--"
+        ]
+      }
+    ],
+    "find-handler": [
+      {
+        "description": "A utility to find an intent handler.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "python3",
+          "{{VCS_ROOT}}/fbobjc/Tools/plugins/find_handler.py"
+        ]
+      }
+    ],
+    "find-selector": [
+      {
+        "description": "A utility to find ObjC method usages via clang.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "python3",
+          "{{VCS_ROOT}}/fbobjc/Tools/find_selector.py"
+        ]
+      }
+    ],
+    "fix-fblite": {
+      "description": "Fixes issues with your FB Lite setup, like fixmyserver.",
+      "owner": "https://fb.workplace.com/groups/785652915166360/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/fblite/fixmydevenv"
+      ]
+    },
+    "fixmydeps": [
+      {
+        "description": "Attempt to add missing BUCK deps to the given BUCK file.",
+        "owner": "https://fb.workplace.com/groups/162975057669039/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/depslint/arcfixmydeps.py"
+        ]
+      }
+    ],
+    "flake8": {
+      "description": "Run Flake8.",
+      "owner": "https://fb.workplace.com/groups/fbpython/",
+      "command": [
+        "{{VCS_ROOT}}/tools/lint/flake8/flake8"
+      ]
+    },
+    "flutter": {
+      "description": "Deprecation notice for arc flutter.",
+      "owner": "https://fb.workplace.com/groups/flutter.meta",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/arvr/tools/flutter/bin/flutter-cli.py"
+      ]
+    },
+    "flutter-dart": {
+      "description": "Deprecation notice for arc flutter-dart.",
+      "owner": "https://fb.workplace.com/groups/flutter.meta",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/arvr/tools/flutter/bin/dart-cli.py"
+      ]
+    },
+    "focus": {
+      "description": "Run `arc focus-android` or `arc focus-xcode` based on the working directory.",
+      "owner": "https://fb.workplace.com/groups/1997086717053245/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mdx/focus/focus_dispatch"
+      ]
+    },
+    "focus-android": {
+      "description": "Build project slices that expose to Android Studio only the code you want to work on, so that AS runs faster.",
+      "owner": "https://fburl.com/focus-android-help",
+      "command": [
+        "{{VCS_ROOT}}/fbandroid/devEnv/focus/bin/focus"
+      ]
+    },
+    "focus-choose": {
+      "description": "Set a default version for `arc focus` if it can't be determined by working directory.",
+      "owner": "https://fb.workplace.com/groups/1997086717053245/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mdx/focus/focus-choose"
+      ]
+    },
+    "focus-index-logs": {
+      "description": "Upload Xcode index logs from recent focus 2 run.",
+      "owner": "https://fb.workplace.com/groups/259316222085023/",
+      "command": [
+        "buck",
+        "run",
+        "//fbobjc/Tools/focus_index_logs:binary"
+      ]
+    },
+    "focus-intellij": {
+      "description": "Deprecation notice for `arc focus-intellij`.",
+      "owner": "https://fburl.com/focus-android-help",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc focus-intellij** is deprecated, use **arc focus-android** instead.",
+        "--"
+      ]
+    },
+    "focus-xcode": {
+      "description": "Run arc focus xcode version 2.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/focus_2/focus2_project_generator/bin/focus2"
+      ]
+    },
+    "focus2": {
+      "description": "Run arc focus xcode version 2.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/focus_2/focus2_project_generator/bin/focus2"
+      ]
+    },
+    "focus2buck": {
+      "description": "Run arc focus xcode version 2 from buck for iosdevxx.",
+      "owner": "https://fb.workplace.com/groups/259316222085023/",
+      "command": [
+        "buck",
+        "run",
+        "//fbobjc/Tools/focus_2:binary_standalone",
+        "--"
+      ]
+    },
+    "fourmolu": {
+      "description": "The fourmolu formatter for haskell.",
+      "owner": "gustavoavena",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/fbcode/common/hs/formatter/run_fourmolu.py"
+      ]
+    },
+    "glados": {
+      "description": "The GLaDOS CLI, for running CI-related tasks.",
+      "owner": "https://fb.workplace.com/groups/967178219989117",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/glados"
+      ]
+    },
+    "google-java-format": {
+      "description": "Run google-java-format.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/google-java-format/google-java-format"
+      ]
+    },
+    "graphql": {
+      "description": "The mobile GraphQL toolchain.",
+      "owner": "https://fb.workplace.com/groups/graphql.help/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/graphql/rebuild_graphql"
+      ]
+    },
+    "ig-add-icon": {
+      "description": "Pulls image from Asset Manager.",
+      "owner": "https://fb.workplace.com/groups/241761409599887/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Apps/Instagram/AppLibraries/CoreUI/IGIcon/scripts/add_icon.py"
+      ]
+    },
+    "ig-api": {
+      "description": "Sync specs for the Instagram API framework.",
+      "owner": "https://fb.workplace.com/groups/1019364331734595",
+      "command": [
+        "{{VCS_ROOT}}/xplat/instagram/arc-ig-api/router.py"
+      ]
+    },
+    "ig-api1": {
+      "description": "Sync specs for the Instagram API framework.",
+      "owner": "https://fb.workplace.com/groups/1019364331734595",
+      "command": [
+        "{{VCS_ROOT}}/xplat/instagram/arc-ig-api/arc_ig_api"
+      ]
+    },
+    "ig-api2": {
+      "description": "Sync specs for the Instagram API framework V2.",
+      "owner": "https://fb.workplace.com/groups/1019364331734595",
+      "command": [
+        "buck",
+        "run",
+        "fbsource//xplat/instagram/arc-ig-api:arc_ig_api2",
+        "--"
+      ]
+    },
+    "ig-launcher": {
+      "description": "Generate code for Instagram Launcher for config management.",
+      "owner": "https://fb.workplace.com/groups/107546696585941/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/mobileconfig/launcher.sh"
+      ]
+    },
+    "ig-launcher-unified": {
+      "description": "Launcher cli tool replaced by mc-tool binary (only pull command replaced now).",
+      "owner": "https://fb.workplace.com/groups/mobileconfig/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/third-party/node/bin/node",
+        "{{VCS_ROOT}}/xplat/instagram/arc-ig-qe/bin/arc-ig-qe.js",
+        "--launcher"
+      ]
+    },
+    "ig-modularity": {
+      "description": "Query the Buck graph for data for Instagram modularity.",
+      "owner": "https://fb.workplace.com/groups/igiosqa/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/instagram/modularity/ig_modularity"
+      ]
+    },
+    "ig-qe": {
+      "description": "Generates code for Quick Experiments.",
+      "owner": "https://fb.workplace.com/groups/107546696585941/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/third-party/node/bin/node",
+        "{{VCS_ROOT}}/xplat/instagram/arc-ig-qe/bin/arc-ig-qe.js"
+      ]
+    },
+    "ig-qe-dev": {
+      "description": "Developer mode for arc ig-qe.",
+      "owner": "https://fb.workplace.com/groups/107546696585941/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/instagram/arc-ig-qe/scripts/dev"
+      ]
+    },
+    "ig-swift-bridge": {
+      "description": "Generates bridged Swift framework APIs from Objective-C interfaces.",
+      "owner": "https://fb.workplace.com/groups/107546696585941/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Apps/Instagram/Tools/ig_swift_bridge.py"
+      ]
+    },
+    "igios-development-libraries": {
+      "description": "Ensures that all Instagram iOS code is tested on CI.",
+      "owner": "https://fb.workplace.com/groups/igiosqa/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Apps/Instagram/Tools/DevelopmentLibraries/arc-igios-development-libraries.py"
+      ]
+    },
+    "ingen": {
+      "description": "Regenerates Ingen files using modified source code files.",
+      "owner": "https://fb.workplace.com/groups/messengeriosdevqna/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}}/fbobjc && {{VCS_ROOT}}/fbobjc/Tools/generateIngen.sh \"$@\"",
+        "--"
+      ]
+    },
+    "install-certificate": {
+      "description": "Authenticate to Jellyfish and Arcanist talk to the backend services.",
+      "owner": "https://fb.workplace.com/groups/jellyfishes/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "",
+        "--line",
+        "To authenticate, visit: **https://www.internalfb.com/intern/jf/authenticate/**",
+        "--line",
+        "",
+        "--"
+      ]
+    },
+    "install-node-modules": {
+      "description": "Runs xplat/third-party/yarn/install-node-modules.",
+      "owner": "https://fb.workplace.com/groups/frontendsupport/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/third-party/yarn/install-node-modules"
+      ]
+    },
+    "jast": {
+      "description": "Run a codemod using jAST.",
+      "owner": "https://fb.workplace.com/groups/544444009512853/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/java/com/facebook/tools/jast/jast"
+      ]
+    },
+    "jq": {
+      "description": "Run jq.",
+      "owner": "https://fb.workplace.com/groups/xplat.qa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/jq/jq"
+      ]
+    },
+    "koast": {
+      "description": "Run a codemod using koAST.",
+      "owner": "https://fb.workplace.com/groups/544444009512853/",
+      "command": [
+        "{{VCS_ROOT}}/fbandroid/java/com/facebook/tools/koast/koast"
+      ]
+    },
+    "ktfmt": {
+      "description": "Run ktfmt (Kotlin format).",
+      "owner": "https://fb.workplace.com/groups/392546017460686/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/ktfmt/ktfmt"
+      ]
+    },
+    "lightspeed": {
+      "description": "Run the msys/LightSpeed Omnigenerator.",
+      "owner": "https://fb.workplace.com/groups/406964220239960",
+      "command": [
+        "buck",
+        "run",
+        "//xplat/msys/tools/omnigui:omnigui",
+        "--verbose",
+        "0",
+        "--"
+      ]
+    },
+    "lint": {
+      "description": "Run linters via Linttool.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/linttool",
+        "lint"
+      ]
+    },
+    "lint-adunit": {
+      "description": "Deprecation notice for `arc lint-adunit`.",
+      "owner": "https://fb.workplace.com/groups/460465050668782/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-adunit** is deprecated, use **arc lint -e adunit** instead.",
+        "--"
+      ]
+    },
+    "lint-androidlint": {
+      "description": "Run Full Mode Android Lint with `arc lint -e androidlint`.",
+      "owner": "https://fb.workplace.com/groups/androidlint/",
+      "command": [
+        "arc",
+        "lint",
+        "--engine",
+        "androidlint"
+      ]
+    },
+    "lint-arfx": {
+      "description": "Deprecation notice for `arc lint-arfx`.",
+      "owner": "https://fburl.com/spark_dev_infra_oncall",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-arfx** is deprecated, use **arc lint -e arfx** instead.",
+        "--"
+      ]
+    },
+    "lint-clang-tidy": {
+      "description": "Run Lint with the clang-tidy checker.",
+      "owner": "https://fb.workplace.com/groups/fbcode.foundation/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-clang-tidy** is deprecated, use **arc lint -e extra** instead.",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-clang-tidy** will be removed soon.",
+        "--cmd",
+        "arc lint --engine extra --take CLANGTIDY",
+        "--"
+      ]
+    },
+    "lint-cpp": {
+      "description": "Run Lint with the clang-tidy checker.",
+      "owner": "https://fb.workplace.com/groups/fbcode.foundation/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-cpp** is deprecated, use **arc lint -e extra** instead.",
+        "--"
+      ]
+    },
+    "lint-deps": {
+      "description": "Run Depslint for fbobjc changes.",
+      "owner": "https://fb.workplace.com/groups/depslintfeedback/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-deps** is deprecated, use **arc lint -e extra** instead.",
+        "--cmd",
+        "arc lint --engine extra --take DEPS",
+        "--"
+      ]
+    },
+    "lint-extra": {
+      "description": "Run `arc lint -e extra`.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-extra** is deprecated, use **arc lint -e extra** instead.",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-extra** will be removed soon.",
+        "--cmd",
+        "arc lint --engine extra",
+        "--"
+      ]
+    },
+    "lint-howtoeven": {
+      "description": "Run Lint for the Howtoeven checker.",
+      "owner": "https://fb.workplace.com/groups/howtoeven/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-howtoeven** is deprecated, use **arc lint -e extra** instead.",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **HOWTOEVEN** has been replaced with **CLANGTIDY**, which runs via **arc lint -e extra**.",
+        "--"
+      ]
+    },
+    "lint-nullsafe": {
+      "description": "Deprecation notice for `arc lint-nullsafe`.",
+      "owner": "https://fb.workplace.com/groups/2003831956542003/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-nullsafe** is deprecated, use **arc lint -e nullsafe** instead.",
+        "--"
+      ]
+    },
+    "lint-rust": {
+      "description": "Deprecation notice for `arc lint-rust`.",
+      "owner": "https://fb.workplace.com/groups/learningrust/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--cmd",
+        "arc lint --engine extra",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-rust** is deprecated, use **arc lint -e extra** instead.",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-rust** will be removed soon.",
+        "--"
+      ]
+    },
+    "lint-tf": {
+      "description": "Deprecation notice for `arc lint-tf`.",
+      "owner": "https://fb.workplace.com/groups/783571305080685/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-tf** is deprecated, use **arc lint -e terraform** instead.",
+        "--"
+      ]
+    },
+    "lint-thrift": {
+      "description": "Deprecation notice for `arc lint-thrift`.",
+      "owner": "https://fb.workplace.com/groups/thriftusers/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-thrift** is deprecated, use **arc lint -e thrift** instead.",
+        "--"
+      ]
+    },
+    "lint-vscode-infra": {
+      "description": "Deprecation notice for `arc lint-vscode-infra`.",
+      "owner": "https://fb.workplace.com/groups/vscode.eng/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc lint-vscode-infra** is deprecated, use **arc lint -e vscodeinfra** instead.",
+        "--"
+      ]
+    },
+    "linttool": {
+      "description": "Run Linttool via DotSlash.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/linttool"
+      ]
+    },
+    "listtargets": [
+      {
+        "description": "Lists all aliased targets for fbobjc/.",
+        "owner": "https://fb.workplace.com/groups/967178219989117",
+        "scope": "fbobjc/",
+        "command": [
+          "fbpython",
+          "{{VCS_ROOT}}/fbobjc/Tools/arc_listtargets.py"
+        ]
+      }
+    ],
+    "local-payment-service": {
+      "description": "Setup the local payment services.",
+      "owner": "https://fb.workplace.com/groups/695480131800017",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/payment/utils/OnDemand/arc_setup_service.sh"
+      ]
+    },
+    "local-profiling-setup": {
+      "description": "Unpack IPA and dSYM needed for app profiling.",
+      "owner": "https://fb.workplace.com/groups/iOSreliability",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/local_profiling_setup.sh"
+      ]
+    },
+    "longestpath": {
+      "description": "Dumps the longest path in a buck target's dependency graph.",
+      "owner": "https://fb.workplace.com/groups/2116332615111503/",
+      "command": [
+        "buck",
+        "run",
+        "//xplat/python/buck_longest_path:buck_longest_path",
+        "--"
+      ]
+    },
+    "ls-analytics-lookup": {
+      "description": "Looks up an analytics event name and biggrep url when given an event id.",
+      "owner": "https://fb.workplace.com/groups/messengeriosdevqna/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Apps/LightSpeed/scripts/ls_analytics_lookup.py"
+      ]
+    },
+    "maven-sandcastle": {
+      "description": "Trigger Sandcastle builds for Maven projects on the currently checked out revision.",
+      "owner": "https://fb.workplace.com/groups/java.eng/",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/javafoundations/scripts/maven-sandcastle.py"
+      ]
+    },
+    "mc": {
+      "description": "MobileConfig client-driven workflow.",
+      "owner": "https://fb.workplace.com/groups/mobileconfig/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/mobileconfig/mobileconfig.sh"
+      ]
+    },
+    "mc-tool": {
+      "description": "Command line tool to create/edit MobileConfig schema definition.",
+      "owner": "https://fb.workplace.com/groups/mobileconfig/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/mobileconfig/editor.sh"
+      ]
+    },
+    "mod-selector": [
+      {
+        "description": "Uses cAST to fixup ObjC Selectors.",
+        "owner": "https://fb.workplace.com/groups/189599014981025",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/selectors/fixup.py"
+        ]
+      }
+    ],
+    "modularity-ranker": {
+      "description": "Tools to prioritize modularity work.",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "buck",
+        "run",
+        "fbsource//xplat/modularity:ranker",
+        "--"
+      ]
+    },
+    "msys-explain": {
+      "description": "Describes multiple types of msys BUCK macros (CQL, Mailbox, etc.).",
+      "owner": "https://fb.workplace.com/groups/406964220239960",
+      "command": [
+        "buck",
+        "run",
+        "--verbose",
+        "0",
+        "//xplat/msys/tools/msys_explain:msys_explain",
+        "--"
+      ]
+    },
+    "msys-omnigenerator": {
+      "description": "Performs schema validation and msys codegen. See https://fburl.com/wiki/pgs561jb",
+      "owner": "https://fb.workplace.com/groups/406964220239960",
+      "command": [
+        "{{VCS_ROOT}}/xplat/msys/tools/scripts/omnigenerator.py"
+      ]
+    },
+    "msys-tal": {
+      "description": "Command line tool to create/edit TAL events.",
+      "owner": "https://fb.workplace.com/groups/545207162976772",
+      "command": [
+        "{{VCS_ROOT}}/xplat/messenger/tal/tool/editor.sh"
+      ]
+    },
+    "msys-where": {
+      "description": "Locate generated files from an MSYS (CQL/mailbox) target.",
+      "owner": "https://fb.workplace.com/groups/406964220239960",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/xplat/msys/tools/scripts/headers.py"
+      ]
+    },
+    "multisect": {
+      "description": "Automated bisect using Fast Multisect CLI.",
+      "owner": "https://fb.workplace.com/groups/testinfra.wtf",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/ctp/fast_multisect/bin/multisect"
+      ]
+    },
+    "myles": {
+      "description": "Myles file search CLI.",
+      "owner": "https://fb.workplace.com/groups/myles.search/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/myles"
+      ]
+    },
+    "nano": {
+      "description": "Same as `arc sanity`.",
+      "owner": "https://fburl.com/mobile_devxx_oncall",
+      "command": [
+        "{{VCS_ROOT}}/xplat/python/sanitycheck/arc-nano.sh"
+      ]
+    },
+    "nano-check": {
+      "description": "Same as `arc sanity`.",
+      "owner": "https://fburl.com/mobile_devxx_oncall",
+      "command": [
+        "{{VCS_ROOT}}/xplat/python/sanitycheck/arc-nano.sh"
+      ]
+    },
+    "new-pluggable-module": [
+      {
+        "description": "Generates an empty Pluggable Module.",
+        "owner": "https://fb.workplace.com/groups/299405163874686/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Apps/Instagram/AppLibraries/IGPluggableModule/creation-helper/create_pluggable_module.py"
+        ]
+      }
+    ],
+    "new-target": [
+      {
+        "description": "Generates a new BUCK via nbp.py.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "arc",
+          "scarf",
+          "ios-buck-target"
+        ]
+      }
+    ],
+    "nn": {
+      "description": "Run nullsafe typechecker on the current change.",
+      "owner": "https://fb.workplace.com/groups/nullsafe",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/infer/nn/scripts/arc-nn.sh",
+        "--"
+      ]
+    },
+    "node": {
+      "description": "Run FBSource's Node.js.",
+      "owner": "https://fb.workplace.com/groups/frontendsupport/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/third-party/node/bin/node"
+      ]
+    },
+    "nt-bridge": [
+      {
+        "description": "Run `ntBridge.py` for fbobjc.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/ios:bridge",
+          "--"
+        ]
+      },
+      {
+        "description": "Run `ntBridge.py` for fbandroid.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/android:bridge",
+          "--"
+        ]
+      }
+    ],
+    "nt-gen-app": [
+      {
+        "description": "Run `ntGenApp.py` for fbandroid.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/android:gen-app",
+          "--"
+        ]
+      },
+      {
+        "description": "Run `ntGenApp.py` for fbobjc.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/ios:gen-app",
+          "--"
+        ]
+      }
+    ],
+    "nt-rebuild": {
+      "description": "Alias for `arc rebuild-nt`.",
+      "owner": "https://fb.workplace.com/groups/ntusers/",
+      "command": [
+        "arc",
+        "rebuild-nt"
+      ]
+    },
+    "nt-support": [
+      {
+        "description": "Run `ntSupport.py` for fbandroid.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/android:support",
+          "--"
+        ]
+      },
+      {
+        "description": "Run `ntSupport.py` for fbobjc.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/ios:support",
+          "--"
+        ]
+      }
+    ],
+    "nullability": {
+      "description": "Tool for working with iOS source and nullability annotations.",
+      "owner": "https://fb.workplace.com/groups/187190633170385/permalink/200768988479216/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/nullability/msdk/nullability"
+      ]
+    },
+    "nullbase": {
+      "description": "Run `nullbase`.",
+      "owner": "https://fb.workplace.com/groups/nullsafe",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/infer/nullbase/nullbase"
+      ]
+    },
+    "only": {
+      "description": "Run `jf preview --no-sandcastle` (like `arc diff --only`).",
+      "owner": "https://fb.workplace.com/groups/jellyfishes/",
+      "command": [
+        "sh",
+        "-c",
+        "jf preview --no-sandcastle",
+        "--"
+      ]
+    },
+    "paste": {
+      "description": "Run `pastry`.",
+      "owner": "https://fb.workplace.com/groups/arcanist/",
+      "command": [
+        "pastry"
+      ]
+    },
+    "patternlint": {
+      "description": "Pattern Lint CLI.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/lint/patternlint/patternlint.py"
+      ]
+    },
+    "pixel": {
+      "description": "Uploads a file to Pixelcloud.",
+      "owner": "https://fb.workplace.com/groups/hack.of.the.day/permalink/4087324804649437/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/pixelcloud/pixelcloud_upload.sh"
+      ]
+    },
+    "playground": [
+      {
+        "description": "Focus on a Playground app.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Apps/Internal/Playgrounds/Tools/msdk/playground"
+        ]
+      },
+      {
+        "description": "Run Android Playground app.",
+        "owner": "https://fb.workplace.com/groups/1430200360634661/",
+        "scope": "fbandroid",
+        "command": [
+          "{{VCS_ROOT}}/fbandroid/java/com/facebook/playground/tools/playground-android"
+        ]
+      }
+    ],
+    "playground-dev": [
+      {
+        "description": "Focus on a Playground app (Development Edition).",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//fbobjc/Apps/Internal/Playgrounds/Tools:playground",
+          "--",
+          "--skip-msdk-release"
+        ]
+      },
+      {
+        "description": "Run Android Playground app (Development Edition).",
+        "owner": "https://fb.workplace.com/groups/1430200360634661/",
+        "scope": "fbandroid",
+        "command": [
+          "buck",
+          "run",
+          "//fbandroid/java/com/facebook/playground/tools:playground",
+          "--"
+        ]
+      }
+    ],
+    "playground-modularity-opportunities": [
+      {
+        "description": "Find opportunities to modularize your playground scenario.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "buck",
+          "run",
+          "//fbobjc/Apps/Internal/Playgrounds/Tools:playground_modularity_opportunities",
+          "--"
+        ]
+      }
+    ],
+    "playground-nt-styles": [
+      {
+        "description": "Find NT styles needed in a playground scenario.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "buck",
+          "run",
+          "//fbobjc/Apps/Internal/Playgrounds/Tools:playground_missing_nt_styles",
+          "--"
+        ]
+      }
+    ],
+    "playground-plugins": [
+      {
+        "description": "Find missing plugins in a playground scenario.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Apps/Internal/Playgrounds/Tools/msdk/missing_plugins"
+        ]
+      }
+    ],
+    "playground-sandcastle-integration": [
+      {
+        "description": "Create jobs for stable artifacts for playground scenarios.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Apps/Internal/Playgrounds/Tools/msdk/sandcastle_integration"
+        ]
+      }
+    ],
+    "playground-sync-deps": [
+      {
+        "description": "Runs the sync deps script for updating iOS Playground Scenarios dependency graph.",
+        "owner": "https://fb.workplace.com/groups/playgroundapps/",
+        "scope": "fbobjc",
+        "command": [
+          "buck",
+          "run",
+          "//fbobjc/Apps/Internal/Playgrounds/Tools:playground_gather_deps",
+          "--"
+        ]
+      }
+    ],
+    "plugins": [
+      {
+        "description": "Perform various functions relating to Plugins for iOS.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/plugins/plugins.sh"
+        ]
+      }
+    ],
+    "plugins-enabled": [
+      {
+        "description": "Determine if plugins are enabled for an test/binary.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "python3",
+          "{{VCS_ROOT}}/fbobjc/Tools/plugins/plugins_enabled.py"
+        ]
+      }
+    ],
+    "plugins-find": [
+      {
+        "description": "Given a SOCKET id, find files with plugins in the codebase.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/configurations/buck/apple/plugins/tools/find_plugins/xplugins_find"
+        ]
+      }
+    ],
+    "plugins-only": [
+      {
+        "description": "A script which you can run to automatically find/update libraries to be plugins_only = True.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "fbpython",
+          "{{VCS_ROOT}}/xplat/configurations/buck/apple/plugins/tools/plugins_only/cli.py"
+        ]
+      }
+    ],
+    "plugins-pin": [
+      {
+        "description": "Pin a library (with plugins) to all plugin-enabled binary targets that depend on it.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/configurations/buck/apple/plugins/tools/pin_library/msdk/pin_library"
+        ]
+      }
+    ],
+    "plugins-query": [
+      {
+        "description": "See all of the plugin feature declarations in a target.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/configurations/buck/apple/plugins/tools/query/xplugins_query/xplugins_query"
+        ]
+      }
+    ],
+    "plugins-regen": [
+      {
+        "description": "Regenerate specific plugin files.",
+        "owner": "https://fb.workplace.com/groups/168653277111190/",
+        "scope": "fbobjc/",
+        "command": [
+          "python3",
+          "{{VCS_ROOT}}/fbobjc/Tools/plugins/plugins_regen.py"
+        ]
+      }
+    ],
+    "popcorn-cli": {
+      "description": "Run popcorn-cli.",
+      "owner": "https://fb.workplace.com/groups/885593154973643/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/cameracore/popcorn/cli/dotslash/popcorn_cli"
+      ]
+    },
+    "prettier": {
+      "description": "Run Prettier.",
+      "owner": "https://fb.workplace.com/groups/prettiercode/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/prettier/prettier"
+      ]
+    },
+    "prewarm": {
+      "description": "Force various download caches to be warmed up.",
+      "owner": "https://fb.workplace.com/groups/xplat.qa/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/workflow/prewarm.py"
+      ]
+    },
+    "pull": {
+      "description": "Rebase onto the best available commit.",
+      "owner": "https://fb.workplace.com/groups/per.app.stable",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/workflow/pull"
+      ]
+    },
+    "pyfmt": {
+      "description": "Run pyfmt (black & isort).",
+      "owner": "https://fb.workplace.com/groups/black.py/",
+      "command": [
+        "{{VCS_ROOT}}/tools/lint/pyfmt/pyfmt"
+      ]
+    },
+    "pyfmtd": {
+      "description": "Run pyfmtd (pyfmt server mode).",
+      "owner": "https://fb.workplace.com/groups/black.py/",
+      "command": [
+        "{{VCS_ROOT}}/tools/lint/pyfmt/pyfmtd"
+      ]
+    },
+    "pyre": {
+      "description": "Run the Pyre client.",
+      "owner": "https://fb.workplace.com/groups/pyreqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/pyre/stable/pyre_client"
+      ]
+    },
+    "pyre-build": {
+      "description": "Run fast Pyre linktree builder.",
+      "owner": "https://fb.workplace.com/groups/295311271085134/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/pyre/buck_project_builder"
+      ]
+    },
+    "reachability-analysis": {
+      "description": "Generate dot graph for analyzing import graph within a single module and split commands for breaking up the module.",
+      "owner": "https://fb.workplace.com/groups/1760130930776407/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/rust/reachability_analysis/arc.sh"
+      ]
+    },
+    "rebuild": {
+      "description": "Redirects to rebuild-bloks, rebuild-nt, or rebuild-graphql.",
+      "owner": "https://fb.workplace.com/groups/ntusers/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/rebuild.sh"
+      ]
+    },
+    "rebuild-bloks": [
+      {
+        "description": "Rebuilds Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/bloks/script/arc/rebuild_android.sh"
+        ]
+      },
+      {
+        "description": "Rebuilds Bloks.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/bloks/script/arc/rebuild_ios.sh"
+        ]
+      },
+      {
+        "description": "Rebuilds Bloks for IG Lite Carbon.",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbcode/fblite/unity/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/bloks/script/arc/rebuild_carbon.sh"
+        ]
+      }
+    ],
+    "rebuild-bloks-dev": [
+      {
+        "description": "Rebuilds Bloks for Android using buck run (Dev Mode).",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/bloks/script:rebuild-android",
+          "--",
+          "--dry"
+        ]
+      },
+      {
+        "description": "Rebuilds Bloks for iOS using buck run (Dev Mode).",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/bloks/script:rebuild-ios",
+          "--",
+          "--dry"
+        ]
+      },
+      {
+        "description": "Rebuilds Bloks for IG Lite Carbon using buck run (Dev Mode).",
+        "owner": "https://fb.workplace.com/groups/2153988557978134/",
+        "scope": "fbcode/fblite/unity/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/bloks/script:rebuild-carbon",
+          "--",
+          "--dry"
+        ]
+      }
+    ],
+    "rebuild-graphql": {
+      "description": "Builds graphql generated files.",
+      "owner": "https://fb.workplace.com/groups/graphql.help/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/graphql/rebuild_graphql",
+        "--run-rebuild-graphql"
+      ]
+    },
+    "rebuild-graphql-dev": {
+      "description": "For developers working on GraphQL tooling. Runs tooling via buck run to pick up any changes to xplat/graphql/ Python source changes.",
+      "owner": "https://fb.workplace.com/groups/graphql.help/",
+      "command": [
+        "buck",
+        "run",
+        "//xplat/graphql:rebuild_graphql_bin",
+        "--"
+      ]
+    },
+    "rebuild-nt": [
+      {
+        "description": "Run `ntMinifiedConstAndStyleGen.py` for fbandroid.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/nativetemplates/scripts/msdk/rebuild.android",
+          "--invoked-via-bot"
+        ]
+      },
+      {
+        "description": "Run `ntMinifiedConstAndStyleGen.py` for fblite.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbcode/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/nativetemplates/scripts/msdk/rebuild.android",
+          "--invoked-via-bot",
+          "--fbcode-source"
+        ]
+      },
+      {
+        "description": "Run `ntMinifiedConstAndStyleGen.py` for fbobjc.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/nativetemplates/scripts/msdk/rebuild.ios",
+          "--invoked-via-bot"
+        ]
+      }
+    ],
+    "rebuild-nt-dev": [
+      {
+        "description": "Buck run `ntMinifiedConstAndStyleGen.py` for fbandroid.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/android:rebuild",
+          "--",
+          "--invoked-via-bot"
+        ]
+      },
+      {
+        "description": "Buck run `ntMinifiedConstAndStyleGen.py` for fblite.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbcode/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/android:rebuild",
+          "--",
+          "--invoked-via-bot",
+          "--fbcode-source"
+        ]
+      },
+      {
+        "description": "Buck run `ntMinifiedConstAndStyleGen.py` for fbobjc.",
+        "owner": "https://fb.workplace.com/groups/ntusers/",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource//xplat/nativetemplates/scripts/ios:rebuild",
+          "--",
+          "--invoked-via-bot"
+        ]
+      }
+    ],
+    "rebuild-omnistore-graphql": {
+      "description": "Builds graphql generated files and omnistore flatbuffer schema.",
+      "owner": "https://fb.workplace.com/groups/1696663473948484/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}} && ./xplat/omnistore/graphqlutil/build_omnistore_flatbuffer_schema.py \"$@\"",
+        "--"
+      ]
+    },
+    "refocus": {
+      "description": "Run `arc refocus-android` or `arc refocus-xcode` based on the working directory.",
+      "owner": "https://fb.workplace.com/groups/1997086717053245/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mdx/focus/refocus_dispatch"
+      ]
+    },
+    "refocus-android": [
+      {
+        "description": "Reruns your last focus-android command.",
+        "owner": "https://fburl.com/focus-android-help",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/fbandroid/devEnv/focus/bin/refocus"
+        ]
+      }
+    ],
+    "refocus-announcer": {
+      "description": "Regenerates announcer files only.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}}/fbobjc && {{VCS_ROOT}}/fbobjc/Tools/focus/run.sh --refocus --codegen announcer \"$@\"",
+        "--"
+      ]
+    },
+    "refocus-inc": {
+      "description": "Run arc refocus incremental.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/focus_2/incremental/refocus_inc_project_generator/bin/refocus_inc"
+      ]
+    },
+    "refocus-inc-dev": {
+      "description": "Run arc refocus incremental from buck for iosdevxx.",
+      "owner": "https://fb.workplace.com/groups/259316222085023/",
+      "command": [
+        "buck",
+        "run",
+        "//fbobjc/Tools/focus_2/incremental:binary_standalone",
+        "--"
+      ]
+    },
+    "refocus-ingen-module": {
+      "description": "Regenerates ingen-module files only.",
+      "owner": "https://fb.workplace.com/groups/messengeriosdevqna/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}}/fbobjc && {{VCS_ROOT}}/fbobjc/Tools/focus/run.sh --refocus --codegen ingen-module \"$@\"",
+        "--"
+      ]
+    },
+    "refocus-remodel": {
+      "description": "Regenerates remodel files only.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}}/fbobjc && {{VCS_ROOT}}/fbobjc/Tools/focus/run.sh --refocus --codegen remodel \"$@\"",
+        "--"
+      ]
+    },
+    "refocus-xcode": [
+      {
+        "description": "Reruns your last focus command.",
+        "owner": "https://fb.workplace.com/groups/967178219989117/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/refocus/refocus.py"
+        ]
+      }
+    ],
+    "refocus2": {
+      "description": "Run arc focus xcode version 2 in refocus mode.",
+      "owner": "https://fb.workplace.com/groups/967178219989117/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/focus_2/focus2_project_generator/bin/focus2",
+        "--refocus"
+      ]
+    },
+    "remodel": {
+      "description": "Regenerates code from Remodel files.",
+      "owner": "https://fb.workplace.com/groups/802242053157745/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc remodel** is no longer supported, because checked-in Remodel files have been deprecated. Instead, update your library to use **autoglob** and **Buck-based Remodel generation**:",
+        "--line",
+        "",
+        "--line",
+        "- **https://www.internalfb.com/intern/wiki/Fb_apple_library/Autoglob/**",
+        "--line",
+        "- **https://www.internalfb.com/intern/wiki/Remodel/Automatic_Generation_With_Buck/**",
+        "--"
+      ]
+    },
+    "repro": {
+      "description": "Repro errors on diffs.",
+      "owner": "https://fb.workplace.com/groups/codetestingqa/",
+      "command": [
+        "python3",
+        "{{VCS_ROOT}}/fbcode/foundation/scripts/arc_repro_wrapper.py"
+      ]
+    },
+    "rfr": {
+      "description": "Repo Find+Replace.",
+      "owner": "https://fb.workplace.com/groups/xplat.qa/",
+      "command": [
+        "xplat/python/xplatdevx/rfr"
+      ]
+    },
+    "rsys-sanity-lite": [
+      {
+        "description": "Runs sanity tests using with support for OnDemand.",
+        "owner": "https://fb.workplace.com/groups/rsysusers",
+        "scope": "xplat/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/rsys/tools/rsys_sanity_lite.sh"
+        ]
+      }
+    ],
+    "rulekeydiff": {
+      "description": "Runs a rulekey diff as described in https://fburl.com/rulekeydiff",
+      "owner": "https://fb.workplace.com/groups/askbuck/",
+      "command": [
+        "python3",
+        "{{VCS_ROOT}}/xplat/build_infra/rulekeys/rulekeydiff.py"
+      ]
+    },
+    "run-xcode-compile": [
+      {
+        "description": "Bring the Xcode window into focus and start compilation. Use in conjunction with arc focus.",
+        "owner": "https://fb.workplace.com/groups/967178219989117/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/focus_2/stand_alone/run_xcode_compile.py"
+        ]
+      }
+    ],
+    "rustfmt": {
+      "description": "Run rustfmt.",
+      "owner": "https://fb.workplace.com/groups/learningrust/",
+      "command": [
+        "{{VCS_ROOT}}/tools/third-party/rustfmt/rustfmt",
+        "--config-path",
+        "{{VCS_ROOT}}/tools/rust/ossconfigs/rustfmt.toml",
+        "--unstable-features",
+        "--skip-children"
+      ]
+    },
+    "sandcastle": {
+      "description": "Deprecation notice for `arc sandcastle`.",
+      "owner": "https://fb.workplace.com/groups/arcanist/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc sandcastle** is deprecated, use **jf sandcastle** instead.",
+        "--"
+      ]
+    },
+    "sandcastle-e2e": {
+      "description": "Start Sandcastle E2E Android and iOS jobs.",
+      "owner": "https://fb.workplace.com/groups/endtoend.testing/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/endtoend/sandcastle_e2e/sandcastle_e2e.py"
+      ]
+    },
+    "sanity": [
+      {
+        "description": "Runs the android-sanity-check tool to build/test your modified targets.",
+        "owner": "https://fburl.com/mobile_devxx_oncall",
+        "scope": "fbandroid/",
+        "command": [
+          "buck",
+          "run",
+          "android-sanity-check",
+          "-v",
+          "0",
+          "--"
+        ]
+      },
+      {
+        "description": "Runs the fbcode-sanity-check tool to build/test your modified targets.",
+        "owner": "https://fburl.com/mobile_devxx_oncall",
+        "scope": "fbcode/",
+        "command": [
+          "buck",
+          "run",
+          "fbcode-sanity-check",
+          "-v",
+          "0",
+          "--",
+          "--config",
+          "xplat.available_platforms=CXX,FBCODE"
+        ]
+      },
+      {
+        "description": "Runs the fbsource-sanity-check tool to build/test your modified targets.",
+        "owner": "https://fburl.com/mobile_devxx_oncall",
+        "scope": "xplat/",
+        "command": [
+          "buck",
+          "run",
+          "fbsource-sanity-check",
+          "-v",
+          "0",
+          "--"
+        ]
+      },
+      {
+        "description": "Runs the ios-sanity-check tool to build/test your modified targets.",
+        "owner": "https://fburl.com/mobile_devxx_oncall",
+        "scope": "fbobjc/",
+        "command": [
+          "buck",
+          "run",
+          "ios-sanity-check",
+          "-v",
+          "0",
+          "--"
+        ]
+      }
+    ],
+    "scarf": {
+      "description": "Start Scarf, which is a command line based scaffolding tool that helps generating boilerplate code.",
+      "owner": "https://www.internalfb.com/intern/wiki/Scarf/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scarf/scarf"
+      ]
+    },
+    "scenes": {
+      "description": "Generate scenes platform events code for specified platforms.",
+      "owner": "https://www.internalfb.com/intern/wiki/Scenes/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/tools/scenes/schema_gen"
+      ]
+    },
+    "screencap": [
+      {
+        "description": "Android emulator or device screen capture (single frame), with optional upload to Pixelcloud (add -px).",
+        "owner": "https://fb.workplace.com/groups/rn.support/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+          "sca"
+        ]
+      },
+      {
+        "description": "iOS simulator or device screen capture (single frame), with optional upload to Pixelcloud (add -px).",
+        "owner": "https://fb.workplace.com/groups/rn.support/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+          "sci"
+        ]
+      }
+    ],
+    "screencap-android": {
+      "description": "Android emulator or device screen capture (single frame), with optional upload to Pixelcloud (add -px).",
+      "owner": "https://fb.workplace.com/groups/rn.support/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+        "sca"
+      ]
+    },
+    "screencap-ios": {
+      "description": "iOS simulator or device screen capture (single frame), with optional upload to Pixelcloud (add -px).",
+      "owner": "https://fb.workplace.com/groups/rn.support/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+        "sci"
+      ]
+    },
+    "screenrecord": [
+      {
+        "description": "Android emulator or device screen recording (video), with optional upload to Pixelcloud (add -px).",
+        "owner": "https://fb.workplace.com/groups/rn.support/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+          "sra"
+        ]
+      },
+      {
+        "description": "iOS simulator or device screen recording (video), with optional upload to Pixelcloud (add -px).",
+        "owner": "https://fb.workplace.com/groups/rn.support/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+          "sri"
+        ]
+      }
+    ],
+    "screenrecord-android": {
+      "description": "Android emulator or device screen recording (video), with optional upload to Pixelcloud (add -px).",
+      "owner": "https://fb.workplace.com/groups/rn.support/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+        "sra"
+      ]
+    },
+    "screenrecord-ios": {
+      "description": "iOS simulator or device screen recording (video), with optional upload to Pixelcloud (add -px).",
+      "owner": "https://fb.workplace.com/groups/rn.support/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/scripts/mobile/screen_recording.sh",
+        "sri"
+      ]
+    },
+    "scsc": {
+      "description": "Source Control Service Client (scsc).",
+      "owner": "https://fb.workplace.com/scm/",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/scm/service/client/scsc"
+      ]
+    },
+    "security-codemod": {
+      "description": "Run the security codemod scripts.",
+      "owner": "https://fb.workplace.com/groups/581629342044285",
+      "command": [
+        "{{VCS_ROOT}}/fbcode/security/prodsec_native/prevention/build/security_codemod"
+      ]
+    },
+    "sheriff-ninja-land": [
+      {
+        "description": "Ninja lands current commit. Used by sheriffs only.",
+        "owner": "https://fb.workplace.com/groups/mobile.sheriff.fyi/",
+        "scope": "fbandroid/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/python/interntools/sheriff_ninja_land/sheriff_ninja_land.py",
+          "--oncall",
+          "fbandroid_sheriff"
+        ]
+      },
+      {
+        "description": "Ninja lands current commit. Used by sheriffs only.",
+        "owner": "https://fb.workplace.com/groups/mobile.sheriff.fyi/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/python/interntools/sheriff_ninja_land/sheriff_ninja_land.py",
+          "--oncall",
+          "fbobjc_sheriff"
+        ]
+      }
+    ],
+    "signedsource": {
+      "description": "Sign and verify file signatures.",
+      "owner": "https://fb.workplace.com/groups/codegen.frameworks/",
+      "command": [
+        "python3",
+        "{{VCS_ROOT}}/xplat/python/signedsource_lib/signedsource.py"
+      ]
+    },
+    "skycastle": {
+      "description": "Skycastle CLI for CI workflows.",
+      "owner": "https://fb.workplace.com/groups/skycastle.eng/",
+      "command": [
+        "{{VCS_ROOT}}/tools/skycastle/skycastle"
+      ]
+    },
+    "sm-autofix": {
+      "description": "Runs supermodule validation and suggests/applies changes to configs based on results (run from fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/rust/supermodules/supermodulator/supermodulator",
+        "autofix"
+      ]
+    },
+    "sm-manifest": {
+      "description": "Dump the list of supermodules in a target. Must be run from the same cell the target lives in (fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/rust/supermodules/manifest/supermodule_manifest"
+      ]
+    },
+    "sm-query": {
+      "description": "See all of the targets in a supermodule.",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/configurations/buck/supermodules/query.py"
+      ]
+    },
+    "sm-validate": {
+      "description": "Validate the supermodule rules in a target. Must be run from the same cell the target lives in (fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/rust/supermodules/validate/supermodule_validation"
+      ]
+    },
+    "sort-unordered-deps": {
+      "description": "A script which can sort args for assert_sorted, conditional_deps, dylib_dep, and other functions.",
+      "owner": "https://fb.workplace.com/groups/2116332615111503",
+      "command": [
+        "{{VCS_ROOT}}/xplat/unordered_deps_sort/unordered_deps_sort",
+        "--functions",
+        "assert_sorted",
+        "conditional_deps",
+        "dylib_deps",
+        "ig_dylib_deps"
+      ]
+    },
+    "spacecraft": {
+      "description": "Runs the CLI tool for Spacecraft Developers.",
+      "owner": "https://www.internalfb.com/omh/view/spacecraft/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/spacecraft/sc"
+      ]
+    },
+    "split-library": [
+      {
+        "description": "Helper to split plugins out of ObjC libraries.",
+        "owner": "https://fb.workplace.com/groups/1429671253737852/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/split-big-libs-helper/split_library2"
+        ]
+      }
+    ],
+    "split-library-old": [
+      {
+        "description": "Helps with splitting up ObjC libraries.",
+        "owner": "https://fb.workplace.com/groups/1429671253737852/",
+        "scope": "fbobjc/",
+        "command": [
+          "{{VCS_ROOT}}/fbobjc/Tools/split-big-libs-helper/split-library.py"
+        ]
+      }
+    ],
+    "stable": {
+      "description": "Get commits that are stable for repo or for apps.",
+      "owner": "https://fb.workplace.com/groups/per.app.stable",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/workflow/arc_stable"
+      ]
+    },
+    "stack-format": {
+      "description": "Format the current stack.",
+      "owner": "https://fb.workplace.com/groups/lintqa/",
+      "command": [
+        "{{VCS_ROOT}}/tools/arcanist/workflow/stack-format.sh"
+      ]
+    },
+    "stamp": {
+      "description": "Approve diffs via `jf action --accept`.",
+      "owner": "https://fb.workplace.com/groups/jellyfishes/",
+      "command": [
+        "jf",
+        "action",
+        "--accept"
+      ]
+    },
+    "submit": {
+      "description": "Deprecation notice for `arc submit`.",
+      "owner": "https://fb.workplace.com/groups/arcanist/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc submit** has been removed - it was an experimental workflow.",
+        "--line",
+        "Use **arc lint && jf submit** instead.",
+        "--"
+      ]
+    },
+    "supermodulator": {
+      "description": "A helper to add and remove buck targets from supermodules as well as edit the supermodules themselves.",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/rust/supermodules/supermodulator/supermodulator"
+      ]
+    },
+    "supermodule-autofix": {
+      "description": "Runs supermodule validation and suggests/applies changes to configs based on results (run from fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "arc",
+        "sm-autofix"
+      ]
+    },
+    "supermodule-manifest": {
+      "description": "Dump the list of supermodules in a target. Must be run from the same cell the target lives in (fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "arc",
+        "sm-manifest"
+      ]
+    },
+    "supermodule-query": {
+      "description": "See all of the targets in a supermodule.",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "arc",
+        "sm-query"
+      ]
+    },
+    "supermodule-validate": {
+      "description": "Validate the supermodule rules in a target. Must be run from the same cell the target lives in (fbobjc or fbandroid).",
+      "owner": "https://fb.workplace.com/groups/2292177024436518/",
+      "command": [
+        "arc",
+        "sm-validate"
+      ]
+    },
+    "swift-format": {
+      "description": "Format Swift code with (a fork of, for now) Apple's swift-format tool.",
+      "owner": "https://fb.workplace.com/groups/ig.swift/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/swift-format/swift-format.py"
+      ]
+    },
+    "sync-msysbloks": [
+      {
+        "description": "Runs www <-> fbandroid bloks binding sync for fb lite.",
+        "owner": "https://fb.workplace.com/groups/1585620104956885",
+        "scope": "xplat/fblite/",
+        "command": [
+          "buck",
+          "run",
+          "//xplat/fblite/msys/codegen/bloks_binding_sync:bloks_binding_sync",
+          "--"
+        ]
+      }
+    ],
+    "test": [
+      {
+        "description": "Delegates to fbandroid/scripts/test_runner/test_runner.py.",
+        "owner": "https://fb.workplace.com/groups/android.automated.testing/",
+        "scope": "fbandroid/",
+        "command": [
+          "sh",
+          "-c",
+          "cd {{VCS_ROOT}}/fbandroid && ./scripts/test_runner/test_runner.py \"$@\"",
+          "--"
+        ]
+      },
+      {
+        "description": "Delegates to fbobjc/automation/test_runner.py.",
+        "owner": "https://fb.workplace.com/groups/iosn00bs/",
+        "scope": "fbobjc/",
+        "command": [
+          "sh",
+          "-c",
+          "cd {{VCS_ROOT}}/fbobjc && ./automation/test_runner.py \"$@\"",
+          "--"
+        ]
+      },
+      {
+        "description": "Delegates to xplat/fbc/scripts/test_runner.sh.",
+        "owner": "jbraeg@fb.com",
+        "scope": "xplat/fbc/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/fbc/scripts/test_runner.sh"
+        ]
+      },
+      {
+        "description": "Delegates to xplat/scripts/test_runner/test_runner.py.",
+        "owner": "https://fb.workplace.com/groups/componentscriptquestions/",
+        "scope": "xplat/js/",
+        "command": [
+          "{{VCS_ROOT}}/xplat/scripts/test_runner/test_runner.py"
+        ]
+      }
+    ],
+    "thrift-upload": {
+      "description": "Upload local commits to Commit Cloud for Thrift syncing.",
+      "owner": "https://fburl.com/oncall3/kmwo7jhz",
+      "command": [
+        "sh",
+        "-c",
+        "cd {{VCS_ROOT}} && {{VCS_ROOT}}/fbcode/ondemand/scripts/thrift_upload \"$@\"",
+        "--"
+      ]
+    },
+    "true": {
+      "description": "Noop command that always returns with exit code zero.",
+      "owner": "https://fb.workplace.com/groups/xplat.qa/",
+      "command": [
+        "true"
+      ]
+    },
+    "tsloop": [
+      {
+        "description": "Automatically run Go/Python unit tests faster based on file changes: `arc tsloop BUCK_TARGET`.",
+        "owner": "https://fb.workplace.com/groups/649403088837690/",
+        "scope": "fbcode/",
+        "command": [
+          "buck",
+          "run",
+          "//tsloop:tsloop",
+          "--"
+        ]
+      }
+    ],
+    "uncrustify": {
+      "description": "Run uncrustify.",
+      "owner": "https://fb.workplace.com/groups/uncrustify/",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> DEPRECATED </bg> **arc uncrustify** is deprecated, use **arc f** instead.",
+        "--"
+      ]
+    },
+    "unit": {
+      "description": "Unused notice for `arc unit`.",
+      "owner": "https://fb.workplace.com/groups/arcanist",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/tools/arcanist/scripts/console_formatter.py",
+        "--stderr",
+        "--exit=1",
+        "--line",
+        "<bg:red> ERROR </bg> **arc unit** is not a thing in fbsource.",
+        "--"
+      ]
+    },
+    "utd": {
+      "description": "UTD (unified target determinator) CLI for TD rules.",
+      "owner": "https://fb.workplace.com/groups/utd.eng/",
+      "command": [
+        "{{VCS_ROOT}}/tools/utd/utd"
+      ]
+    },
+    "verify-buck-uquery": {
+      "description": "Verifies buck graph can be queried with uquery.",
+      "owner": "https://fb.workplace.com/groups/189599014981025",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/xplat/tools/verify_buck_uquery/verify_buck_uquery.py"
+      ]
+    },
+    "vnc": {
+      "description": "VNC into your other mac.",
+      "owner": "https://fb.workplace.com/groups/686184804763471/permalink/2643555955693003",
+      "command": [
+        "{{VCS_ROOT}}/xplat/python/macssh/macssh.py",
+        "-s"
+      ]
+    },
+    "which-apps": {
+      "description": "A utility which tells you, 'which apps is this BUCK target in?'.",
+      "owner": "https://fb.workplace.com/groups/166634924772313",
+      "command": [
+        "fbpython",
+        "{{VCS_ROOT}}/xplat/tools/modularity/which_apps.py"
+      ]
+    },
+    "why-is-socket": [
+      {
+        "description": "An allpaths query to find why an XPlugins SOCKET is in your app.",
+        "owner": "https://fb.workplace.com/groups/189599014981025/",
+        "scope": "fbobjc/",
+        "command": [
+          "fbpython",
+          "{{VCS_ROOT}}/xplat/configurations/buck/apple/plugins/tools/why_is_socket/cli.py"
+        ]
+      }
+    ],
+    "xcplugins": {
+      "description": "Manage Facebook Xcode Plugins.",
+      "owner": "https://fb.workplace.com/groups/xcplugins/",
+      "command": [
+        "{{VCS_ROOT}}/fbobjc/Tools/XcodePlugins/scripts/manage.py"
+      ]
+    },
+    "xplatjs-node": {
+      "description": "Run the `xplat/js` convenience wrapper around Node.js.",
+      "owner": "https://fb.workplace.com/groups/rn.support/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/js/tools/node/bin/node"
+      ]
+    },
+    "xr": {
+      "description": "Alias to access XROS tools.",
+      "owner": "https://fburl.com/xros-sdk-users",
+      "command": [
+        "{{VCS_ROOT}}/arvr/third-party/toolchains/xros-sdk/scripts/xr-cli.sh"
+      ]
+    },
+    "xrb": {
+      "description": "Alias to access XROS XR Bridge tool.",
+      "owner": "https://fburl.com/xros-sdk-users",
+      "command": [
+        "{{VCS_ROOT}}/arvr/third-party/toolchains/xros-sdk/scripts/xrb-cli.sh"
+      ]
+    },
+    "xrbr": {
+      "description": "Alias to access XROS run & build tool.",
+      "owner": "https://www.internalfb.com/intern/wiki/Orion/Experiences/Engineering/XR_Build_and_Run_script_(xrbr)/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/xros/scripts/xrbr.sh"
+      ]
+    },
+    "yarn": {
+      "description": "Run FBSource's Yarn with FBSource's Node.js.",
+      "owner": "https://fb.workplace.com/groups/frontendsupport/",
+      "command": [
+        "{{VCS_ROOT}}/xplat/third-party/node/bin/node",
+        "{{VCS_ROOT}}/xplat/third-party/yarn/yarn"
+      ]
+    }
+  }
+}

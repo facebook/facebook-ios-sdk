@@ -1,0 +1,303 @@
+{
+  "capabilities": [
+    "apply",
+    "land",
+    "sandcastle",
+    "submit",
+    "suggest"
+  ],
+  "commit_cloud_gk": "jf_fbs_commit_cloud_diff",
+  "bundle_property": "facebook:bundle_info:fbsource",
+  "arcanist_project_conditional_overrides": {
+    "fbcode": [
+      {
+        "type": "every_file_matches_every_regexp",
+        "value": [
+          "^fbcode/.*$"
+        ]
+      }
+    ],
+    "facebook-fbandroid": [
+      {
+        "type": "every_file_matches_every_regexp",
+        "value": [
+          "^fbandroid/.*$"
+        ]
+      }
+    ],
+    "fbobjc": [
+      {
+        "type": "every_file_matches_every_regexp",
+        "value": [
+          "^fbobjc/.*$"
+        ]
+      }
+    ]
+  },
+  "postponed_linters": {
+    "async-lint": [
+      {
+        "type": "some_file_matches_some_regexp",
+        "value": [
+          "^.*$"
+        ]
+      }
+    ]
+  },
+  "sandcastle_job_specs": [
+    {
+      "command": "SandcastleFBSourceTargetDeterminatorCommand",
+      "alias": "fbsource-target-determinator",
+      "capabilities": {
+        "marker": "eden",
+        "type": "android",
+        "vcs": "full-fbsource",
+        "tenant": "fbsource-target-determinator"
+      },
+      "args": {
+        "async_lint": true,
+        "schedule_type": "diff"
+      },
+      "priority": 0,
+      "description": "fbsource target determinator",
+      "scheduleType": "diff",
+      "metadata": {
+        "slp_event_environment": 2,
+        "slp_integration_mode": 1,
+        "slp_provider_id": "484271870096463",
+        "landblocking": true,
+        "infra_errors_should_block_lands": true
+      },
+      "jellyfish_conditions": [
+        {
+          "type": "every_regexp_matches",
+          "value": [
+            "^(?!fbandroid/).*$",
+            "^(?!fbobjc/).*$",
+            "^(?!fbcode/).*$"
+          ]
+        }
+      ],
+      "jellyfish_modes": {
+        "nolint": {
+          "description": "Skip running lint on Sandcastle",
+          "value": {
+            "args": {
+              "async_lint": false
+            }
+          }
+        },
+        "post-commit": {
+          "description": "Set the schedule type to \"master\"",
+          "value": {
+            "args": {
+              "schedule_type": "master"
+            },
+            "scheduleType": "master"
+          }
+        }
+      }
+    },
+    {
+      "command": "SandcastleFBSourceTargetDeterminatorCommand",
+      "alias": "fbsource-target-determinator",
+      "capabilities": {
+        "marker": "eden",
+        "type": "fbcode",
+        "vcs": "fbcode-fbsource",
+        "tenant": "fbcode_castle"
+      },
+      "args": {
+        "async_lint": true,
+        "schedule_type": "diff"
+      },
+      "priority": 0,
+      "description": "fbsource target determinator",
+      "scheduleType": "diff",
+      "metadata": {
+        "slp_event_environment": 2,
+        "slp_integration_mode": 1,
+        "slp_provider_id": "484271870096463",
+        "landblocking": true,
+        "infra_errors_should_block_lands": true
+      },
+      "jellyfish_conditions": [
+        {
+          "type": "every_file_matches_every_regexp",
+          "value": [
+            "^fbcode/.*$"
+          ]
+        }
+      ],
+      "jellyfish_modes": {
+        "all-projects": {
+          "description": "Build all projects against changes (fbcode only)",
+          "value": {
+            "args": {
+              "directives": [
+                "all"
+              ]
+            }
+          }
+        },
+        "nolint": {
+          "description": "Skip running lint on Sandcastle",
+          "value": {
+            "args": {
+              "async_lint": false
+            }
+          }
+        },
+        "post-commit": {
+          "description": "Set the schedule type to \"master\"",
+          "value": {
+            "args": {
+              "schedule_type": "master"
+            },
+            "scheduleType": "master"
+          }
+        }
+      }
+    },
+    {
+      "command": "SandcastleFBSourceTargetDeterminatorCommand",
+      "alias": "fbsource-target-determinator",
+      "capabilities": {
+        "marker": "eden",
+        "type": "android",
+        "vcs": "fb4a-fbsource",
+        "tenant": "android_diff"
+      },
+      "args": {
+        "async_lint": true,
+        "schedule_type": "diff"
+      },
+      "priority": 0,
+      "description": "fbsource target determinator",
+      "scheduleType": "diff",
+      "metadata": {
+        "slp_event_environment": 2,
+        "slp_integration_mode": 1,
+        "slp_provider_id": "484271870096463",
+        "landblocking": true,
+        "infra_errors_should_block_lands": true
+      },
+      "jellyfish_conditions": [
+        {
+          "type": "every_file_matches_every_regexp",
+          "value": [
+            "^fbandroid/.*$"
+          ]
+        }
+      ],
+      "jellyfish_modes": {
+        "nolint": {
+          "description": "Skip running lint on Sandcastle",
+          "value": {
+            "args": {
+              "async_lint": false
+            }
+          }
+        },
+        "post-commit": {
+          "description": "Set the schedule type to \"master\"",
+          "value": {
+            "args": {
+              "schedule_type": "master"
+            },
+            "scheduleType": "master"
+          }
+        }
+      }
+    },
+    {
+      "command": "SandcastleFBSourceTargetDeterminatorCommand",
+      "alias": "fbsource-target-determinator",
+      "capabilities": {
+        "marker": "eden",
+        "type": "jackalope",
+        "vcs": "fbobjc-fbsource",
+        "tenant": "ios_diff"
+      },
+      "args": {
+        "async_lint": true,
+        "schedule_type": "diff"
+      },
+      "priority": 0,
+      "description": "fbsource target determinator",
+      "scheduleType": "diff",
+      "metadata": {
+        "slp_event_environment": 2,
+        "slp_integration_mode": 1,
+        "slp_provider_id": "484271870096463",
+        "landblocking": true,
+        "infra_errors_should_block_lands": true
+      },
+      "jellyfish_conditions": [
+        {
+          "type": "every_file_matches_every_regexp",
+          "value": [
+            "^fbobjc/.*$"
+          ]
+        }
+      ],
+      "jellyfish_modes": {
+        "nolint": {
+          "description": "Skip running lint on Sandcastle",
+          "value": {
+            "args": {
+              "async_lint": false
+            }
+          }
+        },
+        "post-commit": {
+          "description": "Set the schedule type to \"master\"",
+          "value": {
+            "args": {
+              "schedule_type": "master"
+            },
+            "scheduleType": "master"
+          }
+        }
+      }
+    }
+  ],
+  "land_modes": {
+    "ignore_test_failures": {
+      "description": "Ignore test failures. Useful when a diff fails to land for test failures and the UI doesn't let you select the option to skip test failures.",
+      "landStyle": "bypass_push_blockers",
+      "checkDiffSuccess": false
+    },
+    "jedi": {
+      "description": "Allows landing local commits using a bundle and only checks that the diff was accepted. AVOID USING UNLESS ABSOLUTELY NECESSARY (i.e: master is broken and you need to land the fix).",
+      "landStyle": "ignore_failures",
+      "skipSanityChecks": true,
+      "checkDiffSuccess": false,
+      "source": "bundle",
+      "checks": {
+        "verifyDiffLocalCommitsMatch": false,
+        "verifyDiffsAccepted": true,
+        "verifyDiffsOnCommits": true,
+        "verifyLocalReviewedByField": true,
+        "verifyMatchingDependencies": false,
+        "verifyNotAlreadyLanding": false,
+        "verifyStackTopology": false
+      }
+    },
+    "ninja": {
+      "description": "Allows landing local commits using a bundle without running any checks or comparing with diffs that may or may not exist. Will trigger a retroactive code audit. Create a diff, get it accepted, and use `--mode jedi` instead. AVOID USING UNLESS ABSOLUTELY NECESSARY.",
+      "landStyle": "ignore_failures",
+      "skipSanityChecks": true,
+      "checkDiffSuccess": false,
+      "source": "bundle",
+      "checks": {
+        "verifyDiffsAccepted": false,
+        "verifyStackTopology": false,
+        "verifyMatchingDependencies": false,
+        "verifyDiffsOnCommits": false
+      }
+    }
+  },
+  "ule_land_enabled": true,
+  "vcs_type": "facebook-ios-sdk-git"
+}
