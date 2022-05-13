@@ -68,7 +68,7 @@ final class LoginCompletionTests: XCTestCase {
 
   func testDefaultProfileProvider() {
     XCTAssertTrue(
-      LoginURLCompleter.profileFactory is ProfileFactory,
+      LoginURLCompleter.profileFactory is _ProfileFactory,
       "Should have the expected concrete profile provider"
     )
   }

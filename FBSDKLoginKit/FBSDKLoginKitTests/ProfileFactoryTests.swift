@@ -15,14 +15,14 @@ final class ProfileFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var sampleProfile: Profile!
-  var factory: ProfileFactory!
+  var factory: _ProfileFactory!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     sampleProfile = SampleUserProfiles.createValid(isLimited: true)
-    factory = ProfileFactory()
+    factory = _ProfileFactory()
   }
 
   override func tearDown() {
