@@ -15,7 +15,7 @@ final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   let stubbedLoginCompleter: TestLoginCompleter
   var capturedURLParameters = [String: Any]()
   var capturedAppID: String?
-  var capturedAuthenticationTokenCreator: AuthenticationTokenCreating?
+  var capturedAuthenticationTokenCreator: _AuthenticationTokenCreating?
   var capturedGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedInternalUtility: URLHosting?
 
@@ -26,7 +26,7 @@ final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String,
-    authenticationTokenCreator: AuthenticationTokenCreating,
+    authenticationTokenCreator: _AuthenticationTokenCreating,
     graphRequestFactory: GraphRequestFactoryProtocol,
     internalUtility: URLHosting
   ) -> LoginCompleting {

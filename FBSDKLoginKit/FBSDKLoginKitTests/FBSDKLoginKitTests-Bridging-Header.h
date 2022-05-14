@@ -10,8 +10,6 @@
 
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKAuthenticationTokenCreating.h"
-#import "FBSDKAuthenticationTokenFactory.h"
-#import "FBSDKAuthenticationTokenFactory+Testing.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKLoginCompleterFactory.h"

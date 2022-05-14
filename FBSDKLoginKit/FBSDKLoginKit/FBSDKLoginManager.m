@@ -15,7 +15,6 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
-#import "FBSDKAuthenticationTokenFactory.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginConstants.h"

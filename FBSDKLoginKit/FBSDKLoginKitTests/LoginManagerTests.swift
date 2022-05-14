@@ -226,7 +226,7 @@ final class LoginManagerTests: XCTestCase {
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertTrue(
-      loginCompleterFactory.capturedAuthenticationTokenCreator is AuthenticationTokenFactory,
+      loginCompleterFactory.capturedAuthenticationTokenCreator is _AuthenticationTokenFactory,
       "Should create a login completer using the expected authentication token factory"
     )
   }
