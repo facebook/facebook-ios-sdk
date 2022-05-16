@@ -104,7 +104,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     with: .contains,
     paramKey: "test",
     linguisticCondition: "hello",
-    numericalCondition: NSNumber(10),
+    numericalCondition: 10.0,
     arrayCondition: ["abv"]
   )
 
@@ -131,7 +131,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     with: .lessThan,
     paramKey: "value",
     linguisticCondition: nil,
-    numericalCondition: NSNumber(value: 10),
+    numericalCondition: 10,
     arrayCondition: nil
   )
 

@@ -312,26 +312,4 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
   }
 }
 
-extension _AEMAdvertiserSingleEntryRule {
-  open override func isEqual(_ object: Any?) -> Bool { // swiftlint:disable:this override_in_extension
-    if let rule = object as? _AEMAdvertiserSingleEntryRule {
-      let isOpEqual = self.operator == rule.operator
-      let isParamKeyEqual = paramKey == rule.paramKey
-      let isLinguisticConditionEqual = linguisticCondition == rule.linguisticCondition
-      var isArrayConditionEqual = false
-      if let array1 = arrayCondition {
-        let array2 = rule.arrayCondition
-        isArrayConditionEqual = array1 == array2
-      } else {
-        isArrayConditionEqual = rule.arrayCondition == nil
-      }
-      let isNumericConditionEqual = ((numericalCondition == nil && rule.numericalCondition == nil)
-        || (numericalCondition?.isEqual(to: rule.numericalCondition ?? NSNumber(value: -1)) == true))
-      return isOpEqual && isParamKeyEqual && isLinguisticConditionEqual
-        && isArrayConditionEqual && isNumericConditionEqual
-    }
-    return false
-  }
-}
-
 #endif
