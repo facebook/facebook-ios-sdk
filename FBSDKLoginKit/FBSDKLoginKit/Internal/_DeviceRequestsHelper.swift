@@ -20,6 +20,12 @@ import Foundation
 @objcMembers
 @objc(FBSDKDeviceRequestsHelper)
 public final class _DeviceRequestsHelper: NSObject {
+
+  // We use weak to strong in order to retain the advertisement services
+  // without having to pass them back to the delegate that started them
+  // Note that in case the delegate is destroyed before it had a chance to
+  // stop the service, the service will continue broadcasting until the map
+  // resizes itself and releases the service, causing it to stop
   private(set) static var mdnsAdvertisementServices = NSMapTable<NetServiceDelegate, AnyObject>.weakToStrongObjects()
 
   private enum DeviceInfoKeys {
