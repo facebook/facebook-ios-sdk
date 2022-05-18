@@ -1,8 +1,0 @@
-{
-  "project_id": "facebook-ios-sdk-git",
-  "arc.feature.start.default": "main",
-  "arc.land.onto.default": "main",
-  "base": "git:HEAD^",
-  "conduit_uri": "https://phabricator.intern.facebook.com/api/",
-  "repository.callsign": "FBIOSSDK"
-}
