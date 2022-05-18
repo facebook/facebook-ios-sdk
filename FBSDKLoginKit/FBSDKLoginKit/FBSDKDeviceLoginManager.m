@@ -15,7 +15,6 @@
 
 #import "FBSDKDeviceLoginManagerDelegate.h"
 #import "FBSDKDevicePolling.h"
-#import "FBSDKDeviceRequestsHelper.h"
 #import "FBSDKLoginConstants.h"
 
 static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
@@ -81,7 +80,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   NSDictionary<NSString *, id> *parameters = @{
     @"scope" : [self.permissions componentsJoinedByString:@","] ?: @"",
     @"redirect_uri" : self.redirectURL.absoluteString ?: @"",
-    FBSDK_DEVICE_INFO_PARAM : [FBSDKDeviceRequestsHelper getDeviceInfo],
+    @"device_info" : [FBSDKDeviceRequestsHelper getDeviceInfo],
   };
   id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
                                                                                  parameters:parameters
@@ -117,9 +116,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                        pollingInterval:interval];
 
       if (self.isSmartLoginEnabled) {
-        [FBSDKDeviceRequestsHelper startAdvertisementService:self.codeInfo.loginCode
-                                                withDelegate:self
-        ];
+        [FBSDKDeviceRequestsHelper startAdvertisementServiceWithLoginCode:self.codeInfo.loginCode delegate:self];
       }
 
       [self.delegate deviceLoginManager:self startedWithCodeInfo:self.codeInfo];
@@ -138,7 +135,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)cancel
 {
-  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementServiceFor:self];
   self.isCancelled = YES;
   [g_loginManagerInstances removeObject:self];
 }
@@ -147,7 +144,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_notifyError:(NSError *)error
 {
-  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementServiceFor:self];
   [self.delegate deviceLoginManager:self
                 completedWithResult:nil
                               error:error];
@@ -156,7 +153,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_notifyToken:(NSString *)tokenString withExpirationDate:(NSDate *)expirationDate withDataAccessExpirationDate:(NSDate *)dataAccessExpirationDate
 {
-  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementServiceFor:self];
   void (^completeWithResult)(FBSDKDeviceLoginManagerResult *) = ^(FBSDKDeviceLoginManagerResult *result) {
     [self.delegate deviceLoginManager:self completedWithResult:result error:nil];
     [g_loginManagerInstances removeObject:self];
@@ -289,7 +286,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 {
   // Only cleanup if the publish error is from our advertising service
   if ([FBSDKDeviceRequestsHelper isDelegate:self forAdvertisementService:sender]) {
-    [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
+    [FBSDKDeviceRequestsHelper cleanUpAdvertisementServiceFor:self];
   }
 }
 

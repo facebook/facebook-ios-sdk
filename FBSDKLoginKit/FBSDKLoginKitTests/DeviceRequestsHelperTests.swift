@@ -14,27 +14,30 @@ final class DeviceRequestsHelperTests: XCTestCase, NetServiceDelegate {
 
   func testGetDeviceInfo() throws {
     let currentDeviceInfo = try XCTUnwrap(getCurrentDeviceInfo())
-    XCTAssertEqual(DeviceRequestsHelper.getDeviceInfo(), currentDeviceInfo, .hasEqualDeviceInfo)
+    XCTAssertEqual(_DeviceRequestsHelper.getDeviceInfo(), currentDeviceInfo, .hasEqualDeviceInfo)
   }
 
   func testStartAdvertisementService() {
-    XCTAssertTrue(DeviceRequestsHelper.startAdvertisementService("123", with: self), .startsAdvertisementService)
-    XCTAssertGreaterThan(DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasAddedService)
+    XCTAssertTrue(
+      _DeviceRequestsHelper.startAdvertisementService(loginCode: "123", delegate: self),
+      .startsAdvertisementService
+    )
+    XCTAssertGreaterThan(_DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasAddedService)
   }
 
   func testIsDelegateForAdvertisementService() throws {
-    DeviceRequestsHelper.startAdvertisementService("123", with: self)
-    let services = DeviceRequestsHelper.mdnsAdvertisementServices
+    _DeviceRequestsHelper.startAdvertisementService(loginCode: "123", delegate: self)
+    let services = _DeviceRequestsHelper.mdnsAdvertisementServices
     let service = try XCTUnwrap(services.object(forKey: self) as? NetService, .isDelegateForService)
 
-    XCTAssertTrue(DeviceRequestsHelper.isDelegate(self, forAdvertisementService: service), .isDelegateForService)
+    XCTAssertTrue(_DeviceRequestsHelper.isDelegate(self, forAdvertisementService: service), .isDelegateForService)
   }
 
   func testCleanUpAdvertisementService() {
-    DeviceRequestsHelper.startAdvertisementService("123", with: self)
-    XCTAssertGreaterThan(DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasAddedService)
-    DeviceRequestsHelper.cleanUpAdvertisementService(self)
-    XCTAssertEqual(DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasRemoveService)
+    _DeviceRequestsHelper.startAdvertisementService(loginCode: "123", delegate: self)
+    XCTAssertGreaterThan(_DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasAddedService)
+    _DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
+    XCTAssertEqual(_DeviceRequestsHelper.mdnsAdvertisementServices.count, 0, .hasRemoveService)
   }
 
   // MARK: - Helpers

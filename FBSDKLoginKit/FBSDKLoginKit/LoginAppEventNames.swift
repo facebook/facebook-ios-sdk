@@ -10,4 +10,8 @@ import FBSDKCoreKit
 
 extension AppEvents.Name {
   static let loginButtonDidTap = AppEvents.Name("fb_login_button_did_tap")
+
+  // MARK: - Device Requests
+
+  static let smartLoginService = AppEvents.Name("fb_smart_login_service")
 }

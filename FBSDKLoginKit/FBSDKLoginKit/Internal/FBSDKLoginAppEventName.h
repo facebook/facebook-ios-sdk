@@ -8,10 +8,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-// MARK: - Device Requests
-
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameFBSDKSmartLoginService;
-
 // MARK: - Login Manager
 
 /// Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10
