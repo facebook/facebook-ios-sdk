@@ -8,6 +8,9 @@
 
 #if !os(tvOS)
 
+import FBSDKCoreKit
+import Foundation
+
 /// A configuration to use for modifying the behavior of a login attempt.
 @objcMembers
 @objc(FBSDKLoginConfiguration)

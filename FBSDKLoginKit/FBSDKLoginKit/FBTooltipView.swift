@@ -8,7 +8,7 @@
 
 #if !os(tvOS)
 
-import CoreText
+import FBSDKCoreKit
 import UIKit
 
 /**

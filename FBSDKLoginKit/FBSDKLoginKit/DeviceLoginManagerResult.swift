@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
+import Foundation
+
 /// Represents the results of the a device login flow. This is used by `DeviceLoginManager`
 @objcMembers
 @objc(FBSDKDeviceLoginManagerResult)

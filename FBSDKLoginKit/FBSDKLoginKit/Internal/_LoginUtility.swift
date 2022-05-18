@@ -8,9 +8,9 @@
 
 #if !os(tvOS)
 
-import Foundation
-
+import FBSDKCoreKit
 import FBSDKCoreKit_Basics
+import Foundation
 
 /**
  Internal Type exposed to facilitate transition to Swift.
