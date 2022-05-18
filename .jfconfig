@@ -12,5 +12,29 @@
   ],
   "git_command": "git",
   "ule_land_enabled": true,
-  "vcs_type": "facebook-ios-sdk-git"
+  "vcs_type": "facebook-ios-sdk-git",
+  "project_id": "facebook-ios-sdk",
+  "sandcastle_job_specs": [
+    {
+      "command": "SandcastleUniversalCommand",
+      "alias": "test-target-determinator",
+      "oncall": "platform_sdks",
+      "description": "run determinator",
+      "priority": 0,
+      "scheduleType": "diff",
+      "capabilities" : {
+        "type": "lego",
+        "vcs": "facebook-ios-sdk-git",
+      },
+      "args": {
+        "steps": [
+          {
+            "name": "run passing job",
+            "shell": "python3 ci/passing_job.py",
+            "determinator": true,
+          },
+        ],
+      },
+    },
+  ],
 }
