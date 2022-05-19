@@ -8,6 +8,11 @@
 
 #if !os(tvOS)
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+ @warning INTERNAL - DO NOT USE
+ */
 @objcMembers
 @objc(FBAEMConfiguration)
 public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
@@ -131,7 +136,8 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     return currencySet
   }
 
-  public func isSameValid(from validFrom: Int, businessID: String?) -> Bool {
+  @objc(isSameValidFrom:businessID:)
+  public func isSame(validFrom: Int, businessID: String?) -> Bool {
     (validFrom == self.validFrom) && isSameBusinessID(businessID)
   }
 

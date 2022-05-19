@@ -290,32 +290,32 @@ final class AEMConfigurationTests: XCTestCase {
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
 
     XCTAssertTrue(
-      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
       "Should return true for the same validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_6666") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_6666") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10001, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10001, businessID: "test_advertiserid_123") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10000, businessID: nil) == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
       "Should return false for the unexpected validFrom and business ID"
     )
 
     XCTAssertTrue(
-      configWithoutBusinessID.isSameValid(from: 10000, businessID: nil) == true,
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
       "Should return true for nil business ID if the config doesn't have business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSameValid(from: 10001, businessID: nil) == true,
+      configWithoutBusinessID.isSame(validFrom: 10001, businessID: nil) == true,
       "Should return false for the unexpected validFrom and business ID"
     )
   }

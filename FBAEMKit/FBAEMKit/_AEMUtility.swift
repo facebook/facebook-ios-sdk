@@ -26,7 +26,7 @@ public final class _AEMUtility: NSObject {
 
   public func getInSegmentValue(
     _ parameters: [String: Any]?,
-    matchingRule: _AEMAdvertiserRuleMatching
+    matchingRule: _AEMAdvertiserRuleMatching?
   ) -> NSNumber {
     guard let parameters = parameters,
           let contentsData = parameters[Keys.content] as? [[String: Any]] else {
@@ -34,7 +34,8 @@ public final class _AEMUtility: NSObject {
     }
 
     let value = contentsData.reduce(0.0) { value, entry in
-      if matchingRule.isMatchedEventParameters([Keys.content: [entry]]) {
+      if let matchingRule = matchingRule,
+         matchingRule.isMatchedEventParameters([Keys.content: [entry]]) {
         let itemPrice = entry[Keys.itemPrice] as? NSNumber ?? 0
         let quantity = entry[Keys.quantity] as? NSNumber ?? 1
 

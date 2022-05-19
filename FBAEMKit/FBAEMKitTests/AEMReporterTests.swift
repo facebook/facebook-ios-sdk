@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBSDKCoreKit_Basics
-
+@testable import FBAEMKit
+import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -64,10 +64,6 @@ final class AEMReporterTests: XCTestCase {
   let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
   let aggregationRequestTimestampToNotDelay = Date().addingTimeInterval(-100)
   let analyticsAppID = "analytics_123"
-
-  override class func setUp() {
-    super.setUp()
-  }
 
   override func setUp() {
     super.setUp()
@@ -541,7 +537,7 @@ final class AEMReporterTests: XCTestCase {
       "Invocation's cached events should be updated"
     )
     XCTAssertEqual(
-      invocation.recordedValues,
+      invocation.recordedValues as? [String: [String: Int]],
       [Values.purchase: [Values.USD: 100]],
       "Invocation's cached values should be updated"
     )

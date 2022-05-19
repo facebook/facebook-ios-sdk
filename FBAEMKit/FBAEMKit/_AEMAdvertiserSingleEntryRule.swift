@@ -306,7 +306,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
           let numericalCondition = coder.decodeObject(of: NSNumber.self, forKey: Keys.numberValue) else {
       return nil
     }
-    let arrayCondition = coder.decodeObject(of: NSArray.self, forKey: Keys.arrayValue) as? [String]
+    let arrayCondition = coder.decodeObject(of: [NSArray.self, NSString.self], forKey: Keys.arrayValue) as? [String]
 
     self.operator = `operator`
     self.paramKey = paramKey as String
