@@ -14,8 +14,6 @@
 
 #import <FBAEMKit/FBAEMKit-Swift.h>
 
-#import "FBAEMInvocation.h"
-
 #define FB_AEM_CONFIG_TIME_OUT 86400
 #define FB_AEM_DELAY           3
 
@@ -267,7 +265,7 @@ static id<FBSDKDataPersisting> _store;
     return nil;
   }
 
-  return [FBAEMInvocation invocationWithAppLinkData:applinkData];
+  return [[FBAEMInvocation alloc] initWithAppLinkData:applinkData];
 }
 
 + (void)recordAndUpdateEvent:(NSString *)event
@@ -324,11 +322,11 @@ static id<FBSDKDataPersisting> _store;
                     currency:currency
                        value:value
                   parameters:parameters
-                     configs:g_configs
+              configurations:g_configs
            shouldUpdateCache:YES];
-  if ([invocation updateConversionValueWithConfigs:g_configs
-                                             event:event
-                               shouldBoostPriority:shouldBoostPriority]) {
+  if ([invocation updateConversionValueWithConfigurations:g_configs
+                                                    event:event
+                                      shouldBoostPriority:shouldBoostPriority]) {
     [self _sendAggregationRequest];
   }
   [self _saveReportData];
@@ -351,7 +349,12 @@ static id<FBSDKDataPersisting> _store;
       continue;
     }
 
-    if ([invocation attributeEvent:event currency:currency value:value parameters:parameters configs:configs shouldUpdateCache:NO]) {
+    if ([invocation attributeEvent:event
+                          currency:currency
+                             value:value
+                        parameters:parameters
+                    configurations:configs
+                 shouldUpdateCache:NO]) {
       attributedInvocation = invocation;
       break;
     }
@@ -456,7 +459,7 @@ static id<FBSDKDataPersisting> _store;
   return g_isConversionFilteringEnabled
   && g_isCatalogMatchingEnabled
   && invocation.catalogID
-  && [invocation isOptimizedEvent:event configs:g_configs];
+  && [invocation isOptimizedEvent:event configurations:g_configs];
 }
 
 + (BOOL)_isContentOptimized:(id _Nullable)result
@@ -551,7 +554,7 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.campaignID forKey:CAMPAIGN_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(0) forKey:CONVERSION_DATA_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(0) forKey:CONSUMPTION_HOUR_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSToken forKey:TOKEN_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsToken forKey:TOKEN_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
 
   return [conversionParams copy];
@@ -729,10 +732,10 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.campaignID forKey:CAMPAIGN_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.conversionValue) forKey:CONVERSION_DATA_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(delay) forKey:CONSUMPTION_HOUR_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSToken forKey:TOKEN_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsToken forKey:TOKEN_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsConfigID forKey:CONFIG_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMACWithDelay:delay] forKey:HMAC_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.businessID forKey:BUSINESS_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.isConversionFilteringEligible && g_isConversionFilteringEnabled) forKey:IS_CONVERSION_FILTERING_KEY];
 
@@ -807,7 +810,7 @@ static id<FBSDKDataPersisting> _store;
   if (g_invocations.count > 0) {
     NSMutableArray<FBAEMInvocation *> *res = [NSMutableArray new];
     for (FBAEMInvocation *invocation in g_invocations) {
-      if ([invocation isOutOfWindowWithConfigs:g_configs] && invocation.isAggregated) {
+      if ([invocation isOutOfWindowWithConfigurations:g_configs] && invocation.isAggregated) {
         isInvocationCacheUpdated = YES;
         continue;
       }

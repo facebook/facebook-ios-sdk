@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBAEMKit
+@testable import FBAEMKit
 import Foundation
 
 @objcMembers
@@ -17,12 +17,46 @@ final class TestInvocation: _AEMInvocation {
   var isOptimizedEvent = false
   var shouldBoostPriority = false
 
+  // This was copied from the superclass because the superclass version can't be called from a subclass
+  convenience init?(
+    campaignID: String,
+    acsToken: String,
+    acsSharedSecret: String?,
+    acsConfigID: String?,
+    businessID: String?,
+    catalogID: String?,
+    isTestMode: Bool,
+    hasSKAN: Bool,
+    isConversionFilteringEligible: Bool
+  ) {
+    self.init(
+      campaignID: campaignID,
+      acsToken: acsToken,
+      acsSharedSecret: acsSharedSecret,
+      acsConfigID: acsConfigID,
+      businessID: businessID,
+      catalogID: catalogID,
+      timestamp: nil,
+      configMode: "DEFAULT",
+      configID: -1,
+      recordedEvents: nil,
+      recordedValues: nil,
+      conversionValue: -1,
+      priority: -1,
+      conversionTimestamp: nil,
+      isAggregated: true,
+      isTestMode: isTestMode,
+      hasSKAN: hasSKAN,
+      isConversionFilteringEligible: isConversionFilteringEligible
+    )
+  }
+
   override func attributeEvent(
     _ event: String,
     currency: String?,
     value: NSNumber?,
     parameters: [String: Any]?,
-    configs: [String: [_AEMConfiguration]]?,
+    configurations: [String: [_AEMConfiguration]]?,
     shouldUpdateCache: Bool
   ) -> Bool {
     attributionCallCount += 1
@@ -30,7 +64,7 @@ final class TestInvocation: _AEMInvocation {
   }
 
   override func updateConversionValue(
-    withConfigs configs: [String: [_AEMConfiguration]]?,
+    configurations configs: [String: [_AEMConfiguration]]?,
     event: String,
     shouldBoostPriority: Bool
   ) -> Bool {
@@ -41,7 +75,7 @@ final class TestInvocation: _AEMInvocation {
 
   override func isOptimizedEvent(
     _ event: String,
-    configs: [String: [_AEMConfiguration]]?
+    configurations: [String: [_AEMConfiguration]]?
   ) -> Bool {
     isOptimizedEvent
   }

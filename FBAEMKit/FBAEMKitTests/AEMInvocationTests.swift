@@ -297,11 +297,13 @@ final class AEMInvocationTests: XCTestCase {
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
     let contentIDs: [String] = ["id123", "id456"]
 
-    let parameters = invocation?.processedParameters([
-      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
-      Keys.contentID: #"["id123", "id456"]"#,
-      Keys.contentType: "product",
-    ]) as? [String: AnyHashable]
+    let parameters = invocation?.getProcessedParameters(
+      from: [
+        Keys.content: #"[{"id": "123", "quantity": 5}]"#,
+        Keys.contentID: #"["id123", "id456"]"#,
+        Keys.contentType: "product",
+      ]
+    ) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
@@ -317,11 +319,13 @@ final class AEMInvocationTests: XCTestCase {
     let invocation: _AEMInvocation? = validInvocation
     let content: [String: AnyHashable] = ["id": "123", "quantity": 5]
 
-    let parameters = invocation?.processedParameters([
-      Keys.content: #"[{"id": "123", "quantity": 5}]"#,
-      Keys.contentID: "001",
-      Keys.contentType: "product",
-    ]) as? [String: AnyHashable]
+    let parameters = invocation?.getProcessedParameters(
+      from: [
+        Keys.content: #"[{"id": "123", "quantity": 5}]"#,
+        Keys.contentID: "001",
+        Keys.contentType: "product",
+      ]
+    ) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
@@ -336,11 +340,13 @@ final class AEMInvocationTests: XCTestCase {
   func testProcessedParametersWithInvalidContent() {
     let invocation: _AEMInvocation? = validInvocation
 
-    let parameters = invocation?.processedParameters([
-      Keys.content: #"[{"id": ,"quantity": 5}]"#,
-      Keys.contentID: "001",
-      Keys.contentType: "product",
-    ]) as? [String: AnyHashable]
+    let parameters = invocation?.getProcessedParameters(
+      from: [
+        Keys.content: #"[{"id": ,"quantity": 5}]"#,
+        Keys.contentID: "001",
+        Keys.contentType: "product",
+      ]
+    ) as? [String: AnyHashable]
     XCTAssertEqual(
       parameters,
       [
@@ -355,9 +361,9 @@ final class AEMInvocationTests: XCTestCase {
   func testFindConfig() {
     var invocation: _AEMInvocation? = validInvocation
     invocation?.reset()
-    invocation?.setConfigID(10)
+    invocation?.configID = 10
     XCTAssertNil(
-      invocation?._findConfig([Values.defaultMode: [config1, config2]]),
+      invocation?.findConfiguration(in: [Values.defaultMode: [config1, config2]]),
       "Should not find the config with unmatched configID"
     )
 
@@ -372,7 +378,7 @@ final class AEMInvocationTests: XCTestCase {
       hasSKAN: false,
       isConversionFilteringEligible: true
     )
-    let config = invocation?._findConfig([Values.defaultMode: [config1, config2]])
+    let config = invocation?.findConfiguration(in: [Values.defaultMode: [config1, config2]])
     XCTAssertEqual(invocation?.configID, 20000, "Should set the invocation with expected configID")
     XCTAssertEqual(invocation?.configMode, Values.defaultMode, "Should set the invocation with expected configMode")
     XCTAssertEqual(config?.validFrom, config2.validFrom, "Should find the expected config")
@@ -384,12 +390,14 @@ final class AEMInvocationTests: XCTestCase {
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
     let invocation = validInvocation
     invocation.reset()
-    invocation.setConfigID(10000)
+    invocation.configID = 10000
 
-    let config = invocation._findConfig([
-      Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID],
-    ])
+    let config = invocation.findConfiguration(
+      in: [
+        Values.defaultMode: [configWithoutBusinessID],
+        Values.brandMode: [configWithBusinessID],
+      ]
+    )
     XCTAssertEqual(
       config?.validFrom,
       10000,
@@ -406,13 +414,15 @@ final class AEMInvocationTests: XCTestCase {
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
     let invocation = validInvocation
     invocation.reset()
-    invocation.setConfigID(10000)
-    invocation.setBusinessID("test_advertiserid_123")
+    invocation.configID = 10000
+    invocation.businessID = "test_advertiserid_123"
 
-    let config = invocation._findConfig([
-      Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID],
-    ])
+    let config = invocation.findConfiguration(
+      in: [
+        Values.defaultMode: [configWithoutBusinessID],
+        Values.brandMode: [configWithBusinessID],
+      ]
+    )
     XCTAssertEqual(
       config?.validFrom,
       10000,
@@ -439,10 +449,12 @@ final class AEMInvocationTests: XCTestCase {
       hasSKAN: false,
       isConversionFilteringEligible: true
     )
-    let config = invocation?._findConfig([
-      Values.defaultMode: [configWithoutBusinessID],
-      Values.brandMode: [configWithBusinessID],
-    ])
+    let config = invocation?.findConfiguration(
+      in: [
+        Values.defaultMode: [configWithoutBusinessID],
+        Values.brandMode: [configWithBusinessID],
+      ]
+    )
     XCTAssertEqual(invocation?.configID, 10000, "Should set the invocation with expected configID")
     XCTAssertEqual(invocation?.configMode, Values.defaultMode, "Should set the invocation with expected configMode")
     XCTAssertEqual(
@@ -475,11 +487,13 @@ final class AEMInvocationTests: XCTestCase {
       hasSKAN: false,
       isConversionFilteringEligible: true
     )
-    let config = invocation?._findConfig([
-      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
-      Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
-      Values.cpasMode: [cpasConfig],
-    ])
+    let config = invocation?.findConfiguration(
+      in: [
+        Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()],
+        Values.brandMode: [SampleAEMConfigurations.createConfigWithBusinessIDAndContentRule()],
+        Values.cpasMode: [cpasConfig],
+      ]
+    )
     XCTAssertEqual(invocation?.configID, 10000, "Should set the invocation with expected configID")
     XCTAssertEqual(invocation?.configMode, Values.cpasMode, "Should set the invocation with expected configMode")
     XCTAssertEqual(
@@ -507,10 +521,10 @@ final class AEMInvocationTests: XCTestCase {
     ]
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
-    var configList = invocation._getConfigList(Values.defaultMode, configs: configs)
+    var configList = invocation.getConfigurationList(mode: .default, configurations: configs)
     XCTAssertEqual(configList.count, 1, "Should only find the default config")
 
-    configList = invocation._getConfigList(Values.brandMode, configs: configs)
+    configList = invocation.getConfigurationList(mode: .brand, configurations: configs)
     XCTAssertEqual(configList.count, 2, "Should only find the brand or cpas config")
     XCTAssertEqual(configList.first?.configMode, Values.cpasMode, "Should have the caps config first")
     XCTAssertEqual(configList.last?.configMode, Values.brandMode, "Should have the brand config last")
@@ -519,14 +533,14 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeEventWithValue() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
     var isAttributed = invocation.attributeEvent(
       Values.test,
       currency: Values.USD,
       value: 10,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
@@ -541,7 +555,7 @@ final class AEMInvocationTests: XCTestCase {
       currency: Values.USD,
       value: 10,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
@@ -549,20 +563,24 @@ final class AEMInvocationTests: XCTestCase {
       invocation.recordedEvents.contains(Values.purchase),
       "Should add events that can be attributed to the invocation"
     )
-    XCTAssertEqual(invocation.recordedValues, [Values.purchase: [Values.USD: 10]], "Should attribute unexpected values")
+    XCTAssertEqual(
+      invocation.recordedValues as? [String: [String: Int]],
+      [Values.purchase: [Values.USD: 10]],
+      "Should attribute unexpected values"
+    )
   }
 
   func testAttributeUnexpectedEventWithoutValue() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
     let isAttributed = invocation.attributeEvent(
       Values.test,
       currency: nil,
       value: nil,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
@@ -573,14 +591,14 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeExpectedEventWithoutValue() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
     var isAttributed = invocation.attributeEvent(
       Values.purchase,
       currency: nil,
       value: nil,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
@@ -592,7 +610,7 @@ final class AEMInvocationTests: XCTestCase {
       currency: nil,
       value: nil,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
@@ -627,7 +645,7 @@ final class AEMInvocationTests: XCTestCase {
         Keys.contentID: "001",
         Keys.contentType: "product",
       ],
-      configs: configs,
+      configurations: configs,
       shouldUpdateCache: true
     )
     XCTAssertTrue(isAttributed, "Should attribute the event with expected parameters")
@@ -660,7 +678,7 @@ final class AEMInvocationTests: XCTestCase {
         Keys.contentID: "001",
         Keys.contentType: "product",
       ],
-      configs: configs,
+      configurations: configs,
       shouldUpdateCache: true
     )
     XCTAssertFalse(isAttributed, "Should attribute the event with expected parameters")
@@ -700,7 +718,7 @@ final class AEMInvocationTests: XCTestCase {
           ],
         ],
       ],
-      configs: configs,
+      configurations: configs,
       shouldUpdateCache: true
     )
     XCTAssertTrue(
@@ -713,7 +731,7 @@ final class AEMInvocationTests: XCTestCase {
       "Should expect the event is updated in the cache"
     )
     XCTAssertEqual(
-      invocation.recordedValues,
+      invocation.recordedValues as? [String: [String: Int]],
       [Values.purchase: [Values.USD: 1000]],
       "Should expect the value is updated in the cache"
     )
@@ -722,14 +740,14 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeEventWithoutCache() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
     let isAttributed = invocation.attributeEvent(
       Values.purchase,
       currency: nil,
       value: nil,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: false
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
@@ -740,14 +758,14 @@ final class AEMInvocationTests: XCTestCase {
   func testAttributeEventAndValueWithoutCache() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
     let isAttributed = invocation.attributeEvent(
       Values.purchase,
       currency: Values.USD,
       value: 10,
       parameters: nil,
-      configs: [Values.defaultMode: [config1, config2]],
+      configurations: [Values.defaultMode: [config1, config2]],
       shouldUpdateCache: false
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
@@ -765,22 +783,22 @@ final class AEMInvocationTests: XCTestCase {
   func testUpdateConversionWithValue() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config1)
+    invocation.setConfiguration(config1)
 
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
+    invocation.recordedEvents = [Values.purchase, Values.unlock]
     XCTAssertFalse(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
       "Should not update conversion value"
     )
 
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.donate]))
+    invocation.recordedEvents = [Values.purchase, Values.donate]
     XCTAssertTrue(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
@@ -792,11 +810,11 @@ final class AEMInvocationTests: XCTestCase {
       "Should update the expected conversion value"
     )
 
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
-    invocation.setRecordedValues(NSMutableDictionary(dictionary: [Values.purchase: [Values.USD: 100]]))
+    invocation.recordedEvents = [Values.purchase, Values.unlock]
+    invocation.recordedValues = [Values.purchase: [Values.USD: 100.0]]
     XCTAssertTrue(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
@@ -809,12 +827,12 @@ final class AEMInvocationTests: XCTestCase {
     )
 
     invocation.reset()
-    invocation.setPriority(100)
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.unlock]))
-    invocation.setRecordedValues(NSMutableDictionary(dictionary: [Values.purchase: [Values.USD: 100]]))
+    invocation.priority = 100
+    invocation.recordedEvents = [Values.purchase, Values.unlock]
+    invocation.recordedValues = [Values.purchase: [Values.USD: 100]]
     XCTAssertFalse(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
@@ -825,12 +843,12 @@ final class AEMInvocationTests: XCTestCase {
   func testUpdateConversionWithouValue() {
     let invocation: _AEMInvocation = validInvocation
     invocation.reset()
-    invocation._setConfig(config2)
+    invocation.setConfiguration(config2)
 
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase]))
+    invocation.recordedEvents = [Values.purchase]
     XCTAssertFalse(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
@@ -842,10 +860,10 @@ final class AEMInvocationTests: XCTestCase {
       "Should not update the unexpected conversion value"
     )
 
-    invocation.setRecordedEvents(NSMutableSet(array: [Values.purchase, Values.donate]))
+    invocation.recordedEvents = [Values.purchase, Values.donate]
     XCTAssertTrue(
       invocation.updateConversionValue(
-        withConfigs: [Values.defaultMode: [config1, config2]],
+        configurations: [Values.defaultMode: [config1, config2]],
         event: Values.purchase,
         shouldBoostPriority: false
       ),
@@ -863,15 +881,16 @@ final class AEMInvocationTests: XCTestCase {
     let configs = [Values.defaultMode: [config]]
     let invocation = SampleAEMInvocations.createCatalogOptimizedInvocation()
 
-    let lowestPriorityRule = config.conversionValueRules.last! // swiftlint:disable:this force_unwrapping
+    // swiftlint:disable force_unwrapping
+    let lowestPriorityRule = config.conversionValueRules.last!
     // Set the highest priority in the conversion rules
-    invocation.setPriority(config.conversionValueRules.first!.priority) // swiftlint:disable:this force_unwrapping
+    invocation.priority = config.conversionValueRules.first!.priority
     // Add the lowest priority event
-    invocation.setRecordedEvents(
-      [lowestPriorityRule.events.first!.eventName] // swiftlint:disable:this force_unwrapping
-    )
+    invocation.recordedEvents = [lowestPriorityRule.events.first!.eventName]
+    // swiftlint:enable force_unwrapping
+
     XCTAssertTrue(
-      invocation.updateConversionValue(withConfigs: configs, event: Values.donate, shouldBoostPriority: true),
+      invocation.updateConversionValue(configurations: configs, event: Values.donate, shouldBoostPriority: true),
       "Should expect to update the conversion value"
     )
     XCTAssertEqual(
@@ -894,13 +913,11 @@ final class AEMInvocationTests: XCTestCase {
     invocation.campaignID = "83" // The campaign id's modulo is matched to purchase's conversion value
 
     let highestPriorityRule = config.conversionValueRules.first! // swiftlint:disable:this force_unwrapping
-    invocation.setPriority(42) // Set the second highest priority with boost priority in the conversion rules
-    invocation.setRecordedEvents([Values.purchase]) // Add the optimzied event
-    invocation.setRecordedValues([
-      Values.purchase: [Values.USD: 100],
-    ])
+    invocation.priority = 42 // Set the second highest priority with boost priority in the conversion rules
+    invocation.recordedEvents = [Values.purchase] // Add the optimzied event
+    invocation.recordedValues = [Values.purchase: [Values.USD: 100.0]]
     XCTAssertTrue(
-      invocation.updateConversionValue(withConfigs: configs, event: Values.purchase, shouldBoostPriority: true),
+      invocation.updateConversionValue(configurations: configs, event: Values.purchase, shouldBoostPriority: true),
       "Should expect to update the conversion value"
     )
     XCTAssertEqual(
@@ -922,23 +939,21 @@ final class AEMInvocationTests: XCTestCase {
 
     let lowestPriorityRule = config.conversionValueRules.last! // swiftlint:disable:this force_unwrapping
     // Set the highest priority in the conversion rules
-    invocation.setPriority(config.conversionValueRules.first!.priority) // swiftlint:disable:this force_unwrapping
+    invocation.priority = config.conversionValueRules.first!.priority // swiftlint:disable:this force_unwrapping
     // Add the lowest priority event
-    invocation.setRecordedEvents(
-      [
-        Values.purchase,
-        lowestPriorityRule.events.first!.eventName, // swiftlint:disable:this force_unwrapping
-      ]
-    )
+    invocation.recordedEvents = [
+      Values.purchase,
+      lowestPriorityRule.events.first!.eventName, // swiftlint:disable:this force_unwrapping
+    ]
     XCTAssertFalse(
-      invocation.updateConversionValue(withConfigs: configs, event: Values.purchase, shouldBoostPriority: true),
+      invocation.updateConversionValue(configurations: configs, event: Values.purchase, shouldBoostPriority: true),
       "Should expect not to update the conversion value"
     )
   }
 
   func testDecodeBase64UrlSafeString() {
     let decodedString = validInvocation
-      .decodeBase64UrlSafeString(
+      .decodeBase64URLSafeString(
         "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
       )
     XCTAssertEqual(
@@ -949,7 +964,7 @@ final class AEMInvocationTests: XCTestCase {
   }
 
   func testDecodeBase64UrlSafeStringWithEmptyString() {
-    let decodedString = validInvocation.decodeBase64UrlSafeString("")
+    let decodedString = validInvocation.decodeBase64URLSafeString("")
     XCTAssertNil(
       decodedString?.base64EncodedString(),
       "Should decode the base64 url safe string as nil with empty string"
@@ -961,7 +976,7 @@ final class AEMInvocationTests: XCTestCase {
     invocation.acsSharedSecret = nil
 
     XCTAssertNil(
-      invocation.getHMAC(10),
+      invocation.getHMAC(delay: 10),
       "HMAC should be nil when ACS Shared Secret is nil"
     )
   }
@@ -971,7 +986,7 @@ final class AEMInvocationTests: XCTestCase {
     invocation.acsSharedSecret = ""
 
     XCTAssertNil(
-      invocation.getHMAC(10),
+      invocation.getHMAC(delay: 10),
       "HMAC should be nil when ACS Shared Secret is an empty string"
     )
   }
@@ -981,7 +996,7 @@ final class AEMInvocationTests: XCTestCase {
     invocation.acsConfigID = nil
 
     XCTAssertNil(
-      invocation.getHMAC(10),
+      invocation.getHMAC(delay: 10),
       "HMAC should be nil when ACS config ID is nil"
     )
   }
@@ -995,7 +1010,7 @@ final class AEMInvocationTests: XCTestCase {
     invocation.conversionValue = 6
 
     XCTAssertEqual(
-      invocation.getHMAC(31),
+      invocation.getHMAC(delay: 31),
       "Z65Xxo-IevEwpLYNES9QmWRlx-zPH8zxfIJPw6ofQtpDJvKWuNI93SBHlUapS1_DIVl9Ovwoa5Xo7v63zQ5_HA",
       "Should generate the expected HMAC"
     )
@@ -1008,7 +1023,7 @@ final class AEMInvocationTests: XCTestCase {
     ]
 
     XCTAssertFalse(
-      invocation.isOptimizedEvent(Values.purchase, configs: configs),
+      invocation.isOptimizedEvent(Values.purchase, configurations: configs),
       "Invocation without catalog ID doesn't have optimized event"
     )
   }
@@ -1020,7 +1035,7 @@ final class AEMInvocationTests: XCTestCase {
     ]
 
     XCTAssertFalse(
-      invocation.isOptimizedEvent(Values.donate, configs: configs),
+      invocation.isOptimizedEvent(Values.donate, configurations: configs),
       "Event is not expected to be optimized"
     )
   }
@@ -1032,7 +1047,7 @@ final class AEMInvocationTests: XCTestCase {
     ]
 
     XCTAssertTrue(
-      invocation.isOptimizedEvent(Values.purchase, configs: configs),
+      invocation.isOptimizedEvent(Values.purchase, configurations: configs),
       "Event is expected to be optimized"
     )
   }
@@ -1064,7 +1079,7 @@ final class AEMInvocationTests: XCTestCase {
     XCTAssertEqual(decodedObject.configMode, object.configMode, .isCodable)
     XCTAssertEqual(decodedObject.configID, object.configID, .isCodable)
     XCTAssertEqual(decodedObject.recordedEvents, object.recordedEvents, .isCodable)
-    XCTAssertEqual(decodedObject.recordedValues, object.recordedValues, .isCodable)
+    XCTAssertTrue(decodedObject.recordedValues.isEmpty, .isCodable)
     XCTAssertEqual(decodedObject.conversionValue, object.conversionValue, .isCodable)
     XCTAssertEqual(decodedObject.priority, object.priority, .isCodable)
     XCTAssertEqual(decodedObject.conversionTimestamp, object.conversionTimestamp, .isCodable)

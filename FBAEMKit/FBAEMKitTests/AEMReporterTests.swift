@@ -241,11 +241,11 @@ final class AEMReporterTests: XCTestCase {
       isConversionFilteringEligible: true
     )
     else { return XCTFail("Unwrapping Error") }
-    invocation1.setConfigID(10000)
-    invocation2.setConfigID(10001)
+    invocation1.configID = 10000
+    invocation2.configID = 10001
     guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
     else { return XCTFail("Date Creation Error") }
-    invocation2.setConversionTimestamp(date)
+    invocation2.conversionTimestamp = date
     AEMReporter.invocations = [invocation1, invocation2]
     AEMReporter._addConfigs(
       [SampleAEMData.validConfigData1, SampleAEMData.validConfigData2, SampleAEMData.validConfigData3]
@@ -871,14 +871,12 @@ final class AEMReporterTests: XCTestCase {
       attributedInvocation,
       "Should not have invocation attributed with double counting"
     )
-    XCTAssertEqual(
-      invocation.recordedEvents,
-      [],
+    XCTAssertTrue(
+      invocation.recordedEvents.isEmpty,
       "Should not expect invocation's recorded events to be changed with double counting"
     )
-    XCTAssertEqual(
-      invocation.recordedValues,
-      [:],
+    XCTAssertTrue(
+      invocation.recordedValues.isEmpty,
       "Should not expect invocation's recorded values to be changed with double counting"
     )
   }

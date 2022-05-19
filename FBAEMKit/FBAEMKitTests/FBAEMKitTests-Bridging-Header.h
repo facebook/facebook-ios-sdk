@@ -10,5 +10,4 @@
 
 #import <TestTools/TestTools-Swift.h>
 
-#import "FBAEMInvocation+Testing.h"
 #import "FBAEMReporter+Testing.h"
