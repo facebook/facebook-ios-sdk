@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Removed
 
 - Removed deprecated `AEMReporter.configure(networker:appID:)` method.
+- Removed deprecated `ContextDialogPresenter.showCreateContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showSwitchContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showChooseContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showChooseContextDialog(with:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.createContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.switchContextDialog(withContent:delegate:)` method.
+- Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
 

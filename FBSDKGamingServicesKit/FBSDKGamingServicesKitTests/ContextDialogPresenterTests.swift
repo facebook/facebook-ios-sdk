@@ -95,22 +95,6 @@ final class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingCreateContextDialog() throws {
-    _ = try presenter.makeCreateContextDialog(
-      content: createContextContent,
-      delegate: delegate
-    )
-
-    XCTAssertTrue(
-      createContextDialogFactory.wasMakeCreateContextDialogCalled,
-      "Should use the factory to make a create context dialog"
-    )
-    XCTAssertTrue(
-      createContextDialogFactory.capturedDelegate === delegate,
-      "Should create a dialog with the expected delegate"
-    )
-  }
-
   func testShowingCreateContextDialog() throws {
     _ = try XCTUnwrap(
       presenter.makeAndShowCreateContextDialog(
@@ -150,22 +134,6 @@ final class ContextDialogPresenterTests: XCTestCase {
     XCTAssertFalse(
       createContextDialogFactory.dialog.wasShowCalled,
       "Should not call show on the dialog"
-    )
-  }
-
-  func testMakingSwitchContextDialog() throws {
-    _ = try presenter.makeSwitchContextDialog(
-      content: switchContextContent,
-      delegate: delegate
-    )
-
-    XCTAssertTrue(
-      switchContextDialogFactory.wasMakeSwitchContextDialogCalled,
-      "Should use the factory to make a switch context dialog"
-    )
-    XCTAssertTrue(
-      switchContextDialogFactory.capturedDelegate === delegate,
-      "Should create a dialog with the expected delegate"
     )
   }
 
@@ -212,22 +180,6 @@ final class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingChooseContextDialog() {
-    _ = presenter.makeChooseContextDialog(
-      content: chooseContextContent,
-      delegate: delegate
-    )
-
-    XCTAssertTrue(
-      chooseContextDialogFactory.wasMakeChooseContextDialogCalled,
-      "Should use the factory to make a choose context dialog"
-    )
-    XCTAssertTrue(
-      chooseContextDialogFactory.capturedDelegate === delegate,
-      "Should create a dialog with the expected delegate"
-    )
-  }
-
   func testShowingChooseContextDialog() throws {
     presenter.makeAndShowChooseContextDialog(
       content: chooseContextContent,
@@ -242,56 +194,5 @@ final class ContextDialogPresenterTests: XCTestCase {
       chooseContextDialogFactory.dialog.wasShowCalled,
       "Should call show on the dialog"
     )
-  }
-
-  // MARK: - Deprecated methods from former wrapper
-
-  func testCreateContextDialog() {
-    setSampleAccessToken()
-    XCTAssertNotNil(
-      ContextDialogPresenter.createContextDialog(
-        withContent: createContextContent,
-        delegate: delegate
-      )
-    )
-  }
-
-  func testShowCreateContextDialog() {
-    setSampleAccessToken()
-    XCTAssertNil(
-      ContextDialogPresenter.showCreateContextDialog(
-        withContent: createContextContent,
-        delegate: delegate
-      )
-    )
-  }
-
-  func testSwitchContextDialog() {
-    setSampleAccessToken()
-    XCTAssertNotNil(
-      ContextDialogPresenter.switchContextDialog(
-        withContent: switchContextContent,
-        delegate: delegate
-      )
-    )
-  }
-
-  func testShowSwitchContextDialog() {
-    setSampleAccessToken()
-    XCTAssertNil(
-      ContextDialogPresenter.showSwitchContextDialog(
-        withContent: switchContextContent,
-        delegate: delegate
-      )
-    )
-  }
-
-  func testShowChooseContextDialog() {
-    let dialog = ContextDialogPresenter.showChooseContextDialog(
-      withContent: chooseContextContent,
-      delegate: delegate
-    )
-    XCTAssertIdentical(dialog.dialogContent, chooseContextContent)
-    XCTAssertIdentical(dialog.delegate, delegate)
   }
 }

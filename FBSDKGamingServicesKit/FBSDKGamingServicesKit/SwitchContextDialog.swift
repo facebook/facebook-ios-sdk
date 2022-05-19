@@ -34,24 +34,6 @@ public final class SwitchContextDialog: ContextWebDialog, Showable {
   }
 
   /**
-   Builds a switch context web dialog with content and a delegate.
-
-   - Parameters:
-    - content: The content for the switch context dialog
-    - windowFinder: The application window finder that provides the window to display the dialog
-    - delegate: The receiver's delegate used to let the receiver know if a context switch was successful
-   */
-  @available(*, deprecated, message: "This method is deprecated and will be removed in the next major release. Use the initializer `init(content:windowFinder:delegate:)` instead") // swiftlint:disable:this line_length
-  @objc(dialogWithContent:windowFinder:delegate:)
-  public static func dialog(
-    content: SwitchContextContent,
-    windowFinder: _WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Self {
-    Self(content: content, windowFinder: windowFinder, delegate: delegate)
-  }
-
-  /**
    Creates a switch context web dialog with content and a delegate.
 
    - Parameter content: The content for the switch context dialog
