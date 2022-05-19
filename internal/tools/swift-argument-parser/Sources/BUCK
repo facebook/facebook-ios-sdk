@@ -1,0 +1,12 @@
+load("@fbsource//fbobjc/Apps/Stella:DEFS.bzl", "fwa_apple_library")
+
+fwa_apple_library(
+    name = "ArgumentParser",
+    autoglob = True,
+    enable_reflection = True,
+    frameworks = [
+        "Foundation",
+    ],
+    oncall = "stella_ios",
+    exported_deps = [],
+)
