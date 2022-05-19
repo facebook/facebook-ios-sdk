@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Removed
+
+- Removed deprecated `AEMReporter.configure(networker:appID:)` method.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
 
 ## 13.2.0

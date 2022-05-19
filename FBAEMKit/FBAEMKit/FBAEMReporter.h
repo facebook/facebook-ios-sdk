@@ -23,19 +23,6 @@ NS_SWIFT_NAME(AEMReporter)
 
 /**
  Configure networker used for calling Facebook AEM Graph API endpoint
- and Facebook App ID
-
- This function should be called in application(_:open:options:) from ApplicationDelegate
- and BEFORE [FBAEMReporter enable] function
-
- @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
- @param appID   An optional Facebook app ID, if it's null, we will get it from info.plist file with key: FacebookAppID
- */
-+ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
-                         appID:(nullable NSString *)appID __attribute__((deprecated("use configureWithNetworker:appID:reporter: instead.")));
-
-/**
- Configure networker used for calling Facebook AEM Graph API endpoint
  Facebook App ID and SKAdNetwork reporter
 
  This function should be called in application(_:open:options:) from ApplicationDelegate

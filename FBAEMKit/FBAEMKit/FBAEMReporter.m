@@ -71,12 +71,6 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
-{
-  [self configureWithNetworker:networker appID:appID reporter:nil];
-}
-
-+ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
-                         appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
 {
   [self configureWithNetworker:networker
