@@ -93,4 +93,5 @@ buck-out/
 infer-out
 
 # Swift Package Manager
-scripts/Runner/Package.resolved
+internal/scripts/Runner/Package.resolved
+internal/scripts/Runner/.build
