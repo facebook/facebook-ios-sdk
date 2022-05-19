@@ -239,22 +239,6 @@ public final class LoginConfiguration: NSObject {
   }
 
   /**
-   Given a string, return the corresponding FBSDKLoginAuthType. Returns nil if the string cannot be mapped to a valid auth type
-
-   @param rawValue the raw auth type.
-   */
-  @available(*, deprecated, message: "This method is deprecated and will be removed in the next major release.")
-  @objc(authTypeForString:)
-  public static func authType(for rawValue: String) -> LoginAuthType? {
-    let map = [
-      "rerequest": LoginAuthType.rerequest,
-      "reauthorize": LoginAuthType.reauthorize,
-    ]
-
-    return map[rawValue]
-  }
-
-  /**
    Attempts to allocate and initialize a new configuration with the expected parameters.
 
    - parameter permissions: The requested permissions for the login attempt.

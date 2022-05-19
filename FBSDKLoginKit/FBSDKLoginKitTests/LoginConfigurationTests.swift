@@ -193,18 +193,6 @@ final class LoginConfigurationTests: XCTestCase {
     )
   }
 
-  func testAuthTypeForStringWithInvalidAuthType() {
-    XCTAssertNil(LoginConfiguration.authType(for: "foo"), "Should return nil for invalid auth types")
-  }
-
-  func testAuthTypeForStringWithValidAuthType() {
-    XCTAssertEqual(
-      LoginConfiguration.authType(for: "rerequest"),
-      .rerequest,
-      "Should return corresponding auth type when valid raw auth type is given"
-    )
-  }
-
   func testCreatingWithCodeVerifier() {
     let codeVerifier = CodeVerifier()
     let config = LoginConfiguration(permissions: [], codeVerifier: codeVerifier)

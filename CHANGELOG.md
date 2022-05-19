@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `ContextDialogPresenter.createContextDialog(withContent:delegate:)` method.
 - Removed deprecated `ContextDialogPresenter.switchContextDialog(withContent:delegate:)` method.
 - Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
+- Removed deprecated `LoginConfiguration.authType(for:)` method.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
 
