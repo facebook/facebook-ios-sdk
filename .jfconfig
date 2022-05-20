@@ -29,10 +29,10 @@
       "args": {
         "steps": [
           {
-            "name": "run passing job",
-            "shell": "python3 ci/passing_job.py",
+            "name": "build hackbook",
+            "shell": "python3 ci/build_hackbook_ipa.py",
             "determinator": true,
-          },
+          }
         ],
       },
     },
