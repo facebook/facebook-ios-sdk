@@ -10,6 +10,7 @@ if [ "$(uname -s)" != Darwin ]; then
     exit 1
 fi
 
+./internal/tools/xcodegen generate -s internal/testing/E2EUtils/project.yml
 ./internal/tools/xcodegen generate -s TestTools/project.yml
 ./internal/tools/xcodegen generate -s FBSDKCoreKit_Basics/project.yml
 ./internal/tools/xcodegen generate -s FBAEMKit/project.yml

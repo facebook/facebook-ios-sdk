@@ -10,6 +10,7 @@
 #import "Console.h"
 #import "MainViewController.h"
 #import "NavigationController.h"
+#import "Hackbook-Swift.h"
 
 @implementation HFAppDelegate
 
@@ -77,6 +78,9 @@
   UINavigationController *nav = [[NavigationController alloc] initWithRootViewController:[[MainViewController alloc] init]];
   _window.rootViewController = nav;
   [_window makeKeyAndVisible];
+
+  FBEndToEndOverlayView *overlay = [[FBEndToEndOverlayView alloc] initWithAppWindow:_window];
+  [overlay setup];
 
   return YES;
 }

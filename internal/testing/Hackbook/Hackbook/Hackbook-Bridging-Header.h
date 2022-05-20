@@ -13,3 +13,6 @@
 #import "PrivacyTestUtils.h"
 #import "SKAN/SKANTestUtils.h"
 #import "SharingDialogViewController.h"
+
+// E2E Helpers
+#import "FBEndToEndViewDump.h"

@@ -19,6 +19,8 @@ projectReferences:
     path: ../../../FBSDKShareKit/FBSDKShareKit.xcodeproj
   FBSDKGamingServicesKit:
     path: ../../../FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj
+  E2EUtils:
+    path: ../E2EUtils/E2EUtils.xcodeproj
 
 targets:
   Hackbook:
@@ -39,6 +41,7 @@ targets:
         embed: false
       - target: FBSDKGamingServicesKit/FBSDKGamingServicesKit-Static
         embed: false
+      - target: E2EUtils/E2EUtils
       - framework: Frameworks/OHHTTPStubs.xcframework
       - sdk: Accelerate.framework
       - sdk: libz.tbd
@@ -50,3 +53,12 @@ targets:
       FB_APP_VERSION: "1.0"
       FB_BUNDLE_VERSION: "1.0"
       FB_BUNDLE_VERSION_SHORT: "1.0"
+
+schemes:
+  Hackbook:
+    build:
+      targets:
+        Hackbook: all
+      environmentVariables:
+        IS_TESTING_JEST: true
+        IS_TESTING: true
