@@ -23,7 +23,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) BOOL isEnabled;
 @property (class, nonatomic) BOOL isConversionFilteringEnabled;
 @property (class, nonatomic) BOOL isCatalogMatchingEnabled;
-@property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configs;
+@property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations;
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
@@ -63,7 +63,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                            configs:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs;
+                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations;
 
 + (BOOL)_isDoubleCounting:(FBAEMInvocation *)invocation
                     event:(NSString *)event;
@@ -82,9 +82,9 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced;
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs;
++ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations;
 
-+ (void)_addConfigs:(nullable NSArray<NSDictionary<NSString *, id> *> *)configs;
++ (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations;
 
 + (NSMutableArray<FBAEMInvocation *> *)_loadReportData;
 
@@ -98,7 +98,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (void)_clearCache;
 
-+ (void)_clearConfigs;
++ (void)_clearConfigurations;
 
 + (void)reset;
 

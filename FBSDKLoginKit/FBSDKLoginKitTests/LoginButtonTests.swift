@@ -136,7 +136,7 @@ final class LoginButtonTests: XCTestCase {
 
   func testLoginConfigurationWithoutNonce() {
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should be able to create a login configuration without a provided nonce"
     )
   }
@@ -145,7 +145,7 @@ final class LoginButtonTests: XCTestCase {
     loginButton.nonce = "   "
 
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should not create a login configuration with an invalid nonce"
     )
   }
@@ -154,7 +154,7 @@ final class LoginButtonTests: XCTestCase {
     loginButton.nonce = validNonce
 
     XCTAssertEqual(
-      loginButton.loginConfiguration()?.nonce,
+      loginButton.makeLoginConfiguration()?.nonce,
       validNonce,
       "Should create a login configuration with valid nonce"
     )
@@ -743,7 +743,7 @@ final class LoginButtonTests: XCTestCase {
     loginButton.messengerPageId = "1234"
 
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should be able to create a configuration with Messenger Page Id"
     )
   }
@@ -772,28 +772,28 @@ final class LoginButtonTests: XCTestCase {
     loginButton.authType = .reauthorize
 
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should be able to create a configuration with auth type"
     )
-    XCTAssertEqual(loginButton.loginConfiguration()?.authType, .reauthorize)
+    XCTAssertEqual(loginButton.makeLoginConfiguration()?.authType, .reauthorize)
   }
 
   func testLoginConfigurationWithNilAuthType() {
     loginButton.authType = nil
 
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should be able to create a configuration with nil auth type"
     )
-    XCTAssertNil(loginButton.loginConfiguration()?.authType)
+    XCTAssertNil(loginButton.makeLoginConfiguration()?.authType)
   }
 
   func testLoginConfigurationWithNoAuthType() {
     XCTAssertNotNil(
-      loginButton.loginConfiguration(),
+      loginButton.makeLoginConfiguration(),
       "Should be able to create a configuration with default auth type"
     )
-    XCTAssertEqual(loginButton.loginConfiguration()?.authType, .rerequest)
+    XCTAssertEqual(loginButton.makeLoginConfiguration()?.authType, .rerequest)
   }
 
   // MARK: default audience
@@ -838,7 +838,7 @@ final class LoginButtonTests: XCTestCase {
       "Should set the login tracking to limited"
     )
     XCTAssertEqual(
-      loginButton.loginConfiguration()?.tracking,
+      loginButton.makeLoginConfiguration()?.tracking,
       .limited,
       "Should created a login configuration with the expected tracking"
     )
@@ -855,7 +855,7 @@ final class LoginButtonTests: XCTestCase {
       "Should set the code verifier to the expected value"
     )
     XCTAssertEqual(
-      loginButton.loginConfiguration()?.codeVerifier.value,
+      loginButton.makeLoginConfiguration()?.codeVerifier.value,
       codeVerifier.value,
       "Should create a login configuration with the expected code verifier"
     )
@@ -867,7 +867,7 @@ final class LoginButtonTests: XCTestCase {
       "Default code verifier should not be nil"
     )
     XCTAssertNotNil(
-      loginButton.loginConfiguration()?.codeVerifier,
+      loginButton.makeLoginConfiguration()?.codeVerifier,
       "Should create a login configuration with the default code verifier"
     )
   }

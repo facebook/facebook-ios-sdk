@@ -386,7 +386,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
       url: url,
       appVersions: []
     )
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: ["dialogConfigurations": [name: dialogConfiguration]]
     )
     serverConfigurationProvider = TestServerConfigurationProvider(configuration: configuration)

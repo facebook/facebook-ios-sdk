@@ -651,7 +651,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     )
     indexer.enable()
     serverConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(withDictionary: setting),
+      ServerConfigurationFixtures.configuration(withDictionary: setting),
       error
     )
   }

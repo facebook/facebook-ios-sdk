@@ -16,7 +16,7 @@ final class GamingVideoUploaderConfigurationTests: XCTestCase {
   let caption = "Cool Video"
   lazy var configuration = GamingVideoUploaderConfiguration(videoURL: url, caption: caption)
 
-  func testValuesAreSavedToConfig() {
+  func testValuesAreSavedToConfiguration() {
     XCTAssertEqual(configuration.caption, caption)
     XCTAssertEqual(configuration.videoURL, url)
   }

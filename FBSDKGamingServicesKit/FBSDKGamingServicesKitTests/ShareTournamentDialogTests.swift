@@ -22,7 +22,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
     identifier: "1234",
     endTime: expirationDate
   )
-  lazy var tournamentConfig = TournamentConfig(
+  lazy var tournamentConfiguration = TournamentConfig(
     title: "test",
     endTime: expirationDate,
     scoreType: .numeric,
@@ -64,7 +64,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
     let dialog = try XCTUnwrap(shareDialog)
     var caughtInvalidAccessToken = false
     do {
-      try dialog.show(initialScore: 120, config: tournamentConfig)
+      try dialog.show(initialScore: 120, config: tournamentConfiguration)
     } catch ShareTournamentDialogError.invalidAccessToken {
       caughtInvalidAccessToken = true
     } catch {
@@ -82,7 +82,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
     var caughtInvalidAuthToken = false
     let dialog = try XCTUnwrap(shareDialog)
     do {
-      try dialog.show(initialScore: 120, config: tournamentConfig)
+      try dialog.show(initialScore: 120, config: tournamentConfiguration)
     } catch ShareTournamentDialogError.invalidAuthToken {
       caughtInvalidAuthToken = true
     } catch {
@@ -97,7 +97,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
 
   func testShareDialogTournamentCreateBridgeFailure() throws {
     let dialog = try XCTUnwrap(shareDialog)
-    _ = try dialog.show(initialScore: 120, config: tournamentConfig)
+    _ = try dialog.show(initialScore: 120, config: tournamentConfiguration)
     guard let handler = bridgeOpener.capturedHandler else {
       return XCTFail("The bridge should be called with a valid success block handler")
     }
@@ -116,7 +116,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
 
   func testShareDialogTournamentCreateURLIsValid() throws {
     let dialog = try XCTUnwrap(shareDialog)
-    _ = try dialog.show(initialScore: 120, config: tournamentConfig)
+    _ = try dialog.show(initialScore: 120, config: tournamentConfiguration)
     guard let dialogURL = bridgeOpener.capturedURL else {
       return XCTFail("The bridge opener should be called with a valid url")
     }

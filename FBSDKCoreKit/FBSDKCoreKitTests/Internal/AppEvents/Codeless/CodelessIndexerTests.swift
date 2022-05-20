@@ -20,7 +20,7 @@ final class CodelessIndexerTests: XCTestCase {
   let settings = TestSettings()
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"
-  let enabledConfiguration = ServerConfigurationFixtures.config(withDictionary: ["codelessEventsEnabled": true])
+  let enabledConfiguration = ServerConfigurationFixtures.configuration(withDictionary: ["codelessEventsEnabled": true])
   let serverConfigurationProvider = TestServerConfigurationProvider()
   lazy var codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
   var capturedIsEnabled = false
@@ -220,7 +220,7 @@ final class CodelessIndexerTests: XCTestCase {
       XCTFail("Should not load a codeless setting when codeless events are disabled")
     }
     serverConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.defaultConfig,
+      ServerConfigurationFixtures.defaultConfiguration,
       nil
     )
     XCTAssertNil(

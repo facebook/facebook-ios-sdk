@@ -26,7 +26,7 @@
 #define FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD @"app_events_feature_bitmask"
 #define FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD @"name"
 #define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD @"default_share_mode"
-#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD @"ios_dialog_configs"
+#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_FIELD @"ios_dialog_configs"
 #define FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD @"ios_sdk_dialog_flows"
 #define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD @"ios_sdk_error_categories"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD @"supports_implicit_sdk_logging"
@@ -217,7 +217,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSString *loginTooltipText = [FBSDKTypeUtility coercedToStringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD]];
     NSString *defaultShareMode = [FBSDKTypeUtility coercedToStringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD]];
     BOOL implicitLoggingEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD]];
-    NSDictionary<NSString *, id> *dialogConfigurations = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD]];
+    NSDictionary<NSString *, id> *dialogConfigurations = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_FIELD]];
     if (dialogConfigurations) {
       dialogConfigurations = [self _parseDialogConfigurations:dialogConfigurations];
     } else {
@@ -295,7 +295,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSArray<NSString *> *fields = @[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD,
                                   FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD,
                                   FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
-                                  FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_FIELD,
                                   dialogFlowsField,
                                   FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD,
                                   FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD,

@@ -19,7 +19,7 @@ enum SettingsAPIFields: String {
 }
 
 @objcMembers
-public class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
+public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
   private static let settingsPath = "cloudbridge_settings"
 
   public static let shared = FBSDKAppEventsCAPIManager()
@@ -48,28 +48,55 @@ public class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
       print("Fail to create CAPI Gateway Settings API request"); return
     }
     graphRequest.start { _, result, error in
-      guard error == nil else {
-        print(error!.localizedDescription); return
-      }
-      guard let res = result as? [String: Any],
-            let data = res["data"] as? [[String: Any]],
-            let config = data.first else {
-        print("CAPI Gateway Settings API response is not a valid json"); return
+      if let error = error {
+        print(error.localizedDescription)
+        return
       }
 
-      guard let url = TypeUtility.dictionary(config, objectForKey: SettingsAPIFields.url.rawValue, ofType: NSString.self) as? String,
-            let datasetID = TypeUtility.dictionary(config, objectForKey: SettingsAPIFields.datasetID.rawValue, ofType: NSString.self) as? String,
-            let accessKey = TypeUtility.dictionary(config, objectForKey: SettingsAPIFields.accessKey.rawValue, ofType: NSString.self) as? String else {
-        print("CAPI Gateway Settings API response doesn't have valid data"); return
+      guard
+        let res = result as? [String: Any],
+        let data = res["data"] as? [[String: Any]],
+        let configuration = data.first
+      else {
+        print("CAPI Gateway Settings API response is not a valid json")
+        return
       }
+
+      guard
+        let url = TypeUtility.dictionary(
+          configuration,
+          objectForKey: SettingsAPIFields.url.rawValue,
+          ofType: NSString.self
+        ) as? String,
+        let datasetID = TypeUtility.dictionary(
+          configuration,
+          objectForKey: SettingsAPIFields.datasetID.rawValue,
+          ofType: NSString.self
+        ) as? String,
+        let accessKey = TypeUtility.dictionary(
+          configuration,
+          objectForKey: SettingsAPIFields.accessKey.rawValue,
+          ofType: NSString.self
+        ) as? String
+      else {
+        print("CAPI Gateway Settings API response doesn't have valid data")
+        return
+      }
+
       FBSDKTransformerGraphRequestFactory.shared.configure(datasetID: datasetID, url: url, accessKey: accessKey)
-      self.isEnabled = TypeUtility.boolValue(TypeUtility.dictionary(config, objectForKey: SettingsAPIFields.enabled.rawValue, ofType: NSNumber.self) ?? false)
+      self.isEnabled = TypeUtility.boolValue(
+        TypeUtility.dictionary(
+          configuration,
+          objectForKey: SettingsAPIFields.enabled.rawValue,
+          ofType: NSNumber.self
+        ) ?? false
+      )
     }
   }
 
-    public func recordEvent(_ parameters: [String: Any]) {
-        if self.isEnabled {
-            FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
-        }
+  public func recordEvent(_ parameters: [String: Any]) {
+    if isEnabled {
+      FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
     }
+  }
 }

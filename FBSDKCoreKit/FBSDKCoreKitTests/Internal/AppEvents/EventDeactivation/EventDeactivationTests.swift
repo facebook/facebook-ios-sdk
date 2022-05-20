@@ -30,7 +30,7 @@ final class EventDeactivationTests: XCTestCase {
       ],
     ],
   ]
-  lazy var serverConfiguration = ServerConfigurationFixtures.config(withDictionary: rawConfiguration)
+  lazy var serverConfiguration = ServerConfigurationFixtures.configuration(withDictionary: rawConfiguration)
   lazy var provider = TestServerConfigurationProvider(configuration: serverConfiguration)
   lazy var eventDeactivationManager = EventDeactivationManager(
     serverConfigurationProvider: provider

@@ -15,7 +15,7 @@ enum SampleAEMConfigurations {
     static let defaultCurrency = "default_currency"
     static let cutoffTime = "cutoff_time"
     static let validFrom = "valid_from"
-    static let configMode = "config_mode"
+    static let mode = "config_mode"
     static let conversionValueRules = "conversion_value_rules"
     static let conversionValue = "conversion_value"
     static let priority = "priority"
@@ -44,7 +44,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.conversionValueRules: [
           [
             Keys.conversionValue: 4,
@@ -99,7 +99,7 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessID() -> _AEMConfiguration {
+  static func createConfigurationWithBusinessID() -> _AEMConfiguration {
     let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
     _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -109,7 +109,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.businessID: "test_advertiserid_123",
         Keys.paramRule: #"{"and": [{"value": {"contains": "abc"}}]}"#,
         Keys.conversionValueRules: [
@@ -130,7 +130,7 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessIDAndContentRule() -> _AEMConfiguration {
+  static func createConfigurationWithBusinessIDAndContentRule() -> _AEMConfiguration {
     let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
     _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -140,7 +140,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.brandMode,
+        Keys.mode: Values.brandMode,
         Keys.businessID: "test_advertiserid_content_test",
         Keys.paramRule: #"{"or": [{"fb_content[*].id": {"eq": "abc"}}]}"#,
         Keys.conversionValueRules: [
@@ -158,7 +158,7 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithoutBusinessID() -> _AEMConfiguration {
+  static func createConfigurationWithoutBusinessID() -> _AEMConfiguration {
     let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
     _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -168,7 +168,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.conversionValueRules: [
           [
             Keys.conversionValue: 2,
@@ -187,7 +187,7 @@ enum SampleAEMConfigurations {
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createCpasConfig() -> _AEMConfiguration {
+  static func createCpasConfiguration() -> _AEMConfiguration {
     let advertiserRuleFactory = _AEMAdvertiserRuleFactory()
 
     _AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -197,7 +197,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.cpasMode,
+        Keys.mode: Values.cpasMode,
         Keys.businessID: "test_advertiserid_cpas",
         Keys.paramRule: #"{"or": [{"fb_content[*].id": {"eq": "abc"}}]}"#,
         Keys.conversionValueRules: [

@@ -30,23 +30,23 @@ internal enum ShareTournamentDialogURLBuilder {
   case create(TournamentConfig)
   case update(Tournament)
 
-  func queryItems(for config: TournamentConfig, score: Int) -> [URLQueryItem] {
+  func queryItems(for configuration: TournamentConfig, score: Int) -> [URLQueryItem] {
     var tournamentDictionary = [String: String]()
     tournamentDictionary[QueryKeys.score] = "\(score)"
 
-    if let title = config.title {
+    if let title = configuration.title {
       tournamentDictionary[QueryKeys.title] = title
     }
-    if let endTime = config.endTime {
+    if let endTime = configuration.endTime {
       tournamentDictionary[QueryKeys.endTime] = "\(Int(endTime))"
     }
-    if let scoreType = config.scoreType?.rawValue {
+    if let scoreType = configuration.scoreType?.rawValue {
       tournamentDictionary[QueryKeys.scoreFormat] = scoreType
     }
-    if let sortOrder = config.sortOrder?.rawValue {
+    if let sortOrder = configuration.sortOrder?.rawValue {
       tournamentDictionary[QueryKeys.sortOrder] = sortOrder
     }
-    if let payload = config.payload {
+    if let payload = configuration.payload {
       tournamentDictionary[QueryKeys.payload] = payload
     }
     return tournamentDictionary.map { queryName, value in
@@ -67,8 +67,8 @@ internal enum ShareTournamentDialogURLBuilder {
         URLQueryItem(name: QueryKeys.payload, value: tournament.payload),
       ]
     }
-    if case let .create(config) = self {
-      components.queryItems = queryItems(for: config, score: score)
+    if case let .create(configuration) = self {
+      components.queryItems = queryItems(for: configuration, score: score)
     }
 
     return components.url

@@ -38,7 +38,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 @property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
 @property (nonatomic) BOOL isRequestStarted;
 @property (nonnull, nonatomic) dispatch_queue_t serialQueue;
-@property (nullable, nonatomic) FBSDKSKAdNetworkConversionConfiguration *config;
+@property (nullable, nonatomic) FBSDKSKAdNetworkConversionConfiguration *configuration;
 @property (nonnull, nonatomic) NSDate *configRefreshTimestamp;
 @property (nonatomic) NSInteger conversionValue;
 @property (nonatomic) NSDate *timestamp;
@@ -150,7 +150,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
         if (json) {
           [self.dataStore setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
           self.configRefreshTimestamp = [NSDate date];
-          self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
+          self.configuration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
           for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
             executionBlock();
           }
@@ -164,16 +164,16 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (void)_checkAndRevokeTimer
 {
-  if (!self.config) {
+  if (!self.configuration) {
     return;
   }
   if ([self shouldCutoff]) {
     return;
   }
-  if (self.conversionValue > self.config.timerBuckets) {
+  if (self.conversionValue > self.configuration.timerBuckets) {
     return;
   }
-  if (self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < self.config.timerInterval) {
+  if (self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < self.configuration.timerInterval) {
     return;
   }
   [self _updateConversionValue:self.conversionValue];
@@ -183,13 +183,13 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
                      currency:(nullable NSString *)currency
                         value:(nullable NSNumber *)value
 {
-  if (!self.config) {
+  if (!self.configuration) {
     return;
   }
   if ([self shouldCutoff]) {
     return;
   }
-  if (![self.config.eventSet containsObject:event] && ![FBSDKAppEventsUtility.shared isStandardEvent:event]) {
+  if (![self.configuration.eventSet containsObject:event] && ![FBSDKAppEventsUtility.shared isStandardEvent:event]) {
     return;
   }
   BOOL isCacheUpdated = false;
@@ -199,8 +199,8 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   }
   // Change currency to default currency if currency is not found in currencySet
   NSString *valueCurrency = currency.uppercaseString;
-  if (![self.config.currencySet containsObject:valueCurrency]) {
-    valueCurrency = self.config.defaultCurrency;
+  if (![self.configuration.currencySet containsObject:valueCurrency]) {
+    valueCurrency = self.configuration.defaultCurrency;
   }
   if (value != nil) {
     NSMutableDictionary<NSString *, id> *mapping = [[FBSDKTypeUtility dictionary:self.recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
@@ -218,7 +218,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 - (void)_checkAndUpdateConversionValue
 {
   // Update conversion value if a rule is matched
-  for (FBSDKSKAdNetworkRule *rule in self.config.conversionValueRules) {
+  for (FBSDKSKAdNetworkRule *rule in self.configuration.conversionValueRules) {
     if (rule.conversionValue < self.conversionValue) {
       break;
     }
@@ -244,22 +244,22 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (BOOL)shouldCutoff
 {
-  if (!self.config.cutoffTime) {
+  if (!self.configuration.cutoffTime) {
     return true;
   }
   NSDate *installTimestamp = [self.dataStore objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.config.cutoffTime * 86400;
+  return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.configuration.cutoffTime * 86400;
 }
 
 - (BOOL)isReportingEvent:(NSString *)event
 {
-  return (self.config && [self.config.eventSet containsObject:event]);
+  return (self.configuration && [self.configuration.eventSet containsObject:event]);
 }
 
 - (void)_loadReportData
 {
   id cachedJSON = [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
-  self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
+  self.configuration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
   NSData *cachedReportData = [self.dataStore objectForKey:FBSDKSKAdNetworkReporterKey];
   self.recordedEvents = [NSMutableSet new];
   self.recordedValues = [NSMutableDictionary new];
@@ -316,11 +316,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 #pragma mark - Testability
 
 #if DEBUG
-
-- (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
-{
-  self.config = configuration;
-}
 
 - (void)setSKAdNetworkReportEnabled:(BOOL)enabled
 {

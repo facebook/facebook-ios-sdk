@@ -18,14 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isSKAdNetworkReportEnabled;
 @property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
 @property (nonnull, nonatomic) dispatch_queue_t serialQueue;
-@property (nullable, nonatomic) FBSDKSKAdNetworkConversionConfiguration *config;
+@property (nullable, nonatomic) FBSDKSKAdNetworkConversionConfiguration *configuration;
 @property (nonnull, nonatomic) NSDate *configRefreshTimestamp;
 @property (nonatomic) NSInteger conversionValue;
 @property (nonatomic) NSDate *timestamp;
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
 @property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedValues;
 
-- (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration;
 - (void)_loadReportData;
 - (void)_recordAndUpdateEvent:(NSString *)event
                      currency:(nullable NSString *)currency

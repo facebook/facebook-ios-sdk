@@ -20,7 +20,7 @@ final class TestServerConfigurationProvider: NSObject, ServerConfigurationProvid
   var requestToLoadConfigurationCallWasCalled = false
   var didRetrieveCachedServerConfiguration = false
 
-  init(configuration: ServerConfiguration = ServerConfigurationFixtures.defaultConfig) {
+  init(configuration: ServerConfiguration = ServerConfigurationFixtures.defaultConfiguration) {
     stubbedServerConfiguration = configuration
   }
 

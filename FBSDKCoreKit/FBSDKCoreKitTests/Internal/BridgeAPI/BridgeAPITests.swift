@@ -77,7 +77,7 @@ final class BridgeAPITests: XCTestCase {
       eventLogger: TestAppEvents()
     )
     let serverConfigurationProvider = TestServerConfigurationProvider(
-      configuration: ServerConfigurationFixtures.defaultConfig
+      configuration: ServerConfigurationFixtures.defaultConfiguration
     )
     let components = TestCoreKitComponents.makeComponents(
       serverConfigurationProvider: serverConfigurationProvider,

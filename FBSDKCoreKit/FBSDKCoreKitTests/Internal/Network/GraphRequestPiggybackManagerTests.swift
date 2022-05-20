@@ -27,7 +27,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
     graphRequestFactory = TestGraphRequestFactory()
     serverConfigurationProvider = TestServerConfigurationProvider(
-      configuration: ServerConfigurationFixtures.defaultConfig
+      configuration: ServerConfigurationFixtures.defaultConfiguration
     )
     settings = TestSettings()
     settings.appID = "abc123"
@@ -681,7 +681,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   // MARK: - Server Configuration Piggyback
 
   func testAddingServerConfigurationPiggybackWithoutAppID() {
-    let configuration = ServerConfigurationFixtures.config(withDictionary: ["defaults": true])
+    let configuration = ServerConfigurationFixtures.configuration(withDictionary: ["defaults": true])
     serverConfigurationProvider.stubbedServerConfiguration = configuration
     settings.appID = nil
 
@@ -696,7 +696,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   }
 
   func testAddingServerConfigurationPiggybackWithDefaultConfigurationExpiredCache() throws {
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: [
         "defaults": true,
         "timestamp": twoDaysAgo,
@@ -720,7 +720,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
   }
 
   func testAddingServerConfigurationPiggybackWithDefaultConfigurationNonExpiredCache() {
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: [
         "defaults": true,
         "timestamp": Date(),
@@ -736,12 +736,12 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     XCTAssertEqual(
       connection.capturedRequests.count,
       1,
-      "Should add a server configuration request for a default config with a non-expired cache"
+      "Should add a server configuration request for a default configuration with a non-expired cache"
     )
   }
 
   func testAddingServerConfigurationPiggybackWithCustomConfigurationExpiredCache() {
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: [
         "defaults": true,
         "timestamp": twoDaysAgo,
@@ -757,12 +757,12 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     XCTAssertEqual(
       connection.capturedRequests.count,
       1,
-      "Should add a server configuration request for a default config with an expired cached"
+      "Should add a server configuration request for a default configuration with an expired cached"
     )
   }
 
   func testAddingServerConfigurationPiggybackWithCustomConfigurationNonExpiredCache() {
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: [
         "defaults": false,
         "timestamp": Date(),
@@ -784,7 +784,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testAddingServerConfigurationPiggybackWithCustomConfigurationMissingTimeout() {
     // Esoterica - the default timeout is nil in the default configuration
-    let configuration = ServerConfigurationFixtures.config(withDictionary: ["defaults": false])
+    let configuration = ServerConfigurationFixtures.configuration(withDictionary: ["defaults": false])
     let graphRequest = GraphRequest(graphPath: name)
     serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest
     serverConfigurationProvider.stubbedServerConfiguration = configuration
@@ -801,7 +801,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   func testAddingServerConfigurationPiggybackWithDefaultConfigurationMissingTimeout() {
     // Esoterica - the default timeout is nil in the default configuration
-    let configuration = ServerConfigurationFixtures.config(withDictionary: ["defaults": true])
+    let configuration = ServerConfigurationFixtures.configuration(withDictionary: ["defaults": true])
     let graphRequest = GraphRequest(graphPath: name)
     serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest
     serverConfigurationProvider.stubbedServerConfiguration = configuration

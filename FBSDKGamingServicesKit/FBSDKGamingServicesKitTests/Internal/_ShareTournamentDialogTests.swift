@@ -21,7 +21,7 @@ final class _ShareTournamentDialogTests: XCTestCase, _ShareTournamentDialogDeleg
     identifier: "1234",
     endTime: expirationDate
   )
-  lazy var tournamentConfig = _TournamentConfig(
+  lazy var tournamentConfiguration = _TournamentConfig(
     title: "test",
     endTime: expirationDate,
     scoreType: .numeric,
@@ -52,7 +52,7 @@ final class _ShareTournamentDialogTests: XCTestCase, _ShareTournamentDialogDeleg
   }
 
   func testWrapperShareDialogTournamentCreateURLIsValid() throws {
-    _ = try shareDialogWrapper.show(initialScore: 120, config: tournamentConfig)
+    _ = try shareDialogWrapper.show(initialScore: 120, config: tournamentConfiguration)
     guard let dialogURL = bridgeOpener.capturedURL else {
       return XCTFail("The bridge opener should be called with a valid url")
     }

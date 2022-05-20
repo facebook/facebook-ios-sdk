@@ -11,13 +11,13 @@
 final class SKAdNetworkConversionConfigurationTests: XCTestCase {
   func testInit() {
     // Init with nil
-    var config = SKAdNetworkConversionConfiguration(json: nil)
-    XCTAssertNil(config)
+    var configuration = SKAdNetworkConversionConfiguration(json: nil)
+    XCTAssertNil(configuration)
 
     // Init with invalid data
     var invalidData = [String: Any]()
-    config = SKAdNetworkConversionConfiguration(json: invalidData)
-    XCTAssertNil(config)
+    configuration = SKAdNetworkConversionConfiguration(json: invalidData)
+    XCTAssertNil(configuration)
 
     invalidData = [
       "data": [
@@ -29,8 +29,8 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
         ],
       ],
     ]
-    config = SKAdNetworkConversionConfiguration(json: invalidData)
-    XCTAssertNil(config)
+    configuration = SKAdNetworkConversionConfiguration(json: invalidData)
+    XCTAssertNil(configuration)
 
     invalidData = [
       "data": [
@@ -42,8 +42,8 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
         ],
       ],
     ]
-    config = SKAdNetworkConversionConfiguration(json: invalidData)
-    XCTAssertNil(config)
+    configuration = SKAdNetworkConversionConfiguration(json: invalidData)
+    XCTAssertNil(configuration)
 
     // Init with valid data
     let validData = [
@@ -58,12 +58,12 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
       ],
     ]
 
-    config = SKAdNetworkConversionConfiguration(json: validData)
-    XCTAssertNotNil(config)
-    XCTAssertEqual(1, config?.timerBuckets)
-    XCTAssertEqual(2, config?.cutoffTime)
-    XCTAssertEqual(config?.defaultCurrency, "USD")
-    XCTAssertEqual(1000, config?.timerInterval ?? 0, accuracy: 0.001)
+    configuration = SKAdNetworkConversionConfiguration(json: validData)
+    XCTAssertNotNil(configuration)
+    XCTAssertEqual(1, configuration?.timerBuckets)
+    XCTAssertEqual(2, configuration?.cutoffTime)
+    XCTAssertEqual(configuration?.defaultCurrency, "USD")
+    XCTAssertEqual(1000, configuration?.timerInterval ?? 0, accuracy: 0.001)
   }
 
   func testParseRules() throws {
@@ -296,9 +296,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
       ],
     ]
 
-    let config = SKAdNetworkConversionConfiguration(json: data)
+    let configuration = SKAdNetworkConversionConfiguration(json: data)
     let expected = Set(["fb_mobile_search", "fb_mobile_purchase", "fb_mobile_complete_registration"])
-    XCTAssertEqual(config?.eventSet, expected)
+    XCTAssertEqual(configuration?.eventSet, expected)
   }
 
   func testCurrencySet() {
@@ -367,9 +367,9 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
       ],
     ]
 
-    let config = SKAdNetworkConversionConfiguration(json: data)
+    let configuration = SKAdNetworkConversionConfiguration(json: data)
     let expected = Set(["USD", "EU", "JPY"])
-    XCTAssertEqual(config?.currencySet, expected)
+    XCTAssertEqual(configuration?.currencySet, expected)
   }
 }
 

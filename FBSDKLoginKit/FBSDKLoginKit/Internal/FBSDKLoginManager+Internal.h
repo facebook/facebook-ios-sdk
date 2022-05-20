@@ -51,7 +51,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nullable, nonatomic, weak) UIViewController *fromViewController;
 @property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nullable, nonatomic, strong) FBSDKLoginManagerLogger *logger;
-@property (nullable, nonatomic, strong) FBSDKLoginConfiguration *config;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
 @property (nonatomic, readonly) BOOL isPerformingLogin;

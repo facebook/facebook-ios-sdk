@@ -327,7 +327,7 @@ public final class FBLoginButton: FBButton {
     }
   }
 
-  func loginConfiguration() -> LoginConfiguration? {
+  func makeLoginConfiguration() -> LoginConfiguration? {
     let nonce = nonce ?? UUID().uuidString
     return LoginConfiguration(
       permissions: Set(permissions.map(Permission.init(stringLiteral:))),
@@ -341,16 +341,16 @@ public final class FBLoginButton: FBButton {
 
   private func logInUser() {
 
-    let loginConfig = loginConfiguration()
+    let loginConfiguration = makeLoginConfiguration()
 
     if loginTracking == .enabled {
       logTapEvent(withEventName: .loginButtonDidTap, parameters: nil)
     }
 
-    if let loginConfig = loginConfig {
+    if let loginConfiguration = loginConfiguration {
       loginProvider.__logIn(
         from: elementProvider.viewController(for: self),
-        configuration: loginConfig
+        configuration: loginConfiguration
       ) { result, error in
         self.delegate?.loginButton(self, didCompleteWith: result, error: error)
       }

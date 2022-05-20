@@ -23,10 +23,10 @@ final class RestrictiveDataFilterTests: XCTestCase {
         ],
       ],
     ]
-    let config = ServerConfigurationFixtures.config(withDictionary: [
+    let configuration = ServerConfigurationFixtures.configuration(withDictionary: [
       "restrictiveParams": params,
     ])
-    let serverConfigProider = TestServerConfigurationProvider(configuration: config)
+    let serverConfigProider = TestServerConfigurationProvider(configuration: configuration)
     let restrictiveDataFilterManager = RestrictiveDataFilterManager(serverConfigurationProvider: serverConfigProider)
     restrictiveDataFilterManager.enable()
     return restrictiveDataFilterManager

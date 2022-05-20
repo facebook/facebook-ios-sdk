@@ -32,10 +32,10 @@ public struct Tournament: Codable {
 
   init(
     identifier: String,
-    config: TournamentConfig
+    configuration: TournamentConfig
   ) {
-    self.init(identifier: identifier, title: config.title, payload: config.payload)
-    if let expirationTimeStamp = config.endTime {
+    self.init(identifier: identifier, title: configuration.title, payload: configuration.payload)
+    if let expirationTimeStamp = configuration.endTime {
       endTime = Date(timeIntervalSince1970: expirationTimeStamp)
     }
   }

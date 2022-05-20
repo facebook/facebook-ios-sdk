@@ -11,7 +11,7 @@ import Foundation
 @objcMembers
 final class SampleSKAdNetworkConversionConfiguration: NSObject {
 
-  static var configJson: [String: Any] {
+  static var configurationJson: [String: Any] {
     [
       "data": [
         [

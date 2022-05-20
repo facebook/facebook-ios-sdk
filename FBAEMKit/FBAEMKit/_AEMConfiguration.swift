@@ -22,7 +22,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     case cutoffTime = "cutoff_time"
     case conversionValueRules = "conversion_value_rules"
     case validFrom = "valid_from"
-    case configMode = "config_mode"
+    case mode = "config_mode"
     case advertiserID = "advertiser_id"
     case businessID = "business_id"
     case paramRule = "param_rule"
@@ -30,10 +30,10 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
 
   public private(set) var cutoffTime: Int
 
-  /// The UNIX timestamp of config's valid date and works as a unqiue identifier of the config
+  /// The UNIX timestamp of configuration's valid date and works as a unqiue identifier of the configuration
   public private(set) var validFrom: Int
   public private(set) var defaultCurrency: String
-  public private(set) var configMode: String
+  public private(set) var mode: String
   public private(set) var businessID: String?
   public private(set) var matchingRule: _AEMAdvertiserRuleMatching?
   public private(set) var conversionValueRules: [_AEMRule]
@@ -53,9 +53,9 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     guard let defaultCurrency = dict[CodingKeys.defaultCurrency.rawValue] as? String,
           let cutoffTime = dict[CodingKeys.cutoffTime.rawValue] as? Int,
           let validFrom = dict[CodingKeys.validFrom.rawValue] as? Int,
-          let configMode = dict[CodingKeys.configMode.rawValue] as? String else {
-      return nil
-    }
+          let mode = dict[CodingKeys.mode.rawValue] as? String
+    else { return nil }
+
     let businessID = dict[CodingKeys.advertiserID.rawValue] as? String
     let paramRuleJson = dict[CodingKeys.paramRule.rawValue] as? String
     let matchingRule = _AEMConfiguration.ruleProvider?.createRule(json: paramRuleJson)
@@ -69,7 +69,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     self.businessID = businessID
     self.matchingRule = matchingRule
     self.defaultCurrency = defaultCurrency
-    self.configMode = configMode
+    self.mode = mode
     conversionValueRules = rules
     eventSet = _AEMConfiguration.getEventSet(from: conversionValueRules)
     currencySet = _AEMConfiguration.getCurrencySet(from: conversionValueRules)
@@ -79,7 +79,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     defaultCurrency: String,
     cutoffTime: Int,
     validFrom: Int,
-    configMode: String,
+    mode: String,
     businessID: String?,
     matchingRule: _AEMAdvertiserRuleMatching?,
     conversionValueRules: [_AEMRule]
@@ -87,7 +87,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     self.defaultCurrency = defaultCurrency
     self.cutoffTime = cutoffTime
     self.validFrom = validFrom
-    self.configMode = configMode
+    self.mode = mode
     self.businessID = businessID
     self.matchingRule = matchingRule
     self.conversionValueRules = conversionValueRules
@@ -151,7 +151,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     coder.encode(defaultCurrency, forKey: CodingKeys.defaultCurrency.rawValue)
     coder.encode(cutoffTime, forKey: CodingKeys.cutoffTime.rawValue)
     coder.encode(validFrom, forKey: CodingKeys.validFrom.rawValue)
-    coder.encode(configMode, forKey: CodingKeys.configMode.rawValue)
+    coder.encode(mode, forKey: CodingKeys.mode.rawValue)
     coder.encode(businessID, forKey: CodingKeys.businessID.rawValue)
     coder.encode(matchingRule, forKey: CodingKeys.paramRule.rawValue)
     coder.encode(conversionValueRules, forKey: CodingKeys.conversionValueRules.rawValue)
@@ -163,7 +163,10 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     ) as String? ?? ""
     let cutoffTime = coder.decodeInteger(forKey: CodingKeys.cutoffTime.rawValue)
     let validFrom = coder.decodeInteger(forKey: CodingKeys.validFrom.rawValue)
-    let configMode = coder.decodeObject(of: NSString.self, forKey: CodingKeys.configMode.rawValue) as String? ?? ""
+    let mode = coder.decodeObject(
+      of: NSString.self,
+      forKey: CodingKeys.mode.rawValue
+    ) as String? ?? ""
     let businessID = coder.decodeObject(of: NSString.self, forKey: CodingKeys.businessID.rawValue) as String?
     let matchingRule = coder.decodeObject(
       of: [NSArray.self, _AEMAdvertiserMultiEntryRule.self, _AEMAdvertiserSingleEntryRule.self],
@@ -178,7 +181,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
       defaultCurrency: defaultCurrency,
       cutoffTime: cutoffTime,
       validFrom: validFrom,
-      configMode: configMode,
+      mode: mode,
       businessID: businessID,
       matchingRule: matchingRule,
       conversionValueRules: rules

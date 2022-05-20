@@ -124,10 +124,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
           fromViewController:(UIViewController *)viewController
                      handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
-                                                                                tracking:FBSDKLoginTrackingEnabled];
+  FBSDKLoginConfiguration *configuration = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                                                       tracking:FBSDKLoginTrackingEnabled];
   [self logInFromViewController:viewController
-                  configuration:config
+                  configuration:configuration
                      completion:handler];
 }
 
@@ -151,11 +151,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     return;
   }
 
-  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[] // Don't need to pass permissions for data reauthorization.
-                                                                                tracking:FBSDKLoginTrackingEnabled
-                                                                         messengerPageId:nil
-                                                                                authType:FBSDKLoginAuthTypeReauthorize];
-  [self logInFromViewControllerImpl:fromViewController configuration:config completion:handler];
+  FBSDKLoginConfiguration *configuration = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[] // Don't need to pass permissions for data reauthorization.
+                                                                                       tracking:FBSDKLoginTrackingEnabled
+                                                                                messengerPageId:nil
+                                                                                       authType:FBSDKLoginAuthTypeReauthorize];
+  [self logInFromViewControllerImpl:fromViewController configuration:configuration completion:handler];
 }
 
 - (void)logOut

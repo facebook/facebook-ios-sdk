@@ -75,23 +75,23 @@ public final class _ShareTournamentDialog: NSObject, ShareTournamentDialogDelega
    - Parameter config: The tournament configuration used to create a new tournament
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  public func show(initialScore: Int, config: _TournamentConfig) throws {
+  public func show(initialScore: Int, config configuration: _TournamentConfig) throws {
     // convert from internal to public enums
-    let scoreType: TournamentScoreType = config.scoreType == .numeric ? .numeric : .time
-    let sortOrder: TournamentSortOrder = config.sortOrder == .higherIsBetter ? .higherIsBetter : .lowerIsBetter
+    let scoreType: TournamentScoreType = configuration.scoreType == .numeric ? .numeric : .time
+    let sortOrder: TournamentSortOrder = configuration.sortOrder == .higherIsBetter ? .higherIsBetter : .lowerIsBetter
     var endTime: Date?
-    if let configEndTime = config.endTime {
-      endTime = Date(timeIntervalSince1970: configEndTime)
+    if let configurationEndTime = configuration.endTime {
+      endTime = Date(timeIntervalSince1970: configurationEndTime)
     }
-    let currentConfig = TournamentConfig(
-      title: config.title,
+    let currentConfiguration = TournamentConfig(
+      title: configuration.title,
       endTime: endTime,
       scoreType: scoreType,
       sortOrder: sortOrder,
-      image: config.image,
-      payload: config.payload
+      image: configuration.image,
+      payload: configuration.payload
     )
-    try dialog?.show(initialScore: initialScore, config: currentConfig)
+    try dialog?.show(initialScore: initialScore, config: currentConfiguration)
   }
 
   // MARK: URLOpening

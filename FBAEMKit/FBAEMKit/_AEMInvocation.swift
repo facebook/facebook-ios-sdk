@@ -24,16 +24,16 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
   public internal(set) var campaignID: String
   public let acsToken: String
   var acsSharedSecret: String?
-  public internal(set) var acsConfigID: String?
+  public internal(set) var acsConfigurationID: String?
   public internal(set) var businessID: String?
   public internal(set) var catalogID: String?
   public let isTestMode: Bool
-  public var hasSKAN: Bool
+  public var hasStoreKitAdNetwork: Bool
   public var isConversionFilteringEligible: Bool
   private(set) var timestamp: Date
-  private(set) var configMode: String
-  /// The unique identifier of the config, it's the same as config's validFrom
-  public internal(set) var configID: Int
+  private(set) var configurationMode: String
+  /// The unique identifier of the configuration, it's the same as configuration's validFrom
+  public internal(set) var configurationID: Int
   var recordedEvents: Set<String>
   var recordedValues: [String: [String: Any]]
   public internal(set) var conversionValue: Int
@@ -82,21 +82,21 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     else { return nil }
 
     let acsSharedSecret = appLinkData[Key.acsSharedSecret.rawValue] as? String
-    let acsConfigID = appLinkData[Key.configurationIdentifier.rawValue] as? String
+    let acsConfigurationID = appLinkData[Key.configurationIdentifier.rawValue] as? String
     let businessID = appLinkData[Key.businessIdentifier.rawValue] as? String
     let catalogID = appLinkData[Key.catalogIdentifier.rawValue] as? String
     let isTestMode = (appLinkData[Key.testDeepLink.rawValue] as? NSNumber)?.boolValue ?? false
-    let hasSKAN = (appLinkData[Key.hasStoreKitAdNetwork.rawValue] as? NSNumber)?.boolValue ?? false
+    let hasStoreKitAdNetwork = (appLinkData[Key.hasStoreKitAdNetwork.rawValue] as? NSNumber)?.boolValue ?? false
 
     self.init(
       campaignID: campaignID,
       acsToken: acsToken,
       acsSharedSecret: acsSharedSecret,
-      acsConfigID: acsConfigID,
+      acsConfigurationID: acsConfigurationID,
       businessID: businessID,
       catalogID: catalogID,
       isTestMode: isTestMode,
-      hasSKAN: hasSKAN,
+      hasStoreKitAdNetwork: hasStoreKitAdNetwork,
       isConversionFilteringEligible: true
     )
   }
@@ -105,23 +105,23 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     campaignID: String,
     acsToken: String,
     acsSharedSecret: String?,
-    acsConfigID: String?,
+    acsConfigurationID: String?,
     businessID: String?,
     catalogID: String?,
     isTestMode: Bool,
-    hasSKAN: Bool,
+    hasStoreKitAdNetwork: Bool,
     isConversionFilteringEligible: Bool
   ) {
     self.init(
       campaignID: campaignID,
       acsToken: acsToken,
       acsSharedSecret: acsSharedSecret,
-      acsConfigID: acsConfigID,
+      acsConfigurationID: acsConfigurationID,
       businessID: businessID,
       catalogID: catalogID,
       timestamp: nil,
-      configMode: "DEFAULT",
-      configID: -1,
+      configurationMode: "DEFAULT",
+      configurationID: -1,
       recordedEvents: nil,
       recordedValues: nil,
       conversionValue: -1,
@@ -129,7 +129,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
       conversionTimestamp: nil,
       isAggregated: true,
       isTestMode: isTestMode,
-      hasSKAN: hasSKAN,
+      hasStoreKitAdNetwork: hasStoreKitAdNetwork,
       isConversionFilteringEligible: isConversionFilteringEligible
     )
   }
@@ -138,12 +138,12 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     campaignID: String,
     acsToken: String,
     acsSharedSecret: String?,
-    acsConfigID: String?,
+    acsConfigurationID: String?,
     businessID: String?,
     catalogID: String?,
     timestamp: Date?,
-    configMode: String,
-    configID: Int,
+    configurationMode: String,
+    configurationID: Int,
     recordedEvents: Set<String>?,
     recordedValues: [String: [String: Any]]?,
     conversionValue: Int,
@@ -151,18 +151,18 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     conversionTimestamp: Date?,
     isAggregated: Bool,
     isTestMode: Bool,
-    hasSKAN: Bool,
+    hasStoreKitAdNetwork: Bool,
     isConversionFilteringEligible: Bool
   ) {
     self.campaignID = campaignID
     self.acsToken = acsToken
     self.acsSharedSecret = acsSharedSecret
-    self.acsConfigID = acsConfigID
+    self.acsConfigurationID = acsConfigurationID
     self.businessID = businessID
     self.catalogID = catalogID
     self.timestamp = timestamp ?? Date()
-    self.configMode = configMode
-    self.configID = configID
+    self.configurationMode = configurationMode
+    self.configurationID = configurationID
     self.recordedEvents = recordedEvents ?? []
     self.recordedValues = recordedValues ?? [:]
     self.conversionValue = conversionValue
@@ -170,7 +170,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     self.conversionTimestamp = conversionTimestamp
     self.isAggregated = isAggregated
     self.isTestMode = isTestMode
-    self.hasSKAN = hasSKAN
+    self.hasStoreKitAdNetwork = hasStoreKitAdNetwork
     self.isConversionFilteringEligible = isConversionFilteringEligible
 
     super.init()
@@ -218,7 +218,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
 
     // Use in-segment value for CPAS
     var value = potentialValue
-    if configuration.configMode == ConfigurationMode.cpas.rawValue {
+    if configuration.mode == ConfigurationMode.cpas.rawValue {
       value = _AEMUtility.shared.getInSegmentValue(processedParameters, matchingRule: configuration.matchingRule)
     }
 
@@ -304,7 +304,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
 
   public func getHMAC(delay: Int) -> String? {
     guard
-      acsConfigID != nil,
+      acsConfigurationID != nil,
       let secretKey = acsSharedSecret,
       let secretKeyData = decodeBase64URLSafeString(secretKey),
       let hmac = NSMutableData(length: Int(CC_SHA512_DIGEST_LENGTH))
@@ -384,9 +384,9 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
 
     guard !configurationList.isEmpty else { return nil }
 
-    if configID > 0 {
+    if configurationID > 0 {
       return configurationList.first {
-        $0.isSame(validFrom: configID, businessID: businessID)
+        $0.isSame(validFrom: configurationID, businessID: businessID)
       }
     } else {
       let configuration = configurationList.reversed().first {
@@ -417,8 +417,8 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
   }
 
   func setConfiguration(_ configuration: _AEMConfiguration) {
-    configID = configuration.validFrom
-    configMode = configuration.configMode
+    configurationID = configuration.validFrom
+    configurationMode = configuration.mode
   }
 
   // MARK: - NSCoding
@@ -429,15 +429,15 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     guard
       let campaignID = decoder.decodeObject(of: NSString.self, forKey: Key.campaignIdentifier.rawValue),
       let acsToken = decoder.decodeObject(of: NSString.self, forKey: Key.acsToken.rawValue),
-      let configMode = decoder.decodeObject(of: NSString.self, forKey: Key.configurationMode.rawValue)
+      let configurationMode = decoder.decodeObject(of: NSString.self, forKey: Key.configurationMode.rawValue)
     else { return nil }
 
     let acsSharedSecret = decoder.decodeObject(of: NSString.self, forKey: Key.acsSharedSecret.rawValue)
-    let acsConfigID = decoder.decodeObject(of: NSString.self, forKey: Key.acsConfigurationIdentifier.rawValue)
+    let acsConfigurationID = decoder.decodeObject(of: NSString.self, forKey: Key.acsConfigurationIdentifier.rawValue)
     let businessID = decoder.decodeObject(of: NSString.self, forKey: Key.businessIdentifier.rawValue)
     let catalogID = decoder.decodeObject(of: NSString.self, forKey: Key.catalogIdentifier.rawValue)
     let timestamp = decoder.decodeObject(of: NSDate.self, forKey: Key.timestamp.rawValue) ?? NSDate()
-    let configID = decoder.decodeInteger(forKey: Key.configurationIdentifier.rawValue)
+    let configurationID = decoder.decodeInteger(forKey: Key.configurationIdentifier.rawValue)
     let recordedEvents = decoder.decodeObject(
       of: [NSSet.self, NSString.self],
       forKey: Key.recordedEvents.rawValue
@@ -450,26 +450,26 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     let priority = decoder.decodeInteger(forKey: Key.priority.rawValue)
     let conversionTimestamp = decoder.decodeObject(of: NSDate.self, forKey: Key.conversionTimestamp.rawValue)
     let isAggregated = decoder.decodeBool(forKey: Key.isAggregated.rawValue)
-    let hasSKAN = decoder.decodeBool(forKey: Key.hasStoreKitAdNetwork.rawValue)
+    let hasStoreKitAdNetwork = decoder.decodeBool(forKey: Key.hasStoreKitAdNetwork.rawValue)
     let isConversionFilteringEligible = decoder.decodeBool(forKey: Key.isConversionFilteringEligible.rawValue)
 
     self.campaignID = campaignID as String
     self.acsToken = acsToken as String
     self.acsSharedSecret = acsSharedSecret as String?
-    self.acsConfigID = acsConfigID as String?
+    self.acsConfigurationID = acsConfigurationID as String?
     self.businessID = businessID as String?
     self.catalogID = catalogID as String?
     self.timestamp = timestamp as Date
-    self.configMode = configMode as String
-    self.configID = configID
+    self.configurationMode = configurationMode as String
+    self.configurationID = configurationID
     self.recordedEvents = (recordedEvents as? Set<String>) ?? []
     self.recordedValues = recordedValues ?? [:]
     self.conversionValue = conversionValue
     self.priority = priority
     self.conversionTimestamp = conversionTimestamp as Date?
     self.isAggregated = isAggregated
-    self.isTestMode = false
-    self.hasSKAN = hasSKAN
+    isTestMode = false
+    self.hasStoreKitAdNetwork = hasStoreKitAdNetwork
     self.isConversionFilteringEligible = isConversionFilteringEligible
   }
 
@@ -477,27 +477,27 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     encoder.encode(campaignID, forKey: Key.campaignIdentifier.rawValue)
     encoder.encode(acsToken, forKey: Key.acsToken.rawValue)
     encoder.encode(acsSharedSecret, forKey: Key.acsSharedSecret.rawValue)
-    encoder.encode(acsConfigID, forKey: Key.acsConfigurationIdentifier.rawValue)
+    encoder.encode(acsConfigurationID, forKey: Key.acsConfigurationIdentifier.rawValue)
     encoder.encode(businessID, forKey: Key.businessIdentifier.rawValue)
     encoder.encode(catalogID, forKey: Key.catalogIdentifier.rawValue)
     encoder.encode(timestamp, forKey: Key.timestamp.rawValue)
-    encoder.encode(configMode, forKey: Key.configurationMode.rawValue)
-    encoder.encode(configID, forKey: Key.configurationIdentifier.rawValue)
+    encoder.encode(configurationMode, forKey: Key.configurationMode.rawValue)
+    encoder.encode(configurationID, forKey: Key.configurationIdentifier.rawValue)
     encoder.encode(recordedEvents, forKey: Key.recordedEvents.rawValue)
     encoder.encode(recordedValues, forKey: Key.recordedValues.rawValue)
     encoder.encode(conversionValue, forKey: Key.conversionValue.rawValue)
     encoder.encode(priority, forKey: Key.priority.rawValue)
     encoder.encode(conversionTimestamp, forKey: Key.conversionTimestamp.rawValue)
     encoder.encode(isAggregated, forKey: Key.isAggregated.rawValue)
-    encoder.encode(hasSKAN, forKey: Key.hasStoreKitAdNetwork.rawValue)
+    encoder.encode(hasStoreKitAdNetwork, forKey: Key.hasStoreKitAdNetwork.rawValue)
     encoder.encode(isConversionFilteringEligible, forKey: Key.isConversionFilteringEligible.rawValue)
   }
 
   #if DEBUG
   func reset() {
     timestamp = Date()
-    configMode = "DEFAULT"
-    configID = -1
+    configurationMode = "DEFAULT"
+    configurationID = -1
     businessID = nil
     catalogID = nil
     recordedEvents = []
@@ -506,7 +506,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     priority = -1
     conversionTimestamp = Date()
     isAggregated = true
-    hasSKAN = false
+    hasStoreKitAdNetwork = false
     isConversionFilteringEligible = true
   }
   #endif

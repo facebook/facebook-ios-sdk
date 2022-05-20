@@ -49,7 +49,7 @@ static BOOL g_isCatalogMatchingEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
-static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *g_configs;
+static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *g_configurations;
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSDate *g_minAggregationRequestTimestamp;
@@ -180,7 +180,7 @@ static id<FBSDKDataPersisting> _store;
       }
       [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
         g_minAggregationRequestTimestamp = [self _loadMinAggregationRequestTimestamp];
-        g_configs = [self _loadConfigs];
+        g_configurations = [self _loadConfigurations];
         g_invocations = [self _loadReportData];
       }];
       [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
@@ -272,11 +272,11 @@ static id<FBSDKDataPersisting> _store;
       return;
     }
     [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
-      if (0 == g_configs.count || 0 == g_invocations.count) {
+      if (0 == g_configurations.count || 0 == g_invocations.count) {
         return;
       }
 
-      FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
+      FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configurations:g_configurations];
       if (attributedInvocation) {
         // We will report conversion in catalog level if
         // 1. conversion filtering and catalog matching are enabled
@@ -316,9 +316,9 @@ static id<FBSDKDataPersisting> _store;
                     currency:currency
                        value:value
                   parameters:parameters
-              configurations:g_configs
+              configurations:g_configurations
            shouldUpdateCache:YES];
-  if ([invocation updateConversionValueWithConfigurations:g_configs
+  if ([invocation updateConversionValueWithConfigurations:g_configurations
                                                     event:event
                                       shouldBoostPriority:shouldBoostPriority]) {
     [self _sendAggregationRequest];
@@ -331,7 +331,7 @@ static id<FBSDKDataPersisting> _store;
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                            configs:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
+                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
 {
   BOOL isGeneralInvocationVisited = NO;
   FBAEMInvocation *attributedInvocation = nil;
@@ -347,7 +347,7 @@ static id<FBSDKDataPersisting> _store;
                           currency:currency
                              value:value
                         parameters:parameters
-                    configurations:configs
+                    configurations:configurations
                  shouldUpdateCache:NO]) {
       attributedInvocation = invocation;
       break;
@@ -363,10 +363,10 @@ static id<FBSDKDataPersisting> _store;
                     event:(NSString *)event
 {
   // We consider it as double counting if following conditions meet simultaneously
-  // 1. The field hasSKAN is true
+  // 1. The field hasStoreKitAdNetwork is true
   // 2. The conversion happens before SKAdNetwork cutoff
   // 3. The event is also being reported by SKAdNetwork
-  return invocation.hasSKAN
+  return invocation.hasStoreKitAdNetwork
   && ![self.reporter shouldCutoff]
   && [self.reporter isReportingEvent:event];
 }
@@ -413,13 +413,13 @@ static id<FBSDKDataPersisting> _store;
                                             NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
                                             if (json) {
                                               g_configRefreshTimestamp = [NSDate date];
-                                              [self _addConfigs:[FBSDKTypeUtility dictionary:json objectForKey:@"data" ofType:NSArray.class]];
+                                              [self _addConfigurations:[FBSDKTypeUtility dictionary:json objectForKey:@"data" ofType:NSArray.class]];
                                               for (FBAEMReporterBlock executionBlock in g_completionBlocks) {
                                                 executionBlock(nil);
                                               }
                                               [g_completionBlocks removeAllObjects];
                                             } else {
-                                              NSLog(@"Received invalid AEM config");
+                                              NSLog(@"Received invalid AEM configuration");
                                             }
                                             g_isLoadingConfiguration = NO;
                                           }];
@@ -453,7 +453,7 @@ static id<FBSDKDataPersisting> _store;
   return g_isConversionFilteringEnabled
   && g_isCatalogMatchingEnabled
   && invocation.catalogID
-  && [invocation isOptimizedEvent:event configurations:g_configs];
+  && [invocation isOptimizedEvent:event configurations:g_configurations];
 }
 
 + (BOOL)_isContentOptimized:(id _Nullable)result
@@ -504,8 +504,8 @@ static id<FBSDKDataPersisting> _store;
       return YES;
     }
   }
-  // Refresh if timestamp is expired or cached config is empty
-  return (![self _isConfigRefreshTimestampValid]) || (0 == g_configs.count);
+  // Refresh if timestamp is expired or cached configuration is empty
+  return (![self _isConfigRefreshTimestampValid]) || (0 == g_configurations.count);
 }
 
 + (BOOL)_shouldDelayAggregationRequest
@@ -571,10 +571,12 @@ static id<FBSDKDataPersisting> _store;
   [self.store setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs
++ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations
 {
-  NSData *cachedConfig = [NSData dataWithContentsOfFile:g_configFile options:NSDataReadingMappedIfSafe error:nil];
-  if ([cachedConfig isKindOfClass:NSData.class]) {
+  NSData *cachedConfiguration = [NSData dataWithContentsOfFile:g_configFile
+                                                       options:NSDataReadingMappedIfSafe
+                                                         error:nil];
+  if ([cachedConfiguration isKindOfClass:NSData.class]) {
     NSSet<Class> *classes = [NSSet setWithArray:@[
       NSMutableDictionary.class,
       NSMutableArray.class,
@@ -582,7 +584,7 @@ static id<FBSDKDataPersisting> _store;
       FBAEMConfiguration.class,
       FBAEMRule.class,
       FBAEMEvent.class]];
-    NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfig error:nil]];
+    NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
     if (cache) {
       return [cache mutableCopy];
     }
@@ -591,46 +593,48 @@ static id<FBSDKDataPersisting> _store;
   return [NSMutableDictionary new];
 }
 
-+ (void)_saveConfigs
++ (void)_saveConfigurations
 {
-  if (!g_configs) {
+  if (!g_configurations) {
     return;
   }
 
-  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_configs requiringSecureCoding:NO error:nil];
+  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:g_configurations requiringSecureCoding:NO error:nil];
   if (cache && g_configFile) {
     [cache writeToFile:g_configFile atomically:YES];
   }
 }
 
-+ (void)_addConfigs:(nullable NSArray<NSDictionary<NSString *, id> *> *)configs
++ (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations
 {
-  if (0 == configs.count) {
+  if (0 == configurations.count) {
     return;
   }
-  for (NSDictionary<NSString *, id> *config in configs) {
-    [self _addConfig:[[FBAEMConfiguration alloc] initWithJSON:config]];
+  for (NSDictionary<NSString *, id> *configuration in configurations) {
+    [self _addConfiguration:[[FBAEMConfiguration alloc] initWithJSON:configuration]];
   }
-  [self _saveConfigs];
+  [self _saveConfigurations];
 }
 
-+ (void)_addConfig:(nullable FBAEMConfiguration *)config
++ (void)_addConfiguration:(nullable FBAEMConfiguration *)configuration
 {
-  if (!config.configMode) {
+  if (!configuration.mode) {
     return;
   }
-  NSMutableArray<FBAEMConfiguration *> *configs = [FBSDKTypeUtility dictionary:g_configs objectForKey:config.configMode ofType:NSMutableArray.class];
-  // Remove the config in the array that has the same "validFrom" and "businessID" as the added config
+  NSMutableArray<FBAEMConfiguration *> *configurations = [FBSDKTypeUtility dictionary:g_configurations
+                                                                         objectForKey:configuration.mode
+                                                                               ofType:NSMutableArray.class];
+  // Remove the configuration in the array that has the same "validFrom" and "businessID" as the added configuration
   NSMutableArray<FBAEMConfiguration *> *res = [NSMutableArray new];
-  for (FBAEMConfiguration *c in configs) {
-    if ([config isSameValidFrom:c.validFrom businessID:c.businessID]) {
+  for (FBAEMConfiguration *candidateConfiguration in configurations) {
+    if ([configuration isSameValidFrom:candidateConfiguration.validFrom businessID:candidateConfiguration.businessID]) {
       continue;
     }
-    [FBSDKTypeUtility array:res addObject:c];
+    [FBSDKTypeUtility array:res addObject:candidateConfiguration];
   }
-  [FBSDKTypeUtility array:res addObject:config];
-  [FBSDKTypeUtility dictionary:g_configs setObject:res forKey:config.configMode];
-  // Sort the configs via "validFrom"
+  [FBSDKTypeUtility array:res addObject:configuration];
+  [FBSDKTypeUtility dictionary:g_configurations setObject:res forKey:configuration.mode];
+  // Sort the configurations via "validFrom"
   [res sortUsingComparator:^NSComparisonResult (FBAEMConfiguration *obj1, FBAEMConfiguration *obj2) {
     if (obj1.validFrom > obj2.validFrom) {
       return NSOrderedDescending;
@@ -728,10 +732,12 @@ static id<FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:conversionParams setObject:@(delay) forKey:CONSUMPTION_HOUR_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsToken forKey:TOKEN_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsConfigID forKey:CONFIG_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.acsConfigurationID forKey:CONFIG_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMACWithDelay:delay] forKey:HMAC_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.businessID forKey:BUSINESS_ID_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.isConversionFilteringEligible && g_isConversionFilteringEnabled) forKey:IS_CONVERSION_FILTERING_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams
+                     setObject:@(invocation.isConversionFilteringEligible && g_isConversionFilteringEnabled)
+                        forKey:IS_CONVERSION_FILTERING_KEY];
 
   return [conversionParams copy];
 }
@@ -759,17 +765,17 @@ static id<FBSDKDataPersisting> _store;
 {
   // step 1: clear aggregated invocations that are outside attribution window
   [self _clearInvocations];
-  // step 2: clear old configs that are not used anymore and keep the most recent config
-  [self _clearConfigs];
+  // step 2: clear old configurations that are not used anymore and keep the most recent configuration
+  [self _clearConfigurations];
 }
 
-+ (void)_clearConfigs
++ (void)_clearConfigurations
 {
   BOOL shouldSaveCache = NO;
-  if (g_configs.count > 0) {
-    NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configs = [NSMutableDictionary new];
-    for (NSString *key in g_configs) {
-      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configs objectForKey:key ofType:NSMutableArray.class];
+  if (g_configurations.count > 0) {
+    NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations = [NSMutableDictionary new];
+    for (NSString *key in g_configurations) {
+      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configurations objectForKey:key ofType:NSMutableArray.class];
       NSMutableArray<FBAEMConfiguration *> *newConfigurations = [NSMutableArray new];
 
       // Removes the last of the old default mode configurations and stores it so it can be
@@ -781,7 +787,7 @@ static id<FBSDKDataPersisting> _store;
       }
 
       for (FBAEMConfiguration *oldConfiguration in oldConfigurations) {
-        if (![self _isUsingConfig:oldConfiguration forInvocations:g_invocations]) {
+        if (![self _isUsingConfiguration:oldConfiguration forInvocations:g_invocations]) {
           shouldSaveCache = YES;
           continue;
         }
@@ -789,12 +795,12 @@ static id<FBSDKDataPersisting> _store;
       }
 
       [FBSDKTypeUtility array:newConfigurations addObject:lastConfiguration];
-      [FBSDKTypeUtility dictionary:configs setObject:newConfigurations forKey:key];
+      [FBSDKTypeUtility dictionary:configurations setObject:newConfigurations forKey:key];
     }
-    g_configs = configs;
+    g_configurations = configurations;
   }
   if (shouldSaveCache) {
-    [self _saveConfigs];
+    [self _saveConfigurations];
   }
 }
 
@@ -804,7 +810,7 @@ static id<FBSDKDataPersisting> _store;
   if (g_invocations.count > 0) {
     NSMutableArray<FBAEMInvocation *> *res = [NSMutableArray new];
     for (FBAEMInvocation *invocation in g_invocations) {
-      if ([invocation isOutOfWindowWithConfigurations:g_configs] && invocation.isAggregated) {
+      if ([invocation isOutOfWindowWithConfigurations:g_configurations] && invocation.isAggregated) {
         isInvocationCacheUpdated = YES;
         continue;
       }
@@ -817,11 +823,11 @@ static id<FBSDKDataPersisting> _store;
   }
 }
 
-+ (BOOL)_isUsingConfig:(FBAEMConfiguration *)config
-        forInvocations:(NSArray<FBAEMInvocation *> *)invocations
++ (BOOL)_isUsingConfiguration:(FBAEMConfiguration *)configuration
+               forInvocations:(NSArray<FBAEMInvocation *> *)invocations
 {
   for (FBAEMInvocation *invocation in invocations) {
-    if ([config isSameValidFrom:invocation.configID businessID:invocation.businessID]) {
+    if ([configuration isSameValidFrom:invocation.configurationID businessID:invocation.businessID]) {
       return YES;
     }
   }
@@ -832,14 +838,14 @@ static id<FBSDKDataPersisting> _store;
 
 #if DEBUG
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
++ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
 {
-  return g_configs;
+  return g_configurations;
 }
 
-+ (void)setConfigs:(NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
++ (void)setConfigurations:(NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
 {
-  g_configs = configs;
+  g_configurations = configurations;
 }
 
 + (void)setInvocations:(NSMutableArray<FBAEMInvocation *> *)invocations
@@ -929,7 +935,7 @@ static id<FBSDKDataPersisting> _store;
   g_isConversionFilteringEnabled = NO;
   g_isCatalogMatchingEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
-  g_configs = [NSMutableDictionary new];
+  g_configurations = [NSMutableDictionary new];
   g_minAggregationRequestTimestamp = nil;
   self.networker = nil;
   self.appID = nil;

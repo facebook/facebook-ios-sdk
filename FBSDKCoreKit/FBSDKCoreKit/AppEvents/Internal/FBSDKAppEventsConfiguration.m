@@ -24,13 +24,13 @@
       if (!dict) {
         return FBSDKAppEventsConfiguration.defaultConfiguration;
       }
-      NSDictionary<NSString *, id> *configs = [FBSDKTypeUtility dictionary:dict objectForKey:@"app_events_config" ofType:NSDictionary.class];
-      if (!configs) {
+      NSDictionary<NSString *, id> *configurations = [FBSDKTypeUtility dictionary:dict objectForKey:@"app_events_config" ofType:NSDictionary.class];
+      if (!configurations) {
         return FBSDKAppEventsConfiguration.defaultConfiguration;
       }
-      NSNumber *defaultATEStatus = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_DEFAULT_ATE_STATUS_KEY]] ?: @(FBSDKAdvertisingTrackingUnspecified);
-      NSNumber *advertiserIDCollectionEnabled = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY]] ?: @(YES);
-      NSNumber *eventCollectionEnabled = [FBSDKTypeUtility numberValue:configs[FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY]] ?: @(NO);
+      NSNumber *defaultATEStatus = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_DEFAULT_ATE_STATUS_KEY]] ?: @(FBSDKAdvertisingTrackingUnspecified);
+      NSNumber *advertiserIDCollectionEnabled = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY]] ?: @(YES);
+      NSNumber *eventCollectionEnabled = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY]] ?: @(NO);
       _defaultATEStatus = defaultATEStatus.integerValue;
       _advertiserIDCollectionEnabled = advertiserIDCollectionEnabled.boolValue;
       _eventCollectionEnabled = eventCollectionEnabled.boolValue;
@@ -55,10 +55,9 @@
 
 + (instancetype)defaultConfiguration
 {
-  FBSDKAppEventsConfiguration *config = [[FBSDKAppEventsConfiguration alloc] initWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
-                                                                        advertiserIDCollectionEnabled:YES
-                                                                               eventCollectionEnabled:NO];
-  return config;
+  return [[FBSDKAppEventsConfiguration alloc] initWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                         advertiserIDCollectionEnabled:YES
+                                                eventCollectionEnabled:NO];
 }
 
 #pragma mark - NSCoding

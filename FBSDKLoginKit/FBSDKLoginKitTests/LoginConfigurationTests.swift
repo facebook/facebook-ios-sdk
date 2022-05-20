@@ -13,44 +13,44 @@ import XCTest
 final class LoginConfigurationTests: XCTestCase {
 
   func testDefaults() {
-    guard let config = LoginConfiguration() else {
-      return XCTFail("Should be able to create a config with default arguments")
+    guard let configuration = LoginConfiguration() else {
+      return XCTFail("Should be able to create a configuration with default arguments")
     }
 
     XCTAssertEqual(
-      config.requestedPermissions,
+      configuration.requestedPermissions,
       [],
-      "A config should be created with default requested permissions"
+      "A configuration should be created with default requested permissions"
     )
     XCTAssertEqual(
-      config.tracking,
+      configuration.tracking,
       .enabled,
       "Tracking should default to enabled when unspecified"
     )
     XCTAssertNotNil(
-      config.nonce,
-      "A config should be created with a default nonce"
+      configuration.nonce,
+      "A configuration should be created with a default nonce"
     )
     XCTAssertNil(
-      config.messengerPageId,
+      configuration.messengerPageId,
       "Messenger Page Id should default to nil when unspecified"
     )
     XCTAssertEqual(
-      config.authType,
+      configuration.authType,
       .rerequest,
       "Auth Type should default to rerequest when unspecified"
     )
     XCTAssertNotNil(
-      config.codeVerifier,
-      "A config should be created with a default code verifier"
+      configuration.codeVerifier,
+      "A configuration should be created with a default code verifier"
     )
   }
 
   func testCreatingWithNonceString() {
     let nonce = "12345"
-    let config = LoginConfiguration(nonce: nonce)
+    let configuration = LoginConfiguration(nonce: nonce)
     XCTAssertEqual(
-      config?.nonce,
+      configuration?.nonce,
       nonce,
       "Should create a configuration with the provided nonce string"
     )
@@ -69,9 +69,9 @@ final class LoginConfigurationTests: XCTestCase {
       .limited,
     ]
     preferences.forEach { preference in
-      let config = LoginConfiguration(tracking: preference)
+      let configuration = LoginConfiguration(tracking: preference)
       XCTAssertEqual(
-        config?.tracking,
+        configuration?.tracking,
         preference,
         "Should create a configuration with the provided tracking preference"
       )
@@ -80,10 +80,10 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithRequestedPermissions() {
     let permissions = Set([Permission.email, .userLikes])
-    let config = LoginConfiguration(permissions: permissions)
+    let configuration = LoginConfiguration(permissions: permissions)
 
     XCTAssertEqual(
-      Set((config?.requestedPermissions.map { $0.value })!), // swiftlint:disable:this force_unwrapping
+      Set((configuration?.requestedPermissions.map { $0.value })!), // swiftlint:disable:this force_unwrapping
       Set(permissions.map { $0.name }),
       "Should create a configuration with the provided tracking preference"
     )
@@ -91,9 +91,9 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithMessengerPageId() {
     let messengerPageId = "12345"
-    let config = LoginConfiguration(messengerPageId: messengerPageId)
+    let configuration = LoginConfiguration(messengerPageId: messengerPageId)
     XCTAssertEqual(
-      config?.messengerPageId,
+      configuration?.messengerPageId,
       messengerPageId,
       .createsConfigWithMessengerID
     )
@@ -103,26 +103,26 @@ final class LoginConfigurationTests: XCTestCase {
     let messengerPageId = "12345"
     let permissions = ["email"]
 
-    let config = LoginConfiguration(
+    let configuration = LoginConfiguration(
       permissions: permissions,
       tracking: .enabled,
       messengerPageId: messengerPageId
     )
 
     XCTAssertEqual(
-      config?.requestedPermissions,
+      configuration?.requestedPermissions,
       FBPermission.permissions(fromRawPermissions: Set(permissions)),
       .createsConfigWithMessengerID
     )
 
     XCTAssertEqual(
-      config?.tracking,
+      configuration?.tracking,
       LoginTracking.enabled,
       .createsConfigWithMessengerID
     )
 
     XCTAssertEqual(
-      config?.messengerPageId,
+      configuration?.messengerPageId,
       messengerPageId,
       .createsConfigWithMessengerID
     )
@@ -130,9 +130,9 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithRerequestAuthType() {
     let authType = LoginAuthType.rerequest
-    let config = LoginConfiguration(authType: authType)
+    let configuration = LoginConfiguration(authType: authType)
     XCTAssertEqual(
-      config?.authType,
+      configuration?.authType,
       authType,
       .createsConfigWithAuthType
     )
@@ -143,7 +143,7 @@ final class LoginConfigurationTests: XCTestCase {
     let permissions = ["email"]
     let messengerPageId = "12345"
 
-    let config = LoginConfiguration(
+    let configuration = LoginConfiguration(
       permissions: permissions,
       tracking: .enabled,
       messengerPageId: messengerPageId,
@@ -151,25 +151,25 @@ final class LoginConfigurationTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      config?.requestedPermissions,
+      configuration?.requestedPermissions,
       FBPermission.permissions(fromRawPermissions: Set(permissions)),
       .createsConfigWithAuthType
     )
 
     XCTAssertEqual(
-      config?.tracking,
+      configuration?.tracking,
       LoginTracking.enabled,
       .createsConfigWithAuthType
     )
 
     XCTAssertEqual(
-      config?.messengerPageId,
+      configuration?.messengerPageId,
       messengerPageId,
       .createsConfigWithAuthType
     )
 
     XCTAssertEqual(
-      config?.authType,
+      configuration?.authType,
       authType,
       .createsConfigWithAuthType
     )
@@ -177,27 +177,27 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithReauthorizeAuthType() {
     let authType = LoginAuthType.reauthorize
-    let config = LoginConfiguration(authType: authType)
+    let configuration = LoginConfiguration(authType: authType)
     XCTAssertEqual(
-      config?.authType,
+      configuration?.authType,
       authType,
       "Should create a configuration with the provided auth_type"
     )
   }
 
   func testCreatingWithNilAuthType() {
-    let config = LoginConfiguration(authType: nil)
+    let configuration = LoginConfiguration(authType: nil)
     XCTAssertNil(
-      config?.authType,
+      configuration?.authType,
       "Should treat a nil auth type as nil"
     )
   }
 
   func testCreatingWithCodeVerifier() {
     let codeVerifier = CodeVerifier()
-    let config = LoginConfiguration(permissions: [], codeVerifier: codeVerifier)
+    let configuration = LoginConfiguration(permissions: [], codeVerifier: codeVerifier)
     XCTAssertEqual(
-      config?.codeVerifier.value,
+      configuration?.codeVerifier.value,
       codeVerifier.value,
       "Should create a configuration with the provided code verifier"
     )

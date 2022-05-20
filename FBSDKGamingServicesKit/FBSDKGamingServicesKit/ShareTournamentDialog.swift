@@ -25,7 +25,7 @@ public final class ShareTournamentDialog: NSObject, URLOpening {
   let gamingGraphDomain = "gaming"
   var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
   weak var delegate: ShareTournamentDialogDelegate?
-  var currentConfig: TournamentConfig?
+  var currentConfiguration: TournamentConfig?
   var tournamentToUpdate: Tournament?
 
   init(
@@ -107,8 +107,8 @@ public final class ShareTournamentDialog: NSObject, URLOpening {
    - Parameter config: The tournament configuration used to create a new tournament
    - throws  Will throw if an error occurs when attempting to show the dialog
    */
-  public func show(initialScore: Int, config: TournamentConfig) throws {
-    currentConfig = config
+  public func show(initialScore: Int, config configuration: TournamentConfig) throws {
+    currentConfiguration = configuration
     guard let accessToken = AccessToken.current else {
       throw ShareTournamentDialogError.invalidAccessToken
     }
@@ -117,7 +117,7 @@ public final class ShareTournamentDialog: NSObject, URLOpening {
     }
     guard
       let url = ShareTournamentDialogURLBuilder
-        .create(config)
+        .create(configuration)
         .url(withPathAppID: accessToken.appID, score: initialScore)
     else {
       throw ShareTournamentDialogError.unableToCreateDialogUrl
@@ -167,8 +167,8 @@ public final class ShareTournamentDialog: NSObject, URLOpening {
     else {
       return false
     }
-    if let currentConfig = currentConfig {
-      let createdTournament = Tournament(identifier: tournamentID, config: currentConfig)
+    if let currentConfiguration = currentConfiguration {
+      let createdTournament = Tournament(identifier: tournamentID, configuration: currentConfiguration)
       delegate?.didComplete(dialog: self, tournament: createdTournament)
     }
     if let tournamentToUpdate = tournamentToUpdate, tournamentToUpdate.identifier == tournamentID {

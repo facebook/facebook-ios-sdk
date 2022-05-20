@@ -79,7 +79,7 @@ final class AppEventsTests: XCTestCase {
     advertiserIDProvider = TestAdvertiserIDProvider()
     skAdNetworkReporter = TestAppEventsReporter()
     serverConfigurationProvider = TestServerConfigurationProvider(
-      configuration: ServerConfigurationFixtures.defaultConfig
+      configuration: ServerConfigurationFixtures.defaultConfiguration
     )
     userDataStore = TestUserDataStore()
     appEventsUtility = TestAppEventsUtility()
@@ -562,7 +562,7 @@ final class AppEventsTests: XCTestCase {
       """
     )
 
-    // The publish call happens after both configs are fetched
+    // The publish call happens after both configurations are fetched
     appEventsConfigurationProvider.firstCapturedBlock?()
     appEventsConfigurationProvider.lastCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
@@ -1388,7 +1388,7 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed() {
     settings.isAutoLogAppEventsEnabled = true
-    let serverConfiguration = ServerConfigurationFixtures.config(
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
     )
     appEvents.fetchServerConfiguration(nil)
@@ -1406,7 +1406,9 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed() {
     settings.isAutoLogAppEventsEnabled = true
-    let serverConfiguration = ServerConfigurationFixtures.config(withDictionary: ["implicitPurchaseLoggingEnabled": 0])
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": 0]
+    )
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
@@ -1422,7 +1424,7 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled() {
     settings.isAutoLogAppEventsEnabled = false
-    let serverConfiguration = ServerConfigurationFixtures.config(
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
     )
     appEvents.fetchServerConfiguration(nil)
@@ -1562,17 +1564,17 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationIncludingCloudBridge() {
     featureManager.enable(feature: .appEventsCloudbridge)
-      appEvents.fetchServerConfiguration(nil)
-      appEventsConfigurationProvider.firstCapturedBlock?()
-      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-      featureManager.completeCheck(
-        forFeature: .appEventsCloudbridge,
-        with: true
-      )
-      XCTAssertTrue(
-        self.capiReporter.enabledWasCalled,
-        "Should enable the CloudBridge"
-      )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .appEventsCloudbridge,
+      with: true
+    )
+    XCTAssertTrue(
+      capiReporter.enabledWasCalled,
+      "Should enable the CloudBridge"
+    )
   }
 
   func testFetchingConfigurationIncludingPrivacyProtection() {

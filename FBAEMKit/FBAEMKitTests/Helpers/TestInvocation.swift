@@ -22,23 +22,23 @@ final class TestInvocation: _AEMInvocation {
     campaignID: String,
     acsToken: String,
     acsSharedSecret: String?,
-    acsConfigID: String?,
+    acsConfigurationID: String?,
     businessID: String?,
     catalogID: String?,
     isTestMode: Bool,
-    hasSKAN: Bool,
+    hasStoreKitAdNetwork: Bool,
     isConversionFilteringEligible: Bool
   ) {
     self.init(
       campaignID: campaignID,
       acsToken: acsToken,
       acsSharedSecret: acsSharedSecret,
-      acsConfigID: acsConfigID,
+      acsConfigurationID: acsConfigurationID,
       businessID: businessID,
       catalogID: catalogID,
       timestamp: nil,
-      configMode: "DEFAULT",
-      configID: -1,
+      configurationMode: "DEFAULT",
+      configurationID: -1,
       recordedEvents: nil,
       recordedValues: nil,
       conversionValue: -1,
@@ -46,7 +46,7 @@ final class TestInvocation: _AEMInvocation {
       conversionTimestamp: nil,
       isAggregated: true,
       isTestMode: isTestMode,
-      hasSKAN: hasSKAN,
+      hasStoreKitAdNetwork: hasStoreKitAdNetwork,
       isConversionFilteringEligible: isConversionFilteringEligible
     )
   }
@@ -64,7 +64,7 @@ final class TestInvocation: _AEMInvocation {
   }
 
   override func updateConversionValue(
-    configurations configs: [String: [_AEMConfiguration]]?,
+    configurations: [String: [_AEMConfiguration]]?,
     event: String,
     shouldBoostPriority: Bool
   ) -> Bool {

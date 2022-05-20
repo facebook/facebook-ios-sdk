@@ -17,9 +17,9 @@
 #define FBSDK_SERVER_CONFIGURATION_ADVERTISING_ID_ENABLED_KEY @"advertisingIDEnabled"
 #define FBSDK_SERVER_CONFIGURATION_APP_ID_KEY @"appID"
 #define FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY @"appName"
-#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY @"dialogConfigs"
+#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY @"dialogConfigs"
 #define FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY @"dialogFlows"
-#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY @"errorConfigs"
+#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY @"errorConfigs"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY @"implicitLoggingEnabled"
 #define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY @"defaultShareMode"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY @"implicitPurchaseLoggingEnabled"
@@ -235,7 +235,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                FBSDKDialogConfiguration.class,
                                                nil];
   NSDictionary<NSString *, id> *dialogConfigurations = [decoder decodeObjectOfClasses:dialogConfigurationsClasses
-                                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
+                                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY];
   NSSet<Class> *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
                                       [NSDictionary<NSString *, id> class],
                                       NSString.class,
@@ -243,7 +243,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                       nil];
   NSDictionary<NSString *, id> *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
                                                                       forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
-  FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:FBSDKErrorConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
+  FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:FBSDKErrorConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY];
   NSTimeInterval sessionTimeoutInterval = [decoder decodeDoubleForKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   NSString *loggingToken = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
@@ -297,9 +297,9 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [encoder encodeObject:_appID forKey:FBSDK_SERVER_CONFIGURATION_APP_ID_KEY];
   [encoder encodeObject:_appName forKey:FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY];
   [encoder encodeObject:_defaultShareMode forKey:FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY];
-  [encoder encodeObject:_dialogConfigurations forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
+  [encoder encodeObject:_dialogConfigurations forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY];
   [encoder encodeObject:_dialogFlows forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
-  [encoder encodeObject:_errorConfiguration forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
+  [encoder encodeObject:_errorConfiguration forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY];
   [encoder encodeBool:_implicitLoggingEnabled forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   [encoder encodeBool:_implicitPurchaseLoggingEnabled
                forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];

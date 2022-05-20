@@ -15,7 +15,7 @@ final class ShareTournamentDialogURLBuilderTests: XCTestCase {
     identifier: "1234",
     payload: "Hello"
   )
-  lazy var tournamentConfig = TournamentConfig(
+  lazy var tournamentConfiguration = TournamentConfig(
     title: "Test",
     endTime: expirationDate,
     scoreType: .numeric,
@@ -58,7 +58,7 @@ final class ShareTournamentDialogURLBuilderTests: XCTestCase {
 
     let updateURL = try XCTUnwrap(
       ShareTournamentDialogURLBuilder
-        .create(tournamentConfig)
+        .create(tournamentConfiguration)
         .url(withPathAppID: "12345", score: 1000)
     )
     let updateURLComponents = try XCTUnwrap(

@@ -12,36 +12,39 @@ import XCTest
 
 final class AppEventsConfigurationTests: XCTestCase {
 
-  private var config = SampleAppEventsConfigurations.valid
+  private var configuration = SampleAppEventsConfigurations.valid
 
   func testCreatingWithDefaultATEStatus() {
-    XCTAssertEqual(config.defaultATEStatus, .unspecified, "Default ATE Status should be unspecified")
+    XCTAssertEqual(configuration.defaultATEStatus, .unspecified, "Default ATE Status should be unspecified")
   }
 
   func testCreatingWithKnownDefaultATEStatus() {
-    config = SampleAppEventsConfigurations.create(defaultATEStatus: AdvertisingTrackingStatus.allowed)
-    XCTAssertEqual(config.defaultATEStatus, .allowed, "Default ATE Status should be settable")
+    configuration = SampleAppEventsConfigurations.create(defaultATEStatus: AdvertisingTrackingStatus.allowed)
+    XCTAssertEqual(configuration.defaultATEStatus, .allowed, "Default ATE Status should be settable")
   }
 
   func testCreatingWithDefaultAdvertisingIDCollectionEnabled() {
     XCTAssertTrue(
-      config.advertiserIDCollectionEnabled,
+      configuration.advertiserIDCollectionEnabled,
       "Advertising identifier collection enabled should default to true"
     )
   }
 
   func testCreatingWithKnownAdvertisingIDCollectionEnabled() {
-    config = SampleAppEventsConfigurations.create(advertiserIDCollectionEnabled: false)
-    XCTAssertFalse(config.advertiserIDCollectionEnabled, "Advertising identifier collection enabled should be settable")
+    configuration = SampleAppEventsConfigurations.create(advertiserIDCollectionEnabled: false)
+    XCTAssertFalse(
+      configuration.advertiserIDCollectionEnabled,
+      "Advertising identifier collection enabled should be settable"
+    )
   }
 
   func testCreatingWithDefaultEventCollectionEnabled() {
-    XCTAssertFalse(config.eventCollectionEnabled, "Event collection enabled should default to false")
+    XCTAssertFalse(configuration.eventCollectionEnabled, "Event collection enabled should default to false")
   }
 
   func testCreatingWithKnownEventCollectionEnabled() {
-    config = SampleAppEventsConfigurations.create(eventCollectionEnabled: true)
-    XCTAssertTrue(config.eventCollectionEnabled, "Event collection enabled should be settable")
+    configuration = SampleAppEventsConfigurations.create(eventCollectionEnabled: true)
+    XCTAssertTrue(configuration.eventCollectionEnabled, "Event collection enabled should be settable")
   }
 
   func testCodingSecurity() {
@@ -49,66 +52,66 @@ final class AppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithMissingDictionary() {
-    config = AppEventsConfiguration(json: nil)
+    configuration = AppEventsConfiguration(json: nil)
     XCTAssertEqual(
-      config,
+      configuration,
       AppEventsConfiguration.default(),
-      "Should use the default config when creating with a missing dictionary"
+      "Should use the default configuration when creating with a missing dictionary"
     )
   }
 
   func testCreatingWithEmptyDictionary() {
-    config = AppEventsConfiguration(json: [:])
+    configuration = AppEventsConfiguration(json: [:])
     XCTAssertEqual(
-      config,
+      configuration,
       AppEventsConfiguration.default(),
-      "Should use the default config when creating with an empty dictionary"
+      "Should use the default configuration when creating with an empty dictionary"
     )
   }
 
   func testCreatingWithMissingTopLevelKey() {
-    config = AppEventsConfiguration(
+    configuration = AppEventsConfiguration(
       json: RawAppEventsConfigurationResponseFixtures.validMissingTopLevelKey
     )
     XCTAssertEqual(
-      config,
+      configuration,
       AppEventsConfiguration.default(),
-      "Should use the default config when creating with a missing top level key"
+      "Should use the default configuration when creating with a missing top level key"
     )
   }
 
   func testCreatingWithInvalidValues() {
-    config = AppEventsConfiguration(
+    configuration = AppEventsConfiguration(
       json: RawAppEventsConfigurationResponseFixtures.invalidValues
     )
     XCTAssertEqual(
-      config.defaultATEStatus,
+      configuration.defaultATEStatus,
       .unspecified,
       "Should use the correct default for ate status"
     )
     XCTAssertTrue(
-      config.advertiserIDCollectionEnabled,
+      configuration.advertiserIDCollectionEnabled,
       "Should use the correct default for ad ID collection"
     )
     XCTAssertFalse(
-      config.eventCollectionEnabled,
+      configuration.eventCollectionEnabled,
       "Should use the correct default for event collection"
     )
   }
 
   func testCreatingWithValidValues() {
-    config = AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.valid)
+    configuration = AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.valid)
     XCTAssertEqual(
-      config.defaultATEStatus,
+      configuration.defaultATEStatus,
       .disallowed,
       "Should use the provided value for the default ate status"
     )
     XCTAssertFalse(
-      config.advertiserIDCollectionEnabled,
+      configuration.advertiserIDCollectionEnabled,
       "Should use the provided value for ad ID collection"
     )
     XCTAssertTrue(
-      config.eventCollectionEnabled,
+      configuration.eventCollectionEnabled,
       "Should use the provided value for event collection"
     )
   }
@@ -116,26 +119,26 @@ final class AppEventsConfigurationTests: XCTestCase {
   // MARK: Coding
 
   func testEncodingAndDecoding() throws {
-    config = AppEventsConfiguration.default()
-    let decodedObject = try CodabilityTesting.encodeAndDecode(config)
+    configuration = AppEventsConfiguration.default()
+    let decodedObject = try CodabilityTesting.encodeAndDecode(configuration)
 
     // Test Objects
-    XCTAssertNotIdentical(decodedObject, config, .isCodable)
-    XCTAssertEqual(decodedObject, config, .isCodable)
+    XCTAssertNotIdentical(decodedObject, configuration, .isCodable)
+    XCTAssertEqual(decodedObject, configuration, .isCodable)
 
     // Test Properties
     XCTAssertEqual(
-      config.defaultATEStatus,
+      configuration.defaultATEStatus,
       decodedObject.defaultATEStatus,
       .isCodable
     )
     XCTAssertEqual(
-      config.advertiserIDCollectionEnabled,
+      configuration.advertiserIDCollectionEnabled,
       decodedObject.advertiserIDCollectionEnabled,
       .isCodable
     )
     XCTAssertEqual(
-      config.eventCollectionEnabled,
+      configuration.eventCollectionEnabled,
       decodedObject.eventCollectionEnabled,
       .isCodable
     )

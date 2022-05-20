@@ -15,11 +15,11 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       campaignID: "test_campaign_1",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
-      acsConfigID: "test_config_id_123",
+      acsConfigurationID: "test_config_id_123",
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false,
+      hasStoreKitAdNetwork: false,
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -29,11 +29,11 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       campaignID: "test_campaign_2",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
-      acsConfigID: "test_config_id_123",
+      acsConfigurationID: "test_config_id_123",
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: false,
+      hasStoreKitAdNetwork: false,
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -43,11 +43,11 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       campaignID: "debugging_campaign",
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
-      acsConfigID: "debugging_config_id_123",
+      acsConfigurationID: "debugging_config_id_123",
       businessID: nil,
       catalogID: nil,
       isTestMode: true,
-      hasSKAN: false,
+      hasStoreKitAdNetwork: false,
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -57,11 +57,11 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       campaignID: "debugging_campaign",
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
-      acsConfigID: "debugging_config_id_123",
+      acsConfigurationID: "debugging_config_id_123",
       businessID: nil,
       catalogID: nil,
       isTestMode: false,
-      hasSKAN: true,
+      hasStoreKitAdNetwork: true,
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -71,11 +71,11 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       campaignID: "81", // The campaign id mod 8 (catalog optimization modulus) modulus is 1
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
-      acsConfigID: "debugging_config_id_123",
+      acsConfigurationID: "debugging_config_id_123",
       businessID: nil,
       catalogID: "test_catalog_id",
       isTestMode: false,
-      hasSKAN: true,
+      hasStoreKitAdNetwork: true,
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
