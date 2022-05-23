@@ -38,6 +38,11 @@
             "shell": "python3 ci/build_hackbook_simulator_ipa.py",
             "determinator": true,
           },
+          {
+            "name": "run unit tests",
+            "shell": "python3 ci/unit_tests.py",
+            "determinator": true,
+          },
         ],
       },
     },
