@@ -68,6 +68,11 @@
             "shell": "python3 ci/xcodebuild_warnings.py",
             "determinator": true,
           },
+          {
+            "name": "spm xcframework integration verification",
+            "shell": "python3 ci/xcframeworks_spm_integration_verification.py",
+            "determinator": true,
+          },
         ],
       },
     },
