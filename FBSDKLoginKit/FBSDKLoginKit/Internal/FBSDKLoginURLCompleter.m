@@ -12,12 +12,12 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKLoginKit/FBSDKLoginError.h>
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKLoginCompletionParameters+Internal.h"
-#import "FBSDKLoginConstants.h"
 #import "FBSDKLoginErrorFactory.h"
 #import "FBSDKLoginManager+Internal.h"
 

@@ -9,11 +9,13 @@
 #import <FBSDKLoginKit/FBSDKAuthenticationTokenCreating.h>
 #import <FBSDKLoginKit/FBSDKCodeVerifier.h>
 #import <FBSDKLoginKit/FBSDKDefaultAudience.h>
+#import <FBSDKLoginKit/FBSDKDeviceLoginError.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
 #import <FBSDKLoginKit/FBSDKDevicePolling.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>
-#import <FBSDKLoginKit/FBSDKLoginConstants.h>
+#import <FBSDKLoginKit/FBSDKLoginError.h>
+#import <FBSDKLoginKit/FBSDKLoginErrorDomain.h>
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResultBlock.h>

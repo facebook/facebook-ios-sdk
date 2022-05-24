@@ -10,12 +10,13 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKLoginKit/FBSDKLoginError.h>
+#import <FBSDKLoginKit/FBSDKLoginErrorDomain.h>
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKDeviceLoginManagerDelegate.h"
 #import "FBSDKDevicePolling.h"
-#import "FBSDKLoginConstants.h"
 
 static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
