@@ -58,6 +58,11 @@
             "shell": "python3 ci/xcode_integration_verification.py",
             "determinator": true,
           },
+          {
+            "name": "xcode analyzer job",
+            "shell": "python3 ci/xcode_analyzer.py",
+            "determinator": true,
+          },
         ],
       },
     },
