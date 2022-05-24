@@ -53,6 +53,11 @@
             "shell": "python3 ci/xcframework_integration_verification_static.py",
             "determinator": true,
           },
+          {
+            "name": "xcode integration verification",
+            "shell": "python3 ci/xcode_integration_verification.py",
+            "determinator": true,
+          },
         ],
       },
     },
