@@ -43,6 +43,16 @@
             "shell": "python3 ci/unit_tests.py",
             "determinator": true,
           },
+          {
+            "name": "dynamic xcframework verification",
+            "shell": "python3 ci/xcframework_integration_verification_dynamic.py",
+            "determinator": true,
+          },
+          {
+            "name": "static xcframework verification",
+            "shell": "python3 ci/xcframework_integration_verification_static.py",
+            "determinator": true,
+          },
         ],
       },
     },

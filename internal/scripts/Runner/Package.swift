@@ -46,9 +46,9 @@ enum HostType: String {
             ]
         case .internal:
             return [
-                .package(name: "swift-argument-parser", path: "../../../../VendorLib/swift-argument-parser"),
-                .package(name: "ShellOut", path: "../../../../VendorLib/ShellOut"),
-                .package(name: "Mustache", path: "../../../../VendorLib/GRMustache")
+                .package(name: "swift-argument-parser", path: "../../tools/swift-argument-parser"),
+                .package(name: "ShellOut", path: "../../tools/ShellOut"),
+                .package(name: "Mustache", path: "../../tools/GRMustache")
             ]
         }
     }

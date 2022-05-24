@@ -11,9 +11,7 @@ def ios_sdk_capabilities(**kwargs):
     return capabilities
 
 def swift_run_runner(args):
-    return python.dedent(
-        """\
+    return """\
     cd internal/scripts/Runner
-    swift run --build-path=`mkscratch path` runner {args}
-    """.format(args = args),
-    )
+    swift run runner {args}
+    """.format(args = args)
