@@ -63,6 +63,11 @@
             "shell": "python3 ci/xcode_analyzer.py",
             "determinator": true,
           },
+          {
+            "name": "xcodebuild warnings",
+            "shell": "python3 ci/xcodebuild_warnings.py",
+            "determinator": true,
+          },
         ],
       },
     },
