@@ -11,8 +11,8 @@ import XCTest
 
 final class DependentAsTypeTests: XCTestCase {
 
-  let defaultDependencies = TestDependencies(value: 14)
-  let customDependencies = TestDependencies(value: 28)
+  private let defaultDependencies = TestDependencies(value: 14)
+  private let customDependencies = TestDependencies(value: 28)
 
   override func setUp() {
     super.setUp()
@@ -93,16 +93,16 @@ final class DependentAsTypeTests: XCTestCase {
 
 // MARK: - Test Types
 
-struct TestDependencies: Equatable {
+private struct TestDependencies: Equatable {
   let value: Int
 }
 
-enum DefaultImplementationDependent: DependentAsType {
+private enum DefaultImplementationDependent: DependentAsType {
   static var configuredDependencies: TestDependencies?
   static var defaultDependencies: TestDependencies?
 }
 
-enum CustomImplementationDependent: DependentAsType {
+private enum CustomImplementationDependent: DependentAsType {
   static var configuredDependencies: TestDependencies?
   static var defaultDependencies: TestDependencies?
 
