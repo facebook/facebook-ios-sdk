@@ -20,7 +20,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKLoginManagerLogger;
-@class FBSDKPermission;
 
 /// Success Block
 typedef void (^ FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
@@ -49,7 +48,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 
 @property (nullable, nonatomic, weak) UIViewController *fromViewController;
-@property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nullable, nonatomic, strong) FBSDKLoginManagerLogger *logger;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;

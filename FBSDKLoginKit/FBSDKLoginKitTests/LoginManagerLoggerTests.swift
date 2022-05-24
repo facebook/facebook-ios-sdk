@@ -14,31 +14,52 @@ import XCTest
 final class LoginManagerLoggerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var loginManagerlogger: LoginManagerLogger!
+  var loginManagerLogger: _LoginManagerLogger!
   var eventLogger: TestLoginEventLogger!
   // swiftlint:enable implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-    eventLogger = TestLoginEventLogger()
-    LoginManagerLogger.configure(withEventLogger: eventLogger)
-    loginManagerlogger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
-  }
-
-  override func tearDown() {
-    eventLogger = nil
-    loginManagerlogger = nil
-    LoginManagerLogger.resetTypeDependencies()
-    super.tearDown()
-  }
 
   let validParameters = [
     "state": "{\"challenge\":\"ibUuyvhzJW36TvC7BBYpasPHrXk%3D\",\"0_auth_logger_id\":\"A48F8D79-F2DF-4E04-B893-B29879A9A37B\",\"com.facebook.sdk_client_state\":true,\"3_method\":\"sfvc_auth\"}", // swiftlint:disable:this line_length
   ]
 
+  override func setUp() {
+    super.setUp()
+    eventLogger = TestLoginEventLogger()
+    loginManagerLogger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    _LoginManagerLogger.setDependencies(.init(eventLogger: eventLogger))
+  }
+
+  override func tearDown() {
+    eventLogger = nil
+    loginManagerLogger = nil
+    _LoginManagerLogger.resetDependencies()
+    super.tearDown()
+  }
+
+  func testDefaultTypeDependencies() throws {
+    _LoginManagerLogger.resetDependencies()
+    let dependencies = try _LoginManagerLogger.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.eventLogger,
+      AppEvents.shared,
+      .defaultDependency("the shared AppEvents", for: "event logging")
+    )
+  }
+
+  func testCustomTypeDependencies() throws {
+    let dependencies = try _LoginManagerLogger.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.eventLogger,
+      eventLogger,
+      .customDependency(for: "event logging")
+    )
+  }
+
   func testCreatingWithMissingParametersWithTrackingEnabled() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: nil,
         tracking: .enabled
       ),
@@ -48,7 +69,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithEmptyParametersWithTrackingEnabled() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: [:],
         tracking: .enabled
       ),
@@ -58,7 +79,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithParametersWithTrackingEnabled() {
     XCTAssertNotNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: validParameters,
         tracking: .enabled
       ),
@@ -68,7 +89,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithMissingParametersWithTrackingLimited() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: nil,
         tracking: .limited
       ),
@@ -78,7 +99,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithEmptyParametersWithTrackingLimited() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: [:],
         tracking: .limited
       ),
@@ -88,7 +109,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithParametersWithTrackingLimited() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         parameters: validParameters,
         tracking: .limited
       ),
@@ -98,7 +119,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithMissingLoggingTokenWithTrackingEnabled() {
     XCTAssertNotNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         loggingToken: nil,
         tracking: .enabled
       ),
@@ -108,7 +129,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingloggingTokenWithTrackingEnabled() {
     XCTAssertNotNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         loggingToken: "123",
         tracking: .enabled
       ),
@@ -118,7 +139,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithMissingLoggingTokenWithTrackingLimited() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         loggingToken: nil,
         tracking: .limited
       ),
@@ -128,7 +149,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithLoggingTokenWithTrackingLimited() {
     XCTAssertNil(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         loggingToken: "123",
         tracking: .limited
       ),
@@ -139,7 +160,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   func testStartingSessionForLoginManager() throws {
     let loginManager = LoginManager(defaultAudience: .friends)
     loginManager.setRequestedPermissions(["user_friends"])
-    loginManagerlogger.startSession(for: loginManager)
+    loginManagerLogger.startSession(for: loginManager)
 
     validateCommonEventLoggingParameters()
     try validateEmptyResult()
@@ -173,7 +194,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   }
 
   func testEndingSession() throws {
-    loginManagerlogger.endSession()
+    loginManagerLogger.endSession()
 
     validateCommonEventLoggingParameters()
     try validateEmptyExtraParameters()
@@ -212,7 +233,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerlogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(with: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -240,7 +261,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerlogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(with: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -277,7 +298,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       declinedPermissions: declined
     )
 
-    loginManagerlogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(with: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -299,7 +320,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     let errorDomain = "testingDomain"
     let errorCode = -1
     let error = NSError(domain: errorDomain, code: errorCode)
-    loginManagerlogger.endLogin(with: nil, error: error)
+    loginManagerLogger.endLogin(with: nil, error: error)
 
     XCTAssertEqual(eventLogger.capturedEventName, AppEvents.Name(rawValue: "fb_mobile_login_method_complete"))
     try validateEmptyExtraParameters()
@@ -322,7 +343,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   }
 
   func testPostingLoginHeartbeat() throws {
-    loginManagerlogger.postLoginHeartbeat()
+    loginManagerLogger.postLoginHeartbeat()
     XCTAssertNil(eventLogger.capturedEventName, .doesNotLogEventName)
 
     let expectation = expectation(description: "post login heart beat")
@@ -332,38 +353,42 @@ final class LoginManagerLoggerTests: XCTestCase {
     try validateEmptyExtraParameters()
   }
 
-  func testClientStateForAuthMethodWithNoExistingState() {
-    let clientState = LoginManagerLogger.clientState(
-      forAuthMethod: "sfvc_auth",
+  func testClientStateForAuthMethodWithNoExistingState() throws {
+    let clientStateString = _LoginManagerLogger.clientStateFor(
+      authMethod: "sfvc_auth",
       andExistingState: nil,
-      logger: loginManagerlogger
+      logger: loginManagerLogger
     )
 
-    let expectedClientState = """
-      {\
-      "com.facebook.sdk_client_state":true,\
-      "3_method":"sfvc_auth",\
-      "0_auth_logger_id":"\(loginManagerlogger.identifier)"\
-      }
-      """
-    XCTAssertEqual(clientState, expectedClientState, .formatsClientState)
+    let identifier = try XCTUnwrap(loginManagerLogger.identifier, .formatsClientState)
+    let expectedClientState: [String: Any] = [
+      "com.facebook.sdk_client_state": true,
+      "3_method": "sfvc_auth",
+      "0_auth_logger_id": "\(identifier)",
+    ]
+
+    let clientState = try XCTUnwrap(clientStateString, .formatsClientState)
+    let data = try XCTUnwrap(clientState.data(using: .utf16), .formatsClientState)
+    let clientStateDict = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any], .formatsClientState)
+    XCTAssertEqual(expectedClientState as NSDictionary, clientStateDict as NSDictionary, .formatsClientState)
   }
 
   func testClientStateForAuthMethodWithExistingState() throws {
     let existingState = ["challenge": "ibUuyvhzJW36TvC7BBYpasPHrXk%3D"]
-    let clientStateString = LoginManagerLogger.clientState(
-      forAuthMethod: "sfvc_auth",
+    let clientStateString = _LoginManagerLogger.clientStateFor(
+      authMethod: "sfvc_auth",
       andExistingState: existingState,
-      logger: loginManagerlogger
+      logger: loginManagerLogger
     )
 
     let clientState = try XCTUnwrap(clientStateString, .formatsClientState)
+    let identifier = try XCTUnwrap(loginManagerLogger.identifier, .formatsClientState)
 
     let expectedDict: [String: Any] = [
       "challenge": "ibUuyvhzJW36TvC7BBYpasPHrXk%3D",
       "com.facebook.sdk_client_state": true,
       "3_method": "sfvc_auth",
-      "0_auth_logger_id": "\(loginManagerlogger.identifier)",
+      "0_auth_logger_id": "\(identifier)",
     ]
     let data = try XCTUnwrap(clientState.data(using: .utf16), .formatsClientState)
     let dict = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any], .formatsClientState)
@@ -373,7 +398,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   // MARK: - Helpers
 
   func testAuthMethod(_ method: String) throws {
-    loginManagerlogger.startAuthMethod(method)
+    loginManagerLogger.startWith(authMethod: method)
 
     validateCommonEventLoggingParameters()
     try validateEmptyExtraParameters()
@@ -399,7 +424,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     )
     XCTAssertEqual(
       eventLogger.capturedParameters?[AppEvents.ParameterName(rawValue: "0_auth_logger_id")] as? String,
-      "\(loginManagerlogger.identifier)",
+      loginManagerLogger.identifier,
       .containsAuthId
     )
     XCTAssertEqual(
@@ -445,6 +470,14 @@ final class LoginManagerLoggerTests: XCTestCase {
 // MARK: - Assumptions
 
 fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _LoginManagerLogger type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _LoginManagerLogger type uses a custom \(type) dependency when provided"
+  }
+
   static let containsLoggingToken = "logger parameters contain a logging token"
   static let containsAuthId = "logger parameters contain an auth identifier"
   static let containsAuthMethod = "logger parameters contain an auth method"

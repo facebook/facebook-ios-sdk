@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if !TARGET_OS_TV
 
 @class FBSDKLoginConfiguration;
+@class FBSDKPermission;
 
 /**
  `FBSDKLoginManager` provides methods for logging the user in and out.
@@ -33,6 +34,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 NS_SWIFT_NAME(LoginManager)
 @interface FBSDKLoginManager : NSObject <FBSDKLoginProviding>
+
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@property (nullable, nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 
 /**
  the default audience.

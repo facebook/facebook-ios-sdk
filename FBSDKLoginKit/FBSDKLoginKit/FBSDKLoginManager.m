@@ -20,7 +20,6 @@
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginErrorFactory.h"
-#import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 #import "FBSDKMonotonicTime.h"
 
@@ -31,6 +30,10 @@ static NSString *const FBSDKExpectedCodeVerifierKey = @"expected_login_code_veri
 static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
+
+NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser = @"browser_auth";
+NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC = @"sfvc_auth";
+NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
 
 @implementation FBSDKLoginManager
 
@@ -723,8 +726,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
                  if ((self->_configuration) && (self->_logger == nil)) {
-                   self->_logger = [FBSDKLoginManagerLogger loggerFromParameters:urlParameters
-                                                                        tracking:self->_configuration.tracking];
+                   self->_logger = [[FBSDKLoginManagerLogger alloc] initWithParameters:urlParameters
+                                                                              tracking:self->_configuration.tracking];
                  }
                  [self completeAuthentication:parameters expectChallenge:YES];
                }

@@ -699,7 +699,7 @@ final class LoginManagerTests: XCTestCase {
       tracking: .enabled
     )
     let logger = try XCTUnwrap(
-      LoginManagerLogger(
+      _LoginManagerLogger(
         loggingToken: "123",
         tracking: .enabled
       )
@@ -823,7 +823,7 @@ final class LoginManagerTests: XCTestCase {
       messengerPageId: nil,
       authType: nil
     )
-    let logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    let logger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
 
     internalUtility.stubbedAppURL = sampleURL
 
@@ -867,7 +867,7 @@ final class LoginManagerTests: XCTestCase {
       messengerPageId: nil,
       authType: .reauthorize
     )
-    let logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    let logger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
     internalUtility.stubbedAppURL = sampleURL
 
     let parameters = try XCTUnwrap(

@@ -22,6 +22,23 @@ NS_SWIFT_NAME(LoginManagerLoginResult)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *loggingExtras;
+
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// legacy flag indicating this is an intermediary result only for logging purposes.
+@property (nonatomic, assign) BOOL isSkipped;
+
 /// the access token.
 @property (nullable, nonatomic, copy) FBSDKAccessToken *token;
 

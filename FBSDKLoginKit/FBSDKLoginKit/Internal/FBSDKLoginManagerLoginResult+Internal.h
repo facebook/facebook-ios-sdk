@@ -16,11 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKLoginManagerLoginResult ()
 
-@property (nonatomic, readonly) NSDictionary<NSString *, id> *loggingExtras;
-
-// legacy flag indicating this is an intermediary result only for logging purposes.
-@property (nonatomic, assign) BOOL isSkipped;
-
 // adds additional logging entry to extras - only sent as part of `endLoginWithResult:`
 - (void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
 @end
