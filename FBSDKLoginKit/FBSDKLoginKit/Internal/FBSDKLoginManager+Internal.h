@@ -13,6 +13,8 @@
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
 
+ #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
+
  #import "FBSDKLoginCompleterFactoryProtocol.h"
  #import "FBSDKLoginCompletionParameters.h"
  #import "FBSDKLoginProviding.h"
@@ -24,14 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Success Block
 typedef void (^ FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
-
-typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
-  FBSDKLoginManagerStateIdle,
-  // We received a call to start login.
-  FBSDKLoginManagerStateStart,
-  // We're calling out to the Facebook app or Safari to perform a log in
-  FBSDKLoginManagerStatePerformingLogin,
-};
 
 @interface FBSDKLoginManager () <FBSDKURLOpening>
 
