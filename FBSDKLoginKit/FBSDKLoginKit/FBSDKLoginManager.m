@@ -20,7 +20,6 @@
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginErrorFactory.h"
-#import "FBSDKLoginManagerLoginResult+Internal.h"
 #import "FBSDKMonotonicTime.h"
 
 static int const FBClientStateChallengeLength = 20;

@@ -13,7 +13,6 @@
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginManagerLoginResult+Internal.h"
 
 @implementation FBSDKLoginRecoveryAttempter
 

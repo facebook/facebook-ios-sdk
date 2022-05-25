@@ -22,6 +22,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
 - Removed deprecated `LoginConfiguration.authType(for:)` method.
 
+### Changed
+
+- Made `LoginManagerLoginResult.token` immutable.
+- Made `LoginManagerLoginResult.authenticationToken` immutable.
+- Made `LoginManagerLoginResult.isCancelled` immutable.
+- Made `LoginManagerLoginResult.grantedPermissions` immutable.
+- Made `LoginManagerLoginResult.declinedPermissions` immutable.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
 
 ## 13.2.0

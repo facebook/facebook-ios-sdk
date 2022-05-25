@@ -59,7 +59,6 @@ public final class _LoginManagerLogger: NSObject {
     case success
     case cancel = "cancelled"
     case error
-    case skipped
   }
 
   @objc(initWithParameters:tracking:)
@@ -151,8 +150,6 @@ public final class _LoginManagerLogger: NSObject {
       resultString = LoggerResult.error.rawValue
     } else if let isCancelled = result?.isCancelled, isCancelled {
       resultString = LoggerResult.cancel.rawValue
-    } else if let isSkipped = result?.isSkipped, isSkipped {
-      resultString = LoggerResult.skipped.rawValue
     } else if result?.token != nil {
       resultString = LoggerResult.success.rawValue
 
