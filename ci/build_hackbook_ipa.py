@@ -41,7 +41,7 @@ my_job = [
                         # Export the archive as an IPA
                         xcodebuild -exportArchive -archivePath build/Hackbook.xcarchive \
                             -exportPath build \
-                            -exportOptionsPlist export.plist
+                            -exportOptionsPlist export_development.plist
 
                         # Clean up provisioning profile
                         rm ~/Library/MobileDevice/Provisioning\ Profiles/Hackbook_Local_Development_9U4W97JX32.mobileprovision
