@@ -28,10 +28,8 @@ my_job = [
                         },
                     ],
                     "shell": """
-                        ./internal/scripts/generate-projects.sh
-                        ./internal/tools/xcodegen -s internal/testing/Hackbook/project.yml
-
                         cd internal/testing/Hackbook
+                        .generate-projects.sh
 
                         # Build the project
                         xcodebuild build -project Hackbook.xcodeproj \

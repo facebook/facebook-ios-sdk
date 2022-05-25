@@ -28,14 +28,12 @@ my_job = [
                         },
                     ],
                     "shell": """
-                        ./internal/scripts/generate-projects.sh
-                        ./internal/tools/xcodegen -s internal/testing/Hackbook/project.yml
-
                         # Copy hackbook profile so xcodebuild can magically find it
                         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles/
                         cp internal/tools/provisioning-profiles/Hackbook_Local_Development_9U4W97JX32.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "Profile already exists at destination"
 
                         cd internal/testing/Hackbook
+                        ./generate-projects.sh
 
                         # Archive the project
                         xcodebuild archive -project Hackbook.xcodeproj -scheme Hackbook -archivePath build/Hackbook

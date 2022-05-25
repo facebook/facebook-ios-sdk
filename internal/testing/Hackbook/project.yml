@@ -53,6 +53,7 @@ targets:
       FB_APP_VERSION: "1.0"
       FB_BUNDLE_VERSION: "1.0"
       FB_BUNDLE_VERSION_SHORT: "1.0"
+      CODE_SIGN_ENTITLEMENTS: "$(SOURCE_ROOT)/Entitlements/Entitlements-Local.plist"
 
 schemes:
   Hackbook:
