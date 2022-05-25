@@ -9,38 +9,7 @@
 #if !os(tvOS)
 
 import FBSDKCoreKit
-
 import UIKit
-
-/// Login Result Block
-public typealias LoginResultBlock = (LoginResult) -> Void
-
-/// Describes the result of a login attempt.
-@frozen
-public enum LoginResult {
-  /// User succesfully logged in. Contains granted, declined permissions and access token.
-  case success(granted: Set<Permission>, declined: Set<Permission>, token: FBSDKCoreKit.AccessToken?)
-  /// Login attempt was cancelled by the user.
-  case cancelled
-  /// Login attempt failed.
-  case failed(Error)
-
-  init(result: LoginManagerLoginResult?, error: Error?) {
-    guard let result = result, error == nil else {
-      self = .failed(error ?? LoginError(.unknown))
-      return
-    }
-
-    guard !result.isCancelled else {
-      self = .cancelled
-      return
-    }
-
-    let granted: Set<Permission> = Set(result.grantedPermissions.map { Permission(stringLiteral: $0) })
-    let declined: Set<Permission> = Set(result.declinedPermissions.map { Permission(stringLiteral: $0) })
-    self = .success(granted: granted, declined: declined, token: result.token)
-  }
-}
 
 /**
  This class provides methods for logging the user in and out.
