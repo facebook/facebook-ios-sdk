@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoginCompletionParametersBlock.h"
+#import <FBSDKLoginKit/FBSDKLoginCompletionParametersBlock.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

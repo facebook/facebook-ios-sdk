@@ -10,13 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoginCompleterFactoryProtocol.h"
+@class FBSDKLoginCompletionParameters;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(LoginCompleterFactory)
-@interface FBSDKLoginCompleterFactory : NSObject <FBSDKLoginCompleterFactory>
-@end
+/// Success Block
+typedef void (^ FBSDKLoginCompletionParametersBlock)(FBSDKLoginCompletionParameters *parameters)
+NS_SWIFT_NAME(LoginCompletionParametersBlock);
 
 NS_ASSUME_NONNULL_END
 
