@@ -528,6 +528,20 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testOpeningUniversalLinkChecksAEMFeatureAvailabilityWithRawStringValue() {
+    // See https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
+    let userActivity = NSUserActivity(activityType: "NSUserActivityTypeBrowsingWeb")
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
   func testOpeningUniversalLinkChecksAEMFeatureAvailability() {
     // See https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
     let userActivity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)

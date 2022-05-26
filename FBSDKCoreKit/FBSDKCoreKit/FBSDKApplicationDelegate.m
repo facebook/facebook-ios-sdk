@@ -191,7 +191,7 @@ static UIApplicationState _applicationState;
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
 {
-  if (userActivity.activityType != NSUserActivityTypeBrowsingWeb) {
+  if (![userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
     return NO;
   }
   return [self application:application openURL:userActivity.webpageURL options:@{}];
