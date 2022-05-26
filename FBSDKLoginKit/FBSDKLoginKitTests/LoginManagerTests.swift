@@ -246,7 +246,7 @@ final class LoginManagerTests: XCTestCase {
       accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
     )
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
     parameters.challenge = challenge
     parameters.authenticationTokenString = "sometoken"
@@ -304,7 +304,7 @@ final class LoginManagerTests: XCTestCase {
       capturedError = error
     }
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.error = SampleError()
 
     loginManager.completeAuthentication(parameters, expectChallenge: true)
@@ -329,7 +329,7 @@ final class LoginManagerTests: XCTestCase {
 
     let completerHandler = try XCTUnwrap(loginCompleter.capturedCompletionHandler)
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.appID = appID
     parameters.permissions = FBPermission.permissions(fromRawPermissions: ["public_profile"])
     parameters.declinedPermissions = []
@@ -357,7 +357,7 @@ final class LoginManagerTests: XCTestCase {
       accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
     )
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
     parameters.challenge = challenge
     parameters.authenticationTokenString = "sometoken"
@@ -392,7 +392,7 @@ final class LoginManagerTests: XCTestCase {
       accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
     )
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
     parameters.challenge = challenge
     parameters.authenticationTokenString = "sometoken"
@@ -426,7 +426,7 @@ final class LoginManagerTests: XCTestCase {
       accessibility: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
     )
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
     parameters.challenge = challenge
     parameters.authenticationTokenString = "sometoken"
@@ -464,7 +464,7 @@ final class LoginManagerTests: XCTestCase {
 
     loginManager.setRequestedPermissions(["email", "user_friends"])
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
     parameters.challenge = "someotherchallenge"
     parameters.authenticationTokenString = "sometoken"
@@ -486,7 +486,7 @@ final class LoginManagerTests: XCTestCase {
 
     loginManager.setRequestedPermissions(["email", "user_friends"])
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.error = SampleError()
 
     loginManager.completeAuthentication(parameters, expectChallenge: true)
@@ -542,7 +542,7 @@ final class LoginManagerTests: XCTestCase {
 
     loginManager.setRequestedPermissions(["email", "user_friends"])
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.authenticationTokenString = tokenString
     parameters.authenticationToken = AuthenticationToken(tokenString: tokenString, nonce: nonce)
     parameters.challenge = challenge
@@ -595,7 +595,7 @@ final class LoginManagerTests: XCTestCase {
     }
     loginManager.setRequestedPermissions(["email", "user_friends"])
 
-    let parameters = LoginCompletionParameters()
+    let parameters = _LoginCompletionParameters()
     parameters.authenticationTokenString = tokenString
     parameters.authenticationToken = AuthenticationToken(tokenString: tokenString, nonce: nonce)
     parameters.challenge = challenge

@@ -218,7 +218,7 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     completer.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -247,7 +247,7 @@ final class LoginCompletionTests: XCTestCase {
     let stubbedResult = [Keys.accessToken: name]
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     completer.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -393,7 +393,7 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     let handler: LoginCompletionParametersBlock = { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -428,7 +428,7 @@ final class LoginCompletionTests: XCTestCase {
     let stubbedResult = [Keys.error: name]
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     let handler: LoginCompletionParametersBlock = { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -462,7 +462,7 @@ final class LoginCompletionTests: XCTestCase {
     let stubbedResult = [Keys.accessToken: name]
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     let handler: LoginCompletionParametersBlock = { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -610,7 +610,7 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     completer.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
@@ -634,7 +634,7 @@ final class LoginCompletionTests: XCTestCase {
     let nonce = Values.nonce
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     completer.completeLogin(
       handler: { parameters in
         capturedParameters = parameters
@@ -672,7 +672,7 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     var completionWasInvoked = false
-    var capturedParameters: LoginCompletionParameters?
+    var capturedParameters: _LoginCompletionParameters?
     completer.completeLogin(
       handler: { parameters in
         capturedParameters = parameters
@@ -841,7 +841,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func verifyParameters(
-    actual: LoginCompletionParameters,
+    actual: _LoginCompletionParameters,
     expected: [String: Any],
     _ file: StaticString = #file,
     _ line: UInt = #line
@@ -962,7 +962,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func verifyEmptyParameters(
-    _ parameters: LoginCompletionParameters,
+    _ parameters: _LoginCompletionParameters,
     _ file: StaticString = #file,
     _ line: UInt = #line
   ) {

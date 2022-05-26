@@ -16,7 +16,6 @@
  #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
  #import "FBSDKLoginCompleterFactoryProtocol.h"
- #import "FBSDKLoginCompletionParameters.h"
  #import "FBSDKLoginProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
