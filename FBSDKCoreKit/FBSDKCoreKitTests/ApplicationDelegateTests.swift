@@ -263,7 +263,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertEqual(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       expected,
       "Should set the current authentication token to the cached access token when it exists"
     )
@@ -278,7 +278,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertNil(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       "Should set the current authentication token to nil access token when there isn't a cached token"
     )
   }

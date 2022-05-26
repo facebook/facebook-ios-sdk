@@ -8,15 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKTokenCaching.h>
+
+@class FBSDKAuthenticationToken;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AuthenticationTokenProviding)
 @protocol FBSDKAuthenticationTokenProviding
 
-@property (class, nullable, nonatomic, readonly, copy) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nullable, nonatomic, readonly, copy) FBSDKAuthenticationToken *currentAuthenticationToken NS_SWIFT_NAME(current);
 @property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
@@ -24,7 +25,7 @@ NS_SWIFT_NAME(AuthenticationTokenProviding)
 NS_SWIFT_NAME(AuthenticationTokenSetting)
 @protocol FBSDKAuthenticationTokenSetting
 
-@property (class, nullable, nonatomic, copy) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nullable, nonatomic, copy) FBSDKAuthenticationToken *currentAuthenticationToken NS_SWIFT_NAME(current);
 
 @end
 

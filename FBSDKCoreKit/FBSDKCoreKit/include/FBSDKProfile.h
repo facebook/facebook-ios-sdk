@@ -9,6 +9,7 @@
 #if !TARGET_OS_TV
 
 #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
+#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 
 @class FBSDKLocation;
 @class FBSDKProfile;
@@ -65,7 +66,7 @@ typedef NSString FBSDKUserIdentifier
  You can use this class to build your own `FBSDKProfilePictureView` or in place of typical requests to "/me".
  */
 NS_SWIFT_NAME(Profile)
-@interface FBSDKProfile : NSObject <NSCopying, NSSecureCoding>
+@interface FBSDKProfile : NSObject <NSCopying, NSSecureCoding, FBSDKProfileProviding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

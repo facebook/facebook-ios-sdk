@@ -30,6 +30,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Made `LoginManagerLoginResult.grantedPermissions` immutable.
 - Made `LoginManagerLoginResult.declinedPermissions` immutable.
 - Made `AccessToken.currentAccessToken` use a Swift name of `current`.
+- Made `AuthenticationToken.currentAuthenticationToken` use a Swift name of `current`.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
 

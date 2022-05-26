@@ -65,7 +65,7 @@ NS_SWIFT_NAME(AccessTokenDidExpireKey);
 
 /// Represents an immutable access token for using Facebook services.
 NS_SWIFT_NAME(AccessToken)
-@interface FBSDKAccessToken : NSObject <NSCopying, NSObject, NSSecureCoding, FBSDKAccessTokenProviding>
+@interface FBSDKAccessToken : NSObject <NSCopying, NSObject, NSSecureCoding, FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>
 
 /**
  The "global" access token that represents the currently logged in user.

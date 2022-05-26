@@ -920,13 +920,13 @@ final class LoginManagerTests: XCTestCase {
 
   func testLogout() {
     TestAccessTokenWallet.current = SampleAccessTokens.validToken
-    TestAuthenticationTokenWallet.currentAuthenticationToken = SampleAuthenticationToken.validToken
+    TestAuthenticationTokenWallet.current = SampleAuthenticationToken.validToken
     TestProfileProvider.current = testUser
 
     loginManager.logOut()
 
     XCTAssertNil(TestAccessTokenWallet.current)
-    XCTAssertNil(TestAuthenticationTokenWallet.currentAuthenticationToken)
+    XCTAssertNil(TestAuthenticationTokenWallet.current)
     XCTAssertNil(TestProfileProvider.current)
   }
 

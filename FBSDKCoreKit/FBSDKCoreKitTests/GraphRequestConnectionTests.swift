@@ -1394,7 +1394,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       nonce: "nonce",
       graphDomain: "gaming"
     )
-    TestAuthenticationTokenWallet.currentAuthenticationToken = authToken
+    TestAuthenticationTokenWallet.current = authToken
     let token = connection.accessToken(with: makeRequestForMeWithEmptyFieldsNoTokenString())
 
     let expectedToken = "GG|\(appID)|\(clientToken)"

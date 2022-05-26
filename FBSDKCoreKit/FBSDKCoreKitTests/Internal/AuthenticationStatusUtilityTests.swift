@@ -25,7 +25,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility.resetClassDependencies()
 
     TestAccessTokenWallet.stubbedCurrentAccessToken = SampleAccessTokens.validToken
-    TestAuthenticationTokenWallet.currentAuthenticationToken = SampleAuthenticationToken.validToken
+    TestAuthenticationTokenWallet.current = SampleAuthenticationToken.validToken
     TestProfileProvider.current = SampleUserProfiles.createValid()
 
     sessionDataTask = TestSessionDataTask()
@@ -92,7 +92,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
   }
 
   func testCheckAuthenticationStatusWithNoToken() {
-    TestAuthenticationTokenWallet.currentAuthenticationToken = nil
+    TestAuthenticationTokenWallet.current = nil
     AuthenticationStatusUtility.checkAuthenticationStatus()
 
     XCTAssertNil(
@@ -135,7 +135,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNil(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       "Authentication token should be cleared when not authorized"
     )
     XCTAssertNil(
@@ -160,7 +160,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
@@ -184,7 +184,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       "Authentication token should not be cleared when connected"
     )
     XCTAssertNotNil(
