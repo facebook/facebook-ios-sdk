@@ -73,7 +73,7 @@ NS_SWIFT_NAME(AccessToken)
  The `currentAccessToken` is a convenient representation of the token of the
  current user and is used by other SDK components (like `FBSDKLoginManager`).
  */
-@property (class, nullable, nonatomic, copy) FBSDKAccessToken *currentAccessToken;
+@property (class, nullable, nonatomic, copy) FBSDKAccessToken *currentAccessToken NS_SWIFT_NAME(current);
 
 /// Returns YES if currentAccessToken is not nil AND currentAccessToken is not expired
 @property (class, nonatomic, readonly, getter = isCurrentAccessTokenActive, assign) BOOL currentAccessTokenIsActive;

@@ -14,51 +14,63 @@ import XCTest
 final class LoginRecoveryAttempterTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var attempter: LoginRecoveryAttempter!
-  var loginManager: TestLoginProvider!
+  var attempter: _LoginRecoveryAttempter!
+  var loginProvider: TestLoginProvider!
   var accessTokenWallet: TestAccessTokenWallet.Type!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    loginManager = TestLoginProvider()
+    loginProvider = TestLoginProvider()
     accessTokenWallet = TestAccessTokenWallet.self
-    attempter = LoginRecoveryAttempter(
-      loginManager: loginManager,
-      accessTokenProvider: accessTokenWallet
+    attempter = _LoginRecoveryAttempter()
+    _LoginRecoveryAttempter.setDependencies(
+      .init(
+        loginProvider: loginProvider,
+        accessTokenProvider: accessTokenWallet
+      )
     )
   }
 
   override func tearDown() {
     accessTokenWallet.reset()
-    loginManager = nil
+    loginProvider = nil
     attempter = nil
-
+    _LoginRecoveryAttempter.resetDependencies()
     super.tearDown()
   }
 
-  func testCreatingWithDefaultDependencies() {
-    attempter = LoginRecoveryAttempter()
+  func testCreatingWithDefaultDependencies() throws {
+    _LoginRecoveryAttempter.resetDependencies()
+
+    let dependencies = try _LoginRecoveryAttempter.getDependencies()
 
     XCTAssertTrue(
-      attempter.loginManager is LoginManager,
-      "Should be created with the expected default login manager"
+      dependencies.accessTokenProvider is AccessToken.Type,
+      .defaultDependency("AccessToken", for: "access token wallet")
     )
+
     XCTAssertTrue(
-      attempter.accessTokenProvider is AccessToken.Type,
-      "Should be created with the expected default access token provider"
+      dependencies.loginProvider is LoginManager,
+      .defaultDependency("LoginManager", for: "login provider")
     )
   }
 
-  func testCreatingWithCustomDependencies() {
-    XCTAssertTrue(
-      attempter.loginManager === loginManager,
-      "Should be created with the provided login manager"
+  func testCreatingWithCustomDependencies() throws {
+
+    let dependencies = try _LoginRecoveryAttempter.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.accessTokenProvider,
+      accessTokenWallet,
+      .customDependency(for: "access token provider")
     )
-    XCTAssertTrue(
-      attempter.accessTokenProvider === accessTokenWallet,
-      "Should be created with the provided access token provider"
+
+    XCTAssertIdentical(
+      dependencies.loginProvider,
+      loginProvider,
+      .customDependency(for: "login provider")
     )
   }
 
@@ -69,7 +81,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
     }
 
     XCTAssertNil(
-      loginManager.capturedCompletion,
+      loginProvider.capturedCompletion,
       "Should not attempt to log in if there are no permissions to refresh"
     )
 
@@ -119,7 +131,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
         capturedSuccess = success
       }
 
-      let completion = try XCTUnwrap(loginManager.capturedCompletion)
+      let completion = try XCTUnwrap(loginProvider.capturedCompletion)
       completion(pair.result, pair.error)
 
       let success = try XCTUnwrap(capturedSuccess)
@@ -135,7 +147,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
       capturedSuccess = success
     }
 
-    let completion = try XCTUnwrap(loginManager.capturedCompletion)
+    let completion = try XCTUnwrap(loginProvider.capturedCompletion)
     completion(createLoginManagerResult(isCancelled: false, declinedPermissions: []), nil)
 
     let success = try XCTUnwrap(capturedSuccess)
@@ -150,5 +162,17 @@ final class LoginRecoveryAttempterTests: XCTestCase {
       grantedPermissions: [],
       declinedPermissions: Set(declinedPermissions)
     )
+  }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _LoginRecoveryAttempter type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _LoginRecoveryAttempter type uses a custom \(type) dependency when provided"
   }
 }
