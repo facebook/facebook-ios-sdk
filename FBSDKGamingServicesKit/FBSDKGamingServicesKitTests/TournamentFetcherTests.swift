@@ -254,68 +254,6 @@ final class TournamentFetcherTests: XCTestCase {
     XCTAssert(completionWasInvoked)
   }
 
-  func testWrapperHandlingTournamentFetchValidResult() throws {
-    let date = try XCTUnwrap(Values.date)
-    let expectedTournament = _FBSDKTournament(
-      identifier: Values.tournamentID,
-      endTime: date,
-      title: Values.tournamentTitle,
-      payload: Values.tournamentPayload
-    )
-
-    var completionWasInvoked = false
-    _TournamentFetcher(graphRequestFactory: factory).fetchTournaments { tournaments, error in
-      if let error = error {
-        XCTFail("Unexpected error received: \(error)")
-      }
-
-      guard let tournaments = tournaments else {
-        return XCTFail("Tournaments array was nil")
-      }
-
-      guard let tournament = tournaments.first else {
-        return XCTFail("Tournaments array was empty")
-      }
-
-      guard let expiration = tournament.endTime?.timeIntervalSince1970 else {
-        return XCTFail("Tournament missing expiration")
-      }
-
-      XCTAssertEqual(tournament.identifier, expectedTournament.identifier)
-      XCTAssertEqual(
-        expiration,
-        date.timeIntervalSince1970
-      )
-      XCTAssertEqual(tournament.title, expectedTournament.title)
-      XCTAssertEqual(tournament.payload, expectedTournament.payload)
-      completionWasInvoked = true
-    }
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-
-    completion(nil, SampleTournamentResults.validFull, nil)
-
-    XCTAssert(completionWasInvoked)
-  }
-
-  func testWrapperHandlingTournamentFetchError() throws {
-    var completionWasInvoked = false
-    _TournamentFetcher(graphRequestFactory: factory).fetchTournaments { tournaments, error in
-      if tournaments != nil {
-        XCTFail("Should not succeed")
-      }
-      guard case let .server(serverError) = error as? TournamentFetchError else {
-        return XCTFail("Should not be a decoding error")
-      }
-      XCTAssertTrue(serverError is SampleError)
-      completionWasInvoked = true
-    }
-    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-
-    completion(nil, nil, SampleError())
-
-    XCTAssert(completionWasInvoked)
-  }
-
   enum SampleTournamentResults {
 
     static let validPartial = [
