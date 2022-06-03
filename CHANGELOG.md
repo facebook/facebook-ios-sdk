@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.0.0...HEAD)
+
+## 14.0.0
+
 ### Removed
 
 - Removed deprecated `AEMReporter.configure(networker:appID:)` method.
@@ -32,7 +36,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Made `AccessToken.currentAccessToken` use a Swift name of `current`.
 - Made `AuthenticationToken.currentAuthenticationToken` use a Swift name of `current`.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
+[2022-06-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...v14.0.0)
 
 ## 13.2.0
 

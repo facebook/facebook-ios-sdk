@@ -81,7 +81,7 @@ main() {
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
       "FBAEMKit/FBAEMKit/FBAEMKitVersions.h"
-      "FBAEMKit/FBAEMKit/FBAEMNetworker.m"
+      "FBAEMKit/FBAEMKit/_AEMNetworker.swift"
     )
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
