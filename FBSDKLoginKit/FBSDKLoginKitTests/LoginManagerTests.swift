@@ -173,7 +173,7 @@ final class LoginManagerTests: XCTestCase {
     XCTAssertTrue(loginManager.profile is Profile.Type)
     XCTAssertTrue(loginManager.urlOpener is BridgeAPI)
     XCTAssertTrue(loginManager.settings is Settings)
-    XCTAssertTrue(loginManager.loginCompleterFactory is LoginCompleterFactory)
+    XCTAssertTrue(loginManager.loginCompleterFactory is _LoginCompleterFactory)
   }
 
   // MARK: Opening URL
@@ -224,10 +224,6 @@ final class LoginManagerTests: XCTestCase {
       loginCompleterFactory.capturedURLParameters["user_id"] as? String,
       "123",
       "Should create a login completer using the parameters parsed from the url"
-    )
-    XCTAssertTrue(
-      loginCompleterFactory.capturedAuthenticationTokenCreator is _AuthenticationTokenFactory,
-      "Should create a login completer using the expected authentication token factory"
     )
   }
 

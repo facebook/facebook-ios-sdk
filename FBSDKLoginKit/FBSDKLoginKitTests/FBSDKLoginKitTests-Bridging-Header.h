@@ -12,7 +12,6 @@
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKDevicePolling.h"
-#import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginErrorFactory.h"
 #import "FBSDKLoginProviding.h"
 

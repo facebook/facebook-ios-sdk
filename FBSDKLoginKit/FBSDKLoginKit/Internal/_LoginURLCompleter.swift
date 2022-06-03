@@ -27,11 +27,9 @@ import Foundation
  Completion occurs synchronously.
  */
 
-@objc(FBSDKLoginURLCompleter)
 public final class _LoginURLCompleter: NSObject, LoginCompleting {
   let parameters = _LoginCompletionParameters()
 
-  @objc(initWithURLParameters:appID:)
   public init(urlParameters: [String: Any], appID: String) {
     super.init()
     let nonce = urlParameters["nonce"] as? String ?? ""

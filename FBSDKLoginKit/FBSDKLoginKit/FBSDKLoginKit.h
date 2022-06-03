@@ -14,7 +14,6 @@
 #import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
 #import <FBSDKLoginKit/FBSDKDevicePolling.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>
-#import <FBSDKLoginKit/FBSDKLoginCompleterFactory.h>
 #import <FBSDKLoginKit/FBSDKLoginCompleterFactoryProtocol.h>
 #import <FBSDKLoginKit/FBSDKLoginCompleting.h>
 #import <FBSDKLoginKit/FBSDKLoginCompletionParametersBlock.h>

@@ -18,7 +18,6 @@
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKCodeVerifier.h"
-#import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginErrorFactory.h"
 
 static int const FBClientStateChallengeLength = 20;
@@ -181,11 +180,7 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
   NSDictionary<NSString *, NSString *> *loginUrlParameters = [self logInParametersFromURL:url];
   if (loginUrlParameters) {
     id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:loginUrlParameters
-                                                                                                     appID:self.settings.appID
-                                                                                authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]
-
-                                                                                       graphRequestFactory:self.graphRequestFactory
-                                                                                           internalUtility:self.internalUtility];
+                                                                                                     appID:self.settings.appID];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *completionParameters) {
       [self completeAuthentication:completionParameters expectChallenge:NO];
     }];
@@ -715,11 +710,7 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
   if (isFacebookURL) {
     NSDictionary<NSString *, id> *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url] ?: @{};
     id<FBSDKLoginCompleting> completer = [self.loginCompleterFactory createLoginCompleterWithURLParameters:urlParameters
-                                                                                                     appID:self.settings.appID
-                                                                                authenticationTokenCreator:[FBSDKAuthenticationTokenFactory new]
-
-                                                                                       graphRequestFactory:self.graphRequestFactory
-                                                                                           internalUtility:self.internalUtility];
+                                                                                                     appID:self.settings.appID];
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
