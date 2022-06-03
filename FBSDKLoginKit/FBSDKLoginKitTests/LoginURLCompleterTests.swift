@@ -13,7 +13,7 @@ import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
-final class LoginCompletionTests: XCTestCase {
+final class LoginURLCompleterTests: XCTestCase {
 
   enum Keys {
     static let accessToken = "access_token"
@@ -41,119 +41,177 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   // swiftlint:disable implicitly_unwrapped_optional
+  var profileFactory: _ProfileFactory!
   var authenticationTokenFactory: TestAuthenticationTokenFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var internalUtility: TestInternalUtility!
+  var errorFactory: ErrorFactory!
+  var urlCompleter: _LoginURLCompleter!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    LoginURLCompleter.reset()
-
+    profileFactory = _ProfileFactory()
     authenticationTokenFactory = TestAuthenticationTokenFactory()
     graphRequestFactory = TestGraphRequestFactory()
     internalUtility = TestInternalUtility()
-
+    errorFactory = ErrorFactory()
     internalUtility.stubbedAppURL = URL(string: Values.redirectURL)
+
+    _LoginURLCompleter.setDependencies(
+      .init(
+        profileFactory: profileFactory,
+        authenticationTokenCreator: authenticationTokenFactory,
+        graphRequestFactory: graphRequestFactory,
+        internalUtility: internalUtility,
+        errorFactory: errorFactory
+      )
+    )
+
+    urlCompleter = _LoginURLCompleter(urlParameters: [:], appID: "")
   }
 
   override func tearDown() {
-    LoginURLCompleter.reset()
+    _LoginURLCompleter.resetDependencies()
+    urlCompleter = nil
+    profileFactory = nil
+    authenticationTokenFactory = nil
+    graphRequestFactory = nil
+    errorFactory = nil
+    internalUtility = nil
 
     super.tearDown()
   }
 
+  func testDefaultTypeDependencies() throws {
+    _LoginURLCompleter.resetDependencies()
+
+    let dependencies = try _LoginURLCompleter.getDependencies()
+
+    XCTAssertTrue(
+      dependencies.profileFactory is _ProfileFactory,
+      .defaultDependency("_ProfileFactory", for: "profile factory")
+    )
+
+    XCTAssertTrue(
+      dependencies.authenticationTokenCreator is _AuthenticationTokenFactory,
+      .defaultDependency("_AuthenticationTokenFactory", for: "authentication token creator")
+    )
+
+    XCTAssertTrue(
+      dependencies.graphRequestFactory is GraphRequestFactory,
+      .defaultDependency("GraphRequestFactory", for: "graph request factory")
+    )
+
+    XCTAssertTrue(
+      dependencies.internalUtility is InternalUtility,
+      .defaultDependency("InternalUtility", for: "internal utility")
+    )
+  }
+
+  func testCustomDependencies() throws {
+
+    let dependencies = try _LoginURLCompleter.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.profileFactory,
+      profileFactory,
+      .customDependency(for: "profile factory")
+    )
+
+    XCTAssertIdentical(
+      dependencies.authenticationTokenCreator,
+      authenticationTokenFactory,
+      .customDependency(for: "authentication token creator")
+    )
+
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory,
+      graphRequestFactory,
+      .customDependency(for: "graph request factory")
+    )
+
+    XCTAssertIdentical(
+      dependencies.internalUtility,
+      internalUtility,
+      .customDependency(for: "internal utility")
+    )
+  }
+
   // MARK: Creation
-
-  func testDefaultProfileProvider() {
-    XCTAssertTrue(
-      LoginURLCompleter.profileFactory is _ProfileFactory,
-      "Should have the expected concrete profile provider"
-    )
-  }
-
-  func testSettingProfileProvider() {
-    let provider = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
-    LoginURLCompleter.profileFactory = provider
-
-    XCTAssertTrue(
-      LoginURLCompleter.profileFactory === provider,
-      "Should be able to inject a profile provider"
-    )
-  }
 
   func testInitWithAccessTokenWithIDToken() {
     let parameters = SampleRawLoginCompletionParameters.withAccessTokenWithIDToken
 
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithAccessToken() {
     let parameters = SampleRawLoginCompletionParameters.withAccessToken
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithNonce() {
     let parameters = SampleRawLoginCompletionParameters.withNonce
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithCode() {
     let parameters = SampleRawLoginCompletionParameters.withCode
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithIDToken() {
     let parameters = SampleRawLoginCompletionParameters.withIDToken
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithStringExpirations() {
     let parameters = SampleRawLoginCompletionParameters.withStringExpirations
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyParameters(actual: completer.parameters, expected: parameters)
+    verifyParameters(actual: urlCompleter.parameters, expected: parameters)
   }
 
   func testInitWithoutAccessTokenWithoutIDTokenWithoutCode() {
     let parameters = SampleRawLoginCompletionParameters.withoutAccessTokenWithoutIDTokenWithoutCode
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyEmptyParameters(completer.parameters)
+    verifyEmptyParameters(urlCompleter.parameters)
   }
 
   func testInitWithEmptyStrings() {
     let parameters = SampleRawLoginCompletionParameters.withEmptyStrings
-    let completer = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
 
-    verifyEmptyParameters(completer.parameters)
+    verifyEmptyParameters(urlCompleter.parameters)
   }
 
   func testInitWithEmptyParameters() {
-    let completer = createLoginCompleter(parameters: [:], appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: [:], appID: Values.appID)
 
-    verifyEmptyParameters(completer.parameters)
+    verifyEmptyParameters(urlCompleter.parameters)
   }
 
   func testInitWithError() {
     let parameters = SampleRawLoginCompletionParameters.withError
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: parameters,
       appID: Values.appID
     )
 
-    XCTAssertNotNil(completer.parameters.error)
+    XCTAssertNotNil(urlCompleter.parameters.error)
   }
 
   func testInitWithFuzzyParameters() {
@@ -168,15 +226,15 @@ final class LoginCompletionTests: XCTestCase {
   // MARK: Completion
 
   func testCompleteWithNonceGraphRequestCreation() throws {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withNonce,
       appID: Values.appID
     )
     let handler: LoginCompletionParametersBlock = { _ in }
 
-    completer.completeLogin(handler: handler)
+    urlCompleter.completeLogin(handler: handler)
 
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
     let capturedRequest = try XCTUnwrap(graphRequestFactory.capturedRequests.first)
     XCTAssertEqual(
@@ -191,7 +249,7 @@ final class LoginCompletionTests: XCTestCase {
     )
     XCTAssertEqual(
       capturedRequest.parameters["fb_exchange_nonce"] as? String,
-      completer.parameters.nonceString,
+      urlCompleter.parameters.nonceString,
       "Should create a graph request with the expected nonce parameter"
     )
     XCTAssertEqual(
@@ -212,14 +270,14 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testNonceExchangeCompletionWithError() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withNonce,
       appID: Values.appID
     )
 
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
-    completer.completeLogin { parameters in
+    urlCompleter.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
     }
@@ -227,12 +285,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertEqual(
-      completer.parameters,
+      urlCompleter.parameters,
       capturedParameters,
       "Should call the completion with the provided parameters"
     )
     XCTAssertTrue(
-      completer.parameters.error is SampleError,
+      urlCompleter.parameters.error is SampleError,
       "Should pass through the error from the graph request"
     )
 
@@ -240,7 +298,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testNonceExchangeCompletionWithAccessTokenString() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withNonce,
       appID: Values.appID
     )
@@ -248,7 +306,7 @@ final class LoginCompletionTests: XCTestCase {
 
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
-    completer.completeLogin { parameters in
+    urlCompleter.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
     }
@@ -256,12 +314,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
     XCTAssertEqual(
-      completer.parameters,
+      urlCompleter.parameters,
       capturedParameters,
       "Should call the completion with the provided parameters"
     )
     XCTAssertEqual(
-      completer.parameters.accessTokenString,
+      urlCompleter.parameters.accessTokenString,
       name,
       "Should set the access token string from the graph request's result"
     )
@@ -269,7 +327,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testNonceExchangeCompletionWithAccessTokenStringAndAuthenticationTokenString() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withNonce,
       appID: Values.appID
     )
@@ -279,7 +337,7 @@ final class LoginCompletionTests: XCTestCase {
       Keys.idToken: Values.idToken,
     ]
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { _ in },
       nonce: nonce,
       codeVerifier: Values.codeVerifier
@@ -288,12 +346,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
     XCTAssertEqual(
-      completer.parameters.accessTokenString,
+      urlCompleter.parameters.accessTokenString,
       name,
       "Should set the access token string from the graph request's result"
     )
     XCTAssertEqual(
-      completer.parameters.authenticationTokenString,
+      urlCompleter.parameters.authenticationTokenString,
       Values.idToken,
       "Should set the authentication token string from the graph request's result"
     )
@@ -310,7 +368,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testNonceExchangeWithRandomResults() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withNonce,
       appID: Values.appID
     )
@@ -322,7 +380,7 @@ final class LoginCompletionTests: XCTestCase {
     ]
 
     var completionWasInvoked = false
-    completer.completeLogin { _ in
+    urlCompleter.completeLogin { _ in
       // Basically just making sure that nothing crashes here when we feed it garbage results
       completionWasInvoked = true
     }
@@ -339,19 +397,19 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCompleteWithCodeGraphRequestCreation() throws {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
     let handler: LoginCompletionParametersBlock = { _ in }
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: handler,
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
     )
 
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
     let capturedRequest = try XCTUnwrap(graphRequestFactory.capturedRequests.first)
     XCTAssertEqual(
@@ -387,7 +445,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCodeExchangeCompletionWithGraphError() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
@@ -399,7 +457,7 @@ final class LoginCompletionTests: XCTestCase {
       completionWasInvoked = true
     }
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: handler,
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
@@ -408,12 +466,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertEqual(
-      completer.parameters,
+      urlCompleter.parameters,
       capturedParameters,
       "Should call the completion with the provided parameters"
     )
     XCTAssertTrue(
-      completer.parameters.error is SampleError,
+      urlCompleter.parameters.error is SampleError,
       "Should pass through the error from the graph request"
     )
 
@@ -421,7 +479,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCodeExchangeCompletionWithError() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
@@ -434,7 +492,7 @@ final class LoginCompletionTests: XCTestCase {
       completionWasInvoked = true
     }
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: handler,
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
@@ -443,19 +501,19 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
     XCTAssertEqual(
-      completer.parameters,
+      urlCompleter.parameters,
       capturedParameters,
       "Should call the completion with the provided parameters"
     )
     XCTAssertNotNil(
-      completer.parameters.error,
+      urlCompleter.parameters.error,
       "Should set error from the graph request's result"
     )
     XCTAssertTrue(completionWasInvoked)
   }
 
   func testCodeExchangeCompletionWithAccessTokenString() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
@@ -468,7 +526,7 @@ final class LoginCompletionTests: XCTestCase {
       completionWasInvoked = true
     }
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: handler,
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
@@ -477,12 +535,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
     XCTAssertEqual(
-      completer.parameters,
+      urlCompleter.parameters,
       capturedParameters,
       "Should call the completion with the provided parameters"
     )
     XCTAssertEqual(
-      completer.parameters.accessTokenString,
+      urlCompleter.parameters.accessTokenString,
       name,
       "Should set the access token string from the graph request's result"
     )
@@ -490,7 +548,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCodeExchangeCompletionWithAccessTokenStringAndAuthenticationTokenString() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
@@ -499,7 +557,7 @@ final class LoginCompletionTests: XCTestCase {
       Keys.idToken: Values.idToken,
     ]
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { _ in },
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
@@ -508,12 +566,12 @@ final class LoginCompletionTests: XCTestCase {
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
     XCTAssertEqual(
-      completer.parameters.accessTokenString,
+      urlCompleter.parameters.accessTokenString,
       Values.accessToken,
       "Should set the access token string from the graph request's result"
     )
     XCTAssertEqual(
-      completer.parameters.authenticationTokenString,
+      urlCompleter.parameters.authenticationTokenString,
       Values.idToken,
       "Should set the authentication token string from the graph request's result"
     )
@@ -530,7 +588,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCodeExchangeWithRandomResults() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withCode,
       appID: Values.appID
     )
@@ -542,7 +600,7 @@ final class LoginCompletionTests: XCTestCase {
     ]
 
     var completionWasInvoked = false
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { _ in
         // Basically just making sure that nothing crashes here when we feed it garbage results
         completionWasInvoked = true
@@ -563,33 +621,33 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCompleteWithAuthenticationTokenWithoutNonce() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withIDToken,
       appID: Values.appID
     )
 
-    completer.completeLogin { _ in }
+    urlCompleter.completeLogin { _ in }
 
-    XCTAssertNotNil(completer.parameters.error)
+    XCTAssertNotNil(urlCompleter.parameters.error)
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
   }
 
   func testCompleteWithAuthenticationTokenWithNonce() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withIDToken,
       appID: Values.appID
     )
 
     let nonce = Values.nonce
 
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { _ in },
       nonce: nonce,
       codeVerifier: Values.codeVerifier
     )
 
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertEqual(
       authenticationTokenFactory.capturedTokenString,
@@ -604,14 +662,14 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testAuthenticationTokenCreationCompleteWithEmptyResult() {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withIDToken,
       appID: Values.appID
     )
 
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
-    completer.completeLogin { parameters in
+    urlCompleter.completeLogin { parameters in
       capturedParameters = parameters
       completionWasInvoked = true
     }
@@ -627,7 +685,7 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testAuthenticationTokenCreationCompleteWithToken() throws {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withIDToken,
       appID: Values.appID
     )
@@ -635,7 +693,7 @@ final class LoginCompletionTests: XCTestCase {
 
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { parameters in
         capturedParameters = parameters
         completionWasInvoked = true
@@ -652,7 +710,7 @@ final class LoginCompletionTests: XCTestCase {
 
     authenticationTokenFactory.capturedCompletion?(token)
 
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     let capturedToken = try XCTUnwrap(capturedParameters?.authenticationToken)
     XCTAssertEqual(
       capturedToken.tokenString,
@@ -666,14 +724,14 @@ final class LoginCompletionTests: XCTestCase {
   }
 
   func testCompleteWithAccessToken() throws {
-    let completer = createLoginCompleter(
+    urlCompleter = createLoginCompleter(
       parameters: SampleRawLoginCompletionParameters.withAccessToken,
       appID: Values.appID
     )
 
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { parameters in
         capturedParameters = parameters
         completionWasInvoked = true
@@ -689,16 +747,16 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     XCTAssertTrue(completionWasInvoked, "Handler should be invoked")
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
   }
 
   func testCompleteWithEmptyParameters() {
-    let completer = createLoginCompleter(parameters: [:], appID: Values.appID)
+    urlCompleter = createLoginCompleter(parameters: [:], appID: Values.appID)
 
     var completionWasInvoked = false
-    completer.completeLogin(
+    urlCompleter.completeLogin(
       handler: { _ in
         completionWasInvoked = true
       },
@@ -707,16 +765,47 @@ final class LoginCompletionTests: XCTestCase {
     )
 
     XCTAssert(completionWasInvoked, "Handler should be invoked")
-    XCTAssertNil(completer.parameters.error)
+    XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
     XCTAssertNil(authenticationTokenFactory.capturedTokenString)
+  }
+
+  func testErrorFromURLParametersWithEmptyParameters() throws {
+    let parameters = [String: Any]()
+    let error = urlCompleter.error(from: parameters)
+
+    XCTAssertNil(error, .noErrorForEmptyParameters)
+  }
+
+  func testErrorFromURLParametersWithParameters() throws {
+    let parameters = ["error_message": "foo"]
+    let returnedError = try XCTUnwrap(
+      urlCompleter.error(from: parameters),
+      .errorForParameters
+    )
+    let error = try XCTUnwrap(returnedError as NSError, .errorForParameters)
+
+    XCTAssertEqual(error.code, 8, .errorCodeMatches)
+    XCTAssertEqual(error.domain, "com.facebook.sdk.core", .errorDomainMatches)
+    XCTAssertFalse(error.userInfo.isEmpty, .hasNoValuesForUserInfo)
   }
 
   // MARK: Profile
 
   func testCreateProfileWithClaims() throws {
     let factory = TestProfileFactory(stubbedProfile: SampleUserProfiles.createValid())
-    LoginURLCompleter.profileFactory = factory
+    let parameters = SampleRawLoginCompletionParameters.withAccessTokenWithIDToken
+
+    urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
+    _LoginURLCompleter.setDependencies(
+      .init(
+        profileFactory: factory,
+        authenticationTokenCreator: authenticationTokenFactory,
+        graphRequestFactory: graphRequestFactory,
+        internalUtility: internalUtility,
+        errorFactory: errorFactory
+      )
+    )
 
     let claim = try XCTUnwrap(
       AuthenticationTokenClaims(
@@ -742,7 +831,7 @@ final class LoginCompletionTests: XCTestCase {
         userLink: "facebook.com"
       )
     )
-    LoginURLCompleter.profile(with: claim)
+    _ = urlCompleter.profile(with: claim)
 
     XCTAssertEqual(
       factory.capturedUserID,
@@ -830,13 +919,10 @@ final class LoginCompletionTests: XCTestCase {
 
   // MARK: - Helpers
 
-  func createLoginCompleter(parameters: [String: Any], appID: String) -> LoginURLCompleter {
-    LoginURLCompleter(
+  func createLoginCompleter(parameters: [String: Any], appID: String) -> _LoginURLCompleter {
+    _LoginURLCompleter(
       urlParameters: parameters,
-      appID: appID,
-      authenticationTokenCreator: authenticationTokenFactory,
-      graphRequestFactory: graphRequestFactory,
-      internalUtility: internalUtility
+      appID: appID
     )
   }
 
@@ -979,4 +1065,22 @@ final class LoginCompletionTests: XCTestCase {
     XCTAssertNil(parameters.nonceString, file: file, line: line)
     XCTAssertNil(parameters.error, file: file, line: line)
   }
+}
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _LoginURLCompleter type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _LoginURLCompleter type uses a custom \(type) dependency when provided"
+  }
+
+  static let noErrorForEmptyParameters = "No error is returned if empty parameters are passed"
+  static let errorForParameters = "An error is returned if some parameters are passed"
+  static let errorCodeMatches = "The returned error code matches the error code passed"
+  static let errorDomainMatches = "The returned error domain matches the expected domain"
+  static let hasNoValuesForUserInfo = "User info does not contain any values"
 }

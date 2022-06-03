@@ -14,8 +14,6 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
-#import "FBSDKLoginURLCompleter.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKLoginCompleterFactory
@@ -27,10 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                   internalUtility:(id<FBSDKURLHosting>)internalUtility
 {
   return [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters
-                                                         appID:appID
-                                    authenticationTokenCreator:authenticationTokenCreator
-                                           graphRequestFactory:graphRequestFactory
-                                               internalUtility:internalUtility];
+                                                         appID:appID];
 }
 
 @end

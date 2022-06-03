@@ -94,26 +94,6 @@ final class LoginErrorFactoryTests: XCTestCase {
       .matchesDescriptionError
     )
   }
-
-  func testErrorFromReturnURLParametersWithEmptyParameters() throws {
-    let parameters = [String: Any]()
-    let error = LoginErrorFactory.fbError(fromReturnURLParameters: parameters)
-
-    XCTAssertNil(error, .noErrorForEmptyParameters)
-  }
-
-  func testErrorFromReturnURLParametersWithParameters() throws {
-    let parameters = ["error_message": "foo"]
-    let returnedError = try XCTUnwrap(
-      LoginErrorFactory.fbError(fromReturnURLParameters: parameters),
-      .errorForParameters
-    )
-    let error = try XCTUnwrap(returnedError as NSError, .errorForParameters)
-
-    XCTAssertEqual(error.code, 8, .errorCodeMatches)
-    XCTAssertEqual(error.domain, "com.facebook.sdk.core", .errorDomainMatches)
-    XCTAssertFalse(error.userInfo.isEmpty, .hasNoValuesForUserInfo)
-  }
 }
 
 // MARK: - Assumptions

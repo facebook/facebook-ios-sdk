@@ -27,7 +27,7 @@ final class LoginCompleterFactoryTests: XCTestCase {
       internalUtility: TestInternalUtility()
     )
     XCTAssertTrue(
-      completer is LoginURLCompleter,
+      completer is _LoginURLCompleter,
       "Should create the expected concrete type of login completer"
     )
   }

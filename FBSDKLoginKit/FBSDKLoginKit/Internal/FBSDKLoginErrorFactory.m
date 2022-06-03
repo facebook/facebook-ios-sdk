@@ -109,31 +109,6 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
                          userInfo:userInfo];
 }
 
-+ (nullable NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters
-{
-  NSError *error = nil;
-
-  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
-
-  if (userInfo.count > 0) {
-    [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
-    [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_code" ofType:NSString.class] forKey:FBSDKGraphRequestErrorGraphErrorCodeKey];
-
-    if (!userInfo[FBSDKErrorDeveloperMessageKey]) {
-      [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_reason" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
-    }
-
-    [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorOther) forKey:FBSDKGraphRequestErrorKey];
-
-    error = [NSError errorWithDomain:FBSDKErrorDomain
-                                code:FBSDKErrorGraphRequestGraphAPI
-                            userInfo:userInfo];
-  }
-
-  return error;
-}
-
 @end
 
 #endif
