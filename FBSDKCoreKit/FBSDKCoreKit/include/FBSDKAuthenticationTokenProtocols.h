@@ -14,18 +14,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(AuthenticationTokenProviding)
 @protocol FBSDKAuthenticationTokenProviding
 
-@property (class, nullable, nonatomic, readonly, copy) FBSDKAuthenticationToken *currentAuthenticationToken NS_SWIFT_NAME(current);
-@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
-
-@end
-
-NS_SWIFT_NAME(AuthenticationTokenSetting)
-@protocol FBSDKAuthenticationTokenSetting
-
 @property (class, nullable, nonatomic, copy) FBSDKAuthenticationToken *currentAuthenticationToken NS_SWIFT_NAME(current);
+@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 

@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
                           appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
-                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
                               crashHandler:(id<FBSDKCrashHandler>)crashHandler
                              crashObserver:(id<FBSDKCrashObserving>)crashObserver
                           defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore

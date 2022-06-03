@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `ContextDialogPresenter.switchContextDialog(withContent:delegate:)` method.
 - Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
 - Removed deprecated `LoginConfiguration.authType(for:)` method.
+- Removed internal `AuthenticationTokenSettings` protocol.
 
 ### Changed
 

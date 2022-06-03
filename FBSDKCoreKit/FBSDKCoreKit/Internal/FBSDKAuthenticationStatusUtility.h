@@ -26,13 +26,13 @@ NS_SWIFT_NAME(AuthenticationStatusUtility)
 @property (class, nullable, nonatomic) Class<FBSDKProfileProviding> profileSetter;
 @property (class, nullable, nonatomic) id<FBSDKSessionProviding> sessionDataTaskProvider;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenWallet;
-@property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+@property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenWallet;
 
 /// Sets dependencies. This must be called during SDK initialization.
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
            sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
                  accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
-         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationWallet;
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationWallet;
 
 /**
  Fetches the latest authentication status from server. This will invalidate

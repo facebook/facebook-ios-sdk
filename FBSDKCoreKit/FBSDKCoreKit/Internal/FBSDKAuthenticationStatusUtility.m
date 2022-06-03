@@ -20,7 +20,7 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 static Class<FBSDKProfileProviding> _profileSetter;
 static id<FBSDKSessionProviding> _sessionDataTaskProvider;
 static Class<FBSDKAccessTokenProviding> _accessTokenWallet;
-static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> _authenticationTokenWallet;
+static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
 
 + (nullable id<FBSDKSessionProviding>)sessionDataTaskProvider
 {
@@ -52,12 +52,12 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
   _accessTokenWallet = accessTokenWallet;
 }
 
-+ (nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
++ (nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
 {
   return _authenticationTokenWallet;
 }
 
-+ (void)setAuthenticationTokenWallet:(nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
++ (void)setAuthenticationTokenWallet:(nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
 {
   _authenticationTokenWallet = authenticationTokenWallet;
 }
@@ -65,7 +65,7 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
            sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
                  accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
-         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet;
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet;
 {
   self.profileSetter = profileSetter;
   self.sessionDataTaskProvider = sessionDataTaskProvider;

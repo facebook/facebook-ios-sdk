@@ -60,7 +60,7 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
                    keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
                       accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
-                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
+                    authenticationToken:(Class<FBSDKAuthenticationTokenProviding>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
                               urlOpener:(id<FBSDKURLOpener>)urlOpener
                                settings:(id<FBSDKSettings>)settings

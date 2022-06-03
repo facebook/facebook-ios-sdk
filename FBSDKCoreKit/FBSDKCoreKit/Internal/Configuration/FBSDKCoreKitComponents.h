@@ -88,7 +88,7 @@ NS_SWIFT_NAME(default);
 @property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
 @property (nonatomic, readonly) id (^getApplicationActivationNotifier)(void);
 @property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
-@property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+@property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding> authenticationTokenWallet;
 @property (nonatomic, readonly) id<FBSDKCrashHandler> crashHandler;
 @property (nonatomic, readonly) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, readonly) id<FBSDKDataPersisting> defaultDataStore;
@@ -165,7 +165,7 @@ NS_SWIFT_NAME(default);
                        appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
                           appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
                        atePublisherFactory:(id<FBSDKATEPublisherCreating>)atePublisherFactory
-                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
                               crashHandler:(id<FBSDKCrashHandler>)crashHandler
                              crashObserver:(id<FBSDKCrashObserving>)crashObserver
                           defaultDataStore:(id<FBSDKDataPersisting>)defaultDataStore
