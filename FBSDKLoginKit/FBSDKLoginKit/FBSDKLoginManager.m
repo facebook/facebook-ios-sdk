@@ -20,7 +20,6 @@
 #import "FBSDKCodeVerifier.h"
 #import "FBSDKLoginCompleterFactory.h"
 #import "FBSDKLoginErrorFactory.h"
-#import "FBSDKMonotonicTime.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
@@ -408,7 +407,7 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.nonce forKey:@"nonce"];
   [self storeExpectedNonce:configuration.nonce];
 
-  NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
+  NSTimeInterval timeValue = [[_MonotonicTimer new] getCurrentSeconds];
   NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
                                                                   error:NULL
                                                    invalidObjectHandler:NULL];
