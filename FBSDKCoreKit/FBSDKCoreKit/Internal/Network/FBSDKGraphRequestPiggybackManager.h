@@ -20,7 +20,7 @@ NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @property (nonatomic, readonly) int tokenRefreshThresholdInSeconds;
 @property (nonatomic, readonly) int tokenRefreshRetryInSeconds;
 
-@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+@property (nonatomic) Class<FBSDKAccessTokenProviding> tokenWallet;
 @property (nonatomic) id<FBSDKSettings> settings;
 @property (nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
@@ -28,7 +28,7 @@ NS_SWIFT_NAME(GraphRequestPiggybackManager)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+- (instancetype)initWithTokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
                            settings:(id<FBSDKSettings>)settings
         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory;

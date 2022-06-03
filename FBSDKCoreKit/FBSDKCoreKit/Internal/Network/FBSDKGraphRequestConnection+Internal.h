@@ -43,7 +43,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (class, nullable, nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (class, nullable, nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-@property (class, nullable, nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
 @property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 @property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenProvider;
 @property (nonatomic) FBSDKLogger *logger;
@@ -70,7 +69,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
              operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                     macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
                         accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
                                errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
                 authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider;
 

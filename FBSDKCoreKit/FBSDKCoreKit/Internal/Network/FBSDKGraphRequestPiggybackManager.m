@@ -16,7 +16,7 @@
 
 @implementation FBSDKGraphRequestPiggybackManager
 
-- (instancetype)initWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+- (instancetype)initWithTokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
                            settings:(id<FBSDKSettings>)settings
         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory

@@ -211,7 +211,6 @@ NS_ASSUME_NONNULL_BEGIN
                                     operatingSystemVersionComparer:self.components.operatingSystemVersionComparer
                                            macCatalystDeterminator:self.components.macCatalystDeterminator
                                                accessTokenProvider:self.components.accessTokenWallet
-                                                 accessTokenSetter:self.components.accessTokenWallet
                                                       errorFactory:self.components.errorFactory
                                        authenticationTokenProvider:self.components.authenticationTokenWallet];
   [FBSDKGraphRequestConnection setCanMakeRequests];

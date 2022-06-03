@@ -84,7 +84,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       operatingSystemVersionComparer: processInfo,
       macCatalystDeterminator: macCatalystDeterminator,
       accessTokenProvider: TestAccessTokenWallet.self,
-      accessTokenSetter: TestAccessTokenWallet.self,
       errorFactory: errorFactory,
       authenticationTokenProvider: TestAuthenticationTokenWallet.self
     )
@@ -194,10 +193,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       "A graph request connection should not an access token provider by default"
     )
     XCTAssertNil(
-      GraphRequestConnection.accessTokenSetter,
-      "A graph request connection should not have an access token setter by default"
-    )
-    XCTAssertNil(
       GraphRequestConnection.errorFactory,
       "A graph request connection should not have an error factory by default"
     )
@@ -247,10 +242,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     XCTAssertTrue(
       GraphRequestConnection.accessTokenProvider === TestAccessTokenWallet.self,
       "A graph request connection should persist the access token provider it was created with"
-    )
-    XCTAssertTrue(
-      GraphRequestConnection.accessTokenSetter === TestAccessTokenWallet.self,
-      "A graph request connection should persist the access token setter it was created with"
     )
     XCTAssertTrue(
       GraphRequestConnection.errorFactory === errorFactory,

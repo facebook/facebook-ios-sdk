@@ -22,21 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AccessTokenProviding)
 @protocol FBSDKAccessTokenProviding
 
-@property (class, nullable, nonatomic, readonly, copy) FBSDKAccessToken *currentAccessToken NS_SWIFT_NAME(current);
-@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
-
-@end
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-NS_SWIFT_NAME(AccessTokenSetting)
-@protocol FBSDKAccessTokenSetting
-
 @property (class, nullable, nonatomic, copy) FBSDKAccessToken *currentAccessToken NS_SWIFT_NAME(current);
+@property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 

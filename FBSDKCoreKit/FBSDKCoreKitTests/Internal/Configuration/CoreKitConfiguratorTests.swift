@@ -644,10 +644,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "GraphRequestConnection should not have an access token provider by default"
     )
     XCTAssertNil(
-      GraphRequestConnection.accessTokenSetter,
-      "GraphRequestConnection should not have an access token setter by default"
-    )
-    XCTAssertNil(
       GraphRequestConnection.errorFactory,
       "GraphRequestConnection should not have an error factory by default"
     )
@@ -698,10 +694,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       GraphRequestConnection.accessTokenProvider === components.accessTokenWallet,
       "GraphRequestConnection should be configured with the access token provider"
-    )
-    XCTAssertTrue(
-      GraphRequestConnection.accessTokenSetter === components.accessTokenWallet,
-      "GraphRequestConnection should be configured with the access token setter by default"
     )
     XCTAssertTrue(
       GraphRequestConnection.errorFactory === components.errorFactory,

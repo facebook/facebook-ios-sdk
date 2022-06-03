@@ -13,7 +13,7 @@ enum TestCoreKitComponents {
 
   static func makeComponents(
     accessTokenExpirer: AccessTokenExpiring = TestAccessTokenExpirer(),
-    accessTokenWallet: (AccessTokenProviding & AccessTokenSetting & TokenStringProviding).Type = TestAccessTokenWallet.self,
+    accessTokenWallet: (AccessTokenProviding & TokenStringProviding).Type = TestAccessTokenWallet.self,
     advertiserIDProvider: AdvertiserIDProviding = TestAdvertiserIDProvider(),
     appEvents: AppEventsConfiguring & ApplicationActivating & ApplicationLifecycleObserving & ApplicationStateSetting & EventLogging & SourceApplicationTracking = TestAppEvents(),
     appEventsConfigurationProvider: AppEventsConfigurationProviding = TestAppEventsConfigurationProvider(),

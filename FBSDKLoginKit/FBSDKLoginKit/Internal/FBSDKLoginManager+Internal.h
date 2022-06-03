@@ -31,7 +31,7 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 @property (nullable, nonatomic) FBSDKLoginManagerLoginResultBlock handler;
 @property (nullable, nonatomic) FBSDKLoginConfiguration *configuration;
 @property (nonatomic) id<FBSDKKeychainStore> keychainStore;
-@property (nonatomic) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> accessTokenWallet;
+@property (nonatomic) Class<FBSDKAccessTokenProviding> accessTokenWallet;
 @property (nonatomic) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationToken;
 @property (nonatomic) Class<FBSDKProfileProviding> profile;
 @property (nonatomic) id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> internalUtility;
@@ -51,7 +51,7 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 
 - (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
                    keychainStoreFactory:(id<FBSDKKeychainStoreProviding>)keychainStoreFactory
-                      accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
+                      accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
                     authenticationToken:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationToken
                                 profile:(Class<FBSDKProfileProviding>)profile
                               urlOpener:(id<FBSDKURLOpener>)urlOpener

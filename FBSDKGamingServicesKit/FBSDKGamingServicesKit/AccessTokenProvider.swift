@@ -19,6 +19,9 @@ final class AccessTokenProvider: AccessTokenProviding {
   }
 
   static var current: AccessToken? {
-    AccessToken.current
+    get {
+      AccessToken.current
+    }
+    set {} // swiftlint:disable:this unused_setter_value
   }
 }
