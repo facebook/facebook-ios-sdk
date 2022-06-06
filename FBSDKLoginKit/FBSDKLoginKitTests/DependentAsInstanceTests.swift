@@ -122,26 +122,24 @@ private final class CustomImplementationDependent: DependentAsInstance {
 
 fileprivate extension String {
   static let missingDependencies = """
-    Attempting to get the missing dependencies of a dependent should throw a missing instance dependencies error
+    Attempting to get the missing dependencies of a dependent throws a missing instance dependencies error
     """
   static let defaultDependencies = """
-    If a dependent's configured dependencies are missing, its default dependencies should be provided
+    When a dependent's configured dependencies are missing, its default dependencies are provided
     """
-  static let customDependencies = """
-    If a dependent has configured dependencies, those dependencies should be provided
-    """
+  static let customDependencies = "When a dependent has configured dependencies, those dependencies are provided"
 
   static let defaultSetDependenciesImplementation = """
-    A dependent should have a default `setDependencies(_:)` implementation that sets its configured dependencies
+    A dependent has a default `setDependencies(_:)` implementation that sets its configured dependencies
     """
   static let customSetDependenciesImplementation = """
-    A dependent should be able to override the default `setDependencies(_:)` implementation
+    A dependent can override the default `setDependencies(_:)` implementation
     """
 
   static let defaultResetDependenciesImplementation = """
-    A dependent should have a default `resetDependencies()` implementation that clears its configured dependencies
+    A dependent has a default `resetDependencies()` implementation that clears its configured dependencies
     """
   static let customResetDependenciesImplementation = """
-    A dependent should be able to override the default `resetDependencies()` implementation
+    A dependent can override the default `resetDependencies()` implementation
     """
 }
