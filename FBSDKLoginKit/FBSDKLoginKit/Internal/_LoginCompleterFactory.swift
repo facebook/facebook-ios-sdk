@@ -22,7 +22,7 @@ public final class _LoginCompleterFactory: NSObject, LoginCompleterFactoryProtoc
   public func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String
-  ) -> LoginCompleting {
+  ) -> _LoginCompleting {
     _LoginURLCompleter(urlParameters: parameters, appID: appID)
   }
 }

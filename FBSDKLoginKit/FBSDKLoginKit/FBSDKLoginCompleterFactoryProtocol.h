@@ -11,9 +11,10 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKLoginKit/FBSDKLoginCompleting.h>
 
 #import "FBSDKAuthenticationTokenCreating.h"
+
+@protocol FBSDKLoginCompleting;
 
 NS_ASSUME_NONNULL_BEGIN
 

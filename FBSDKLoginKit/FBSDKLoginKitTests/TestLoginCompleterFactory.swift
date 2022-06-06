@@ -23,7 +23,7 @@ final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String
-  ) -> LoginCompleting {
+  ) -> _LoginCompleting {
     capturedURLParameters = parameters
     capturedAppID = appID
 
