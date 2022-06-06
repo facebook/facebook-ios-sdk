@@ -18,7 +18,6 @@
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 #import "FBSDKCodeVerifier.h"
-#import "FBSDKLoginErrorFactory.h"
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
@@ -296,7 +295,7 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
   NSString *challengeReceived = parameters.challenge;
   NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
   if (![challengeExpected isEqualToString:challengeReceived]) {
-    return [FBSDKLoginErrorFactory fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
+    return [NSError errorWithDomain:FBSDKLoginErrorDomain code:FBSDKLoginErrorBadChallengeString userInfo:nil];
   } else {
     return nil;
   }
