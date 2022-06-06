@@ -12,4 +12,4 @@
  Provides a random string
  @param numberOfBytes the number of bytes to use
  */
-extern NSString *fb_randomString(NSUInteger numberOfBytes);
+extern NSString *_Nullable fb_randomString(NSUInteger numberOfBytes);
