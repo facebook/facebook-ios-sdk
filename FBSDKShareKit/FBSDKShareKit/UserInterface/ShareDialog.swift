@@ -204,9 +204,7 @@ extension ShareDialog {
 
   @discardableResult
   public func show() -> Bool {
-    guard let internalUtility = try? Self.getDependencies().internalUtility else {
-      return false
-    }
+    guard let internalUtility = Self.internalUtility else { return false }
 
     do {
       try validate()
@@ -302,19 +300,11 @@ extension ShareDialog {
   }
 
   private var canShowNative: Bool {
-    guard let internalUtility = try? Self.getDependencies().internalUtility else {
-      return false
-    }
-
-    return internalUtility.isFacebookAppInstalled
+    Self.internalUtility?.isFacebookAppInstalled ?? false
   }
 
   private var canShowShareSheet: Bool {
-    guard let internalUtility = try? Self.getDependencies().internalUtility else {
-      return false
-    }
-
-    return internalUtility.isFacebookAppInstalled
+    Self.internalUtility?.isFacebookAppInstalled ?? false
   }
 
   private var canAttributeThroughShareSheet: Bool {
@@ -330,7 +320,7 @@ extension ShareDialog {
 
     var canOpenURL = false
     if let url = components.url,
-       let internalURLOpener = try? Self.getDependencies().internalURLOpener {
+       let internalURLOpener = Self.internalURLOpener {
       canOpenURL = internalURLOpener.canOpenURL(url)
     }
 
@@ -338,9 +328,7 @@ extension ShareDialog {
   }
 
   private var canUseFBShareSheet: Bool {
-    guard let urlOpener = try? Self.getDependencies().internalURLOpener else {
-      return false
-    }
+    guard let urlOpener = Self.internalURLOpener else { return false }
 
     var components = URLComponents()
     components.scheme = URLScheme.facebookAPI.rawValue
@@ -364,9 +352,7 @@ extension ShareDialog {
 
   private func contentVideoURL(for video: ShareVideo) -> URL? {
     if let asset = video.videoAsset {
-      guard let mediaLibrarySearcher = try? Self.getDependencies().mediaLibrarySearcher else {
-        return nil
-      }
+      guard let mediaLibrarySearcher = Self.mediaLibrarySearcher else { return nil }
 
       return try? mediaLibrarySearcher.fb_getVideoURL(for: asset)
     } else if let data = video.data {
@@ -1000,8 +986,7 @@ extension ShareDialog {
   }
 
   private func invokeDelegateDidComplete(results: [String: Any]) {
-    let eventLogger = try? Self.getDependencies().eventLogger
-    eventLogger?.logInternalEvent(
+    Self.eventLogger?.logInternalEvent(
       .shareDialogResult,
       parameters: [.outcome: ShareAppEventsParameters.DialogOutcomeValue.completed],
       isImplicitlyLogged: true,
@@ -1018,8 +1003,7 @@ extension ShareDialog {
       .errorMessage: nsError.description,
     ]
 
-    let eventLogger = try? Self.getDependencies().eventLogger
-    eventLogger?.logInternalEvent(
+    Self.eventLogger?.logInternalEvent(
       .shareDialogResult,
       parameters: parameters,
       isImplicitlyLogged: true,
@@ -1049,8 +1033,7 @@ extension ShareDialog {
       .shareContentType: contentType,
     ]
 
-    let eventLogger = try? Self.getDependencies().eventLogger
-    eventLogger?.logInternalEvent(
+    Self.eventLogger?.logInternalEvent(
       .shareDialogShow,
       parameters: parameters,
       isImplicitlyLogged: true,
@@ -1169,8 +1152,7 @@ extension ShareDialog: WebDialogDelegate {
     self.webDialog = nil
     invokeDelegateDidFail(error: error)
 
-    let internalUtility = try? Self.getDependencies().internalUtility
-    internalUtility?.unregisterTransientObject(self)
+    Self.internalUtility?.unregisterTransientObject(self)
   }
 
   public func webDialogDidCancel(_ webDialog: WebDialog) {
@@ -1179,8 +1161,7 @@ extension ShareDialog: WebDialogDelegate {
     self.webDialog = nil
     invokeDelegateDidCancel()
 
-    let internalUtility = try? Self.getDependencies().internalUtility
-    internalUtility?.unregisterTransientObject(self)
+    Self.internalUtility?.unregisterTransientObject(self)
   }
 }
 

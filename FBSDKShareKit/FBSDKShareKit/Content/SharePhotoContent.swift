@@ -81,7 +81,7 @@ extension SharePhotoContent: SharingContent {
     _ existingParameters: [String: Any],
     options bridgeOptions: ShareBridgeOptions
   ) -> [String: Any] {
-    guard let imageFinder = try? Self.getDependencies().imageFinder else {
+    guard let imageFinder = Self.imageFinder else {
       return existingParameters
     }
 

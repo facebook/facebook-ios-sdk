@@ -124,14 +124,10 @@ public final class _LoginManagerLogger: NSObject {
   }
 
   public func endSession() {
-    guard
-      let eventLogger = try? Self.getDependencies().eventLogger
-    else {
-      return
-    }
-
     logEvent(.sessionAuthEnd, result: lastResult, error: lastError)
-    if eventLogger.flushBehavior != .explicitOnly {
+
+    if let eventLogger = Self.eventLogger,
+       eventLogger.flushBehavior != .explicitOnly {
       eventLogger.flush()
     }
   }
@@ -249,12 +245,7 @@ public final class _LoginManagerLogger: NSObject {
   }
 
   func logEvent(_ eventName: AppEvents.Name, params: [AppEvents.ParameterName: Any]?) {
-    guard
-      identifier != nil,
-      let eventLogger = try? Self.getDependencies().eventLogger
-    else {
-      return
-    }
+    guard identifier != nil else { return }
 
     var parameters = params
     if let extrasData = try? JSONSerialization.data(withJSONObject: extras),
@@ -265,7 +256,7 @@ public final class _LoginManagerLogger: NSObject {
     }
 
     extras.removeAll()
-    eventLogger.logInternalEvent(eventName, parameters: parameters, isImplicitlyLogged: true)
+    Self.eventLogger?.logInternalEvent(eventName, parameters: parameters, isImplicitlyLogged: true)
   }
 
   func logEvent(_ eventName: AppEvents.Name, result: String, error: NSError?) {

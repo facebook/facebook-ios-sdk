@@ -88,7 +88,7 @@ extension ShareVideoContent: SharingContent {
       if bridgeOptions == .videoAsset {
         // Bridge the PHAsset.localIdentifier
         videoParameters["assetIdentifier"] = asset.localIdentifier
-      } else if let mediaLibrarySearcher = try? Self.getDependencies().mediaLibrarySearcher,
+      } else if let mediaLibrarySearcher = Self.mediaLibrarySearcher,
                 let url = try? mediaLibrarySearcher.fb_getVideoURL(for: asset) {
         // Bridge the legacy "assets-library" URL from AVAsset
         videoParameters["assetURL"] = url

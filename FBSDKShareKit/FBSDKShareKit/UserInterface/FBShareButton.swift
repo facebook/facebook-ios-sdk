@@ -53,7 +53,7 @@ public final class FBShareButton: FBButton, SharingButton {
 
   public func configureButton() {
     var title = ""
-    if let bundle = try? Self.getDependencies().stringProvider.bundleForStrings {
+    if let bundle = Self.stringProvider?.bundleForStrings {
       title = NSLocalizedString(
         "ShareButton.Share",
         tableName: "FacebookSDK",

@@ -228,9 +228,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
   }
 
   private var canShowNative: Bool {
-    guard let internalUtility = try? Self.getDependencies().internalUtility else {
-      return false
-    }
+    guard let internalUtility = Self.internalUtility else { return false }
 
     let shouldUseNativeDialog = shareDialogConfiguration.shouldUseNativeDialog(
       forDialogName: FBSDKDialogConfigurationNameMessage
