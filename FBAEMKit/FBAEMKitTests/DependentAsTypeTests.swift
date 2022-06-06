@@ -89,11 +89,24 @@ final class DependentAsTypeTests: XCTestCase {
     CustomImplementationDependent.resetDependencies()
     XCTAssertTrue(CustomImplementationDependent.wasResetDependenciesCalled, .customResetDependenciesImplementation)
   }
+
+  func testFailedDynamicMemberLookup() {
+    XCTAssertNil(DefaultImplementationDependent.value, .missingDependencyDynamicMemberLookup)
+  }
+
+  func testDynamicMemberLookup() {
+    DefaultImplementationDependent.defaultDependencies = customDependencies
+    XCTAssertEqual(
+      DefaultImplementationDependent.value,
+      customDependencies.value,
+      .dynamicMemberLookup
+    )
+  }
 }
 
 // MARK: - Test Types
 
-struct TestDependencies: Equatable {
+private struct TestDependencies: Equatable {
   let value: Int
 }
 
@@ -142,4 +155,9 @@ fileprivate extension String {
   static let customResetDependenciesImplementation = """
     A dependent can override the default `resetDependencies()` implementation
     """
+
+  static let missingDependencyDynamicMemberLookup = """
+    When a dependent's dependencies are missing, dynamic lookup of a dependency as a property yields a nil value
+    """
+  static let dynamicMemberLookup = "The discrete dependencies of a dependent can be accessed dynamically as properties"
 }

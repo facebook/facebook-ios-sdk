@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@dynamicMemberLookup
 protocol DependentAsType {
   associatedtype TypeDependencies
 
@@ -37,10 +38,14 @@ extension DependentAsType {
 
     return dependencies
   }
+
+  static subscript<Dependency>(dynamicMember keyPath: KeyPath<TypeDependencies, Dependency>) -> Dependency? {
+    try? getDependencies()[keyPath: keyPath]
+  }
 }
 
 struct MissingTypeDependenciesError<Dependent: DependentAsType>: Error, CustomStringConvertible {
-  private var dependent: Dependent.Type
+  private let dependent: Dependent.Type
 
   fileprivate init(for dependent: Dependent.Type) {
     self.dependent = dependent

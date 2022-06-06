@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
-
+@dynamicMemberLookup
 protocol DependentAsType {
   associatedtype TypeDependencies
 
@@ -38,6 +37,10 @@ extension DependentAsType {
     }
 
     return dependencies
+  }
+
+  static subscript<Dependency>(dynamicMember keyPath: KeyPath<TypeDependencies, Dependency>) -> Dependency? {
+    try? getDependencies()[keyPath: keyPath]
   }
 }
 
