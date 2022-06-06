@@ -75,10 +75,14 @@ public final class _LoginURLCompleter: NSObject, _LoginCompleting {
   /// Performs the work needed to populate the login completion parameters before they
   /// are used to determine login success, failure or cancellation.
   public func completeLogin(handler: @escaping LoginCompletionParametersBlock) {
-    completeLogin(handler: handler, nonce: nil, codeVerifier: nil)
+    completeLogin(nonce: nil, codeVerifier: nil, handler: handler)
   }
 
-  public func completeLogin(handler: @escaping LoginCompletionParametersBlock, nonce: String?, codeVerifier: String?) {
+  public func completeLogin(
+    nonce: String?,
+    codeVerifier: String?,
+    handler: @escaping LoginCompletionParametersBlock
+  ) {
     if parameters.code != nil {
       exchangeCodeForTokensWith(nonce: nonce, codeVerifier: codeVerifier, handler: handler)
     } else if parameters.nonceString != nil {
@@ -284,7 +288,7 @@ public final class _LoginURLCompleter: NSObject, _LoginCompleting {
         let result = result as? [String: Any]
       else {
         parameters.error = graphRequestError
-        completeLogin(handler: handler, nonce: nonce, codeVerifier: nil)
+        completeLogin(nonce: nonce, codeVerifier: nil, handler: handler)
         return
       }
 
@@ -302,7 +306,7 @@ public final class _LoginURLCompleter: NSObject, _LoginCompleting {
         parameters.authenticationTokenString = result["id_token"] as? String
       }
 
-      completeLogin(handler: handler, nonce: nonce, codeVerifier: nil)
+      completeLogin(nonce: nonce, codeVerifier: nil, handler: handler)
     }
   }
 

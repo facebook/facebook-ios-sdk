@@ -30,8 +30,12 @@ public protocol _LoginCompleting {
    Invoke handler with the login parameters derived from the authentication result.
    See the implementing class's documentation for whether it completes synchronously or asynchronously.
    */
-  @objc(completeLoginWithHandler:nonce:codeVerifier:)
-  func completeLogin(handler: @escaping LoginCompletionParametersBlock, nonce: String?, codeVerifier: String?)
+  @objc(completeLoginWithNonce:codeVerifier:handler:)
+  func completeLogin(
+    nonce: String?,
+    codeVerifier: String?,
+    handler: @escaping LoginCompletionParametersBlock
+  )
 }
 
 #endif

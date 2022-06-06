@@ -713,15 +713,15 @@ NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink = @"applink_auth";
                                                                                                      appID:self.settings.appID];
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
-    [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
-                 if ((self->_configuration) && (self->_logger == nil)) {
-                   self->_logger = [[FBSDKLoginManagerLogger alloc] initWithParameters:urlParameters
-                                                                              tracking:self->_configuration.tracking];
-                 }
-                 [self completeAuthentication:parameters expectChallenge:YES];
-               }
-                                  nonce:[self loadExpectedNonce]
-                           codeVerifier:[self loadExpectedCodeVerifier]];
+    [completer completeLoginWithNonce:[self loadExpectedNonce]
+                         codeVerifier:[self loadExpectedCodeVerifier]
+                              handler:^(FBSDKLoginCompletionParameters *parameters) {
+                                if ((self->_configuration) && (self->_logger == nil)) {
+                                  self->_logger = [[FBSDKLoginManagerLogger alloc] initWithParameters:urlParameters
+                                                                                             tracking:self->_configuration.tracking];
+                                }
+                                [self completeAuthentication:parameters expectChallenge:YES];
+                              }];
     [self storeExpectedNonce:nil];
     [self storeExpectedCodeVerifier:nil];
   }

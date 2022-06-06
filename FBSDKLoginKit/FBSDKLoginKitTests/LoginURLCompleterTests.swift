@@ -338,10 +338,9 @@ final class LoginURLCompleterTests: XCTestCase {
     ]
 
     urlCompleter.completeLogin(
-      handler: { _ in },
       nonce: nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { _ in }
 
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
@@ -404,9 +403,9 @@ final class LoginURLCompleterTests: XCTestCase {
     let handler: LoginCompletionParametersBlock = { _ in }
 
     urlCompleter.completeLogin(
-      handler: handler,
       nonce: Values.nonce,
-      codeVerifier: Values.codeVerifier
+      codeVerifier: Values.codeVerifier,
+      handler: handler
     )
 
     XCTAssertNil(urlCompleter.parameters.error)
@@ -458,9 +457,9 @@ final class LoginURLCompleterTests: XCTestCase {
     }
 
     urlCompleter.completeLogin(
-      handler: handler,
       nonce: Values.nonce,
-      codeVerifier: Values.codeVerifier
+      codeVerifier: Values.codeVerifier,
+      handler: handler
     )
 
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
@@ -493,9 +492,9 @@ final class LoginURLCompleterTests: XCTestCase {
     }
 
     urlCompleter.completeLogin(
-      handler: handler,
       nonce: Values.nonce,
-      codeVerifier: Values.codeVerifier
+      codeVerifier: Values.codeVerifier,
+      handler: handler
     )
 
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
@@ -527,9 +526,9 @@ final class LoginURLCompleterTests: XCTestCase {
     }
 
     urlCompleter.completeLogin(
-      handler: handler,
       nonce: Values.nonce,
-      codeVerifier: Values.codeVerifier
+      codeVerifier: Values.codeVerifier,
+      handler: handler
     )
 
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
@@ -558,10 +557,9 @@ final class LoginURLCompleterTests: XCTestCase {
     ]
 
     urlCompleter.completeLogin(
-      handler: { _ in },
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { _ in }
 
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, stubbedResult, nil)
 
@@ -601,13 +599,12 @@ final class LoginURLCompleterTests: XCTestCase {
 
     var completionWasInvoked = false
     urlCompleter.completeLogin(
-      handler: { _ in
-        // Basically just making sure that nothing crashes here when we feed it garbage results
-        completionWasInvoked = true
-      },
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { _ in
+      // Basically just making sure that nothing crashes here when we feed it garbage results
+      completionWasInvoked = true
+    }
 
     (0 ..< 100).forEach { _ in
       let mangledResult = stubbedResult
@@ -642,10 +639,9 @@ final class LoginURLCompleterTests: XCTestCase {
     let nonce = Values.nonce
 
     urlCompleter.completeLogin(
-      handler: { _ in },
       nonce: nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { _ in }
 
     XCTAssertNil(urlCompleter.parameters.error)
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 0)
@@ -694,13 +690,12 @@ final class LoginURLCompleterTests: XCTestCase {
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
     urlCompleter.completeLogin(
-      handler: { parameters in
-        capturedParameters = parameters
-        completionWasInvoked = true
-      },
       nonce: nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { parameters in
+      capturedParameters = parameters
+      completionWasInvoked = true
+    }
 
     let tokenString = try XCTUnwrap(SampleRawLoginCompletionParameters.withIDToken[Keys.idToken] as? String)
     let token = AuthenticationToken(
@@ -732,13 +727,12 @@ final class LoginURLCompleterTests: XCTestCase {
     var completionWasInvoked = false
     var capturedParameters: _LoginCompletionParameters?
     urlCompleter.completeLogin(
-      handler: { parameters in
-        capturedParameters = parameters
-        completionWasInvoked = true
-      },
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { parameters in
+      capturedParameters = parameters
+      completionWasInvoked = true
+    }
 
     let parameters = try XCTUnwrap(capturedParameters)
     verifyParameters(
@@ -757,12 +751,11 @@ final class LoginURLCompleterTests: XCTestCase {
 
     var completionWasInvoked = false
     urlCompleter.completeLogin(
-      handler: { _ in
-        completionWasInvoked = true
-      },
       nonce: Values.nonce,
       codeVerifier: Values.codeVerifier
-    )
+    ) { _ in
+      completionWasInvoked = true
+    }
 
     XCTAssert(completionWasInvoked, "Handler should be invoked")
     XCTAssertNil(urlCompleter.parameters.error)
