@@ -113,9 +113,9 @@ extension SharePhotoContent: SharingContent {
   }
 }
 
-// MARK: - SharingValidation
+// MARK: - SharingValidatable
 
-extension SharePhotoContent: SharingValidation {
+extension SharePhotoContent: SharingValidatable {
   // The number of photos that can be shared at once is restricted
   private static let photosCountRange = 1 ... 6
 
