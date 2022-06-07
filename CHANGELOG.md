@@ -36,6 +36,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Made `LoginManagerLoginResult.declinedPermissions` immutable.
 - Made `AccessToken.currentAccessToken` use a Swift name of `current`.
 - Made `AuthenticationToken.currentAuthenticationToken` use a Swift name of `current`.
+- Renamed `SharingValidation` protocol to `SharingValidatable`.
 
 [2022-06-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...v14.0.0)

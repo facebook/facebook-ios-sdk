@@ -8,11 +8,11 @@
 
 import Foundation
 
-/// A base interface for validation of content and media.
-@objc(FBSDKSharingValidation)
-public protocol SharingValidation {
+/// An interface for validatable content and media.
+@objc(FBSDKSharingValidatable)
+public protocol SharingValidatable {
   /**
-   Asks the receiver to validate that its content or media values are valid.
+   Validate that this content or media contains valid values.
    - Parameter options:  The share bridge options to use for validation.
    - Throws: If the values are not valid.
    */
