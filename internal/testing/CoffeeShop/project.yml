@@ -44,7 +44,6 @@ targets:
       SWIFT_OBJC_BRIDGING_HEADER: CoffeeShop/CoffeeShop-Bridging-Header.h
       CODE_SIGN_ENTITLEMENTS: Entitlements-Local.plist
       PROVISIONING_PROFILE_SPECIFIER: "CoffeeShop Local Development"
-      FB_BUNDLE_ID: com.facebook.coffeeshop.localDevelopment
       FB_BUNDLE_VERSION: "1.0"
       FB_BUNDLE_VERSION_SHORT: "1.0"
       DEVELOPMENT_TEAM: V9WTTPBFK9
