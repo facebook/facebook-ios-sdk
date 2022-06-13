@@ -21,7 +21,6 @@
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
 #import <FBSDKLoginKit/FBSDKLoginManagerLoginResultBlock.h>
 #import <FBSDKLoginKit/FBSDKLoginProviding.h>
-#import <FBSDKLoginKit/FBSDKLoginTooltipViewDelegate.h>
 #import <FBSDKLoginKit/FBSDKProfileCreating.h>
 #import <FBSDKLoginKit/NSURLSession+SessionProviding.h>
 
