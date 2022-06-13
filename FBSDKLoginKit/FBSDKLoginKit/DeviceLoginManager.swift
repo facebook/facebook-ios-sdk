@@ -306,7 +306,7 @@ extension DeviceLoginManager: NetServiceDelegate {
 
 extension DeviceLoginManager: DependentAsInstance {
   struct InstanceDependencies {
-    var devicePoller: _DevicePolling
+    var devicePoller: DevicePolling
     var errorFactory: ErrorCreating
     var graphRequestFactory: GraphRequestFactoryProtocol
     var internalUtility: InternalUtilityProtocol

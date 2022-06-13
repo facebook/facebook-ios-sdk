@@ -14,7 +14,7 @@
  */
 @objcMembers
 @objc(FBSDKDevicePoller)
-public final class _DevicePoller: NSObject, _DevicePolling {
+public final class _DevicePoller: NSObject, DevicePolling {
   public func schedule(interval: UInt, block: @escaping () -> Void) {
     let dispatchTime = DispatchTime.now() + DispatchTimeInterval.seconds(Int(interval))
     DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: block)

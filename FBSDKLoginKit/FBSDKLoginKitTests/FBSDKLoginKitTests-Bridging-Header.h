@@ -11,7 +11,6 @@
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
 #import "FBSDKAuthenticationTokenCreating.h"
 #import "FBSDKCodeVerifier.h"
-#import "FBSDKDevicePolling.h"
 #import "FBSDKLoginProviding.h"
 
 // +Testing.h files

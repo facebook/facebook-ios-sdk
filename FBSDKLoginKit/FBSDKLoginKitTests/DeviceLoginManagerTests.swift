@@ -79,7 +79,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "A device login manager uses a provided graph request factory"
     )
     XCTAssertIdentical(
-      dependencies.devicePoller,
+      dependencies.devicePoller as AnyObject,
       poller,
       "A device login manager uses a provided device poller"
     )
