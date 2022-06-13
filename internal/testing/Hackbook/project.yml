@@ -54,7 +54,6 @@ targets:
       FB_BUNDLE_VERSION: "1.0"
       FB_BUNDLE_VERSION_SHORT: "1.0"
       CODE_SIGN_ENTITLEMENTS: "$(SOURCE_ROOT)/Entitlements/Entitlements-Local.plist"
-      PRODUCT_BUNDLE_IDENTIFIER: com.facebook.internal.sdk.samples.Hackbook.localDevelopment
 
 schemes:
   Hackbook:
