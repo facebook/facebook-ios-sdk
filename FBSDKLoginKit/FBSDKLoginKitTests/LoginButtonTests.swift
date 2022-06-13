@@ -97,7 +97,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     XCTAssertIdentical(
-      loginButton.loginProvider,
+      loginButton.loginProvider as AnyObject,
       loginProvider,
       .hasCustomLoginProvider
     )
@@ -892,18 +892,18 @@ final class LoginButtonTests: XCTestCase {
 
     XCTAssertNotNil(loginProvider.capturedConfiguration)
     let completion = try XCTUnwrap(loginProvider.capturedCompletion)
-    let granted = Set(SampleAccessTokens.validToken.permissions.map { $0.name })
-    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map { $0.name })
+    let granted = Set(SampleAccessTokens.validToken.permissions.map(\.name))
+    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map(\.name ))
     let result = LoginManagerLoginResult(
       token: SampleAccessTokens.validToken,
-      authenticationToken: sampleToken,
+      authenticationToken: nil,
       isCancelled: false,
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    completion(result, nil)
+    completion(LoginResult(result: result, error: nil))
 
-    XCTAssertEqual(delegate.capturedResult, result)
+    assertEqualLoginManagerLoginResults(delegate.capturedResult, result, .delegateIsPassedResult)
   }
 
   func testButtonPressAuthenticated() throws {
@@ -1008,6 +1008,22 @@ final class LoginButtonTests: XCTestCase {
       expectedTitleRect,
       .hasCustomTitleFrame
     )
+  }
+
+  // MARK: - Helpers
+
+  private func assertEqualLoginManagerLoginResults(
+    _ result1: LoginManagerLoginResult?,
+    _ result2: LoginManagerLoginResult?,
+    _ message: String,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    XCTAssertEqual(result1?.token, result2?.token, message, file: file, line: line)
+    XCTAssertEqual(result1?.authenticationToken, result2?.authenticationToken, message, file: file, line: line)
+    XCTAssertEqual(result1?.isCancelled, result2?.isCancelled, message, file: file, line: line)
+    XCTAssertEqual(result1?.grantedPermissions, result2?.grantedPermissions, message, file: file, line: line)
+    XCTAssertEqual(result1?.declinedPermissions, result2?.declinedPermissions, message, file: file, line: line)
   }
 }
 
@@ -1200,4 +1216,5 @@ fileprivate extension String {
     User id should change when attempting to update content \
     with a profile with an identical user id has a new name
     """
+  static let delegateIsPassedResult = "The delegate is passed the login result"
 }

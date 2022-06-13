@@ -68,7 +68,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
     )
 
     XCTAssertIdentical(
-      dependencies.loginProvider,
+      dependencies.loginProvider as AnyObject,
       loginProvider,
       .customDependency(for: "login provider")
     )
@@ -131,7 +131,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
         capturedSuccess = success
       }
 
-      let completion = try XCTUnwrap(loginProvider.capturedCompletion)
+      let completion = try XCTUnwrap(loginProvider.capturedLegacyCompletion)
       completion(pair.result, pair.error)
 
       let success = try XCTUnwrap(capturedSuccess)
@@ -147,7 +147,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
       capturedSuccess = success
     }
 
-    let completion = try XCTUnwrap(loginProvider.capturedCompletion)
+    let completion = try XCTUnwrap(loginProvider.capturedLegacyCompletion)
     completion(createLoginManagerResult(isCancelled: false, declinedPermissions: []), nil)
 
     let success = try XCTUnwrap(capturedSuccess)

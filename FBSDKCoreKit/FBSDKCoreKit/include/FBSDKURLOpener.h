@@ -25,8 +25,8 @@ NS_SWIFT_NAME(URLOpener)
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
+                                 sender:(nullable id<FBSDKURLOpening>)sender
+                     fromViewController:(nullable UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
 // UNCRUSTIFY_FORMAT_ON

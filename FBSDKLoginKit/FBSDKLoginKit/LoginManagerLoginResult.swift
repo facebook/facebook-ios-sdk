@@ -60,13 +60,7 @@ public final class LoginManagerLoginResult: NSObject {
     self.declinedPermissions = declinedPermissions
   }
 
-  /**
-   Internal method exposed to facilitate transition to Swift.
-   API Subject to change or removal without warning. Do not use.
-
-   @warning INTERNAL - DO NOT USE
-   */
-  public func addLoggingExtra(_ object: Any, forKey key: String) {
+  func addLoggingExtra(_ object: Any, forKey key: String) {
     loggingExtras[key] = object
   }
 }

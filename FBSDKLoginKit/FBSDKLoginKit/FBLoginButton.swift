@@ -96,7 +96,7 @@ public final class FBLoginButton: FBButton {
   var userName: String?
   var elementProvider: _UserInterfaceElementProviding = InternalUtility.shared
   var stringProvider: _UserInterfaceStringProviding = InternalUtility.shared
-  var loginProvider: _LoginProviding = LoginManager()
+  var loginProvider: LoginProviding = LoginManager()
   var graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()
 
   var isAuthenticated: Bool {
@@ -144,7 +144,7 @@ public final class FBLoginButton: FBButton {
     frame: CGRect = .zero,
     elementProvider: _UserInterfaceElementProviding,
     stringProvider: _UserInterfaceStringProviding,
-    loginProvider: _LoginProviding,
+    loginProvider: LoginProviding,
     graphRequestFactory: GraphRequestFactoryProtocol
   ) {
     self.init(frame: frame)
@@ -348,11 +348,11 @@ public final class FBLoginButton: FBButton {
     }
 
     if let loginConfiguration = loginConfiguration {
-      loginProvider.__logIn(
-        from: elementProvider.viewController(for: self),
+      loginProvider.logIn(
+        viewController: elementProvider.viewController(for: self),
         configuration: loginConfiguration
-      ) { result, error in
-        self.delegate?.loginButton(self, didCompleteWith: result, error: error)
+      ) { result in
+        self.delegate?.loginButton(self, didCompleteWith: result.loginManagerResult, error: result.error)
       }
     }
   }

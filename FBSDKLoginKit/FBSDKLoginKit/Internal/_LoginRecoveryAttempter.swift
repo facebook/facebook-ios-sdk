@@ -49,7 +49,7 @@ public final class _LoginRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
 
 extension _LoginRecoveryAttempter: DependentAsType {
   struct TypeDependencies {
-    var loginProvider: _LoginProviding
+    var loginProvider: LoginProviding
     var accessTokenProvider: AccessTokenProviding.Type
   }
 

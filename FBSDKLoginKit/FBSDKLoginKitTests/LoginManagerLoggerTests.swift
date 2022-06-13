@@ -159,7 +159,8 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testStartingSessionForLoginManager() throws {
     let loginManager = LoginManager(defaultAudience: .friends)
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
     loginManagerLogger.startSession(for: loginManager)
 
     validateCommonEventLoggingParameters()
