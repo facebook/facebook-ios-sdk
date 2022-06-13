@@ -6,21 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBSDKLoginKit
+#if !os(tvOS)
 
-final class TestAuthenticationTokenFactory: AuthenticationTokenCreating {
-  var capturedTokenString: String?
-  var capturedNonce: String?
-  var capturedCompletion: AuthenticationTokenBlock?
+import FBSDKCoreKit
 
+ typealias AuthenticationTokenBlock = (AuthenticationToken?) -> Void
+
+protocol AuthenticationTokenCreating {
   func createToken(
     tokenString: String,
     nonce: String,
     graphDomain: String,
     completion: @escaping AuthenticationTokenBlock
-  ) {
-    capturedTokenString = tokenString
-    capturedNonce = nonce
-    capturedCompletion = completion
-  }
+  )
 }
+
+#endif

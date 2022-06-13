@@ -17,7 +17,7 @@ import Security
  An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
  */
 @objc(FBSDKAuthenticationTokenFactory)
-public final class _AuthenticationTokenFactory: NSObject, _AuthenticationTokenCreating {
+public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCreating {
   typealias PublicCertCompletionHandler = (SecCertificate?) -> Void
   typealias PublicKeyCompletionHandler = (SecKey?) -> Void
   typealias VerifySignatureCompletionHandler = (Bool) -> Void
@@ -53,7 +53,7 @@ public final class _AuthenticationTokenFactory: NSObject, _AuthenticationTokenCr
    @param graphDomain the graph domain where user is authenticated
    @param completion the completion handler
    */
-  public func createToken(
+   func createToken(
     tokenString: String,
     nonce: String,
     graphDomain: String,

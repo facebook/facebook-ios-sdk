@@ -121,7 +121,7 @@ final class LoginURLCompleterTests: XCTestCase {
     )
 
     XCTAssertIdentical(
-      dependencies.authenticationTokenCreator,
+      dependencies.authenticationTokenCreator as AnyObject,
       authenticationTokenFactory,
       .customDependency(for: "authentication token creator")
     )
