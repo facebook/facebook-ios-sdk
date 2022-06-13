@@ -1,6 +1,6 @@
 # (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-name: Coffeeshop
+name: CoffeeShop
 
 include:
   - ../../../xcodegen_project_common.yml
@@ -19,7 +19,7 @@ projectReferences:
     path: ../E2EUtils/E2EUtils.xcodeproj
 
 targets:
-  Coffeeshop:
+  CoffeeShop:
     platform: iOS
     type: application
     sources:
