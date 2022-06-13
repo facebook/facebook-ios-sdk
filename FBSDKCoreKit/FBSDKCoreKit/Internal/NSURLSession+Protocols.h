@@ -17,7 +17,4 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSURLSessionDataTask (FBSessionDataTask) <FBSDKSessionDataTask>
 @end
 
-@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
-@end
-
 NS_ASSUME_NONNULL_END

@@ -21,4 +21,5 @@
 #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
 #import <FBSDKCoreKit_Basics/NSBundle+InfoDictionaryProviding.h>
+#import <FBSDKCoreKit_Basics/NSURLSession+SessionProviding.h>
 #import <FBSDKCoreKit_Basics/NSUserDefaults+FBSDKDataPersisting.h>
