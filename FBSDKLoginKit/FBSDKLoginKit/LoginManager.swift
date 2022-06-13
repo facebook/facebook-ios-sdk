@@ -574,7 +574,7 @@ public final class LoginManager: NSObject {
     parameters["nonce"] = configuration.nonce
     storeExpectedNonce(configuration.nonce)
 
-    let values = ["init": _MonotonicTimer().getCurrentSeconds()]
+    let values = ["init": MonotonicTimer().getCurrentSeconds()]
     if let timestamp = try? BasicUtility.jsonString(for: values) {
       parameters["e2e"] = timestamp
     }

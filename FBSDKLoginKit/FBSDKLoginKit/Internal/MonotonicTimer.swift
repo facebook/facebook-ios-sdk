@@ -10,14 +10,7 @@
 
 import Foundation
 
-/**
- Internal type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objcMembers
-public final class _MonotonicTimer: NSObject {
+struct MonotonicTimer {
   private static let timebaseInfo: mach_timebase_info = {
     var info = mach_timebase_info()
     guard mach_timebase_info(&info) == 0 else {
@@ -31,7 +24,7 @@ public final class _MonotonicTimer: NSObject {
     (mach_absolute_time() * UInt64(Self.timebaseInfo.numer)) / UInt64(Self.timebaseInfo.denom)
   }
 
-  public func getCurrentSeconds() -> TimeInterval {
+  func getCurrentSeconds() -> TimeInterval {
     Double(getNanoseconds()) / 1_000_000_000.0
   }
 }
