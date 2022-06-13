@@ -19,7 +19,7 @@ final class DevicePollerTests: XCTestCase {
       expectation.fulfill()
     }
 
-    poller.scheduleBlock(block, interval: 1)
+    poller.schedule(interval: 1, block: block)
 
     waitForExpectations(timeout: 2, handler: nil)
   }

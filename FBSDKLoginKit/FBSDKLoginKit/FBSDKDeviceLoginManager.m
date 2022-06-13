@@ -233,53 +233,54 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_schedulePoll:(NSUInteger)interval
 {
-  [self.devicePoller scheduleBlock:^{
-                       if (self.isCancelled) {
-                         return;
-                       }
+  [self.devicePoller scheduleWithInterval:interval
+                                    block:^{
+                                      if (self.isCancelled) {
+                                        return;
+                                      }
 
-                       NSDictionary<NSString *, id> *parameters = @{ @"code" : self.codeInfo.identifier };
-                       id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
-                                                                                                      parameters:parameters
-                                                                                                     tokenString:[self.internalUtility validateRequiredClientAccessToken]
-                                                                                                      HTTPMethod:@"POST"
-                                                                                                           flags:FBSDKGraphRequestFlagNone];
-                       request.graphErrorRecoveryDisabled = YES;
-                       FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-                         if (self.isCancelled) {
-                           return;
-                         }
-                         if (error) {
-                           [self _processError:error];
-                         } else {
-                           NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                           NSDate *expirationDate = NSDate.distantFuture;
-                           NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
-                           if (expiresIn > 0) {
-                             expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
-                           }
+                                      NSDictionary<NSString *, id> *parameters = @{ @"code" : self.codeInfo.identifier };
+                                      id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
+                                                                                                                     parameters:parameters
+                                                                                                                    tokenString:[self.internalUtility validateRequiredClientAccessToken]
+                                                                                                                     HTTPMethod:@"POST"
+                                                                                                                          flags:FBSDKGraphRequestFlagNone];
+                                      request.graphErrorRecoveryDisabled = YES;
+                                      FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                                        if (self.isCancelled) {
+                                          return;
+                                        }
+                                        if (error) {
+                                          [self _processError:error];
+                                        } else {
+                                          NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                                          NSDate *expirationDate = NSDate.distantFuture;
+                                          NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
+                                          if (expiresIn > 0) {
+                                            expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
+                                          }
 
-                           NSDate *dataAccessExpirationDate = NSDate.distantFuture;
-                           NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
-                           if (dataAccessExpirationTime > 0) {
-                             dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];
-                           }
+                                          NSDate *dataAccessExpirationDate = NSDate.distantFuture;
+                                          NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
+                                          if (dataAccessExpirationTime > 0) {
+                                            dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];
+                                          }
 
-                           if (tokenString) {
-                             [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
-                           } else {
-                             id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
-                             NSError *unknownError = [errorFactory errorWithDomain:FBSDKLoginErrorDomain
-                                                                              code:FBSDKErrorUnknown
-                                                                          userInfo:nil
-                                                                           message:@"Device Login poll failed. No token nor error was found."
-                                                                   underlyingError:nil];
-                             [self _notifyError:unknownError];
-                           }
-                         }
-                       };
-                       [request startWithCompletion:completion];
-                     } interval:interval];
+                                          if (tokenString) {
+                                            [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
+                                          } else {
+                                            id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
+                                            NSError *unknownError = [errorFactory errorWithDomain:FBSDKLoginErrorDomain
+                                                                                             code:FBSDKErrorUnknown
+                                                                                         userInfo:nil
+                                                                                          message:@"Device Login poll failed. No token nor error was found."
+                                                                                  underlyingError:nil];
+                                            [self _notifyError:unknownError];
+                                          }
+                                        }
+                                      };
+                                      [request startWithCompletion:completion];
+                                    }];
 }
 
 - (void)netService:(NSNetService *)sender

@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestDevicePoller: DevicePolling {
+final class TestDevicePoller: _DevicePolling {
   var capturedInterval: UInt = 0
 
-  func scheduleBlock(_ block: @escaping () -> Void, interval: UInt) {
+  func schedule(interval: UInt, block: @escaping () -> Void) {
     capturedInterval = interval
     block()
   }

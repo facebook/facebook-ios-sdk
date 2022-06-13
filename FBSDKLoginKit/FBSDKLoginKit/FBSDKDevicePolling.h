@@ -10,10 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(DevicePolling)
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_DevicePolling)
 @protocol FBSDKDevicePolling
 
-- (void)scheduleBlock:(dispatch_block_t)block interval:(NSUInteger)interval;
+// UNCRUSTIFY_FORMAT_OFF
+- (void)scheduleWithInterval:(NSUInteger)interval block:(dispatch_block_t)block
+NS_SWIFT_NAME(schedule(interval:block:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 
