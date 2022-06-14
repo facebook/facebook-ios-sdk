@@ -29,11 +29,6 @@
       "args": {
         "steps": [
           {
-            "name": "build hackbook for device",
-            "shell": "python3 ci/build_hackbook_ipa.py",
-            "determinator": true,
-          },
-          {
             "name": "build hackbook for simulator",
             "shell": "python3 ci/build_hackbook_simulator_ipa.py",
             "determinator": true,
