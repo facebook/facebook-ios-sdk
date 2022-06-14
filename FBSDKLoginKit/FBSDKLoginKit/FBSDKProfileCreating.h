@@ -8,10 +8,11 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 @class FBSDKLocation;
 @class FBSDKProfile;
 @class FBSDKUserAgeRange;
-typedef NSString FBSDKUserIdentifier;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +26,7 @@ NS_SWIFT_NAME(_ProfileCreating)
 @protocol FBSDKProfileCreating
 
 // UNCRUSTIFY_FORMAT_OFF
-- (FBSDKProfile *)createProfileWithUserID:(FBSDKUserIdentifier *)userID
+- (FBSDKProfile *)createProfileWithUserID:(FBSDKUserIdentifier)userID
                                 firstName:(nullable NSString *)firstName
                                middleName:(nullable NSString *)middleName
                                  lastName:(nullable NSString *)lastName
@@ -34,7 +35,7 @@ NS_SWIFT_NAME(_ProfileCreating)
                               refreshDate:(nullable NSDate *)refreshDate
                                  imageURL:(nullable NSURL *)imageURL
                                     email:(nullable NSString *)email
-                                friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                                friendIDs:(nullable NSArray<FBSDKUserIdentifier> *)friendIDs
                                  birthday:(nullable NSDate *)birthday
                                  ageRange:(nullable FBSDKUserAgeRange *)ageRange
                                  hometown:(nullable FBSDKLocation *)hometown
