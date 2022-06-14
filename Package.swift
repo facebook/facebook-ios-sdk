@@ -173,37 +173,37 @@ extension Target {
     enum Prefixed {
         static let basics = binaryTarget(
             name: .Prefixed.basics,
-            remoteChecksum: "b00151de2e44ba684a8c15f65aee3cc561c885fea5ef258aa462846765e4c4f9"
+            remoteChecksum: "0c46ab4fe339da87b7e45d22276800953a9429d2562fb9b54835b860385c0f07"
         )
 
         static let aem = binaryTarget(
             name: .Prefixed.aem,
-            remoteChecksum: "cd5e09f0a9b091d4263ed30762b3a65a125c8cad1f3c8909c2e71e8565488e3e"
+            remoteChecksum: "694fe8857e21d5208ac382879416eed1d291c6703f94d63099d38b8f3317019a"
         )
 
         static let core = binaryTarget(
             name: .Prefixed.core,
-            remoteChecksum: "c23fd6ff01535b72b8a7fc5b924fb2cc9647457540aca50aa32376f3725bb45a"
+            remoteChecksum: "452444279282443ba7350323fda093259ffd17550ddfc5687f5e423ed2e1cb30"
         )
 
         static let login = binaryTarget(
             name: .Prefixed.login,
-            remoteChecksum: "dd32a7f938d0a8d8ee0b4862eefb0825004b9ed1d9233f1e76c7b3d3ff08a372"
+            remoteChecksum: "50bfb9a317d96ef9bc26a587190216c25a922f46d64de8d2e4aca8d43753a242"
         )
 
         static let share = binaryTarget(
             name: .Prefixed.share,
-            remoteChecksum: "5880bc7c3565b9e4d5722daf3604d11471651489ac542baf22fd4e18e08811df"
+            remoteChecksum: "6da59633f039c41dfd6d89adb0c20d22d86333410c0e78613a0ae6f30c131cea"
         )
 
         static let gamingServices = binaryTarget(
             name: .Prefixed.gaming,
-            remoteChecksum: "acd6575897ec782a210b08d055bb4ab49d1c51264b8697698c69f60721e7af92"
+            remoteChecksum: "bc7d64539f992c10a771fa83727b9dab5181d999a0541ec8afd39070ac88c101"
         )
 
         static let tv = binaryTarget(
             name: .Prefixed.tv,
-            remoteChecksum: "c05019bfe10e474de0123275742cb0134c839b86d9028b2f32faf529ad5380dd"
+            remoteChecksum: "cc8a40192a7773ab96fbdbb42995ee8168100ea5f37650940e3c3bdc49886680"
         )
     }
 }
