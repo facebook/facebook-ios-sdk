@@ -50,8 +50,7 @@ typedef void (^ FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nu
 NS_SWIFT_NAME(ProfileBlock);
 
 /// Represents the unique identifier for an end user
-typedef NSString FBSDKUserIdentifier
-  NS_SWIFT_NAME(UserIdentifier);
+typedef NSString *FBSDKUserIdentifier NS_SWIFT_NAME(UserIdentifier) NS_SWIFT_BRIDGED_TYPEDEF;
 
 /**
  Represents an immutable Facebook profile
@@ -81,7 +80,7 @@ NS_SWIFT_NAME(Profile)
  @param linkURL the link for this profile
  @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
  */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+- (instancetype)initWithUserID:(FBSDKUserIdentifier)userID
                      firstName:(nullable NSString *)firstName
                     middleName:(nullable NSString *)middleName
                       lastName:(nullable NSString *)lastName
@@ -109,7 +108,7 @@ NS_SWIFT_NAME(Profile)
  When true, `loadCurrentProfileWithCompletion:` will assume the profile is
  incomplete and disregard any cached profile. Defaults to false.
  */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+- (instancetype)initWithUserID:(FBSDKUserIdentifier)userID
                      firstName:(nullable NSString *)firstName
                     middleName:(nullable NSString *)middleName
                       lastName:(nullable NSString *)lastName
@@ -118,7 +117,7 @@ NS_SWIFT_NAME(Profile)
                    refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(nullable NSURL *)imageURL
                          email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                     friendIDs:(nullable NSArray<FBSDKUserIdentifier> *)friendIDs
                       birthday:(nullable NSDate *)birthday
                       ageRange:(nullable FBSDKUserAgeRange *)ageRange
                       hometown:(nullable FBSDKLocation *)hometown
@@ -144,7 +143,7 @@ NS_SWIFT_NAME(Profile)
  @param location the user's location
  @param gender the user's gender
  */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+- (instancetype)initWithUserID:(FBSDKUserIdentifier)userID
                      firstName:(nullable NSString *)firstName
                     middleName:(nullable NSString *)middleName
                       lastName:(nullable NSString *)lastName
@@ -153,7 +152,7 @@ NS_SWIFT_NAME(Profile)
                    refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(nullable NSURL *)imageURL
                          email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                     friendIDs:(nullable NSArray<FBSDKUserIdentifier> *)friendIDs
                       birthday:(nullable NSDate *)birthday
                       ageRange:(nullable FBSDKUserAgeRange *)ageRange
                       hometown:(nullable FBSDKLocation *)hometown
@@ -173,7 +172,7 @@ NS_SWIFT_NAME(Profile)
 NS_SWIFT_NAME(current);
 
 /// The user id
-@property (nonatomic, readonly, copy) FBSDKUserIdentifier *userID;
+@property (nonatomic, readonly, copy) FBSDKUserIdentifier userID;
 /// The user's first name
 @property (nullable, nonatomic, readonly, copy) NSString *firstName;
 /// The user's middle name
@@ -207,7 +206,7 @@ NS_SWIFT_NAME(current);
 
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
  */
-@property (nullable, nonatomic, readonly, copy) NSArray<FBSDKUserIdentifier *> *friendIDs;
+@property (nullable, nonatomic, readonly, copy) NSArray<FBSDKUserIdentifier> *friendIDs;
 
 /**
  The user's birthday.

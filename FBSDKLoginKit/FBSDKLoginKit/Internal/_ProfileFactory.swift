@@ -8,6 +8,8 @@
 
 #if !os(tvOS)
 
+import FBSDKCoreKit
+
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -20,7 +22,7 @@ public final class _ProfileFactory: NSObject, _ProfileCreating {
 
   // swiftlint:disable:next function_parameter_count
   public func createProfile(
-    userID: String,
+    userID: UserIdentifier,
     firstName: String?,
     middleName: String?,
     lastName: String?,
