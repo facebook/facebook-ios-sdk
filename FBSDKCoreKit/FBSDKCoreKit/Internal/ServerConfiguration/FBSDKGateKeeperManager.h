@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGraphRequestConnectionFactory;
 @protocol FBSDKDataPersisting;
 
-/// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
 typedef void (^ FBSDKGKManagerBlock)(NSError *_Nullable error)
 NS_SWIFT_NAME(GKManagerBlock);
