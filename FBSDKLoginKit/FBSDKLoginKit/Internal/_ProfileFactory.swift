@@ -18,7 +18,7 @@ import FBSDKCoreKit
  */
 @objcMembers
 @objc(FBSDKProfileFactory)
-public final class _ProfileFactory: NSObject, _ProfileCreating {
+public final class _ProfileFactory: NSObject, ProfileCreating {
 
   // swiftlint:disable:next function_parameter_count
   public func createProfile(

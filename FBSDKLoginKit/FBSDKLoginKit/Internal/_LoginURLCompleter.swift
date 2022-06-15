@@ -425,7 +425,7 @@ public final class _LoginURLCompleter: NSObject, _LoginCompleting {
 
 extension _LoginURLCompleter: DependentAsType {
   struct TypeDependencies {
-    var profileFactory: _ProfileCreating
+    var profileFactory: ProfileCreating
     var authenticationTokenCreator: AuthenticationTokenCreating
     var graphRequestFactory: GraphRequestFactoryProtocol
     var internalUtility: URLHosting

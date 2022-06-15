@@ -115,7 +115,7 @@ final class LoginURLCompleterTests: XCTestCase {
     let dependencies = try _LoginURLCompleter.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.profileFactory,
+      dependencies.profileFactory as AnyObject,
       profileFactory,
       .customDependency(for: "profile factory")
     )
