@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKLoginKit/FBSDKCodeVerifier.h>
 #import <FBSDKLoginKit/FBSDKDefaultAudience.h>
 #import <FBSDKLoginKit/FBSDKDeviceLoginError.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>

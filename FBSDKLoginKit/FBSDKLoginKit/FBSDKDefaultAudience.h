@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
 #if !TARGET_OS_TV
+
+ #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

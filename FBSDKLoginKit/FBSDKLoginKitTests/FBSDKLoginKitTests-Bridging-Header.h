@@ -9,7 +9,6 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "FBSDKAuthenticationTokenClaims+Testing.h"
-#import "FBSDKCodeVerifier.h"
 
 // +Testing.h files
 #import "FBSDKAccessToken+Testing.h"
