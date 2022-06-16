@@ -6,11 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
-import Foundation
+@testable import FBSDKLoginKit
 
-@objcMembers
-final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
+final class TestLoginCompleterFactory: LoginCompleterFactoryProtocol {
 
   let stubbedLoginCompleter: TestLoginCompleter
   var capturedURLParameters = [String: Any]()

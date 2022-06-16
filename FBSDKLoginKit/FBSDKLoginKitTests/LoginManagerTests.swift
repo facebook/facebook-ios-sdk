@@ -205,7 +205,7 @@ final class LoginManagerTests: XCTestCase {
       .Dependencies.customDependency(for: "keychain store")
     )
     XCTAssertIdentical(
-      dependencies.loginCompleterFactory,
+      dependencies.loginCompleterFactory as AnyObject,
       loginCompleterFactory,
       .Dependencies.customDependency(for: "login completer factory")
     )

@@ -8,7 +8,6 @@
 
 #import <FBSDKLoginKit/FBSDKDeviceLoginError.h>
 #import <FBSDKLoginKit/FBSDKLoginAuthType.h>
-#import <FBSDKLoginKit/FBSDKLoginCompleterFactoryProtocol.h>
 #import <FBSDKLoginKit/FBSDKLoginCompletionParametersBlock.h>
 #import <FBSDKLoginKit/FBSDKLoginError.h>
 #import <FBSDKLoginKit/FBSDKLoginErrorDomain.h>
