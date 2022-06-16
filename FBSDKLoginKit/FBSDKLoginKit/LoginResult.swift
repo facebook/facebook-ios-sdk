@@ -24,8 +24,11 @@ public enum LoginResult {
   case failed(Error)
 
   init(result: LoginManagerLoginResult?, error: Error?) {
-    guard let result = result, error == nil else {
-      self = .failed(error ?? LoginError(.unknown))
+    guard
+      let result = result,
+      error == nil
+    else {
+      self = .failed(error ?? LoginError(LoginError.unknown))
       return
     }
 

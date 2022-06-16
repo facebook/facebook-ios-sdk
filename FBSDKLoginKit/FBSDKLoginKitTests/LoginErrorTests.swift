@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
+@testable import FBSDKLoginKit
 import XCTest
 
 // These tests can likely be simplified once we move to a pure Swift implementation and no longer
@@ -18,6 +18,8 @@ final class LoginErrorTests: XCTestCase {
     XCTAssertEqual(LoginError.errorDomain, LoginErrorDomain, .domainInLoginError)
     XCTAssertEqual(DeviceLoginError.errorDomain, LoginErrorDomain, .domainInDeviceLoginError)
   }
+
+  // MARK: - LoginError
 
   func testLoginErrorCodes() {
     testLoginError(LoginError.reserved, code: .reserved, rawValue: 300)
@@ -51,6 +53,40 @@ final class LoginErrorTests: XCTestCase {
     XCTAssertEqual(error.errorUserInfo[.userInfoStringKey] as? String, .userInfoValue, .usesUserInfo)
   }
 
+  func testLoginErrorUnequalNSErrors() {
+    XCTAssertNotEqual(
+      LoginError(_nsError: .sample),
+      LoginError(_nsError: .unequalToSample),
+      .unequalNSErrors
+    )
+  }
+
+  func testLoginErrorEqualNSErrors() {
+    XCTAssertEqual(
+      LoginError(_nsError: .sample),
+      LoginError(_nsError: .sample),
+      .equalNSErrors
+    )
+  }
+
+  func testLoginErrorUnequalCodes() {
+    XCTAssertNotEqual(
+      LoginError(.missingAccessToken),
+      LoginError(.badChallengeString),
+      .unequalErrorCodes
+    )
+  }
+
+  func testLoginErrorEqualCodes() {
+    XCTAssertEqual(
+      LoginError(.missingAccessToken),
+      LoginError(.missingAccessToken),
+      .equalErrorCodes
+    )
+  }
+
+  // MARK: - DeviceLoginError
+
   func testDeviceLoginErrorCodes() {
     testDeviceLoginError(DeviceLoginError.excessivePolling, code: .excessivePolling, rawValue: 1349172)
     testDeviceLoginError(DeviceLoginError.authorizationDeclined, code: .authorizationDeclined, rawValue: 1349173)
@@ -76,6 +112,38 @@ final class LoginErrorTests: XCTestCase {
     XCTAssertEqual(error.errorUserInfo[.userInfoStringKey] as? String, .userInfoValue, .usesUserInfo)
   }
 
+  func testDeviceLoginErrorUnequalNSErrors() {
+    XCTAssertNotEqual(
+      DeviceLoginError(_nsError: .sample),
+      DeviceLoginError(_nsError: .unequalToSample),
+      .unequalNSErrors
+    )
+  }
+
+  func testDeviceLoginErrorEqualNSErrors() {
+    XCTAssertEqual(
+      DeviceLoginError(_nsError: .sample),
+      DeviceLoginError(_nsError: .sample),
+      .equalNSErrors
+    )
+  }
+
+  func testDeviceLoginErrorUnequalCodes() {
+    XCTAssertNotEqual(
+      DeviceLoginError(.authorizationDeclined),
+      DeviceLoginError(.authorizationPending),
+      .unequalErrorCodes
+    )
+  }
+
+  func testDeviceLoginErrorEqualCodes() {
+    XCTAssertEqual(
+      DeviceLoginError(.codeExpired),
+      DeviceLoginError(.codeExpired),
+      .equalErrorCodes
+    )
+  }
+
   // MARK: - Helpers
 
   private func testLoginError(
@@ -85,6 +153,8 @@ final class LoginErrorTests: XCTestCase {
     file: StaticString = #file,
     line: UInt = #line
   ) {
+    let error = LoginError(member)
+    XCTAssertEqual(error.errorCode, rawValue, .loginErrorCode(code, rawValue: rawValue), file: file, line: line)
     XCTAssertEqual(code.rawValue, rawValue, .loginErrorCode(code, rawValue: rawValue), file: file, line: line)
     XCTAssertEqual(member, code, .loginErrorMember(member, code: code), file: file, line: line)
   }
@@ -96,6 +166,8 @@ final class LoginErrorTests: XCTestCase {
     file: StaticString = #file,
     line: UInt = #line
   ) {
+    let error = DeviceLoginError(member)
+    XCTAssertEqual(error.errorCode, rawValue, .deviceLoginErrorCode(code, rawValue: rawValue), file: file, line: line)
     XCTAssertEqual(code.rawValue, rawValue, .deviceLoginErrorCode(code, rawValue: rawValue), file: file, line: line)
     XCTAssertEqual(member, code, .deviceLoginErrorMember(member, code: code), file: file, line: line)
   }
@@ -129,12 +201,18 @@ fileprivate extension String {
   static func deviceLoginErrorMember(_ member: DeviceLoginError.Code, code: DeviceLoginError.Code) -> String {
     "DeviceLoginError has a member with a code equal to \(String(describing: code))"
   }
+
+  static let unequalNSErrors = "Errors with unequal NSErrors are unequal"
+  static let equalNSErrors = "Errors with equal NSErrors are equal"
+  static let unequalErrorCodes = "Errors with unequal error codes are unequal"
+  static let equalErrorCodes = "Errors with equal error codes are equal"
 }
 
 // MARK: - Test Values
 
 fileprivate extension NSError {
   static let sample = NSError(domain: .sampleErrorDomain, code: .sampleErrorCode, userInfo: .sample)
+  static let unequalToSample = NSError(domain: .sampleErrorDomain, code: .sampleErrorCode + 1, userInfo: .sample)
 }
 
 fileprivate extension String {
