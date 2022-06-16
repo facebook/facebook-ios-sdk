@@ -6,33 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <TargetConditionals.h>
+#if !os(tvOS)
 
-#if !TARGET_OS_TV
-
- #import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
+import Foundation
 
 /**
- FBSDKDefaultAudience enum
-
-  Passed to openURL to indicate which default audience to use for sessions that post data to Facebook.
+ Passed to openURL to indicate which default audience to use for sessions that post data to Facebook.
 
  Certain operations such as publishing a status or publishing a photo require an audience. When the user
  grants an application permission to perform a publish operation, a default audience is selected as the
  publication ceiling for the application. This enumerated value allows the application to select which
  audience to ask the user to grant publish permission for.
  */
-typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience) {
+@objc(FBSDKDefaultAudience)
+public enum DefaultAudience: UInt {
   /// Indicates that the user's friends are able to see posts made by the application
-  FBSDKDefaultAudienceFriends = 0,
+  case friends
   /// Indicates that only the user is able to see posts made by the application
-  FBSDKDefaultAudienceOnlyMe,
+  case onlyMe
   /// Indicates that all Facebook users are able to see posts made by the application
-  FBSDKDefaultAudienceEveryone,
-} NS_SWIFT_NAME(DefaultAudience);
-
-NS_ASSUME_NONNULL_END
+  case everyone
+}
 
 #endif
