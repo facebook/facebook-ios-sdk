@@ -74,6 +74,26 @@ final class AEMUtilityTests: XCTestCase {
     XCTAssertEqual(value.intValue, 100, "Didn't get the expected in-segment value")
   }
 
+  func testGetContent() {
+    let content = _AEMUtility.shared.getContent([
+      Keys.content: getJsonString(object: [
+        [Keys.identity: "123"],
+        [Keys.identity: "456"],
+      ]),
+    ])
+    XCTAssertEqual(content, #"[{"id":"123"},{"id":"456"}]"#)
+  }
+
+  func testGetContentWithoutData() {
+    let content = _AEMUtility.shared.getContent([
+      Keys.contentID: getJsonString(object: [
+        [Keys.identity: "123"],
+        [Keys.identity: "456"],
+      ]),
+    ])
+    XCTAssertNil(content)
+  }
+
   func testGetContentWithIntID() {
     let contentID = _AEMUtility.shared.getContentID([
       Keys.content: getJsonString(object: [
@@ -99,6 +119,33 @@ final class AEMUtilityTests: XCTestCase {
       Keys.contentID: #"["123","456"]"#,
     ])
     XCTAssertEqual(contentID, #"["123","456"]"#)
+  }
+
+  func testGetBusinessIDsInOrderWithoutInvocations() {
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder([])
+    XCTAssertEqual(businessIDs, [])
+  }
+
+  func testGetBusinessIDsInOrderWithoutBusinessIDs() {
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+      [
+        SampleAEMInvocations.createGeneralInvocation1(),
+        SampleAEMInvocations.createGeneralInvocation2(),
+      ]
+    )
+    XCTAssertEqual(businessIDs, ["", ""])
+  }
+
+  func testGetBusinessIDsInOrderWithBusinessIDs() {
+    let invocation = SampleAEMInvocations.createInvocationWithBusinessID()
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+      [
+        SampleAEMInvocations.createGeneralInvocation1(),
+        SampleAEMInvocations.createGeneralInvocation2(),
+        invocation,
+      ]
+    )
+    XCTAssertEqual(businessIDs, [invocation.businessID, "", ""])
   }
 
   func getJsonString(object: [Any]) -> String {
