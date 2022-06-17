@@ -112,6 +112,23 @@ final class AEMReporterTests: XCTestCase {
     XCTAssertTrue(AEMReporter.isCatalogMatchingEnabled, "AEM Catalog Matching should be enabled")
   }
 
+  func testAdvertiserRuleMatchInServerEnabledDefaultConfigure() {
+    XCTAssertFalse(
+      AEMReporter.isAdvertiserRuleMatchInServerEnabled,
+      "AEM Advertiser Rule Match in server should be disabled by default"
+    )
+  }
+
+  func testSetAdvertiserRuleMatchInServerEnabled() {
+    AEMReporter.isAdvertiserRuleMatchInServerEnabled = false
+    AEMReporter.setAdvertiserRuleMatchInServerEnabled(true)
+
+    XCTAssertTrue(
+      AEMReporter.isAdvertiserRuleMatchInServerEnabled,
+      "AEM Advertiser Rule Match in server should be enabled"
+    )
+  }
+
   func testConfigure() {
     XCTAssertEqual(
       networker,

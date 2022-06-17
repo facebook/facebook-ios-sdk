@@ -46,6 +46,7 @@ static BOOL g_isAEMReportEnabled = NO;
 static BOOL g_isLoadingConfiguration = NO;
 static BOOL g_isConversionFilteringEnabled = NO;
 static BOOL g_isCatalogMatchingEnabled = NO;
+static BOOL g_isAdvertiserRuleMatchInServerEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
@@ -221,6 +222,11 @@ static id<FBSDKDataPersisting> _store;
 + (void)setCatalogMatchingEnabled:(BOOL)enabled
 {
   g_isCatalogMatchingEnabled = enabled;
+}
+
++ (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled
+{
+  g_isAdvertiserRuleMatchInServerEnabled = enabled;
 }
 
 + (void)handleURL:(NSURL *)url
@@ -888,6 +894,16 @@ static id<FBSDKDataPersisting> _store;
   return g_isCatalogMatchingEnabled;
 }
 
++ (void)setIsAdvertiserRuleMatchInServerEnabled:(BOOL)enabled
+{
+  g_isAdvertiserRuleMatchInServerEnabled = enabled;
+}
+
++ (BOOL)isAdvertiserRuleMatchInServerEnabled
+{
+  return g_isAdvertiserRuleMatchInServerEnabled;
+}
+
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
 {
   g_completionBlocks = completionBlocks;
@@ -934,6 +950,7 @@ static id<FBSDKDataPersisting> _store;
   g_isLoadingConfiguration = NO;
   g_isConversionFilteringEnabled = NO;
   g_isCatalogMatchingEnabled = NO;
+  g_isAdvertiserRuleMatchInServerEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
   g_configurations = [NSMutableDictionary new];
   g_minAggregationRequestTimestamp = nil;

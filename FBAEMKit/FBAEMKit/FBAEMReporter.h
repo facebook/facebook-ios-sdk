@@ -77,6 +77,14 @@ NS_SWIFT_NAME(AEMReporter)
 + (void)setCatalogMatchingEnabled:(BOOL)enabled;
 
 /**
+ Control whether to enable advertiser rule match enabled in server side. This is expected
+ to be called internally by FB SDK and will be removed in the future
+
+ This function should be called in application(_:open:options:) from ApplicationDelegate
+ */
++ (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled;
+
+/**
  Handle deeplink
 
  This function should be called in application(_:open:options:) from ApplicationDelegate

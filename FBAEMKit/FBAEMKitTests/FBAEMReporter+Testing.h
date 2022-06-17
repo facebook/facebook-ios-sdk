@@ -23,6 +23,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) BOOL isEnabled;
 @property (class, nonatomic) BOOL isConversionFilteringEnabled;
 @property (class, nonatomic) BOOL isCatalogMatchingEnabled;
+@property (class, nonatomic) BOOL isAdvertiserRuleMatchInServerEnabled;
 @property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations;
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;

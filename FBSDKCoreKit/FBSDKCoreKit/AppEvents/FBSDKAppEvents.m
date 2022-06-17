@@ -1015,6 +1015,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
             [self.aemReporter enable];
             [self.aemReporter setCatalogMatchingEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
             [self.aemReporter setConversionFilteringEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
+            [self.aemReporter setAdvertiserRuleMatchInServerEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMAdvertiserRuleMatchInServer]];
           }
         }];
       }

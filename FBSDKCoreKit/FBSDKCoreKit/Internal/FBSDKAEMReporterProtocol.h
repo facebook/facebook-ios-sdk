@@ -36,6 +36,8 @@ NS_SWIFT_NAME(_AEMReporterProtocol)
 
 + (void)setCatalogMatchingEnabled:(BOOL)enabled;
 
++ (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled;
+
 @end
 
 NS_ASSUME_NONNULL_END

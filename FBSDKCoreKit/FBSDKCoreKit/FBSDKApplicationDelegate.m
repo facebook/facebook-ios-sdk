@@ -226,6 +226,7 @@ static UIApplicationState _applicationState;
     if (enabled) {
       [FBAEMReporter setCatalogMatchingEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
       [FBAEMReporter setConversionFilteringEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
+      [FBAEMReporter setAdvertiserRuleMatchInServerEnabled:[self.components.featureChecker isEnabled:FBSDKFeatureAEMAdvertiserRuleMatchInServer]];
       [FBAEMReporter enable];
       [FBAEMReporter handleURL:url];
     }
