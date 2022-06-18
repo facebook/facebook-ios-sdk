@@ -66,7 +66,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                                                   contentID:(nullable NSString *)contentID;
 
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
-                                              Event:(NSString *)event
+                                              event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters

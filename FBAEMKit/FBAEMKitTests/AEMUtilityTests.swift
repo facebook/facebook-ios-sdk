@@ -21,6 +21,33 @@ final class AEMUtilityTests: XCTestCase {
     static let quantity = "quantity"
   }
 
+  func testGetMatchedInvocationWithoutBusinessID() {
+    let invocations = [SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertNil(
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      "Should not expect to get the matched invocation without matched business ID"
+    )
+  }
+
+  func testGetMatchedInvocationWithUnmatchedBusinessID() {
+    let invocationWithBusinessID = SampleAEMInvocations.createInvocationWithBusinessID()
+    let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertNil(
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      "Should not expect to get the matched invocation without matched business ID"
+    )
+  }
+
+  func testGetMatchedInvocationWithMatchedBusinessID() {
+    let invocationWithBusinessID = SampleAEMInvocations.createInvocationWithBusinessID()
+    let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertEqual(
+      invocationWithBusinessID,
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: invocationWithBusinessID.businessID),
+      "Should expect to get the matched invocation"
+    )
+  }
+
   func testGetInSegmentValue() {
     let parameters = [
       Keys.content: [

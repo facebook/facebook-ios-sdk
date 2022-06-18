@@ -565,7 +565,8 @@ final class AEMInvocationTests: XCTestCase {
       value: 10,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(
@@ -580,7 +581,8 @@ final class AEMInvocationTests: XCTestCase {
       value: 10,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
     XCTAssertTrue(
@@ -605,7 +607,8 @@ final class AEMInvocationTests: XCTestCase {
       value: nil,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(invocation.recordedEvents.contains(Values.test))
@@ -623,7 +626,8 @@ final class AEMInvocationTests: XCTestCase {
       value: nil,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.purchase))
@@ -635,7 +639,8 @@ final class AEMInvocationTests: XCTestCase {
       value: nil,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.donate))
@@ -670,7 +675,8 @@ final class AEMInvocationTests: XCTestCase {
         Keys.contentType: "product",
       ],
       configurations: configurations,
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute the event with expected parameters")
   }
@@ -703,7 +709,8 @@ final class AEMInvocationTests: XCTestCase {
         Keys.contentType: "product",
       ],
       configurations: configurations,
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertFalse(isAttributed, "Should attribute the event with expected parameters")
   }
@@ -743,7 +750,8 @@ final class AEMInvocationTests: XCTestCase {
         ],
       ],
       configurations: configurations,
-      shouldUpdateCache: true
+      shouldUpdateCache: true,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(
       isAttributed,
@@ -757,6 +765,60 @@ final class AEMInvocationTests: XCTestCase {
     XCTAssertEqual(
       invocation.recordedValues as? [String: [String: Int]],
       [Values.purchase: [Values.USD: 1000]],
+      "Should expect the total value is updated in the cache"
+    )
+  }
+
+  func testAttributeEventWithRuleMatchInServer() {
+    let invocation = _AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: nil,
+      acsConfigurationID: nil,
+      businessID: "test_advertiserid_cpas",
+      catalogID: nil,
+      isTestMode: false,
+      hasStoreKitAdNetwork: false,
+      isConversionFilteringEligible: true
+    )! // swiftlint:disable:this force_unwrapping
+    let configurations = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.cpasMode: [SampleAEMConfigurations.createCpasConfiguration()],
+    ]
+    let isAttributed = invocation.attributeEvent(
+      Values.purchase,
+      currency: Values.USD,
+      value: NSNumber(value: 5000),
+      parameters: [
+        Keys.content: [
+          [
+            Keys.identity: "abc",
+            Keys.itemPrice: NSNumber(value: 100),
+            Keys.quantity: NSNumber(value: 10),
+          ],
+          [
+            Keys.identity: "test",
+            Keys.itemPrice: NSNumber(value: 200),
+            Keys.quantity: NSNumber(value: 20),
+          ],
+        ],
+      ],
+      configurations: configurations,
+      shouldUpdateCache: true,
+      isRuleMatchInServer: true
+    )
+    XCTAssertTrue(
+      isAttributed,
+      "Should attribute the event"
+    )
+    XCTAssertEqual(
+      invocation.recordedEvents,
+      [Values.purchase],
+      "Should expect the event is updated in the cache"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues as? [String: [String: Int]],
+      [Values.purchase: [Values.USD: 5000]],
       "Should expect the value is updated in the cache"
     )
   }
@@ -772,7 +834,8 @@ final class AEMInvocationTests: XCTestCase {
       value: nil,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: false
+      shouldUpdateCache: false,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertFalse(invocation.recordedEvents.contains(Values.purchase), "Should not update the event cache")
@@ -790,7 +853,8 @@ final class AEMInvocationTests: XCTestCase {
       value: 10,
       parameters: nil,
       configurations: [Values.defaultMode: [configuration1, configuration2]],
-      shouldUpdateCache: false
+      shouldUpdateCache: false,
+      isRuleMatchInServer: false
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
     XCTAssertFalse(

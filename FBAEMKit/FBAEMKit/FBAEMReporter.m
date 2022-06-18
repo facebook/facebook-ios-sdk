@@ -298,30 +298,47 @@ static id<FBSDKDataPersisting> _store;
                           value:(nullable NSNumber *)value
                      parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configurations:g_configurations];
+  FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations event:event currency:currency value:value parameters:parameters configurations:g_configurations];
   if (attributedInvocation) {
-    // We will report conversion in catalog level if
-    // 1. conversion filtering and catalog matching are enabled
-    // 2. invocation has catalog id
-    // 3. event is optimized
-    // 4. event's content id belongs to the catalog
-    if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
-      NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
-      [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
-        [self _updateAttributedInvocation:attributedInvocation
-                                    event:event
-                                 currency:currency value:value
-                               parameters:parameters
-                      shouldBoostPriority:YES];
-      }];
-    } else {
-      [self _updateAttributedInvocation:attributedInvocation
+    [self _attributionWithInvocation:attributedInvocation
+                               event:event
+                            currency:currency
+                               value:value
+                          parameters:parameters
+                 isRuleMatchInServer:NO];
+  }
+}
+
++ (void)_attributionWithInvocation:(FBAEMInvocation *)invocation
+                             event:(NSString *)event
+                          currency:(nullable NSString *)currency
+                             value:(nullable NSNumber *)value
+                        parameters:(nullable NSDictionary<NSString *, id> *)parameters
+               isRuleMatchInServer:(BOOL)isRuleMatchInServer
+{
+  // We will report conversion in catalog level if
+  // 1. conversion filtering and catalog matching are enabled
+  // 2. invocation has catalog id
+  // 3. event is optimized
+  // 4. event's content id belongs to the catalog
+  if ([self _shouldReportConversionInCatalogLevel:invocation event:event]) {
+    NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
+    [self _loadCatalogOptimizationWithInvocation:invocation contentID:contentID block:^() {
+      [self _updateAttributedInvocation:invocation
                                   event:event
-                               currency:currency
-                                  value:value
+                               currency:currency value:value
                              parameters:parameters
-                    shouldBoostPriority:g_isConversionFilteringEnabled];
-    }
+                    shouldBoostPriority:YES
+                    isRuleMatchInServer:isRuleMatchInServer];
+    }];
+  } else {
+    [self _updateAttributedInvocation:invocation
+                                event:event
+                             currency:currency
+                                value:value
+                           parameters:parameters
+                  shouldBoostPriority:g_isConversionFilteringEnabled
+                  isRuleMatchInServer:isRuleMatchInServer];
   }
 }
 
@@ -331,13 +348,15 @@ static id<FBSDKDataPersisting> _store;
                               value:(nullable NSNumber *)value
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
                 shouldBoostPriority:(BOOL)shouldBoostPriority
+                isRuleMatchInServer:(BOOL)isRuleMatchInServer
 {
   [invocation attributeEvent:event
                     currency:currency
                        value:value
                   parameters:parameters
               configurations:g_configurations
-           shouldUpdateCache:YES];
+           shouldUpdateCache:YES
+         isRuleMatchInServer:isRuleMatchInServer];
   if ([invocation updateConversionValueWithConfigurations:g_configurations
                                                     event:event
                                       shouldBoostPriority:shouldBoostPriority]) {
@@ -347,7 +366,7 @@ static id<FBSDKDataPersisting> _store;
 }
 
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
-                                              Event:(NSString *)event
+                                              event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -368,7 +387,8 @@ static id<FBSDKDataPersisting> _store;
                              value:value
                         parameters:parameters
                     configurations:configurations
-                 shouldUpdateCache:NO]) {
+                 shouldUpdateCache:NO
+               isRuleMatchInServer:NO]) {
       attributedInvocation = invocation;
       break;
     }
@@ -479,8 +499,33 @@ static id<FBSDKDataPersisting> _store;
                                      tokenString:nil
                                       HTTPMethod:FBAEMHTTPMethodGET
                                       completion:^(id _Nullable result, NSError *_Nullable error) {
-                                        if (error) {
+                                        if (nil != error || nil == result) {
                                           return;
+                                        }
+                                        NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
+                                        NSNumber *success = [FBSDKTypeUtility dictionary:json objectForKey:@"success" ofType:NSNumber.class];
+                                        if (success.boolValue) {
+                                          NSNumber *isValidMatch = [FBSDKTypeUtility dictionary:json objectForKey:@"is_valid_match" ofType:NSNumber.class];
+                                          NSString *matchedBusinessID = [FBSDKTypeUtility dictionary:json objectForKey:@"matched_advertiser_id" ofType:NSString.class];
+                                          NSNumber *inSegmentValue = [FBSDKTypeUtility dictionary:json objectForKey:@"in_segment_value_usd" ofType:NSNumber.class];
+                                          FBAEMInvocation *matchedInvocation = [FBAEMUtility.sharedUtility getMatchedInvocation:g_invocations businessID:matchedBusinessID];
+                                          // Drop the conversion if not a valid match or no matched invocation
+                                          if (!isValidMatch.boolValue || !matchedInvocation) {
+                                            return;
+                                          }
+                                          [self dispatchOnQueue:g_serialQueue delay:0 block:^{
+                                            [self _attributionWithInvocation:matchedInvocation
+                                                                       event:event
+                                                                    currency:@"USD"
+                                                                       value:inSegmentValue
+                                                                  parameters:parameters
+                                                         isRuleMatchInServer:YES];
+                                          }];
+                                        } else {
+                                          // Fall back to attribution v1 if fails
+                                          [self dispatchOnQueue:g_serialQueue delay:0 block:^{
+                                            [self _attributionV1WithEvent:event currency:currency value:value parameters:parameters];
+                                          }];
                                         }
                                       }];
 }

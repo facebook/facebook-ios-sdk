@@ -24,6 +24,19 @@ public final class _AEMUtility: NSObject {
 
   @objc(sharedUtility) public static let shared = _AEMUtility()
 
+  public func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
+    guard let businessID = businessID else {
+      return nil
+    }
+
+    for invocation in invocations.reversed() {
+      if let thisID = invocation.businessID, thisID == businessID {
+        return invocation
+      }
+    }
+    return nil
+  }
+
   public func getInSegmentValue(
     _ parameters: [String: Any]?,
     matchingRule: _AEMAdvertiserRuleMatching?
