@@ -21,6 +21,7 @@ typedef void (^FBAEMReporterBlock)(NSError *);
 
 static NSString *const BUSINESS_ID_KEY = @"advertiser_id";
 static NSString *const BUSINESS_IDS_KEY = @"advertiser_ids";
+static NSString *const FB_CONTENT_DATA_KEY = @"fb_contents_data";
 static NSString *const AL_APPLINK_DATA_KEY = @"al_applink_data";
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
 static NSString *const CONVERSION_DATA_KEY = @"conversion_data";
@@ -282,32 +283,45 @@ static id<FBSDKDataPersisting> _store;
         return;
       }
 
-      FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configurations:g_configurations];
-      if (attributedInvocation) {
-        // We will report conversion in catalog level if
-        // 1. conversion filtering and catalog matching are enabled
-        // 2. invocation has catalog id
-        // 3. event is optimized
-        // 4. event's content id belongs to the catalog
-        if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
-          NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
-          [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
-            [self _updateAttributedInvocation:attributedInvocation
-                                        event:event
-                                     currency:currency value:value
-                                   parameters:parameters
-                          shouldBoostPriority:YES];
-          }];
-        } else {
-          [self _updateAttributedInvocation:attributedInvocation
-                                      event:event
-                                   currency:currency
-                                      value:value
-                                 parameters:parameters
-                        shouldBoostPriority:g_isConversionFilteringEnabled];
-        }
+      NSArray<NSString *> *businessIDs = [FBAEMUtility.sharedUtility getBusinessIDsInOrder:g_invocations];
+      if (g_isAdvertiserRuleMatchInServerEnabled && businessIDs.firstObject.length > 0) {
+        [self _loadRuleMatch:businessIDs event:event currency:currency value:value parameters:parameters];
+      } else {
+        [self _attributionV1WithEvent:event currency:currency value:value parameters:parameters];
       }
     }];
+  }
+}
+
++ (void)_attributionV1WithEvent:(NSString *)event
+                       currency:(nullable NSString *)currency
+                          value:(nullable NSNumber *)value
+                     parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configurations:g_configurations];
+  if (attributedInvocation) {
+    // We will report conversion in catalog level if
+    // 1. conversion filtering and catalog matching are enabled
+    // 2. invocation has catalog id
+    // 3. event is optimized
+    // 4. event's content id belongs to the catalog
+    if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
+      NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
+      [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
+        [self _updateAttributedInvocation:attributedInvocation
+                                    event:event
+                                 currency:currency value:value
+                               parameters:parameters
+                      shouldBoostPriority:YES];
+      }];
+    } else {
+      [self _updateAttributedInvocation:attributedInvocation
+                                  event:event
+                               currency:currency
+                                  value:value
+                             parameters:parameters
+                    shouldBoostPriority:g_isConversionFilteringEnabled];
+    }
   }
 }
 
@@ -453,6 +467,24 @@ static id<FBSDKDataPersisting> _store;
                                       }];
 }
 
++ (void)_loadRuleMatch:(NSArray<NSString *> *)businessIDs
+                 event:(NSString *)event
+              currency:(nullable NSString *)currency
+                 value:(nullable NSNumber *)value
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  NSString *content = [FBAEMUtility.sharedUtility getContent:parameters];
+  [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_attribution", self.appID]
+                                      parameters:[self _ruleMatchRequestParameters:businessIDs content:content]
+                                     tokenString:nil
+                                      HTTPMethod:FBAEMHTTPMethodGET
+                                      completion:^(id _Nullable result, NSError *_Nullable error) {
+                                        if (error) {
+                                          return;
+                                        }
+                                      }];
+}
+
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
                                         event:(NSString *)event
 {
@@ -491,6 +523,16 @@ static id<FBSDKDataPersisting> _store;
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_IDS_KEY];
   [FBSDKTypeUtility dictionary:params setObject:catalogID forKey:CATALOG_ID_KEY];
+  return [params copy];
+}
+
++ (NSDictionary<NSString *, id> *)_ruleMatchRequestParameters:(NSArray<NSString *> *)businessIDs
+                                                      content:(nullable NSString *)content
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
+  NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
+  [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:content forKey:FB_CONTENT_DATA_KEY];
   return [params copy];
 }
 

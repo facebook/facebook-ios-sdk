@@ -28,6 +28,7 @@ final class AEMReporterTests: XCTestCase {
     static let campaignID = "campaign_id"
     static let catalogID = "catalog_id"
     static let contentID = "fb_content_ids"
+    static let content = "fb_content"
     static let token = "token"
   }
 
@@ -445,6 +446,21 @@ final class AEMReporterTests: XCTestCase {
         "delay_flow": "server",
       ],
       "Should have expected request parameters for debugging invocation"
+    )
+  }
+
+  func testRuleMatchRequestParameters() {
+    let businessIDs = ["123"]
+    let content = #"[{"id": "123", "quantity": 5}]"#
+    let parameters = AEMReporter._ruleMatchRequestParameters(businessIDs, content: content)
+    let expected = [
+      "advertiser_ids": #"["123"]"#,
+      "fb_contents_data": content,
+    ]
+    XCTAssertEqual(
+      parameters as? [String: String] ,
+      expected,
+      "Rule match request parameter is not expected"
     )
   }
 
@@ -1064,6 +1080,26 @@ final class AEMReporterTests: XCTestCase {
         }
       }
     }
+  }
+
+  // MARK: - Rule Match in Server
+
+  func testLoadRuleMatch() {
+    let content = #"[{"id": "123", "quantity": 5}]"#
+    AEMReporter._loadRuleMatch(["123"], event: "test", currency: nil, value: nil, parameters: [Keys.content: content])
+    let expectedParameters = [
+      "advertiser_ids": #"["123"]"#,
+      "fb_contents_data": content,
+    ]
+    XCTAssertTrue(
+      (networker.capturedGraphPath?.contains("aem_attribution")) == true,
+      "Should start the rule match request"
+    )
+    XCTAssertEqual(
+      networker.capturedParameters as? [String: String],
+      expectedParameters,
+      "Should have the expected parameters in the rule match request"
+    )
   }
 
   // MARK: - Aggregation Request
