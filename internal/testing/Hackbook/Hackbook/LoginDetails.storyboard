@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fMK-sJ-9gI">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Login Details View Controller-->
+        <scene sceneID="5H8-bJ-BB1">
+            <objects>
+                <viewController id="fMK-sJ-9gI" customClass="LoginDetailsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zD7-pV-pVj"/>
+                        <viewControllerLayoutGuide type="bottom" id="cf2-W7-3ln"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="my2-lX-NOZ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3e8-IX-yWe">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="774"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="LPs-TD-n7f">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="540"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Requesting / Requested Permissions:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QZC-9z-29B">
+                                                <rect key="frame" x="0.0" y="0.0" width="351.5" height="26.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RequestedPermissions" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kIo-bp-pa4">
+                                                <rect key="frame" x="0.0" y="42.5" width="174" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="DEV-U3-Xsz">
+                                                <rect key="frame" x="0.0" y="79" width="252.5" height="28"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DYb-5n-oFc">
+                                                        <rect key="frame" x="0.0" y="0.0" width="136.5" height="28"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2M2-kN-q96">
+                                                        <rect key="frame" x="144.5" y="0.0" width="108" height="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <state key="normal" title="Copy to clipboard"/>
+                                                        <connections>
+                                                            <action selector="copyAccessTokenToClipboard:" destination="fMK-sJ-9gI" eventType="touchUpInside" id="Dnx-Pi-Tls"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AccessToken" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Y8-yF-7C2">
+                                                <rect key="frame" x="0.0" y="123" width="99" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Granted Permissions:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2dd-fY-Nqs" userLabel="Granted Permissions:">
+                                                <rect key="frame" x="0.0" y="159.5" width="202.5" height="26.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Permissions" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9vI-Ih-wFx">
+                                                <rect key="frame" x="0.0" y="202" width="92" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Declined Permissions:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="quB-7D-31d" userLabel="Declined Permissions:">
+                                                <rect key="frame" x="0.0" y="238.5" width="209" height="26.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Declined Permissions" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5B-64-G18">
+                                                <rect key="frame" x="0.0" y="281" width="163" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zG5-D4-pBI">
+                                                <rect key="frame" x="0.0" y="317.5" width="321.5" height="28"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Authentication Token:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6EM-QV-tGP">
+                                                        <rect key="frame" x="0.0" y="0.0" width="205.5" height="28"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Opg-VH-uRV">
+                                                        <rect key="frame" x="213.5" y="0.0" width="108" height="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <state key="normal" title="Copy to clipboard"/>
+                                                        <connections>
+                                                            <action selector="copyAuthenticationTokenToClipboard:" destination="fMK-sJ-9gI" eventType="touchUpInside" id="n7K-ds-Sbc"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AuthenticationToken" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wi0-oS-N5U">
+                                                <rect key="frame" x="0.0" y="361.5" width="155" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Authentication Token Nonce:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E5L-V9-hhb">
+                                                <rect key="frame" x="0.0" y="398" width="273" height="26.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nonce" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qwi-H3-gGS">
+                                                <rect key="frame" x="0.0" y="440.5" width="50" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile Information:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YRI-we-fht">
+                                                <rect key="frame" x="0.0" y="477" width="178.5" height="26.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5R-nA-oWU">
+                                                <rect key="frame" x="0.0" y="519.5" width="48.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="LPs-TD-n7f" firstAttribute="leading" secondItem="3e8-IX-yWe" secondAttribute="leading" id="FcT-5d-4zT"/>
+                                    <constraint firstItem="LPs-TD-n7f" firstAttribute="width" secondItem="3e8-IX-yWe" secondAttribute="width" id="V7X-Gz-nZj"/>
+                                    <constraint firstAttribute="bottom" secondItem="LPs-TD-n7f" secondAttribute="bottom" id="gfY-Ta-ugm"/>
+                                    <constraint firstItem="LPs-TD-n7f" firstAttribute="top" secondItem="3e8-IX-yWe" secondAttribute="top" id="paQ-0c-awt"/>
+                                    <constraint firstAttribute="trailing" secondItem="LPs-TD-n7f" secondAttribute="trailing" id="uBW-hP-IuT"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3e8-IX-yWe" firstAttribute="leading" secondItem="my2-lX-NOZ" secondAttribute="leading" id="0Ec-DO-sNX"/>
+                            <constraint firstAttribute="trailing" secondItem="3e8-IX-yWe" secondAttribute="trailing" id="GYs-5D-Bq5"/>
+                            <constraint firstItem="3e8-IX-yWe" firstAttribute="leading" secondItem="my2-lX-NOZ" secondAttribute="leading" id="KMK-gK-793"/>
+                            <constraint firstItem="3e8-IX-yWe" firstAttribute="top" secondItem="zD7-pV-pVj" secondAttribute="bottom" id="fsi-XC-Wng"/>
+                            <constraint firstItem="3e8-IX-yWe" firstAttribute="trailing" secondItem="my2-lX-NOZ" secondAttribute="trailing" id="iaO-UB-dqW"/>
+                            <constraint firstItem="cf2-W7-3ln" firstAttribute="top" secondItem="3e8-IX-yWe" secondAttribute="bottom" id="rKN-AY-pSK"/>
+                            <constraint firstItem="3e8-IX-yWe" firstAttribute="top" secondItem="zD7-pV-pVj" secondAttribute="bottom" id="uQc-iX-lB3"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="3lz-pq-le3"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO"/>
+                    <connections>
+                        <outlet property="accessTokenLabel" destination="5Y8-yF-7C2" id="0pe-qq-XiG"/>
+                        <outlet property="authenticationTokenLabel" destination="wi0-oS-N5U" id="1j9-Gd-cNL"/>
+                        <outlet property="declinedPermissionsLabel" destination="n5B-64-G18" id="34S-lC-4ba"/>
+                        <outlet property="grantedPermissionsLabel" destination="9vI-Ih-wFx" id="1Ax-wv-yk1"/>
+                        <outlet property="nonceLabel" destination="Qwi-H3-gGS" id="639-Qk-brm"/>
+                        <outlet property="profileLabel" destination="n5R-nA-oWU" id="u7c-zd-kX8"/>
+                        <outlet property="requestedPermissionsLabel" destination="kIo-bp-pa4" id="2Yf-LA-mrX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GyU-yh-Gwu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3744.9275362318845" y="39.508928571428569"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

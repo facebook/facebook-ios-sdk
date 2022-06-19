@@ -1,0 +1,23 @@
+#!/usr/bin/env dotslash
+
+// SwiftFormat Version: 0.49.6
+// https://github.com/nicklockwood/SwiftFormat
+//
+// How to update:
+//
+// `brew update && brew upgrade swiftformat`
+// Find executable path with `brew ls swiftformat`. (example: /usr/local/Cellar/swiftformat/0.XX.XX/bin/swiftformat)
+// Run: `arc everstore store /usr/local/Cellar/swiftformat/0.XX.XX/bin/swiftformat`
+// Update version number in this file
+// Replace handle with the new handle from uploading
+
+{
+  "name": "swiftformat",
+  "oncall": "oncall+platform_sdks@xmail.facebook.com",
+  "platforms": {
+    "macos": {
+      "scheme": "everstore",
+      "handle": "GC8Aqwf4wOilsAgKAOnyGwkc4bsxbpZBAAAi"
+    }
+  }
+}

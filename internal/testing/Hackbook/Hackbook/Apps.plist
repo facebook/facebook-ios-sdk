@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>E2E - Xplay GS Test App</key>
+	<dict>
+		<key>Token</key>
+		<string>21a2e3f046b04d84d0dbdc83f4718389</string>
+		<key>App_ID</key>
+		<string>442355790447822</string>
+	</dict>
+	<key>Hackbook Default</key>
+	<dict>
+		<key>Token</key>
+		<string>73a6ae93869886362007649824bf98f8</string>
+		<key>App_ID</key>
+		<string>421415891237674</string>
+	</dict>
+	<key>PlayKats</key>
+	<dict>
+		<key>Token</key>
+		<string>78dedd6534d2e23dd3b1cbeeee4275ac
+78dedd6534d2e23dd3b1cbeeee4275ac
+78dedd6534d2e23dd3b1cbeeee4275ac</string>
+		<key>App_ID</key>
+		<string>448188556264551</string>
+	</dict>
+	<key>Hackbook Gaming Login</key>
+	<dict>
+		<key>Token</key>
+		<string>9f04dd6346ec3e94a49766e4ef99c8f6</string>
+		<key>App_ID</key>
+		<string>2188842757882025</string>
+	</dict>
+	<key>Hackbook Simple CoffeeShop</key>
+	<dict>
+		<key>Token</key>
+		<string>3880cb364b504f656cf911171ea15025</string>
+		<key>App_ID</key>
+		<string>104403138198698</string>
+	</dict>
+	<key>Awesome Test Game</key>
+	<dict>
+		<key>Token</key>
+		<string>9c2581de883cdda3479cb9830dc832f1</string>
+		<key>App_ID</key>
+		<string>504965336734884</string>
+	</dict>
+</dict>
+</plist>

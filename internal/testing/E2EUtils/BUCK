@@ -1,0 +1,26 @@
+load("@fbsource//tools/build_defs/apple:fb_apple_library.bzl", "fb_apple_library")
+load("@fbsource//tools/build_defs/apple:flag_defs.bzl", "get_objc_arc_preprocessor_flags", "get_preprocessor_flags_for_build_mode")
+
+# @lint-ignore BUCKLINT
+fb_apple_library(
+    name = "E2EUtils",
+    srcs = glob([
+        "*.m",
+        "*.swift",
+    ]),
+    headers = glob([
+        "*.h",
+    ]),
+    exported_headers = glob([
+        "*.h",
+    ]),
+    autoglob = False,
+    bad_practices = ["mixed_module"],
+    frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+    link_whole = True,
+    preprocessor_flags = get_objc_arc_preprocessor_flags() + get_preprocessor_flags_for_build_mode(),
+    reexport_all_header_dependencies = True,
+)

@@ -1,0 +1,7 @@
+Used for building apps that can interact with Jest E2E.
+
+To build the project run:
+
+'ios-sdk/internal/tools/xcodegen generate'
+
+If xcodegen is unavailable you can run 'brew install xcodegen' or visit https://github.com/yonaskolb/XcodeGen.

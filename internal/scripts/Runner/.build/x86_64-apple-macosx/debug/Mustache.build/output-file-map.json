@@ -1,0 +1,221 @@
+{
+  "": {
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/master.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Box.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Box.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Box.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Box~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Box.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Common.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Common.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Common.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Common~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Common.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Configuration.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Configuration.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Configuration.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Configuration~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Configuration.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Context.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Context.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Context.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Context~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Context.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/CoreFunctions.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreFunctions.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreFunctions.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreFunctions~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreFunctions.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/CoreGraphics.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreGraphics.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreGraphics.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreGraphics~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/CoreGraphics.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/EachFilter.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/EachFilter.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/EachFilter.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/EachFilter~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/EachFilter.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Expression.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Expression.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Expression.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Expression~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Expression.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/ExpressionGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/ExpressionInvocation.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionInvocation.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionInvocation.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionInvocation~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionInvocation.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/ExpressionParser.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionParser.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionParser.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionParser~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ExpressionParser.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Fixit-1.1.0.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Fixit-1.1.0.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Fixit-1.1.0.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Fixit-1.1.0~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Fixit-1.1.0.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Formatter.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Formatter.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Formatter.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Formatter~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Formatter.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Foundation.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Foundation.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Foundation.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Foundation~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Foundation.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/HTMLEscapeHelper.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/HTMLEscapeHelper.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/HTMLEscapeHelper.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/HTMLEscapeHelper~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/HTMLEscapeHelper.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/JavascriptEscapeHelper.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/JavascriptEscapeHelper.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/JavascriptEscapeHelper.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/JavascriptEscapeHelper~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/JavascriptEscapeHelper.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Localizer.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Localizer.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Localizer.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Localizer~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Localizer.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/LocatedTag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/LocatedTag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/LocatedTag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/LocatedTag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/LocatedTag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Logger.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Logger.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Logger.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Logger~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Logger.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/MustacheBox.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/MustacheBox.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/MustacheBox.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/MustacheBox~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/MustacheBox.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/RenderingEngine.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/RenderingEngine.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/RenderingEngine.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/RenderingEngine~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/RenderingEngine.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/SectionTag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SectionTag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SectionTag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SectionTag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SectionTag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/StandardLibrary.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/StandardLibrary.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/StandardLibrary.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/StandardLibrary~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/StandardLibrary.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/SwiftStandardLibrary.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SwiftStandardLibrary.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SwiftStandardLibrary.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SwiftStandardLibrary~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/SwiftStandardLibrary.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Tag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Tag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Tag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Tag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Tag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/Template.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Template.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Template.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Template~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Template.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateAST.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateAST.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateAST.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateAST~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateAST.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateASTNode.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateASTNode.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateASTNode.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateASTNode~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateASTNode.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateCompiler.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateCompiler.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateCompiler.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateCompiler~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateCompiler.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateParser.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateParser.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateParser.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateParser~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateParser.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateRepository.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateRepository.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateRepository.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateRepository~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateRepository.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/TemplateToken.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateToken.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateToken.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateToken~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/TemplateToken.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/URLEscapeHelper.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/URLEscapeHelper.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/URLEscapeHelper.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/URLEscapeHelper~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/URLEscapeHelper.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/VariableTag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/VariableTag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/VariableTag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/VariableTag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/VariableTag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/GRMustache/Sources/ZipFilter.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ZipFilter.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ZipFilter.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ZipFilter~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/ZipFilter.swiftdeps"
+  }
+}

@@ -1,0 +1,52 @@
+# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+name: Hackbook
+
+include:
+  - ../../../xcodegen_project_common.yml
+
+projectReferences:
+
+  FBAEMKit:
+    path: ../../../FBAEMKit/FBAEMKit.xcodeproj
+  FBSDKCoreKit_Basics:
+    path: ../../../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBSDKCoreKit:
+    path: ../../../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  FBSDKLoginKit:
+    path: ../../../FBSDKLoginKit/FBSDKLoginKit.xcodeproj
+  FBSDKShareKit:
+    path: ../../../FBSDKShareKit/FBSDKShareKit.xcodeproj
+  FBSDKGamingServicesKit:
+    path: ../../../FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj
+
+targets:
+  Hackbook:
+    platform: iOS
+    type: application
+    sources:
+      - path: Hackbook
+    dependencies:
+      - target: FBAEMKit/FBAEMKit-Static
+        embed: false
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+        embed: false
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
+        embed: false
+      - target: FBSDKLoginKit/FBSDKLoginKit-Static
+        embed: false
+      - target: FBSDKShareKit/FBSDKShareKit-Static
+        embed: false
+      - target: FBSDKGamingServicesKit/FBSDKGamingServicesKit-Static
+        embed: false
+      - framework: Frameworks/OHHTTPStubs.xcframework
+      - sdk: Accelerate.framework
+      - sdk: libz.tbd
+      - sdk: libc++.tbd
+    settings:
+      SWIFT_OBJC_BRIDGING_HEADER: Hackbook/Hackbook-Bridging-Header.h
+      PROVISIONING_PROFILE_SPECIFIER: "Hackbook Local Development"
+      DEVELOPMENT_TEAM: V9WTTPBFK9
+      FB_APP_VERSION: "1.0"
+      FB_BUNDLE_VERSION: "1.0"
+      FB_BUNDLE_VERSION_SHORT: "1.0"

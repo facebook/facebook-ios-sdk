@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1xr-DJ-gYC">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--LoginDetails-->
+        <scene sceneID="vrH-en-Bxh">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LoginDetails" id="W8k-rv-sBi" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="W7c-mw-Mpq"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hvP-ji-SFx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1405" y="-129"/>
+        </scene>
+        <!--Swift Login View Controller-->
+        <scene sceneID="CKR-af-9b7">
+            <objects>
+                <viewController id="1xr-DJ-gYC" customClass="SwiftLoginViewController" customModule="Hackbook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="owD-BR-aZO">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="WNg-PH-igE">
+                                <rect key="frame" x="0.0" y="124" width="414" height="197"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KeJ-jf-TG0">
+                                        <rect key="frame" x="113" y="0.0" width="188" height="33"/>
+                                        <color key="backgroundColor" systemColor="linkColor"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="contentEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                        <state key="normal" title="Login Manager Button"/>
+                                        <connections>
+                                            <action selector="loginTapped" destination="1xr-DJ-gYC" eventType="touchUpInside" id="Sgj-RB-t9w"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iof-MK-wbC" customClass="FBSDKLoginButton">
+                                        <rect key="frame" x="180" y="56" width="54" height="30"/>
+                                        <color key="backgroundColor" systemColor="linkColor"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="contentEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                        <state key="normal" title="Log In"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="1xr-DJ-gYC" id="ojC-FW-ajN"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="vPE-Mw-fEn">
+                                        <rect key="frame" x="118" y="109" width="178.5" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limit Tracking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDg-gw-LQ2">
+                                                <rect key="frame" x="0.0" y="0.0" width="106.5" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UFJ-Zb-h6U">
+                                                <rect key="frame" x="129.5" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Provide an Optional Nonce" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="db0-5r-1Es">
+                                        <rect key="frame" x="107" y="163" width="200" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7h6-HP-ORj"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="WNg-PH-igE" firstAttribute="leading" secondItem="7h6-HP-ORj" secondAttribute="leading" id="77H-6l-606"/>
+                            <constraint firstItem="7h6-HP-ORj" firstAttribute="trailing" secondItem="WNg-PH-igE" secondAttribute="trailing" id="FJD-mC-aZM"/>
+                            <constraint firstItem="WNg-PH-igE" firstAttribute="top" secondItem="owD-BR-aZO" secondAttribute="topMargin" constant="80" id="PTo-P0-VqU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="limitTrackingSwitch" destination="UFJ-Zb-h6U" id="faT-oE-T5Z"/>
+                        <outlet property="loginButton" destination="Iof-MK-wbC" id="ofs-0a-G3B"/>
+                        <outlet property="loginManagerButton" destination="KeJ-jf-TG0" id="9h7-Iu-i1y"/>
+                        <outlet property="nonceTextField" destination="db0-5r-1Es" id="MYU-av-E1x"/>
+                        <segue destination="W8k-rv-sBi" kind="show" identifier="showLoginDetails" id="Qhn-lO-bhh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GJf-K9-d5O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="643" y="56"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

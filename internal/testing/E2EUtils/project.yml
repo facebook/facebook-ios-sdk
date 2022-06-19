@@ -1,0 +1,27 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: E2EUtils
+
+include:
+  - ../../../xcodegen_project_common.yml
+
+targets:
+  E2EUtils:
+    type: framework
+    platform: iOS
+    productName: E2EUtils
+    sources:
+      - path: .
+    settings:
+      PRODUCT_NAME: E2EUtils
+      PRODUCT_BUNDLE_IDENTIFIER: com.facebook.E2EUtils
+
+schemes:
+  E2EUtils:
+    build:
+      targets:
+        E2EUtils: all

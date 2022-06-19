@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.4 (swiftlang-1205.0.26.9 clang-1205.0.19.55)"
+options: "3eac663a005935598299f97c1eb81b4a"
+build_time: [1642535689, 984869000]
+inputs:
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/ShellOut/Sources/ShellOut.swift": !dirty [1642534921, 651931000]

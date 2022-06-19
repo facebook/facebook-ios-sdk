@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Write Privacy</key>
+	<array>
+		<string>Only Me</string>
+		<string>Friends</string>
+		<string>Everyone</string>
+	</array>
+	<key>Login Behavior</key>
+	<array>
+		<string>Browser</string>
+	</array>
+	<key>Read Extended</key>
+	<array>
+		<string>public_profile</string>
+		<string>email</string>
+		<string>read_insights</string>
+		<string>read_audience_network_insights</string>
+		<string>read_page_mailboxes</string>
+	</array>
+	<key>User Data Perms</key>
+	<array>
+		<string>user_friends</string>
+		<string>user_link</string>
+		<string>user_gender</string>
+		<string>user_age_range</string>
+		<string>user_birthday</string>
+		<string>user_mobile_phone</string>
+		<string>user_events</string>
+		<string>user_hometown</string>
+		<string>user_likes</string>
+		<string>user_location</string>
+		<string>user_picture</string>
+		<string>gaming_user_picture</string>
+		<string>user_posts</string>
+		<string>user_photos</string>
+		<string>user_status</string>
+		<string>user_videos</string>
+		<string>user_tagged_places</string>
+		<string>user_messenger_contact</string>
+	</array>
+	<key>Managed</key>
+	<array>
+		<string>ads_read</string>
+		<string>business_management</string>
+		<string>pages_messaging</string>
+		<string>pages_messaging_phone_number</string>
+		<string>pages_messaging_subscriptions</string>
+		<string>pages_manage_cta</string>
+		<string>pages_manage_instant_articles</string>
+		<string>pages_show_list</string>
+	</array>
+	<key>Managed Write</key>
+	<array>
+		<string>ads_management</string>
+		<string>publish_video</string>
+	</array>
+	<key>Deprecated</key>
+	<array>
+		<string>manage_pages</string>
+		<string>manage_notifications</string>
+		<string>basic_info</string>
+		<string>publish_actions</string>
+		<string>publish_stream</string>
+		<string>user_religion_politics</string>
+		<string>user_relationships</string>
+		<string>user_notes</string>
+		<string>user_activities</string>
+		<string>user_relationship_details</string>
+		<string>user_website</string>
+		<string>user_interests</string>
+		<string>user_managed_groups</string>
+		<string>user_about_me</string>
+		<string>user_games_activity</string>
+		<string>user_groups</string>
+		<string>user_work_history</string>
+		<string>user_education_history</string>
+		<string>read_custom_friendlists</string>
+		<string>read_mailbox</string>
+		<string>read_stream</string>
+		<string>user_actions.books</string>
+		<string>user_actions.fitness</string>
+		<string>user_actions.news</string>
+		<string>user_actions.music</string>
+		<string>user_actions.video</string>
+	</array>
+</dict>
+</plist>

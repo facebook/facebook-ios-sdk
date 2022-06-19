@@ -1,0 +1,4 @@
+#!/bin/bash
+
+git submodule foreach 'git fetch --tags'; git submodule update --init --recursive
+

@@ -1,0 +1,215 @@
+{
+  "": {
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/master.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Completions/BashCompletionsGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/BashCompletionsGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/BashCompletionsGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/BashCompletionsGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/BashCompletionsGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Completions/CompletionsGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/CompletionsGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/CompletionsGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/CompletionsGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/CompletionsGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Completions/FishCompletionsGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/FishCompletionsGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/FishCompletionsGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/FishCompletionsGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/FishCompletionsGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Completions/ZshCompletionsGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/ZshCompletionsGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/ZshCompletionsGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/ZshCompletionsGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Completions/ZshCompletionsGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/Argument.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Argument.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Argument.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Argument~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Argument.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/ArgumentHelp.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/ArgumentHelp.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/ArgumentHelp.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/ArgumentHelp~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/ArgumentHelp.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/CompletionKind.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/CompletionKind.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/CompletionKind.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/CompletionKind~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/CompletionKind.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/Errors.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Errors.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Errors.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Errors~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Errors.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/Flag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Flag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Flag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Flag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Flag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/NameSpecification.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/NameSpecification.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/NameSpecification.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/NameSpecification~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/NameSpecification.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/Option.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Option.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Option.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Option~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/Option.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Properties/OptionGroup.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/OptionGroup.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/OptionGroup.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/OptionGroup~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Properties/OptionGroup.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/CommandConfiguration.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/CommandConfiguration.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/CommandConfiguration.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/CommandConfiguration~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/CommandConfiguration.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/EnumerableFlag.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/EnumerableFlag.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/EnumerableFlag.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/EnumerableFlag~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/EnumerableFlag.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ExpressibleByArgument.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ExpressibleByArgument.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ExpressibleByArgument.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ExpressibleByArgument~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ExpressibleByArgument.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableArguments.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArguments.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArguments.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArguments~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArguments.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableArgumentsValidation.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArgumentsValidation.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArgumentsValidation.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArgumentsValidation~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableArgumentsValidation.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsable Types/ParsableCommand.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableCommand.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableCommand.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsable Types/ParsableCommand.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/ArgumentDecoder.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDecoder.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDecoder.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDecoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDecoder.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/ArgumentDefinition.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDefinition.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDefinition.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDefinition~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentDefinition.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/ArgumentSet.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentSet.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentSet.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentSet~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ArgumentSet.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/CommandParser.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/CommandParser.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/CommandParser.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/CommandParser~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/CommandParser.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/InputOrigin.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/InputOrigin.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/InputOrigin.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/InputOrigin~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/InputOrigin.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/Name.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Name.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Name.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Name~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Name.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/Parsed.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Parsed.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Parsed.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Parsed~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/Parsed.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/ParsedValues.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParsedValues.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParsedValues.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParsedValues~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParsedValues.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/ParserError.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParserError.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParserError.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParserError~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/ParserError.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Parsing/SplitArguments.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/SplitArguments.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/SplitArguments.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/SplitArguments~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Parsing/SplitArguments.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Usage/HelpCommand.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpCommand.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpCommand.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpCommand.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Usage/HelpGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/HelpGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Usage/MessageInfo.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/MessageInfo.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/MessageInfo.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/MessageInfo~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/MessageInfo.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Usage/UsageGenerator.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/UsageGenerator.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/UsageGenerator.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/UsageGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Usage/UsageGenerator.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Utilities/SequenceExtensions.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/SequenceExtensions.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/SequenceExtensions.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/SequenceExtensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/SequenceExtensions.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Utilities/StringExtensions.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/StringExtensions.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/StringExtensions.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/StringExtensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/StringExtensions.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/swift-argument-parser/Sources/ArgumentParser/Utilities/Tree.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/Tree.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/Tree.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/Tree~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/Utilities/Tree.swiftdeps"
+  }
+}

@@ -1,0 +1,205 @@
+load("@fbsource//fbobjc/EndToEndTests/Tests/FacebookSDK:DEFS.bzl", "BUNDLE_CONFIG")
+load("@fbsource//tools/build_defs:fb_native_wrapper.bzl", "fb_native")
+load("@fbsource//tools/build_defs/apple:config_utils_defs.bzl", "APPLICATION_IOS_CONFIG", "PROJECT_DEBUG_CONFIG", "PROJECT_PROFILE_CONFIG", "PROJECT_RELEASE_CONFIG", "fbchain_configs", "fbobjc_configs")
+load("@fbsource//tools/build_defs/apple:fb_apple_asset_catalog.bzl", "fb_apple_asset_catalog")
+load("@fbsource//tools/build_defs/apple:fb_apple_resource.bzl", "fb_apple_resource")
+load("@fbsource//tools/build_defs/apple:flag_defs.bzl", "get_application_ios_flags_with_deprecated_objc_flag", "get_objc_arc_preprocessor_flags", "get_preprocessor_flags_for_build_mode")
+load("@fbsource//tools/build_defs/apple:ios_binary.bzl", "ios_binary")
+
+fb_apple_asset_catalog(
+    name = "HackbookCatalog",
+    app_icon = BUNDLE_CONFIG.icon_prefix,
+    dirs = ["Hackbook/Images.xcassets"],
+    launch_image = "LaunchImage",
+)
+
+# Copy the xcassets as a resource during compile time\
+fb_apple_resource(
+    name = "HackbookResources",
+    dirs = ["Hackbook/Images.xcassets"],
+    files = glob([
+        "Hackbook/*.storyboard",
+        "Hackbook/LoginFeatures/**/*.storyboard",
+        "Hackbook/settings.plist",
+        "Hackbook/Apps.plist",
+        "Hackbook/Resources/*",
+    ]),
+)
+
+# FB_APP_VERSION and FB_BUNDLE_VERSION_SHORT are auto-updated by the version
+# bump script.
+FB_APP_VERSION = "53.0.0.0.243"
+
+FB_BUNDLE_VERSION_SHORT = "53.0"
+
+HACKBOOK_CONFIG = fbchain_configs(
+    APPLICATION_IOS_CONFIG,
+    {
+        "CODE_SIGN_ENTITLEMENTS": "$(SOURCE_ROOT)/" + BUNDLE_CONFIG.entitlements_file,
+        "DISPLAY_NAME": "$(PRODUCT_NAME)",
+        "FB_APPLICATION_NAME": "Hackbook",
+        "FB_APP_VERSION": FB_APP_VERSION,
+        "FB_BUNDLE_ID": BUNDLE_CONFIG.bundle_id,
+        "FB_BUNDLE_VERSION": BUNDLE_CONFIG.bundle_version,
+        "FB_BUNDLE_VERSION_SHORT": FB_BUNDLE_VERSION_SHORT,
+        "PRODUCT_NAME": "$(FB_APPLICATION_NAME)",
+    },
+)
+
+E2E_CONFIG = fbchain_configs(
+    HACKBOOK_CONFIG,
+    {
+        "FacebookDomainPart": "trunkstable",
+    },
+)
+
+# Overview:
+# This app is intended to mimic a third party app's usage of the public iOS SDK.
+# Therefore some changes or validation jobs intended for first party Facebook apps may not make sense for this target.
+#
+# NOTE: This target is not the same as the versioned variants. ex: Hackbook.X.X.X`
+#
+# If you see an error building a target like `Hackbook.X.X.X` in a job named ios-sdk-update-legacy-hackbook or ios-sdk-update-legacy-hackbook-test,
+# this is actually building a target that's defined in fbobjc/EndToEndTests/Tests/FacebookSDK/DEFS.bzl
+#
+# You won't be able to use the target because we don't actually check in the method call that uses the legacy def to create the target.
+# So for instance `buck build //fbobjc/ios-sdk/internal/testing/Hackbook:Hackbook.xx.x.x` will fail due to the missing target.
+#
+# The target is created dynamically from this script:
+# https://www.internalfb.com/code/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/Sources/Runner/UpdateLegacyHackbook.swift
+#
+# So in order to reproduce any error in building legacy hackbook locally, and have artifacts to examine, you'd run:
+# cd fbsource/fbobjc/ios-sdk/internal/scripts/Runner
+# swift run runner update-legacy-hackbook --no-upload --use-current-version --no-cleanup
+#
+ios_binary(
+    name = "Hackbook",
+    allow_swift = True,
+    autoglob = True,
+    bridging_header = "Hackbook/Hackbook-Bridging-Header.h",
+    compiler_flags = [
+        "-fmodules",
+    ],
+    configs = fbobjc_configs(
+        APPLICATION_IOS_CONFIG,
+        config_specific_settings = {
+            "Debug": fbchain_configs(
+                PROJECT_DEBUG_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+            "Profile": fbchain_configs(
+                PROJECT_PROFILE_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+            "Release": fbchain_configs(
+                PROJECT_RELEASE_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+        },
+    ),
+    disable_intents = True,
+    disable_plugins = True,
+    frameworks = [
+        "AdSupport",
+        "AssetsLibrary",
+        "CoreGraphics",
+        "CoreLocation",
+        "Foundation",
+        "MobileCoreServices",
+        "Photos",
+        "QuartzCore",
+        "Security",
+        "UIKit",
+    ],
+    include_directories = [
+        #TODO: remove once bridging header is removed
+        "../../../../..",
+    ],
+    info_plist = "Hackbook/Info.plist",
+    info_plist_substitutions = HACKBOOK_CONFIG,
+    inherited_buck_flags = get_application_ios_flags_with_deprecated_objc_flag(),
+    prefix_header = "Hackbook/Hackbook-Prefix.pch",
+    preprocessor_flags = get_objc_arc_preprocessor_flags() + get_preprocessor_flags_for_build_mode(),
+    swift_compiler_flags = ["-DBUCK"],
+    swift_version = "4.2",
+    target_sdk_version = "11.0",
+    url_scheme_validation_autoinit_enabled = False,
+    use_graphql = False,
+    visibility = ["PUBLIC"],
+    deps = [
+        ":HackbookCatalog",
+        ":HackbookResources",
+        "//fbobjc/VendorLib/OHHTTPStubs/OHHTTPStubs:OHHTTPStubs",
+        "//fbobjc/ios-sdk/FBSDKCoreKit:FBSDKCoreKit",
+        "//fbobjc/ios-sdk/FBSDKGamingServicesKit:FBSDKGamingServicesKit",
+        "//fbobjc/ios-sdk/FBSDKLoginKit:FBSDKLoginKit",
+        "//fbobjc/ios-sdk/FBSDKShareKit:FBSDKShareKit",
+        "//fbobjc/ios-sdk/internal/testing/E2EUtils:E2EUtils",
+    ],
+)
+
+ios_binary(
+    name = "E2E",
+    autoglob = True,
+    autoglob_dangerous_directory_name_override = "Hackbook",
+    bridging_header = "Hackbook/Hackbook-Bridging-Header.h",
+    compiler_flags = [
+        "-fmodules",
+    ],
+    configs = fbobjc_configs(
+        APPLICATION_IOS_CONFIG,
+        config_specific_settings = {
+            "Debug": fbchain_configs(
+                PROJECT_DEBUG_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+            "Profile": fbchain_configs(
+                PROJECT_PROFILE_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+            "Release": fbchain_configs(
+                PROJECT_RELEASE_CONFIG,
+                HACKBOOK_CONFIG,
+            ),
+        },
+    ),
+    disable_intents = True,
+    disable_plugins = True,
+    frameworks = [
+        "AdSupport",
+        "AssetsLibrary",
+        "CoreGraphics",
+        "CoreLocation",
+        "Foundation",
+        "MobileCoreServices",
+        "Photos",
+        "QuartzCore",
+        "Security",
+        "UIKit",
+    ],
+    info_plist = "Hackbook/Info.plist",
+    info_plist_substitutions = E2E_CONFIG,
+    inherited_buck_flags = get_application_ios_flags_with_deprecated_objc_flag(),
+    module_name = "Hackbook",
+    prefix_header = "Hackbook/Hackbook-Prefix.pch",
+    preprocessor_flags = get_objc_arc_preprocessor_flags() + get_preprocessor_flags_for_build_mode(),
+    swift_compiler_flags = ["-DBUCK"],
+    swift_version = "4.2",
+    url_scheme_validation_autoinit_enabled = False,
+    use_graphql = False,
+    visibility = ["PUBLIC"],
+    deps = [
+        ":HackbookCatalog",
+        ":HackbookResources",
+        "//fbobjc/VendorLib/OHHTTPStubs/OHHTTPStubs:OHHTTPStubs",
+        "//fbobjc/ios-sdk/FBSDKCoreKit:FBSDKCoreKit",
+        "//fbobjc/ios-sdk/FBSDKGamingServicesKit:FBSDKGamingServicesKit",
+        "//fbobjc/ios-sdk/FBSDKLoginKit:FBSDKLoginKit",
+        "//fbobjc/ios-sdk/FBSDKShareKit:FBSDKShareKit",
+    ],
+)
+
+fb_native.xcode_workspace_config(
+    name = "workspace",
+    src_target = ":Hackbook",
+)

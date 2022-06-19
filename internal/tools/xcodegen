@@ -1,0 +1,36 @@
+#!/usr/bin/env dotslash
+
+// Current Xcodegen version: 2.25.0
+//
+// Updating instructions:
+// `brew upgrade xcodegen`
+// Find library path with `brew ls xcodegen`
+// Output will be something like: /usr/local/Cellar/xcodegen/2.24.0/bin/xcodegen
+// Zip the xcodegen directory with `cd /usr/local/Cellar && tar -czvf /tmp/xcodegen.tar.gz xcodegen`
+// Upload with `jf upload /tmp/xcodegen.tar.gz`
+// Replace handle with the new handle from uploading.
+
+{
+  "name": "xcodegen",
+
+  "oncall": "oncall+platform_sdks@xmail.facebook.com",
+
+  "platforms": {
+    "linux": {
+      "scheme": "everstore",
+      "handle": "GDDzew-sc3OYMzgCAF2XUEtECWAgbsIXAAAz",
+      "extract": {
+        "decompress": "tar.gz",
+        "path": "xcodegen/2.25.0/bin/xcodegen",
+      },
+    },
+    "macos": {
+      "scheme": "everstore",
+      "handle": "GDDzew-sc3OYMzgCAF2XUEtECWAgbsIXAAAz",
+      "extract": {
+        "decompress": "tar.gz",
+        "path": "xcodegen/2.25.0/bin/xcodegen",
+      },
+    },
+  },
+}

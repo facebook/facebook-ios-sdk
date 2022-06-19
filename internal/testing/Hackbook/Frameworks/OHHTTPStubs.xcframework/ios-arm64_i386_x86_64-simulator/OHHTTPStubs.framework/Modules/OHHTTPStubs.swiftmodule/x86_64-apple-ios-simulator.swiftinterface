@@ -1,0 +1,45 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
+// swift-module-flags: -target x86_64-apple-ios8.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name OHHTTPStubs
+import Foundation
+@_exported import OHHTTPStubs
+import Swift
+import _Concurrency
+extension Foundation.URLRequest {
+  public var ohhttpStubs_httpBody: Foundation.Data? {
+    get
+  }
+}
+public func fixture(filePath: Swift.String, status: Swift.Int32 = 200, headers: [Swift.AnyHashable : Any]?) -> OHHTTPStubs.HTTPStubsResponse
+@discardableResult
+public func stub(condition: @escaping OHHTTPStubs.HTTPStubsTestBlock, response: @escaping OHHTTPStubs.HTTPStubsResponseBlock) -> OHHTTPStubs.HTTPStubsDescriptor
+public func isMethodGET() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isMethodPOST() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isMethodPUT() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isMethodPATCH() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isMethodDELETE() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isMethodHEAD() -> OHHTTPStubs.HTTPStubsTestBlock
+public func isAbsoluteURLString(_ url: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func isScheme(_ scheme: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func isHost(_ host: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func isPath(_ path: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func pathStartsWith(_ path: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func pathEndsWith(_ path: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func pathMatches(_ regex: Foundation.NSRegularExpression) -> OHHTTPStubs.HTTPStubsTestBlock
+public func pathMatches(_ regexString: Swift.String, options: Foundation.NSRegularExpression.Options = []) -> OHHTTPStubs.HTTPStubsTestBlock
+public func isExtension(_ ext: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+@available(iOS 8.0, macOS 10.10, *)
+public func containsQueryParams(_ params: [Swift.String : Swift.String?]) -> OHHTTPStubs.HTTPStubsTestBlock
+public func hasHeaderNamed(_ name: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func hasHeaderNamed(_ name: Swift.String, value: Swift.String) -> OHHTTPStubs.HTTPStubsTestBlock
+public func hasBody(_ body: Foundation.Data) -> OHHTTPStubs.HTTPStubsTestBlock
+public func hasJsonBody(_ jsonObject: [Swift.AnyHashable : Any]) -> OHHTTPStubs.HTTPStubsTestBlock
+@available(iOS 8.0, macOS 10.10, *)
+public func hasFormBody(_ params: [Swift.String : Swift.String?]) -> OHHTTPStubs.HTTPStubsTestBlock
+@available(iOS 8.0, macOS 10.10, *)
+public func hasFormBody(_ queryItems: [Foundation.URLQueryItem]) -> OHHTTPStubs.HTTPStubsTestBlock
+@available(iOS 8.0, macOS 10.10, *)
+public func hasFormBody(_ queryItems: Foundation.URLQueryItem...) -> OHHTTPStubs.HTTPStubsTestBlock
+public func || (lhs: @escaping OHHTTPStubs.HTTPStubsTestBlock, rhs: @escaping OHHTTPStubs.HTTPStubsTestBlock) -> OHHTTPStubs.HTTPStubsTestBlock
+public func && (lhs: @escaping OHHTTPStubs.HTTPStubsTestBlock, rhs: @escaping OHHTTPStubs.HTTPStubsTestBlock) -> OHHTTPStubs.HTTPStubsTestBlock
+prefix public func ! (expr: @escaping OHHTTPStubs.HTTPStubsTestBlock) -> OHHTTPStubs.HTTPStubsTestBlock

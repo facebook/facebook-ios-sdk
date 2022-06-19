@@ -1,0 +1,17 @@
+load("@fbsource//tools/build_defs/apple:autoglob.bzl", "EXPORT_UNLESS_INTERNAL")
+load("@fbsource//tools/build_defs/apple:fb_apple_library.bzl", "fb_apple_library")
+load("@fbsource//tools/build_defs/apple:flag_defs.bzl", "get_objc_arc_preprocessor_flags", "get_preprocessor_flags_for_build_mode")
+
+fb_apple_library(
+    name = "PerformanceBenchmarkUtils",
+    autoglob_mode = EXPORT_UNLESS_INTERNAL,
+    bad_practices = ["mixed_module"],
+    frameworks = [
+        "Foundation",
+        "UIKit",
+    ],
+    link_whole = True,
+    oncall = "app_signals",
+    preprocessor_flags = get_objc_arc_preprocessor_flags() + get_preprocessor_flags_for_build_mode(),
+    swift_version = "5",
+)

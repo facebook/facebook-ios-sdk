@@ -1,0 +1,4 @@
+1. Install theos
+2. Download FBSDKCoreKit.framework and FBSDKLytroKit.framework to current fold
+3. Update bundle in LytroInjector.plist (replace com.apple.UIKit with bundle id of the app you wanna inject lytro)
+4. Run command 'make' from current directory

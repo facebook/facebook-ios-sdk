@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ShellOut.build/master.swiftdeps"
+  },
+  "/Users/joesusnick/fbsource/fbobjc/VendorLib/ShellOut/Sources/ShellOut.swift": {
+    "dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ShellOut.build/ShellOut.d",
+    "object": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ShellOut.build/ShellOut.swift.o",
+    "swiftmodule": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ShellOut.build/ShellOut~partial.swiftmodule",
+    "swift-dependencies": "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ShellOut.build/ShellOut.swiftdeps"
+  }
+}

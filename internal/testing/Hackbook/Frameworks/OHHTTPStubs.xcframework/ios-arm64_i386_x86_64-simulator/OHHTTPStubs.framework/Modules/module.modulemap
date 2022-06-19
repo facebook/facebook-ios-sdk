@@ -1,0 +1,11 @@
+framework module OHHTTPStubs {
+  umbrella header "OHHTTPStubs.h"
+
+  export *
+  module * { export * }
+}
+
+module OHHTTPStubs.Swift {
+    header "OHHTTPStubs-Swift.h"
+    requires objc
+}

@@ -1,0 +1,14 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/LogicTests.xcconfig"
+
+PRODUCT_NAME = FBSDKBetaKitTests
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKBetaKitTests
+
+INFOPLIST_FILE = $(SRCROOT)/FBSDKBetaKitTests/Info.plist
+
+IPHONEOS_DEPLOYMENT_TARGET = 11.0
+
+HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)

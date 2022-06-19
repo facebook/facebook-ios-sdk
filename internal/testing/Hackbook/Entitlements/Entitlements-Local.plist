@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>get-task-allow</key>
+	<true/>
+	<key>com.apple.developer.team-identifier</key>
+	<string>V9WTTPBFK9</string>
+	<key>application-identifier</key>
+	<string>T84QZS65DQ.com.facebook.internal.sdk.samples.Hackbook.localDevelopment</string>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>T84QZS65DQ.platformFamily</string>
+	</array>
+</dict>
+</plist>

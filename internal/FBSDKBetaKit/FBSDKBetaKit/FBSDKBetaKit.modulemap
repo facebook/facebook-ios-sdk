@@ -1,0 +1,6 @@
+framework module FBSDKBetaKit {
+    umbrella header "FBSDKBetaKit.h"
+
+    export *
+    module * { export * }
+}

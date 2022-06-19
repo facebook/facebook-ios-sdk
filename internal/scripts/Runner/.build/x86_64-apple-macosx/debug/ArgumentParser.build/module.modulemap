@@ -1,0 +1,4 @@
+module ArgumentParser {
+    header "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/ArgumentParser.build/ArgumentParser-Swift.h"
+    requires objc
+}

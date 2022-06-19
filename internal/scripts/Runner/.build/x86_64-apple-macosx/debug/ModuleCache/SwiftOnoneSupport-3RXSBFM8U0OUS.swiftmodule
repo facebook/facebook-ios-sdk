@@ -1,0 +1,16 @@
+---
+path:            '/Applications/Xcode_13.0.0_fb.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/prebuilt-modules/11.3/SwiftOnoneSupport.swiftmodule/x86_64-apple-macos.swiftmodule'
+dependencies:
+  - mtime:           1629583526000000000
+    path:            '/Applications/Xcode_13.0.0_fb.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/prebuilt-modules/11.3/SwiftOnoneSupport.swiftmodule/x86_64-apple-macos.swiftmodule'
+    size:            13620
+  - mtime:           1615884272000000000
+    path:            'usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftinterface'
+    size:            1560744
+    sdk_relative:    true
+  - mtime:           1615884272000000000
+    path:            'usr/lib/swift/SwiftOnoneSupport.swiftmodule/x86_64-apple-macos.swiftinterface'
+    size:            433
+    sdk_relative:    true
+version:         1
+...

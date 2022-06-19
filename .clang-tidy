@@ -1,0 +1,8 @@
+---
+InheritParentConfig: true
+Checks: '
+facebook-ios-sdk-utility-methods-check,
+-facebook-idfa-usage-policy-check,
+-facebook-ad-tracking-usage-policy-check,
+'
+...

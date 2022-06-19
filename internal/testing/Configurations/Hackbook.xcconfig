@@ -1,0 +1,13 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "InternalApplication.xcconfig"
+
+// Just for OCMock
+OTHER_LDFLAGS = -ObjC -framework Bolts -framework FBSDKCoreKit -framework FBSDKLoginKit -framework FBSDKShareKit
+HEADER_SEARCH_PATHS = $(inherited) "$(BUILT_PRODUCTS_DIR)" "$(DERIVED_FILE_DIR)" "$(TARGET_BUILD_DIR)"
+
+// Needed for dlyb
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
+
+PROVISIONING_PROFILE_SPECIFIER = 4W5TH4RKQ2/Hackbook Master Distribution
+DEVELOPMENT_TEAM = 4W5TH4RKQ2

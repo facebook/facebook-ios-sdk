@@ -1,0 +1,16 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/StaticFramework.xcconfig"
+#include "Shared/Version.xcconfig"
+
+PRODUCT_NAME = FBSDKBetaKit
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKBetaKit
+
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
+
+INFOPLIST_FILE = $(SRCROOT)/FBSDKBetaKit/Info.plist
+MODULEMAP_FILE = $(SRCROOT)/FBSDKBetaKit/FBSDKBetaKit.modulemap
+
+HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+GITHOOKSBASEDIR=$(cd $(dirname $0); pwd)
+"$GITHOOKSBASEDIR"/pngcrush-changed.sh cached

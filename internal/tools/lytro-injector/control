@@ -1,0 +1,9 @@
+Package: com.facebook.lytroinjector
+Name: LytroInjector
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Stan Wu
+Author: Stan Wu
+Section: Tweaks

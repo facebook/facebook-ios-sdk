@@ -1,0 +1,14 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "../../../Configurations/FacebookSDK-Application.xcconfig"
+
+// Search Paths
+FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)" "$(SRCROOT)/../../../build"
+
+// Remove armv7s optimization from our apps.
+ARCHS = i386 armv7 x86_64 arm64
+
+FB_BITCODE_FLAG = $()
+ENABLE_BITCODE = YES
+CLANG_ENABLE_MODULES = YES
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
