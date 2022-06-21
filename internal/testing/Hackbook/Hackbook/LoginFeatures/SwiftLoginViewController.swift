@@ -13,6 +13,9 @@ class SwiftLoginViewController: LoginViewController, LoginButtonDelegate {
     @IBOutlet var loginButton: FBLoginButton!
     @IBOutlet weak var nonceTextField: UITextField!
     @IBOutlet weak var limitTrackingSwitch: UISwitch!
+    @IBOutlet weak var defaultAudienceButton: UIButton!
+
+    var defaultAudience: DefaultAudience = .friends
 
     var tracking: LoginTracking {
         limitTrackingSwitch.isOn ? .limited : .enabled
@@ -28,8 +31,29 @@ class SwiftLoginViewController: LoginViewController, LoginButtonDelegate {
         }
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+      
+        if #available(iOS 14, *) {
+            configureDefaultAudienceButton()
+        }
+    }
+
+    @available(iOS 14, *)
+    func configureDefaultAudienceButton() {
+        defaultAudienceButton.menu = UIMenu(children: [
+          UIAction(title: "Friends", state: .on, handler: { _ in self.defaultAudience = .friends }),
+          UIAction(title: "Only Me", handler: { _ in self.defaultAudience = .onlyMe }),
+          UIAction(title: "Everyone", handler: { _ in self.defaultAudience = .everyone })
+        ])
+        defaultAudienceButton.showsMenuAsPrimaryAction = true
+        if #available(iOS 15, *) {
+            defaultAudienceButton.changesSelectionAsPrimaryAction = true
+        }
+    }
+
     @IBAction func loginTapped() {
-        let loginManager = LoginManager()
+      let loginManager = LoginManager(defaultAudience: defaultAudience)
 
         if isLoggedIn() {
             loginManager.logOut()
@@ -77,7 +101,9 @@ class SwiftLoginViewController: LoginViewController, LoginButtonDelegate {
         if let nonce = nonceTextField.text, !nonce.isEmpty {
             loginButton.nonce = nonce
         }
-
+        
+        loginButton.defaultAudience = self.defaultAudience;
+      
         return true
     }
 
