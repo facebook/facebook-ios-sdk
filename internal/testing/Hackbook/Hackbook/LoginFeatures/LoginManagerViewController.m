@@ -10,6 +10,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
 @property (nonatomic, strong) IBOutlet UISwitch *trackingLimitedSwitch;
 @property (nonatomic, strong) IBOutlet UITextField *nonceTextField;
+@property (nonatomic, strong) IBOutlet UIButton *defaultAudienceButton;
+@property (nonatomic) FBSDKDefaultAudience defaultAudience;
 
 @end
 
@@ -20,6 +22,8 @@
   [super viewWillAppear:animated];
 
   [self updateLoginButton];
+
+  [self configureDefaultAudienceButton];
 }
 
 - (FBSDKLoginTracking)tracking
@@ -44,9 +48,32 @@
   }
 }
 
+- (void)configureDefaultAudienceButton {
+    if (@available(iOS 14.0, *)) {
+        NSMutableArray* children = [[NSMutableArray alloc] init];
+        [children addObject:[UIAction actionWithTitle:@"Friends" image:nil identifier:nil handler:^(__kindof UIAction* _Nonnull action) {
+            self.defaultAudience = FBSDKDefaultAudienceFriends;
+        }]];
+        [children addObject:[UIAction actionWithTitle:@"Everyone" image:nil identifier:nil handler:^(__kindof UIAction* _Nonnull action) {
+                self.defaultAudience = FBSDKDefaultAudienceEveryone;
+        }]];
+        [children addObject:[UIAction actionWithTitle:@"Only Me" image:nil identifier:nil handler:^(__kindof UIAction* _Nonnull action) {
+                self.defaultAudience = FBSDKDefaultAudienceOnlyMe;
+        }]];
+        UIMenu* menu = [UIMenu menuWithTitle:@"" children:children];
+
+        self.defaultAudienceButton.menu = menu;
+        self.defaultAudienceButton.showsMenuAsPrimaryAction = YES;
+        if (@available(iOS 15, *)) {
+            self.defaultAudienceButton.changesSelectionAsPrimaryAction = true;
+        }
+    }
+}
+
 - (IBAction)toggleLoginState:(id)sender
 {
   FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  loginManager.defaultAudience = self.defaultAudience;
 
   if ([self isLoggedIn]) {
     [loginManager logOut];
