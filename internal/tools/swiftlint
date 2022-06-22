@@ -1,0 +1,25 @@
+#!/usr/bin/env dotslash
+
+// Swiftlint Version: 0.47.1
+// https://github.com/realm/SwiftLint
+//
+// How to update:
+//
+// `brew update && brew upgrade swiftlint`
+// Find executable path with `brew ls swiftlint`. (example: /usr/local/Cellar/swiftlint/0.XX.XX/bin/swiftlint)
+// Run: `manifold put /usr/local/Cellar/swiftlint/0.XX.XX/bin/swiftlint ios-sdk-tools/tree/swiftlint`
+// Update version number in this file
+// Replace handle with the new handle from uploading
+
+{
+  "name": "swiftlint",
+  "oncall": "oncall+platform_sdks@xmail.facebook.com",
+  "platforms": {
+    "macos": {
+      "scheme": "manifold",
+	    "bucket": "ios-sdk-tools",
+	    "path": "tree/swiftlint",
+      "api_key": "ios-sdk-tools-key",
+    }
+  }
+}
