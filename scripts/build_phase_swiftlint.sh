@@ -11,20 +11,19 @@ if [ -n "$PROJECT_DIR" ]; then
   PROJECT_DIR_NAME=${PROJECT_DIR##*/} # ex FBSDKShareKit
 fi
 
-# Add paths for Hg since Xcode build phases do not source the user shell profile
-export PATH="/usr/local/bin:/opt/facebook/hg/bin:$PATH"
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 
-HG_ROOT=$(hg root 2>/dev/null)
-if [ -n "$HG_ROOT" ]; then
-  SWIFTLINT_PATH="../Tools/swiftlint/swiftlint"
-  SWIFTFORMAT_PATH="internal/tools/swiftformat"
-  # shellcheck disable=SC2207
-  IFS=$'\n' CHANGED_FILES=($(hg status --modified --added --no-status --rev 'ancestor(master,.)::.' && hg status --no-status --unknown --modified --added | grep -v '\.\./'))
-else
-  SWIFTLINT_PATH=$(which swiftlint)
-  SWIFTFORMAT_PATH=$(which swiftformat)
-  # shellcheck disable=SC2207
-  IFS=$'\n' CHANGED_FILES=($(git -P diff --name-only --diff-filter=MA main...HEAD && git -P diff --name-only --diff-filter=MA HEAD))
+# Get list of changed files
+# shellcheck disable=SC2207
+IFS=$'\n' CHANGED_FILES=($(git -P diff --name-only --diff-filter=MA main...HEAD && git -P diff --name-only --diff-filter=MA HEAD))
+
+SWIFTLINT_PATH="internal/tools/swiftlint"
+SWIFTFORMAT_PATH="internal/tools/swiftformat"
+
+# If we don't have access to the internal directory, use whatever version is installed
+if [ -d "$SWIFTFORMAT_PATH" ]; then
+    SWIFTLINT_PATH=$(which swiftlint)
+    SWIFTFORMAT_PATH=$(which swiftformat)
 fi
 
 # Lint changes from the current revision and uncommitted changes
