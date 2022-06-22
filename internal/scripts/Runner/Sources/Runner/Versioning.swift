@@ -53,7 +53,7 @@ enum Versioning {
 
         return try FileSystem.execute(from: .sdk) {
             let changes = try shellOut(
-                to: "hg diff -c $( hg whereami ) FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
+                to: "git show HEAD FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
             )
 
             guard !changes.isEmpty else {

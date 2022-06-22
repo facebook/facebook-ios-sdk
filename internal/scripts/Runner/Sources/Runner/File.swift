@@ -8,7 +8,7 @@ enum File {
         case coreKitVersions
         case error
         case everstoreHandle
-        case ipa(String)
+        case hackbookIPA
         case output
         case packageManifest
         case podspec(String)
@@ -20,7 +20,7 @@ enum File {
             case .coreKitVersions: return "FBSDKCoreKitVersions.h"
             case .error: return "error.txt"
             case .everstoreHandle: return "everstoreHandle.txt"
-            case .ipa(let version): return "Hackbook.\(version)Package.ipa"
+            case .hackbookIPA: return "Hackbook.ipa"
             case .output: return "output.txt"
             case .packageManifest: return "Package.swift"
             case .podspec(let name): return "\(name).podspec"

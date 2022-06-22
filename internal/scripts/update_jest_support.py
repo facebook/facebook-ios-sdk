@@ -8,16 +8,16 @@ import sys
 
 
 def main():
-    hg_root = run("hg root").rstrip()
-    sdk_dir = f"{hg_root}/fbobjc/ios-sdk"
+    fbsource_path = "/data/sandcastle/boxes/trunk-hg-fbobjc-fbsource"
+    ios_sdk_path = "/data/sandcastle/boxes/trunk-git-facebook-ios-sdk"
 
-    jest_e2e_dir = f"{hg_root}/xplat/endtoend/jest-e2e"
+    jest_e2e_dir = f"{fbsource_path}/xplat/endtoend/jest-e2e"
     jest_e2e_file = f"{jest_e2e_dir}/libdef/jest-e2e.js"
 
     hackbook_jest_ios_dir = f"{jest_e2e_dir}/apps/hackbook/__tests__/iOS"
     hackbook_launch_test_file = f"{hackbook_jest_ios_dir}/hb4iLaunchTest-e2e.js"
 
-    version = extract_updated_version(sdk_dir)
+    version = extract_updated_version(ios_sdk_path)
     update_jest_definitions(jest_e2e_file, version)
     update_hackbook_test(hackbook_launch_test_file, version)
 
@@ -71,7 +71,7 @@ def extract_updated_version(sdk_dir):
 
     print("Checking FBSDKCoreKit.h for updated sdk version...")
     changes = run(
-        "hg diff -c $(hg whereami) FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
+        "git show HEAD FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
     )
 
     if not changes:

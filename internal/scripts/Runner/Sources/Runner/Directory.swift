@@ -7,7 +7,9 @@ enum Directory {
     case box
     case build
     case coreKit
+    case fbsource(isSandcastle: Bool)
     case hackbook
+    case hackbookBuild
     case home
     case include
     case `internal`
@@ -23,8 +25,8 @@ enum Directory {
     case xcframeworks
     case xcodeBuildDir
 
-    // Note: Expect box_dir to be the fbobjc directory here.
-    // BOX_DIR=/data/sandcastle/boxes/trunk-hg-fbobjc-fbsource/fbobjc
+    // Note: Expect box_dir to be the sdk directory here.
+    // BOX_DIR=/data/sandcastle/boxes/trunk-git-facebook-ios-sdk
     // As a follow-up this can likely be removed entirely and can just use the initial directory.
     static var boxURL: URL = {
         do {
@@ -78,10 +80,28 @@ enum Directory {
                 .appendingPathComponent("FBSDKCoreKit")
                 .appendingPathComponent("FBSDKCoreKit")
 
+        case let .fbsource(isSandcastle):
+            if isSandcastle {
+                return URL(fileURLWithPath: "/data/sandcastle/boxes/trunk-hg-fbobjc-fbsource")
+            }
+            else {
+                do {
+                    let fbsourcePath = try shellOut(to: "echo ~/fbsource")
+                    return URL(fileURLWithPath: fbsourcePath)
+                }
+                catch {
+                    fatalError("Could not resolve path: ~/fbsource. Is fbsource checked out on your local machine?")
+                }
+            }
+
         case .hackbook:
             return Directory.internal.url
                 .appendingPathComponent("testing")
                 .appendingPathComponent("Hackbook")
+
+        case .hackbookBuild:
+            return Directory.hackbook.url
+                .appendingPathComponent("build")
 
         case .home:
             return Directory.homeURL
