@@ -1,5 +1,4 @@
 excluded:
-  - ads
   - internal
   - samples
   - testing
