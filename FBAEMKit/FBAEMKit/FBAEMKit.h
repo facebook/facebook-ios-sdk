@@ -11,6 +11,5 @@
 
 // Temporarily public
 #import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
-#import <FBAEMKit/FBAEMAdvertiserRuleOperator.h>
 #import <FBAEMKit/FBAEMKit-Prefix-Header.h>
 #import <FBAEMKit/FBAEMKitVersions.h>
