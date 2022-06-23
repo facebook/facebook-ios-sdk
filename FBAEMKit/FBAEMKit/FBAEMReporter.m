@@ -21,7 +21,7 @@ typedef void (^FBAEMReporterBlock)(NSError *);
 
 static NSString *const BUSINESS_ID_KEY = @"advertiser_id";
 static NSString *const BUSINESS_IDS_KEY = @"advertiser_ids";
-static NSString *const FB_CONTENT_DATA_KEY = @"fb_contents_data";
+static NSString *const FB_CONTENT_DATA_KEY = @"fb_content_data";
 static NSString *const AL_APPLINK_DATA_KEY = @"al_applink_data";
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
 static NSString *const CONVERSION_DATA_KEY = @"conversion_data";
@@ -489,8 +489,8 @@ static id<FBSDKDataPersisting> _store;
 
 + (void)_loadRuleMatch:(NSArray<NSString *> *)businessIDs
                  event:(NSString *)event
-              currency:(nullable NSString *)currency
-                 value:(nullable NSNumber *)value
+              currency:(nullable NSString *)potentialCurrency
+                 value:(nullable NSNumber *)potentialValue
             parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   NSString *content = [FBAEMUtility.sharedUtility getContent:parameters];
@@ -502,29 +502,40 @@ static id<FBSDKDataPersisting> _store;
                                         if (nil != error || nil == result) {
                                           return;
                                         }
-                                        NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
+                                        NSDictionary<NSString *, id> *res = [FBSDKTypeUtility dictionaryValue:result];
+                                        NSArray<id> *data = [FBSDKTypeUtility dictionary:res objectForKey:@"data" ofType:NSArray.class];
+                                        NSDictionary<NSString *, id> *json = data.firstObject;
+                                        if (!json) {
+                                          return;
+                                        }
                                         NSNumber *success = [FBSDKTypeUtility dictionary:json objectForKey:@"success" ofType:NSNumber.class];
                                         if (success.boolValue) {
                                           NSNumber *isValidMatch = [FBSDKTypeUtility dictionary:json objectForKey:@"is_valid_match" ofType:NSNumber.class];
                                           NSString *matchedBusinessID = [FBSDKTypeUtility dictionary:json objectForKey:@"matched_advertiser_id" ofType:NSString.class];
-                                          NSNumber *inSegmentValue = [FBSDKTypeUtility dictionary:json objectForKey:@"in_segment_value_usd" ofType:NSNumber.class];
+                                          NSNumber *inSegmentValue = [FBSDKTypeUtility dictionary:json objectForKey:@"in_segment_value" ofType:NSNumber.class];
                                           FBAEMInvocation *matchedInvocation = [FBAEMUtility.sharedUtility getMatchedInvocation:g_invocations businessID:matchedBusinessID];
                                           // Drop the conversion if not a valid match or no matched invocation
                                           if (!isValidMatch.boolValue || !matchedInvocation) {
                                             return;
                                           }
                                           [self dispatchOnQueue:g_serialQueue delay:0 block:^{
+                                            NSString *currency = potentialCurrency;
+                                            NSNumber *value = potentialValue;
+                                            if (matchedInvocation.businessID) {
+                                              currency = @"USD";
+                                              value = inSegmentValue;
+                                            }
                                             [self _attributionWithInvocation:matchedInvocation
                                                                        event:event
-                                                                    currency:@"USD"
-                                                                       value:inSegmentValue
+                                                                    currency:currency
+                                                                       value:value
                                                                   parameters:parameters
                                                          isRuleMatchInServer:YES];
                                           }];
                                         } else {
                                           // Fall back to attribution v1 if fails
                                           [self dispatchOnQueue:g_serialQueue delay:0 block:^{
-                                            [self _attributionV1WithEvent:event currency:currency value:value parameters:parameters];
+                                            [self _attributionV1WithEvent:event currency:potentialCurrency value:potentialValue parameters:parameters];
                                           }];
                                         }
                                       }];
