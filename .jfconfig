@@ -68,6 +68,11 @@
             "shell": "python3 ci/xcframeworks_spm_integration_verification.py",
             "determinator": true,
           },
+          {
+            "name": "swift interface check",
+            "shell": "python3 ci/swift_interface_check.py",
+            "determinator": true,
+          }
         ],
       },
     },
