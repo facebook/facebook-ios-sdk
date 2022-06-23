@@ -53,7 +53,7 @@ public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCre
    @param graphDomain the graph domain where user is authenticated
    @param completion the completion handler
    */
-   func createToken(
+  func createToken(
     tokenString: String,
     nonce: String,
     graphDomain: String,
