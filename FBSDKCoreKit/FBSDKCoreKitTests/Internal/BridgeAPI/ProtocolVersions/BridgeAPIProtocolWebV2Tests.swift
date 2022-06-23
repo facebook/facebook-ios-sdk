@@ -46,7 +46,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     errorFactory = TestErrorFactory()
     internalUtility = TestInternalUtility()
     bundle = TestBundle()
-    bundle.bundleIdentifier = Values.bundleIdentifier
+    bundle.fb_bundleIdentifier = Values.bundleIdentifier
     bridge = BridgeAPIProtocolWebV2(
       serverConfigurationProvider: serverConfigurationProvider,
       nativeBridge: nativeBridge,
@@ -218,7 +218,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
     XCTAssertEqual(
       queryParameters[Keys.iosBundleID],
-      bundle.bundleIdentifier,
+      bundle.fb_bundleIdentifier,
       "Should add the bundle ID to the query parameters"
     )
     XCTAssertEqual(

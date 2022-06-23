@@ -15,9 +15,9 @@
 #import "FBSDKCrashObserving.h"
 #import "FBSDKFileDataExtracting.h"
 #import "FBSDKFileManaging.h"
+#import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
-#import "NSBundle+InfoDictionaryProviding.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
@@ -289,8 +289,8 @@ static void FBSDKExceptionHandler(NSException *exception)
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
 
-  NSString *version = [self.bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-  NSString *build = [self.bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+  NSString *version = [self.bundle fb_objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *build = [self.bundle fb_objectForInfoDictionaryKey:@"CFBundleVersion"];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:[NSString stringWithFormat:@"%@(%@)", version, build] forKey:kFBSDKAppVersion];
 
   struct utsname systemInfo;

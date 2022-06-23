@@ -121,7 +121,7 @@
   }
 
   NSMutableDictionary<NSString *, NSString *> *queryParameters = [[FBSDKBasicUtility dictionaryWithQueryString:requestURL.query] mutableCopy];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:self.infoDictionaryProvider.bundleIdentifier forKey:@"ios_bundle_id"];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:self.infoDictionaryProvider.fb_bundleIdentifier forKey:@"ios_bundle_id"];
   [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL.absoluteString forKey:@"redirect_url"];
 
   return [self.internalUtility URLWithScheme:requestURL.scheme

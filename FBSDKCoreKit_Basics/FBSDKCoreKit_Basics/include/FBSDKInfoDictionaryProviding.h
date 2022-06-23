@@ -10,13 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// An internal protocol used for accessing bundles
 NS_SWIFT_NAME(InfoDictionaryProviding)
 @protocol FBSDKInfoDictionaryProviding
 
-@property (nullable, readonly, copy) NSDictionary<NSString *, id> *infoDictionary;
-@property (nullable, readonly, copy) NSString *bundleIdentifier;
+@property (nullable, readonly, copy) NSDictionary<NSString *, id> *fb_infoDictionary;
+@property (nullable, readonly, copy) NSString *fb_bundleIdentifier;
 
-- (nullable id)objectForInfoDictionaryKey:(NSString *)key;
+- (nullable id)fb_objectForInfoDictionaryKey:(NSString *)key
+NS_SWIFT_NAME(fb_object(forInfoDictionaryKey:));
+
+@end
+
+@interface NSBundle (InfoDictionaryProviding) <FBSDKInfoDictionaryProviding>
 
 @end
 

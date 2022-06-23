@@ -55,7 +55,7 @@
 
 - (BOOL)_isNewBackgroundRefresh
 {
-  if ([_infoDictionaryProvider objectForInfoDictionaryKey:@"BGTaskSchedulerPermittedIdentifiers"]) {
+  if ([_infoDictionaryProvider fb_objectForInfoDictionaryKey:@"BGTaskSchedulerPermittedIdentifiers"]) {
     return YES;
   }
   return NO;

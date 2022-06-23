@@ -285,7 +285,7 @@ static BOOL _isConfigured = NO;
     return NO;
   }
   [self validateConfiguration];
-  for (NSDictionary<NSString *, id> *urlType in [self.infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+  for (NSDictionary<NSString *, id> *urlType in [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
     for (NSString *urlScheme in urlType[@"CFBundleURLSchemes"]) {
       if ([urlScheme caseInsensitiveCompare:scheme] == NSOrderedSame) {
         return YES;
