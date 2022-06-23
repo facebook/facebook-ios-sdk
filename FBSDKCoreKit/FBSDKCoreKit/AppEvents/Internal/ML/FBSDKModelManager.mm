@@ -103,8 +103,8 @@ static dispatch_once_t enableNonce;
                                         attributes:NULL
                                              error:NULL];
       }
-      _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
-      NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+      _modelInfo = [self.store fb_objectForKey:MODEL_INFO_KEY];
+      NSDate *timestamp = [self.store fb_objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![self.featureChecker isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
         NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.settings.appID];
@@ -120,8 +120,8 @@ static dispatch_once_t enableNonce;
                 _modelInfo = [modelInfo mutableCopy];
                 [weakSelf.class processMTML];
                 // update cache for model info and timestamp
-                [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
-                [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+                [weakSelf.store fb_setObject:_modelInfo forKey:MODEL_INFO_KEY];
+                [weakSelf.store fb_setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
               }
             }
           }

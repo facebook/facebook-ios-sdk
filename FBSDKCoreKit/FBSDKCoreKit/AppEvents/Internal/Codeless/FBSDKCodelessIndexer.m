@@ -197,7 +197,7 @@ static id<FBSDKSettings> _settings;
 
     // load the defaults
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
-    NSData *data = [self.dataStore objectForKey:defaultKey];
+    NSData *data = [self.dataStore fb_objectForKey:defaultKey];
     if ([data isKindOfClass:NSData.class]) {
       NSMutableDictionary<NSString *, id> *codelessSetting = nil;
       id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
@@ -235,7 +235,7 @@ static id<FBSDKSettings> _settings;
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
           // update the cached copy in user defaults
-          [self.dataStore setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
+          [self.dataStore fb_setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
           completionBlock(isCodelessSetupEnabled, codelessLoadingError);
         }
       }];

@@ -651,7 +651,7 @@ static id<FBSDKDataPersisting> _store;
 
 + (nullable NSDate *)_loadMinAggregationRequestTimestamp
 {
-  NSDate *timestamp = [self.store objectForKey:FBAEMMINAggregationRequestTimestampKey];
+  NSDate *timestamp = [self.store fb_objectForKey:FBAEMMINAggregationRequestTimestampKey];
   if ([timestamp isKindOfClass:NSDate.class]) {
     return timestamp;
   }
@@ -661,7 +661,7 @@ static id<FBSDKDataPersisting> _store;
 + (void)_updateAggregationRequestTimestamp:(NSTimeInterval)timestamp
 {
   g_minAggregationRequestTimestamp = [NSDate dateWithTimeIntervalSince1970:timestamp];
-  [self.store setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
+  [self.store fb_setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations

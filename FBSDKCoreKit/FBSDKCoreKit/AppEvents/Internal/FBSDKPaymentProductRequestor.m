@@ -77,7 +77,7 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     _transaction = transaction;
     _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
-    NSString *data = [_store stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
+    NSString *data = [_store fb_stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
     _eventsWithReceipt = [NSSet setWithArray:@[FBSDKAppEventNamePurchased, FBSDKAppEventNameSubscribe,
                                                FBSDKAppEventNameStartTrial]];
     if (data) {
@@ -217,8 +217,8 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet addObject:transactionID];
-  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store fb_setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                    forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (void)clearOriginalTransactionID:(NSString *)transactionID
@@ -227,8 +227,8 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet removeObject:transactionID];
-  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store fb_setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                    forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (BOOL)isStartTrial:(SKPaymentTransaction *)transaction

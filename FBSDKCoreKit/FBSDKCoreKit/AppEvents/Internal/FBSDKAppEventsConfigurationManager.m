@@ -62,7 +62,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
   self.settings = settings;
   self.graphRequestFactory = graphRequestFactory;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
-  id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
+  id data = [self.store fb_objectForKey:FBSDKAppEventsConfigurationKey];
 
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -79,7 +79,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
     self.configuration = FBSDKAppEventsConfiguration.defaultConfiguration;
   }
   self.completionBlocks = [NSMutableArray new];
-  self.timestamp = [self.store objectForKey:FBSDKAppEventsConfigurationTimestampKey];
+  self.timestamp = [self.store fb_objectForKey:FBSDKAppEventsConfigurationTimestampKey];
 }
 
 - (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration
@@ -140,8 +140,8 @@ static FBSDKAppEventsConfigurationManager *_shared;
     [self.completionBlocks removeAllObjects];
   }
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.configuration];
-  [self.store setObject:data forKey:FBSDKAppEventsConfigurationKey];
-  [self.store setObject:date forKey:FBSDKAppEventsConfigurationTimestampKey];
+  [self.store fb_setObject:data forKey:FBSDKAppEventsConfigurationKey];
+  [self.store fb_setObject:date forKey:FBSDKAppEventsConfigurationTimestampKey];
 }
 
 #pragma clang diagnostic pop

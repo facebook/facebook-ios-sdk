@@ -97,7 +97,7 @@ static id<FBSDKDataPersisting> _store;
         // load the defaults
         NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
                                 appID];
-        NSData *data = [self.store objectForKey:defaultKey];
+        NSData *data = [self.store fb_objectForKey:defaultKey];
         if ([data isKindOfClass:NSData.class]) {
           id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
           @try {
@@ -193,7 +193,7 @@ static id<FBSDKDataPersisting> _store;
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:gateKeeper];
     #endif
 
-      [self.store setObject:data forKey:defaultKey];
+      [self.store fb_setObject:data forKey:defaultKey];
     }
 
     [self _didProcessGKFromNetwork:error];
