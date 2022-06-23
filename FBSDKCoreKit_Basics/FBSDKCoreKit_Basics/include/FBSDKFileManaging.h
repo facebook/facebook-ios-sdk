@@ -14,24 +14,19 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FileManaging)
 @protocol FBSDKFileManaging
 
-- (nullable NSURL *)URLForDirectory:(NSSearchPathDirectory)directory
-                           inDomain:(NSSearchPathDomainMask)domain
-                  appropriateForURL:(NSURL *)url
-                             create:(BOOL)shouldCreate
-                              error:(NSError *_Nullable *)error;
+- (BOOL)fb_createDirectoryAtPath:(NSString *)path
+     withIntermediateDirectories:(BOOL)createIntermediates
+                      attributes:(NSDictionary<NSFileAttributeKey, id> *_Nullable)attributes
+                           error:(NSError *_Nullable *)error;
 
-- (BOOL)createDirectoryAtPath:(NSString *)path
-  withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(NSDictionary<NSFileAttributeKey, id> *_Nullable)attributes
-                        error:(NSError *_Nullable *)error;
+- (BOOL)fb_fileExistsAtPath:(NSString *)path;
 
-- (BOOL)fileExistsAtPath:(NSString *)path;
+- (BOOL)fb_removeItemAtPath:(NSString *)path
+                      error:(NSError *_Nullable *)error;
 
-- (BOOL)removeItemAtPath:(NSString *)path
-                   error:(NSError *_Nullable *)error;
-
-- (NSArray<NSString *> *)contentsOfDirectoryAtPath:(NSString *)path
-                                             error:(NSError *_Nullable *)error;
+- (NSArray<NSString *> *)fb_contentsOfDirectoryAtPath:(NSString *)path
+                                                error:(NSError *_Nullable *)error
+__attribute__((swift_error(nonnull_error)));
 
 @end
 

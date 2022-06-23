@@ -100,11 +100,11 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 - (void)createErrorDirectoryIfNeeded
 {
-  if (![self.fileManager fileExistsAtPath:self.directoryPath]) {
-    if (![self.fileManager createDirectoryAtPath:self.directoryPath
-                     withIntermediateDirectories:NO
-                                      attributes:NULL
-                                           error:NULL]) {
+  if (![self.fileManager fb_fileExistsAtPath:self.directoryPath]) {
+    if (![self.fileManager fb_createDirectoryAtPath:self.directoryPath
+                        withIntermediateDirectories:NO
+                                         attributes:NULL
+                                              error:NULL]) {
       NSString *msg = [NSString stringWithFormat:@"Failed to create library at %@", self.directoryPath];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
     }
@@ -136,7 +136,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 - (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *errorReportArr = [NSMutableArray array];
-  NSArray<NSString *> *fileNames = [self.fileManager contentsOfDirectoryAtPath:self.directoryPath error:NULL];
+  NSArray<NSString *> *fileNames = [self.fileManager fb_contentsOfDirectoryAtPath:self.directoryPath error:NULL];
   NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL (id _Nullable evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
     NSString *str = (NSString *)evaluatedObject;
     return [str hasPrefix:@"error_report_"] && [str hasSuffix:@".json"];
@@ -167,11 +167,11 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 - (void)_clearErrorInfo
 {
-  NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:self.directoryPath error:nil];
+  NSArray<NSString *> *files = [self.fileManager fb_contentsOfDirectoryAtPath:self.directoryPath error:nil];
   for (NSString *file in files) {
     if ([file hasPrefix:@"error_report"]) {
       NSString *path = [self.directoryPath stringByAppendingPathComponent:file];
-      [self.fileManager removeItemAtPath:path error:nil];
+      [self.fileManager fb_removeItemAtPath:path error:nil];
     }
   }
 }
