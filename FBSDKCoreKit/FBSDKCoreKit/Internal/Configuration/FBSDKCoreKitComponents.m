@@ -9,6 +9,7 @@
 #import "FBSDKCoreKitComponents.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAEMNetworker.h"
 #import "FBSDKATEPublisherFactory.h"
@@ -54,7 +55,6 @@
 #import "FBSDKWebViewFactory.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSProcessInfo+Protocols.h"
-#import "NSURLSession+Protocols.h"
 #import "UIApplication+URLOpener.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -125,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
-                  sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+                  sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
                       skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter, FBSKAdNetworkReporting>)skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler

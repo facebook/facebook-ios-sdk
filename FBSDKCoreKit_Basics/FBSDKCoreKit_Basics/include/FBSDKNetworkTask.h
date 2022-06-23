@@ -8,11 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit_Basics/FBSDKSessionProviding.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
+/// An internal protocol used to describe a network task
+NS_SWIFT_NAME(NetworkTask)
+@protocol FBSDKNetworkTask <NSObject>
+
+@property (readonly) NSURLSessionTaskState fb_state;
+
+- (void)fb_resume;
+- (void)fb_cancel;
+
+@end
+
+@interface NSURLSessionTask (NetworkTask) <FBSDKNetworkTask>
 
 @end
 

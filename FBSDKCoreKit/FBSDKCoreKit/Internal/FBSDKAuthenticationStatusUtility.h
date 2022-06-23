@@ -24,13 +24,13 @@ NS_SWIFT_NAME(AuthenticationStatusUtility)
 @interface FBSDKAuthenticationStatusUtility : NSObject
 
 @property (class, nullable, nonatomic) Class<FBSDKProfileProviding> profileSetter;
-@property (class, nullable, nonatomic) id<FBSDKSessionProviding> sessionDataTaskProvider;
+@property (class, nullable, nonatomic) id<FBSDKURLSessionProviding> sessionDataTaskProvider;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenWallet;
 @property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenWallet;
 
 /// Sets dependencies. This must be called during SDK initialization.
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
-           sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+           sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
                  accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
          authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationWallet;
 
