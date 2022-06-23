@@ -455,7 +455,7 @@ final class AEMReporterTests: XCTestCase {
     let parameters = AEMReporter._ruleMatchRequestParameters(businessIDs, content: content)
     let expected = [
       "advertiser_ids": #"["123"]"#,
-      "fb_contents_data": content,
+      "fb_content_data": content,
     ]
     XCTAssertEqual(
       parameters as? [String: String] ,
@@ -1089,7 +1089,7 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter._loadRuleMatch(["123"], event: "test", currency: nil, value: nil, parameters: [Keys.content: content])
     let expectedParameters = [
       "advertiser_ids": #"["123"]"#,
-      "fb_contents_data": content,
+      "fb_content_data": content,
     ]
     XCTAssertTrue(
       (networker.capturedGraphPath?.contains("aem_attribution")) == true,
