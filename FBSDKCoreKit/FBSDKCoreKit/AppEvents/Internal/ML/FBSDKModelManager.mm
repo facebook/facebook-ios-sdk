@@ -97,8 +97,11 @@ static dispatch_once_t enableNonce;
       }
 
       _directoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-      if (![self.fileManager fileExistsAtPath:_directoryPath]) {
-        [self.fileManager createDirectoryAtPath:_directoryPath withIntermediateDirectories:YES attributes:NULL error:NULL];
+      if (![self.fileManager fb_fileExistsAtPath:_directoryPath]) {
+        [self.fileManager fb_createDirectoryAtPath:_directoryPath
+                       withIntermediateDirectories:YES
+                                        attributes:NULL
+                                             error:NULL];
       }
       _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
       NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
