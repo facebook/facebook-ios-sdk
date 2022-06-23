@@ -719,7 +719,7 @@ final class InternalUtilityTests: XCTestCase {
 
     XCTAssertTrue(internalUtility.isRegisteredCanOpenURLScheme(name), "Sanity check")
 
-    bundle.infoDictionary = [:]
+    bundle.fb_infoDictionary = [:]
 
     XCTAssertTrue(
       internalUtility.isRegisteredCanOpenURLScheme(name),

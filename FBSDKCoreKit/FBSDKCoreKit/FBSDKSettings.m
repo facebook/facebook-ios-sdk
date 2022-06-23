@@ -33,7 +33,7 @@
       _ ## PROPERTY_NAME = [[self.store objectForKey:@#PLIST_KEY] copy]; \
     } \
     if (_ ## PROPERTY_NAME == nil) { \
-      _ ## PROPERTY_NAME = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
+      _ ## PROPERTY_NAME = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
     } \
     return _ ## PROPERTY_NAME; \
   } \
@@ -186,7 +186,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (NSString *)appID
 {
   if (!_appID) {
-    _appID = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
+    _appID = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
   }
   return _appID;
 }
@@ -201,7 +201,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (CGFloat)JPEGCompressionQuality
 {
   if (!_JPEGCompressionQuality) {
-    NSNumber *compressionQuality = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
+    NSNumber *compressionQuality = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
     _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:compressionQuality.floatValue ?: 0.9];
   }
   return _JPEGCompressionQuality;
@@ -287,7 +287,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 
   if (_SKAdNetworkReportEnabled == nil) {
-    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
+    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
   }
 
   return _SKAdNetworkReportEnabled.boolValue;
@@ -360,7 +360,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
   if (!_loggingBehaviors) {
-    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
+    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
     if (bundleLoggingBehaviors) {
       _loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
     } else {
@@ -475,10 +475,10 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (void)logWarnings
 {
   // Log warnings for App Event Flags
-  if (![self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
+  if (![self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
     NSLog(autoLogAppEventsEnabledNotSetWarning);
   }
-  if (![self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
+  if (![self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
     NSLog(advertiserIDCollectionEnabledNotSetWarning);
   }
   if (!self._advertiserIDCollectionEnabled.boolValue) {
@@ -504,7 +504,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     NSInteger initialBitmask = 0;
     NSInteger usageBitmask = 0;
     for (int i = 0; i < keys.count; i++) {
-      NSNumber *plistValue = [self.infoDictionaryProvider objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
+      NSNumber *plistValue = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
       BOOL initialValue = [(plistValue ?: [FBSDKTypeUtility array:defaultValues objectAtIndex:i]) boolValue];
       initialBitmask |= (initialValue ? 1 : 0) << i;
       usageBitmask |= (plistValue != nil ? 1 : 0) << i;
