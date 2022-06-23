@@ -76,7 +76,7 @@ enum TestCoreKitComponents {
     modelManager: EventProcessing & IntegrityParametersProcessorProvider = TestOnDeviceMLModelManager(),
     profileSetter: ProfileProviding.Type = TestProfileProvider.self,
     rulesFromKeyProvider: RulesFromKeyProvider = TestOnDeviceMLModelManager(),
-    sessionDataTaskProvider: SessionProviding = TestSessionProvider(),
+    sessionDataTaskProvider: URLSessionProviding = TestSessionProvider(),
     skAdNetworkReporter: (SKAdNetworkReporting & AppEventsReporter)? = TestSKAdNetworkReporter(),
     suggestedEventsIndexer: SuggestedEventsIndexerProtocol = TestSuggestedEventsIndexer(),
     swizzler: Swizzling.Type = TestSwizzler.self,

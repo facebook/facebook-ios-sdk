@@ -18,16 +18,16 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 @implementation FBSDKAuthenticationStatusUtility
 
 static Class<FBSDKProfileProviding> _profileSetter;
-static id<FBSDKSessionProviding> _sessionDataTaskProvider;
+static id<FBSDKURLSessionProviding> _sessionDataTaskProvider;
 static Class<FBSDKAccessTokenProviding> _accessTokenWallet;
 static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
 
-+ (nullable id<FBSDKSessionProviding>)sessionDataTaskProvider
++ (nullable id<FBSDKURLSessionProviding>)sessionDataTaskProvider
 {
   return _sessionDataTaskProvider;
 }
 
-+ (void)setSessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
++ (void)setSessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
 {
   _sessionDataTaskProvider = sessionDataTaskProvider;
 }
@@ -63,7 +63,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
 }
 
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
-           sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+           sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
                  accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
          authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet;
 {
@@ -94,8 +94,8 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
 
   NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
   if (request) {
-    [[self.sessionDataTaskProvider dataTaskWithRequest:request
-                                     completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+    [[self.sessionDataTaskProvider fb_dataTaskWithRequest:request
+                                        completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
                                        if (!error) {
                                          fb_dispatch_on_main_thread(^{
                                            [self _handleResponse:response];
@@ -104,7 +104,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
                                          [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests
                                                                 logEntry:error.localizedDescription];
                                        }
-                                     }] resume];
+                                     }] fb_resume];
   }
 }
 

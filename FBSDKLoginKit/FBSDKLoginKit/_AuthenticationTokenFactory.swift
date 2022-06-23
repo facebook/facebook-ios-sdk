@@ -24,7 +24,7 @@ public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCre
 
   let beginCertificate = "-----BEGIN CERTIFICATE-----"
   let endCertificate = "-----END CERTIFICATE-----"
-  var sessionProvider: SessionProviding = URLSession(configuration: .default)
+  var sessionProvider: URLSessionProviding = URLSession(configuration: .default)
   var certificateEndpoint: URL {
     var error: NSError?
     return Utility.unversionedFacebookURL(
@@ -37,7 +37,7 @@ public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCre
 
   // MARK: - Init
 
-  convenience init(sessionProvider: SessionProviding) {
+  convenience init(sessionProvider: URLSessionProviding) {
     self.init()
     self.sessionProvider = sessionProvider
   }
@@ -170,7 +170,7 @@ public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCre
 
   func getCertificateWith(certificateKey: String, completion: @escaping PublicCertCompletionHandler) {
     let request = URLRequest(url: certificateEndpoint)
-    sessionProvider.dataTask(with: request) { data, response, error in
+    sessionProvider.fb_dataTask(with: request) { data, response, error in
       guard
         error == nil,
         let data = data,
@@ -205,7 +205,7 @@ public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCre
         completion(nil)
       }
     }
-    .resume()
+    .fb_resume()
   }
 }
 

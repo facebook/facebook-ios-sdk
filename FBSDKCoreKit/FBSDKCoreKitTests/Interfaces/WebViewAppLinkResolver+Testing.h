@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import "FBSDKWebViewAppLinkResolver.h"
+
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,10 +18,10 @@ NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
 @interface FBSDKWebViewAppLinkResolver (Testing)
 
-@property (nonatomic) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic) id<FBSDKURLSessionProviding> sessionProvider;
 @property (nonatomic) id<FBSDKErrorCreating> errorFactory;
 
-- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+- (instancetype)initWithSessionProvider:(id<FBSDKURLSessionProviding>)sessionProvider
                            errorFactory:(id<FBSDKErrorCreating>)errorFactory;
 - (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsBlock)handler;
 - (FBSDKAppLink *)appLinkFromALData:(NSDictionary<NSString *, id> *)appLinkDict

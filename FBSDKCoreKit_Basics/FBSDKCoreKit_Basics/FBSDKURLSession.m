@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
-#import <FBSDKCoreKit_Basics/NSURLSession+SessionProviding.h>
+#import <FBSDKCoreKit_Basics/FBSDKURLSessionProviding.h>
 
 @implementation FBSDKURLSession
 

@@ -143,7 +143,7 @@ NS_SWIFT_NAME(default);
 @property (nonatomic, readonly) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> modelManager;
 @property (nonatomic, readonly) Class<FBSDKProfileProviding> profileSetter;
 @property (nonatomic, readonly) id<FBSDKRulesFromKeyProvider> rulesFromKeyProvider;
-@property (nonatomic, readonly) id<FBSDKSessionProviding> sessionDataTaskProvider;
+@property (nonatomic, readonly) id<FBSDKURLSessionProviding> sessionDataTaskProvider;
 @property (nullable, nonatomic, readonly) id<FBSDKAppEventsReporter, FBSKAdNetworkReporting> skAdNetworkReporter;
 @property (nonatomic, readonly) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
@@ -220,7 +220,7 @@ NS_SWIFT_NAME(default);
                              modelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                             profileSetter:(Class<FBSDKProfileProviding>)profileSetter
                      rulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)rulesFromKeyProvider
-                  sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
+                  sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
                       skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter, FBSKAdNetworkReporting>)skAdNetworkReporter
                    suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                                  swizzler:(Class<FBSDKSwizzling>)swizzler

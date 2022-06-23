@@ -10,38 +10,39 @@ import FBSDKCoreKit_Basics
 import Foundation
 
 @objcMembers
-public final class TestSessionDataTask: NSObject, SessionDataTask {
+public final class TestSessionDataTask: NSObject, NetworkTask {
   public var resumeCallCount = 0
   public var cancelCallCount = 0
   public var stubbedState: URLSessionTask.State = .completed
 
-  public var state: URLSessionTask.State {
+  // swiftlint:disable:next identifier_name
+  public var fb_state: URLSessionTask.State {
     stubbedState
   }
 
-  public func resume() {
+  public func fb_resume() {
     resumeCallCount += 1
   }
 
-  public func cancel() {
+  public func fb_cancel() {
     cancelCallCount += 1
   }
 }
 
 @objcMembers
-public final class TestSessionProvider: NSObject, SessionProviding {
+public final class TestSessionProvider: NSObject, URLSessionProviding {
   /// A data task to return from `dataTask(with:completion:)`
-  public var stubbedDataTask: SessionDataTask?
+  public var stubbedDataTask: NetworkTask?
   /// The completion handler to be invoked in the test
   public var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
   /// The url request for the data task
   public var capturedRequest: URLRequest?
   public var dataTaskCallCount = 0
 
-  public func dataTask(
+  public func fb_dataTask(
     with request: URLRequest,
     completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
+  ) -> NetworkTask {
     dataTaskCallCount += 1
     capturedRequest = request
     capturedCompletion = completionHandler

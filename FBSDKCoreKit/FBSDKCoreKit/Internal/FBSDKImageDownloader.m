@@ -8,14 +8,14 @@
 
 #import "FBSDKImageDownloader.h"
 
-#import "NSURLSession+Protocols.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 static NSString *const kImageDirectory = @"fbsdkimages";
 static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
 @interface FBSDKImageDownloader ()
 
-@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic, strong) id<FBSDKURLSessionProviding> sessionProvider;
 @property (nonatomic, strong) NSURLCache *urlCache;
 
 @end
@@ -37,7 +37,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   return [self initWithSessionProvider:NSURLSession.sharedSession];
 }
 
-- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+- (instancetype)initWithSessionProvider:(id<FBSDKURLSessionProviding>)sessionProvider
 {
   if ((self = [super init])) {
   #if TARGET_OS_MACCATALYST
@@ -76,8 +76,8 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   };
 
   if (cachedResponse == nil || isExpired) {
-    id<FBSDKSessionDataTask> task = [self.sessionProvider dataTaskWithRequest:request
-                                                            completionHandler:
+    id<FBSDKNetworkTask> task = [self.sessionProvider fb_dataTaskWithRequest:request
+                                                           completionHandler:
                                      ^(NSData *data, NSURLResponse *response, NSError *error) {
                                        if ([response isKindOfClass:NSHTTPURLResponse.class]
                                            && ((NSHTTPURLResponse *)response).statusCode == 200
@@ -94,7 +94,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
                                          completion(nil);
                                        }
                                      }];
-    [task resume];
+    [task fb_resume];
   } else {
     completionWrapper(cachedResponse);
   }

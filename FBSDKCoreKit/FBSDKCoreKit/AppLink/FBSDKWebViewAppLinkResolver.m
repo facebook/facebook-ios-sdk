@@ -20,7 +20,6 @@
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
-#import "NSURLSession+Protocols.h"
 
 /**
  Describes the callback for appLinkFromURLInBackground.
@@ -62,7 +61,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @interface FBSDKWebViewAppLinkResolver ()
 
-@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic, strong) id<FBSDKURLSessionProviding> sessionProvider;
 @property (nonatomic, strong) id<FBSDKErrorCreating> errorFactory;
 
 @end
@@ -76,7 +75,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
                           errorFactory:factory];
 }
 
-- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+- (instancetype)initWithSessionProvider:(id<FBSDKURLSessionProviding>)sessionProvider
                            errorFactory:(id<FBSDKErrorCreating>)errorFactory
 {
   if ((self = [super init])) {
@@ -132,10 +131,11 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
   [request setValue:FBSDKWebViewAppLinkResolverMetaTagPrefix forHTTPHeaderField:FBSDKWebViewAppLinkResolverPreferHeader];
 
-  id<FBSDKSessionDataTask> task = [self.sessionProvider dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  id<FBSDKNetworkTask> task = [self.sessionProvider fb_dataTaskWithRequest:request
+                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
     completion(response, data, error);
   }];
-  [task resume];
+  [task fb_resume];
 }
 
 - (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler
