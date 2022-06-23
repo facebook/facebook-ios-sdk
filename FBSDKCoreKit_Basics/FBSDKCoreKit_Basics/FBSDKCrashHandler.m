@@ -259,7 +259,9 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 - (nullable NSData *)_loadCrashLog:(NSString *)fileName
 {
-  return [self.dataExtractor dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor fb_dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName]
+                                               options:NSDataReadingMappedIfSafe
+                                                 error:nil];
 }
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
@@ -376,7 +378,9 @@ static void FBSDKExceptionHandler(NSException *exception)
 - (nullable NSData *)_loadLibData:(NSDictionary<NSString *, id> *)crashLog
 {
   NSString *identifier = [FBSDKTypeUtility dictionary:crashLog objectForKey:kFBSDKMappingTableIdentifier ofType:NSObject.class];
-  return [self.dataExtractor dataWithContentsOfFile:[self _getPathToLibDataFile:identifier] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor fb_dataWithContentsOfFile:[self _getPathToLibDataFile:identifier]
+                                               options:NSDataReadingMappedIfSafe
+                                                 error:nil];
 }
 
 + (NSString *)_getPathToCrashFile:(NSString *)timestamp

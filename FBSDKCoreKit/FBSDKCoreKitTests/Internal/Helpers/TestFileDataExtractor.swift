@@ -16,7 +16,7 @@ final class TestFileDataExtractor: FileDataExtracting {
   static var stubbedData: Data?
   static var capturedFileNames = [String]()
 
-  static func data(
+  static func fb_data(
     withContentsOfFile path: String,
     options readOptionsMask: NSData.ReadingOptions = []
   ) throws -> Data {

@@ -14,13 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(FileDataExtracting)
 @protocol FBSDKFileDataExtracting
 
-+ (nullable NSData *)dataWithContentsOfFile:(NSString *)path
-                                    options:(NSDataReadingOptions)readOptionsMask
-                                      error:(NSError *_Nullable *)errorPtr;
++ (nullable NSData *)fb_dataWithContentsOfFile:(NSString *)path
+                                       options:(NSDataReadingOptions)readOptionsMask
+                                         error:(NSError *_Nullable *)error;
 
 @end
 
 @interface NSData (FileDataExtracting) <FBSDKFileDataExtracting>
+
 @end
 
 NS_ASSUME_NONNULL_END

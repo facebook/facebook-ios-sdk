@@ -140,7 +140,9 @@ static dispatch_once_t enableNonce;
     if (model && model[VERSION_ID_KEY]) {
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
-        NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+        NSData *rulesData = [self.dataExtractor fb_dataWithContentsOfFile:filePath
+                                                                  options:NSDataReadingMappedIfSafe
+                                                                    error:nil];
         NSDictionary<NSString *, id> *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }

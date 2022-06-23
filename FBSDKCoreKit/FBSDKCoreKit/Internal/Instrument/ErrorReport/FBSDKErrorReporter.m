@@ -148,9 +148,10 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   if (fileNames.count > 0) {
     fileNames = [fileNames subarrayWithRange:NSMakeRange(0, MIN(fileNames.count, FBSDK_MAX_ERROR_REPORT_LOGS))];
     for (NSUInteger i = 0; i < fileNames.count; i++) {
-      NSData *data = [self.dataExtractor dataWithContentsOfFile:[self.directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:fileNames objectAtIndex:i]]
-                                                        options:NSDataReadingMappedIfSafe
-                                                          error:nil];
+      NSString *path = [self.directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:fileNames objectAtIndex:i]];
+      NSData *data = [self.dataExtractor fb_dataWithContentsOfFile:path
+                                                           options:NSDataReadingMappedIfSafe
+                                                             error:nil];
       if (data) {
         NSDictionary<NSString *, id> *errorReport = [FBSDKTypeUtility JSONObjectWithData:data
                                                                                  options:0
