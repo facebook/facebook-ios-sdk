@@ -524,15 +524,15 @@ static id<FBSDKURLHosting> _urlHoster;
 {
   if (profile) {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profile];
-    [self.dataStore setObject:data forKey:FBSDKProfileUserDefaultsKey];
+    [self.dataStore fb_setObject:data forKey:FBSDKProfileUserDefaultsKey];
   } else {
-    [self.dataStore removeObjectForKey:FBSDKProfileUserDefaultsKey];
+    [self.dataStore fb_removeObjectForKey:FBSDKProfileUserDefaultsKey];
   }
 }
 
 + (nullable FBSDKProfile *)fetchCachedProfile
 {
-  NSData *data = [self.dataStore objectForKey:FBSDKProfileUserDefaultsKey];
+  NSData *data = [self.dataStore fb_objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
 

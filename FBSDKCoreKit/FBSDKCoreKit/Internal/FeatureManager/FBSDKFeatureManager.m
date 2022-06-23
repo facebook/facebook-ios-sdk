@@ -65,7 +65,7 @@ static FBSDKFeatureManager * sharedInstance;
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
   // check if the feature is locally disabled by Crash Shield first
-  NSString *version = [self.store stringForKey:[self storageKeyForFeature:feature]];
+  NSString *version = [self.store fb_stringForKey:[self storageKeyForFeature:feature]];
   if (version && [version isEqualToString:self.settings.sdkVersion]) {
     if (completionBlock) {
       completionBlock(false);
@@ -96,7 +96,7 @@ static FBSDKFeatureManager * sharedInstance;
 
 - (void)disableFeature:(FBSDKFeature)feature
 {
-  [self.store setObject:self.settings.sdkVersion forKey:[self storageKeyForFeature:feature]];
+  [self.store fb_setObject:self.settings.sdkVersion forKey:[self storageKeyForFeature:feature]];
 }
 
 - (NSString *)storageKeyForFeature:(FBSDKFeature)feature

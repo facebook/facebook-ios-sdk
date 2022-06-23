@@ -462,9 +462,9 @@ static UIApplicationState _applicationState;
     bit++;
   }
 
-  NSInteger existingBitmask = [self.components.defaultDataStore integerForKey:FBSDKKitsBitmaskKey];
+  NSInteger existingBitmask = [self.components.defaultDataStore fb_integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
-    [self.components.defaultDataStore setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
+    [self.components.defaultDataStore fb_setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
     [self.components.appEvents logInternalEvent:@"fb_sdk_initialize"
                                      parameters:params
                              isImplicitlyLogged:NO];
