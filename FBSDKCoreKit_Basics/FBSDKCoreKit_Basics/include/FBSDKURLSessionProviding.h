@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 #import <FBSDKCoreKit_Basics/FBSDKNetworkTask.h>
 
 #import <Foundation/Foundation.h>
@@ -21,6 +22,7 @@ NS_SWIFT_NAME(URLSessionProviding)
 
 @end
 
+FB_LINK_CATEGORY_INTERFACE(NSURLSession, URLSessionProviding)
 @interface NSURLSession (URLSessionProviding) <FBSDKURLSessionProviding>
 
 @end

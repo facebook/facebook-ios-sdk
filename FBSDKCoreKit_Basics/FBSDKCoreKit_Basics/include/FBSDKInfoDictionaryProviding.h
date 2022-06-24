@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +24,7 @@ NS_SWIFT_NAME(fb_object(forInfoDictionaryKey:));
 
 @end
 
+FB_LINK_CATEGORY_INTERFACE(NSBundle, InfoDictionaryProviding)
 @interface NSBundle (InfoDictionaryProviding) <FBSDKInfoDictionaryProviding>
 
 @end

@@ -7,9 +7,11 @@
  */
 
 #import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+FB_LINK_CATEGORY_IMPLEMENTATION(NSBundle, InfoDictionaryProviding)
 @implementation NSBundle (InfoDictionaryProviding)
 
 - (nullable NSDictionary<NSString *, id> *)fb_infoDictionary

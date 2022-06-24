@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSessionProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+FB_LINK_CATEGORY_IMPLEMENTATION(NSURLSession, URLSessionProviding)
 @implementation NSURLSession (URLSessionProviding)
 
 - (id<FBSDKNetworkTask>)fb_dataTaskWithRequest:(NSURLRequest *)request

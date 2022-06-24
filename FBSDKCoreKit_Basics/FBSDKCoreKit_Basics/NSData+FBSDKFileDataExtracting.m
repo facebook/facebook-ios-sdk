@@ -7,9 +7,13 @@
  */
 
 #import <FBSDKCoreKit_Basics/FBSDKFileDataExtracting.h>
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+FB_LINK_CATEGORY_IMPLEMENTATION(NSData, FileDataExtracting)
 @implementation NSData (FileDataExtracting)
 
 + (nullable NSData *)fb_dataWithContentsOfFile:(NSString *)path
@@ -22,3 +26,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

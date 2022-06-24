@@ -16,6 +16,7 @@
 #import <FBSDKCoreKit_Basics/FBSDKFileManaging.h>
 #import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
 #import <FBSDKCoreKit_Basics/FBSDKLibAnalyzer.h>
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 #import <FBSDKCoreKit_Basics/FBSDKNetworkTask.h>
 #import <FBSDKCoreKit_Basics/FBSDKTypeUtility.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>

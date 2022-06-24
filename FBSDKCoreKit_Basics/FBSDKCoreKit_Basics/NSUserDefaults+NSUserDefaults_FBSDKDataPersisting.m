@@ -7,11 +7,13 @@
  */
 
 #import <FBSDKCoreKit_Basics/FBSDKDataPersisting.h>
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+FB_LINK_CATEGORY_IMPLEMENTATION(NSUserDefaults, DataPersisting)
 @implementation NSUserDefaults (DataPersisting)
 
 - (NSInteger)fb_integerForKey:(NSString *)key
