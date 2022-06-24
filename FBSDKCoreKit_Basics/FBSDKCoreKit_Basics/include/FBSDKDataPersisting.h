@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// An internal protocol used to describe a simple data store
@@ -26,6 +28,7 @@ NS_SWIFT_NAME(DataPersisting)
 
 @end
 
+FB_LINK_CATEGORY_INTERFACE(NSUserDefaults, DataPersisting)
 @interface NSUserDefaults (DataPersisting) <FBSDKDataPersisting>
 
 @end

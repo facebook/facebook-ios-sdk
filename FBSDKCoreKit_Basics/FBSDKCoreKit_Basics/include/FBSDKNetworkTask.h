@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// An internal protocol used to describe a network task
@@ -21,6 +23,7 @@ NS_SWIFT_NAME(NetworkTask)
 
 @end
 
+FB_LINK_CATEGORY_INTERFACE(NSURLSessionTask, NetworkTask)
 @interface NSURLSessionTask (NetworkTask) <FBSDKNetworkTask>
 
 @end

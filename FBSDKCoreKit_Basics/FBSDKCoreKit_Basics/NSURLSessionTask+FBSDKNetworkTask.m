@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 #import <FBSDKCoreKit_Basics/FBSDKNetworkTask.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+FB_LINK_CATEGORY_IMPLEMENTATION(NSURLSessionTask, NetworkTask)
 @implementation NSURLSessionTask (NetworkTask)
 
 - (NSURLSessionTaskState)fb_state
@@ -26,3 +30,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

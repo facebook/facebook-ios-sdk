@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,7 +32,9 @@ __attribute__((swift_error(nonnull_error)));
 
 @end
 
-@interface NSFileManager (FBSDKFileManaging) <FBSDKFileManaging>
+FB_LINK_CATEGORY_INTERFACE(NSFileManager, FileManaging)
+@interface NSFileManager (FileManaging) <FBSDKFileManaging>
+
 @end
 
 NS_ASSUME_NONNULL_END

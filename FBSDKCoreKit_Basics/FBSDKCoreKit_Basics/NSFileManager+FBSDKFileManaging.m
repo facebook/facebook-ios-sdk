@@ -7,14 +7,18 @@
  */
 
 #import <FBSDKCoreKit_Basics/FBSDKFileManaging.h>
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
 
 #import <Foundation/Foundation.h>
 
-@implementation NSFileManager (FBSDKFileManaging)
+NS_ASSUME_NONNULL_BEGIN
+
+FB_LINK_CATEGORY_IMPLEMENTATION(NSFileManager, FileManaging)
+@implementation NSFileManager (FileManaging)
 
 - (BOOL)fb_createDirectoryAtPath:(NSString *)path
      withIntermediateDirectories:(BOOL)createIntermediates
-                      attributes:(NSDictionary<NSFileAttributeKey,id> *)attributes
+                      attributes:(nullable NSDictionary<NSFileAttributeKey,id> *)attributes
                            error:(NSError * _Nullable __autoreleasing *)error
 {
   return [self createDirectoryAtPath:path
@@ -41,3 +45,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
