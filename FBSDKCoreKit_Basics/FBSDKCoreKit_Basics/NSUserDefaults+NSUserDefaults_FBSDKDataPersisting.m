@@ -1,10 +1,10 @@
-//
-//  NSUserDefaults+NSUserDefaults_FBSDKDataPersisting.m
-//  FBSDKCoreKit_Basics
-//
-//  Created by Sam Odom on 6/22/22.
-//  Copyright © 2022 Facebook. All rights reserved.
-//
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #import <FBSDKCoreKit_Basics/FBSDKDataPersisting.h>
 
