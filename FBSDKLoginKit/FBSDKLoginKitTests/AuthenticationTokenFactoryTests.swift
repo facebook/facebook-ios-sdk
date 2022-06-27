@@ -32,7 +32,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
       wasCalled = true
     }
 
-    _AuthenticationTokenFactory().createToken(
+    AuthenticationTokenFactory().createToken(
       tokenString: "invalid_token",
       nonce: "123456789",
       graphDomain: "facebook",
@@ -46,7 +46,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
   // MARK: - Verifying Signature
 
   func testCertificateEndpointURL() {
-    let url = _AuthenticationTokenFactory().certificateEndpoint
+    let url = AuthenticationTokenFactory().certificateEndpoint
     XCTAssertEqual(url.absoluteString, "https://m.facebook.com/.well-known/oauth/openid/certs/")
   }
 
@@ -54,7 +54,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     var wasCalled = false
     var capturedSuccess = false
@@ -86,7 +86,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     var wasCalled = false
     var capturedSuccess = false
@@ -123,7 +123,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     var wasCalled = false
     var capturedSuccess = false
@@ -159,7 +159,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     var wasCalled = false
     var capturedSuccess = false
@@ -196,7 +196,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     var wasCalled = false
     var capturedSuccess = false
@@ -238,7 +238,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
       let dataTask = TestSessionDataTask()
       let session = TestSessionProvider()
       session.stubbedDataTask = dataTask
-      let factory = _AuthenticationTokenFactory(sessionProvider: session)
+      let factory = AuthenticationTokenFactory(sessionProvider: session)
 
       var wasCalled = false
       var capturedSuccess = false
@@ -275,7 +275,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
     let dataTask = TestSessionDataTask()
     let session = TestSessionProvider()
     session.stubbedDataTask = dataTask
-    let factory = _AuthenticationTokenFactory(sessionProvider: session)
+    let factory = AuthenticationTokenFactory(sessionProvider: session)
 
     try (1 ..< 100).forEach { _ in
       let certificates = Fuzzer.randomize(json: validRawCertificateResponse)

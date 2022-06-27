@@ -435,7 +435,7 @@ extension _LoginURLCompleter: DependentAsType {
   static var configuredDependencies: TypeDependencies?
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
     profileFactory: _ProfileFactory(),
-    authenticationTokenCreator: _AuthenticationTokenFactory(),
+    authenticationTokenCreator: AuthenticationTokenFactory(),
     graphRequestFactory: GraphRequestFactory(),
     internalUtility: InternalUtility.shared,
     errorFactory: ErrorFactory()

@@ -16,8 +16,7 @@ import Security
  Class responsible for generating an `AuthenticationToken` given a valid token string.
  An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
  */
-@objc(FBSDKAuthenticationTokenFactory)
-public final class _AuthenticationTokenFactory: NSObject, AuthenticationTokenCreating {
+final class AuthenticationTokenFactory: AuthenticationTokenCreating {
   typealias PublicCertCompletionHandler = (SecCertificate?) -> Void
   typealias PublicKeyCompletionHandler = (SecKey?) -> Void
   typealias VerifySignatureCompletionHandler = (Bool) -> Void

@@ -95,7 +95,7 @@ final class LoginURLCompleterTests: XCTestCase {
     )
 
     XCTAssertTrue(
-      dependencies.authenticationTokenCreator is _AuthenticationTokenFactory,
+      dependencies.authenticationTokenCreator is AuthenticationTokenFactory,
       .defaultDependency("_AuthenticationTokenFactory", for: "authentication token creator")
     )
 
