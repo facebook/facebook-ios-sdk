@@ -11,7 +11,7 @@
 #import "FBSDKAccessTokenExpiring.h"
 
 @protocol FBSDKNotificationPosting;
-@protocol FBSDKNotificationObserving;
+@protocol FBSDKNotificationDelivering;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_SWIFT_NAME(AccessTokenExpirer)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter;
+- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter;
 
 @end
 

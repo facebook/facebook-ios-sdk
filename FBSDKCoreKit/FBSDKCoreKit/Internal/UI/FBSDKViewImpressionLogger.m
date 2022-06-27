@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic, strong) id<FBSDKNotificationDelivering> notificationDeliverer;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
 @property (nonatomic) NSMutableSet<NSDictionary<NSString *, id> *> *trackedImpressions;
 
@@ -36,7 +36,7 @@ static dispatch_once_t token;
 + (instancetype)impressionLoggerWithEventName:(FBSDKAppEventName)eventName
                           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
-                         notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+                         notificationDeliverer:(id<FBSDKNotificationDelivering>)notificationDeliverer
                                   tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
   static NSMutableDictionary<NSString *, id> *_impressionTrackers = nil;
@@ -50,7 +50,7 @@ static dispatch_once_t token;
     impressionTracker = [[self alloc] initWithEventName:eventName
                                     graphRequestFactory:graphRequestFactory
                                             eventLogger:eventLogger
-                                   notificationObserver:notificationObserver
+                                  notificationDeliverer:notificationDeliverer
                                             tokenWallet:tokenWallet];
     if (!_impressionTrackers) {
       _impressionTrackers = [NSMutableDictionary new];
@@ -65,7 +65,7 @@ static dispatch_once_t token;
 - (instancetype)initWithEventName:(FBSDKAppEventName)eventName
               graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                       eventLogger:(id<FBSDKEventLogging>)eventLogger
-             notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+             notificationDeliverer:(id<FBSDKNotificationDelivering>)notificationDeliverer
                       tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
   if ((self = [super init])) {
@@ -73,10 +73,10 @@ static dispatch_once_t token;
     _trackedImpressions = [NSMutableSet new];
     _graphRequestFactory = graphRequestFactory;
     _eventLogger = eventLogger;
-    _notificationObserver = notificationObserver;
+    _notificationDeliverer = notificationDeliverer;
     _tokenWallet = tokenWallet;
 
-    [self.notificationObserver addObserver:self
+    [self.notificationDeliverer addObserver:self
                                   selector:@selector(_applicationDidEnterBackgroundNotification:)
                                       name:UIApplicationDidEnterBackgroundNotification
                                     object:UIApplication.sharedApplication];

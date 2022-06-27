@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                           piggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)piggybackManager

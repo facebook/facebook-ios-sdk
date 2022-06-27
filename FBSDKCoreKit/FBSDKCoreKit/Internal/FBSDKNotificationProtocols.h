@@ -23,9 +23,9 @@ NS_SWIFT_NAME(post(name:object:userInfo:));
 
 @end
 
-/// An internal protocol used to describe a type that can observe a notification
-NS_SWIFT_NAME(NotificationObserving)
-@protocol FBSDKNotificationObserving
+/// An internal protocol used to describe a type that can deliver a notification
+NS_SWIFT_NAME(NotificationDelivering)
+@protocol FBSDKNotificationDelivering
 
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector

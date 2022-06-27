@@ -43,7 +43,7 @@ enum TestCoreKitComponents {
     logger: Logging.Type = TestLogger.self,
     loggerFactory: LoggerCreating = TestLoggerFactory(),
     macCatalystDeterminator: MacCatalystDetermining = TestMacCatalystDeterminator(),
-    notificationCenter: NotificationObserving & NotificationPosting = TestNotificationCenter(),
+    notificationCenter: NotificationDelivering & NotificationPosting = TestNotificationCenter(),
     operatingSystemVersionComparer: OperatingSystemVersionComparing = TestProcessInfo(),
     paymentObserver: PaymentObserving = TestPaymentObserver(),
     piggybackManager: GraphRequestPiggybackManaging = TestGraphRequestPiggybackManager(),

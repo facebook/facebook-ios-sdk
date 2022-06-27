@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKDataPersisting> dataStore;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
-@property (class, nullable, nonatomic) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
+@property (class, nullable, nonatomic) id<FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
 @property (class, nullable, nonatomic) id<FBSDKURLHosting> urlHoster;
 
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile

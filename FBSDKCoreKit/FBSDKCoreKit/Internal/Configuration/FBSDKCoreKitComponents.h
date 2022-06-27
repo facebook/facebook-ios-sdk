@@ -109,7 +109,7 @@ NS_SWIFT_NAME(default);
 @property (nonatomic, readonly) Class<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<__FBSDKLoggerCreating> loggerFactory;
 @property (nonatomic, readonly) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
-@property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
+@property (nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
 @property (nonatomic, readonly) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (nonatomic, readonly) id<FBSDKPaymentObserving> paymentObserver;
 @property (nonatomic, readonly) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
@@ -187,7 +187,7 @@ NS_SWIFT_NAME(default);
                                     logger:(Class<FBSDKLogging>)logger
                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
                    macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+                        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
             operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                            paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                           piggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
