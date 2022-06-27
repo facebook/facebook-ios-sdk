@@ -15,8 +15,6 @@ from sdk_kit_names import kits
 
 
 def main():
-    generate_projects()
-
     for kit in kits:
         # Output file paths need to be outside of the directory so that we don't pollute the history we're trying to examine.
         base_revision_interface_path = f"/tmp/{kit}_base"
@@ -24,9 +22,11 @@ def main():
 
         print("Building Swift interface for base revision.")
         checkout_base_commit()
+        generate_projects()
         build_swift_interface(kit, base_revision_interface_path)
         print("Building Swift interface for current revision.")
         checkout_current_commit()
+        generate_projects()
         build_swift_interface(kit, current_revision_interface_path)
 
         compare_swift_interfaces(kit, base_revision_interface_path, current_revision_interface_path)
