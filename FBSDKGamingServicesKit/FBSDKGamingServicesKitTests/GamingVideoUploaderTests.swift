@@ -133,7 +133,7 @@ final class GamingVideoUploaderTests: XCTestCase {
     )
     XCTAssertEqual(
       videoUploaderFactory.capturedVideoSize,
-      UInt(fileHandle.seekToEndOfFile()),
+      UInt(fileHandle.fb_seekToEndOfFile()),
       "Should create an uploader with the size of the video being uploaded"
     )
     XCTAssertTrue(
