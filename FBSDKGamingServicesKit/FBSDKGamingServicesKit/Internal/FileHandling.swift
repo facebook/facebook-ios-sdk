@@ -9,9 +9,7 @@
 import Foundation
 
 protocol FileHandling {
-  func seekToEndOfFile() -> UInt64
-  func seek(toFileOffset offset: UInt64)
-  func readData(ofLength length: Int) -> Data
+  func fb_seekToEndOfFile() -> UInt64
+  func fb_seek(toFileOffset offset: UInt64)
+  func fb_readData(ofLength length: Int) -> Data
 }
-
-extension FileHandle: FileHandling {}

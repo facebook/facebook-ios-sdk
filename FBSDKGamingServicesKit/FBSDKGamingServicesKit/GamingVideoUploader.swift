@@ -122,7 +122,7 @@ public final class GamingVideoUploader: NSObject {
 
     guard
       let fileHandle = try? fileHandleFactory.fileHandleForReading(from: configuration.videoURL),
-      fileHandle.seekToEndOfFile() != 0
+      fileHandle.fb_seekToEndOfFile() != 0
     else {
       completion(
         false,
@@ -138,7 +138,7 @@ public final class GamingVideoUploader: NSObject {
       return
     }
 
-    let fileSize = UInt(fileHandle.seekToEndOfFile())
+    let fileSize = UInt(fileHandle.fb_seekToEndOfFile())
 
     let uploader = GamingVideoUploader(
       fileHandle: fileHandle,
@@ -207,8 +207,8 @@ extension GamingVideoUploader: VideoUploaderDelegate {
     let chunkSize = endOffset - startOffset
     guard let fileHandle = fileHandle else { return nil }
 
-    fileHandle.seek(toFileOffset: UInt64(startOffset))
-    let videoChunkData = fileHandle.readData(ofLength: Int(chunkSize))
+    fileHandle.fb_seek(toFileOffset: UInt64(startOffset))
+    let videoChunkData = fileHandle.fb_readData(ofLength: Int(chunkSize))
     guard videoChunkData.count == chunkSize else {
       return nil
     }

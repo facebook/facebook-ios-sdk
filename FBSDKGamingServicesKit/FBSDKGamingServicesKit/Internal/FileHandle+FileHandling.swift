@@ -6,23 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBSDKGamingServicesKit
 import Foundation
 
-final class TestFileHandler: FileHandling {
-  var stubbedReadData = Data()
-  var stubbedSeekToEndOfFile: UInt64 = 0
-  var capturedFileOffset: UInt64 = 0
-
+extension FileHandle: FileHandling {
   func fb_seekToEndOfFile() -> UInt64 {
-    stubbedSeekToEndOfFile
+    seekToEndOfFile()
   }
 
   func fb_seek(toFileOffset offset: UInt64) {
-    capturedFileOffset = offset
+    seek(toFileOffset: offset)
   }
 
   func fb_readData(ofLength length: Int) -> Data {
-    stubbedReadData
+    readData(ofLength: length)
   }
 }
