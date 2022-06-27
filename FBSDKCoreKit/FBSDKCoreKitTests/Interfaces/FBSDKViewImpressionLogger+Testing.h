@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nonatomic, assign) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic, strong) id<FBSDKNotificationDelivering> notificationDeliverer;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
 
 + (void)reset;

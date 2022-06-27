@@ -44,7 +44,7 @@ static NSDateFormatter *_dateFormatter;
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
-static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
+static id<FBSDKNotificationPosting, FBSDKNotificationDelivering> _notificationCenter = nil;
 static id<FBSDKDataPersisting> _dataStore;
 static id<FBSDKSettings> _settings;
 static id<FBSDKURLHosting> _urlHoster;
@@ -79,12 +79,12 @@ static id<FBSDKURLHosting> _urlHoster;
   _settings = settings;
 }
 
-+ (nullable id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
++ (nullable id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
 {
   return _notificationCenter;
 }
 
-+ (void)setNotificationCenter:(nullable id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
++ (void)setNotificationCenter:(nullable id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
 {
   _notificationCenter = notificationCenter;
 }
@@ -505,7 +505,7 @@ static id<FBSDKURLHosting> _urlHoster;
 
 + (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
            accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
                       settings:(id<FBSDKSettings>)settings
                      urlHoster:(id<FBSDKURLHosting>)urlHoster
 {

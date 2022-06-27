@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Default conformance to NotificationPosting and NotificationObserving
-@interface NSNotificationCenter (NotificationProtocolsConformance) <FBSDKNotificationPosting, FBSDKNotificationObserving>
+@interface NSNotificationCenter (NotificationProtocolsConformance) <FBSDKNotificationPosting, FBSDKNotificationDelivering>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -14,7 +14,7 @@
 
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKEventLogging;
-@protocol FBSDKNotificationObserving;
+@protocol FBSDKNotificationDelivering;
 @protocol FBSDKAccessTokenProviding;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -28,7 +28,7 @@ NS_SWIFT_NAME(ViewImpressionLogger)
 + (instancetype)impressionLoggerWithEventName:(FBSDKAppEventName)eventName
                           graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
-                         notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+                        notificationDeliverer:(id<FBSDKNotificationDelivering>)notificationDeliverer
                                   tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet;
 
 @property (nonatomic, readonly, copy) FBSDKAppEventName eventName;

@@ -16,7 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKNotificationPosting;
-@protocol FBSDKNotificationObserving;
+@protocol FBSDKNotificationDelivering;
 @protocol FBSDKSettings;
 @protocol FBSDKURLHosting;
 
@@ -43,7 +43,7 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 // UNCRUSTIFY_FORMAT_OFF
 + (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
            accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
                       settings:(id<FBSDKSettings>)settings
                      urlHoster:(id<FBSDKURLHosting>)urlHoster
 NS_SWIFT_NAME(configure(dataStore:accessTokenProvider:notificationCenter:settings:urlHoster:));

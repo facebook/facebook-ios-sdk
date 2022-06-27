@@ -48,7 +48,7 @@ final class ViewImpressionLoggerTests: XCTestCase {
       "Should be able to create with an event logger"
     )
     XCTAssertEqual(
-      tracker.notificationObserver as? TestNotificationCenter,
+      tracker.notificationDeliverer as? TestNotificationCenter,
       notificationCenter,
       "Should be able to create with a notification observer"
     )
@@ -210,7 +210,7 @@ final class ViewImpressionLoggerTests: XCTestCase {
       eventName: name,
       graphRequestFactory: graphRequestFactory,
       eventLogger: logger,
-      notificationObserver: notificationCenter,
+      notificationDeliverer: notificationCenter,
       tokenWallet: TestAccessTokenWallet.self
     )
   }
