@@ -12,7 +12,8 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKNotificationProtocols.h"
+#import "FBSDKNotificationDelivering.h"
+#import "FBSDKNotificationPosting.h"
 
 @interface FBSDKAccessTokenExpirer ()
 
@@ -27,8 +28,14 @@
 {
   if ((self = [super init])) {
     _notificationCenter = notificationCenter;
-    [notificationCenter addObserver:self selector:@selector(_checkAccessTokenExpirationDate) name:FBSDKAccessTokenDidChangeNotification object:nil];
-    [notificationCenter addObserver:self selector:@selector(_checkAccessTokenExpirationDate) name:FBSDKApplicationDidBecomeActiveNotification object:nil];
+    [notificationCenter fb_addObserver:self
+                              selector:@selector(_checkAccessTokenExpirationDate)
+                                  name:FBSDKAccessTokenDidChangeNotification
+                                object:nil];
+    [notificationCenter fb_addObserver:self
+                              selector:@selector(_checkAccessTokenExpirationDate)
+                                  name:FBSDKApplicationDidBecomeActiveNotification
+                                object:nil];
     [self _checkAccessTokenExpirationDate];
   }
   return self;
@@ -59,9 +66,9 @@
   [FBSDKTypeUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeOldKey];
   userInfo[FBSDKAccessTokenDidExpireKey] = @YES;
 
-  [self.notificationCenter postNotificationName:FBSDKAccessTokenDidChangeNotification
-                                         object:FBSDKAccessToken.class
-                                       userInfo:userInfo];
+  [self.notificationCenter fb_postNotificationName:FBSDKAccessTokenDidChangeNotification
+                                            object:FBSDKAccessToken.class
+                                          userInfo:userInfo];
 }
 
 @end

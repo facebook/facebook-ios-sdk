@@ -17,7 +17,8 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
-#import "FBSDKNotificationProtocols.h"
+#import "FBSDKNotificationDelivering.h"
+#import "FBSDKNotificationPosting.h"
 #import "FBSDKProfileCodingKey.h"
 #import "FBSDKURLHosting.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -341,9 +342,9 @@ static id<FBSDKURLHosting> _urlHoster;
     g_currentProfile = profile;
 
     if (shouldPostNotification) {
-      [self.notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
-                                             object:self.class
-                                           userInfo:userInfo];
+      [self.notificationCenter fb_postNotificationName:FBSDKProfileDidChangeNotification
+                                                object:self.class
+                                              userInfo:userInfo];
     }
   }
 }
@@ -356,12 +357,12 @@ static id<FBSDKURLHosting> _urlHoster;
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
 {
   if (enable) {
-    [self.notificationCenter addObserver:self
-                                selector:@selector(observeChangeAccessTokenChange:)
-                                    name:FBSDKAccessTokenDidChangeNotification
-                                  object:nil];
+    [self.notificationCenter fb_addObserver:self
+                                   selector:@selector(observeChangeAccessTokenChange:)
+                                       name:FBSDKAccessTokenDidChangeNotification
+                                     object:nil];
   } else {
-    [self.notificationCenter removeObserver:self];
+    [self.notificationCenter fb_removeObserver:self];
   }
 }
 

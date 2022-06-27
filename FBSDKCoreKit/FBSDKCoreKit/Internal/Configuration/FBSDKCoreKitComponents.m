@@ -53,7 +53,8 @@
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKUserDataStore.h"
 #import "FBSDKWebViewFactory.h"
-#import "NSNotificationCenter+Extensions.h"
+#import "NSNotificationCenter+NotificationDelivering.h"
+#import "NSNotificationCenter+NotificationPosting.h"
 #import "NSProcessInfo+Protocols.h"
 #import "UIApplication+URLOpener.h"
 
