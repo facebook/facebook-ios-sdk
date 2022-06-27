@@ -13,10 +13,6 @@
     <false/>
     <key>com.apple.developer.team-identifier</key>
     <string>4W5TH4RKQ2</string>
-    <key>com.apple.accounts.facebook.defaultaccess</key>
-    <true/>
-    <key>aps-environment</key>
-    <string>production</string>
     <key>com.apple.developer.associated-domains</key>
     <array>
         <string>applinks:*.internalfb.com</string>
