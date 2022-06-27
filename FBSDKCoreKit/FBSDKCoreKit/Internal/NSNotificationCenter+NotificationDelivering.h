@@ -6,14 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKNotificationProtocols.h"
+#import "FBSDKNotificationDelivering.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Default conformance to NotificationPosting and NotificationObserving
-@interface NSNotificationCenter (NotificationProtocolsConformance) <FBSDKNotificationPosting, FBSDKNotificationDelivering>
+FB_LINK_CATEGORY_INTERFACE(NSNotificationCenter, NotificationDelivering)
+@interface NSNotificationCenter (NotificationDelivering) <FBSDKNotificationDelivering>
+
 @end
 
 NS_ASSUME_NONNULL_END

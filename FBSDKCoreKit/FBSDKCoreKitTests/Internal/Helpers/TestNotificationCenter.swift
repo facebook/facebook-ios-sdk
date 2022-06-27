@@ -37,7 +37,7 @@ final class TestNotificationCenter: NSObject, NotificationDelivering, Notificati
 
   // MARK: Posting
 
-  func post(
+  func fb_post(
     name: Notification.Name,
     object: Any?,
     userInfo: [String: Any]? = nil
@@ -47,13 +47,13 @@ final class TestNotificationCenter: NSObject, NotificationDelivering, Notificati
     capturedPostUserInfos.append(userInfo ?? [:])
   }
 
-  // MARK: Observing
+  // MARK: Delivering
 
-  func removeObserver(_ observer: Any) {
+  func fb_removeObserver(_ observer: Any) {
     capturedRemovedObservers.append(observer)
   }
 
-  func addObserver(
+  func fb_addObserver(
     _ observer: Any,
     selector: Selector,
     name: Notification.Name?,

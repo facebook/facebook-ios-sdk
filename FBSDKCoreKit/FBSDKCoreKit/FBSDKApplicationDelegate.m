@@ -170,18 +170,18 @@ static UIApplicationState _applicationState;
 
 - (void)addObservers
 {
-  [self.components.notificationCenter addObserver:self
-                                         selector:@selector(applicationDidEnterBackground:)
-                                             name:UIApplicationDidEnterBackgroundNotification
-                                           object:nil];
-  [self.components.notificationCenter addObserver:self
-                                         selector:@selector(applicationDidBecomeActive:)
-                                             name:UIApplicationDidBecomeActiveNotification
-                                           object:nil];
-  [self.components.notificationCenter addObserver:self
-                                         selector:@selector(applicationWillResignActive:)
-                                             name:UIApplicationWillResignActiveNotification
-                                           object:nil];
+  [self.components.notificationCenter fb_addObserver:self
+                                            selector:@selector(applicationDidEnterBackground:)
+                                                name:UIApplicationDidEnterBackgroundNotification
+                                              object:nil];
+  [self.components.notificationCenter fb_addObserver:self
+                                            selector:@selector(applicationDidBecomeActive:)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+  [self.components.notificationCenter fb_addObserver:self
+                                            selector:@selector(applicationWillResignActive:)
+                                                name:UIApplicationWillResignActiveNotification
+                                              object:nil];
 #if !TARGET_OS_TV
   [self addObserver:FBSDKBridgeAPI.sharedInstance];
 #endif

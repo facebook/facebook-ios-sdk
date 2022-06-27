@@ -15,7 +15,7 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKNotificationProtocols.h"
+#import "FBSDKNotificationDelivering.h"
 
 @interface FBSDKViewImpressionLogger ()
 
@@ -76,10 +76,10 @@ static dispatch_once_t token;
     _notificationDeliverer = notificationDeliverer;
     _tokenWallet = tokenWallet;
 
-    [self.notificationDeliverer addObserver:self
-                                  selector:@selector(_applicationDidEnterBackgroundNotification:)
-                                      name:UIApplicationDidEnterBackgroundNotification
-                                    object:UIApplication.sharedApplication];
+    [self.notificationDeliverer fb_addObserver:self
+                                      selector:@selector(_applicationDidEnterBackgroundNotification:)
+                                          name:UIApplicationDidEnterBackgroundNotification
+                                        object:UIApplication.sharedApplication];
   }
   return self;
 }

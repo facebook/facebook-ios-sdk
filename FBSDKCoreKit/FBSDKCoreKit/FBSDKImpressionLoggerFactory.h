@@ -12,7 +12,7 @@
 #import "FBSDKEventLogging.h"
 #import "FBSDKImpressionLoggerFactoryProtocol.h"
 #import "FBSDKImpressionLogging.h"
-#import "FBSDKNotificationProtocols.h"
+#import "FBSDKNotificationDelivering.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
