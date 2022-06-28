@@ -10,14 +10,7 @@ import FBSDKCoreKit_Basics
 
 #if !os(tvOS)
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- - Warning INTERNAL:  DO NOT USE
- */
-@objcMembers
-@objc(FBSDKAuthenticationTokenHeader)
-public final class _AuthenticationTokenHeader: NSObject {
+final class AuthenticationTokenHeader {
 
   /// Key identifier used in identifying the key to be used to verify the signature.
   public let kid: String
