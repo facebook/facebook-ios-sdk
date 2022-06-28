@@ -267,7 +267,7 @@ final class LoginManagerTests: XCTestCase {
     )
 
     XCTAssertTrue(
-      dependencies.loginCompleterFactory is _LoginCompleterFactory,
+      dependencies.loginCompleterFactory is LoginCompleterFactory,
       .Dependencies.defaultDependency("a concrete login completer factory", for: "login completer factory")
     )
     XCTAssertIdentical(

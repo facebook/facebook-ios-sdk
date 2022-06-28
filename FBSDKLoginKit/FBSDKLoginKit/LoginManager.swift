@@ -87,7 +87,7 @@ public final class LoginManager: NSObject {
       graphRequestFactory: GraphRequestFactory(),
       internalUtility: InternalUtility.shared,
       keychainStore: keychainStore,
-      loginCompleterFactory: _LoginCompleterFactory(),
+      loginCompleterFactory: LoginCompleterFactory(),
       profileProvider: Profile.self,
       settings: Settings.shared,
       urlOpener: BridgeAPI.shared

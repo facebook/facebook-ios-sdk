@@ -6,20 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
-
 #if !os(tvOS)
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- - Warning INTERNAL:  DO NOT USE
- */
-@objcMembers
-@objc(FBSDKLoginCompleterFactory)
-public final class _LoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
+struct LoginCompleterFactory: LoginCompleterFactoryProtocol {
 
-  public func createLoginCompleter(
+  func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String
   ) -> _LoginCompleting {
