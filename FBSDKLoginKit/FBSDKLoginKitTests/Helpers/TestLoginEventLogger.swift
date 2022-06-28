@@ -8,7 +8,7 @@
 
 @testable import FBSDKLoginKit
 
-final class TestLoginEventLogger: _LoginEventLogging {
+final class TestLoginEventLogger: LoginEventLogging {
   var capturedParameters: [AppEvents.ParameterName: Any]?
   var capturedEventName: AppEvents.Name?
   var flushBehavior = AppEvents.FlushBehavior.auto

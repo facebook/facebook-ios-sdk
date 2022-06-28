@@ -8,14 +8,7 @@
 
 import FBSDKCoreKit
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(_FBSDKLoginEventLogging)
-public protocol _LoginEventLogging {
+protocol LoginEventLogging {
   var flushBehavior: AppEvents.FlushBehavior { get }
 
   func logInternalEvent(
