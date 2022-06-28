@@ -80,7 +80,7 @@ final class AuthenticationTokenFactory: AuthenticationTokenCreating {
     let signature = segments[2]
 
     let claims = AuthenticationTokenClaims(fromEncodedString: encodedClaims, nonce: nonce)
-    let header = _AuthenticationTokenHeader(fromEncodedString: encodedHeader)
+    let header = AuthenticationTokenHeader(fromEncodedString: encodedHeader)
 
     guard
       claims != nil,
