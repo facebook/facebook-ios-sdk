@@ -27,7 +27,7 @@ import Foundation
  Completion occurs synchronously.
  */
 
-public final class _LoginURLCompleter: NSObject, _LoginCompleting {
+public final class _LoginURLCompleter: NSObject, LoginCompleting {
   let parameters = _LoginCompletionParameters()
 
   public init(urlParameters: [String: Any], appID: String) {

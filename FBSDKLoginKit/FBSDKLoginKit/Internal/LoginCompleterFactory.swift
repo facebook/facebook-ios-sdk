@@ -13,7 +13,7 @@ struct LoginCompleterFactory: LoginCompleterFactoryProtocol {
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String
-  ) -> _LoginCompleting {
+  ) -> LoginCompleting {
     _LoginURLCompleter(urlParameters: parameters, appID: appID)
   }
 }

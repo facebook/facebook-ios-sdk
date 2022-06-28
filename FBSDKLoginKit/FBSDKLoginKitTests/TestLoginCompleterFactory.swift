@@ -21,7 +21,7 @@ final class TestLoginCompleterFactory: LoginCompleterFactoryProtocol {
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
     appID: String
-  ) -> _LoginCompleting {
+  ) -> LoginCompleting {
     capturedURLParameters = parameters
     capturedAppID = appID
 
