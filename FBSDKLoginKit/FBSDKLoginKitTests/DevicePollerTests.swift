@@ -12,7 +12,7 @@ import XCTest
 
 final class DevicePollerTests: XCTestCase {
   func testScheduleBlock() {
-    let poller = _DevicePoller()
+    let poller = DevicePoller()
     let expectation = self.expectation(description: name)
 
     func block() {

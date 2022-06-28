@@ -44,7 +44,7 @@ public final class DeviceLoginManager: NSObject {
   var configuredDependencies: InstanceDependencies?
 
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
-    devicePoller: _DevicePoller(),
+    devicePoller: DevicePoller(),
     errorFactory: ErrorFactory(),
     graphRequestFactory: GraphRequestFactory(),
     internalUtility: InternalUtility.shared,
