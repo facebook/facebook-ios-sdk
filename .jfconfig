@@ -74,8 +74,13 @@
             "determinator": true,
           },
           {
-            "name": "swift interface check",
+            "name": "generated swift interface check",
             "shell": "python3 ci/swift_generated_interface_check.py",
+            "determinator": true,
+          },
+          {
+            "name": "update legacy hackbook",
+            "shell": "python3 ci/legacy_hackbook.py",
             "determinator": true,
           },
         ],
