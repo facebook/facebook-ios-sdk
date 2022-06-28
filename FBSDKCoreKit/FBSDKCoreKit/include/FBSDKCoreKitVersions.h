@@ -6,5 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#define FBSDK_VERSION_STRING @"14.0.0"
+#define FBSDK_VERSION_STRING @"14.1.0"
 #define FBSDK_DEFAULT_GRAPH_API_VERSION @"v14.0"
