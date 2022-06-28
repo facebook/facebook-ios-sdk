@@ -60,7 +60,7 @@ public final class DeviceLoginManager: NSObject {
   @objc(initWithPermissions:enableSmartLogin:)
   public init(permissions: [String], enableSmartLogin: Bool) {
     self.permissions = permissions
-    self.isSmartLoginEnabled = enableSmartLogin
+    isSmartLoginEnabled = enableSmartLogin
     super.init()
   }
 
@@ -77,7 +77,7 @@ public final class DeviceLoginManager: NSObject {
     let parameters: [String: Any] = [
       "scope": permissions.joined(separator: ","),
       "redirect_uri": redirectURL?.absoluteString ?? "",
-      "device_info": _DeviceRequestsHelper.getDeviceInfo(),
+      "device_info": DeviceRequestsHelper.getDeviceInfo(),
     ]
     let request = dependencies.graphRequestFactory.createGraphRequest(
       withGraphPath: "device/login",
@@ -125,7 +125,7 @@ public final class DeviceLoginManager: NSObject {
       self.codeInfo = codeInfo
 
       if isSmartLoginEnabled {
-        _DeviceRequestsHelper.startAdvertisementService(loginCode: codeInfo.loginCode, delegate: self)
+        DeviceRequestsHelper.startAdvertisementService(loginCode: codeInfo.loginCode, delegate: self)
       }
 
       delegate?.deviceLoginManager(self, startedWith: codeInfo)
@@ -135,13 +135,13 @@ public final class DeviceLoginManager: NSObject {
 
   /// Attempts to cancel the device login flow.
   public func cancel() {
-    _DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
+    DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
     isCancelled = true
     Self.loginManagerInstances.removeAll { $0 === self }
   }
 
   private func notifyDelegate(error: Error) {
-    _DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
+    DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
     delegate?.deviceLoginManager(self, completedWith: nil, error: error)
     Self.loginManagerInstances.removeAll { $0 === self }
   }
@@ -151,7 +151,7 @@ public final class DeviceLoginManager: NSObject {
     expirationDate: Date?,
     dataAccessExpirationDate: Date?
   ) {
-    _DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
+    DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
 
     let complete: (DeviceLoginManagerResult) -> Void = { [self] result in
       delegate?.deviceLoginManager(self, completedWith: result, error: nil)
@@ -298,9 +298,9 @@ public final class DeviceLoginManager: NSObject {
 extension DeviceLoginManager: NetServiceDelegate {
   public func netService(_ service: NetService, didNotPublish errorValues: [String: NSNumber]) {
     // Only cleanup if the publish error is from our advertising service
-    guard _DeviceRequestsHelper.isDelegate(self, forAdvertisementService: service) else { return }
+    guard DeviceRequestsHelper.isDelegate(self, forAdvertisementService: service) else { return }
 
-    _DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
+    DeviceRequestsHelper.cleanUpAdvertisementService(for: self)
   }
 }
 

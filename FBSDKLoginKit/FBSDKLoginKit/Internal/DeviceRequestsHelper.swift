@@ -7,19 +7,9 @@
  */
 
 import FBSDKCoreKit
-import Foundation
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 
 /// Helper class for device requests mDNS broadcasts. Note this is only intended for internal consumption.
-@objcMembers
-@objc(FBSDKDeviceRequestsHelper)
-public final class _DeviceRequestsHelper: NSObject {
+enum DeviceRequestsHelper {
 
   // We use weak to strong in order to retain the advertisement services
   // without having to pass them back to the delegate that started them
@@ -62,7 +52,7 @@ public final class _DeviceRequestsHelper: NSObject {
   }
 
   /// Get device info to include with the GraphRequest
-  public static func getDeviceInfo() -> String {
+  static func getDeviceInfo() -> String {
     var systemInfo = utsname()
     uname(&systemInfo)
 
@@ -85,7 +75,7 @@ public final class _DeviceRequestsHelper: NSObject {
    @return True if the service broadcast was successfully started.
    */
   @discardableResult
-  public static func startAdvertisementService(loginCode: String, delegate: NetServiceDelegate) -> Bool {
+  static func startAdvertisementService(loginCode: String, delegate: NetServiceDelegate) -> Bool {
     let serviceName = """
       \(NetServiceValues.header)_\(NetServiceValues.flavor)-\(NetServiceValues.sdkVersion)_\(loginCode)
       """
@@ -111,7 +101,7 @@ public final class _DeviceRequestsHelper: NSObject {
    @param service The advertisement service to check for.
    @return True if the service is the one the delegate registered with.
    */
-  public static func isDelegate(_ delegate: NetServiceDelegate, forAdvertisementService service: NetService) -> Bool {
+  static func isDelegate(_ delegate: NetServiceDelegate, forAdvertisementService service: NetService) -> Bool {
     guard
       let mdnsAdvertisementService = mdnsAdvertisementServices.object(forKey: delegate) as? NetService
     else {
@@ -124,7 +114,7 @@ public final class _DeviceRequestsHelper: NSObject {
    Stop the mDNS advertisement service for a device request
    @param delegate The delegate registered with the service.
    */
-  public static func cleanUpAdvertisementService(for delegate: NetServiceDelegate) {
+  static func cleanUpAdvertisementService(for delegate: NetServiceDelegate) {
     guard
       let mdnsAdvertisementService = mdnsAdvertisementServices.object(forKey: delegate) as? NetService
     else {
