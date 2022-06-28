@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
+
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-// An interface for indicating whether the version of the operating system on which the process is executing
-// is the same or later than a given version.
-NS_SWIFT_NAME(OperatingSystemVersionComparing)
-@protocol FBSDKOperatingSystemVersionComparing
+FB_LINK_CATEGORY_IMPLEMENTATION(NSProcessInfo, OperatingSystemVersionComparing)
+@implementation NSProcessInfo (OperatingSystemVersionComparing)
 
-// UNCRUSTIFY_FORMAT_OFF
 - (BOOL)fb_isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version
-NS_SWIFT_NAME(fb_isOperatingSystemAtLeast(_:));
-// UNCRUSTIFY_FORMAT_ON
+{
+  return [self isOperatingSystemAtLeastVersion:version];
+}
 
 @end
 

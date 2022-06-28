@@ -6,18 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKMacCatalystDetermining.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Default conformance to the `OperatingSystemVersionComparing` protocol
+FB_LINK_CATEGORY_INTERFACE(NSProcessInfo, OperatingSystemVersionComparing)
 @interface NSProcessInfo (OperatingSystemVersionComparing) <FBSDKOperatingSystemVersionComparing>
-@end
 
-@interface NSProcessInfo (MacCatalystDetermining) <FBSDKMacCatalystDetermining>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -55,7 +55,8 @@
 #import "FBSDKWebViewFactory.h"
 #import "NSNotificationCenter+NotificationDelivering.h"
 #import "NSNotificationCenter+NotificationPosting.h"
-#import "NSProcessInfo+Protocols.h"
+#import "NSProcessInfo+MacCatalystDetermining.h"
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 #import "UIApplication+URLOpener.h"
 
 NS_ASSUME_NONNULL_BEGIN
