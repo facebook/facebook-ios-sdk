@@ -109,7 +109,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "A device login manager uses a concrete graph request factory by default"
     )
     XCTAssertTrue(
-      dependencies.devicePoller is _DevicePoller,
+      dependencies.devicePoller is DevicePoller,
       "A device login manager uses a concrete device poller by default"
     )
     XCTAssertIdentical(
