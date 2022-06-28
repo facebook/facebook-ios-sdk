@@ -14,7 +14,7 @@ import XCTest
 final class LoginCompleterFactoryTests: XCTestCase {
 
   func testCreatingCompleterWithDependencies() {
-    let completer = _LoginCompleterFactory().createLoginCompleter(
+    let completer = LoginCompleterFactory().createLoginCompleter(
       urlParameters: [:],
       appID: name
     )
