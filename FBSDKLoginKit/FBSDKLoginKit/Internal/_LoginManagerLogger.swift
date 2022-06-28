@@ -301,7 +301,7 @@ public final class _LoginManagerLogger: NSObject {
 
 extension _LoginManagerLogger: DependentAsType {
   struct TypeDependencies {
-    var eventLogger: _LoginEventLogging
+    var eventLogger: LoginEventLogging
   }
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(eventLogger: AppEvents.shared)

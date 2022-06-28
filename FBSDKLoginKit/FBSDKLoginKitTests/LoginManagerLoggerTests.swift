@@ -41,7 +41,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     let dependencies = try _LoginManagerLogger.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.eventLogger,
+      dependencies.eventLogger as AnyObject,
       AppEvents.shared,
       .defaultDependency("the shared AppEvents", for: "event logging")
     )
@@ -51,7 +51,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     let dependencies = try _LoginManagerLogger.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.eventLogger,
+      dependencies.eventLogger as AnyObject,
       eventLogger,
       .customDependency(for: "event logging")
     )
