@@ -29,7 +29,7 @@ public final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegat
 
   private enum Values {
     static let newline = "\r\n"
-    static let versionString = "14.0.0"
+    static let versionString = "14.1.0"
     static let defaultGraphAPIVersion = "v14.0"
     static let SDK = "ios"
     static let userAgentBase = "FBiOSAEM"
