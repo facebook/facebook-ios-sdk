@@ -9,7 +9,7 @@
 #if !os(tvOS)
 
 protocol LoginCompleterFactoryProtocol {
-  func createLoginCompleter(urlParameters parameters: [String: Any], appID: String) -> _LoginCompleting
+  func createLoginCompleter(urlParameters parameters: [String: Any], appID: String) -> LoginCompleting
 }
 
 #endif

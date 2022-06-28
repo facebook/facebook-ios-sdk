@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
+@testable import FBSDKLoginKit
 import Foundation
 
 @objcMembers
-final class TestLoginCompleter: NSObject, _LoginCompleting {
+final class TestLoginCompleter: NSObject, LoginCompleting {
 
   var capturedCompletionHandler: LoginCompletionParametersBlock?
   var capturedNonce: String?

@@ -8,29 +8,18 @@
 
 #if !os(tvOS)
 
-import Foundation
-
-/**
- Internal type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(FBSDKLoginCompleting)
-public protocol _LoginCompleting {
+protocol LoginCompleting {
 
   /**
    Invoke handler with the login parameters derived from the authentication result.
    See the implementing class's documentation for whether it completes synchronously or asynchronously.
    */
-  @objc(completeLoginWithHandler:)
   func completeLogin(handler: @escaping LoginCompletionParametersBlock)
 
   /**
    Invoke handler with the login parameters derived from the authentication result.
    See the implementing class's documentation for whether it completes synchronously or asynchronously.
    */
-  @objc(completeLoginWithNonce:codeVerifier:handler:)
   func completeLogin(
     nonce: String?,
     codeVerifier: String?,
