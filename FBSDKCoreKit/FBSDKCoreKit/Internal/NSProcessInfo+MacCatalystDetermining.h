@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
+
+#import "FBSDKMacCatalystDetermining.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-// An interface for indicating whether a process originated as an iOS app and runs on macOS.
-NS_SWIFT_NAME(MacCatalystDetermining)
-@protocol FBSDKMacCatalystDetermining
-
-@property (readonly) BOOL fb_isMacCatalystApp;
+FB_LINK_CATEGORY_INTERFACE(NSProcessInfo, MacCatalystDetermining)
+@interface NSProcessInfo (MacCatalystDetermining) <FBSDKMacCatalystDetermining>
 
 @end
 

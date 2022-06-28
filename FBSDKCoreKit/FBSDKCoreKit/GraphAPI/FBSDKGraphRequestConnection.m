@@ -1304,7 +1304,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.class.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
-    if (self.class.macCatalystDeterminator.isMacCatalystApp) {
+    if (self.class.macCatalystDeterminator.fb_isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }

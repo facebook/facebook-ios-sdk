@@ -13,7 +13,7 @@
 #import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
-#import "NSProcessInfo+Protocols.h"
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 @protocol FBSDKLogging;
 @protocol FBSDKBridgeAPIResponseCreating;

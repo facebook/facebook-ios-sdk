@@ -16,7 +16,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
-#import "NSProcessInfo+Protocols.h"
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
@@ -59,7 +59,7 @@
 {
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
   NSOperatingSystemVersion iOS13Version = { .majorVersion = 13, .minorVersion = 0, .patchVersion = 0 };
-  if ([comparer isOperatingSystemAtLeastVersion:iOS13Version]) {
+  if ([comparer fb_isOperatingSystemAtLeastVersion:iOS13Version]) {
     // SourceApplication is not available in iOS 13.
     // https://forums.developer.apple.com/thread/119118
   } else {

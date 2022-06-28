@@ -26,7 +26,7 @@
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKURLScheme.h"
-#import "NSProcessInfo+Protocols.h"
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 #import "UIApplication+URLOpener.h"
 
 /// Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
@@ -285,7 +285,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   dispatch_block_t block = ^{
     // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
     NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
-    if ([weakProcessInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
+    if ([weakProcessInfo fb_isOperatingSystemAtLeastVersion:iOS10Version]) {
       if (self.urlOpener) {
         [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
           handler(success, nil);

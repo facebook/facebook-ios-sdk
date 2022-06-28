@@ -131,7 +131,7 @@ final class BridgeAPITests: XCTestCase {
   }
 
   func testCreatingWithDependencies() {
-    XCTAssertEqual(
+    XCTAssertIdentical(
       api.processInfo as? TestProcessInfo,
       processInfo,
       "Should be able to create a bridge api with a specific process info"
