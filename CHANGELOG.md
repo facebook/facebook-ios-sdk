@@ -18,6 +18,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Fixed GitHub Issue #2082.
 
+### Added
+
+- Added server-side AEM rule matching
+
 [2022-06-28](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.1.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.0.0...v14.1.0)
 
