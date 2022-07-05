@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKLoginKit
 
-final class TestUserInterfaceElementProvider: _UserInterfaceElementProviding {
+final class TestUserInterfaceElementProvider: UserInterfaceElementProviding {
   var stubbedTopMostViewController: UIViewController?
   var capturedView: UIView?
 

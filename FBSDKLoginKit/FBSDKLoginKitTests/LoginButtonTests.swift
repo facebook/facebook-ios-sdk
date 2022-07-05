@@ -61,7 +61,7 @@ final class LoginButtonTests: XCTestCase {
   func testDefaultDependencies() {
     let loginButton = FBLoginButton()
     XCTAssertIdentical(
-      loginButton.elementProvider,
+      loginButton.elementProvider as AnyObject,
       InternalUtility.shared,
       .hasDefaultElementProvider
     )
@@ -85,7 +85,7 @@ final class LoginButtonTests: XCTestCase {
 
   func testCustomDependencies() {
     XCTAssertIdentical(
-      loginButton.elementProvider,
+      loginButton.elementProvider as AnyObject,
       elementProvider,
       .hasCustomElementProvider
     )
