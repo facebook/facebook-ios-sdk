@@ -10,18 +10,10 @@
 
 import FBSDKCoreKit
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objcMembers
-@objc(FBSDKProfileFactory)
-public final class _ProfileFactory: NSObject, ProfileCreating {
+final class ProfileFactory: NSObject, ProfileCreating {
 
   // swiftlint:disable:next function_parameter_count
-  public func createProfile(
+  func createProfile(
     userID: UserIdentifier,
     firstName: String?,
     middleName: String?,

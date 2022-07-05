@@ -41,7 +41,7 @@ final class LoginURLCompleterTests: XCTestCase {
   }
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var profileFactory: _ProfileFactory!
+  var profileFactory: ProfileFactory!
   var authenticationTokenFactory: TestAuthenticationTokenFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var internalUtility: TestInternalUtility!
@@ -52,7 +52,7 @@ final class LoginURLCompleterTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    profileFactory = _ProfileFactory()
+    profileFactory = ProfileFactory()
     authenticationTokenFactory = TestAuthenticationTokenFactory()
     graphRequestFactory = TestGraphRequestFactory()
     internalUtility = TestInternalUtility()
@@ -90,8 +90,8 @@ final class LoginURLCompleterTests: XCTestCase {
     let dependencies = try LoginURLCompleter.getDependencies()
 
     XCTAssertTrue(
-      dependencies.profileFactory is _ProfileFactory,
-      .defaultDependency("_ProfileFactory", for: "profile factory")
+      dependencies.profileFactory is ProfileFactory,
+      .defaultDependency("ProfileFactory", for: "profile factory")
     )
 
     XCTAssertTrue(
