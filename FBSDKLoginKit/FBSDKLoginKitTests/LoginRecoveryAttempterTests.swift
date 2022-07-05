@@ -14,7 +14,7 @@ import XCTest
 final class LoginRecoveryAttempterTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var attempter: _LoginRecoveryAttempter!
+  var attempter: LoginRecoveryAttempter!
   var loginProvider: TestLoginProvider!
   var accessTokenWallet: TestAccessTokenWallet.Type!
   // swiftlint:enable implicitly_unwrapped_optional
@@ -24,8 +24,8 @@ final class LoginRecoveryAttempterTests: XCTestCase {
 
     loginProvider = TestLoginProvider()
     accessTokenWallet = TestAccessTokenWallet.self
-    attempter = _LoginRecoveryAttempter()
-    _LoginRecoveryAttempter.setDependencies(
+    attempter = LoginRecoveryAttempter()
+    LoginRecoveryAttempter.setDependencies(
       .init(
         loginProvider: loginProvider,
         accessTokenProvider: accessTokenWallet
@@ -37,14 +37,14 @@ final class LoginRecoveryAttempterTests: XCTestCase {
     accessTokenWallet.reset()
     loginProvider = nil
     attempter = nil
-    _LoginRecoveryAttempter.resetDependencies()
+    LoginRecoveryAttempter.resetDependencies()
     super.tearDown()
   }
 
   func testCreatingWithDefaultDependencies() throws {
-    _LoginRecoveryAttempter.resetDependencies()
+    LoginRecoveryAttempter.resetDependencies()
 
-    let dependencies = try _LoginRecoveryAttempter.getDependencies()
+    let dependencies = try LoginRecoveryAttempter.getDependencies()
 
     XCTAssertTrue(
       dependencies.accessTokenProvider is AccessToken.Type,
@@ -59,7 +59,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
 
   func testCreatingWithCustomDependencies() throws {
 
-    let dependencies = try _LoginRecoveryAttempter.getDependencies()
+    let dependencies = try LoginRecoveryAttempter.getDependencies()
 
     XCTAssertIdentical(
       dependencies.accessTokenProvider,

@@ -11,17 +11,9 @@ import Foundation
 
 #if !os(tvOS)
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- - Warning INTERNAL:  DO NOT USE
- */
+final class LoginRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
 
-@objc(FBSDKLoginRecoveryAttempter)
-public final class _LoginRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
-
-  @objc(attemptRecoveryFromError:completionHandler:)
-  public func attemptRecovery(fromError error: Error, completionHandler: @escaping (Bool) -> Void) {
+  func attemptRecovery(fromError error: Error, completionHandler: @escaping (Bool) -> Void) {
     guard
       let dependencies = try? Self.getDependencies(),
       let currentPermissions = dependencies.accessTokenProvider.current?.permissions.map(\.name),
@@ -47,7 +39,7 @@ public final class _LoginRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
   }
 }
 
-extension _LoginRecoveryAttempter: DependentAsType {
+extension LoginRecoveryAttempter: DependentAsType {
   struct TypeDependencies {
     var loginProvider: LoginProviding
     var accessTokenProvider: AccessTokenProviding.Type
