@@ -14,7 +14,7 @@ struct LoginCompleterFactory: LoginCompleterFactoryProtocol {
     urlParameters parameters: [String: Any],
     appID: String
   ) -> LoginCompleting {
-    _LoginURLCompleter(urlParameters: parameters, appID: appID)
+    LoginURLCompleter(urlParameters: parameters, appID: appID)
   }
 }
 

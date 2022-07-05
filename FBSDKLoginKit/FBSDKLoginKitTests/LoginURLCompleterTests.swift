@@ -46,7 +46,7 @@ final class LoginURLCompleterTests: XCTestCase {
   var graphRequestFactory: TestGraphRequestFactory!
   var internalUtility: TestInternalUtility!
   var errorFactory: ErrorFactory!
-  var urlCompleter: _LoginURLCompleter!
+  var urlCompleter: LoginURLCompleter!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -59,7 +59,7 @@ final class LoginURLCompleterTests: XCTestCase {
     errorFactory = ErrorFactory()
     internalUtility.stubbedAppURL = URL(string: Values.redirectURL)
 
-    _LoginURLCompleter.setDependencies(
+    LoginURLCompleter.setDependencies(
       .init(
         profileFactory: profileFactory,
         authenticationTokenCreator: authenticationTokenFactory,
@@ -69,11 +69,11 @@ final class LoginURLCompleterTests: XCTestCase {
       )
     )
 
-    urlCompleter = _LoginURLCompleter(urlParameters: [:], appID: "")
+    urlCompleter = LoginURLCompleter(urlParameters: [:], appID: "")
   }
 
   override func tearDown() {
-    _LoginURLCompleter.resetDependencies()
+    LoginURLCompleter.resetDependencies()
     urlCompleter = nil
     profileFactory = nil
     authenticationTokenFactory = nil
@@ -85,9 +85,9 @@ final class LoginURLCompleterTests: XCTestCase {
   }
 
   func testDefaultTypeDependencies() throws {
-    _LoginURLCompleter.resetDependencies()
+    LoginURLCompleter.resetDependencies()
 
-    let dependencies = try _LoginURLCompleter.getDependencies()
+    let dependencies = try LoginURLCompleter.getDependencies()
 
     XCTAssertTrue(
       dependencies.profileFactory is _ProfileFactory,
@@ -112,7 +112,7 @@ final class LoginURLCompleterTests: XCTestCase {
 
   func testCustomDependencies() throws {
 
-    let dependencies = try _LoginURLCompleter.getDependencies()
+    let dependencies = try LoginURLCompleter.getDependencies()
 
     XCTAssertIdentical(
       dependencies.profileFactory as AnyObject,
@@ -790,7 +790,7 @@ final class LoginURLCompleterTests: XCTestCase {
     let parameters = SampleRawLoginCompletionParameters.withAccessTokenWithIDToken
 
     urlCompleter = createLoginCompleter(parameters: parameters, appID: Values.appID)
-    _LoginURLCompleter.setDependencies(
+    LoginURLCompleter.setDependencies(
       .init(
         profileFactory: factory,
         authenticationTokenCreator: authenticationTokenFactory,
@@ -912,8 +912,8 @@ final class LoginURLCompleterTests: XCTestCase {
 
   // MARK: - Helpers
 
-  func createLoginCompleter(parameters: [String: Any], appID: String) -> _LoginURLCompleter {
-    _LoginURLCompleter(
+  func createLoginCompleter(parameters: [String: Any], appID: String) -> LoginURLCompleter {
+    LoginURLCompleter(
       urlParameters: parameters,
       appID: appID
     )
@@ -1064,11 +1064,11 @@ final class LoginURLCompleterTests: XCTestCase {
 
 fileprivate extension String {
   static func defaultDependency(_ dependency: String, for type: String) -> String {
-    "The _LoginURLCompleter type uses \(dependency) as its \(type) dependency by default"
+    "The LoginURLCompleter type uses \(dependency) as its \(type) dependency by default"
   }
 
   static func customDependency(for type: String) -> String {
-    "The _LoginURLCompleter type uses a custom \(type) dependency when provided"
+    "The LoginURLCompleter type uses a custom \(type) dependency when provided"
   }
 
   static let noErrorForEmptyParameters = "No error is returned if empty parameters are passed"
