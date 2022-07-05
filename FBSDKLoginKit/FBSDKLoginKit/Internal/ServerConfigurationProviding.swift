@@ -8,4 +8,6 @@
 
 import FBSDKCoreKit
 
-extension ServerConfigurationProvider: ServerConfigurationProviding {}
+protocol ServerConfigurationProviding {
+  func loadServerConfiguration(completion: LoginTooltipBlock?)
+}

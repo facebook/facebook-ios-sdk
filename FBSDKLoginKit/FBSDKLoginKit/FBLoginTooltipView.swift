@@ -48,7 +48,7 @@ public final class FBLoginTooltipView: FBTooltipView {
   }
 
   /// Service configuration provider
-  let serverConfigurationProvider: _ServerConfigurationProviding
+  let serverConfigurationProvider: ServerConfigurationProviding
 
   /// UI String provider
   let stringProvider: _UserInterfaceStringProviding
@@ -74,9 +74,8 @@ public final class FBLoginTooltipView: FBTooltipView {
   /// - Parameters:
   ///   - serverConfigurationProvider: Service configuration provider
   ///   - stringProvider: String provider
-  @objc(initWithServerConfigurationProvider:stringProvider:)
   init(
-    serverConfigurationProvider: _ServerConfigurationProviding,
+    serverConfigurationProvider: ServerConfigurationProviding,
     stringProvider: _UserInterfaceStringProviding
   ) {
     self.serverConfigurationProvider = serverConfigurationProvider

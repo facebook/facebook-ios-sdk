@@ -8,7 +8,7 @@
 
 @testable import FBSDKLoginKit
 
-final class TestServerConfigurationProvider: _ServerConfigurationProviding {
+final class TestServerConfigurationProvider: ServerConfigurationProviding {
   var capturedCompletion: LoginTooltipBlock?
 
   func loadServerConfiguration(completion: LoginTooltipBlock?) {
