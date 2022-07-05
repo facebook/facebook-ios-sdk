@@ -10,14 +10,8 @@
 
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
-import Foundation
 
 /**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
-
  Extracts the log in completion parameters from the parameters dictionary,
  which must contain the parsed result of the return URL query string.
 
@@ -27,11 +21,10 @@ import Foundation
  Completion occurs synchronously.
  */
 
-public final class _LoginURLCompleter: NSObject, LoginCompleting {
+struct LoginURLCompleter: LoginCompleting {
   let parameters = _LoginCompletionParameters()
 
-  public init(urlParameters: [String: Any], appID: String) {
-    super.init()
+  init(urlParameters: [String: Any], appID: String) {
     let nonce = urlParameters["nonce"] as? String ?? ""
     let idToken = urlParameters["id_token"] as? String ?? ""
     let accessToken = urlParameters["access_token"] as? String ?? ""
@@ -74,11 +67,11 @@ public final class _LoginURLCompleter: NSObject, LoginCompleting {
 
   /// Performs the work needed to populate the login completion parameters before they
   /// are used to determine login success, failure or cancellation.
-  public func completeLogin(handler: @escaping LoginCompletionParametersBlock) {
+  func completeLogin(handler: @escaping LoginCompletionParametersBlock) {
     completeLogin(nonce: nil, codeVerifier: nil, handler: handler)
   }
 
-  public func completeLogin(
+  func completeLogin(
     nonce: String?,
     codeVerifier: String?,
     handler: @escaping LoginCompletionParametersBlock
@@ -423,7 +416,7 @@ public final class _LoginURLCompleter: NSObject, LoginCompleting {
   }
 }
 
-extension _LoginURLCompleter: DependentAsType {
+extension LoginURLCompleter: DependentAsType {
   struct TypeDependencies {
     var profileFactory: ProfileCreating
     var authenticationTokenCreator: AuthenticationTokenCreating
