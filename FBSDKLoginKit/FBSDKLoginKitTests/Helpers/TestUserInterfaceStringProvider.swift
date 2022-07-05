@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKLoginKit
 
-final class TestUserInterfaceStringProvider: _UserInterfaceStringProviding {
+final class TestUserInterfaceStringProvider: UserInterfaceStringProviding {
   var stubbedBundleForStrings: Bundle?
 
   var bundleForStrings: Bundle {

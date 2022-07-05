@@ -51,7 +51,7 @@ public final class FBLoginTooltipView: FBTooltipView {
   let serverConfigurationProvider: ServerConfigurationProviding
 
   /// UI String provider
-  let stringProvider: _UserInterfaceStringProviding
+  let stringProvider: UserInterfaceStringProviding
 
   // MARK: - Init
 
@@ -76,7 +76,7 @@ public final class FBLoginTooltipView: FBTooltipView {
   ///   - stringProvider: String provider
   init(
     serverConfigurationProvider: ServerConfigurationProviding,
-    stringProvider: _UserInterfaceStringProviding
+    stringProvider: UserInterfaceStringProviding
   ) {
     self.serverConfigurationProvider = serverConfigurationProvider
     self.stringProvider = stringProvider

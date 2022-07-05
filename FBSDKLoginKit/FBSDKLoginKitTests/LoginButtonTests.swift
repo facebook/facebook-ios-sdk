@@ -67,7 +67,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     XCTAssertIdentical(
-      loginButton.stringProvider,
+      loginButton.stringProvider as AnyObject,
       InternalUtility.shared,
       .hasDefaultStringProvider
     )
@@ -91,7 +91,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     XCTAssertIdentical(
-      loginButton.stringProvider,
+      loginButton.stringProvider as AnyObject,
       stringProvider,
       .hasCustomStringProvider
     )
