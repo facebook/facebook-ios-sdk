@@ -10,18 +10,9 @@
 
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
-import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objcMembers
-@objc(FBSDKLoginUtility)
-public final class _LoginUtility: NSObject {
-  public static func string(forAudience audience: DefaultAudience) -> String {
+enum LoginUtility {
+  static func string(forAudience audience: DefaultAudience) -> String {
     switch audience {
     case .onlyMe:
       return "only_me"
@@ -34,7 +25,7 @@ public final class _LoginUtility: NSObject {
     }
   }
 
-  public static func queryParams(fromLoginURL url: URL) -> [String: Any]? {
+  static func queryParams(fromLoginURL url: URL) -> [String: Any]? {
     let appURL = try? InternalUtility.shared.appURL(
       withHost: "authorize",
       path: "",
@@ -54,7 +45,7 @@ public final class _LoginUtility: NSObject {
     return params
   }
 
-  public static func userID(fromSignedRequest signedRequest: String?) -> String? {
+  static func userID(fromSignedRequest signedRequest: String?) -> String? {
     guard let signedRequest = signedRequest else {
       return nil
     }

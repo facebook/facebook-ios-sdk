@@ -525,7 +525,7 @@ public final class LoginManager: NSObject {
       "cbt": String(cbtInMilliseconds),
       "ies": NSNumber(value: dependencies.settings.isAutoLogAppEventsEnabled).stringValue,
       "local_client_id": dependencies.settings.appURLSchemeSuffix,
-      "default_audience": _LoginUtility.string(forAudience: defaultAudience),
+      "default_audience": LoginUtility.string(forAudience: defaultAudience),
     ]
     var parameters = nullableParameters.compactMapValues { $0 }
 
@@ -839,7 +839,7 @@ extension LoginManager: URLOpening {
       let dependencies = try? getDependencies()
     else { return false }
 
-    let urlParameters = _LoginUtility.queryParams(fromLoginURL: url) ?? [:]
+    let urlParameters = LoginUtility.queryParams(fromLoginURL: url) ?? [:]
     let completer = dependencies.loginCompleterFactory.createLoginCompleter(
       urlParameters: urlParameters,
       appID: dependencies.settings.appID ?? ""
