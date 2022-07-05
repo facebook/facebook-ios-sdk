@@ -95,7 +95,7 @@ public final class FBLoginButton: FBButton {
   var userID: String?
   var userName: String?
   var elementProvider: UserInterfaceElementProviding = InternalUtility.shared
-  var stringProvider: _UserInterfaceStringProviding = InternalUtility.shared
+  var stringProvider: UserInterfaceStringProviding = InternalUtility.shared
   var loginProvider: LoginProviding = LoginManager()
   var graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()
 
@@ -143,7 +143,7 @@ public final class FBLoginButton: FBButton {
   convenience init(
     frame: CGRect = .zero,
     elementProvider: UserInterfaceElementProviding,
-    stringProvider: _UserInterfaceStringProviding,
+    stringProvider: UserInterfaceStringProviding,
     loginProvider: LoginProviding,
     graphRequestFactory: GraphRequestFactoryProtocol
   ) {
