@@ -8,16 +8,7 @@
 
 #if !os(tvOS)
 
-import Foundation
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(FBSDKLoginManagerState)
-public enum _LoginManagerState: Int {
+enum LoginManagerState: Int {
   case idle
 
   // We received a call to start login.
