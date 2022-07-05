@@ -9,16 +9,8 @@
 #if !os(tvOS)
 
 import FBSDKCoreKit
-import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- - Warning INTERNAL:  DO NOT USE
- */
-@objcMembers
-@objc(FBSDKLoginManagerLogger)
-public final class _LoginManagerLogger: NSObject {
+final class LoginManagerLogger {
   var identifier: String?
   var extras = [String: Any]()
   var lastResult = ""
@@ -61,8 +53,7 @@ public final class _LoginManagerLogger: NSObject {
     case error
   }
 
-  @objc(initWithParameters:tracking:)
-  public convenience init?(parameters: [String: Any]?, tracking: LoginTracking) {
+  convenience init?(parameters: [String: Any]?, tracking: LoginTracking) {
     guard
       let parameters = parameters,
       let clientStateString = parameters[ClientStateKeys.state] as? String,
@@ -78,8 +69,7 @@ public final class _LoginManagerLogger: NSObject {
     loggingToken = clientState[LoggerParameterKeys.loggingToken.rawValue] as? String
   }
 
-  @objc(initWithLoggingToken:tracking:)
-  public init?(loggingToken: String?, tracking: LoginTracking) {
+  init?(loggingToken: String?, tracking: LoginTracking) {
 
     switch tracking {
     case .enabled:
@@ -88,14 +78,11 @@ public final class _LoginManagerLogger: NSObject {
       return nil
     }
 
-    super.init()
-
     identifier = UUID().uuidString
     self.loggingToken = loggingToken
   }
 
-  @objc(startSessionForLoginManager:)
-  public func startSession(for loginManager: LoginManager) {
+   func startSession(for loginManager: LoginManager) {
     let isReauthorize = AccessToken.current != nil
     let willTryNative = false
     let willTryBrowser = true
@@ -123,7 +110,7 @@ public final class _LoginManagerLogger: NSObject {
     logEvent(.sessionAuthStart, params: parametersForNewEvent())
   }
 
-  public func endSession() {
+  func endSession() {
     logEvent(.sessionAuthEnd, result: lastResult, error: lastError)
 
     if let eventLogger = Self.eventLogger,
@@ -132,14 +119,12 @@ public final class _LoginManagerLogger: NSObject {
     }
   }
 
-  @objc(startAuthMethod:)
-  public func startWith(authMethod: String) {
+  func startWith(authMethod: String) {
     self.authMethod = authMethod
     logEvent(.sessionAuthMethodStart, params: parametersForNewEvent())
   }
 
-  @objc(endLoginWithResult:error:)
-  public func endLogin(with result: LoginManagerLoginResult?, error: NSError?) {
+  func endLogin(with result: LoginManagerLoginResult?, error: NSError?) {
     var resultString = ""
 
     if error != nil {
@@ -168,7 +153,7 @@ public final class _LoginManagerLogger: NSObject {
     logEvent(.sessionAuthMethodEnd, result: resultString, error: error)
   }
 
-  public func postLoginHeartbeat() {
+  func postLoginHeartbeat() {
     Timer.scheduledTimer(
       timeInterval: 5.0,
       target: self,
@@ -178,11 +163,12 @@ public final class _LoginManagerLogger: NSObject {
     )
   }
 
+  @objc
   func heartbeatTimerDidFire() {
     logEvent(.sessionAuthHeartbeat, result: lastResult, error: lastError)
   }
 
-  public func willAttemptAppSwitchingBehaviorWith(urlScheme: String) {
+  func willAttemptAppSwitchingBehaviorWith(urlScheme: String) {
     let isURLSchemeRegistered = InternalUtility.shared.isRegisteredURLScheme(urlScheme)
     let isFacebookAppCanOpenURLSchemeRegistered = InternalUtility.shared.isRegisteredCanOpenURLScheme(
       URLScheme.facebookAPI.rawValue
@@ -200,10 +186,10 @@ public final class _LoginManagerLogger: NSObject {
     extras = extras.merging(urlSchemeParameters) { _, last in last }
   }
 
-  public static func clientStateFor(
+  static func clientStateFor(
     authMethod: String?,
     andExistingState existingState: [String: Any]?,
-    logger: _LoginManagerLogger?
+    logger: LoginManagerLogger?
   ) -> String? {
 
     var clientState: [String: Any] = [
@@ -299,7 +285,7 @@ public final class _LoginManagerLogger: NSObject {
   }
 }
 
-extension _LoginManagerLogger: DependentAsType {
+extension LoginManagerLogger: DependentAsType {
   struct TypeDependencies {
     var eventLogger: LoginEventLogging
   }

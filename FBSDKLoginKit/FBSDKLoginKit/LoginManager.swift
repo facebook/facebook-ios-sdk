@@ -36,7 +36,7 @@ public final class LoginManager: NSObject {
 
   private weak var fromViewController: UIViewController?
   var requestedPermissions: Set<FBPermission>?
-  var logger: _LoginManagerLogger?
+  var logger: LoginManagerLogger?
   var state = _LoginManagerState.idle
   var usedSafariSession = false
 
@@ -262,7 +262,7 @@ public final class LoginManager: NSObject {
   private func logIn(permissions: Set<FBPermission>, handler: LoginManagerLoginResultBlock?) {
     if let configuration = configuration {
       let provider = ServerConfigurationProvider()
-      logger = _LoginManagerLogger(loggingToken: provider.loggingToken, tracking: configuration.tracking)
+      logger = LoginManagerLogger(loggingToken: provider.loggingToken, tracking: configuration.tracking)
     }
 
     self.handler = handler.flatMap(IdentifiedLoginResultHandler.init)
@@ -550,7 +550,7 @@ public final class LoginManager: NSObject {
     let expectedChallenge = getStringForChallenge()
     let encodedChallenge = expectedChallenge.flatMap(Utility.encode(urlString:))
     let state: [String: Any] = ["challenge": encodedChallenge ?? NSNull()]
-    if let clientState = _LoginManagerLogger.clientStateFor(
+    if let clientState = LoginManagerLogger.clientStateFor(
       authMethod: authenticationMethod,
       andExistingState: state,
       logger: logger
@@ -852,7 +852,7 @@ extension LoginManager: URLOpening {
     ) { [self] parameters in
       if let configuration = configuration,
          logger == nil {
-        logger = _LoginManagerLogger(
+        logger = LoginManagerLogger(
           parameters: urlParameters,
           tracking: configuration.tracking
         )
