@@ -37,7 +37,7 @@ public final class LoginManager: NSObject {
   private weak var fromViewController: UIViewController?
   var requestedPermissions: Set<FBPermission>?
   var logger: LoginManagerLogger?
-  var state = _LoginManagerState.idle
+  var state = LoginManagerState.idle
   var usedSafariSession = false
 
   var isPerformingLogin: Bool {
