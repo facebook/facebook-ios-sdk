@@ -19,6 +19,11 @@ NS_SWIFT_NAME(NotificationDelivering)
                   name:(nullable NSNotificationName)name
                 object:(nullable id)object;
 
+- (id <NSObject>)fb_addObserverForName:(nullable NSNotificationName)name
+                                object:(nullable id)obj
+                                 queue:(nullable NSOperationQueue *)queue
+                            usingBlock:(void (^)(NSNotification *note))block;
+
 - (void)fb_removeObserver:(id)observer;
 
 @end

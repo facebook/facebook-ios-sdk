@@ -22,6 +22,14 @@ FB_LINK_CATEGORY_IMPLEMENTATION(NSNotificationCenter, NotificationDelivering)
   [self addObserver:observer selector:selector name:name object:object];
 }
 
+- (id<NSObject>)fb_addObserverForName:(nullable NSNotificationName)name
+                               object:(nullable id)object
+                                queue:(nullable NSOperationQueue *)queue
+                           usingBlock:(void (^)(NSNotification * _Nonnull))block
+{
+  return [self addObserverForName:name object:object queue:queue usingBlock:block];
+}
+
 - (void)fb_removeObserver:(id)observer
 {
   [self removeObserver:observer];
