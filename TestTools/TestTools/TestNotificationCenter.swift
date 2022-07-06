@@ -8,16 +8,30 @@
 
 import Foundation
 
-@objcMembers
-final class TestNotificationCenter: NSObject, NotificationDelivering, NotificationPosting {
+import FBSDKCoreKit_Basics
 
-  struct ObserverEvidence: Equatable {
+@objcMembers
+public final class TestNotificationCenter: NSObject, NotificationDelivering {
+
+  public struct ObserverEvidence: Equatable {
     let observer: Any
     let name: Notification.Name?
     let selector: Selector
     let object: Any?
 
-    static func == (
+    public init(
+      observer: Any,
+      name: Notification.Name?,
+      selector: Selector,
+      object: Any?
+    ) {
+      self.observer = observer
+      self.name = name
+      self.selector = selector
+      self.object = object
+    }
+
+    public static func == (
       lhs: TestNotificationCenter.ObserverEvidence,
       rhs: TestNotificationCenter.ObserverEvidence
     ) -> Bool {
@@ -28,32 +42,20 @@ final class TestNotificationCenter: NSObject, NotificationDelivering, Notificati
     }
   }
 
-  var capturedRemovedObservers = [Any]()
-  var capturedPostNames = [NSNotification.Name]()
-  var capturedPostObjects = [Any]()
-  var capturedPostUserInfos = [[String: Any]]()
+  public var capturedRemovedObservers = [Any]()
+  public var capturedPostNames = [NSNotification.Name]()
+  public var capturedPostObjects = [Any]()
+  public var capturedPostUserInfos = [[String: Any]]()
 
-  var capturedAddObserverInvocations = [ObserverEvidence]()
-
-  // MARK: Posting
-
-  func fb_post(
-    name: Notification.Name,
-    object: Any?,
-    userInfo: [String: Any]? = nil
-  ) {
-    capturedPostNames.append(name)
-    capturedPostObjects.append(object as Any)
-    capturedPostUserInfos.append(userInfo ?? [:])
-  }
+  public var capturedAddObserverInvocations = [ObserverEvidence]()
 
   // MARK: Delivering
 
-  func fb_removeObserver(_ observer: Any) {
+  public func fb_removeObserver(_ observer: Any) {
     capturedRemovedObservers.append(observer)
   }
 
-  func fb_addObserver(
+  public func fb_addObserver(
     _ observer: Any,
     selector: Selector,
     name: Notification.Name?,
@@ -69,7 +71,7 @@ final class TestNotificationCenter: NSObject, NotificationDelivering, Notificati
     )
   }
 
-  func clearTestEvidence() {
+  public func clearTestEvidence() {
     capturedRemovedObservers = []
     capturedPostNames = []
     capturedPostObjects = []
