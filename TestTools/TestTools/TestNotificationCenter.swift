@@ -13,16 +13,18 @@ import FBSDKCoreKit_Basics
 @objcMembers
 public final class TestNotificationCenter: NSObject, NotificationDelivering {
 
+  private let stubbedObject = NSObject()
+
   public struct ObserverEvidence: Equatable {
-    let observer: Any
+    let observer: Any?
     let name: Notification.Name?
-    let selector: Selector
+    let selector: Selector?
     let object: Any?
 
     public init(
-      observer: Any,
+      observer: Any?,
       name: Notification.Name?,
-      selector: Selector,
+      selector: Selector?,
       object: Any?
     ) {
       self.observer = observer
@@ -46,6 +48,7 @@ public final class TestNotificationCenter: NSObject, NotificationDelivering {
   public var capturedPostNames = [NSNotification.Name]()
   public var capturedPostObjects = [Any]()
   public var capturedPostUserInfos = [[String: Any]]()
+  public var capturedCompletions = [(Notification) -> Void]()
 
   public var capturedAddObserverInvocations = [ObserverEvidence]()
 
@@ -69,6 +72,25 @@ public final class TestNotificationCenter: NSObject, NotificationDelivering {
         object: object
       )
     )
+  }
+
+  public func fb_addObserver(
+    forName name: NSNotification.Name?,
+    object: Any?,
+    queue: OperationQueue?,
+    using block: @escaping (Notification) -> Void
+  ) -> NSObjectProtocol {
+    capturedAddObserverInvocations.append(
+      .init(
+        observer: nil,
+        name: name,
+        selector: nil,
+        object: object
+      )
+    )
+    capturedCompletions.append(block)
+
+    return stubbedObject
   }
 
   public func clearTestEvidence() {

@@ -49,6 +49,15 @@ final class NotificationCenterTests: XCTestCase {
     try validateNotification(message: .addObserver)
   }
 
+  func testAddingObserverWithTrailingClosure() throws {
+    notificationCenter.fb_addObserver(forName: .sample, object: notificationObject, queue: nil) { notification in
+      self.observedNotification = notification
+    }
+
+    postNotification()
+    try validateNotification(message: .addObserver)
+  }
+
   func testRemovingObserver() {
     addObserver()
 
