@@ -53,7 +53,6 @@
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKUserDataStore.h"
 #import "FBSDKWebViewFactory.h"
-#import "NSNotificationCenter+NotificationDelivering.h"
 #import "NSNotificationCenter+NotificationPosting.h"
 #import "NSProcessInfo+MacCatalystDetermining.h"
 #import "NSProcessInfo+OperatingSystemVersionComparing.h"

@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit_Basics/FBSDKNotificationDelivering.h>
+
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFactory.h>
 
 #import "FBSDKEventLogging.h"
 #import "FBSDKImpressionLoggerFactoryProtocol.h"
 #import "FBSDKImpressionLogging.h"
-#import "FBSDKNotificationDelivering.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

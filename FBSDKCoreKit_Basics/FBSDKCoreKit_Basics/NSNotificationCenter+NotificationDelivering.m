@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "NSNotificationCenter+NotificationDelivering.h"
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+#import <FBSDKCoreKit_Basics/NSNotificationCenter+NotificationDelivering.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

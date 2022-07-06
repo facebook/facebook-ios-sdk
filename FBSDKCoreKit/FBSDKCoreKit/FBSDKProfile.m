@@ -17,7 +17,6 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
-#import "FBSDKNotificationDelivering.h"
 #import "FBSDKNotificationPosting.h"
 #import "FBSDKProfileCodingKey.h"
 #import "FBSDKURLHosting.h"

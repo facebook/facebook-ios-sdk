@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBSDKCoreKit
+import FBSDKCoreKit_Basics
 import Foundation
 import XCTest
 
@@ -37,16 +37,25 @@ final class NotificationCenterTests: XCTestCase {
     super.tearDown()
   }
 
-  func testPostingNotification() throws {
-    addObserver()
-
-    notificationCenter.fb_post(
+  func testAddingObserver() throws {
+    notificationCenter.fb_addObserver(
+      self,
+      selector: #selector(handleNotification(_:)),
       name: .sample,
-      object: notificationObject,
-      userInfo: userInfo
+      object: notificationObject
     )
 
-    try validateNotification(message: .postNotification)
+    postNotification()
+    try validateNotification(message: .addObserver)
+  }
+
+  func testRemovingObserver() {
+    addObserver()
+
+    notificationCenter.fb_removeObserver(observer!) // swiftlint:disable:this force_unwrapping
+
+    postNotification()
+    XCTAssertNil(observedNotification, .removeObserver)
   }
 
   // MARK: - Helpers
@@ -91,7 +100,8 @@ final class NotificationCenterTests: XCTestCase {
 // MARK: - Assumptions
 
 fileprivate extension String {
-  static let postNotification = "A notification center can publish a notification through an internal abstraction"
+  static let addObserver = "A notification center can add a notification observer through an internal abstraction"
+  static let removeObserver = "A notification center can remove a notification observer through an internal abstraction"
 }
 
 // MARK: - Test Values

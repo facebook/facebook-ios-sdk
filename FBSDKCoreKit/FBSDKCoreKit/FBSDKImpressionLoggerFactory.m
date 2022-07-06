@@ -8,12 +8,13 @@
 
 #import "FBSDKImpressionLoggerFactory.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKNotificationDelivering.h>
+
 #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFactory.h>
 
 #import "FBSDKEventLogging.h"
 #import "FBSDKImpressionLogging.h"
-#import "FBSDKNotificationDelivering.h"
 #import "FBSDKViewImpressionLogger.h"
 
 NS_ASSUME_NONNULL_BEGIN
