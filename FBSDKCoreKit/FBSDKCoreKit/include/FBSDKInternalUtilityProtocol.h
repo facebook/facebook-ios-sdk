@@ -130,6 +130,9 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
  */
 @property (nonatomic, readonly, strong) NSBundle *bundleForStrings;
 
+/// Returns currently displayed top view controller.
+- (nullable UIViewController *)topMostViewController;
+
 @end
 
 NS_ASSUME_NONNULL_END
