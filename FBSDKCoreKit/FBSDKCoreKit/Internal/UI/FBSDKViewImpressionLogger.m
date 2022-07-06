@@ -15,7 +15,6 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKNotificationDelivering.h"
 
 @interface FBSDKViewImpressionLogger ()
 

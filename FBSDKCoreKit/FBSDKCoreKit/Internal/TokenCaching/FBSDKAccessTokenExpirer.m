@@ -12,7 +12,6 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKNotificationDelivering.h"
 #import "FBSDKNotificationPosting.h"
 
 @interface FBSDKAccessTokenExpirer ()

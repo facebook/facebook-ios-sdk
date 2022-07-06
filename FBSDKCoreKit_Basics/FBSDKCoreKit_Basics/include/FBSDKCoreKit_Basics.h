@@ -22,3 +22,5 @@
 #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
 #import <FBSDKCoreKit_Basics/FBSDKURLSessionProviding.h>
+#import <FBSDKCoreKit_Basics/NSNotificationCenter+NotificationDelivering.h>
+#import <FBSDKCoreKit_Basics/FBSDKNotificationDelivering.h>

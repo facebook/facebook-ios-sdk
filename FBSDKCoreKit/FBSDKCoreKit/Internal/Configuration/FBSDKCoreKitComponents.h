@@ -53,7 +53,6 @@
 #import "FBSDKInternalURLOpener.h"
 #import "FBSDKMacCatalystDetermining.h"
 #import "FBSDKMetadataIndexing.h"
-#import "FBSDKNotificationDelivering.h"
 #import "FBSDKNotificationPosting.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKPaymentObserving.h"
