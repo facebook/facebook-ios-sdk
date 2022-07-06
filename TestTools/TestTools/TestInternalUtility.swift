@@ -144,4 +144,6 @@ public final class TestInternalUtility: NSObject,
   }
 
   public var bundleForStrings: Bundle { .main }
+
+  public func topMostViewController() -> UIViewController? { nil }
 }
