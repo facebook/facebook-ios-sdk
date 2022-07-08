@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 
 enum LoginUtility {
-  static func string(forAudience audience: DefaultAudience) -> String {
+  static func stringForAudience(_ audience: DefaultAudience) -> String {
     switch audience {
     case .onlyMe:
       return "only_me"
@@ -25,7 +25,7 @@ enum LoginUtility {
     }
   }
 
-  static func queryParams(fromLoginURL url: URL) -> [String: Any]? {
+  static func getQueryParameters(from url: URL) -> [String: Any]? {
     let appURL = try? InternalUtility.shared.appURL(
       withHost: "authorize",
       path: "",
@@ -38,14 +38,14 @@ enum LoginUtility {
       return nil
     }
     var params = InternalUtility.shared.parameters(fromFBURL: url)
-    if let userID = Self.userID(fromSignedRequest: params["signed_request"] as? String) {
+    if let userID = Self.getUserID(from: params["signed_request"] as? String) {
       params["user_id"] = userID
     }
 
     return params
   }
 
-  static func userID(fromSignedRequest signedRequest: String?) -> String? {
+  static func getUserID(from signedRequest: String?) -> String? {
     guard let signedRequest = signedRequest else {
       return nil
     }

@@ -87,7 +87,7 @@ final class LoginManagerLogger {
     let willTryNative = false
     let willTryBrowser = true
     let behaviorString = "FBSDKLoginBehaviorBrowser"
-    let audience = LoginUtility.string(forAudience: loginManager.defaultAudience)
+    let audience = LoginUtility.stringForAudience(loginManager.defaultAudience)
 
     var permissionsString = ""
     if let permissions = loginManager.requestedPermissions {
