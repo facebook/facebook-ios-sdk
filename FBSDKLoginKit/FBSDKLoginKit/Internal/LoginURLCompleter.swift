@@ -10,6 +10,7 @@
 
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
+import Foundation
 
 /**
  Extracts the log in completion parameters from the parameters dictionary,
