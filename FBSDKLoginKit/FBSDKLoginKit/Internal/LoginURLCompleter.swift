@@ -160,7 +160,7 @@ struct LoginURLCompleter: LoginCompleting {
        userID.isEmpty,
        let signedRequest = values["signed_request"] as? String,
        !signedRequest.isEmpty {
-      parameters.userID = LoginUtility.userID(fromSignedRequest: signedRequest)
+      parameters.userID = LoginUtility.getUserID(from: signedRequest)
     } else {
       parameters.userID = userID
     }
