@@ -8,15 +8,15 @@
 
 import FBSDKCoreKit
 
-final class TestErrorRecoveryAttempter: NSObject, ErrorRecoveryAttempting {
+final class TestErrorRecoveryAttempter: ErrorRecoveryAttempting {
   var capturedError: Error?
   var capturedCompletion: ((Bool) -> Void)?
 
   func attemptRecovery(
-    fromError error: Error,
-    completionHandler: @escaping (Bool) -> Void
+    from error: Error,
+    completion: @escaping (Bool) -> Void
   ) {
     capturedError = error
-    capturedCompletion = completionHandler
+    capturedCompletion = completion
   }
 }

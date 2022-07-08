@@ -76,7 +76,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
 
   func testAttemptingRecoveryWithoutPermissions() {
     var capturedSuccess = true
-    attempter.attemptRecovery(fromError: SampleError()) { success in
+    attempter.attemptRecovery(from: SampleError()) { success in
       capturedSuccess = success
     }
 
@@ -127,7 +127,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
 
     try resultErrorPairs.forEach { pair in
       var capturedSuccess = true
-      attempter.attemptRecovery(fromError: SampleError()) { success in
+      attempter.attemptRecovery(from: SampleError()) { success in
         capturedSuccess = success
       }
 
@@ -143,7 +143,7 @@ final class LoginRecoveryAttempterTests: XCTestCase {
     accessTokenWallet.current = SampleAccessTokens.create(withPermissions: ["foo"])
 
     var capturedSuccess = false
-    attempter.attemptRecovery(fromError: SampleError()) { success in
+    attempter.attemptRecovery(from: SampleError()) { success in
       capturedSuccess = success
     }
 
