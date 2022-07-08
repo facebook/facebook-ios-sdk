@@ -173,21 +173,27 @@ public final class GameRequestDialog: NSObject {
     return schemePrefixMatches && hostMatches
   }
 
+  private enum PayloadKeys {
+    static let requestID = "request_id"
+    static let recipients = "recipients"
+  }
+
   private func parsePayload(from url: URL) -> [String: Any]? {
     // If the URL contains no query items, then the user self closed the dialog within fbios.
     guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-          let queryItems = components.queryItems
+          let queryItems = components.queryItems,
+          queryItems.contains(where: { $0.name == PayloadKeys.requestID })
     else {
       didCancel()
       return nil
     }
 
     var payload = [String: Any]()
-    if let requestIDItem = queryItems.last(where: { $0.name == "request_id" }),
+    if let requestIDItem = queryItems.last(where: { $0.name == PayloadKeys.requestID }),
        let value = requestIDItem.value {
       payload[requestIDItem.name] = value
     }
-    if let recipientsItem = queryItems.last(where: { $0.name == "recipients" }),
+    if let recipientsItem = queryItems.last(where: { $0.name == PayloadKeys.recipients }),
        let recipients = recipientsItem.value {
       payload[recipientsItem.name] = recipients.components(separatedBy: ",")
     }
@@ -202,18 +208,6 @@ public final class GameRequestDialog: NSObject {
   @discardableResult
   public func show() -> Bool {
     guard let dependencies = try? getDependencies() else { return false }
-
-    guard canShow else {
-      let error = dependencies.errorFactory.error(
-        domain: ShareErrorDomain,
-        code: ShareError.dialogNotAvailable.rawValue,
-        userInfo: nil,
-        message: "Game request dialog is not available.",
-        underlyingError: nil
-      )
-      delegate?.gameRequestDialog(self, didFailWithError: error)
-      return false
-    }
 
     do {
       try validate()
