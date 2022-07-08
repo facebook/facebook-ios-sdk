@@ -9,7 +9,11 @@
 @testable import FBSDKGamingServicesKit
 
 final class TestGamingUtility: GamingUtility {
-  static func getGraphDomainFromToken() -> String? { nil }
+  static var stubbedGraphDomain: String?
 
-  static func reset() {}
+  static func getGraphDomainFromToken() -> String? { stubbedGraphDomain }
+
+  static func reset() {
+    stubbedGraphDomain = nil
+  }
 }

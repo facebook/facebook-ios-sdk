@@ -10,8 +10,10 @@
 import Foundation
 
 final class TestGameRequestURLProvider: GameRequestURLProviding {
+  static var stubbedDeepLinkURL: URL?
+
   static func createDeepLinkURL(queryDictionary: [String: Any]) -> URL? {
-    nil
+    stubbedDeepLinkURL
   }
 
   static func filtersName(for filters: GameRequestFilter) -> String? {
@@ -22,5 +24,7 @@ final class TestGameRequestURLProvider: GameRequestURLProviding {
     nil
   }
 
-  static func reset() {}
+  static func reset() {
+    stubbedDeepLinkURL = nil
+  }
 }

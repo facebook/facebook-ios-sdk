@@ -94,8 +94,12 @@ public final class GameRequestDialog: NSObject {
     content: GameRequestContent,
     delegate: GameRequestDialogDelegate?
   ) -> GameRequestDialog {
-    let dialog = GameRequestDialog(content: content, delegate: delegate)
+    show(dialog: GameRequestDialog(content: content, delegate: delegate))
+  }
 
+  /// Testable implementation of the public static `show` method. Allows us to configure dependencies on the
+  /// dialog that is acted upon.
+  static func show(dialog: GameRequestDialog) -> GameRequestDialog {
     guard let dependencies = try? dialog.getDependencies() else { return dialog }
 
     if dependencies.utility.getGraphDomainFromToken() == "gaming",
