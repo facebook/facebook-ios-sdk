@@ -234,7 +234,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -262,7 +262,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -299,7 +299,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       declinedPermissions: declined
     )
 
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -321,7 +321,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     let errorDomain = "testingDomain"
     let errorCode = -1
     let error = NSError(domain: errorDomain, code: errorCode)
-    loginManagerLogger.endLogin(with: nil, error: error)
+    loginManagerLogger.endLogin(result: nil, error: error)
 
     XCTAssertEqual(eventLogger.capturedEventName, AppEvents.Name(rawValue: "fb_mobile_login_method_complete"))
     try validateEmptyExtraParameters()
@@ -355,9 +355,9 @@ final class LoginManagerLoggerTests: XCTestCase {
   }
 
   func testClientStateForAuthMethodWithNoExistingState() throws {
-    let clientStateString = LoginManagerLogger.clientStateFor(
-      authMethod: "sfvc_auth",
-      andExistingState: nil,
+    let clientStateString = LoginManagerLogger.getClientState(
+      authenticationMethod: "sfvc_auth",
+      existingState: nil,
       logger: loginManagerLogger
     )
 
@@ -376,9 +376,9 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testClientStateForAuthMethodWithExistingState() throws {
     let existingState = ["challenge": "ibUuyvhzJW36TvC7BBYpasPHrXk%3D"]
-    let clientStateString = LoginManagerLogger.clientStateFor(
-      authMethod: "sfvc_auth",
-      andExistingState: existingState,
+    let clientStateString = LoginManagerLogger.getClientState(
+      authenticationMethod: "sfvc_auth",
+      existingState: existingState,
       logger: loginManagerLogger
     )
 
@@ -399,7 +399,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   // MARK: - Helpers
 
   func testAuthMethod(_ method: String) throws {
-    loginManagerLogger.startWith(authMethod: method)
+    loginManagerLogger.start(authenticationMethod: method)
 
     validateCommonEventLoggingParameters()
     try validateEmptyExtraParameters()
