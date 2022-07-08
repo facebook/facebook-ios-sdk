@@ -467,7 +467,7 @@ public final class LoginManager: NSObject {
     result: LoginManagerLoginResult? = nil,
     error: Error? = nil
   ) {
-    logger?.endLogin(with: result, error: error as NSError?)
+    logger?.endLogin(result: result, error: error as NSError?)
     logger?.endSession()
     logger?.postLoginHeartbeat()
     logger = nil
@@ -550,9 +550,9 @@ public final class LoginManager: NSObject {
     let expectedChallenge = getStringForChallenge()
     let encodedChallenge = expectedChallenge.flatMap(Utility.encode(urlString:))
     let state: [String: Any] = ["challenge": encodedChallenge ?? NSNull()]
-    if let clientState = LoginManagerLogger.clientStateFor(
-      authMethod: authenticationMethod,
-      andExistingState: state,
+    if let clientState = LoginManagerLogger.getClientState(
+      authenticationMethod: authenticationMethod,
+      existingState: state,
       logger: logger
     ) {
       parameters["state"] = clientState
@@ -624,14 +624,14 @@ public final class LoginManager: NSObject {
     guard let dependencies = try? getDependencies() else { return }
 
     let urlScheme = "fb\(self.settings?.appID ?? "")\(self.settings?.appURLSchemeSuffix ?? "")"
-    logger?.willAttemptAppSwitchingBehaviorWith(urlScheme: urlScheme)
+    logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
     let serverConfigurationProvider = ServerConfigurationProvider()
     let shouldUseSafariViewController = serverConfigurationProvider.useSafariViewController(forDialogName: "login")
     let authenticationMethod = shouldUseSafariViewController
       ? LoggerAuthenticationMethod.safariViewController
       : LoggerAuthenticationMethod.browser
 
-    logger?.startWith(authMethod: authenticationMethod)
+    logger?.start(authenticationMethod: authenticationMethod)
 
     var potentialError: Error?
     var authenticationURL: URL?

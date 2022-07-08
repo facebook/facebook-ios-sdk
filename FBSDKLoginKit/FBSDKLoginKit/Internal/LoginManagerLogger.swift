@@ -82,7 +82,7 @@ final class LoginManagerLogger {
     self.loggingToken = loggingToken
   }
 
-   func startSession(for loginManager: LoginManager) {
+  func startSession(for loginManager: LoginManager) {
     let isReauthorize = AccessToken.current != nil
     let willTryNative = false
     let willTryBrowser = true
@@ -119,12 +119,12 @@ final class LoginManagerLogger {
     }
   }
 
-  func startWith(authMethod: String) {
-    self.authMethod = authMethod
+  func start(authenticationMethod: String) {
+    authMethod = authenticationMethod
     logEvent(.sessionAuthMethodStart, params: parametersForNewEvent())
   }
 
-  func endLogin(with result: LoginManagerLoginResult?, error: NSError?) {
+  func endLogin(result: LoginManagerLoginResult?, error: NSError?) {
     var resultString = ""
 
     if error != nil {
@@ -168,7 +168,7 @@ final class LoginManagerLogger {
     logEvent(.sessionAuthHeartbeat, result: lastResult, error: lastError)
   }
 
-  func willAttemptAppSwitchingBehaviorWith(urlScheme: String) {
+  func willAttemptAppSwitchingBehavior(urlScheme: String) {
     let isURLSchemeRegistered = InternalUtility.shared.isRegisteredURLScheme(urlScheme)
     let isFacebookAppCanOpenURLSchemeRegistered = InternalUtility.shared.isRegisteredCanOpenURLScheme(
       URLScheme.facebookAPI.rawValue
@@ -186,14 +186,14 @@ final class LoginManagerLogger {
     extras = extras.merging(urlSchemeParameters) { _, last in last }
   }
 
-  static func clientStateFor(
-    authMethod: String?,
-    andExistingState existingState: [String: Any]?,
+  static func getClientState(
+    authenticationMethod: String?,
+    existingState: [String: Any]?,
     logger: LoginManagerLogger?
   ) -> String? {
 
     var clientState: [String: Any] = [
-      LoggerParameterKeys.authMethod.rawValue: authMethod ?? "",
+      LoggerParameterKeys.authMethod.rawValue: authenticationMethod ?? "",
       LoggerParameterKeys.identifier.rawValue: logger?.identifier ?? UUID().uuidString,
       ClientStateKeys.isClientState: true,
     ]
