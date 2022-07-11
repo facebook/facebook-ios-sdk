@@ -15,7 +15,7 @@ class ShareViewController: UITableViewController {
 
   // MARK: - Table view data source
   override func numberOfSections(in tableView: UITableView) -> Int {
-    2
+    3
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -27,14 +27,23 @@ class ShareViewController: UITableViewController {
     cell.selectionStyle = .none
     cell.accessoryType = .disclosureIndicator
 
-    let options = [["Share Extension", "Share Dialog", "Share to Stories", "Share to Reels"], ["Message Dialog"]]
+    let options = [["Share Extension", "Share Dialog", "Share to Stories", "Share to Reels"], ["Message Dialog"], ["Share to Reels"]]
     cell.textLabel?.text = options[indexPath.section][indexPath.row]
 
     return cell
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    0 == section ? "Facebook" : "Messenger"
+    switch section {
+    case 0:
+      return "Facebook"
+    case 1:
+      return "Messenger"
+    case 2:
+      return "Instagram"
+    default:
+      return ""
+    }
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -58,6 +67,8 @@ class ShareViewController: UITableViewController {
 
     case 1:
       vc = storyboard.instantiateViewController(withIdentifier: "MessageShareDialog")
+    case 2:
+      vc = IGShareToReelsViewController()
     default:
       break
     }

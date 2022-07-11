@@ -8,6 +8,7 @@
 #import "ActivityViewTableViewController.h"
 #import "Console.h"
 #import "FBSDKPlatformSharingToStories.h"
+#import "IGSDKPlatformSharingToReels.h"
 #import "LoginFeatures/LoginViewController.h"
 #import "MessageDialogTestViewController.h"
 #import "PrivacyTestUtils.h"

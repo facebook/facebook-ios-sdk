@@ -72,6 +72,7 @@
 	<string>HackBook Internal for iOS</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>instagram-reels</string>
 		<string>instagram</string>
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
