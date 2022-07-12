@@ -81,8 +81,6 @@
 #import "FBSDKButton+Internal.h"
 #import "FBSDKButtonImpressionLogging.h"
 #import "FBSDKClientTokenProviding.h"
-#import "FBSDKCloseIcon.h"
-#import "FBSDKCloseIcon+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKitComponents.h"
 #import "FBSDKCoreKitConfigurator.h"

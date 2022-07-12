@@ -131,8 +131,8 @@ final class DrawableTests: XCTestCase {
   // MARK: Close Icon
 
   func testCloseIcon() {
-    guard let image = FBCloseIcon().image(
-      with: size,
+    guard let image = _FBCloseIcon().image(
+      size: size,
       primaryColor: .red,
       secondaryColor: .green,
       scale: 2.0
