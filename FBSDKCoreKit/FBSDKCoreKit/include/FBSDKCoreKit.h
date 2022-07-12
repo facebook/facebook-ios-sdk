@@ -47,7 +47,6 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
-#import <FBSDKCoreKit/FBSDKIcon.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>

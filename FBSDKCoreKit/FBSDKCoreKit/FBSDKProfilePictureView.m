@@ -12,7 +12,7 @@
 #import "FBSDKProfilePictureView+Internal.h"
 
 #import "FBSDKAccessToken.h"
-#import "FBSDKHumanSilhouetteIcon.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMath.h"
 #import "FBSDKProfile+Internal.h"
