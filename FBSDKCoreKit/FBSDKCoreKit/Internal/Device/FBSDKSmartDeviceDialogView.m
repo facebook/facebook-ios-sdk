@@ -12,7 +12,7 @@
 
 #import "FBSDKDeviceUtilities.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKLogo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 @interface FBSDKSmartDeviceDialogView ()
 @property (nonatomic) UIActivityIndicatorView *spinner;

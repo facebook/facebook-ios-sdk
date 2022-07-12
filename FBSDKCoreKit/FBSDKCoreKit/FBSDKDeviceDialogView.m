@@ -13,7 +13,7 @@
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 
 #import "FBSDKDeviceUtilities.h"
-#import "FBSDKLogo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 @interface FBSDKDeviceDialogView ()
 

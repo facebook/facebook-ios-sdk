@@ -9,7 +9,7 @@
 #import "FBSDKButton+Internal.h"
 
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKLogo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #define HEIGHT_TO_FONT_SIZE 0.47
 #define HEIGHT_TO_MARGIN 0.27

@@ -12,9 +12,9 @@ import FBSDKCoreKit
 
 @objcMembers
 @objc(FBSDKMessengerIcon)
-final class MessengerIcon: Icon {
+final class MessengerIcon: FBIcon {
 
-  override func path(with size: CGSize) -> Unmanaged<CGPath>? {
+  override func path(with size: CGSize) -> CGPath? {
     let scale = CGAffineTransform(scaleX: size.width / 61.0, y: size.height / 61.0)
     let path = CGMutablePath()
 
@@ -62,7 +62,7 @@ final class MessengerIcon: Icon {
     path.addLine(to: .init(x: 33.159, y: 37.473), transform: scale)
     path.closeSubpath()
 
-    return Unmanaged.passRetained(path).autorelease()
+    return path
   }
 }
 
