@@ -15,6 +15,7 @@
 #import <objc/runtime.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 
 #import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublishing.h"

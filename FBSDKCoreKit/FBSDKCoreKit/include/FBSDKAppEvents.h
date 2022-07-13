@@ -20,6 +20,7 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
+#import <FBSDKCoreKit/FBSDKEventLogging.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -74,7 +75,7 @@ NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
  + The length of each parameter value can be no more than on the order of 100 characters.
  */
 NS_SWIFT_NAME(AppEvents)
-@interface FBSDKAppEvents : NSObject
+@interface FBSDKAppEvents : NSObject <FBSDKEventLogging>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -515,6 +516,8 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
               parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(nullable FBSDKAccessToken *)accessToken;
+
+- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 
 @end
 

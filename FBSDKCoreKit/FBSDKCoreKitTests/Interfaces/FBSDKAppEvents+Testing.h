@@ -7,7 +7,7 @@
  */
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsFlushReason.h"
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

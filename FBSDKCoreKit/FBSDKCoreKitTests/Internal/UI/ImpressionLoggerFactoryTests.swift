@@ -70,7 +70,7 @@ final class ImpressionLoggerFactoryTests: XCTestCase {
     let logger = factory.makeImpressionLogger(withEventName: .adClick)
 
     XCTAssertTrue(
-      logger is ViewImpressionLogger,
+      logger is _ViewImpressionLogger,
       "Should make the correct type of impression logger"
     )
   }

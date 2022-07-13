@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+
 typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason) {
   FBSDKAppEventsFlushReasonExplicit,
   FBSDKAppEventsFlushReasonTimer,
@@ -15,4 +22,4 @@ typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason) {
   FBSDKAppEventsFlushReasonPersistedEvents,
   FBSDKAppEventsFlushReasonEventThreshold,
   FBSDKAppEventsFlushReasonEagerlyFlushingEvent,
-} NS_SWIFT_NAME(AppEventsUtility.FlushReason);
+} NS_SWIFT_NAME(AppEvents.FlushReason);

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 import XCTest
 
 @objcMembers
@@ -39,7 +40,7 @@ final class TestAppEventsUtility: NSObject, AppEventDropDetermining, AppEventPar
     stubbedTokenStringToUse
   }
 
-  func flushReason(toString flushReason: AppEventsUtility.FlushReason) -> String {
+  func flushReason(toString flushReason: AppEvents.FlushReason) -> String {
     ""
   }
 

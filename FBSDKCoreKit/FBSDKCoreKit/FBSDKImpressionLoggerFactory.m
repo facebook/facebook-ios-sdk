@@ -15,7 +15,7 @@
 
 #import "FBSDKEventLogging.h"
 #import "FBSDKImpressionLogging.h"
-#import "FBSDKViewImpressionLogger.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,11 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<FBSDKImpressionLogging>)makeImpressionLoggerWithEventName:(FBSDKAppEventName)eventName
 {
-  return [FBSDKViewImpressionLogger impressionLoggerWithEventName:eventName
-                                              graphRequestFactory:self.graphRequestFactory
-                                                      eventLogger:self.eventLogger
-                                             notificationDeliverer:self.notificationCenter
-                                                      tokenWallet:self.accessTokenWallet];
+  return [FBSDKViewImpressionLogger retrieveLoggerWith: eventName];
 }
 
 @end
