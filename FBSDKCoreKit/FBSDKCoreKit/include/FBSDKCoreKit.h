@@ -17,6 +17,7 @@
 #import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
@@ -36,6 +37,7 @@
 #import <FBSDKCoreKit/FBSDKErrorCreating.h>
 #import <FBSDKCoreKit/FBSDKErrorFactory.h>
 #import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
+#import <FBSDKCoreKit/FBSDKEventLogging.h>
 #import <FBSDKCoreKit/FBSDKFeatureChecking.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
@@ -47,6 +49,7 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
+#import <FBSDKCoreKit/FBSDKImpressionLogging.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>

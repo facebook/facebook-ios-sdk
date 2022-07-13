@@ -10,9 +10,18 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 
 @class FBSDKAccessToken;
+
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +30,7 @@ NS_SWIFT_NAME(EventLogging)
 
 @property (nonatomic, readonly) FBSDKAppEventsFlushBehavior flushBehavior;
 
-- (void)flushForReason:(NSUInteger)flushReason;
+- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;

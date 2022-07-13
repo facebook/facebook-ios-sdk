@@ -39,7 +39,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
   FBSDKApplicationActivating,
   FBSDKApplicationLifecycleObserving,
   FBSDKApplicationStateSetting,
-  FBSDKEventLogging,
   FBSDKSourceApplicationTracking,
   FBSDKUserIDProviding
 >

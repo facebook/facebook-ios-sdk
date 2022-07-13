@@ -14,7 +14,7 @@
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
-#import "FBSDKAppEventsFlushReason.h"
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKAppEventsUtilityProtocol.h"
 #import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKLoggingNotifying.h"
