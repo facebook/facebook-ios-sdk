@@ -2,15 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>application-identifier</key>
-  <string>3NW3KR6Q88.com.facebook.CoffeeShop.internalDevelopment</string>
-  <key>get-task-allow</key>
-  <true/>
-  <key>keychain-access-groups</key>
-  <array>
-    <string>3NW3KR6Q88.*</string>
-  </array>
-  <key>aps-environment</key>
-  <string>development</string>
+	<key>application-identifier</key>
+	<string>T84QZS65DQ.com.facebook.coffeeshop.localDevelopment</string>
+	<key>aps-environment</key>
+	<string>development</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:*.internalfb.com</string>
+	</array>
+	<key>get-task-allow</key>
+	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>3NW3KR6Q88.*</string>
+	</array>
 </dict>
 </plist>
