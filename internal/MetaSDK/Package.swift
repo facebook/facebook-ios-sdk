@@ -4,12 +4,12 @@ import PackageDescription
 let package = Package(
     name: "MetaSDK",
     platforms: [
-        .iOS(.v12)
+        .iOS(.v12),
     ],
     products: [
         .library(
             name: "MetaLogin",
-            targets: ["MetaLogin"])
+            targets: ["MetaLogin"]),
     ],
     targets: [
         .target(
@@ -17,6 +17,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "MetaLoginTests",
-            dependencies: ["MetaLogin"])
+            dependencies: ["MetaLogin"]),
     ]
 )

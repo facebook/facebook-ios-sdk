@@ -1,9 +1,9 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import XCTest
 @testable import MetaLogin
+import XCTest
 
-class LoginConfigurationTests: XCTestCase {
+final class LoginConfigurationTests: XCTestCase {
     func testCreatingWithNoAppID() {
         let configuration = LoginConfiguration(
             permissions: ["public_profile"]

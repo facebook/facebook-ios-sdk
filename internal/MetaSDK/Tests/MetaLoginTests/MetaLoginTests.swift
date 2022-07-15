@@ -1,9 +1,9 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import XCTest
 @testable import MetaLogin
+import XCTest
 
-class MetaLoginTests: XCTestCase {
+final class MetaLoginTests: XCTestCase {
     func testLogin() {
         var wasCalled = false
 
