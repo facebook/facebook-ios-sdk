@@ -33,6 +33,24 @@ my_job = [
                 },
             ],
         },
+    },
+    {
+        "alias": "meta-sdk-unit-tests",
+        "capabilities": ios_sdk_capabilities(),
+        "command": "SandcastleUniversalCommand",
+        "description": "Runs the Unit Tests defined in the MetaSDK package",
+        "oncall": ONCALL,
+        "priority": 0,
+        "tags": ["meta-ios-sdk", "unit-tests"],
+        "args": {
+            "oncall": ONCALL,
+            "steps": [
+                {
+                    "name": "Run Unit Tests",
+                    "shell": "cd internal/MetaSDK && swift test",
+                },
+            ],
+        },
     }
 ]
 
