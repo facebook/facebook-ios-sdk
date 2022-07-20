@@ -47,7 +47,13 @@ my_job = [
             "steps": [
                 {
                     "name": "Run Unit Tests",
-                    "shell": "cd internal/MetaSDK && swift test",
+                    "shell": """
+                        export DESTINATION_ID=$( python3 ci/simulator_selection.py | tail -1 );
+                        cd internal/MetaSDK;
+                        xcodebuild test \
+                            -scheme MetaSDK \
+                            -destination "id=$DESTINATION_ID"
+                    """,
                 },
             ],
         },
