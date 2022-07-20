@@ -29,7 +29,6 @@
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
-#import <FBSDKCoreKit/FBSDKDeviceButton.h>
 #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
@@ -62,6 +61,7 @@
 #import <FBSDKCoreKit/FBSDKLogging.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #import <FBSDKCoreKit/FBSDKLoginTooltip.h>
+#import <FBSDKCoreKit/FBSDKMath.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>

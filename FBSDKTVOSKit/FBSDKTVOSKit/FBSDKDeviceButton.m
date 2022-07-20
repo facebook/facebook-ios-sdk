@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
 #if TARGET_OS_TV
 
 #import "FBSDKDeviceButton.h"
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKMath.h"
+#import <FBSDKCoreKit/FBSDKMath.h>
 
 static const CGFloat kFBLogoSize = 54.0;
 static const CGFloat kFBLogoLeftMargin = 36.0;
