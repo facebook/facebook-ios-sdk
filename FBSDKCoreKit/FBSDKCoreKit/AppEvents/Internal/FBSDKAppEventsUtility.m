@@ -16,7 +16,6 @@
 
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings+Internal.h"
