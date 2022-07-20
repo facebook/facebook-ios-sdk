@@ -16,9 +16,9 @@ class AccessTokenTest: XCTestCase {
         
         let emptyTokenString = ""
         let tokenString = "testToken"
-        let expiredDate = Date().advanced(by: -100)
-        let pastDate = Date().advanced(by: -10)
-        let futureDate = Date().advanced(by: 100)
+        let expiredDate = Date().addingTimeInterval(-100)
+        let pastDate = Date().addingTimeInterval(-10)
+        let futureDate = Date().addingTimeInterval(100)
         accessTokenWithInvalidExpirationDate = AccessToken(
             tokenString: tokenString,
             expirationDate: expiredDate,

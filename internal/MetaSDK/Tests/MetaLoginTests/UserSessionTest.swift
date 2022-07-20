@@ -39,8 +39,8 @@ class UserSessionTest: XCTestCase {
         let graphDomain = GraphDomain.meta
         let token = AccessToken(
             tokenString: tokenString,
-            expirationDate: Date().advanced(by: 100),
-            dataAccessExpirationDate: Date().advanced(by: 100)
+            expirationDate: Date().addingTimeInterval(100),
+            dataAccessExpirationDate: Date().addingTimeInterval(100)
         )!
         userSession = UserSession(
             userId: userId,
