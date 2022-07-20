@@ -3,8 +3,8 @@
 import Foundation
 import AuthenticationServices
 
-class WebAuthenticationSessionPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+class TestWebAuthenticationSessionPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.windows.first { $0.isKeyWindow } ?? ASPresentationAnchor()
+        return ASPresentationAnchor()
     }
 }

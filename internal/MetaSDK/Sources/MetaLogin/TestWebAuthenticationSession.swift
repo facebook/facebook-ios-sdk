@@ -6,7 +6,11 @@ import AuthenticationServices
 @available(iOS 13.0, *)
 class TestWebAuthenticationSession: WebAuthenticationSession {
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
-
+        
+    init(stubbedPresentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider) {
+        self.presentationContextProvider = stubbedPresentationContextProvider
+    }
+    
     var startWasCalled = false
     
     func start() -> Bool {

@@ -8,15 +8,20 @@ class AuthWebViewTests: XCTestCase {
     var authWebView: AuthWebView!
     var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
     var authSession: TestWebAuthenticationSession!
+    var presentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider!
+    let sampleURL = SampleURLs.valid
+    let sampleCallbackURLScheme = "metalogin"
 
     override func setUp() {
         super.setUp()
         authWebView = AuthWebView()
-        authSession = TestWebAuthenticationSession()
+        presentationContextProvider = TestWebAuthenticationSessionPresentationContextProvider()
+        authSession = TestWebAuthenticationSession(stubbedPresentationContextProvider: presentationContextProvider)
         webAuthSessionFactory = TestWebAuthenticationSessionFactory(stubbedSession: authSession)
-
         authWebView.setDependencies(
-            .init(webAuthenticationSessionFactory: webAuthSessionFactory)
+            .init(
+                webAuthenticationSessionFactory: webAuthSessionFactory,
+                presentationContextProvider: presentationContextProvider)
         )
     }
 
@@ -24,6 +29,7 @@ class AuthWebViewTests: XCTestCase {
         authWebView = nil
         authSession = nil
         webAuthSessionFactory = nil
+        presentationContextProvider = nil
         super.tearDown()
     }
 
@@ -33,16 +39,47 @@ class AuthWebViewTests: XCTestCase {
 
         XCTAssertTrue(
             dependencies.webAuthenticationSessionFactory is WebAuthenticationSessionFactory,
-            "A web authentication view uses a provided web authentication session factory."
+            "A web authentication view uses a provided web authentication session factory"
+        )
+        XCTAssertTrue(
+            dependencies.presentationContextProvider is WebAuthenticationSessionPresentationContextProvider,
+            "A web authentication view uses a provided presentation context provider"
         )
     }
 
     func testCustomDependencies() throws {
         let dependencies = try authWebView.getDependencies()
-        XCTAssertIdentical(
-            dependencies.webAuthenticationSessionFactory as AnyObject,
-            webAuthSessionFactory,
+        
+        XCTAssertTrue(
+            dependencies.webAuthenticationSessionFactory is TestWebAuthenticationSessionFactory,
             "Should be set to custom web authentication session factory"
         )
+        XCTAssertTrue(
+            dependencies.presentationContextProvider is TestWebAuthenticationSessionPresentationContextProvider,
+            "Should be set to custom presentation context provider"
+        )
+    }
+    
+    func testOpenURL() throws {
+        var capturedResult: Result<URL, Error>?
+        authWebView.openURL(
+            url: sampleURL,
+            callbackURLScheme: sampleCallbackURLScheme
+        ) { result in
+            capturedResult = result
+        }
+        
+        XCTAssertEqual(webAuthSessionFactory.capturedURL, sampleURL, "Should pass sample url to the authentication session")
+        XCTAssertEqual(webAuthSessionFactory.capturedCallbackURLScheme, sampleCallbackURLScheme, "Should pass sample callback url scheme to the authentication session")
+        
+        let url = SampleURLs.valid(path: "foo")
+        webAuthSessionFactory.capturedCompletionHandler?(.success(url))
+        XCTAssertEqual(
+            try capturedResult?.get(),
+            url,
+            "Should invoke the completion handler with the expected result"
+        )
+        XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
+        XCTAssertIdentical(authSession.presentationContextProvider, presentationContextProvider, "Should set the presentation context provider on the authentication session")
     }
 }
