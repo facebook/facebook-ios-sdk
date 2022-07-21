@@ -15,4 +15,8 @@ protocol WebAuthenticationSession {
     mutating func start() -> Bool
 }
 
+protocol AuthenticationSessionStatePersisting {
+    var authenticationSessionState: AuthenticationSessionState {get set}
+}
+
 extension ASWebAuthenticationSession: WebAuthenticationSession {}
