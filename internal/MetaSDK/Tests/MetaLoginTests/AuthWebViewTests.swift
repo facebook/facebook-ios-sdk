@@ -7,6 +7,7 @@
  */
 
 @testable import MetaLogin
+import AuthenticationServices
 import XCTest
 
 @available(iOS 13.0, *)
@@ -15,19 +16,24 @@ final class AuthWebViewTests: XCTestCase {
     var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
     var authSession: TestWebAuthenticationSession!
     var presentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider!
+    var localStorage: TestLocalStorage!
     let sampleURL = SampleURLs.valid
     let sampleCallbackURLScheme = "metalogin"
 
     override func setUp() {
         super.setUp()
+
         authWebView = AuthWebView()
         presentationContextProvider = TestWebAuthenticationSessionPresentationContextProvider()
+        localStorage = TestLocalStorage()
         authSession = TestWebAuthenticationSession(stubbedPresentationContextProvider: presentationContextProvider)
         webAuthSessionFactory = TestWebAuthenticationSessionFactory(stubbedSession: authSession)
         authWebView.setDependencies(
             .init(
                 webAuthenticationSessionFactory: webAuthSessionFactory,
-                presentationContextProvider: presentationContextProvider)
+                presentationContextProvider: presentationContextProvider,
+                localStorage: localStorage
+            )
         )
     }
 
@@ -36,6 +42,7 @@ final class AuthWebViewTests: XCTestCase {
         authSession = nil
         webAuthSessionFactory = nil
         presentationContextProvider = nil
+
         super.tearDown()
     }
 
@@ -66,7 +73,7 @@ final class AuthWebViewTests: XCTestCase {
         )
     }
 
-    func testOpenURL() throws {
+    func testOpenURLWithSessionSuccess() throws {
         var capturedResult: Result<URL, Error>?
         authWebView.openURL(
             url: sampleURL,
@@ -88,16 +95,108 @@ final class AuthWebViewTests: XCTestCase {
 
         let url = SampleURLs.valid(path: "foo")
         webAuthSessionFactory.capturedCompletionHandler?(.success(url))
-        XCTAssertEqual(
-            try capturedResult?.get(),
-            url,
-            "Should invoke the completion handler with the expected result"
-        )
-        XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
+        XCTAssertNotNil(capturedResult, "Should capture result at completion")
+        XCTAssertEqual(try capturedResult?.get(), url, "Should invoke the completion handler with the expected result")
+
         XCTAssertIdentical(
             authSession.presentationContextProvider,
             presentationContextProvider,
-            "Should set the presentation context provider on the authentication session"
+            "Should pass the presentation context provider to the authentication session"
+        )
+        XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
+        XCTAssertEqual(localStorage.authenticationSessionState,
+            .performingLogin,
+            "Session state should be set to .performinglogin after successfully starting session"
+        )
+    }
+
+    func testOpenURLWithCanceledSession() throws {
+        var capturedResult: Result<URL, Error>?
+        var capturedError: Error?
+        authWebView.openURL(
+            url: sampleURL,
+            callbackURLScheme: sampleCallbackURLScheme
+        ) { result in
+            capturedResult = result
+            if case let .failure(error) = result {
+                capturedError = error
+            }
+        }
+
+        let error = ASWebAuthenticationSessionError(.canceledLogin, userInfo: [:])
+        webAuthSessionFactory.capturedCompletionHandler?(.failure(error))
+        XCTAssertNotNil(capturedResult, "Should capture result at completion")
+
+        let unwrappedError = try XCTUnwrap(capturedError, "Should capture error at completion")
+        XCTAssertIdentical(
+            unwrappedError as AnyObject,
+            error as AnyObject,
+            "Authentication session error should be set to assigned value"
+        )
+        XCTAssertEqual(
+            localStorage.authenticationSessionState,
+            .canceled,
+            "Session state should be set to .canceled when the canceled login error is returned"
+        )
+    }
+
+    func testOpenURLWithPresentationContextNotProvided() throws {
+        var capturedResult: Result<URL, Error>?
+        var capturedError: Error?
+        authWebView.openURL(
+            url: sampleURL,
+            callbackURLScheme: sampleCallbackURLScheme
+        ) { result in
+            capturedResult = result
+            if case let .failure(error) = result {
+                capturedError = error
+            }
+        }
+
+        let error = ASWebAuthenticationSessionError(.presentationContextNotProvided, userInfo: [:])
+        webAuthSessionFactory.capturedCompletionHandler?(.failure(error))
+        XCTAssertNotNil(capturedResult, "Should capture result at completion")
+
+        let unwrappedError = try XCTUnwrap(capturedError, "Should capture error at completion")
+        XCTAssertIdentical(
+            unwrappedError as AnyObject,
+            error as AnyObject,
+            "Authentication session error should be set to assigned value"
+        )
+        XCTAssertEqual(
+            localStorage.authenticationSessionState,
+            .canceled,
+            "Session state should be set to .canceled when the presentation context is not provided"
+        )
+    }
+
+    func testOpenURLWithPresentationContextInvalid() throws {
+        var capturedResult: Result<URL, Error>?
+        var capturedError: Error?
+        authWebView.openURL(
+            url: sampleURL,
+            callbackURLScheme: sampleCallbackURLScheme
+        ) { result in
+            capturedResult = result
+            if case let .failure(error) = result {
+                capturedError = error
+            }
+        }
+
+        let error = ASWebAuthenticationSessionError(.presentationContextInvalid, userInfo: [:])
+        webAuthSessionFactory.capturedCompletionHandler?(.failure(error))
+        XCTAssertNotNil(capturedResult, "Should capture result at completion")
+
+        let unwrappedError = try XCTUnwrap(capturedError, "Should capture error at completion")
+        XCTAssertIdentical(
+            unwrappedError as AnyObject,
+            error as AnyObject,
+            "Authentication session error should be set to assigned value"
+        )
+        XCTAssertEqual(
+            localStorage.authenticationSessionState,
+            .canceled,
+            "Session state should be set to .canceled when there is an invalid presentation context"
         )
     }
 }

@@ -17,7 +17,8 @@ struct AuthWebView {
     var defaultDependencies: InstanceDependencies? {
         .init(
             webAuthenticationSessionFactory: WebAuthenticationSessionFactory(),
-            presentationContextProvider: WebAuthenticationSessionPresentationContextProvider()
+            presentationContextProvider: WebAuthenticationSessionPresentationContextProvider(),
+            localStorage: LocalStorage()
         )
     }
 
@@ -26,17 +27,32 @@ struct AuthWebView {
         callbackURLScheme: String,
         completion: @escaping AuthWebViewCompletion
     ) {
-        guard let dependencies = try? getDependencies() else { return }
+        guard var dependencies = try? getDependencies() else { return }
+
+        let wrappedCompletion: AuthWebViewCompletion = { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                dependencies.localStorage.authenticationSessionState = .canceled
+            }
+
+            completion(result)
+        }
 
         var session = dependencies.webAuthenticationSessionFactory.createWebAuthenticationSession(
             url: url,
             callbackURLScheme: callbackURLScheme,
-            completionHandler: completion
+            completionHandler: wrappedCompletion
         )
 
         session.presentationContextProvider = dependencies.presentationContextProvider
 
-        session.start()
+        let sessionStarted = session.start()
+
+        if sessionStarted {
+            dependencies.localStorage.authenticationSessionState = .performingLogin
+        }
     }
 }
 
@@ -45,5 +61,6 @@ extension AuthWebView: DependentAsInstance {
     struct InstanceDependencies {
         var webAuthenticationSessionFactory: WebAuthenticationSessionCreating
         var presentationContextProvider: ASWebAuthenticationPresentationContextProviding
+        var localStorage: AuthenticationSessionStatePersisting
     }
 }

@@ -22,7 +22,7 @@ protocol WebAuthenticationSession {
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? {get set}
 
     @discardableResult
-    mutating func start() -> Bool
+    func start() -> Bool
 }
 
 protocol AuthenticationSessionStatePersisting {
