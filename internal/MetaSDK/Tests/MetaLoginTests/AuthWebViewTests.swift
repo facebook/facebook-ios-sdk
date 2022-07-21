@@ -1,10 +1,16 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 @testable import MetaLogin
 import XCTest
 
 @available(iOS 13.0, *)
-class AuthWebViewTests: XCTestCase {
+final class AuthWebViewTests: XCTestCase {
     var authWebView: AuthWebView!
     var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
     var authSession: TestWebAuthenticationSession!
@@ -49,7 +55,7 @@ class AuthWebViewTests: XCTestCase {
 
     func testCustomDependencies() throws {
         let dependencies = try authWebView.getDependencies()
-        
+
         XCTAssertTrue(
             dependencies.webAuthenticationSessionFactory is TestWebAuthenticationSessionFactory,
             "Should be set to custom web authentication session factory"
@@ -59,7 +65,7 @@ class AuthWebViewTests: XCTestCase {
             "Should be set to custom presentation context provider"
         )
     }
-    
+
     func testOpenURL() throws {
         var capturedResult: Result<URL, Error>?
         authWebView.openURL(
@@ -68,10 +74,18 @@ class AuthWebViewTests: XCTestCase {
         ) { result in
             capturedResult = result
         }
-        
-        XCTAssertEqual(webAuthSessionFactory.capturedURL, sampleURL, "Should pass sample url to the authentication session")
-        XCTAssertEqual(webAuthSessionFactory.capturedCallbackURLScheme, sampleCallbackURLScheme, "Should pass sample callback url scheme to the authentication session")
-        
+
+        XCTAssertEqual(
+            webAuthSessionFactory.capturedURL,
+            sampleURL,
+            "Should pass sample url to the authentication session"
+        )
+        XCTAssertEqual(
+            webAuthSessionFactory.capturedCallbackURLScheme,
+            sampleCallbackURLScheme,
+            "Should pass sample callback url scheme to the authentication session"
+        )
+
         let url = SampleURLs.valid(path: "foo")
         webAuthSessionFactory.capturedCompletionHandler?(.success(url))
         XCTAssertEqual(
@@ -80,6 +94,10 @@ class AuthWebViewTests: XCTestCase {
             "Should invoke the completion handler with the expected result"
         )
         XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
-        XCTAssertIdentical(authSession.presentationContextProvider, presentationContextProvider, "Should set the presentation context provider on the authentication session")
+        XCTAssertIdentical(
+            authSession.presentationContextProvider,
+            presentationContextProvider,
+            "Should set the presentation context provider on the authentication session"
+        )
     }
 }

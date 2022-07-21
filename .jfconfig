@@ -83,6 +83,11 @@
             "shell": "python3 ci/legacy_hackbook.py",
             "determinator": true,
           },
+          {
+            "name": "Lint Meta SDK",
+            "shell": "python3 ci/swiftlint_check.py",
+            "determinator": true,
+          }
         ],
       },
     },

@@ -1,0 +1,37 @@
+excluded:
+  - Package.swift
+
+file_header:
+  required_string:
+    "/*\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n * All rights reserved.\n *\n * This source code is
+    licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
+
+custom_rules:
+  blank_line_after_single_line_guard:
+    regex: "guard [^\n]*? else \\{ return (:?\\w+ )?\\}\n[^\n]"
+    message: "Prefer a blank line after a guard with a return."
+  objc_members_above_objc:
+    regex: "@objc[^\n]*?\n@objcMembers"
+    message: "Place @objcMembers above @objc"
+  objc_used_without_importing_foundation:
+    regex: "LICENSE file in the root directory of this source tree.\n \\*/\n+@objc"
+    message: "@objc attribute used without importing module 'Foundation'"
+  swiftlint_disable_without_this_or_next:
+    regex: "// swiftlint:disable (?!implicitly_unwrapped_optional|force_unwrapping)"
+    message: "Prefer using swiftlint:disable:this or swiftlint:disable:next over swiftlint:disable"
+  one_let_per_line:
+    regex: " let [^\n]*?, let "
+    message: "Place each let statement and condition on its own line"
+  test_classes_should_be_final:
+    regex: "(?<!final )class.*XCTestCase\\b"
+    message: "Make test classes final"
+  prefer_final_classes:
+    regex: "(?<!(?:final|open) )class (?!func|var)[^\n]*\\{"
+    message: "Most classes should be declared as final even when not declared as open"
+
+opt_in_rules:
+  - file_header
+
+disabled_rules:
+  - todo
+  - trailing_comma

@@ -1,10 +1,16 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import XCTest
 @testable import MetaLogin
 
 extension AccessToken: Equatable {
-    
+
     public static func == (
       lhs: AccessToken,
       rhs: AccessToken
@@ -14,8 +20,8 @@ extension AccessToken: Equatable {
     }
 }
 
-extension UserSession : Equatable {
-    
+extension UserSession: Equatable {
+
     public static func == (
       lhs: UserSession,
       rhs: UserSession
@@ -28,12 +34,12 @@ extension UserSession : Equatable {
     }
 }
 
-class UserSessionTest: XCTestCase {
+final class UserSessionTest: XCTestCase {
     var userSession: UserSession!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         let userId = UInt(111)
         let tokenString = "testToken"
         let graphDomain = GraphDomain.meta
@@ -50,12 +56,12 @@ class UserSessionTest: XCTestCase {
             declinedPermissions: []
         )
     }
-    
+
     override func tearDown() {
         userSession = nil
         super.tearDown()
     }
-    
+
     func testUserSessionEncoderAndDecoder() throws {
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()

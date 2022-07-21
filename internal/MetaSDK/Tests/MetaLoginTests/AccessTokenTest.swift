@@ -1,19 +1,26 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import XCTest
 @testable import MetaLogin
 
-class AccessTokenTest: XCTestCase {
+final class AccessTokenTest: XCTestCase {
     var expiredAccessToken: AccessToken!
     var newAccessToken: AccessToken!
     var accessTokenWithoutExpirationDate: AccessToken!
     var accessTokenWithInvalidTokenStr: AccessToken!
     var accessTokenWithInvalidExpirationDate: AccessToken!
+    // swiftlint:disable:next identifier_name
     var accessTokenWithInvalidDataAccessExpirationDate: AccessToken!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         let emptyTokenString = ""
         let tokenString = "testToken"
         let expiredDate = Date().addingTimeInterval(-100)
@@ -47,7 +54,7 @@ class AccessTokenTest: XCTestCase {
             dataAccessExpirationDate: futureDate
         )
     }
-    
+
     override func tearDown() {
         expiredAccessToken = nil
         newAccessToken = nil
@@ -85,7 +92,7 @@ class AccessTokenTest: XCTestCase {
 
         )
     }
-    
+
     func testInvalidTokenParameters() {
         XCTAssertNil(
             accessTokenWithInvalidTokenStr,

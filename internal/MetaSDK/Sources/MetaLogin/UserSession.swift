@@ -1,10 +1,16 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import Foundation
 
 /// Represents user login information including both user and authentication data
-public class UserSession: Codable {
-    
+public final class UserSession: Codable {
+
     /// The id of the user
     public let userId: UInt
     /// It represents login account type (Facebook/Meta)
@@ -15,7 +21,7 @@ public class UserSession: Codable {
     public internal(set) var requestedPermissions: [String]
     /// The permissions that were declined when the token was obtained
     public internal(set) var declinedPermissions: [String]
-    
+
     internal init(
         userId: UInt,
         graphDomain: GraphDomain,
@@ -27,6 +33,6 @@ public class UserSession: Codable {
         self.graphDomain = graphDomain
         self.requestedPermissions = requestedPermissions
         self.userId = userId
-        self.declinedPermissions = declinedPermissions;
+        self.declinedPermissions = declinedPermissions
     }
 }

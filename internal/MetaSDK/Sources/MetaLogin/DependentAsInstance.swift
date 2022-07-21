@@ -9,10 +9,10 @@
 @dynamicMemberLookup
 protocol DependentAsInstance {
     associatedtype InstanceDependencies
-    
+
     var configuredDependencies: InstanceDependencies? { get set }
     var defaultDependencies: InstanceDependencies? { get }
-    
+
     mutating func setDependencies(_ dependencies: InstanceDependencies)
 
     #if DEBUG

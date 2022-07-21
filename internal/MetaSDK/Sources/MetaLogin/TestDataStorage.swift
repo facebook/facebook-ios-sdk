@@ -1,18 +1,24 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import Foundation
 
-class TestDataStorage: DataPersisting {
+final class TestDataStorage: DataPersisting {
     var capturedIntegerForKeyName: String?
     var stubbedIntegerForKey = 0
     var capturedSetIntegerForKeyName: String?
     var capturedSetValue: Int?
-    
+
     func integer(forKey defaultName: String) -> Int {
         capturedIntegerForKeyName = defaultName
         return stubbedIntegerForKey
     }
-    
+
     func set(_ value: Int, forKey defaultName: String) {
         capturedSetIntegerForKeyName = defaultName
         capturedSetValue = value

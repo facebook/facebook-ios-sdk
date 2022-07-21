@@ -1,4 +1,10 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 import AuthenticationServices
 import Foundation
@@ -14,22 +20,22 @@ struct AuthWebView {
             presentationContextProvider: WebAuthenticationSessionPresentationContextProvider()
         )
     }
-    
+
     func openURL(
         url: URL,
         callbackURLScheme: String,
         completion: @escaping AuthWebViewCompletion
-    ) -> Void {
+    ) {
         guard let dependencies = try? getDependencies() else { return }
-        
+
         var session = dependencies.webAuthenticationSessionFactory.createWebAuthenticationSession(
             url: url,
             callbackURLScheme: callbackURLScheme,
             completionHandler: completion
         )
-        
+
         session.presentationContextProvider = dependencies.presentationContextProvider
-        
+
         session.start()
     }
 }
