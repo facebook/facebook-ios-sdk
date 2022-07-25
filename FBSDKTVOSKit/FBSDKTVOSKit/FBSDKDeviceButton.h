@@ -8,7 +8,7 @@
 
 #if TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import <FBSDKTVOSKit/FBSDKButton.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

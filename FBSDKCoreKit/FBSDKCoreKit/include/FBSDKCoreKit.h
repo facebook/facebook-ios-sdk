@@ -22,10 +22,10 @@
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
 #import <FBSDKCoreKit/FBSDKApplicationObserving.h>
+#import <FBSDKCoreKit/FBSDKApplicationLifecycleNotifications.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
-#import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
@@ -37,6 +37,7 @@
 #import <FBSDKCoreKit/FBSDKErrorFactory.h>
 #import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
 #import <FBSDKCoreKit/FBSDKEventLogging.h>
+#import <FBSDKCoreKit/FBSDKImpressionLoggerFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKFeatureChecking.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
@@ -49,7 +50,6 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
 #import <FBSDKCoreKit/FBSDKImpressionLogging.h>
-#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKKeychainStore.h>
@@ -94,7 +94,9 @@
  #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIRequestCreating.h>
  #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
+ #import <FBSDKCoreKit/FBSDKButton.h>
  #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
+ #import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
  #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
  #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
  #import <FBSDKCoreKit/FBSDKMutableCopying.h>

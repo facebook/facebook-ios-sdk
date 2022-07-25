@@ -10,7 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 
-#import "FBSDKImpressionLogging.h"
+#import <FBSDKCoreKit/FBSDKImpressionLogging.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

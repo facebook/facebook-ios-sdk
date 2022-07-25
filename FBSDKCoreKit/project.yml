@@ -185,11 +185,13 @@ targets:
         excludes:
           - FBSDKAppLink*
           - FBSDKBridgeAPI*
+          - FBSDKButton.*
           - FBSDKGraphErrorRecoveryProcessor*
           - FBSDKBridgeAPI*
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKImpressionLoggingButton*
           - FBSDKShareDialogConfiguration*
           - FBSDKURL.*
           - FBSDKURLHosting*
@@ -290,11 +292,13 @@ targets:
         excludes:
           - FBSDKAppLink*
           - FBSDKBridgeAPI*
+          - FBSDKButton.*
           - FBSDKGraphErrorRecoveryProcessor*
           - FBSDKBridgeAPI*
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKImpressionLoggingButton*
           - FBSDKShareDialogConfiguration*
           - FBSDKURL.*
           - FBSDKURLHosting*
