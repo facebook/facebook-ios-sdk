@@ -11,9 +11,10 @@ extern NSString *const IGSDKPlatformSharingToReelsParamBackgroundVideo; // backg
 extern NSString *const IGSDKPlatformSharingToReelsParamStickerImage; // sticker image data
 
 
-BOOL IGSDKPlatformSharingToReels(NSData *_Nullable backgroundVideo,
-                                   NSData *_Nullable stickerImage)
-NS_SWIFT_NAME(shareToReels(backgroundVideo:stickerImage:));
+BOOL IGSDKPlatformSharingToReels(NSString *_Nullable appID,
+                                 NSData *_Nullable backgroundVideo,
+                                 NSData *_Nullable stickerImage)
+NS_SWIFT_NAME(shareToReels(appID:backgroundVideo:stickerImage:));
 
 BOOL IGSDKPlatformSharingToReelsCanOpen(void);
 

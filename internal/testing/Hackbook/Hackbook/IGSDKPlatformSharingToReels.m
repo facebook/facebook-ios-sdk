@@ -6,13 +6,18 @@
 
 NSString *const IGSDKPlatformSharingToReelsScheme = @"instagram-reels://share";
 
+NSString *const IGSDKPlatformSharingToReelsParamAppID = @"com.instagram.sharedSticker.appID";
 NSString *const IGSDKPlatformSharingToReelsParamBackgroundVideo = @"com.instagram.sharedSticker.backgroundVideo";
 NSString *const IGSDKPlatformSharingToReelsParamStickerImage = @"com.instagram.sharedSticker.stickerImage";
 
-BOOL IGSDKPlatformSharingToReels(NSData *_Nullable backgroundVideo,
-                                   NSData *_Nullable stickerImage)
+BOOL IGSDKPlatformSharingToReels(NSString *_Nullable appID,
+                                 NSData *_Nullable backgroundVideo,
+                                 NSData *_Nullable stickerImage)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *const pasteboardItems = [NSMutableArray new];
+  if (appID) {
+    [pasteboardItems addObject:@{IGSDKPlatformSharingToReelsParamAppID : appID}];
+  }
   if (backgroundVideo) {
     [pasteboardItems addObject:@{IGSDKPlatformSharingToReelsParamBackgroundVideo : backgroundVideo}];
   }

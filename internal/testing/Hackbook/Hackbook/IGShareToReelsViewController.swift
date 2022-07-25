@@ -8,6 +8,8 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
 
   // This is the url scheme that third party app will call
   private let urlScheme = "instagram-reels://share"
+  // This is the allowlisted appID for this feature
+  private let appID = "830547164036012"
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -69,7 +71,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   private func share(video: Data) {
-    if shareToReels(backgroundVideo:video, stickerImage:nil) {
+    if shareToReels(appID: appID, backgroundVideo:video, stickerImage:nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -121,7 +123,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
     let stickerImage = imageFromURL(imageURL:stickerImageURL)
 
     let stickerImageData = stickerImage?.pngData()
-    if shareToReels(backgroundVideo:videoData, stickerImage:stickerImageData) {
+    if shareToReels(appID: appID, backgroundVideo:videoData, stickerImage:stickerImageData) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -129,7 +131,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
   
   private func shareWithoutVideo() {
-    if shareToReels(backgroundVideo:nil, stickerImage:nil) {
+    if shareToReels(appID: appID, backgroundVideo:nil, stickerImage:nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
