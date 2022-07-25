@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKDeviceButton.h>
+#import "FBSDKDeviceButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -10,7 +10,7 @@
 
 #if TARGET_OS_TV
 
-#import "FBSDKDeviceButton.h"
+#import "FBSDKDeviceButton+Internal.h"
 
 #import <UIKit/UIKit.h>
 
