@@ -10,7 +10,12 @@
 	<string>3NW3KR6Q88.com.facebook.internal.sdk.samples.Hackbook.internalInHouse</string>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>3NW3KR6Q88.platformFamily</string>
+		<string>3NW3KR6Q88.*</string>
+		<string>com.apple.token</string>
+	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:*.internalfb.com</string>
 	</array>
 </dict>
 </plist>
