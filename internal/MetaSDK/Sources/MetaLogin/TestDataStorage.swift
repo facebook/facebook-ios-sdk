@@ -12,7 +12,8 @@ final class TestDataStorage: DataPersisting {
     var capturedIntegerForKeyName: String?
     var stubbedIntegerForKey = 0
     var capturedSetIntegerForKeyName: String?
-    var capturedSetValue: Int?
+    var capturedRemoveStringForKeyName: String?
+    var capturedSetIntValue: Int?
 
     func integer(forKey defaultName: String) -> Int {
         capturedIntegerForKeyName = defaultName
@@ -21,6 +22,10 @@ final class TestDataStorage: DataPersisting {
 
     func set(_ value: Int, forKey defaultName: String) {
         capturedSetIntegerForKeyName = defaultName
-        capturedSetValue = value
+        capturedSetIntValue = value
+    }
+
+    func removeObject(forKey: String) {
+        capturedRemoveStringForKeyName = forKey
     }
 }
